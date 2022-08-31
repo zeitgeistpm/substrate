@@ -2171,6 +2171,17 @@ impl<T: Config> Pallet<T> {
 
 		None
 	}
+	pub fn pool_members(pool_id: PoolId) -> Option<Vec<PoolMember<T>>> {
+		let members = PoolMembers::<T>::iter()
+			.filter_map(|(_key, p)| if p.pool_id == pool_id { Some(p) } else { None })
+			.collect::<Vec<PoolMember<T>>>();
+
+		if members.is_empty() {
+			None
+		} else {
+			Some(members)
+		}
+	}
 
 	/// The amount of bond that MUST REMAIN IN BONDED in ALL POOLS.
 	///

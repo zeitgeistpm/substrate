@@ -52,6 +52,7 @@ use pallet_grandpa::{
 	fg_primitives, AuthorityId as GrandpaId, AuthorityList as GrandpaAuthorityList,
 };
 use pallet_im_online::sr25519::AuthorityId as ImOnlineId;
+use pallet_nomination_pools::{PoolId, PoolMember};
 use pallet_session::historical::{self as pallet_session_historical};
 pub use pallet_transaction_payment::{CurrencyAdapter, Multiplier, TargetedFeeAdjustment};
 use pallet_transaction_payment::{FeeDetails, RuntimeDispatchInfo};
@@ -1852,9 +1853,13 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl pallet_nomination_pools_runtime_api::NominationPoolsApi<Block, AccountId, Balance> for Runtime {
+
+	impl pallet_nomination_pools_runtime_api::NominationPoolsApi<Block, AccountId, Balance, PoolId, PoolMember<Runtime>> for Runtime {
 		fn pending_rewards(member_account: AccountId) -> Balance {
 			NominationPools::pending_rewards(member_account).unwrap_or_default()
+		}
+		fn pool_members(pool_id: PoolId) -> Vec<PoolMember<Runtime>> {
+			NominationPools::pool_members(pool_id).unwrap_or_default()
 		}
 	}
 

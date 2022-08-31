@@ -21,13 +21,17 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::Codec;
+use sp_std::vec::Vec;
 
 sp_api::decl_runtime_apis! {
 	/// Runtime api for accessing information about nomination pools.
-	pub trait NominationPoolsApi<AccountId, Balance>
-		where AccountId: Codec, Balance: Codec
+	pub trait NominationPoolsApi<AccountId, Balance, PoolId, PoolMember>
+		where AccountId: Codec, Balance: Codec, PoolId: Codec, PoolMember: Codec
 	{
 		/// Returns the pending rewards for the member that the AccountId was given for.
 		fn pending_rewards(member: AccountId) -> Balance;
+
+		/// Returns the members of a particular pool given a poolId.
+		fn pool_members(pool_id: PoolId) -> Vec<PoolMember>;
 	}
 }
