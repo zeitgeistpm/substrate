@@ -31,7 +31,7 @@ sp_api::decl_runtime_apis! {
 		/// Returns the pending rewards for the member that the AccountId was given for.
 		fn pending_rewards(member: AccountId) -> Balance;
 
-		/// Returns the members of a particular pool given a poolId.
+		/// Returns the members of a particular pool given a pool id.
 		fn pool_members(pool_id: PoolId) -> Vec<PoolMember>;
 	}
 }
