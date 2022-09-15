@@ -210,7 +210,6 @@ where
 		block_request_protocol_config: ProtocolConfig,
 		state_request_protocol_config: ProtocolConfig,
 		warp_sync_protocol_config: Option<ProtocolConfig>,
-		light_client_request_protocol_config: ProtocolConfig,
 		// All remaining request protocol configs.
 		mut request_response_protocols: Vec<ProtocolConfig>,
 		peerset: PeersetHandle,
@@ -228,7 +227,6 @@ where
 		};
 		request_response_protocols.push(block_request_protocol_config);
 		request_response_protocols.push(state_request_protocol_config);
-		request_response_protocols.push(light_client_request_protocol_config);
 
 		Ok(Self {
 			substrate,

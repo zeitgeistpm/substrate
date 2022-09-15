@@ -364,7 +364,6 @@ where
 					params.block_request_protocol_config,
 					params.state_request_protocol_config,
 					params.warp_sync_protocol_config,
-					params.light_client_request_protocol_config,
 					params.network_config.request_response_protocols,
 					peerset_handle.clone(),
 				);

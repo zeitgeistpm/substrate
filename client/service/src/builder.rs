@@ -820,7 +820,7 @@ where
 		})
 		.unwrap_or_default();
 
-	let light_client_request_protocol_config = {
+	request_response_protocol_configs.push(Some({
 		// Allow both outgoing and incoming requests.
 		let (handler, protocol_config) = LightClientRequestHandler::new(
 			&protocol_id,
@@ -829,7 +829,7 @@ where
 		);
 		spawn_handle.spawn("light-client-request-handler", Some("networking"), handler.run());
 		protocol_config
-	};
+	}));
 
 	let chain_sync = ChainSync::new(
 		match config.network.sync_mode {
@@ -868,7 +868,6 @@ where
 		block_request_protocol_config,
 		state_request_protocol_config,
 		warp_sync_protocol_config,
-		light_client_request_protocol_config,
 		request_response_protocol_configs: request_response_protocol_configs
 			.into_iter()
 			.flatten()

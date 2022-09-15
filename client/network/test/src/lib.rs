@@ -874,6 +874,7 @@ where
 			Some(warp_sync),
 		)
 		.unwrap();
+
 		let network = NetworkWorker::new(sc_network::config::Params {
 			role: if config.is_authority { Role::Authority } else { Role::Full },
 			executor: None,
@@ -886,9 +887,8 @@ where
 			metrics_registry: None,
 			block_request_protocol_config,
 			state_request_protocol_config,
-			light_client_request_protocol_config,
 			warp_sync_protocol_config: Some(warp_protocol_config),
-			request_response_protocol_configs: Vec::new(),
+			request_response_protocol_configs: vec![light_client_request_protocol_config],
 		})
 		.unwrap();
 

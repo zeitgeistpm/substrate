@@ -144,9 +144,8 @@ fn build_test_full_node(
 		metrics_registry: None,
 		block_request_protocol_config,
 		state_request_protocol_config,
-		light_client_request_protocol_config,
 		warp_sync_protocol_config: None,
-		request_response_protocol_configs: Vec::new(),
+		request_response_protocol_configs: vec![light_client_request_protocol_config],
 	})
 	.unwrap();
 
