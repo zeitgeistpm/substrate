@@ -250,6 +250,7 @@ mod peer_info;
 mod protocol;
 mod request_responses;
 mod service;
+mod sync_helper;
 mod transport;
 
 pub mod config;

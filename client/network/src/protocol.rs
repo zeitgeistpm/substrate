@@ -16,15 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-use crate::config;
+use crate::{config, sync_helper};
 
 use bytes::Bytes;
 use codec::{Decode, DecodeAll, Encode};
-use futures::{
-	channel::oneshot,
-	prelude::*,
-	stream::{FuturesUnordered, Stream},
-};
+use futures::{channel::oneshot, prelude::*, stream::Stream};
 use futures_lite::stream::StreamExt;
 use libp2p::{
 	core::{connection::ConnectionId, transport::ListenerId, ConnectedPoint},
@@ -165,70 +161,6 @@ impl Metrics {
 	}
 }
 
-// TODO: zzz
-type PendingResponse<B> =
-	(PeerId, PeerRequest<B>, Result<Result<Vec<u8>, RequestFailure>, oneshot::Canceled>);
-
-// TODO: move chainsync here
-struct SyncingHelper<B: BlockT> {
-	pub pending_responses:
-		FuturesUnordered<Pin<Box<dyn Future<Output = PendingResponse<B>> + Send>>>,
-	/// State machine that handles the list of in-progress requests. Only full node peers are
-	/// registered.
-	pub chain_sync: Box<dyn ChainSync<B>>,
-}
-
-impl<B: BlockT> SyncingHelper<B> {
-	pub fn new(chain_sync: Box<dyn ChainSync<B>>) -> Self {
-		Self { chain_sync, pending_responses: Default::default() }
-	}
-
-	pub fn prepare_block_request(
-		&mut self,
-		who: PeerId,
-		request: BlockRequest<B>,
-	) -> CustomMessageOutcome<B> {
-		let (tx, rx) = oneshot::channel();
-
-		let new_request = self.chain_sync.create_opaque_block_request(&request);
-
-		self.pending_responses
-			.push(Box::pin(async move { (who, PeerRequest::Block(request), rx.await) }));
-
-		CustomMessageOutcome::BlockRequest {
-			target: who,
-			request: new_request,
-			pending_response: tx,
-		}
-	}
-
-	pub fn prepare_state_request(
-		&mut self,
-		who: PeerId,
-		request: OpaqueStateRequest,
-	) -> CustomMessageOutcome<B> {
-		let (tx, rx) = oneshot::channel();
-
-		self.pending_responses
-			.push(Box::pin(async move { (who, PeerRequest::State, rx.await) }));
-
-		CustomMessageOutcome::StateRequest { target: who, request, pending_response: tx }
-	}
-
-	pub fn prepare_warp_sync_request(
-		&mut self,
-		who: PeerId,
-		request: WarpProofRequest<B>,
-	) -> CustomMessageOutcome<B> {
-		let (tx, rx) = oneshot::channel();
-
-		self.pending_responses
-			.push(Box::pin(async move { (who, PeerRequest::WarpProof, rx.await) }));
-
-		CustomMessageOutcome::WarpSyncRequest { target: who, request, pending_response: tx }
-	}
-}
-
 // Lock must always be taken in order declared here.
 pub struct Protocol<B: BlockT, Client> {
 	/// Interval at which we call `tick`.
@@ -239,7 +171,7 @@ pub struct Protocol<B: BlockT, Client> {
 	roles: Roles,
 	genesis_hash: B::Hash,
 	// temporary object that performs all Protocol's syncing-related functionality
-	sync_helper: SyncingHelper<B>,
+	sync_helper: sync_helper::SyncingHelper<B>,
 	// All connected peers. Contains both full and light node peers.
 	peers: HashMap<PeerId, Peer<B>>,
 	chain: Arc<Client>,
@@ -276,7 +208,7 @@ pub struct Protocol<B: BlockT, Client> {
 }
 
 #[derive(Debug)]
-enum PeerRequest<B: BlockT> {
+pub enum PeerRequest<B: BlockT> {
 	Block(BlockRequest<B>),
 	State,
 	WarpProof,
@@ -284,7 +216,7 @@ enum PeerRequest<B: BlockT> {
 
 /// Peer information
 #[derive(Debug)]
-struct Peer<B: BlockT> {
+pub struct Peer<B: BlockT> {
 	info: PeerInfo<B>,
 	/// Holds a set of blocks known to this peer.
 	known_blocks: LruHashSet<B::Hash>,
@@ -515,7 +447,7 @@ where
 			},
 			boot_node_ids,
 			block_announce_data_cache,
-			sync_helper: SyncingHelper::new(chain_sync),
+			sync_helper: sync_helper::SyncingHelper::new(chain_sync),
 		};
 
 		Ok((protocol, peerset_handle, known_addresses))
