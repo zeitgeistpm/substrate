@@ -719,6 +719,7 @@ where
 		Ok(())
 	}
 
+	// TODO: move to `SyncingHelper`
 	/// Make sure an important block is propagated to peers.
 	///
 	/// In chain-based consensus, we often need to make sure non-best forks are
@@ -764,6 +765,7 @@ where
 		}
 	}
 
+	// TODO: move to `SyncingHelper`
 	/// Push a block announce validation.
 	///
 	/// It is required that [`ChainSync::poll_block_announce_validation`] is
@@ -803,6 +805,7 @@ where
 		}
 	}
 
+	// TODO: move to `SyncingHelper`
 	/// Process the result of the block announce validation.
 	fn process_block_announce_validation_result(
 		&mut self,
@@ -876,12 +879,14 @@ where
 		}
 	}
 
+	// TODO: move to `SyncingHelper`
 	/// Call this when a block has been finalized. The sync layer may have some additional
 	/// requesting to perform.
 	pub fn on_block_finalized(&mut self, hash: B::Hash, header: &B::Header) {
 		self.sync_helper.chain_sync.on_block_finalized(&hash, *header.number())
 	}
 
+	// TODO: move to `SyncingHelper`
 	/// Request a justification for the given block.
 	///
 	/// Uses `protocol` to queue a new justification request and tries to dispatch all pending
@@ -890,11 +895,13 @@ where
 		self.sync_helper.chain_sync.request_justification(hash, number)
 	}
 
+	// TODO: move to `SyncingHelper`
 	/// Clear all pending justification requests.
 	pub fn clear_justification_requests(&mut self) {
 		self.sync_helper.chain_sync.clear_justification_requests();
 	}
 
+	// TODO: move to `SyncingHelper`
 	/// Request syncing for the given block from given set of peers.
 	/// Uses `protocol` to queue a new block download request and tries to dispatch all pending
 	/// requests.
@@ -907,6 +914,7 @@ where
 		self.sync_helper.chain_sync.set_sync_fork_request(peers, hash, number)
 	}
 
+	// TODO: move to `SyncingHelper`
 	/// A batch of blocks have been processed, with or without errors.
 	/// Call this when a batch of blocks have been processed by the importqueue, with or without
 	/// errors.
@@ -931,6 +939,7 @@ where
 		}
 	}
 
+	// TODO: move to `SyncingHelper`
 	/// Call this when a justification has been processed by the import queue, with or without
 	/// errors.
 	pub fn justification_import_result(
@@ -1221,153 +1230,14 @@ where
 			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(message))
 		}
 
-		// Check for finished outgoing requests.
-		let mut finished_block_requests = Vec::new();
-		let mut finished_state_requests = Vec::new();
-		let mut finished_warp_sync_requests = Vec::new();
-
-		// TODO: move to a separate funtion
-		while let Poll::Ready(Some((id, request, response))) =
-			self.sync_helper.pending_responses.poll_next(cx)
-		{
-			match response {
-				Ok(Ok(resp)) => match request {
-					PeerRequest::Block(req) => {
-						let response =
-							match self.sync_helper.chain_sync.decode_block_response(&resp[..]) {
-								Ok(proto) => proto,
-								Err(e) => {
-									debug!(
-										target: "sync",
-										"Failed to decode block response from peer {:?}: {:?}.",
-										id,
-										e
-									);
-									self.peerset_handle.report_peer(id, rep::BAD_MESSAGE);
-									self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-									continue
-								},
-							};
-
-						finished_block_requests.push((id, req, response));
-					},
-					PeerRequest::State => {
-						let response =
-							match self.sync_helper.chain_sync.decode_state_response(&resp[..]) {
-								Ok(proto) => proto,
-								Err(e) => {
-									debug!(
-										target: "sync",
-										"Failed to decode state response from peer {:?}: {:?}.",
-										id,
-										e
-									);
-									self.peerset_handle.report_peer(id, rep::BAD_MESSAGE);
-									self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-									continue
-								},
-							};
-
-						finished_state_requests.push((id, response));
-					},
-					PeerRequest::WarpProof => {
-						finished_warp_sync_requests.push((id, resp));
-					},
-				},
-				Ok(Err(err)) => {
-					debug!(target: "sync", "Request to peer {:?} failed: {:?}.", id, err);
-
-					match err {
-						RequestFailure::Network(OutboundFailure::Timeout) => {
-							self.peerset_handle.report_peer(id, rep::TIMEOUT);
-							self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-						},
-						RequestFailure::Network(OutboundFailure::UnsupportedProtocols) => {
-							self.peerset_handle.report_peer(id, rep::BAD_PROTOCOL);
-							self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-						},
-						RequestFailure::Network(OutboundFailure::DialFailure) => {
-							self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-						},
-						RequestFailure::Refused => {
-							self.peerset_handle.report_peer(id, rep::REFUSED);
-							self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-						},
-						RequestFailure::Network(OutboundFailure::ConnectionClosed) |
-						RequestFailure::NotConnected => {
-							self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-						},
-						RequestFailure::UnknownProtocol => {
-							debug_assert!(false, "Block request protocol should always be known.");
-						},
-						RequestFailure::Obsolete => {
-							debug_assert!(
-								false,
-								"Can not receive `RequestFailure::Obsolete` after dropping the \
-									 response receiver.",
-							);
-						},
-					}
-				},
-				Err(oneshot::Canceled) => {
-					trace!(
-						target: "sync",
-						"Request to peer {:?} failed due to oneshot being canceled.",
-						id,
-					);
-					self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-				},
-			}
-		}
-
-		for (id, req, response) in finished_block_requests {
-			let ev = self.sync_helper.on_block_response(id, req, response);
-			self.pending_messages.push_back(ev);
-		}
-
-		for (id, response) in finished_state_requests {
-			let ev = self.sync_helper.on_state_response(id, response);
-			self.pending_messages.push_back(ev);
-		}
-
-		for (id, response) in finished_warp_sync_requests {
-			let ev = self.sync_helper.on_warp_sync_response(id, EncodedProof(response));
-			self.pending_messages.push_back(ev);
-		}
+		let events = self.sync_helper.poll(cx);
+		self.pending_messages.extend(events);
 
 		while let Poll::Ready(Some(())) = self.tick_timeout.poll_next_unpin(cx) {
 			self.tick();
 		}
 
-		// TODO: implement poll for `self.chainsync` which executes this
-		for (id, request) in self
-			.sync_helper
-			.chain_sync
-			.block_requests()
-			.map(|(peer_id, request)| (*peer_id, request))
-			.collect::<Vec<_>>()
-		{
-			let event = self.sync_helper.prepare_block_request(id, request);
-			self.pending_messages.push_back(event);
-		}
-
-		if let Some((id, request)) = self.sync_helper.chain_sync.state_request() {
-			let event = self.sync_helper.prepare_state_request(id, request);
-			self.pending_messages.push_back(event);
-		}
-
-		for (id, request) in
-			self.sync_helper.chain_sync.justification_requests().collect::<Vec<_>>()
-		{
-			let event = self.sync_helper.prepare_block_request(id, request);
-			self.pending_messages.push_back(event);
-		}
-
-		if let Some((id, request)) = self.sync_helper.chain_sync.warp_sync_request() {
-			let event = self.sync_helper.prepare_warp_sync_request(id, request);
-			self.pending_messages.push_back(event);
-		}
-
+		// TODO: move this elsewhere
 		// Check if there is any block announcement validation finished.
 		while let Poll::Ready(result) =
 			self.sync_helper.chain_sync.poll_block_announce_validation(cx)

@@ -170,10 +170,7 @@ impl<B: BlockT> SyncingHelper<B> {
 				},
 			}
 		} else {
-			match self
-				.chain_sync
-				.on_block_data(&peer_id, Some(request), block_response)
-			{
+			match self.chain_sync.on_block_data(&peer_id, Some(request), block_response) {
 				Ok(OnBlockData::Import(origin, blocks)) =>
 					CustomMessageOutcome::BlockImport(origin, blocks),
 				Ok(OnBlockData::Request(peer, req)) => self.prepare_block_request(peer, req),
@@ -222,6 +219,151 @@ impl<B: BlockT> SyncingHelper<B> {
 
 	// TODO: implement
 	fn disconnect_and_report_peer(&mut self, _id: PeerId, _score_diff: ReputationChange) {
-		todo!();
+		self.disconnect_peer(_id);
+		// TODO: report peer
+		// todo!();
+	}
+
+	fn disconnect_peer(&mut self, _id: PeerId) {
+		// TODO: disconnect peer
+		// todo!();
+	}
+
+	pub fn poll(&mut self, cx: &mut std::task::Context) -> VecDeque<CustomMessageOutcome<B>> {
+		// Check for finished outgoing requests.
+		let mut finished_block_requests = Vec::new();
+		let mut finished_state_requests = Vec::new();
+		let mut finished_warp_sync_requests = Vec::new();
+
+		while let Poll::Ready(Some((id, request, response))) = self.pending_responses.poll_next(cx)
+		{
+			match response {
+				Ok(Ok(resp)) => match request {
+					PeerRequest::Block(req) => {
+						let response = match self.chain_sync.decode_block_response(&resp[..]) {
+							Ok(proto) => proto,
+							Err(e) => {
+								debug!(
+									target: "sync",
+									"Failed to decode block response from peer {:?}: {:?}.",
+									id,
+									e
+								);
+								self.disconnect_and_report_peer(id, rep::BAD_MESSAGE);
+								continue
+							},
+						};
+
+						finished_block_requests.push((id, req, response));
+					},
+					PeerRequest::State => {
+						let response = match self.chain_sync.decode_state_response(&resp[..]) {
+							Ok(proto) => proto,
+							Err(e) => {
+								debug!(
+									target: "sync",
+									"Failed to decode state response from peer {:?}: {:?}.",
+									id,
+									e
+								);
+								self.disconnect_and_report_peer(id, rep::BAD_MESSAGE);
+								continue
+							},
+						};
+
+						finished_state_requests.push((id, response));
+					},
+					PeerRequest::WarpProof => {
+						finished_warp_sync_requests.push((id, resp));
+					},
+				},
+				Ok(Err(err)) => {
+					debug!(target: "sync", "Request to peer {:?} failed: {:?}.", id, err);
+
+					match err {
+						RequestFailure::Network(OutboundFailure::Timeout) => {
+							self.disconnect_and_report_peer(id, rep::TIMEOUT);
+						},
+						RequestFailure::Network(OutboundFailure::UnsupportedProtocols) => {
+							self.disconnect_and_report_peer(id, rep::BAD_PROTOCOL);
+						},
+						RequestFailure::Network(OutboundFailure::DialFailure) => {
+							self.disconnect_peer(id);
+						},
+						RequestFailure::Refused => {
+							self.disconnect_and_report_peer(id, rep::REFUSED);
+						},
+						RequestFailure::Network(OutboundFailure::ConnectionClosed) |
+						RequestFailure::NotConnected => {
+							self.disconnect_peer(id);
+						},
+						RequestFailure::UnknownProtocol => {
+							debug_assert!(false, "Block request protocol should always be known.");
+						},
+						RequestFailure::Obsolete => {
+							debug_assert!(
+								false,
+								"Can not receive `RequestFailure::Obsolete` after dropping the \
+									 response receiver.",
+							);
+						},
+					}
+				},
+				Err(oneshot::Canceled) => {
+					trace!(
+						target: "sync",
+						"Request to peer {:?} failed due to oneshot being canceled.",
+						id,
+					);
+					self.disconnect_peer(id);
+				},
+			}
+		}
+
+		let mut pending_messages = VecDeque::new();
+
+		// TODO: merge loops below with the loop above
+
+		for (id, req, response) in finished_block_requests {
+			let ev = self.on_block_response(id, req, response);
+			pending_messages.push_back(ev);
+		}
+
+		for (id, response) in finished_state_requests {
+			let ev = self.on_state_response(id, response);
+			pending_messages.push_back(ev);
+		}
+
+		for (id, response) in finished_warp_sync_requests {
+			let ev = self.on_warp_sync_response(id, EncodedProof(response));
+			pending_messages.push_back(ev);
+		}
+
+		for (id, request) in self
+			.chain_sync
+			.block_requests()
+			.map(|(peer_id, request)| (*peer_id, request))
+			.collect::<Vec<_>>()
+		{
+			let event = self.prepare_block_request(id, request);
+			pending_messages.push_back(event);
+		}
+
+		if let Some((id, request)) = self.chain_sync.state_request() {
+			let event = self.prepare_state_request(id, request);
+			pending_messages.push_back(event);
+		}
+
+		for (id, request) in self.chain_sync.justification_requests().collect::<Vec<_>>() {
+			let event = self.prepare_block_request(id, request);
+			pending_messages.push_back(event);
+		}
+
+		if let Some((id, request)) = self.chain_sync.warp_sync_request() {
+			let event = self.prepare_warp_sync_request(id, request);
+			pending_messages.push_back(event);
+		}
+
+		pending_messages
 	}
 }
