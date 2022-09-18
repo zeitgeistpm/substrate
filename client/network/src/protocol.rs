@@ -815,8 +815,6 @@ where
 		if no_slot_peer {
 			self.default_peers_set_no_slot_connected_peers.insert(who);
 		}
-		self.pending_messages
-			.push_back(CustomMessageOutcome::PeerNewBest(who, status.best_number));
 
 		if let Some(req) = req {
 			self.pending_messages
@@ -915,9 +913,9 @@ where
 		&mut self,
 		validation_result: PollBlockAnnounceValidation<B::Header>,
 	) -> CustomMessageOutcome<B> {
-		let (header, is_best, who) = match validation_result {
+		let (header, who) = match validation_result {
 			PollBlockAnnounceValidation::Skip => return CustomMessageOutcome::None,
-			PollBlockAnnounceValidation::Nothing { is_best, who, announce } => {
+			PollBlockAnnounceValidation::Nothing { is_best: _, who, announce } => {
 				self.update_peer_info(&who);
 
 				if let Some(data) = announce.data {
@@ -926,19 +924,9 @@ where
 					}
 				}
 
-				// `on_block_announce` returns `OnBlockAnnounce::ImportHeader`
-				// when we have all data required to import the block
-				// in the BlockAnnounce message. This is only when:
-				// 1) we're on light client;
-				// AND
-				// 2) parent block is already imported and not pruned.
-				if is_best {
-					return CustomMessageOutcome::PeerNewBest(who, *announce.header.number())
-				} else {
-					return CustomMessageOutcome::None
-				}
+				return CustomMessageOutcome::None
 			},
-			PollBlockAnnounceValidation::ImportHeader { announce, is_best, who } => {
+			PollBlockAnnounceValidation::ImportHeader { announce, is_best: _, who } => {
 				self.update_peer_info(&who);
 
 				if let Some(data) = announce.data {
@@ -947,7 +935,7 @@ where
 					}
 				}
 
-				(announce.header, is_best, who)
+				(announce.header, who)
 			},
 			PollBlockAnnounceValidation::Failure { who, disconnect } => {
 				if disconnect {
@@ -958,8 +946,6 @@ where
 				return CustomMessageOutcome::None
 			},
 		};
-
-		let number = *header.number();
 
 		// to import header from announced block let's construct response to request that normally
 		// would have been sent over network (but it is not in our case)
@@ -980,10 +966,6 @@ where
 				}],
 			},
 		);
-
-		if is_best {
-			self.pending_messages.push_back(CustomMessageOutcome::PeerNewBest(who, number));
-		}
 
 		match blocks_to_import {
 			Ok(OnBlockData::Import(origin, blocks)) =>
@@ -1269,8 +1251,6 @@ pub enum CustomMessageOutcome<B: BlockT> {
 		request: WarpProofRequest<B>,
 		pending_response: oneshot::Sender<Result<Vec<u8>, RequestFailure>>,
 	},
-	/// Peer has a reported a new head of chain.
-	PeerNewBest(PeerId, NumberFor<B>),
 	/// Now connected to a new peer for syncing purposes.
 	SyncConnected(PeerId),
 	/// No longer connected to a peer for syncing purposes.

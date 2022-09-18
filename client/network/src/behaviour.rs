@@ -429,7 +429,6 @@ where
 			CustomMessageOutcome::NotificationsReceived { remote, messages } => {
 				self.events.push_back(BehaviourOut::NotificationsReceived { remote, messages });
 			},
-			CustomMessageOutcome::PeerNewBest(_peer_id, _number) => {},
 			CustomMessageOutcome::SyncConnected(peer_id) =>
 				self.events.push_back(BehaviourOut::SyncConnected(peer_id)),
 			CustomMessageOutcome::SyncDisconnected(peer_id) =>
