@@ -182,6 +182,51 @@ impl<B: BlockT> SyncingHelper<B> {
 	pub fn new(chain_sync: Box<dyn ChainSync<B>>) -> Self {
 		Self { chain_sync, pending_responses: Default::default() }
 	}
+
+	pub fn prepare_block_request(
+		&mut self,
+		who: PeerId,
+		request: BlockRequest<B>,
+	) -> CustomMessageOutcome<B> {
+		let (tx, rx) = oneshot::channel();
+
+		let new_request = self.chain_sync.create_opaque_block_request(&request);
+
+		self.pending_responses
+			.push(Box::pin(async move { (who, PeerRequest::Block(request), rx.await) }));
+
+		CustomMessageOutcome::BlockRequest {
+			target: who,
+			request: new_request,
+			pending_response: tx,
+		}
+	}
+
+	pub fn prepare_state_request(
+		&mut self,
+		who: PeerId,
+		request: OpaqueStateRequest,
+	) -> CustomMessageOutcome<B> {
+		let (tx, rx) = oneshot::channel();
+
+		self.pending_responses
+			.push(Box::pin(async move { (who, PeerRequest::State, rx.await) }));
+
+		CustomMessageOutcome::StateRequest { target: who, request, pending_response: tx }
+	}
+
+	pub fn prepare_warp_sync_request(
+		&mut self,
+		who: PeerId,
+		request: WarpProofRequest<B>,
+	) -> CustomMessageOutcome<B> {
+		let (tx, rx) = oneshot::channel();
+
+		self.pending_responses
+			.push(Box::pin(async move { (who, PeerRequest::WarpProof, rx.await) }));
+
+		CustomMessageOutcome::WarpSyncRequest { target: who, request, pending_response: tx }
+	}
 }
 
 // Lock must always be taken in order declared here.
@@ -661,7 +706,7 @@ where
 				Ok(OnBlockData::Import(origin, blocks)) =>
 					CustomMessageOutcome::BlockImport(origin, blocks),
 				Ok(OnBlockData::Request(peer, req)) =>
-					prepare_block_request(&mut self.sync_helper, peer, req),
+					self.sync_helper.prepare_block_request(peer, req),
 				Ok(OnBlockData::Continue) => CustomMessageOutcome::None,
 				Err(BadPeer(id, repu)) => {
 					self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
@@ -843,7 +888,7 @@ where
 
 		if let Some(req) = req {
 			self.pending_messages
-				.push_back(prepare_block_request(&mut self.sync_helper, who, req));
+				.push_back(self.sync_helper.prepare_block_request(who, req));
 		}
 
 		Ok(())
@@ -1012,7 +1057,7 @@ where
 			Ok(OnBlockData::Import(origin, blocks)) =>
 				CustomMessageOutcome::BlockImport(origin, blocks),
 			Ok(OnBlockData::Request(peer, req)) =>
-				prepare_block_request(&mut self.sync_helper, peer, req),
+				self.sync_helper.prepare_block_request(peer, req),
 			Ok(OnBlockData::Continue) => CustomMessageOutcome::None,
 			Err(BadPeer(id, repu)) => {
 				self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
@@ -1066,11 +1111,8 @@ where
 		for result in results {
 			match result {
 				Ok((id, req)) => {
-					self.pending_messages.push_back(prepare_block_request(
-						&mut self.sync_helper,
-						id,
-						req,
-					));
+					self.pending_messages
+						.push_back(self.sync_helper.prepare_block_request(id, req));
 				},
 				Err(BadPeer(id, repu)) => {
 					self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
@@ -1244,50 +1286,6 @@ where
 				.set(m.justifications.importing_requests.into());
 		}
 	}
-}
-
-fn prepare_block_request<B: BlockT>(
-	sync_helper: &mut SyncingHelper<B>,
-	who: PeerId,
-	request: BlockRequest<B>,
-) -> CustomMessageOutcome<B> {
-	let (tx, rx) = oneshot::channel();
-
-	let new_request = sync_helper.chain_sync.create_opaque_block_request(&request);
-
-	sync_helper
-		.pending_responses
-		.push(Box::pin(async move { (who, PeerRequest::Block(request), rx.await) }));
-
-	CustomMessageOutcome::BlockRequest { target: who, request: new_request, pending_response: tx }
-}
-
-fn prepare_state_request<B: BlockT>(
-	sync_helper: &mut SyncingHelper<B>,
-	who: PeerId,
-	request: OpaqueStateRequest,
-) -> CustomMessageOutcome<B> {
-	let (tx, rx) = oneshot::channel();
-
-	sync_helper
-		.pending_responses
-		.push(Box::pin(async move { (who, PeerRequest::State, rx.await) }));
-
-	CustomMessageOutcome::StateRequest { target: who, request, pending_response: tx }
-}
-
-fn prepare_warp_sync_request<B: BlockT>(
-	sync_helper: &mut SyncingHelper<B>,
-	who: PeerId,
-	request: WarpProofRequest<B>,
-) -> CustomMessageOutcome<B> {
-	let (tx, rx) = oneshot::channel();
-
-	sync_helper
-		.pending_responses
-		.push(Box::pin(async move { (who, PeerRequest::WarpProof, rx.await) }));
-
-	CustomMessageOutcome::WarpSyncRequest { target: who, request, pending_response: tx }
 }
 
 /// Outcome of an incoming custom message.
@@ -1542,24 +1540,24 @@ where
 			.map(|(peer_id, request)| (*peer_id, request))
 			.collect::<Vec<_>>()
 		{
-			let event = prepare_block_request(&mut self.sync_helper, id, request);
+			let event = self.sync_helper.prepare_block_request(id, request);
 			self.pending_messages.push_back(event);
 		}
 
 		if let Some((id, request)) = self.sync_helper.chain_sync.state_request() {
-			let event = prepare_state_request(&mut self.sync_helper, id, request);
+			let event = self.sync_helper.prepare_state_request(id, request);
 			self.pending_messages.push_back(event);
 		}
 
 		for (id, request) in
 			self.sync_helper.chain_sync.justification_requests().collect::<Vec<_>>()
 		{
-			let event = prepare_block_request(&mut self.sync_helper, id, request);
+			let event = self.sync_helper.prepare_block_request(id, request);
 			self.pending_messages.push_back(event);
 		}
 
 		if let Some((id, request)) = self.sync_helper.chain_sync.warp_sync_request() {
-			let event = prepare_warp_sync_request(&mut self.sync_helper, id, request);
+			let event = self.sync_helper.prepare_warp_sync_request(id, request);
 			self.pending_messages.push_back(event);
 		}
 
