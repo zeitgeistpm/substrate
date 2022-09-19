@@ -141,8 +141,7 @@ impl<B: BlockT> SyncingHelper<B> {
 			Ok(blocks) => blocks,
 			Err(err) => {
 				debug!(target: "sync", "Failed to decode block response from {}: {}", peer_id, err);
-				// TODO: report peer
-				// self.peerset_handle.report_peer(peer_id, rep::BAD_MESSAGE);
+				self.report_peer(peer_id, rep::BAD_MESSAGE);
 				return CustomMessageOutcome::None
 			},
 		};

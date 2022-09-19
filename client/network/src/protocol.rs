@@ -485,8 +485,9 @@ where
 
 	/// Returns the number of peers we're connected to and that are being queried.
 	pub fn num_active_peers(&self) -> usize {
+		0usize
 		// TODO: reimplement this using something
-		self.sync_helper.pending_responses.len()
+		// self.sync_helper.pending_responses.len()
 		// self.peers.values().filter(|p| p.request.is_some()).count()
 	}
 
@@ -1180,6 +1181,7 @@ where
 				notifications_sink,
 				negotiated_fallback,
 			} => {
+				// TODO: fix
 				// Set number 0 is hardcoded the default set of peers we sync from.
 				if set_id == HARDCODED_PEERSETS_SYNC {
 					// `received_handshake` can be either a `Status` message if received from the
@@ -1276,6 +1278,7 @@ where
 				}
 			},
 			NotificationsOut::CustomProtocolReplaced { peer_id, notifications_sink, set_id } =>
+			// TODO: fix
 				if set_id == HARDCODED_PEERSETS_SYNC ||
 					self.bad_handshake_substreams.contains(&(peer_id, set_id))
 				{
@@ -1291,6 +1294,7 @@ where
 				},
 			NotificationsOut::CustomProtocolClosed { peer_id, set_id } => {
 				// Set number 0 is hardcoded the default set of peers we sync from.
+				// TODO: fix
 				if set_id == HARDCODED_PEERSETS_SYNC {
 					if self.on_sync_peer_disconnected(peer_id).is_ok() {
 						CustomMessageOutcome::SyncDisconnected(peer_id)
@@ -1317,6 +1321,7 @@ where
 				}
 			},
 			NotificationsOut::Notification { peer_id, set_id, message } => match set_id {
+				// TODO: fix
 				HARDCODED_PEERSETS_SYNC if self.peers.contains_key(&peer_id) => {
 					if let Ok(announce) = BlockAnnounce::decode(&mut message.as_ref()) {
 						self.push_block_announce_validation(peer_id, announce);
@@ -1335,6 +1340,7 @@ where
 						CustomMessageOutcome::None
 					}
 				},
+				// TODO: fix
 				HARDCODED_PEERSETS_SYNC => {
 					trace!(
 						target: "sync",
