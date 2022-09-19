@@ -186,9 +186,21 @@ impl PalletCmd {
 		.execute(strategy.into())
 		.map_err(|e| format!("{}: {}", ERROR_METADATA_NOT_FOUND, e))?;
 
-		let (list, storage_info) =
+		let (mut list, storage_info) =
 			<(Vec<BenchmarkList>, Vec<StorageInfo>) as Decode>::decode(&mut &result[..])
 				.map_err(|e| format!("Failed to decode benchmark metadata: {:?}", e))?;
+
+		// Append the instance name to each pallet name which has duplicates.
+		let pallet_names = list.iter().map(|b| b.pallet.clone()).collect::<Vec<_>>();
+		for benchmark in list.iter_mut() {
+			if pallet_names.iter().filter(|p| *p == &benchmark.pallet).count() > 1 {
+				let instance_name = Self::to_snake_case(&String::from_utf8(benchmark.instance.clone()).expect("instance name is uft8"));
+
+				benchmark.pallet = format!("{}_{}",
+				String::from_utf8(benchmark.pallet.clone()).expect("pallet name is utf8"),
+				instance_name).into_bytes();
+			}
+		}
 
 		// Use the benchmark list and the user input to determine the set of benchmarks to run.
 		let mut benchmarks_to_run = Vec::new();
@@ -430,6 +442,19 @@ impl PalletCmd {
 		Ok(false)
 	}
 
+	fn to_snake_case(s: &str) -> String {
+		let mut snake_case = String::new();
+		let mut prev_char = '_';
+		for c in s.chars() {
+			if c.is_uppercase() && prev_char != '_' {
+				snake_case.push('_');
+			}
+			snake_case.push(c.to_ascii_lowercase());
+			prev_char = c;
+		}
+		snake_case
+	}
+
 	/// Prints the results as human-readable summary without raw timing data.
 	fn print_summary(
 		&self,
@@ -524,5 +549,18 @@ fn list_benchmark(benchmarks_to_run: Vec<(Vec<u8>, Vec<u8>, Vec<(BenchmarkParame
 	println!("pallet, benchmark");
 	for (pallet, extrinsic, _components) in benchmarks_to_run {
 		println!("{}, {}", String::from_utf8_lossy(&pallet), String::from_utf8_lossy(&extrinsic));
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	#[test]
+	fn snake_case_works() {
+		let tests = vec![("FooBar", "foo_bar"), ("FooBarBaz", "foo_bar_baz"),
+		("AddIP", "add_i_p"), ("ALL_CAPS", "a_l_l_c_a_p_s")];
+
+		for test in tests {
+			assert_eq!(super::PalletCmd::to_snake_case(test.0), test.1);
+		}
 	}
 }
