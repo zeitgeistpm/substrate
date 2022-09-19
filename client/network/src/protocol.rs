@@ -569,12 +569,12 @@ where
 		self.peerset_handle.report_peer(who, reputation)
 	}
 
-	/// Perform time based maintenance.
-	///
-	/// > **Note**: This method normally doesn't have to be called except for testing purposes.
-	pub fn tick(&mut self) {
-		self.report_metrics()
-	}
+	// /// Perform time based maintenance.
+	// ///
+	// /// > **Note**: This method normally doesn't have to be called except for testing purposes.
+	// pub fn tick(&mut self) {
+	// 	self.report_metrics()
+	// }
 
 	// TODO: how to fix this???
 	/// Called on the first connection between two peers on the default set, after their exchange
@@ -991,34 +991,32 @@ where
 		self.sync_helper.chain_sync.encode_state_request(request)
 	}
 
-	fn report_metrics(&self) {
-		if let Some(metrics) = &self.metrics {
-			let n = u64::try_from(self.peers.len()).unwrap_or(std::u64::MAX);
-			metrics.peers.set(n);
-
-			let m = self.sync_helper.chain_sync.metrics();
-
-			metrics.fork_targets.set(m.fork_targets.into());
-			metrics.queued_blocks.set(m.queued_blocks.into());
-
-			metrics
-				.justifications
-				.with_label_values(&["pending"])
-				.set(m.justifications.pending_requests.into());
-			metrics
-				.justifications
-				.with_label_values(&["active"])
-				.set(m.justifications.active_requests.into());
-			metrics
-				.justifications
-				.with_label_values(&["failed"])
-				.set(m.justifications.failed_requests.into());
-			metrics
-				.justifications
-				.with_label_values(&["importing"])
-				.set(m.justifications.importing_requests.into());
-		}
-	}
+	// // TODO: move to syncing
+	// fn report_metrics(&self) {
+	// 	if let Some(metrics) = &self.metrics {
+	// 		let n = u64::try_from(self.peers.len()).unwrap_or(std::u64::MAX);
+	// 		metrics.peers.set(n);
+	// 		let m = self.sync_helper.chain_sync.metrics();
+	// 		metrics.fork_targets.set(m.fork_targets.into());
+	// 		metrics.queued_blocks.set(m.queued_blocks.into());
+	// 		metrics
+	// 			.justifications
+	// 			.with_label_values(&["pending"])
+	// 			.set(m.justifications.pending_requests.into());
+	// 		metrics
+	// 			.justifications
+	// 			.with_label_values(&["active"])
+	// 			.set(m.justifications.active_requests.into());
+	// 		metrics
+	// 			.justifications
+	// 			.with_label_values(&["failed"])
+	// 			.set(m.justifications.failed_requests.into());
+	// 		metrics
+	// 			.justifications
+	// 			.with_label_values(&["importing"])
+	// 			.set(m.justifications.importing_requests.into());
+	// 	}
+	// }
 }
 
 /// Outcome of an incoming custom message.
@@ -1148,9 +1146,9 @@ where
 		let events = self.sync_helper.poll(cx);
 		self.pending_messages.extend(events);
 
-		while let Poll::Ready(Some(())) = self.tick_timeout.poll_next_unpin(cx) {
-			self.tick();
-		}
+		// while let Poll::Ready(Some(())) = self.tick_timeout.poll_next_unpin(cx) {
+		// 	self.tick();
+		// }
 
 		if let Some(message) = self.pending_messages.pop_front() {
 			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(message))
