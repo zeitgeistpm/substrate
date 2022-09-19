@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+#![allow(unused)]
 use crate::{config, sync_helper};
 
 use bytes::Bytes;
@@ -203,8 +204,6 @@ pub struct Protocol<B: BlockT, Client> {
 	metrics: Option<Metrics>,
 	/// The `PeerId`'s of all boot nodes.
 	boot_node_ids: HashSet<PeerId>,
-	/// A cache for the data that was associated to a block announcement.
-	block_announce_data_cache: lru::LruCache<B::Hash, Vec<u8>>,
 }
 
 #[derive(Debug)]
@@ -411,11 +410,6 @@ where
 			)
 		};
 
-		let block_announce_data_cache = lru::LruCache::new(
-			network_config.default_peers_set.in_peers as usize +
-				network_config.default_peers_set.out_peers as usize,
-		);
-
 		let protocol = Self {
 			tick_timeout: Box::pin(interval(TICK_TIMEOUT)),
 			pending_messages: VecDeque::new(),
@@ -446,8 +440,11 @@ where
 				None
 			},
 			boot_node_ids,
-			block_announce_data_cache,
-			sync_helper: sync_helper::SyncingHelper::new(chain_sync),
+			sync_helper: sync_helper::SyncingHelper::new(
+				chain_sync,
+				network_config.default_peers_set.in_peers as usize +
+					network_config.default_peers_set.out_peers as usize,
+			),
 		};
 
 		Ok((protocol, peerset_handle, known_addresses))
@@ -537,15 +534,6 @@ where
 		);
 	}
 
-	fn update_peer_info(&mut self, who: &PeerId) {
-		if let Some(info) = self.sync_helper.chain_sync.peer_info(who) {
-			if let Some(ref mut peer) = self.peers.get_mut(who) {
-				peer.info.best_hash = info.best_hash;
-				peer.info.best_number = info.best_number;
-			}
-		}
-	}
-
 	/// Returns information about all the peers we are connected to after the handshake message.
 	pub fn peers_info(&self) -> impl Iterator<Item = (&PeerId, &PeerInfo<B>)> {
 		self.peers.iter().map(|(id, peer)| (id, &peer.info))
@@ -587,6 +575,7 @@ where
 		self.report_metrics()
 	}
 
+	// TODO: how to fix this???
 	/// Called on the first connection between two peers on the default set, after their exchange
 	/// of handshake.
 	///
@@ -681,7 +670,6 @@ where
 				best_hash: status.best_hash,
 				best_number: status.best_number,
 			},
-			// request: None,
 			known_blocks: LruHashSet::new(
 				NonZeroUsize::new(MAX_KNOWN_BLOCKS).expect("Constant is nonzero"),
 			),
@@ -746,7 +734,7 @@ where
 		debug!(target: "sync", "Reannouncing block {:?} is_best: {}", hash, is_best);
 
 		let data = data
-			.or_else(|| self.block_announce_data_cache.get(&hash).cloned())
+			.or_else(|| self.sync_helper.block_announce_data_cache.get(&hash).cloned())
 			.unwrap_or_default();
 
 		for (who, ref mut peer) in self.peers.iter_mut() {
@@ -802,80 +790,6 @@ where
 			self.sync_helper
 				.chain_sync
 				.push_block_announce_validation(who, hash, announce, is_best);
-		}
-	}
-
-	// TODO: move to `SyncingHelper`
-	/// Process the result of the block announce validation.
-	fn process_block_announce_validation_result(
-		&mut self,
-		validation_result: PollBlockAnnounceValidation<B::Header>,
-	) -> CustomMessageOutcome<B> {
-		let (header, who) = match validation_result {
-			PollBlockAnnounceValidation::Skip => return CustomMessageOutcome::None,
-			PollBlockAnnounceValidation::Nothing { is_best: _, who, announce } => {
-				self.update_peer_info(&who);
-
-				if let Some(data) = announce.data {
-					if !data.is_empty() {
-						self.block_announce_data_cache.put(announce.header.hash(), data);
-					}
-				}
-
-				return CustomMessageOutcome::None
-			},
-			PollBlockAnnounceValidation::ImportHeader { announce, is_best: _, who } => {
-				self.update_peer_info(&who);
-
-				if let Some(data) = announce.data {
-					if !data.is_empty() {
-						self.block_announce_data_cache.put(announce.header.hash(), data);
-					}
-				}
-
-				(announce.header, who)
-			},
-			PollBlockAnnounceValidation::Failure { who, disconnect } => {
-				if disconnect {
-					self.behaviour.disconnect_peer(&who, HARDCODED_PEERSETS_SYNC);
-				}
-
-				self.report_peer(who, rep::BAD_BLOCK_ANNOUNCEMENT);
-				return CustomMessageOutcome::None
-			},
-		};
-
-		// to import header from announced block let's construct response to request that normally
-		// would have been sent over network (but it is not in our case)
-		let blocks_to_import = self.sync_helper.chain_sync.on_block_data(
-			&who,
-			None,
-			BlockResponse::<B> {
-				id: 0,
-				blocks: vec![BlockData::<B> {
-					hash: header.hash(),
-					header: Some(header),
-					body: None,
-					indexed_body: None,
-					receipt: None,
-					message_queue: None,
-					justification: None,
-					justifications: None,
-				}],
-			},
-		);
-
-		match blocks_to_import {
-			Ok(OnBlockData::Import(origin, blocks)) =>
-				CustomMessageOutcome::BlockImport(origin, blocks),
-			Ok(OnBlockData::Request(peer, req)) =>
-				self.sync_helper.prepare_block_request(peer, req),
-			Ok(OnBlockData::Continue) => CustomMessageOutcome::None,
-			Err(BadPeer(id, repu)) => {
-				self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-				self.peerset_handle.report_peer(id, repu);
-				CustomMessageOutcome::None
-			},
 		}
 	}
 
@@ -1237,17 +1151,6 @@ where
 			self.tick();
 		}
 
-		// TODO: move this elsewhere
-		// Check if there is any block announcement validation finished.
-		while let Poll::Ready(result) =
-			self.sync_helper.chain_sync.poll_block_announce_validation(cx)
-		{
-			match self.process_block_announce_validation_result(result) {
-				CustomMessageOutcome::None => {},
-				outcome => self.pending_messages.push_back(outcome),
-			}
-		}
-
 		if let Some(message) = self.pending_messages.pop_front() {
 			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(message))
 		}
@@ -1423,7 +1326,7 @@ where
 						if let Poll::Ready(res) =
 							self.sync_helper.chain_sync.poll_block_announce_validation(cx)
 						{
-							self.process_block_announce_validation_result(res)
+							self.sync_helper.process_block_announce_validation_result(res)
 						} else {
 							CustomMessageOutcome::None
 						}

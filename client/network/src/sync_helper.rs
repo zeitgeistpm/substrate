@@ -66,14 +66,22 @@ pub type PendingResponse<B> =
 pub struct SyncingHelper<B: BlockT> {
 	pub pending_responses:
 		FuturesUnordered<Pin<Box<dyn Future<Output = PendingResponse<B>> + Send>>>,
+
 	/// State machine that handles the list of in-progress requests. Only full node peers are
 	/// registered.
 	pub chain_sync: Box<dyn ChainSync<B>>,
+
+	/// A cache for the data that was associated to a block announcement.
+	pub block_announce_data_cache: lru::LruCache<B::Hash, Vec<u8>>,
 }
 
 impl<B: BlockT> SyncingHelper<B> {
-	pub fn new(chain_sync: Box<dyn ChainSync<B>>) -> Self {
-		Self { chain_sync, pending_responses: Default::default() }
+	pub fn new(chain_sync: Box<dyn ChainSync<B>>, cache_size: usize) -> Self {
+		Self {
+			chain_sync,
+			pending_responses: Default::default(),
+			block_announce_data_cache: lru::LruCache::new(cache_size),
+		}
 	}
 
 	pub fn prepare_block_request(
@@ -152,6 +160,7 @@ impl<B: BlockT> SyncingHelper<B> {
 			(Some(first), Some(_)) => format!(" ({})", first),
 			_ => Default::default(),
 		};
+
 		trace!(target: "sync", "BlockResponse {} from {} with {} blocks {}",
 			block_response.id,
 			peer_id,
@@ -217,9 +226,12 @@ impl<B: BlockT> SyncingHelper<B> {
 		}
 	}
 
-	// TODO: implement
 	fn disconnect_and_report_peer(&mut self, _id: PeerId, _score_diff: ReputationChange) {
 		self.disconnect_peer(_id);
+		self.report_peer(_id, _score_diff);
+	}
+
+	fn report_peer(&mut self, _id: PeerId, _score_diff: ReputationChange) {
 		// TODO: report peer
 		// todo!();
 	}
@@ -227,6 +239,75 @@ impl<B: BlockT> SyncingHelper<B> {
 	fn disconnect_peer(&mut self, _id: PeerId) {
 		// TODO: disconnect peer
 		// todo!();
+	}
+
+	// TODO: move to `SyncingHelper`
+	/// Process the result of the block announce validation.
+	pub fn process_block_announce_validation_result(
+		&mut self,
+		validation_result: PollBlockAnnounceValidation<B::Header>,
+	) -> CustomMessageOutcome<B> {
+		let (header, who) = match validation_result {
+			PollBlockAnnounceValidation::Skip => return CustomMessageOutcome::None,
+			PollBlockAnnounceValidation::Nothing { is_best: _, who, announce } => {
+				if let Some(data) = announce.data {
+					if !data.is_empty() {
+						self.block_announce_data_cache.put(announce.header.hash(), data);
+					}
+				}
+
+				return CustomMessageOutcome::None
+			},
+			PollBlockAnnounceValidation::ImportHeader { announce, is_best: _, who } => {
+				if let Some(data) = announce.data {
+					if !data.is_empty() {
+						self.block_announce_data_cache.put(announce.header.hash(), data);
+					}
+				}
+
+				(announce.header, who)
+			},
+			PollBlockAnnounceValidation::Failure { who, disconnect } => {
+				if disconnect {
+					self.disconnect_peer(who);
+				}
+
+				self.report_peer(who, rep::BAD_BLOCK_ANNOUNCEMENT);
+				return CustomMessageOutcome::None
+			},
+		};
+
+		// TODO: refactor this?
+		// to import header from announced block let's construct response to request that normally
+		// would have been sent over network (but it is not in our case)
+		let blocks_to_import = self.chain_sync.on_block_data(
+			&who,
+			None,
+			BlockResponse::<B> {
+				id: 0,
+				blocks: vec![BlockData::<B> {
+					hash: header.hash(),
+					header: Some(header),
+					body: None,
+					indexed_body: None,
+					receipt: None,
+					message_queue: None,
+					justification: None,
+					justifications: None,
+				}],
+			},
+		);
+
+		match blocks_to_import {
+			Ok(OnBlockData::Import(origin, blocks)) =>
+				CustomMessageOutcome::BlockImport(origin, blocks),
+			Ok(OnBlockData::Request(peer, req)) => self.prepare_block_request(peer, req),
+			Ok(OnBlockData::Continue) => CustomMessageOutcome::None,
+			Err(BadPeer(id, repu)) => {
+				self.disconnect_and_report_peer(id, repu);
+				CustomMessageOutcome::None
+			},
+		}
 	}
 
 	pub fn poll(&mut self, cx: &mut std::task::Context) -> VecDeque<CustomMessageOutcome<B>> {
@@ -345,6 +426,7 @@ impl<B: BlockT> SyncingHelper<B> {
 			.map(|(peer_id, request)| (*peer_id, request))
 			.collect::<Vec<_>>()
 		{
+			// TODO: send block request
 			let event = self.prepare_block_request(id, request);
 			pending_messages.push_back(event);
 		}
@@ -355,6 +437,7 @@ impl<B: BlockT> SyncingHelper<B> {
 		}
 
 		for (id, request) in self.chain_sync.justification_requests().collect::<Vec<_>>() {
+			// TODO: send block request
 			let event = self.prepare_block_request(id, request);
 			pending_messages.push_back(event);
 		}
@@ -362,6 +445,14 @@ impl<B: BlockT> SyncingHelper<B> {
 		if let Some((id, request)) = self.chain_sync.warp_sync_request() {
 			let event = self.prepare_warp_sync_request(id, request);
 			pending_messages.push_back(event);
+		}
+
+		// Check if there is any block announcement validation finished.
+		while let Poll::Ready(result) = self.chain_sync.poll_block_announce_validation(cx) {
+			match self.process_block_announce_validation_result(result) {
+				CustomMessageOutcome::None => {},
+				outcome => pending_messages.push_back(outcome),
+			}
 		}
 
 		pending_messages
