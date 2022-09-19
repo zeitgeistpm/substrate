@@ -216,7 +216,7 @@ impl PalletCmd {
 						extrinsics.contains(&&benchmark_name[..])
 					{
 						benchmarks_to_run.push((
-							item.pallet.clone(),
+							item.pallet_display_name.clone().unwrap(),
 							benchmark.name.clone(),
 							benchmark.components.clone(),
 						))
