@@ -1849,6 +1849,7 @@ macro_rules! list_benchmark {
 		let pallet_benchmarks = BenchmarkList {
 			pallet: pallet_string.to_vec(),
 			instance: instance_string.to_vec(),
+			pallet_display_name: None,
 			benchmarks: benchmarks.to_vec(),
 		};
 		$list.push(pallet_benchmarks)
