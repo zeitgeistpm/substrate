@@ -63,7 +63,7 @@ pub type PendingResponse<B> =
 	(PeerId, PeerRequest<B>, Result<Result<Vec<u8>, RequestFailure>, oneshot::Canceled>);
 
 // TODO: move chainsync here
-pub struct SyncingHelper<B: BlockT> {
+pub struct SyncingHelper<B: BlockT, Client> {
 	pub pending_responses:
 		FuturesUnordered<Pin<Box<dyn Future<Output = PendingResponse<B>> + Send>>>,
 
@@ -73,14 +73,344 @@ pub struct SyncingHelper<B: BlockT> {
 
 	/// A cache for the data that was associated to a block announcement.
 	pub block_announce_data_cache: lru::LruCache<B::Hash, Vec<u8>>,
+
+	/// Genesis hash
+	pub genesis_hash: B::Hash,
+
+	/// Blockchain client
+	pub chain: Arc<Client>,
+
+	/// Set of all peers
+	pub peers: HashMap<PeerId, Peer<B>>,
+
+	pub roles: Roles,
+
+	/// Value that was passed as part of the configuration. Used to cap the number of full nodes.
+	default_peers_set_num_full: usize,
+
+	/// List of nodes that should never occupy peer slots.
+	default_peers_set_no_slot_peers: HashSet<PeerId>,
+
+	/// Actual list of connected no-slot nodes.
+	default_peers_set_no_slot_connected_peers: HashSet<PeerId>,
+
+	/// Number of slots to allocate to light nodes.
+	default_peers_set_num_light: usize,
 }
 
-impl<B: BlockT> SyncingHelper<B> {
-	pub fn new(chain_sync: Box<dyn ChainSync<B>>, cache_size: usize) -> Self {
+impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
+	pub fn new(
+		chain_sync: Box<dyn ChainSync<B>>,
+		cache_size: usize,
+		genesis_hash: B::Hash,
+		chain: Arc<Client>,
+		roles: Roles,
+		default_peers_set_num_full: usize,
+		default_peers_set_num_light: usize,
+	) -> Self {
 		Self {
 			chain_sync,
 			pending_responses: Default::default(),
 			block_announce_data_cache: lru::LruCache::new(cache_size),
+			genesis_hash,
+			chain,
+			roles,
+			peers: HashMap::new(),
+			default_peers_set_no_slot_peers: HashSet::new(),
+			default_peers_set_no_slot_connected_peers: HashSet::new(),
+			default_peers_set_num_full,
+			default_peers_set_num_light,
+		}
+	}
+
+	// TODO: how to fix this???
+	/// Called on the first connection between two peers on the default set, after their exchange
+	/// of handshake.
+	///
+	/// Returns `Ok` if the handshake is accepted and the peer added to the list of peers we sync
+	/// from.
+	fn on_sync_peer_connected(
+		&mut self,
+		who: PeerId,
+		status: BlockAnnouncesHandshake<B>,
+	) -> Result<Option<CustomMessageOutcome<B>>, ()> {
+		trace!(target: "sync", "New peer {} {:?}", who, status);
+
+		if self.peers.contains_key(&who) {
+			error!(target: "sync", "Called on_sync_peer_connected with already connected peer {}", who);
+			debug_assert!(false);
+			return Err(())
+		}
+
+		if status.genesis_hash != self.genesis_hash {
+			log!(
+				target: "sync",
+				Level::Warn,
+				"Peer is on different chain (our genesis: {} theirs: {})",
+				self.genesis_hash, status.genesis_hash
+			);
+			self.disconnect_and_report_peer(who, rep::GENESIS_MISMATCH);
+
+			// if self.boot_node_ids.contains(&who) {
+			// 	error!(
+			// 		target: "sync",
+			// 		"Bootnode with peer id `{}` is on a different chain (our genesis: {} theirs: {})",
+			// 		who,
+			// 		self.genesis_hash,
+			// 		status.genesis_hash,
+			// 	);
+			// }
+
+			return Err(())
+		}
+
+		if self.roles.is_light() {
+			// we're not interested in light peers
+			if status.roles.is_light() {
+				debug!(target: "sync", "Peer {} is unable to serve light requests", who);
+				self.disconnect_and_report_peer(who, rep::BAD_ROLE);
+				return Err(())
+			}
+
+			// we don't interested in peers that are far behind us
+			let self_best_block = self.chain.info().best_number;
+			let blocks_difference = self_best_block
+				.checked_sub(&status.best_number)
+				.unwrap_or_else(Zero::zero)
+				.saturated_into::<u64>();
+			if blocks_difference > LIGHT_MAXIMAL_BLOCKS_DIFFERENCE {
+				debug!(target: "sync", "Peer {} is far behind us and will unable to serve light requests", who);
+				self.disconnect_and_report_peer(who, rep::PEER_BEHIND_US_LIGHT);
+				return Err(())
+			}
+		}
+
+		let no_slot_peer = self.default_peers_set_no_slot_peers.contains(&who);
+		let this_peer_reserved_slot: usize = if no_slot_peer { 1 } else { 0 };
+
+		if status.roles.is_full() &&
+			self.chain_sync.num_peers() >=
+				self.default_peers_set_num_full +
+					self.default_peers_set_no_slot_connected_peers.len() +
+					this_peer_reserved_slot
+		{
+			debug!(target: "sync", "Too many full nodes, rejecting {}", who);
+			self.disconnect_peer(who);
+			return Err(())
+		}
+
+		if status.roles.is_light() &&
+			(self.peers.len() - self.chain_sync.num_peers()) >= self.default_peers_set_num_light
+		{
+			// Make sure that not all slots are occupied by light clients.
+			debug!(target: "sync", "Too many light nodes, rejecting {}", who);
+			self.disconnect_peer(who);
+			return Err(())
+		}
+
+		let peer = Peer {
+			info: PeerInfo {
+				roles: status.roles,
+				best_hash: status.best_hash,
+				best_number: status.best_number,
+			},
+			known_blocks: LruHashSet::new(
+				NonZeroUsize::new(MAX_KNOWN_BLOCKS).expect("Constant is nonzero"),
+			),
+		};
+
+		let req = if peer.info.roles.is_full() {
+			match self.chain_sync.new_peer(who, peer.info.best_hash, peer.info.best_number) {
+				Ok(req) => req,
+				Err(BadPeer(id, repu)) => {
+					self.disconnect_and_report_peer(id, repu);
+					return Err(())
+				},
+			}
+		} else {
+			None
+		};
+
+		debug!(target: "sync", "Connected {}", who);
+
+		self.peers.insert(who, peer);
+		if no_slot_peer {
+			self.default_peers_set_no_slot_connected_peers.insert(who);
+		}
+
+		if let Some(req) = req {
+			Ok(Some(self.prepare_block_request(who, req)))
+		} else {
+			Ok(None)
+		}
+	}
+
+	/// Called by peer when it is disconnecting.
+	///
+	/// Returns a result if the handshake of this peer was indeed accepted.
+	pub fn on_sync_peer_disconnected(
+		&mut self,
+		peer: PeerId,
+	) -> Result<Option<CustomMessageOutcome<B>>, ()> {
+		if let Some(_peer_data) = self.peers.remove(&peer) {
+			let msg = if let Some(OnBlockData::Import(origin, blocks)) =
+				self.chain_sync.peer_disconnected(&peer)
+			{
+				Some(CustomMessageOutcome::BlockImport(origin, blocks))
+			} else {
+				None
+			};
+
+			self.default_peers_set_no_slot_connected_peers.remove(&peer);
+			Ok(msg)
+		} else {
+			Err(())
+		}
+	}
+
+	// TODO: move to `SyncingHelper`
+	/// Push a block announce validation.
+	///
+	/// It is required that [`ChainSync::poll_block_announce_validation`] is
+	/// called later to check for finished validations. The result of the validation
+	/// needs to be passed to [`Protocol::process_block_announce_validation_result`]
+	/// to finish the processing.
+	///
+	/// # Note
+	///
+	/// This will internally create a future, but this future will not be registered
+	/// in the task before being polled once. So, it is required to call
+	/// [`ChainSync::poll_block_announce_validation`] to ensure that the future is
+	/// registered properly and will wake up the task when being ready.
+	fn push_block_announce_validation(&mut self, who: PeerId, announce: BlockAnnounce<B::Header>) {
+		let hash = announce.header.hash();
+
+		let peer = match self.peers.get_mut(&who) {
+			Some(p) => p,
+			None => {
+				log::error!(target: "sync", "Received block announce from disconnected peer {}", who);
+				debug_assert!(false);
+				return
+			},
+		};
+
+		peer.known_blocks.insert(hash);
+
+		let is_best = match announce.state.unwrap_or(BlockState::Best) {
+			BlockState::Best => true,
+			BlockState::Normal => false,
+		};
+
+		if peer.info.roles.is_full() {
+			self.chain_sync.push_block_announce_validation(who, hash, announce, is_best);
+		}
+	}
+
+	pub fn notification(
+		&mut self,
+		peer: PeerId,
+		message: bytes::BytesMut,
+		cx: &mut std::task::Context,
+	) -> CustomMessageOutcome<B> {
+		if self.peers.contains_key(&peer) {
+			if let Ok(announce) = BlockAnnounce::decode(&mut message.as_ref()) {
+				self.push_block_announce_validation(peer, announce);
+
+				// Make sure that the newly added block announce validation future was
+				// polled once to be registered in the task.
+				if let Poll::Ready(res) = self.chain_sync.poll_block_announce_validation(cx) {
+					self.process_block_announce_validation_result(res)
+				} else {
+					CustomMessageOutcome::None
+				}
+			} else {
+				warn!(target: "sub-libp2p", "Failed to decode block announce");
+				CustomMessageOutcome::None
+			}
+		} else {
+			trace!(
+				target: "sync",
+				"Received sync for peer earlier refused by sync layer: {peer}",
+			);
+			CustomMessageOutcome::None
+		}
+	}
+
+	pub fn custom_protocol_close(&mut self, peer: PeerId) -> CustomMessageOutcome<B> {
+		if self.on_sync_peer_disconnected(peer).is_ok() {
+			CustomMessageOutcome::SyncDisconnected(peer)
+		} else {
+			log::trace!(
+				target: "sync",
+				"Disconnected peer which had earlier been refused by on_sync_peer_connected {peer}",
+			);
+			CustomMessageOutcome::None
+		}
+	}
+
+	pub fn custom_protocol_open(
+		&mut self,
+		peer_id: PeerId,
+		received_handshake: Vec<u8>,
+		notifications_sink: NotificationsSink,
+		negotiated_fallback: Option<ProtocolName>,
+	) -> VecDeque<CustomMessageOutcome<B>> {
+		match <Message<B> as DecodeAll>::decode_all(&mut &received_handshake[..]) {
+			Ok(GenericMessage::Status(handshake)) => {
+				let handshake = BlockAnnouncesHandshake {
+					roles: handshake.roles,
+					best_number: handshake.best_number,
+					best_hash: handshake.best_hash,
+					genesis_hash: handshake.genesis_hash,
+				};
+
+				match self.on_sync_peer_connected(peer_id, handshake) {
+					Ok(msg) => match msg {
+						Some(inner) =>
+							VecDeque::from([inner, CustomMessageOutcome::SyncConnected(peer_id)]),
+						None => VecDeque::from([CustomMessageOutcome::SyncConnected(peer_id)]),
+					},
+					Err(_) => VecDeque::from([CustomMessageOutcome::None]),
+				}
+			},
+			Ok(msg) => {
+				debug!(
+					target: "sync",
+					"Expected Status message from {}, but got {:?}",
+					peer_id,
+					msg,
+				);
+				self.report_peer(peer_id, rep::BAD_MESSAGE);
+				VecDeque::from([CustomMessageOutcome::None])
+			},
+			Err(err) => {
+				match <BlockAnnouncesHandshake<B> as DecodeAll>::decode_all(
+					&mut &received_handshake[..],
+				) {
+					Ok(handshake) => match self.on_sync_peer_connected(peer_id, handshake) {
+						Ok(msg) => match msg {
+							Some(inner) => VecDeque::from([
+								inner,
+								CustomMessageOutcome::SyncConnected(peer_id),
+							]),
+							None => VecDeque::from([CustomMessageOutcome::SyncConnected(peer_id)]),
+						},
+						Err(_) => VecDeque::from([CustomMessageOutcome::None]),
+					},
+					Err(err2) => {
+						debug!(
+							target: "sync",
+							"Couldn't decode handshake sent by {}: {:?}: {} & {}",
+							peer_id,
+							received_handshake,
+							err,
+							err2,
+						);
+						self.report_peer(peer_id, rep::BAD_MESSAGE);
+						VecDeque::from([CustomMessageOutcome::None])
+					},
+				}
+			},
 		}
 	}
 
