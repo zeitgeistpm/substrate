@@ -196,16 +196,18 @@ impl PalletCmd {
 			if pallet_names.iter().filter(|p| *p == &benchmark.pallet).count() > 1 {
 				let instance_name = Self::to_snake_case(&String::from_utf8(benchmark.instance.clone()).expect("instance name is uft8"));
 
-				benchmark.pallet = format!("{}_{}",
+				benchmark.pallet_display_name = format!("{}_{}",
 				String::from_utf8(benchmark.pallet.clone()).expect("pallet name is utf8"),
 				instance_name).into_bytes();
+			} else {
+				benchmark.pallet_display_name = benchmark.pallet.clone();
 			}
 		}
 
 		// Use the benchmark list and the user input to determine the set of benchmarks to run.
 		let mut benchmarks_to_run = Vec::new();
 		list.iter()
-			.filter(|item| pallet.is_empty() || pallet == &b"*"[..] || pallet == &item.pallet[..])
+			.filter(|item| pallet.is_empty() || pallet == &b"*"[..] || pallet == &item.pallet_display_name[..])
 			.for_each(|item| {
 				for benchmark in &item.benchmarks {
 					let benchmark_name = &benchmark.name;

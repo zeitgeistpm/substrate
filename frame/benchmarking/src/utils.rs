@@ -206,6 +206,7 @@ pub struct BenchmarkConfig {
 pub struct BenchmarkList {
 	pub pallet: Vec<u8>,
 	pub instance: Vec<u8>,
+	pub pallet_display_name: Option<Vec<u8>>,
 	pub benchmarks: Vec<BenchmarkMetadata>,
 }
 
