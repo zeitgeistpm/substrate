@@ -4,7 +4,7 @@ use crate::{config, protocol::*};
 use bytes::Bytes;
 use codec::{Decode, DecodeAll, Encode};
 use futures::{
-	channel::oneshot,
+	channel::{mpsc, oneshot},
 	prelude::*,
 	stream::{FuturesUnordered, Stream},
 };
@@ -69,7 +69,7 @@ pub struct SyncingHelper<B: BlockT, Client> {
 
 	/// State machine that handles the list of in-progress requests. Only full node peers are
 	/// registered.
-	pub chain_sync: Box<dyn ChainSync<B>>,
+	chain_sync: Box<dyn ChainSync<B>>,
 
 	/// A cache for the data that was associated to a block announcement.
 	pub block_announce_data_cache: lru::LruCache<B::Hash, Vec<u8>>,
@@ -96,7 +96,49 @@ pub struct SyncingHelper<B: BlockT, Client> {
 
 	/// Number of slots to allocate to light nodes.
 	default_peers_set_num_light: usize,
+
+	rx: mpsc::Receiver<SyncEvent<B>>,
 }
+
+pub enum SyncEvent<B: BlockT> {
+	NumConnectedPeers,
+	SyncState(oneshot::Sender<SyncStatus<B>>),
+	BestSeenBlock(oneshot::Sender<Option<NumberFor<B>>>),
+	NumSyncPeers(oneshot::Sender<u32>),
+	NumQueuedBlocks(oneshot::Sender<u32>),
+	NumDownloadedBlocks(oneshot::Sender<usize>),
+	NumSyncRequests(oneshot::Sender<usize>),
+	UpdateChainInfo,
+	PeersInfo(oneshot::Sender<Vec<Peer<B>>>),
+	GetBlockAnnounceData(B::Hash, oneshot::Sender<Vec<u8>>),
+	OnBlockFinalized(B::Hash, B::Header),
+	RequestJustification(B::Hash, NumberFor<B>),
+	ClearJustificationRequests,
+	SetSyncForkRequest(Vec<PeerId>, B::Hash, NumberFor<B>),
+	OnBlocksProcessed(
+		usize,
+		usize,
+		Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
+		Vec<CustomMessageOutcome<B>>,
+	),
+	EncodeBlockRequest(OpaqueBlockRequest, oneshot::Sender<Result<Vec<u8>, String>>),
+	EncodeStateRequest(OpaqueStateRequest, oneshot::Sender<Result<Vec<u8>, String>>),
+}
+
+#[derive(Clone)]
+pub struct SyncingHandle<B: BlockT> {
+	tx: mpsc::Sender<SyncEvent<B>>,
+}
+
+impl<B: BlockT> SyncingHandle<B> {
+	pub fn new(tx: mpsc::Sender<SyncEvent<B>>) -> Self {
+		Self { tx }
+	}
+}
+
+pub trait SyncingInterface {}
+
+impl<B: BlockT> SyncingInterface for SyncingHandle<B> {}
 
 impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 	pub fn new(
@@ -107,20 +149,137 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		roles: Roles,
 		default_peers_set_num_full: usize,
 		default_peers_set_num_light: usize,
-	) -> Self {
-		Self {
-			chain_sync,
-			pending_responses: Default::default(),
-			block_announce_data_cache: lru::LruCache::new(cache_size),
-			genesis_hash,
-			chain,
-			roles,
-			peers: HashMap::new(),
-			default_peers_set_no_slot_peers: HashSet::new(),
-			default_peers_set_no_slot_connected_peers: HashSet::new(),
-			default_peers_set_num_full,
-			default_peers_set_num_light,
+	) -> (Self, SyncingHandle<B>) {
+		let (tx, rx) = mpsc::channel(64);
+
+		(
+			Self {
+				chain_sync,
+				pending_responses: Default::default(),
+				block_announce_data_cache: lru::LruCache::new(cache_size),
+				genesis_hash,
+				chain,
+				roles,
+				peers: HashMap::new(),
+				default_peers_set_no_slot_peers: HashSet::new(),
+				default_peers_set_no_slot_connected_peers: HashSet::new(),
+				default_peers_set_num_full,
+				default_peers_set_num_light,
+				rx,
+			},
+			SyncingHandle::new(tx),
+		)
+	}
+
+	pub fn justification_import_result(
+		&mut self,
+		who: PeerId,
+		hash: B::Hash,
+		number: NumberFor<B>,
+		success: bool,
+	) {
+		self.chain_sync.on_justification_import(hash, number, success);
+		if !success {
+			info!("💔 Invalid justification provided by {} for #{}", who, hash);
+			self.disconnect_peer(who);
+			self.report_peer(who, sc_peerset::ReputationChange::new_fatal("Invalid justification"));
 		}
+	}
+
+	/// Encode implementation-specific block request.
+	pub fn encode_block_request(&self, request: &OpaqueBlockRequest) -> Result<Vec<u8>, String> {
+		self.chain_sync.encode_block_request(request)
+	}
+
+	/// Encode implementation-specific state request.
+	pub fn encode_state_request(&self, request: &OpaqueStateRequest) -> Result<Vec<u8>, String> {
+		self.chain_sync.encode_state_request(request)
+	}
+
+	pub fn status(&self) -> SyncStatus<B> {
+		self.chain_sync.status()
+	}
+
+	/// Target sync block number.
+	pub fn best_seen_block(&self) -> Option<NumberFor<B>> {
+		self.chain_sync.status().best_seen_block
+	}
+
+	/// Number of peers participating in syncing.
+	pub fn num_sync_peers(&self) -> u32 {
+		self.chain_sync.status().num_peers
+	}
+
+	/// Number of blocks in the import queue.
+	pub fn num_queued_blocks(&self) -> u32 {
+		self.chain_sync.status().queued_blocks
+	}
+
+	/// Number of downloaded blocks.
+	pub fn num_downloaded_blocks(&self) -> usize {
+		self.chain_sync.num_downloaded_blocks()
+	}
+
+	/// Number of active sync requests.
+	pub fn num_sync_requests(&self) -> usize {
+		self.chain_sync.num_sync_requests()
+	}
+
+	pub fn update_chain_info(&mut self, hash: B::Hash, number: NumberFor<B>) {
+		self.chain_sync.update_chain_info(&hash, number);
+	}
+
+	pub fn on_block_finalized(&mut self, hash: B::Hash, header: B::Header) {
+		self.chain_sync.on_block_finalized(&hash, *header.number())
+	}
+
+	// TODO: move to `SyncingHelper`
+	/// Request a justification for the given block.
+	///
+	/// Uses `protocol` to queue a new justification request and tries to dispatch all pending
+	/// requests.
+	pub fn request_justification(&mut self, hash: &B::Hash, number: NumberFor<B>) {
+		self.chain_sync.request_justification(hash, number)
+	}
+
+	// TODO: move to `SyncingHelper`
+	/// Clear all pending justification requests.
+	pub fn clear_justification_requests(&mut self) {
+		self.chain_sync.clear_justification_requests();
+	}
+
+	// TODO: move to `SyncingHelper`
+	/// Request syncing for the given block from given set of peers.
+	/// Uses `protocol` to queue a new block download request and tries to dispatch all pending
+	/// requests.
+	pub fn set_sync_fork_request(
+		&mut self,
+		peers: Vec<PeerId>,
+		hash: &B::Hash,
+		number: NumberFor<B>,
+	) {
+		self.chain_sync.set_sync_fork_request(peers, hash, number)
+	}
+
+	pub fn on_blocks_processed(
+		&mut self,
+		imported: usize,
+		count: usize,
+		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
+	) -> VecDeque<CustomMessageOutcome<B>> {
+		let mut out = VecDeque::new();
+
+		for result in self.chain_sync.on_blocks_processed(imported, count, results) {
+			match result {
+				Ok((id, req)) => out.push_back(self.prepare_block_request(id, req)),
+				Err(BadPeer(id, repu)) => {
+					self.disconnect_peer(id);
+					self.report_peer(id, repu)
+				},
+			}
+		}
+
+		out
 	}
 
 	// TODO: how to fix this???
@@ -785,5 +944,12 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		}
 
 		pending_messages
+	}
+
+	pub async fn run(mut self) {
+		todo!();
+		// while let Some(event) = self.rx.next().await {
+		//    	// TODO: zzz
+		// }
 	}
 }

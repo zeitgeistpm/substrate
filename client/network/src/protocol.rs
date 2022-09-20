@@ -196,6 +196,7 @@ pub struct Protocol<B: BlockT, Client> {
 	metrics: Option<Metrics>,
 	/// The `PeerId`'s of all boot nodes.
 	boot_node_ids: HashSet<PeerId>,
+	sync_handle: sync_helper::SyncingHandle<B>,
 }
 
 #[derive(Debug)]
@@ -402,12 +403,26 @@ where
 			)
 		};
 
+		let (sync_helper, sync_handle) = sync_helper::SyncingHelper::new(
+			chain_sync,
+			network_config.default_peers_set.in_peers as usize +
+				network_config.default_peers_set.out_peers as usize,
+			info.genesis_hash,
+			Arc::clone(&chain),
+			roles,
+			network_config.default_peers_set_num_full as usize,
+			{
+				let total = network_config.default_peers_set.out_peers +
+					network_config.default_peers_set.in_peers;
+				total.saturating_sub(network_config.default_peers_set_num_full) as usize
+			},
+		);
+
 		let protocol = Self {
 			tick_timeout: Box::pin(interval(TICK_TIMEOUT)),
 			pending_messages: VecDeque::new(),
 			roles,
-			// peers: HashMap::new(),
-			chain: Arc::clone(&chain),
+			chain,
 			genesis_hash: info.genesis_hash,
 			important_peers,
 			peerset_handle: peerset_handle.clone(),
@@ -424,20 +439,8 @@ where
 				None
 			},
 			boot_node_ids,
-			sync_helper: sync_helper::SyncingHelper::new(
-				chain_sync,
-				network_config.default_peers_set.in_peers as usize +
-					network_config.default_peers_set.out_peers as usize,
-				info.genesis_hash,
-				chain,
-				roles,
-				network_config.default_peers_set_num_full as usize,
-				{
-					let total = network_config.default_peers_set.out_peers +
-						network_config.default_peers_set.in_peers;
-					total.saturating_sub(network_config.default_peers_set_num_full) as usize
-				},
-			),
+			sync_helper,
+			sync_handle,
 		};
 
 		Ok((protocol, peerset_handle, known_addresses))
@@ -487,39 +490,39 @@ where
 	// TODO: remove, not used
 	/// Current global sync state.
 	pub fn sync_state(&self) -> SyncStatus<B> {
-		self.sync_helper.chain_sync.status()
+		self.sync_helper.status()
 	}
 
 	/// Target sync block number.
 	pub fn best_seen_block(&self) -> Option<NumberFor<B>> {
-		self.sync_helper.chain_sync.status().best_seen_block
+		self.sync_helper.status().best_seen_block
 	}
 
 	/// Number of peers participating in syncing.
 	pub fn num_sync_peers(&self) -> u32 {
-		self.sync_helper.chain_sync.status().num_peers
+		self.sync_helper.status().num_peers
 	}
 
 	/// Number of blocks in the import queue.
 	pub fn num_queued_blocks(&self) -> u32 {
-		self.sync_helper.chain_sync.status().queued_blocks
+		self.sync_helper.status().queued_blocks
 	}
 
 	/// Number of downloaded blocks.
 	pub fn num_downloaded_blocks(&self) -> usize {
-		self.sync_helper.chain_sync.num_downloaded_blocks()
+		self.sync_helper.num_downloaded_blocks()
 	}
 
 	/// Number of active sync requests.
 	pub fn num_sync_requests(&self) -> usize {
-		self.sync_helper.chain_sync.num_sync_requests()
+		self.sync_helper.num_sync_requests()
 	}
 
 	/// Inform sync about new best imported block.
 	pub fn new_best_block_imported(&mut self, hash: B::Hash, number: NumberFor<B>) {
 		debug!(target: "sync", "New best block imported {:?}/#{}", hash, number);
 
-		self.sync_helper.chain_sync.update_chain_info(&hash, number);
+		self.sync_helper.update_chain_info(hash, number);
 
 		self.behaviour.set_notif_protocol_handshake(
 			HARDCODED_PEERSETS_SYNC,
@@ -595,7 +598,7 @@ where
 	/// Call this when a block has been finalized. The sync layer may have some additional
 	/// requesting to perform.
 	pub fn on_block_finalized(&mut self, hash: B::Hash, header: &B::Header) {
-		self.sync_helper.chain_sync.on_block_finalized(&hash, *header.number())
+		self.sync_helper.on_block_finalized(hash, header.clone()) // TODO: remove clone if possible
 	}
 
 	// TODO: move to `SyncingHelper`
@@ -604,13 +607,13 @@ where
 	/// Uses `protocol` to queue a new justification request and tries to dispatch all pending
 	/// requests.
 	pub fn request_justification(&mut self, hash: &B::Hash, number: NumberFor<B>) {
-		self.sync_helper.chain_sync.request_justification(hash, number)
+		self.sync_helper.request_justification(hash, number)
 	}
 
 	// TODO: move to `SyncingHelper`
 	/// Clear all pending justification requests.
 	pub fn clear_justification_requests(&mut self) {
-		self.sync_helper.chain_sync.clear_justification_requests();
+		self.sync_helper.clear_justification_requests();
 	}
 
 	// TODO: move to `SyncingHelper`
@@ -623,7 +626,7 @@ where
 		hash: &B::Hash,
 		number: NumberFor<B>,
 	) {
-		self.sync_helper.chain_sync.set_sync_fork_request(peers, hash, number)
+		self.sync_helper.set_sync_fork_request(peers, hash, number)
 	}
 
 	// TODO: move to `SyncingHelper`
@@ -636,19 +639,8 @@ where
 		count: usize,
 		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
 	) {
-		let results = self.sync_helper.chain_sync.on_blocks_processed(imported, count, results);
-		for result in results {
-			match result {
-				Ok((id, req)) => {
-					self.pending_messages
-						.push_back(self.sync_helper.prepare_block_request(id, req));
-				},
-				Err(BadPeer(id, repu)) => {
-					self.behaviour.disconnect_peer(&id, HARDCODED_PEERSETS_SYNC);
-					self.peerset_handle.report_peer(id, repu)
-				},
-			}
-		}
+		let messages = self.sync_helper.on_blocks_processed(imported, count, results);
+		self.pending_messages.extend(messages);
 	}
 
 	// TODO: move to `SyncingHelper`
@@ -661,13 +653,7 @@ where
 		number: NumberFor<B>,
 		success: bool,
 	) {
-		self.sync_helper.chain_sync.on_justification_import(hash, number, success);
-		if !success {
-			info!("💔 Invalid justification provided by {} for #{}", who, hash);
-			self.behaviour.disconnect_peer(&who, HARDCODED_PEERSETS_SYNC);
-			self.peerset_handle
-				.report_peer(who, sc_peerset::ReputationChange::new_fatal("Invalid justification"));
-		}
+		self.sync_helper.justification_import_result(who, hash, number, success);
 	}
 
 	/// Set whether the syncing peers set is in reserved-only mode.
@@ -780,12 +766,12 @@ where
 
 	/// Encode implementation-specific block request.
 	pub fn encode_block_request(&self, request: &OpaqueBlockRequest) -> Result<Vec<u8>, String> {
-		self.sync_helper.chain_sync.encode_block_request(request)
+		self.sync_helper.encode_block_request(request)
 	}
 
 	/// Encode implementation-specific state request.
 	pub fn encode_state_request(&self, request: &OpaqueStateRequest) -> Result<Vec<u8>, String> {
-		self.sync_helper.chain_sync.encode_state_request(request)
+		self.sync_helper.encode_state_request(request)
 	}
 
 	// // TODO: move to syncing
