@@ -62,8 +62,8 @@ fn prepare_good_block() -> (TestClient, Hash, u64, PeerId, IncomingBlock<Block>)
 	)
 }
 
-#[test]
-fn import_single_good_block_works() {
+#[async_std::test]
+async fn import_single_good_block_works() {
 	let (_, _hash, number, peer_id, block) = prepare_good_block();
 
 	let mut expected_aux = ImportedAux::default();
@@ -81,8 +81,8 @@ fn import_single_good_block_works() {
 	}
 }
 
-#[test]
-fn import_single_good_known_block_is_ignored() {
+#[async_std::test]
+async fn import_single_good_known_block_is_ignored() {
 	let (mut client, _hash, number, _, block) = prepare_good_block();
 	match block_on(import_single_block(
 		&mut client,
@@ -95,8 +95,8 @@ fn import_single_good_known_block_is_ignored() {
 	}
 }
 
-#[test]
-fn import_single_good_block_without_header_fails() {
+#[async_std::test]
+async fn import_single_good_block_without_header_fails() {
 	let (_, _, _, peer_id, mut block) = prepare_good_block();
 	block.header = None;
 	match block_on(import_single_block(
@@ -110,8 +110,8 @@ fn import_single_good_block_without_header_fails() {
 	}
 }
 
-#[test]
-fn async_import_queue_drops() {
+#[async_std::test]
+async fn async_import_queue_drops() {
 	let executor = sp_core::testing::TaskExecutor::new();
 	// Perform this test multiple times since it exhibits non-deterministic behavior.
 	for _ in 0..100 {

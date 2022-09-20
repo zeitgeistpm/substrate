@@ -39,6 +39,7 @@ use sc_network_common::{
 		OpaqueBlockResponse, OpaqueStateRequest, OpaqueStateResponse, PollBlockAnnounceValidation,
 		SyncStatus,
 	},
+	utils::{LruHashSet},
 };
 use sc_peerset::ReputationChange;
 use sp_arithmetic::traits::SaturatedConversion;
@@ -98,31 +99,44 @@ pub struct SyncingHelper<B: BlockT, Client> {
 	default_peers_set_num_light: usize,
 
 	rx: mpsc::Receiver<SyncEvent<B>>,
+
+	pending_messages: VecDeque<CustomMessageOutcome<B>>,
 }
 
 pub enum SyncEvent<B: BlockT> {
-	NumConnectedPeers,
+	NumConnectedPeers(oneshot::Sender<usize>),
 	SyncState(oneshot::Sender<SyncStatus<B>>),
 	BestSeenBlock(oneshot::Sender<Option<NumberFor<B>>>),
 	NumSyncPeers(oneshot::Sender<u32>),
 	NumQueuedBlocks(oneshot::Sender<u32>),
 	NumDownloadedBlocks(oneshot::Sender<usize>),
 	NumSyncRequests(oneshot::Sender<usize>),
-	UpdateChainInfo,
-	PeersInfo(oneshot::Sender<Vec<Peer<B>>>),
-	GetBlockAnnounceData(B::Hash, oneshot::Sender<Vec<u8>>),
+	UpdateChainInfo(B::Hash, NumberFor<B>),
+	// GetBlockAnnounceData(B::Hash, oneshot::Sender<Vec<u8>>),
 	OnBlockFinalized(B::Hash, B::Header),
 	RequestJustification(B::Hash, NumberFor<B>),
 	ClearJustificationRequests,
 	SetSyncForkRequest(Vec<PeerId>, B::Hash, NumberFor<B>),
+	JustificationImportResult(PeerId, B::Hash, NumberFor<B>, bool),
 	OnBlocksProcessed(
 		usize,
 		usize,
 		Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
-		Vec<CustomMessageOutcome<B>>,
+		oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>,
 	),
 	EncodeBlockRequest(OpaqueBlockRequest, oneshot::Sender<Result<Vec<u8>, String>>),
 	EncodeStateRequest(OpaqueStateRequest, oneshot::Sender<Result<Vec<u8>, String>>),
+	GetPeers(oneshot::Sender<Vec<(PeerId, Peer<B>)>>),
+	CustomProtocolClosed(PeerId, oneshot::Sender<CustomMessageOutcome<B>>),
+	CustomProtocolOpen(
+		PeerId,
+		Vec<u8>,
+		NotificationsSink,
+		Option<ProtocolName>,
+		oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>,
+	),
+	GetEvents(oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>),
+	Notification(PeerId, bytes::BytesMut, oneshot::Sender<CustomMessageOutcome<B>>),
 }
 
 #[derive(Clone)]
@@ -134,11 +148,217 @@ impl<B: BlockT> SyncingHandle<B> {
 	pub fn new(tx: mpsc::Sender<SyncEvent<B>>) -> Self {
 		Self { tx }
 	}
+
+	pub async fn on_block_finalized(&mut self, hash: B::Hash, header: B::Header) {
+		self.tx
+			.send(SyncEvent::OnBlockFinalized(hash, header))
+			.await
+			.expect("channel to stay open");
+	}
+
+	pub async fn request_justification(&mut self, hash: B::Hash, number: NumberFor<B>) {
+		self.tx
+			.send(SyncEvent::RequestJustification(hash, number))
+			.await
+			.expect("channel to stay open");
+	}
+
+	pub async fn clear_justification_requests(&mut self) {
+		self.tx
+			.send(SyncEvent::ClearJustificationRequests)
+			.await
+			.expect("channel to stay open");
+	}
+
+	pub async fn set_sync_fork_request(
+		&mut self,
+		peers: Vec<PeerId>,
+		hash: B::Hash,
+		number: NumberFor<B>,
+	) {
+		self.tx
+			.send(SyncEvent::SetSyncForkRequest(peers, hash, number))
+			.await
+			.expect("channel to stay open");
+	}
+
+	pub async fn on_blocks_processed(
+		&mut self,
+		imported: usize,
+		count: usize,
+		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
+	) -> VecDeque<CustomMessageOutcome<B>> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.send(SyncEvent::OnBlocksProcessed(imported, count, results, tx))
+			.await
+			.expect("channel to stay open");
+
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn justification_import_result(
+		&mut self,
+		who: PeerId,
+		hash: B::Hash,
+		number: NumberFor<B>,
+		success: bool,
+	) {
+		self.tx
+			.send(SyncEvent::JustificationImportResult(who, hash, number, success))
+			.await
+			.expect("channel to stay open");
+	}
+
+	pub async fn encode_block_request(
+		&mut self,
+		request: OpaqueBlockRequest,
+	) -> Result<Vec<u8>, String> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.send(SyncEvent::EncodeBlockRequest(request, tx))
+			.await
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	/// Encode implementation-specific state request.
+	pub async fn encode_state_request(
+		&mut self,
+		request: OpaqueStateRequest,
+	) -> Result<Vec<u8>, String> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.send(SyncEvent::EncodeStateRequest(request, tx))
+			.await
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn num_connected_peers(&self) -> usize {
+		let (tx, rx) = oneshot::channel();
+
+		// TODO: zzz
+		self.tx
+			.clone()
+			.send(SyncEvent::NumConnectedPeers(tx))
+			.await
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn status(&self) -> SyncStatus<B> {
+		let (tx, rx) = oneshot::channel();
+
+		// TODO: zzz
+		self.tx
+			.clone()
+			.send(SyncEvent::SyncState(tx))
+			.await
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn num_downloaded_blocks(&self) -> usize {
+		let (tx, rx) = oneshot::channel();
+
+		// TODO: zzz
+		self.tx
+			.clone()
+			.send(SyncEvent::NumDownloadedBlocks(tx))
+			.await
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn num_sync_requests(&self) -> usize {
+		let (tx, rx) = oneshot::channel();
+
+		// TODO: zzz
+		self.tx
+			.clone()
+			.send(SyncEvent::NumSyncRequests(tx))
+			.await
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn update_chain_info(&mut self, hash: B::Hash, number: NumberFor<B>) {
+		self.tx
+			.send(SyncEvent::UpdateChainInfo(hash, number))
+			.await
+			.expect("channel to stay open");
+	}
+
+	pub async fn get_peers(&self) -> Vec<(PeerId, Peer<B>)> {
+		let (tx, rx) = oneshot::channel();
+
+		// TODO: zzz
+		self.tx
+			.clone()
+			.send(SyncEvent::GetPeers(tx))
+			.await
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn custom_protocol_close(&mut self, peer: PeerId) -> CustomMessageOutcome<B> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.send(SyncEvent::CustomProtocolClosed(peer, tx))
+			.await
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn custom_protocol_open(
+		&mut self,
+		peer_id: PeerId,
+		received_handshake: Vec<u8>,
+		notifications_sink: NotificationsSink,
+		negotiated_fallback: Option<ProtocolName>,
+	) -> VecDeque<CustomMessageOutcome<B>> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.send(SyncEvent::CustomProtocolOpen(
+				peer_id,
+				received_handshake,
+				notifications_sink,
+				negotiated_fallback,
+				tx,
+			))
+			.await
+			.expect("channel to stay open");
+
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn get_events(&mut self) -> VecDeque<CustomMessageOutcome<B>> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx.send(SyncEvent::GetEvents(tx)).await.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn notification(
+		&mut self,
+		peer: PeerId,
+		message: bytes::BytesMut,
+	) -> CustomMessageOutcome<B> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.send(SyncEvent::Notification(peer, message, tx))
+			.await
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
 }
-
-pub trait SyncingInterface {}
-
-impl<B: BlockT> SyncingInterface for SyncingHandle<B> {}
 
 impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 	pub fn new(
@@ -166,6 +386,7 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 				default_peers_set_num_full,
 				default_peers_set_num_light,
 				rx,
+				pending_messages: Default::default(),
 			},
 			SyncingHandle::new(tx),
 		)
@@ -258,6 +479,7 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		hash: &B::Hash,
 		number: NumberFor<B>,
 	) {
+		info!(target: "sync", "setting sync for request");
 		self.chain_sync.set_sync_fork_request(peers, hash, number)
 	}
 
@@ -469,19 +691,22 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		&mut self,
 		peer: PeerId,
 		message: bytes::BytesMut,
-		cx: &mut std::task::Context,
+		// cx: &mut std::task::Context,
 	) -> CustomMessageOutcome<B> {
 		if self.peers.contains_key(&peer) {
 			if let Ok(announce) = BlockAnnounce::decode(&mut message.as_ref()) {
 				self.push_block_announce_validation(peer, announce);
 
-				// Make sure that the newly added block announce validation future was
-				// polled once to be registered in the task.
-				if let Poll::Ready(res) = self.chain_sync.poll_block_announce_validation(cx) {
-					self.process_block_announce_validation_result(res)
-				} else {
-					CustomMessageOutcome::None
-				}
+				info!(target: "sync", "heeezz");
+
+				// // Make sure that the newly added block announce validation future was
+				// // polled once to be registered in the task.
+				// if let Poll::Ready(res) = self.chain_sync.poll_block_announce_validation(cx) {
+				// 	self.process_block_announce_validation_result(res)
+				// } else {
+				// }
+				// TODO: address this issue
+				CustomMessageOutcome::None
 			} else {
 				warn!(target: "sub-libp2p", "Failed to decode block announce");
 				CustomMessageOutcome::None
@@ -580,6 +805,8 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 	) -> CustomMessageOutcome<B> {
 		let (tx, rx) = oneshot::channel();
 
+		info!(target: "sync", "prepareping block requset");
+
 		let new_request = self.chain_sync.create_opaque_block_request(&request);
 
 		self.pending_responses
@@ -599,6 +826,8 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 	) -> CustomMessageOutcome<B> {
 		let (tx, rx) = oneshot::channel();
 
+		info!(target: "sync", "prepareping state requset");
+
 		self.pending_responses
 			.push(Box::pin(async move { (who, PeerRequest::State, rx.await) }));
 
@@ -611,6 +840,8 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		request: WarpProofRequest<B>,
 	) -> CustomMessageOutcome<B> {
 		let (tx, rx) = oneshot::channel();
+
+		info!(target: "sync", "prepareping warp requset");
 
 		self.pending_responses
 			.push(Box::pin(async move { (who, PeerRequest::WarpProof, rx.await) }));
@@ -798,158 +1029,247 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		}
 	}
 
-	pub fn poll(&mut self, cx: &mut std::task::Context) -> VecDeque<CustomMessageOutcome<B>> {
+	// TODO: zzz
+	fn handle_pending_response(
+		&mut self,
+		id: PeerId,
+		request: PeerRequest<B>,
+		response: Result<Result<Vec<u8>, RequestFailure>, oneshot::Canceled>,
+	) {
 		// Check for finished outgoing requests.
 		let mut finished_block_requests = Vec::new();
 		let mut finished_state_requests = Vec::new();
 		let mut finished_warp_sync_requests = Vec::new();
 
-		while let Poll::Ready(Some((id, request, response))) = self.pending_responses.poll_next(cx)
-		{
-			match response {
-				Ok(Ok(resp)) => match request {
-					PeerRequest::Block(req) => {
-						let response = match self.chain_sync.decode_block_response(&resp[..]) {
-							Ok(proto) => proto,
-							Err(e) => {
-								debug!(
-									target: "sync",
-									"Failed to decode block response from peer {:?}: {:?}.",
-									id,
-									e
-								);
-								self.disconnect_and_report_peer(id, rep::BAD_MESSAGE);
-								continue
-							},
-						};
-
-						finished_block_requests.push((id, req, response));
-					},
-					PeerRequest::State => {
-						let response = match self.chain_sync.decode_state_response(&resp[..]) {
-							Ok(proto) => proto,
-							Err(e) => {
-								debug!(
-									target: "sync",
-									"Failed to decode state response from peer {:?}: {:?}.",
-									id,
-									e
-								);
-								self.disconnect_and_report_peer(id, rep::BAD_MESSAGE);
-								continue
-							},
-						};
-
-						finished_state_requests.push((id, response));
-					},
-					PeerRequest::WarpProof => {
-						finished_warp_sync_requests.push((id, resp));
-					},
-				},
-				Ok(Err(err)) => {
-					debug!(target: "sync", "Request to peer {:?} failed: {:?}.", id, err);
-
-					match err {
-						RequestFailure::Network(OutboundFailure::Timeout) => {
-							self.disconnect_and_report_peer(id, rep::TIMEOUT);
-						},
-						RequestFailure::Network(OutboundFailure::UnsupportedProtocols) => {
-							self.disconnect_and_report_peer(id, rep::BAD_PROTOCOL);
-						},
-						RequestFailure::Network(OutboundFailure::DialFailure) => {
-							self.disconnect_peer(id);
-						},
-						RequestFailure::Refused => {
-							self.disconnect_and_report_peer(id, rep::REFUSED);
-						},
-						RequestFailure::Network(OutboundFailure::ConnectionClosed) |
-						RequestFailure::NotConnected => {
-							self.disconnect_peer(id);
-						},
-						RequestFailure::UnknownProtocol => {
-							debug_assert!(false, "Block request protocol should always be known.");
-						},
-						RequestFailure::Obsolete => {
-							debug_assert!(
-								false,
-								"Can not receive `RequestFailure::Obsolete` after dropping the \
-									 response receiver.",
+		match response {
+			Ok(Ok(resp)) => match request {
+				PeerRequest::Block(req) => {
+					let response = match self.chain_sync.decode_block_response(&resp[..]) {
+						Ok(proto) => proto,
+						Err(e) => {
+							debug!(
+								target: "sync",
+								"Failed to decode block response from peer {:?}: {:?}.",
+								id,
+								e
 							);
+							self.disconnect_and_report_peer(id, rep::BAD_MESSAGE);
+							return
 						},
-					}
+					};
+
+					finished_block_requests.push((id, req, response));
 				},
-				Err(oneshot::Canceled) => {
-					trace!(
-						target: "sync",
-						"Request to peer {:?} failed due to oneshot being canceled.",
-						id,
-					);
-					self.disconnect_peer(id);
+				PeerRequest::State => {
+					let response = match self.chain_sync.decode_state_response(&resp[..]) {
+						Ok(proto) => proto,
+						Err(e) => {
+							debug!(
+								target: "sync",
+								"Failed to decode state response from peer {:?}: {:?}.",
+								id,
+								e
+							);
+							self.disconnect_and_report_peer(id, rep::BAD_MESSAGE);
+							return
+						},
+					};
+
+					finished_state_requests.push((id, response));
 				},
-			}
+				PeerRequest::WarpProof => {
+					finished_warp_sync_requests.push((id, resp));
+				},
+			},
+			Ok(Err(err)) => {
+				debug!(target: "sync", "Request to peer {:?} failed: {:?}.", id, err);
+
+				match err {
+					RequestFailure::Network(OutboundFailure::Timeout) => {
+						self.disconnect_and_report_peer(id, rep::TIMEOUT);
+					},
+					RequestFailure::Network(OutboundFailure::UnsupportedProtocols) => {
+						self.disconnect_and_report_peer(id, rep::BAD_PROTOCOL);
+					},
+					RequestFailure::Network(OutboundFailure::DialFailure) => {
+						self.disconnect_peer(id);
+					},
+					RequestFailure::Refused => {
+						self.disconnect_and_report_peer(id, rep::REFUSED);
+					},
+					RequestFailure::Network(OutboundFailure::ConnectionClosed) |
+					RequestFailure::NotConnected => {
+						self.disconnect_peer(id);
+					},
+					RequestFailure::UnknownProtocol => {
+						debug_assert!(false, "Block request protocol should always be known.");
+					},
+					RequestFailure::Obsolete => {
+						debug_assert!(
+							false,
+							"Can not receive `RequestFailure::Obsolete` after dropping the \
+								 response receiver.",
+						);
+					},
+				}
+			},
+			Err(oneshot::Canceled) => {
+				trace!(
+					target: "sync",
+					"Request to peer {:?} failed due to oneshot being canceled.",
+					id,
+				);
+				self.disconnect_peer(id);
+			},
 		}
-
-		let mut pending_messages = VecDeque::new();
-
-		// TODO: merge loops below with the loop above
 
 		for (id, req, response) in finished_block_requests {
 			let ev = self.on_block_response(id, req, response);
-			pending_messages.push_back(ev);
+			self.pending_messages.push_back(ev);
 		}
 
 		for (id, response) in finished_state_requests {
 			let ev = self.on_state_response(id, response);
-			pending_messages.push_back(ev);
+			self.pending_messages.push_back(ev);
 		}
 
 		for (id, response) in finished_warp_sync_requests {
 			let ev = self.on_warp_sync_response(id, EncodedProof(response));
-			pending_messages.push_back(ev);
+			self.pending_messages.push_back(ev);
 		}
+	}
 
-		for (id, request) in self
-			.chain_sync
-			.block_requests()
-			.map(|(peer_id, request)| (*peer_id, request))
-			.collect::<Vec<_>>()
-		{
-			// TODO: send block request
-			let event = self.prepare_block_request(id, request);
-			pending_messages.push_back(event);
+	// TODO: hideous, fix
+	fn handle_command(&mut self, event: SyncEvent<B>) {
+		match event {
+			SyncEvent::NumConnectedPeers(channel_response) => {
+				let _ = channel_response.send(self.peers.len());
+			},
+			SyncEvent::SyncState(channel_response) => {
+				let _ = channel_response.send(self.chain_sync.status());
+			},
+			SyncEvent::BestSeenBlock(channel_response) => {
+				let _ = channel_response.send(self.chain_sync.status().best_seen_block);
+			},
+			SyncEvent::NumSyncPeers(channel_response) => {
+				let _ = channel_response.send(self.chain_sync.status().num_peers);
+			},
+			SyncEvent::NumQueuedBlocks(channel_response) => {
+				let _ = channel_response.send(self.chain_sync.status().queued_blocks);
+			},
+			SyncEvent::NumDownloadedBlocks(channel_response) => {
+				let _ = channel_response.send(self.num_downloaded_blocks());
+			},
+			SyncEvent::NumSyncRequests(channel_response) => {
+				let _ = channel_response.send(self.num_sync_requests());
+			},
+			SyncEvent::UpdateChainInfo(hash, number) => {
+				self.update_chain_info(hash, number);
+			},
+			SyncEvent::OnBlockFinalized(hash, header) => {
+				self.on_block_finalized(hash, header);
+			},
+			SyncEvent::RequestJustification(hash, number) => {
+				self.request_justification(&hash, number);
+			},
+			SyncEvent::ClearJustificationRequests => {
+				self.clear_justification_requests();
+			},
+			SyncEvent::SetSyncForkRequest(peers, hash, number) => {
+				self.set_sync_fork_request(peers, &hash, number);
+			},
+			SyncEvent::JustificationImportResult(peer_id, hash, number, success) => {
+				self.justification_import_result(peer_id, hash, number, success);
+			},
+			SyncEvent::OnBlocksProcessed(imported, count, results, channel_response) => {
+				let _ = channel_response.send(self.on_blocks_processed(imported, count, results));
+			},
+			SyncEvent::EncodeBlockRequest(request, channel_response) => {
+				let _ = channel_response.send(self.encode_block_request(&request));
+			},
+			SyncEvent::EncodeStateRequest(request, channel_response) => {
+				let _ = channel_response.send(self.encode_state_request(&request));
+			},
+			SyncEvent::GetPeers(channel_response) => {
+				// TODO: remove clone if possible
+				let _ = channel_response
+					.send(self.peers.iter().map(|(id, peer)| (*id, (*peer).clone())).collect());
+			},
+			SyncEvent::CustomProtocolClosed(peer_id, channel_response) => {
+				let _ = channel_response.send(self.custom_protocol_close(peer_id));
+			},
+			SyncEvent::CustomProtocolOpen(
+				peer_id,
+				received_handshake,
+				notifications_sink,
+				negotiated_fallback,
+				channel_response,
+			) => {
+				let _ = channel_response.send(self.custom_protocol_open(
+					peer_id,
+					received_handshake,
+					notifications_sink,
+					negotiated_fallback,
+				));
+			},
+			SyncEvent::GetEvents(channel_response) => {
+				let _ = channel_response.send(std::mem::take(&mut self.pending_messages));
+			},
+			SyncEvent::Notification(peer, bytes, channel_response) => {
+				let _ = channel_response.send(self.notification(peer, bytes));
+			},
 		}
-
-		if let Some((id, request)) = self.chain_sync.state_request() {
-			let event = self.prepare_state_request(id, request);
-			pending_messages.push_back(event);
-		}
-
-		for (id, request) in self.chain_sync.justification_requests().collect::<Vec<_>>() {
-			// TODO: send block request
-			let event = self.prepare_block_request(id, request);
-			pending_messages.push_back(event);
-		}
-
-		if let Some((id, request)) = self.chain_sync.warp_sync_request() {
-			let event = self.prepare_warp_sync_request(id, request);
-			pending_messages.push_back(event);
-		}
-
-		// Check if there is any block announcement validation finished.
-		while let Poll::Ready(result) = self.chain_sync.poll_block_announce_validation(cx) {
-			match self.process_block_announce_validation_result(result) {
-				CustomMessageOutcome::None => {},
-				outcome => pending_messages.push_back(outcome),
-			}
-		}
-
-		pending_messages
 	}
 
 	pub async fn run(mut self) {
-		todo!();
-		// while let Some(event) = self.rx.next().await {
-		//    	// TODO: zzz
+		loop {
+			futures::select! {
+				command = futures::StreamExt::next(&mut self.rx).fuse() => match command {
+					Some(command) => self.handle_command(command),
+					None => {},
+				},
+				request = self.pending_responses.select_next_some() => {
+					warn!(target: "sync", "new pending response");
+					self.handle_pending_response(request.0, request.1, request.2)
+				}
+				_ = futures_timer::Delay::new(std::time::Duration::from_millis(500)).fuse() => {
+					for (id, request) in self
+						.chain_sync
+						.block_requests()
+						.map(|(peer_id, request)| (*peer_id, request))
+						.collect::<Vec<_>>()
+					{
+						// TODO: send block request
+						let event = self.prepare_block_request(id, request);
+						self.pending_messages.push_back(event);
+					}
+
+					if let Some((id, request)) = self.chain_sync.state_request() {
+						let event = self.prepare_state_request(id, request);
+						self.pending_messages.push_back(event);
+					}
+
+					for (id, request) in self.chain_sync.justification_requests().collect::<Vec<_>>() {
+						// TODO: send block request
+						let event = self.prepare_block_request(id, request);
+						self.pending_messages.push_back(event);
+					}
+
+					if let Some((id, request)) = self.chain_sync.warp_sync_request() {
+						let event = self.prepare_warp_sync_request(id, request);
+						self.pending_messages.push_back(event);
+					}
+				}
+			}
+		}
+
+		// TODO: fix this
+		// Check if there is any block announcement validation finished.
+		// while let Poll::Ready(result) = self.chain_sync.poll_block_announce_validation(cx) {
+		// 	match self.process_block_announce_validation_result(result) {
+		// 		CustomMessageOutcome::None => {},
+		// 		outcome => pending_messages.push_back(outcome),
+		// 	}
 		// }
 	}
 }

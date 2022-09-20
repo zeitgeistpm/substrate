@@ -172,7 +172,7 @@ pub struct Protocol<B: BlockT, Client> {
 	roles: Roles,
 	genesis_hash: B::Hash,
 	// temporary object that performs all Protocol's syncing-related functionality
-	sync_helper: sync_helper::SyncingHelper<B, Client>,
+	// sync_helper: sync_helper::SyncingHelper<B, Client>,
 	// All connected peers. Contains both full and light node peers.
 	// peers: HashMap<PeerId, Peer<B>>,
 	chain: Arc<Client>,
@@ -207,7 +207,8 @@ pub enum PeerRequest<B: BlockT> {
 }
 
 /// Peer information
-#[derive(Debug)]
+// TODO: remove clone when no longer needed
+#[derive(Debug, Clone)]
 pub struct Peer<B: BlockT> {
 	pub info: PeerInfo<B>,
 	/// Holds a set of blocks known to this peer.
@@ -263,7 +264,8 @@ where
 		network_config: &config::NetworkConfiguration,
 		notifications_protocols_handshakes: Vec<Vec<u8>>,
 		metrics_registry: Option<&Registry>,
-		chain_sync: Box<dyn ChainSync<B>>,
+		// chain_sync: Box<dyn ChainSync<B>>,
+		sync_handle: sync_helper::SyncingHandle<B>,
 	) -> error::Result<(Self, sc_peerset::PeersetHandle, Vec<(PeerId, Multiaddr)>)> {
 		let info = chain.info();
 
@@ -403,21 +405,6 @@ where
 			)
 		};
 
-		let (sync_helper, sync_handle) = sync_helper::SyncingHelper::new(
-			chain_sync,
-			network_config.default_peers_set.in_peers as usize +
-				network_config.default_peers_set.out_peers as usize,
-			info.genesis_hash,
-			Arc::clone(&chain),
-			roles,
-			network_config.default_peers_set_num_full as usize,
-			{
-				let total = network_config.default_peers_set.out_peers +
-					network_config.default_peers_set.in_peers;
-				total.saturating_sub(network_config.default_peers_set_num_full) as usize
-			},
-		);
-
 		let protocol = Self {
 			tick_timeout: Box::pin(interval(TICK_TIMEOUT)),
 			pending_messages: VecDeque::new(),
@@ -439,7 +426,6 @@ where
 				None
 			},
 			boot_node_ids,
-			sync_helper,
 			sync_handle,
 		};
 
@@ -476,7 +462,7 @@ where
 
 	/// Returns the number of peers we're connected to.
 	pub fn num_connected_peers(&self) -> usize {
-		self.sync_helper.peers.len()
+		futures::executor::block_on(self.sync_handle.num_connected_peers())
 	}
 
 	/// Returns the number of peers we're connected to and that are being queried.
@@ -490,39 +476,39 @@ where
 	// TODO: remove, not used
 	/// Current global sync state.
 	pub fn sync_state(&self) -> SyncStatus<B> {
-		self.sync_helper.status()
+		futures::executor::block_on(self.sync_handle.status())
 	}
 
 	/// Target sync block number.
 	pub fn best_seen_block(&self) -> Option<NumberFor<B>> {
-		self.sync_helper.status().best_seen_block
+		futures::executor::block_on(self.sync_handle.status()).best_seen_block
 	}
 
 	/// Number of peers participating in syncing.
 	pub fn num_sync_peers(&self) -> u32 {
-		self.sync_helper.status().num_peers
+		futures::executor::block_on(self.sync_handle.status()).num_peers
 	}
 
 	/// Number of blocks in the import queue.
 	pub fn num_queued_blocks(&self) -> u32 {
-		self.sync_helper.status().queued_blocks
+		futures::executor::block_on(self.sync_handle.status()).queued_blocks
 	}
 
 	/// Number of downloaded blocks.
 	pub fn num_downloaded_blocks(&self) -> usize {
-		self.sync_helper.num_downloaded_blocks()
+		futures::executor::block_on(self.sync_handle.num_downloaded_blocks())
 	}
 
 	/// Number of active sync requests.
 	pub fn num_sync_requests(&self) -> usize {
-		self.sync_helper.num_sync_requests()
+		futures::executor::block_on(self.sync_handle.num_sync_requests())
 	}
 
 	/// Inform sync about new best imported block.
 	pub fn new_best_block_imported(&mut self, hash: B::Hash, number: NumberFor<B>) {
 		debug!(target: "sync", "New best block imported {:?}/#{}", hash, number);
 
-		self.sync_helper.update_chain_info(hash, number);
+		futures::executor::block_on(self.sync_handle.update_chain_info(hash, number));
 
 		self.behaviour.set_notif_protocol_handshake(
 			HARDCODED_PEERSETS_SYNC,
@@ -532,8 +518,11 @@ where
 	}
 
 	/// Returns information about all the peers we are connected to after the handshake message.
-	pub fn peers_info(&self) -> impl Iterator<Item = (&PeerId, &PeerInfo<B>)> {
-		self.sync_helper.peers.iter().map(|(id, peer)| (id, &peer.info))
+	pub fn peers_info(&self) -> Vec<(PeerId, PeerInfo<B>)> {
+		futures::executor::block_on(self.sync_handle.get_peers())
+			.iter()
+			.map(|(id, peer)| (*id, peer.info.clone())) // TODO: fix
+			.collect()
 	}
 
 	/// Adjusts the reputation of a node.
@@ -554,51 +543,53 @@ where
 	/// In chain-based consensus, we often need to make sure non-best forks are
 	/// at least temporarily synced.
 	pub fn announce_block(&mut self, hash: B::Hash, data: Option<Vec<u8>>) {
-		let header = match self.chain.header(BlockId::Hash(hash)) {
-			Ok(Some(header)) => header,
-			Ok(None) => {
-				warn!("Trying to announce unknown block: {}", hash);
-				return
-			},
-			Err(e) => {
-				warn!("Error reading block header {}: {}", hash, e);
-				return
-			},
-		};
+		// TODO: enable block announcements
+		// todo!();
+		// let header = match self.chain.header(BlockId::Hash(hash)) {
+		// 	Ok(Some(header)) => header,
+		// 	Ok(None) => {
+		// 		warn!("Trying to announce unknown block: {}", hash);
+		// 		return
+		// 	},
+		// 	Err(e) => {
+		// 		warn!("Error reading block header {}: {}", hash, e);
+		// 		return
+		// 	},
+		// };
 
-		// don't announce genesis block since it will be ignored
-		if header.number().is_zero() {
-			return
-		}
+		// // don't announce genesis block since it will be ignored
+		// if header.number().is_zero() {
+		// 	return
+		// }
 
-		let is_best = self.chain.info().best_hash == hash;
-		debug!(target: "sync", "Reannouncing block {:?} is_best: {}", hash, is_best);
+		// let is_best = self.chain.info().best_hash == hash;
+		// debug!(target: "sync", "Reannouncing block {:?} is_best: {}", hash, is_best);
 
-		let data = data
-			.or_else(|| self.sync_helper.block_announce_data_cache.get(&hash).cloned())
-			.unwrap_or_default();
+		// let data = data
+		// 	.or_else(|| self.sync_helper.block_announce_data_cache.get(&hash).cloned())
+		// 	.unwrap_or_default();
 
-		for (who, ref mut peer) in self.sync_helper.peers.iter_mut() {
-			let inserted = peer.known_blocks.insert(hash);
-			if inserted {
-				trace!(target: "sync", "Announcing block {:?} to {}", hash, who);
-				let message = BlockAnnounce {
-					header: header.clone(),
-					state: if is_best { Some(BlockState::Best) } else { Some(BlockState::Normal) },
-					data: Some(data.clone()),
-				};
+		// for (who, ref mut peer) in self.sync_helper.peers.iter_mut() {
+		// 	let inserted = peer.known_blocks.insert(hash);
+		// 	if inserted {
+		// 		trace!(target: "sync", "Announcing block {:?} to {}", hash, who);
+		// 		let message = BlockAnnounce {
+		// 			header: header.clone(),
+		// 			state: if is_best { Some(BlockState::Best) } else { Some(BlockState::Normal) },
+		// 			data: Some(data.clone()),
+		// 		};
 
-				self.behaviour
-					.write_notification(who, HARDCODED_PEERSETS_SYNC, message.encode());
-			}
-		}
+		// 		self.behaviour
+		// 			.write_notification(who, HARDCODED_PEERSETS_SYNC, message.encode());
+		// 	}
+		// }
 	}
 
 	// TODO: move to `SyncingHelper`
 	/// Call this when a block has been finalized. The sync layer may have some additional
 	/// requesting to perform.
 	pub fn on_block_finalized(&mut self, hash: B::Hash, header: &B::Header) {
-		self.sync_helper.on_block_finalized(hash, header.clone()) // TODO: remove clone if possible
+		futures::executor::block_on(self.sync_handle.on_block_finalized(hash, header.clone()));
 	}
 
 	// TODO: move to `SyncingHelper`
@@ -607,13 +598,13 @@ where
 	/// Uses `protocol` to queue a new justification request and tries to dispatch all pending
 	/// requests.
 	pub fn request_justification(&mut self, hash: &B::Hash, number: NumberFor<B>) {
-		self.sync_helper.request_justification(hash, number)
+		futures::executor::block_on(self.sync_handle.request_justification(*hash, number));
 	}
 
 	// TODO: move to `SyncingHelper`
 	/// Clear all pending justification requests.
 	pub fn clear_justification_requests(&mut self) {
-		self.sync_helper.clear_justification_requests();
+		futures::executor::block_on(self.sync_handle.clear_justification_requests());
 	}
 
 	// TODO: move to `SyncingHelper`
@@ -626,7 +617,7 @@ where
 		hash: &B::Hash,
 		number: NumberFor<B>,
 	) {
-		self.sync_helper.set_sync_fork_request(peers, hash, number)
+		futures::executor::block_on(self.sync_handle.set_sync_fork_request(peers, *hash, number));
 	}
 
 	// TODO: move to `SyncingHelper`
@@ -639,7 +630,9 @@ where
 		count: usize,
 		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
 	) {
-		let messages = self.sync_helper.on_blocks_processed(imported, count, results);
+		let messages = futures::executor::block_on(
+			self.sync_handle.on_blocks_processed(imported, count, results),
+		);
 		self.pending_messages.extend(messages);
 	}
 
@@ -653,7 +646,9 @@ where
 		number: NumberFor<B>,
 		success: bool,
 	) {
-		self.sync_helper.justification_import_result(who, hash, number, success);
+		futures::executor::block_on(
+			self.sync_handle.justification_import_result(who, hash, number, success),
+		);
 	}
 
 	/// Set whether the syncing peers set is in reserved-only mode.
@@ -765,13 +760,13 @@ where
 	}
 
 	/// Encode implementation-specific block request.
-	pub fn encode_block_request(&self, request: &OpaqueBlockRequest) -> Result<Vec<u8>, String> {
-		self.sync_helper.encode_block_request(request)
+	pub fn encode_block_request(&mut self, request: OpaqueBlockRequest) -> Result<Vec<u8>, String> {
+		futures::executor::block_on(self.sync_handle.encode_block_request(request))
 	}
 
 	/// Encode implementation-specific state request.
-	pub fn encode_state_request(&self, request: &OpaqueStateRequest) -> Result<Vec<u8>, String> {
-		self.sync_helper.encode_state_request(request)
+	pub fn encode_state_request(&mut self, request: OpaqueStateRequest) -> Result<Vec<u8>, String> {
+		futures::executor::block_on(self.sync_handle.encode_state_request(request))
 	}
 
 	// // TODO: move to syncing
@@ -926,7 +921,7 @@ where
 			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(message))
 		}
 
-		let events = self.sync_helper.poll(cx);
+		let events = futures::executor::block_on(self.sync_handle.get_events());
 		self.pending_messages.extend(events);
 
 		// while let Poll::Ready(Some(())) = self.tick_timeout.poll_next_unpin(cx) {
@@ -965,12 +960,13 @@ where
 				// TODO: remove hardcoded peerset entry
 				// Set number 0 is hardcoded the default set of peers we sync from.
 				if set_id == HARDCODED_PEERSETS_SYNC {
-					let mut events = self.sync_helper.custom_protocol_open(
-						peer_id,
-						received_handshake,
-						notifications_sink,
-						negotiated_fallback,
-					);
+					let mut events =
+						futures::executor::block_on(self.sync_handle.custom_protocol_open(
+							peer_id,
+							received_handshake,
+							notifications_sink,
+							negotiated_fallback,
+						));
 
 					// TODO: beyond hideous, remove
 					if events.len() > 1 {
@@ -982,7 +978,9 @@ where
 				} else {
 					match (
 						message::Roles::decode_all(&mut &received_handshake[..]),
-						self.sync_helper.peers.get(&peer_id),
+						futures::executor::block_on(self.sync_handle.get_peers())
+							.iter()
+							.find(|(id, _)| id == &peer_id), // TODO: fix
 					) {
 						(Ok(roles), _) => CustomMessageOutcome::NotificationStreamOpened {
 							remote: peer_id,
@@ -993,7 +991,7 @@ where
 							roles,
 							notifications_sink,
 						},
-						(Err(_), Some(peer)) if received_handshake.is_empty() => {
+						(Err(_), Some((id, peer))) if received_handshake.is_empty() => {
 							// As a convenience, we allow opening substreams for "external"
 							// notification protocols with an empty handshake. This fetches the
 							// roles from the locally-known roles.
@@ -1037,7 +1035,7 @@ where
 				// Set number 0 is hardcoded the default set of peers we sync from.
 				// TODO: remove hardcoded peerset entry
 				if set_id == HARDCODED_PEERSETS_SYNC {
-					self.sync_helper.custom_protocol_close(peer_id)
+					futures::executor::block_on(self.sync_handle.custom_protocol_close(peer_id))
 				} else if self.bad_handshake_substreams.remove(&(peer_id, set_id)) {
 					// The substream that has just been closed had been opened with a bad
 					// handshake. The outer layers have never received an opening event about this
@@ -1053,7 +1051,8 @@ where
 				}
 			},
 			NotificationsOut::Notification { peer_id, set_id, message } => match set_id {
-				HARDCODED_PEERSETS_SYNC => self.sync_helper.notification(peer_id, message, cx),
+				HARDCODED_PEERSETS_SYNC =>
+					futures::executor::block_on(self.sync_handle.notification(peer_id, message)),
 				_ if self.bad_handshake_substreams.contains(&(peer_id, set_id)) =>
 					CustomMessageOutcome::None,
 				_ => {

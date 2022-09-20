@@ -343,7 +343,7 @@ where
 				.events
 				.push_back(BehaviourOut::JustificationImport(origin, hash, nb, justification)),
 			CustomMessageOutcome::BlockRequest { target, request, pending_response } => {
-				match self.substrate.encode_block_request(&request) {
+				match self.substrate.encode_block_request(request) {
 					Ok(data) => {
 						self.request_responses.send_request(
 							&target,
@@ -353,17 +353,18 @@ where
 							IfDisconnected::ImmediateError,
 						);
 					},
-					Err(err) => {
-						log::warn!(
-							target: "sync",
-							"Failed to encode block request {:?}: {:?}",
-							request, err
-						);
+					Err(_err) => {
+						// TODO: fix
+						// log::warn!(
+						// 	target: "sync",
+						// 	"Failed to encode block request {:?}: {:?}",
+						// 	request, err
+						// );
 					},
 				}
 			},
 			CustomMessageOutcome::StateRequest { target, request, pending_response } => {
-				match self.substrate.encode_state_request(&request) {
+				match self.substrate.encode_state_request(request) {
 					Ok(data) => {
 						self.request_responses.send_request(
 							&target,
@@ -373,12 +374,13 @@ where
 							IfDisconnected::ImmediateError,
 						);
 					},
-					Err(err) => {
-						log::warn!(
-							target: "sync",
-							"Failed to encode state request {:?}: {:?}",
-							request, err
-						);
+					Err(_err) => {
+						// TODO: fix
+						// log::warn!(
+						// 	target: "sync",
+						// 	"Failed to encode state request {:?}: {:?}",
+						// 	request, err
+						// );
 					},
 				}
 			},

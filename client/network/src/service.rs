@@ -38,7 +38,7 @@ use crate::{
 		self, message::generic::Roles, NotificationsSink, NotifsHandlerError, PeerInfo, Protocol,
 		Ready,
 	},
-	transport, ReputationChange,
+	sync_helper, transport, ReputationChange,
 };
 
 use codec::Encode as _;
@@ -224,6 +224,23 @@ where
 
 		let default_notif_handshake_message = Roles::from(&params.role).encode();
 
+		let (sync_helper, sync_handle) = sync_helper::SyncingHelper::new(
+			params.chain_sync,
+			params.network_config.default_peers_set.in_peers as usize +
+				params.network_config.default_peers_set.out_peers as usize,
+			params.chain.info().genesis_hash,
+			Arc::clone(&params.chain),
+			From::from(&params.role),
+			params.network_config.default_peers_set_num_full as usize,
+			{
+				let total = params.network_config.default_peers_set.out_peers +
+					params.network_config.default_peers_set.in_peers;
+				total.saturating_sub(params.network_config.default_peers_set_num_full) as usize
+			},
+		);
+
+		(params.syncing_executor)(sync_helper.run().boxed());
+
 		let (protocol, peerset_handle, mut known_addresses) = Protocol::new(
 			From::from(&params.role),
 			params.chain.clone(),
@@ -234,7 +251,7 @@ where
 				.map(|_| default_notif_handshake_message.clone())
 				.collect(),
 			params.metrics_registry.as_ref(),
-			params.chain_sync,
+			sync_handle,
 		)?;
 
 		// List of multiaddresses that we know in the network.
@@ -661,12 +678,10 @@ where
 
 	/// Get currently connected peers.
 	pub fn peers_debug_info(&mut self) -> Vec<(PeerId, PeerInfo<B>)> {
-		self.network_service
-			.behaviour_mut()
-			.user_protocol_mut()
-			.peers_info()
-			.map(|(id, info)| (*id, info.clone()))
-			.collect()
+		self.network_service.behaviour_mut().user_protocol_mut().peers_info()
+		// TODO: fix
+		// .map(|(id, info)| (*id, info.clone()))
+		// .collect()
 	}
 
 	/// Removes a `PeerId` from the list of reserved peers.

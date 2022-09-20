@@ -858,6 +858,12 @@ where
 				spawn_handle.spawn("libp2p-node", Some("networking"), fut);
 			}))
 		},
+		syncing_executor: {
+			let spawn_handle = Clone::clone(&spawn_handle);
+			Box::new(move |fut| {
+				spawn_handle.spawn("network-syncing-handler", Some("networking"), fut);
+			})
+		},
 		network_config: config.network.clone(),
 		chain: client.clone(),
 		protocol_id: protocol_id.clone(),

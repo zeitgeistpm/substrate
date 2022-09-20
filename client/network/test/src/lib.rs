@@ -294,7 +294,12 @@ where
 	}
 
 	/// Add blocks to the peer -- edit the block before adding
-	pub fn generate_blocks<F>(&mut self, count: usize, origin: BlockOrigin, edit_block: F) -> H256
+	pub async fn generate_blocks<F>(
+		&mut self,
+		count: usize,
+		origin: BlockOrigin,
+		edit_block: F,
+	) -> H256
 	where
 		F: FnMut(
 			BlockBuilder<Block, PeersFullClient, substrate_test_runtime_client::Backend>,
@@ -311,10 +316,11 @@ where
 			true,
 			ForkChoiceStrategy::LongestChain,
 		)
+		.await
 	}
 
 	/// Add blocks to the peer -- edit the block before adding and use custom fork choice rule.
-	pub fn generate_blocks_with_fork_choice<F>(
+	pub async fn generate_blocks_with_fork_choice<F>(
 		&mut self,
 		count: usize,
 		origin: BlockOrigin,
@@ -337,11 +343,12 @@ where
 			true,
 			fork_choice,
 		)
+		.await
 	}
 
 	/// Add blocks to the peer -- edit the block before adding. The chain will
 	/// start at the given block iD.
-	pub fn generate_blocks_at<F>(
+	pub async fn generate_blocks_at<F>(
 		&mut self,
 		at: BlockId<Block>,
 		count: usize,
@@ -375,15 +382,16 @@ where
 			let mut import_block = BlockImportParams::new(origin, header.clone());
 			import_block.body = if headers_only { None } else { Some(block.extrinsics) };
 			import_block.fork_choice = Some(fork_choice);
-			let (import_block, cache) =
-				futures::executor::block_on(self.verifier.verify(import_block)).unwrap();
+			let (import_block, cache) = self.verifier.verify(import_block).await.unwrap();
 			let cache = if let Some(cache) = cache {
 				cache.into_iter().collect()
 			} else {
 				Default::default()
 			};
 
-			futures::executor::block_on(self.block_import.import_block(import_block, cache))
+			self.block_import
+				.import_block(import_block, cache)
+				.await
 				.expect("block_import failed");
 			if announce_block {
 				self.network.service().announce_block(hash, None);
@@ -401,48 +409,54 @@ where
 	}
 
 	/// Push blocks to the peer (simplified: with or without a TX)
-	pub fn push_blocks(&mut self, count: usize, with_tx: bool) -> H256 {
+	pub async fn push_blocks(&mut self, count: usize, with_tx: bool) -> H256 {
 		let best_hash = self.client.info().best_hash;
-		self.push_blocks_at(BlockId::Hash(best_hash), count, with_tx)
+		self.push_blocks_at(BlockId::Hash(best_hash), count, with_tx).await
 	}
 
 	/// Push blocks to the peer (simplified: with or without a TX)
-	pub fn push_headers(&mut self, count: usize) -> H256 {
+	pub async fn push_headers(&mut self, count: usize) -> H256 {
 		let best_hash = self.client.info().best_hash;
 		self.generate_tx_blocks_at(BlockId::Hash(best_hash), count, false, true, true, true)
+			.await
 	}
 
 	/// Push blocks to the peer (simplified: with or without a TX) starting from
 	/// given hash.
-	pub fn push_blocks_at(&mut self, at: BlockId<Block>, count: usize, with_tx: bool) -> H256 {
-		self.generate_tx_blocks_at(at, count, with_tx, false, true, true)
+	pub async fn push_blocks_at(
+		&mut self,
+		at: BlockId<Block>,
+		count: usize,
+		with_tx: bool,
+	) -> H256 {
+		self.generate_tx_blocks_at(at, count, with_tx, false, true, true).await
 	}
 
 	/// Push blocks to the peer (simplified: with or without a TX) starting from
 	/// given hash without informing the sync protocol about the new best block.
-	pub fn push_blocks_at_without_informing_sync(
+	pub async fn push_blocks_at_without_informing_sync(
 		&mut self,
 		at: BlockId<Block>,
 		count: usize,
 		with_tx: bool,
 	) -> H256 {
-		self.generate_tx_blocks_at(at, count, with_tx, false, false, true)
+		self.generate_tx_blocks_at(at, count, with_tx, false, false, true).await
 	}
 
 	/// Push blocks to the peer (simplified: with or without a TX) starting from
 	/// given hash without announcing the block.
-	pub fn push_blocks_at_without_announcing(
+	pub async fn push_blocks_at_without_announcing(
 		&mut self,
 		at: BlockId<Block>,
 		count: usize,
 		with_tx: bool,
 	) -> H256 {
-		self.generate_tx_blocks_at(at, count, with_tx, false, true, false)
+		self.generate_tx_blocks_at(at, count, with_tx, false, true, false).await
 	}
 
 	/// Push blocks/headers to the peer (simplified: with or without a TX) starting from
 	/// given hash.
-	fn generate_tx_blocks_at(
+	async fn generate_tx_blocks_at(
 		&mut self,
 		at: BlockId<Block>,
 		count: usize,
@@ -473,6 +487,7 @@ where
 				announce_block,
 				ForkChoiceStrategy::LongestChain,
 			)
+			.await
 		} else {
 			self.generate_blocks_at(
 				at,
@@ -484,14 +499,19 @@ where
 				announce_block,
 				ForkChoiceStrategy::LongestChain,
 			)
+			.await
 		}
 	}
 
-	pub fn push_authorities_change_block(&mut self, new_authorities: Vec<AuthorityId>) -> H256 {
+	pub async fn push_authorities_change_block(
+		&mut self,
+		new_authorities: Vec<AuthorityId>,
+	) -> H256 {
 		self.generate_blocks(1, BlockOrigin::File, |mut builder| {
 			builder.push(Extrinsic::AuthoritiesChange(new_authorities.clone())).unwrap();
 			builder.build().unwrap().block
 		})
+		.await
 	}
 
 	/// Get a reference to the client.
@@ -702,6 +722,7 @@ pub struct FullPeerConfig {
 	pub storage_chain: bool,
 }
 
+#[async_trait::async_trait]
 pub trait TestNetFactory: Default + Sized
 where
 	<Self::BlockImport as BlockImport<Block>>::Transaction: Send,
@@ -878,6 +899,9 @@ where
 		let network = NetworkWorker::new(sc_network::config::Params {
 			role: if config.is_authority { Role::Authority } else { Role::Full },
 			executor: None,
+			syncing_executor: Box::new(|task| {
+				async_std::task::spawn(task);
+			}),
 			network_config,
 			chain: client.clone(),
 			protocol_id,
@@ -983,30 +1007,27 @@ where
 	///
 	/// Calls `poll_until_sync` repeatedly.
 	/// (If we've not synced within 10 mins then panic rather than hang.)
-	fn block_until_sync(&mut self) {
-		futures::executor::block_on(timeout(
+	async fn block_until_sync(&mut self) {
+		timeout(
 			Duration::from_secs(10 * 60),
 			futures::future::poll_fn::<(), _>(|cx| self.poll_until_sync(cx)),
-		))
+		)
+		.await
 		.expect("sync didn't happen within 10 mins");
 	}
 
 	/// Blocks the current thread until there are no pending packets.
 	///
 	/// Calls `poll_until_idle` repeatedly with the runtime passed as parameter.
-	fn block_until_idle(&mut self) {
-		futures::executor::block_on(futures::future::poll_fn::<(), _>(|cx| {
-			self.poll_until_idle(cx)
-		}));
+	async fn block_until_idle(&mut self) {
+		futures::future::poll_fn::<(), _>(|cx| self.poll_until_idle(cx)).await;
 	}
 
 	/// Blocks the current thread until all peers are connected to each other.
 	///
 	/// Calls `poll_until_connected` repeatedly with the runtime passed as parameter.
-	fn block_until_connected(&mut self) {
-		futures::executor::block_on(futures::future::poll_fn::<(), _>(|cx| {
-			self.poll_until_connected(cx)
-		}));
+	async fn block_until_connected(&mut self) {
+		futures::future::poll_fn::<(), _>(|cx| self.poll_until_connected(cx)).await;
 	}
 
 	/// Polls the testnet. Processes all the pending actions.
