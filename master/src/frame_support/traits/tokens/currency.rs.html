@@ -333,7 +333,7 @@
 	<span class="ident">traits::Get</span>,
 };
 <span class="kw">use</span> <span class="ident">codec::MaxEncodedLen</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::traits::MaybeSerializeDeserialize</span>;
+<span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">traits::MaybeSerializeDeserialize</span>, <span class="ident">FixedPointOperand</span>};
 <span class="kw">use</span> <span class="ident">sp_std::fmt::Debug</span>;
 
 <span class="kw">mod</span> <span class="ident">reservable</span>;
@@ -344,7 +344,7 @@
 <span class="doccomment">/// Abstraction over a fungible assets system.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Currency</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// The balance of an account.</span>
-	<span class="kw">type</span> <span class="ident">Balance</span>: <span class="ident">Balance</span> <span class="op">+</span> <span class="ident">MaybeSerializeDeserialize</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">MaxEncodedLen</span>;
+	<span class="kw">type</span> <span class="ident">Balance</span>: <span class="ident">Balance</span> <span class="op">+</span> <span class="ident">MaybeSerializeDeserialize</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">MaxEncodedLen</span> <span class="op">+</span> <span class="ident">FixedPointOperand</span>;
 
 	<span class="doccomment">/// The opaque token type for an imbalance. This is returned by unbalanced operations</span>
 	<span class="doccomment">/// and must be dealt with. It may be dropped but cannot be cloned.</span>

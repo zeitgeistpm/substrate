@@ -1120,6 +1120,21 @@
 <span id="1114">1114</span>
 <span id="1115">1115</span>
 <span id="1116">1116</span>
+<span id="1117">1117</span>
+<span id="1118">1118</span>
+<span id="1119">1119</span>
+<span id="1120">1120</span>
+<span id="1121">1121</span>
+<span id="1122">1122</span>
+<span id="1123">1123</span>
+<span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
+<span id="1128">1128</span>
+<span id="1129">1129</span>
+<span id="1130">1130</span>
+<span id="1131">1131</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -1209,12 +1224,12 @@
 <span class="kw">mod</span> <span class="ident">gas</span>;
 <span class="kw">mod</span> <span class="ident">benchmarking</span>;
 <span class="kw">mod</span> <span class="ident">exec</span>;
+<span class="kw">mod</span> <span class="ident">migration</span>;
 <span class="kw">mod</span> <span class="ident">schedule</span>;
 <span class="kw">mod</span> <span class="ident">storage</span>;
 <span class="kw">mod</span> <span class="ident">wasm</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">chain_extension</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">migration</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">weights</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -1231,7 +1246,10 @@
 <span class="kw">use</span> <span class="ident">frame_support</span>::{
 	<span class="ident">dispatch</span>::{<span class="ident">DispatchClass</span>, <span class="ident">Dispatchable</span>, <span class="ident">GetDispatchInfo</span>, <span class="ident">Pays</span>, <span class="ident">PostDispatchInfo</span>},
 	<span class="ident">ensure</span>,
-	<span class="ident">traits</span>::{<span class="ident">ConstU32</span>, <span class="ident">Contains</span>, <span class="ident">Currency</span>, <span class="ident">Get</span>, <span class="ident">Randomness</span>, <span class="ident">ReservableCurrency</span>, <span class="ident">Time</span>},
+	<span class="ident">traits</span>::{
+		<span class="ident">tokens::fungible::Inspect</span>, <span class="ident">ConstU32</span>, <span class="ident">Contains</span>, <span class="ident">Currency</span>, <span class="ident">Get</span>, <span class="ident">Randomness</span>,
+		<span class="ident">ReservableCurrency</span>, <span class="ident">Time</span>,
+	},
 	<span class="ident">weights::Weight</span>,
 	<span class="ident">BoundedVec</span>, <span class="ident">WeakBoundedVec</span>,
 };
@@ -1248,6 +1266,7 @@
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::{
 	<span class="ident">exec</span>::{<span class="ident">Frame</span>, <span class="ident">VarSizedKey</span> <span class="kw">as</span> <span class="ident">StorageKey</span>},
+	<span class="ident">migration::Migration</span>,
 	<span class="ident">pallet</span>::<span class="kw-2">*</span>,
 	<span class="ident">schedule</span>::{<span class="ident">HostFnWeights</span>, <span class="ident">InstructionWeights</span>, <span class="ident">Limits</span>, <span class="ident">Schedule</span>},
 };
@@ -1347,7 +1366,7 @@
 	<span class="kw">use</span> <span class="ident">frame_system::pallet_prelude</span>::<span class="kw-2">*</span>;
 
 	<span class="doccomment">/// The current storage version.</span>
-	<span class="kw">const</span> <span class="ident">STORAGE_VERSION</span>: <span class="ident">StorageVersion</span> <span class="op">=</span> <span class="ident">StorageVersion::new</span>(<span class="number">7</span>);
+	<span class="kw">const</span> <span class="ident">STORAGE_VERSION</span>: <span class="ident">StorageVersion</span> <span class="op">=</span> <span class="ident">StorageVersion::new</span>(<span class="number">8</span>);
 
 	<span class="attribute">#[<span class="ident">pallet::pallet</span>]</span>
 	<span class="attribute">#[<span class="ident">pallet::storage_version</span>(<span class="ident">STORAGE_VERSION</span>)]</span>
@@ -1358,11 +1377,12 @@
 		<span class="doccomment">/// The time implementation used to supply timestamps to contracts through `seal_now`.</span>
 		<span class="kw">type</span> <span class="ident">Time</span>: <span class="ident">Time</span>;
 
-		<span class="doccomment">/// The generator used to supply randomness to contracts through `seal_random`.</span>
+		<span class="doccomment">/// The generator used to supply randomness to contracts through `seal_random`</span>
 		<span class="kw">type</span> <span class="ident">Randomness</span>: <span class="ident">Randomness</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Hash</span>, <span class="ident"><span class="self">Self</span>::BlockNumber</span><span class="op">&gt;</span>;
 
 		<span class="doccomment">/// The currency in which fees are paid and contract balances are held.</span>
-		<span class="kw">type</span> <span class="ident">Currency</span>: <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span>;
+		<span class="kw">type</span> <span class="ident">Currency</span>: <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span>
+			<span class="op">+</span> <span class="ident">Inspect</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span>, <span class="ident">Balance</span> <span class="op">=</span> <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
 		<span class="doccomment">/// The overarching event type.</span>
 		<span class="kw">type</span> <span class="ident">RuntimeEvent</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">IsType</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::RuntimeEvent</span><span class="op">&gt;</span>;
@@ -2158,7 +2178,7 @@
 		};
 		<span class="kw">let</span> <span class="ident">schedule</span> <span class="op">=</span> <span class="ident">T::Schedule::get</span>();
 		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">ExecStack</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">PrefabWasmModule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::run_call</span>(
-			<span class="ident">origin</span>,
+			<span class="ident">origin</span>.<span class="ident">clone</span>(),
 			<span class="ident">dest</span>,
 			<span class="kw-2">&amp;mut</span> <span class="ident">gas_meter</span>,
 			<span class="kw-2">&amp;mut</span> <span class="ident">storage_meter</span>,
@@ -2167,7 +2187,11 @@
 			<span class="ident">data</span>,
 			<span class="ident">debug_message</span>,
 		);
-		<span class="ident">InternalCallOutput</span> { <span class="ident">result</span>, <span class="ident">gas_meter</span>, <span class="ident">storage_deposit</span>: <span class="ident">storage_meter</span>.<span class="ident">into_deposit</span>() }
+		<span class="ident">InternalCallOutput</span> {
+			<span class="ident">result</span>,
+			<span class="ident">gas_meter</span>,
+			<span class="ident">storage_deposit</span>: <span class="ident">storage_meter</span>.<span class="ident">into_deposit</span>(<span class="kw-2">&amp;</span><span class="ident">origin</span>),
+		}
 	}
 
 	<span class="doccomment">/// Internal function that does the actual instantiation.</span>
@@ -2211,7 +2235,7 @@
 				<span class="ident">value</span>.<span class="ident">saturating_add</span>(<span class="ident">extra_deposit</span>),
 			)<span class="question-mark">?</span>;
 			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">ExecStack</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">PrefabWasmModule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::run_instantiate</span>(
-				<span class="ident">origin</span>,
+				<span class="ident">origin</span>.<span class="ident">clone</span>(),
 				<span class="ident">executable</span>,
 				<span class="kw-2">&amp;mut</span> <span class="ident">gas_meter</span>,
 				<span class="kw-2">&amp;mut</span> <span class="ident">storage_meter</span>,
@@ -2222,18 +2246,24 @@
 				<span class="ident">debug_message</span>,
 			);
 			<span class="ident">storage_deposit</span> <span class="op">=</span> <span class="ident">storage_meter</span>
-				.<span class="ident">into_deposit</span>()
+				.<span class="ident">into_deposit</span>(<span class="kw-2">&amp;</span><span class="ident">origin</span>)
 				.<span class="ident">saturating_add</span>(<span class="kw-2">&amp;</span><span class="ident">StorageDeposit::Charge</span>(<span class="ident">extra_deposit</span>));
 			<span class="ident">result</span>
 		};
 		<span class="ident">InternalInstantiateOutput</span> { <span class="ident">result</span>: <span class="ident">try_exec</span>(), <span class="ident">gas_meter</span>, <span class="ident">storage_deposit</span> }
 	}
 
+	<span class="doccomment">/// Deposit a pallet contracts event. Handles the conversion to the overarching event type.</span>
 	<span class="kw">fn</span> <span class="ident">deposit_event</span>(<span class="ident">topics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T::Hash</span><span class="op">&gt;</span>, <span class="ident">event</span>: <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
 		<span class="op">&lt;</span><span class="ident">frame_system::Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::deposit_event_indexed</span>(
 			<span class="kw-2">&amp;</span><span class="ident">topics</span>,
 			<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeEvent::from</span>(<span class="ident">event</span>).<span class="ident">into</span>(),
 		)
+	}
+
+	<span class="doccomment">/// Return the existential deposit of [`Config::Currency`].</span>
+	<span class="kw">fn</span> <span class="ident">min_balance</span>() -&gt; <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+		<span class="op">&lt;</span><span class="ident">T::Currency</span> <span class="kw">as</span> <span class="ident">Inspect</span><span class="op">&lt;</span><span class="ident">AccountIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::minimum_balance</span>()
 	}
 }
 </code></pre></div>

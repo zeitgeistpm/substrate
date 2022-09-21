@@ -323,6 +323,33 @@
 <span id="317">317</span>
 <span id="318">318</span>
 <span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -359,30 +386,50 @@
 <span class="kw">use</span> <span class="ident">sp_core::crypto::UncheckedFrom</span>;
 <span class="kw">use</span> <span class="ident">sp_io::KillStorageResult</span>;
 <span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">traits</span>::{<span class="ident">Hash</span>, <span class="ident">Zero</span>},
+	<span class="ident">traits</span>::{<span class="ident">Hash</span>, <span class="ident">Saturating</span>, <span class="ident">Zero</span>},
 	<span class="ident">RuntimeDebug</span>,
 };
 <span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
 
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">RawContractInfo</span><span class="op">&lt;</span><span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>;
-
 <span class="doccomment">/// Information for managing an account and its sub trie abstraction.</span>
 <span class="doccomment">/// This is the required info to cache for an account.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">TypeInfo</span>, <span class="ident">MaxEncodedLen</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawContractInfo</span><span class="op">&lt;</span><span class="ident">CodeHash</span>, <span class="ident">Balance</span><span class="op">&gt;</span> {
+<span class="attribute">#[<span class="ident">scale_info</span>(<span class="ident">skip_type_params</span>(<span class="ident">T</span>))]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// Unique ID for the subtree encoded as a bytes vector.</span>
 	<span class="kw">pub</span> <span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
 	<span class="doccomment">/// The code associated with a given account.</span>
-	<span class="kw">pub</span> <span class="ident">code_hash</span>: <span class="ident">CodeHash</span>,
-	<span class="doccomment">/// The amount of balance that is currently deposited to pay for consumed storage.</span>
-	<span class="kw">pub</span> <span class="ident">storage_deposit</span>: <span class="ident">Balance</span>,
+	<span class="kw">pub</span> <span class="ident">code_hash</span>: <span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// How many bytes of storage are accumulated in this contract&#39;s child trie.</span>
+	<span class="kw">pub</span> <span class="ident">storage_bytes</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// How many items of storage are accumulated in this contract&#39;s child trie.</span>
+	<span class="kw">pub</span> <span class="ident">storage_items</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// This records to how much deposit the accumulated `storage_bytes` amount to.</span>
+	<span class="kw">pub</span> <span class="ident">storage_byte_deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// This records to how much deposit the accumulated `storage_items` amount to.</span>
+	<span class="kw">pub</span> <span class="ident">storage_item_deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// This records how much deposit is put down in order to pay for the contract itself.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// We need to store this information separately so it is not used when calculating any refunds</span>
+	<span class="doccomment">/// since the base deposit can only ever be refunded on contract termination.</span>
+	<span class="kw">pub</span> <span class="ident">storage_base_deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">CodeHash</span>, <span class="ident">Balance</span><span class="op">&gt;</span> <span class="ident">RawContractInfo</span><span class="op">&lt;</span><span class="ident">CodeHash</span>, <span class="ident">Balance</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// Associated child trie unique id is built from the hash part of the trie id.</span>
 	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">child_trie_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ChildInfo</span> {
 		<span class="ident">child_trie_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">trie_id</span>[..])
+	}
+
+	<span class="doccomment">/// The deposit paying for the accumulated storage generated within the contract&#39;s child trie.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extra_deposit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">storage_byte_deposit</span>.<span class="ident">saturating_add</span>(<span class="self">self</span>.<span class="ident">storage_item_deposit</span>)
+	}
+
+	<span class="doccomment">/// Same as [`Self::extra_deposit`] but including the base deposit.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">total_deposit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">extra_deposit</span>().<span class="ident">saturating_add</span>(<span class="self">self</span>.<span class="ident">storage_base_deposit</span>)
 	}
 }
 
@@ -503,7 +550,7 @@
 				},
 				(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; (),
 			}
-			<span class="ident">storage_meter</span>.<span class="ident">charge</span>(<span class="kw-2">&amp;</span><span class="ident">diff</span>)<span class="question-mark">?</span>;
+			<span class="ident">storage_meter</span>.<span class="ident">charge</span>(<span class="kw-2">&amp;</span><span class="ident">diff</span>);
 		}
 
 		<span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">new_value</span> {
@@ -525,14 +572,21 @@
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_contract</span>(
 		<span class="ident">account</span>: <span class="kw-2">&amp;</span><span class="ident">AccountIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 		<span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
-		<span class="ident">ch</span>: <span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+		<span class="ident">code_hash</span>: <span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">DispatchError</span><span class="op">&gt;</span> {
 		<span class="kw">if</span> <span class="op">&lt;</span><span class="ident">ContractInfoOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="ident">account</span>) {
 			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::DuplicateContract</span>.<span class="ident">into</span>())
 		}
 
-		<span class="kw">let</span> <span class="ident">contract</span> <span class="op">=</span>
-			<span class="ident">ContractInfo</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> { <span class="ident">code_hash</span>: <span class="ident">ch</span>, <span class="ident">trie_id</span>, <span class="ident">storage_deposit</span>: <span class="op">&lt;</span><span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::zero</span>() };
+		<span class="kw">let</span> <span class="ident">contract</span> <span class="op">=</span> <span class="ident">ContractInfo</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+			<span class="ident">code_hash</span>,
+			<span class="ident">trie_id</span>,
+			<span class="ident">storage_bytes</span>: <span class="number">0</span>,
+			<span class="ident">storage_items</span>: <span class="number">0</span>,
+			<span class="ident">storage_byte_deposit</span>: <span class="ident">Zero::zero</span>(),
+			<span class="ident">storage_item_deposit</span>: <span class="ident">Zero::zero</span>(),
+			<span class="ident">storage_base_deposit</span>: <span class="ident">Zero::zero</span>(),
+		};
 
 		<span class="prelude-val">Ok</span>(<span class="ident">contract</span>)
 	}
