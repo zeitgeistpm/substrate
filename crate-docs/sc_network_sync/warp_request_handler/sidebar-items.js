@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["generate_request_response_config","Generates a [`RequestResponseConfig`] for the grandpa warp sync request protocol, refusing incoming requests."]],"struct":[["RequestHandler","Handler for incoming grandpa warp sync requests from a remote peer."]]});

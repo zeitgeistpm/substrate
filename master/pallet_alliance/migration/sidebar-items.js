@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["STORAGE_VERSION","The current storage version."]],"fn":[["migrate","Wrapper for all migrations of this pallet."]],"struct":[["Migration","Implements `OnRuntimeUpgrade` trait."]]};

@@ -1,0 +1,5 @@
+(function() {var implementors = {};
+implementors["sp_core"] = [];
+implementors["sp_externalities"] = [];
+implementors["sp_state_machine"] = [{"text":"impl&lt;H&gt; <a class=\"trait\" href=\"sp_externalities/trait.ExternalitiesExt.html\" title=\"trait sp_externalities::ExternalitiesExt\">ExternalitiesExt</a> for <a class=\"struct\" href=\"sp_state_machine/struct.TestExternalities.html\" title=\"struct sp_state_machine::TestExternalities\">TestExternalities</a>&lt;H&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: Hasher,<br>&nbsp;&nbsp;&nbsp;&nbsp;H::Out: <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a> + Codec,&nbsp;</span>","synthetic":false,"types":["sp_state_machine::testing::TestExternalities"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

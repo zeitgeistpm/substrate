@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Alliance Pallet"><meta name="keywords" content="rust, rustlang, rust-lang, pallet_alliance"><title>pallet_alliance - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../dark.css" disabled><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../storage.js"></script><script src="../crates.js"></script><script defer src="../main.js"></script>
+    <noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../favicon.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../pallet_alliance/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../pallet_alliance/index.html"><div class="logo-container"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"><a href="#">Crate pallet_alliance</a></h2><div class="sidebar-elems"><div class="block"><ul><li class="version">Version 4.0.0-dev</li><li><a id="all-types" href="all.html">All Items</a></li></div></ul><section><div class="block"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#types">Type Definitions</a></li></ul></div></section><div id="sidebar-vars" data-name="pallet_alliance" data-ty="mod" data-relpath=""></div><script defer src="sidebar-items.js"></script></div></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../pallet_alliance/index.html"><img class="rust-logo" src="../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="main-heading">
+    <h1 class="fqn"><span class="in-band">Crate <a class="mod" href="#">pallet_alliance</a><button id="copy-path" onclick="copy_path(this)" title="Copy item path to clipboard"><img src="../clipboard.svg" width="19" height="18" alt="Copy item path"></button></span></h1><span class="out-of-band"><a class="srclink" href="../src/pallet_alliance/lib.rs.html#18-1053">source</a> · <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="alliance-pallet"><a href="#alliance-pallet">Alliance Pallet</a></h2>
+<p>The Alliance Pallet provides a collective that curates a list of accounts and URLs, deemed by
+the voting members to be unscrupulous actors. The alliance</p>
+<ul>
+<li>provides a set of ethics against bad behavior, and</li>
+<li>provides recognition and influence for those teams that contribute something back to the
+ecosystem.</li>
+</ul>
+<h3 id="overview"><a href="#overview">Overview</a></h3>
+<p>The network initializes the Alliance via a Root call. After that, anyone with an approved
+identity and website can join as an Ally. The <code>MembershipManager</code> origin can elevate Allies to
+Fellows, giving them voting rights within the Alliance.</p>
+<p>Voting members of the Alliance maintain a list of accounts and websites. Members can also vote
+to update the Alliance’s rule and make announcements.</p>
+<h4 id="terminology"><a href="#terminology">Terminology</a></h4>
+<ul>
+<li>Rule: The IPFS CID (hash) of the Alliance rules for the community to read and the Alliance
+members to enforce. Similar to a Code of Conduct.</li>
+<li>Announcement: An IPFS CID of some content that the Alliance want to announce.</li>
+<li>Member: An account that is already in the group of the Alliance, including three types:
+Founder, Fellow, or Ally. A member can also be kicked by the <code>MembershipManager</code> origin or
+retire by itself.</li>
+<li>Founder: An account who is initiated by Root with normal voting rights for basic motions and
+special veto rights for rule change and Ally elevation motions.</li>
+<li>Fellow: An account who is elevated from Ally by Founders and other Fellows.</li>
+<li>Ally: An account who would like to join the alliance. To become a voting member, Fellow or
+Founder, it will need approval from the <code>MembershipManager</code> origin. Any account can join as an
+Ally either by placing a deposit or by nomination from a voting member.</li>
+<li>Unscrupulous List: A list of bad websites and addresses, items can be added or removed by
+Founders and Fellows.</li>
+</ul>
+<h3 id="interface"><a href="#interface">Interface</a></h3><h4 id="dispatchable-functions"><a href="#dispatchable-functions">Dispatchable Functions</a></h4><h5 id="for-general-users"><a href="#for-general-users">For General Users</a></h5>
+<ul>
+<li><code>join_alliance</code> - Join the Alliance as an Ally. This requires a slashable deposit.</li>
+</ul>
+<h5 id="for-members-all"><a href="#for-members-all">For Members (All)</a></h5>
+<ul>
+<li><code>retire</code> - Retire from the Alliance and release the caller’s deposit.</li>
+</ul>
+<h5 id="for-members-foundersfellows"><a href="#for-members-foundersfellows">For Members (Founders/Fellows)</a></h5>
+<ul>
+<li><code>propose</code> - Propose a motion.</li>
+<li><code>vote</code> - Vote on a motion.</li>
+<li><code>close</code> - Close a motion with enough votes or that has expired.</li>
+<li><code>set_rule</code> - Initialize or update the Alliance’s rule by IPFS CID.</li>
+<li><code>announce</code> - Make announcement by IPFS CID.</li>
+<li><code>nominate_ally</code> - Nominate a non-member to become an Ally, without deposit.</li>
+<li><code>elevate_ally</code> - Approve an ally to become a Fellow.</li>
+<li><code>kick_member</code> - Kick a member and slash its deposit.</li>
+<li><code>add_unscrupulous_items</code> - Add some items, either accounts or websites, to the list of
+unscrupulous items.</li>
+<li><code>remove_unscrupulous_items</code> - Remove some items from the list of unscrupulous items.</li>
+</ul>
+<h5 id="for-members-only-founders"><a href="#for-members-only-founders">For Members (Only Founders)</a></h5>
+<ul>
+<li><code>veto</code> - Veto on a motion about <code>set_rule</code> and <code>elevate_ally</code>.</li>
+</ul>
+<h5 id="root-calls"><a href="#root-calls">Root Calls</a></h5>
+<ul>
+<li><code>init_founders</code> - Initialize the founding members.</li>
+</ul>
+</div></details><h2 id="reexports" class="small-section-header"><a href="#reexports">Re-exports</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left import-item"><code>pub use <a class="mod" href="pallet/index.html" title="mod pallet_alliance::pallet">pallet</a>::*;</code></div><div class="item-right docblock-short"></div></div><div class="item-row"><div class="item-left import-item"><code>pub use <a class="mod" href="weights/index.html" title="mod pallet_alliance::weights">weights</a>::*;</code></div><div class="item-right docblock-short"></div></div></div><h2 id="modules" class="small-section-header"><a href="#modules">Modules</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="pallet/index.html" title="pallet_alliance::pallet mod">pallet</a></div><div class="item-right docblock-short"><p>The module that hosts all the
+<a href="https://docs.substrate.io/v3/runtime/frame">FRAME</a>
+types needed to add this pallet to a
+runtime.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="weights/index.html" title="pallet_alliance::weights mod">weights</a></div><div class="item-right docblock-short"><p>Autogenerated weights for pallet_alliance</p>
+</div></div></div><h2 id="structs" class="small-section-header"><a href="#structs">Structs</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Cid.html" title="pallet_alliance::Cid struct">Cid</a></div><div class="item-right docblock-short"><p>Representation of a CID.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Multihash.html" title="pallet_alliance::Multihash struct">Multihash</a></div><div class="item-right docblock-short"><p>A Multihash instance that only supports the basic functionality and no hashing.</p>
+</div></div></div><h2 id="enums" class="small-section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.MemberRole.html" title="pallet_alliance::MemberRole enum">MemberRole</a></div><div class="item-right docblock-short"><p>The various roles that a member can hold.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.UnscrupulousItem.html" title="pallet_alliance::UnscrupulousItem enum">UnscrupulousItem</a></div><div class="item-right docblock-short"><p>The type of item that may be deemed unscrupulous.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Version.html" title="pallet_alliance::Version enum">Version</a></div><div class="item-right docblock-short"><p>The version of the CID.</p>
+</div></div></div><h2 id="traits" class="small-section-header"><a href="#traits">Traits</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.IdentityVerifier.html" title="pallet_alliance::IdentityVerifier trait">IdentityVerifier</a></div><div class="item-right docblock-short"><p>Interface required for identity verification.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.ProposalProvider.html" title="pallet_alliance::ProposalProvider trait">ProposalProvider</a></div><div class="item-right docblock-short"><p>The provider of a collective action interface, for example an instance of <code>pallet-collective</code>.</p>
+</div></div></div><h2 id="types" class="small-section-header"><a href="#types">Type Definitions</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="type" href="type.ProposalIndex.html" title="pallet_alliance::ProposalIndex type">ProposalIndex</a></div><div class="item-right docblock-short"><p>Simple index type for proposal counting.</p>
+</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="pallet_alliance" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.62.0-nightly (6dd68402c 2022-05-11)" ></div>
+</body></html>

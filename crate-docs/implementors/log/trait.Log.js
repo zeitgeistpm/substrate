@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["sp_runtime"] = [{"text":"impl <a class=\"trait\" href=\"https://docs.rs/log/0.4.17/log/trait.Log.html\" title=\"trait log::Log\">Log</a> for <a class=\"struct\" href=\"sp_runtime/runtime_logger/struct.RuntimeLogger.html\" title=\"struct sp_runtime::runtime_logger::RuntimeLogger\">RuntimeLogger</a>","synthetic":false,"types":["sp_runtime::runtime_logger::RuntimeLogger"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["error","Offchain RPC errors."]],"trait":[["OffchainApiClient","Client implementation for the `OffchainApi` RPC API."],["OffchainApiServer","Server trait implementation for the `OffchainApi` RPC API."]]});

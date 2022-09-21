@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"type":[["BeefySignedCommitment","A commitment with matching BEEFY authorities’ signatures."]]};
