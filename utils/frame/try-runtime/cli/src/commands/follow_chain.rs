@@ -23,6 +23,7 @@ use jsonrpsee::{
 	core::{
 		async_trait,
 		client::{Client, Subscription, SubscriptionClientT},
+		rpc_params,
 	},
 	ws_client::WsClientBuilder,
 };
@@ -84,7 +85,7 @@ async fn start_subscribing<Header: DeserializeOwned>(
 	log::info!(target: LOG_TARGET, "subscribing to {:?} / {:?}", SUB, UN_SUB);
 
 	let sub = client
-		.subscribe(SUB, None, UN_SUB)
+		.subscribe(SUB, rpc_params![], UN_SUB)
 		.await
 		.map_err(|e| sc_cli::Error::Application(e.into()))?;
 	Ok((client, sub))

@@ -23,7 +23,7 @@
 use codec::{Decode, Encode};
 
 use jsonrpsee::{
-	core::{client::ClientT, Error as RpcError},
+	core::{client::ClientT, params::BatchRequestBuilder, Error as RpcError},
 	proc_macros::rpc,
 	rpc_params,
 	ws_client::{WsClient, WsClientBuilder},
@@ -370,11 +370,13 @@ impl<B: BlockT + DeserializeOwned> Builder<B> {
 		let mut key_values: Vec<KeyValue> = vec![];
 		let client = self.as_online().rpc_client();
 		for chunk_keys in keys.chunks(BATCH_SIZE) {
-			let batch = chunk_keys
-				.iter()
-				.cloned()
-				.map(|key| ("state_getStorage", rpc_params![key, at]))
-				.collect::<Vec<_>>();
+			let mut batch = BatchRequestBuilder::new();
+
+			for key in chunk_keys.iter() {
+				batch
+					.insert("state_getStorage", rpc_params![key, at])
+					.map_err(|_| "Invalid batch params")?;
+			}
 
 			let values = client.batch_request::<Option<StorageData>>(batch).await.map_err(|e| {
 				log::error!(
@@ -420,11 +422,11 @@ impl<B: BlockT + DeserializeOwned> Builder<B> {
 	) -> Result<Vec<KeyValue>, &'static str> {
 		let mut child_kv_inner = vec![];
 		for batch_child_key in child_keys.chunks(BATCH_SIZE) {
-			let batch_request = batch_child_key
-				.iter()
-				.cloned()
-				.map(|key| {
-					(
+			let mut batch_request = BatchRequestBuilder::new();
+
+			for key in batch_child_key {
+				batch_request
+					.insert(
 						"childstate_getStorage",
 						rpc_params![
 							PrefixedStorageKey::new(prefixed_top_key.as_ref().to_vec()),
@@ -432,8 +434,8 @@ impl<B: BlockT + DeserializeOwned> Builder<B> {
 							at
 						],
 					)
-				})
-				.collect::<Vec<_>>();
+					.map_err(|_| "Invalid batch params")?;
+			}
 
 			let batch_response = self
 				.as_online()

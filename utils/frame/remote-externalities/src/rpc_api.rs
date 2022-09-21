@@ -19,9 +19,11 @@
 // TODO: Consolidate one off RPC calls https://github.com/paritytech/substrate/issues/8988
 
 use jsonrpsee::{
-	core::client::{Client, ClientT},
+	core::{
+		client::{Client, ClientT},
+		params::ArrayParams,
+	},
 	rpc_params,
-	types::ParamsSer,
 	ws_client::{WsClient, WsClientBuilder},
 };
 use serde::de::DeserializeOwned;
@@ -50,10 +52,10 @@ impl RpcCall {
 async fn make_request<'a, T: DeserializeOwned>(
 	client: &Arc<Client>,
 	call: RpcCall,
-	params: Option<ParamsSer<'a>>,
+	params: ArrayParams,
 ) -> Result<T, String> {
 	client
-		.request::<T>(call.as_str(), params)
+		.request::<T, _>(call.as_str(), params)
 		.await
 		.map_err(|e| format!("{} request failed: {:?}", call.as_str(), e))
 }
@@ -102,7 +104,7 @@ impl RpcService {
 	async fn make_request<'a, T: DeserializeOwned>(
 		&self,
 		call: RpcCall,
-		params: Option<ParamsSer<'a>>,
+		params: ArrayParams,
 	) -> Result<T, String> {
 		match self.policy {
 			// `self.keep_connection` must have been `true`.
@@ -125,7 +127,7 @@ impl RpcService {
 
 	/// Get the finalized head.
 	pub async fn get_finalized_head<Block: BlockT>(&self) -> Result<Block::Hash, String> {
-		self.make_request(RpcCall::GetFinalizedHead, None).await
+		self.make_request(RpcCall::GetFinalizedHead, rpc_params![]).await
 	}
 
 	/// Get the signed block identified by `at`.
