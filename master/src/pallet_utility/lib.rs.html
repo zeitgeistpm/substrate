@@ -689,7 +689,7 @@
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">calls</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span><span class="op">&gt;</span>,
 		) -&gt; <span class="ident">DispatchResultWithPostInfo</span> {
-			<span class="kw">let</span> <span class="ident">is_root</span> <span class="op">=</span> <span class="ident">ensure_root</span>(<span class="ident">origin</span>.<span class="ident">clone</span>()).<span class="ident">is_ok</span>();
+			<span class="kw">let</span> <span class="ident">is_root</span> <span class="op">=</span> <span class="ident">ensure_signed_or_root</span>(<span class="ident">origin</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>.<span class="ident">is_none</span>();
 			<span class="kw">let</span> <span class="ident">calls_len</span> <span class="op">=</span> <span class="ident">calls</span>.<span class="ident">len</span>();
 			<span class="macro">ensure!</span>(<span class="ident">calls_len</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident"><span class="self">Self</span>::batched_calls_limit</span>() <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::TooManyCalls</span>);
 
@@ -805,7 +805,7 @@
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">calls</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span><span class="op">&gt;</span>,
 		) -&gt; <span class="ident">DispatchResultWithPostInfo</span> {
-			<span class="kw">let</span> <span class="ident">is_root</span> <span class="op">=</span> <span class="ident">ensure_root</span>(<span class="ident">origin</span>.<span class="ident">clone</span>()).<span class="ident">is_ok</span>();
+			<span class="kw">let</span> <span class="ident">is_root</span> <span class="op">=</span> <span class="ident">ensure_signed_or_root</span>(<span class="ident">origin</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>.<span class="ident">is_none</span>();
 			<span class="kw">let</span> <span class="ident">calls_len</span> <span class="op">=</span> <span class="ident">calls</span>.<span class="ident">len</span>();
 			<span class="macro">ensure!</span>(<span class="ident">calls_len</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident"><span class="self">Self</span>::batched_calls_limit</span>() <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::TooManyCalls</span>);
 
@@ -912,7 +912,7 @@
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">calls</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span><span class="op">&gt;</span>,
 		) -&gt; <span class="ident">DispatchResultWithPostInfo</span> {
-			<span class="kw">let</span> <span class="ident">is_root</span> <span class="op">=</span> <span class="ident">ensure_root</span>(<span class="ident">origin</span>.<span class="ident">clone</span>()).<span class="ident">is_ok</span>();
+			<span class="kw">let</span> <span class="ident">is_root</span> <span class="op">=</span> <span class="ident">ensure_signed_or_root</span>(<span class="ident">origin</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>.<span class="ident">is_none</span>();
 			<span class="kw">let</span> <span class="ident">calls_len</span> <span class="op">=</span> <span class="ident">calls</span>.<span class="ident">len</span>();
 			<span class="macro">ensure!</span>(<span class="ident">calls_len</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident"><span class="self">Self</span>::batched_calls_limit</span>() <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::TooManyCalls</span>);
 
