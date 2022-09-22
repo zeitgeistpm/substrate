@@ -368,7 +368,7 @@
 		<span class="kw">let</span> <span class="ident">a</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">T::MaxPending::get</span>() <span class="op">-</span> <span class="number">1</span>;
 		<span class="kw">let</span> <span class="ident">p</span> <span class="kw">in</span> <span class="number">1</span> .. (<span class="ident">T::MaxProxies::get</span>() <span class="op">-</span> <span class="number">1</span>) =&gt; <span class="ident">add_proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">p</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 		<span class="comment">// In this case the caller is the &quot;target&quot; proxy</span>
-		<span class="kw">let</span> <span class="ident">caller</span>: <span class="ident">T::AccountId</span> <span class="op">=</span> <span class="ident">account</span>(<span class="string">&quot;anonymous&quot;</span>, <span class="number">0</span>, <span class="ident">SEED</span>);
+		<span class="kw">let</span> <span class="ident">caller</span>: <span class="ident">T::AccountId</span> <span class="op">=</span> <span class="ident">account</span>(<span class="string">&quot;pure&quot;</span>, <span class="number">0</span>, <span class="ident">SEED</span>);
 		<span class="kw">let</span> <span class="ident">delegate</span>: <span class="ident">T::AccountId</span> <span class="op">=</span> <span class="ident">account</span>(<span class="string">&quot;target&quot;</span>, <span class="ident">p</span> <span class="op">-</span> <span class="number">1</span>, <span class="ident">SEED</span>);
 		<span class="kw">let</span> <span class="ident">delegate_lookup</span> <span class="op">=</span> <span class="ident">T::Lookup::unlookup</span>(<span class="ident">delegate</span>.<span class="ident">clone</span>());
 		<span class="ident">T::Currency::make_free_balance_be</span>(<span class="kw-2">&amp;</span><span class="ident">delegate</span>, <span class="ident">BalanceOf</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::max_value</span>() <span class="op">/</span> <span class="number">2u32</span>.<span class="ident">into</span>());
@@ -488,7 +488,7 @@
 		<span class="macro">assert_eq!</span>(<span class="ident">proxies</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="number">0</span>);
 	}
 
-	<span class="ident">anonymous</span> {
+	<span class="ident">create_pure</span> {
 		<span class="kw">let</span> <span class="ident">p</span> <span class="kw">in</span> <span class="number">1</span> .. (<span class="ident">T::MaxProxies::get</span>() <span class="op">-</span> <span class="number">1</span>) =&gt; <span class="ident">add_proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">p</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 		<span class="kw">let</span> <span class="ident">caller</span>: <span class="ident">T::AccountId</span> <span class="op">=</span> <span class="ident">whitelisted_caller</span>();
 	}: <span class="kw">_</span>(
@@ -498,22 +498,22 @@
 		<span class="number">0</span>
 	)
 	<span class="ident">verify</span> {
-		<span class="kw">let</span> <span class="ident">anon_account</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::anonymous_account</span>(<span class="kw-2">&amp;</span><span class="ident">caller</span>, <span class="kw-2">&amp;</span><span class="ident">T::ProxyType::default</span>(), <span class="number">0</span>, <span class="prelude-val">None</span>);
-		<span class="ident">assert_last_event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">Event::AnonymousCreated</span> {
-			<span class="ident">anonymous</span>: <span class="ident">anon_account</span>,
+		<span class="kw">let</span> <span class="ident">pure_account</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::pure_account</span>(<span class="kw-2">&amp;</span><span class="ident">caller</span>, <span class="kw-2">&amp;</span><span class="ident">T::ProxyType::default</span>(), <span class="number">0</span>, <span class="prelude-val">None</span>);
+		<span class="ident">assert_last_event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">Event::PureCreated</span> {
+			<span class="ident">pure</span>: <span class="ident">pure_account</span>,
 			<span class="ident">who</span>: <span class="ident">caller</span>,
 			<span class="ident">proxy_type</span>: <span class="ident">T::ProxyType::default</span>(),
 			<span class="ident">disambiguation_index</span>: <span class="number">0</span>,
 		}.<span class="ident">into</span>());
 	}
 
-	<span class="ident">kill_anonymous</span> {
+	<span class="ident">kill_pure</span> {
 		<span class="kw">let</span> <span class="ident">p</span> <span class="kw">in</span> <span class="number">0</span> .. (<span class="ident">T::MaxProxies::get</span>() <span class="op">-</span> <span class="number">2</span>);
 
 		<span class="kw">let</span> <span class="ident">caller</span>: <span class="ident">T::AccountId</span> <span class="op">=</span> <span class="ident">whitelisted_caller</span>();
 		<span class="kw">let</span> <span class="ident">caller_lookup</span> <span class="op">=</span> <span class="ident">T::Lookup::unlookup</span>(<span class="ident">caller</span>.<span class="ident">clone</span>());
 		<span class="ident">T::Currency::make_free_balance_be</span>(<span class="kw-2">&amp;</span><span class="ident">caller</span>, <span class="ident">BalanceOf</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::max_value</span>());
-		<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::anonymous</span>(
+		<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::create_pure</span>(
 			<span class="ident">RawOrigin::Signed</span>(<span class="ident">whitelisted_caller</span>()).<span class="ident">into</span>(),
 			<span class="ident">T::ProxyType::default</span>(),
 			<span class="ident">T::BlockNumber::zero</span>(),
@@ -521,13 +521,13 @@
 		)<span class="question-mark">?</span>;
 		<span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="ident">system::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::block_number</span>();
 		<span class="kw">let</span> <span class="ident">ext_index</span> <span class="op">=</span> <span class="ident">system::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::extrinsic_index</span>().<span class="ident">unwrap_or</span>(<span class="number">0</span>);
-		<span class="kw">let</span> <span class="ident">anon</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::anonymous_account</span>(<span class="kw-2">&amp;</span><span class="ident">caller</span>, <span class="kw-2">&amp;</span><span class="ident">T::ProxyType::default</span>(), <span class="number">0</span>, <span class="prelude-val">None</span>);
+		<span class="kw">let</span> <span class="ident">pure_account</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::pure_account</span>(<span class="kw-2">&amp;</span><span class="ident">caller</span>, <span class="kw-2">&amp;</span><span class="ident">T::ProxyType::default</span>(), <span class="number">0</span>, <span class="prelude-val">None</span>);
 
-		<span class="ident">add_proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">p</span>, <span class="prelude-val">Some</span>(<span class="ident">anon</span>.<span class="ident">clone</span>()))<span class="question-mark">?</span>;
-		<span class="macro">ensure!</span>(<span class="ident">Proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">anon</span>), <span class="string">&quot;anon proxy not created&quot;</span>);
-	}: <span class="kw">_</span>(<span class="ident">RawOrigin::Signed</span>(<span class="ident">anon</span>.<span class="ident">clone</span>()), <span class="ident">caller_lookup</span>, <span class="ident">T::ProxyType::default</span>(), <span class="number">0</span>, <span class="ident">height</span>, <span class="ident">ext_index</span>)
+		<span class="ident">add_proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">p</span>, <span class="prelude-val">Some</span>(<span class="ident">pure_account</span>.<span class="ident">clone</span>()))<span class="question-mark">?</span>;
+		<span class="macro">ensure!</span>(<span class="ident">Proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">pure_account</span>), <span class="string">&quot;pure proxy not created&quot;</span>);
+	}: <span class="kw">_</span>(<span class="ident">RawOrigin::Signed</span>(<span class="ident">pure_account</span>.<span class="ident">clone</span>()), <span class="ident">caller_lookup</span>, <span class="ident">T::ProxyType::default</span>(), <span class="number">0</span>, <span class="ident">height</span>, <span class="ident">ext_index</span>)
 	<span class="ident">verify</span> {
-		<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">Proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">anon</span>));
+		<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">Proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">pure_account</span>));
 	}
 
 	<span class="macro">impl_benchmark_test_suite!</span>(<span class="ident">Proxy</span>, <span class="ident"><span class="kw">crate</span>::tests::new_test_ext</span>(), <span class="ident"><span class="kw">crate</span>::tests::Test</span>);

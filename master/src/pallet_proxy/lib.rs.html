@@ -799,55 +799,6 @@
 <span id="793">793</span>
 <span id="794">794</span>
 <span id="795">795</span>
-<span id="796">796</span>
-<span id="797">797</span>
-<span id="798">798</span>
-<span id="799">799</span>
-<span id="800">800</span>
-<span id="801">801</span>
-<span id="802">802</span>
-<span id="803">803</span>
-<span id="804">804</span>
-<span id="805">805</span>
-<span id="806">806</span>
-<span id="807">807</span>
-<span id="808">808</span>
-<span id="809">809</span>
-<span id="810">810</span>
-<span id="811">811</span>
-<span id="812">812</span>
-<span id="813">813</span>
-<span id="814">814</span>
-<span id="815">815</span>
-<span id="816">816</span>
-<span id="817">817</span>
-<span id="818">818</span>
-<span id="819">819</span>
-<span id="820">820</span>
-<span id="821">821</span>
-<span id="822">822</span>
-<span id="823">823</span>
-<span id="824">824</span>
-<span id="825">825</span>
-<span id="826">826</span>
-<span id="827">827</span>
-<span id="828">828</span>
-<span id="829">829</span>
-<span id="830">830</span>
-<span id="831">831</span>
-<span id="832">832</span>
-<span id="833">833</span>
-<span id="834">834</span>
-<span id="835">835</span>
-<span id="836">836</span>
-<span id="837">837</span>
-<span id="838">838</span>
-<span id="839">839</span>
-<span id="840">840</span>
-<span id="841">841</span>
-<span id="842">842</span>
-<span id="843">843</span>
-<span id="844">844</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -1041,10 +992,6 @@
 		<span class="doccomment">/// - `real`: The account that the proxy will make a call on behalf of.</span>
 		<span class="doccomment">/// - `force_proxy_type`: Specify the exact proxy type to be used and checked for this call.</span>
 		<span class="doccomment">/// - `call`: The call to be made by the `real` account.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of the number of proxies the user has (P).</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>({
 			<span class="kw">let</span> <span class="ident">di</span> <span class="op">=</span> <span class="ident">call</span>.<span class="ident">get_dispatch_info</span>();
 			(<span class="ident">T::WeightInfo::proxy</span>(<span class="ident">T::MaxProxies::get</span>())
@@ -1078,10 +1025,6 @@
 		<span class="doccomment">/// - `proxy_type`: The permissions allowed for this proxy account.</span>
 		<span class="doccomment">/// - `delay`: The announcement period required of the initial proxy. Will generally be</span>
 		<span class="doccomment">/// zero.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of the number of proxies the user has (P).</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::add_proxy</span>(<span class="ident">T::MaxProxies::get</span>()))]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_proxy</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
@@ -1101,10 +1044,6 @@
 		<span class="doccomment">/// Parameters:</span>
 		<span class="doccomment">/// - `proxy`: The account that the `caller` would like to remove as a proxy.</span>
 		<span class="doccomment">/// - `proxy_type`: The permissions currently enabled for the removed proxy account.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of the number of proxies the user has (P).</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::remove_proxy</span>(<span class="ident">T::MaxProxies::get</span>()))]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_proxy</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
@@ -1121,12 +1060,8 @@
 		<span class="doccomment">///</span>
 		<span class="doccomment">/// The dispatch origin for this call must be _Signed_.</span>
 		<span class="doccomment">///</span>
-		<span class="doccomment">/// WARNING: This may be called on accounts created by `anonymous`, however if done, then</span>
+		<span class="doccomment">/// WARNING: This may be called on accounts created by `pure`, however if done, then</span>
 		<span class="doccomment">/// the unreserved fees will be inaccessible. **All access to this account will be lost.**</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of the number of proxies the user has (P).</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::remove_proxies</span>(<span class="ident">T::MaxProxies::get</span>()))]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_proxies</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">DispatchResult</span> {
 			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
@@ -1154,13 +1089,8 @@
 		<span class="doccomment">/// same sender, with the same parameters.</span>
 		<span class="doccomment">///</span>
 		<span class="doccomment">/// Fails if there are insufficient funds to pay for deposit.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of the number of proxies the user has (P).</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
-		<span class="doccomment">/// TODO: Might be over counting 1 read</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::anonymous</span>(<span class="ident">T::MaxProxies::get</span>()))]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">anonymous</span>(
+		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::create_pure</span>(<span class="ident">T::MaxProxies::get</span>()))]</span>
+		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_pure</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">proxy_type</span>: <span class="ident">T::ProxyType</span>,
 			<span class="ident">delay</span>: <span class="ident">T::BlockNumber</span>,
@@ -1168,8 +1098,8 @@
 		) -&gt; <span class="ident">DispatchResult</span> {
 			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="ident">anonymous</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::anonymous_account</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>, <span class="kw-2">&amp;</span><span class="ident">proxy_type</span>, <span class="ident">index</span>, <span class="prelude-val">None</span>);
-			<span class="macro">ensure!</span>(<span class="op">!</span><span class="ident">Proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">anonymous</span>), <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Duplicate</span>);
+			<span class="kw">let</span> <span class="ident">pure</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::pure_account</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>, <span class="kw-2">&amp;</span><span class="ident">proxy_type</span>, <span class="ident">index</span>, <span class="prelude-val">None</span>);
+			<span class="macro">ensure!</span>(<span class="op">!</span><span class="ident">Proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">pure</span>), <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Duplicate</span>);
 
 			<span class="kw">let</span> <span class="ident">proxy_def</span> <span class="op">=</span>
 				<span class="ident">ProxyDefinition</span> { <span class="ident">delegate</span>: <span class="ident">who</span>.<span class="ident">clone</span>(), <span class="ident">proxy_type</span>: <span class="ident">proxy_type</span>.<span class="ident">clone</span>(), <span class="ident">delay</span> };
@@ -1179,9 +1109,9 @@
 			<span class="kw">let</span> <span class="ident">deposit</span> <span class="op">=</span> <span class="ident">T::ProxyDepositBase::get</span>() <span class="op">+</span> <span class="ident">T::ProxyDepositFactor::get</span>();
 			<span class="ident">T::Currency::reserve</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>, <span class="ident">deposit</span>)<span class="question-mark">?</span>;
 
-			<span class="ident">Proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="kw-2">&amp;</span><span class="ident">anonymous</span>, (<span class="ident">bounded_proxies</span>, <span class="ident">deposit</span>));
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event::AnonymousCreated</span> {
-				<span class="ident">anonymous</span>,
+			<span class="ident">Proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="kw-2">&amp;</span><span class="ident">pure</span>, (<span class="ident">bounded_proxies</span>, <span class="ident">deposit</span>));
+			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event::PureCreated</span> {
+				<span class="ident">pure</span>,
 				<span class="ident">who</span>,
 				<span class="ident">proxy_type</span>,
 				<span class="ident">disambiguation_index</span>: <span class="ident">index</span>,
@@ -1190,28 +1120,24 @@
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Removes a previously spawned anonymous proxy.</span>
+		<span class="doccomment">/// Removes a previously spawned pure proxy.</span>
 		<span class="doccomment">///</span>
 		<span class="doccomment">/// WARNING: **All access to this account will be lost.** Any funds held in it will be</span>
 		<span class="doccomment">/// inaccessible.</span>
 		<span class="doccomment">///</span>
 		<span class="doccomment">/// Requires a `Signed` origin, and the sender account must have been created by a call to</span>
-		<span class="doccomment">/// `anonymous` with corresponding parameters.</span>
+		<span class="doccomment">/// `pure` with corresponding parameters.</span>
 		<span class="doccomment">///</span>
-		<span class="doccomment">/// - `spawner`: The account that originally called `anonymous` to create this account.</span>
-		<span class="doccomment">/// - `index`: The disambiguation index originally passed to `anonymous`. Probably `0`.</span>
-		<span class="doccomment">/// - `proxy_type`: The proxy type originally passed to `anonymous`.</span>
-		<span class="doccomment">/// - `height`: The height of the chain when the call to `anonymous` was processed.</span>
-		<span class="doccomment">/// - `ext_index`: The extrinsic index in which the call to `anonymous` was processed.</span>
+		<span class="doccomment">/// - `spawner`: The account that originally called `pure` to create this account.</span>
+		<span class="doccomment">/// - `index`: The disambiguation index originally passed to `pure`. Probably `0`.</span>
+		<span class="doccomment">/// - `proxy_type`: The proxy type originally passed to `pure`.</span>
+		<span class="doccomment">/// - `height`: The height of the chain when the call to `pure` was processed.</span>
+		<span class="doccomment">/// - `ext_index`: The extrinsic index in which the call to `pure` was processed.</span>
 		<span class="doccomment">///</span>
-		<span class="doccomment">/// Fails with `NoPermission` in case the caller is not a previously created anonymous</span>
-		<span class="doccomment">/// account whose `anonymous` call has corresponding parameters.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of the number of proxies the user has (P).</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::kill_anonymous</span>(<span class="ident">T::MaxProxies::get</span>()))]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kill_anonymous</span>(
+		<span class="doccomment">/// Fails with `NoPermission` in case the caller is not a previously created pure</span>
+		<span class="doccomment">/// account whose `pure` call has corresponding parameters.</span>
+		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::kill_pure</span>(<span class="ident">T::MaxProxies::get</span>()))]</span>
+		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kill_pure</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">spawner</span>: <span class="ident">AccountIdLookupOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 			<span class="ident">proxy_type</span>: <span class="ident">T::ProxyType</span>,
@@ -1223,7 +1149,7 @@
 			<span class="kw">let</span> <span class="ident">spawner</span> <span class="op">=</span> <span class="ident">T::Lookup::lookup</span>(<span class="ident">spawner</span>)<span class="question-mark">?</span>;
 
 			<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> (<span class="ident">height</span>, <span class="ident">ext_index</span>);
-			<span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::anonymous_account</span>(<span class="kw-2">&amp;</span><span class="ident">spawner</span>, <span class="kw-2">&amp;</span><span class="ident">proxy_type</span>, <span class="ident">index</span>, <span class="prelude-val">Some</span>(<span class="ident">when</span>));
+			<span class="kw">let</span> <span class="ident">proxy</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::pure_account</span>(<span class="kw-2">&amp;</span><span class="ident">spawner</span>, <span class="kw-2">&amp;</span><span class="ident">proxy_type</span>, <span class="ident">index</span>, <span class="prelude-val">Some</span>(<span class="ident">when</span>));
 			<span class="macro">ensure!</span>(<span class="ident">proxy</span> <span class="op">==</span> <span class="ident">who</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::NoPermission</span>);
 
 			<span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">deposit</span>) <span class="op">=</span> <span class="ident">Proxies</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::take</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>);
@@ -1247,12 +1173,6 @@
 		<span class="doccomment">/// Parameters:</span>
 		<span class="doccomment">/// - `real`: The account that the proxy will make a call on behalf of.</span>
 		<span class="doccomment">/// - `call_hash`: The hash of the call to be made by the `real` account.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of:</span>
-		<span class="doccomment">/// - A: the number of announcements made.</span>
-		<span class="doccomment">/// - P: the number of proxies the user has.</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::announce</span>(<span class="ident">T::MaxPending::get</span>(), <span class="ident">T::MaxProxies::get</span>()))]</span>
 		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">announce</span>(
 			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
@@ -1302,12 +1222,6 @@
 		<span class="doccomment">/// Parameters:</span>
 		<span class="doccomment">/// - `real`: The account that the proxy will make a call on behalf of.</span>
 		<span class="doccomment">/// - `call_hash`: The hash of the call to be made by the `real` account.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of:</span>
-		<span class="doccomment">/// - A: the number of announcements made.</span>
-		<span class="doccomment">/// - P: the number of proxies the user has.</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::remove_announcement</span>(
 			<span class="ident">T::MaxPending::get</span>(),
 			<span class="ident">T::MaxProxies::get</span>()
@@ -1334,12 +1248,6 @@
 		<span class="doccomment">/// Parameters:</span>
 		<span class="doccomment">/// - `delegate`: The account that previously announced the call.</span>
 		<span class="doccomment">/// - `call_hash`: The hash of the call to be made.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of:</span>
-		<span class="doccomment">/// - A: the number of announcements made.</span>
-		<span class="doccomment">/// - P: the number of proxies the user has.</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::reject_announcement</span>(
 			<span class="ident">T::MaxPending::get</span>(),
 			<span class="ident">T::MaxProxies::get</span>()
@@ -1369,12 +1277,6 @@
 		<span class="doccomment">/// - `real`: The account that the proxy will make a call on behalf of.</span>
 		<span class="doccomment">/// - `force_proxy_type`: Specify the exact proxy type to be used and checked for this call.</span>
 		<span class="doccomment">/// - `call`: The call to be made by the `real` account.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// # &lt;weight&gt;</span>
-		<span class="doccomment">/// Weight is a function of:</span>
-		<span class="doccomment">/// - A: the number of announcements made.</span>
-		<span class="doccomment">/// - P: the number of proxies the user has.</span>
-		<span class="doccomment">/// # &lt;/weight&gt;</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>({
 			<span class="kw">let</span> <span class="ident">di</span> <span class="op">=</span> <span class="ident">call</span>.<span class="ident">get_dispatch_info</span>();
 			(<span class="ident">T::WeightInfo::proxy_announced</span>(<span class="ident">T::MaxPending::get</span>(), <span class="ident">T::MaxProxies::get</span>())
@@ -1415,10 +1317,10 @@
 	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
 		<span class="doccomment">/// A proxy was executed correctly, with the given.</span>
 		<span class="ident">ProxyExecuted</span> { <span class="ident">result</span>: <span class="ident">DispatchResult</span> },
-		<span class="doccomment">/// Anonymous account has been created by new proxy with given</span>
+		<span class="doccomment">/// A pure account has been created by new proxy with given</span>
 		<span class="doccomment">/// disambiguation index and proxy type.</span>
-		<span class="ident">AnonymousCreated</span> {
-			<span class="ident">anonymous</span>: <span class="ident">T::AccountId</span>,
+		<span class="ident">PureCreated</span> {
+			<span class="ident">pure</span>: <span class="ident">T::AccountId</span>,
 			<span class="ident">who</span>: <span class="ident">T::AccountId</span>,
 			<span class="ident">proxy_type</span>: <span class="ident">T::ProxyType</span>,
 			<span class="ident">disambiguation_index</span>: <span class="ident">u16</span>,
@@ -1492,7 +1394,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Calculate the address of an anonymous account.</span>
+	<span class="doccomment">/// Calculate the address of an pure account.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// - `who`: The spawner account.</span>
 	<span class="doccomment">/// - `proxy_type`: The type of the proxy that the sender will be registered as over the</span>
@@ -1501,9 +1403,9 @@
 	<span class="doccomment">/// - `index`: A disambiguation index, in case this is called multiple times in the same</span>
 	<span class="doccomment">/// transaction (e.g. with `utility::batch`). Unless you&#39;re using `batch` you probably just</span>
 	<span class="doccomment">/// want to use `0`.</span>
-	<span class="doccomment">/// - `maybe_when`: The block height and extrinsic index of when the anonymous account was</span>
+	<span class="doccomment">/// - `maybe_when`: The block height and extrinsic index of when the pure account was</span>
 	<span class="doccomment">/// created. None to use current block height and extrinsic index.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">anonymous_account</span>(
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pure_account</span>(
 		<span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">T::AccountId</span>,
 		<span class="ident">proxy_type</span>: <span class="kw-2">&amp;</span><span class="ident">T::ProxyType</span>,
 		<span class="ident">index</span>: <span class="ident">u16</span>,
@@ -1680,9 +1582,9 @@
 				<span class="prelude-val">Some</span>(<span class="ident">Call::remove_proxy</span> { <span class="kw-2">ref</span> <span class="ident">proxy_type</span>, .. })
 					<span class="kw">if</span> <span class="op">!</span><span class="ident">def</span>.<span class="ident">proxy_type</span>.<span class="ident">is_superset</span>(<span class="ident">proxy_type</span>) =&gt;
 					<span class="bool-val">false</span>,
-				<span class="comment">// Proxy call cannot remove all proxies or kill anonymous proxies unless it has full</span>
+				<span class="comment">// Proxy call cannot remove all proxies or kill pure proxies unless it has full</span>
 				<span class="comment">// permissions.</span>
-				<span class="prelude-val">Some</span>(<span class="ident">Call::remove_proxies</span> { .. }) <span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">Call::kill_anonymous</span> { .. })
+				<span class="prelude-val">Some</span>(<span class="ident">Call::remove_proxies</span> { .. }) <span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">Call::kill_pure</span> { .. })
 					<span class="kw">if</span> <span class="ident">def</span>.<span class="ident">proxy_type</span> <span class="op">!</span><span class="op">=</span> <span class="ident">T::ProxyType::default</span>() =&gt;
 					<span class="bool-val">false</span>,
 				<span class="kw">_</span> =&gt; <span class="ident">def</span>.<span class="ident">proxy_type</span>.<span class="ident">filter</span>(<span class="ident">c</span>),
