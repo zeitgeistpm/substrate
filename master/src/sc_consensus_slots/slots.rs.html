@@ -189,18 +189,6 @@
 <span id="183">183</span>
 <span id="184">184</span>
 <span id="185">185</span>
-<span id="186">186</span>
-<span id="187">187</span>
-<span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -253,8 +241,6 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SlotInfo</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// The slot number as found in the inherent data.</span>
 	<span class="kw">pub</span> <span class="ident">slot</span>: <span class="ident">Slot</span>,
-	<span class="doccomment">/// Current timestamp as found in the inherent data.</span>
-	<span class="kw">pub</span> <span class="ident">timestamp</span>: <span class="ident">sp_timestamp::Timestamp</span>,
 	<span class="doccomment">/// The instant at which the slot ends.</span>
 	<span class="kw">pub</span> <span class="ident">ends_at</span>: <span class="ident">Instant</span>,
 	<span class="doccomment">/// The inherent data.</span>
@@ -275,7 +261,6 @@
 	<span class="doccomment">/// `ends_at` is calculated using `timestamp` and `duration`.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
 		<span class="ident">slot</span>: <span class="ident">Slot</span>,
-		<span class="ident">timestamp</span>: <span class="ident">sp_timestamp::Timestamp</span>,
 		<span class="ident">inherent_data</span>: <span class="ident">InherentData</span>,
 		<span class="ident">duration</span>: <span class="ident">Duration</span>,
 		<span class="ident">chain_head</span>: <span class="ident">B::Header</span>,
@@ -283,7 +268,6 @@
 	) -&gt; <span class="self">Self</span> {
 		<span class="self">Self</span> {
 			<span class="ident">slot</span>,
-			<span class="ident">timestamp</span>,
 			<span class="ident">inherent_data</span>,
 			<span class="ident">duration</span>,
 			<span class="ident">chain_head</span>,
@@ -378,7 +362,6 @@
 				);
 			}
 
-			<span class="kw">let</span> <span class="ident">timestamp</span> <span class="op">=</span> <span class="ident">inherent_data_providers</span>.<span class="ident">timestamp</span>();
 			<span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="ident">inherent_data_providers</span>.<span class="ident">slot</span>();
 			<span class="kw">let</span> <span class="ident">inherent_data</span> <span class="op">=</span> <span class="ident">inherent_data_providers</span>.<span class="ident">create_inherent_data</span>()<span class="question-mark">?</span>;
 
@@ -386,14 +369,7 @@
 			<span class="kw">if</span> <span class="ident">slot</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">last_slot</span> {
 				<span class="self">self</span>.<span class="ident">last_slot</span> <span class="op">=</span> <span class="ident">slot</span>;
 
-				<span class="kw">break</span> <span class="prelude-val">Ok</span>(<span class="ident">SlotInfo::new</span>(
-					<span class="ident">slot</span>,
-					<span class="ident">timestamp</span>,
-					<span class="ident">inherent_data</span>,
-					<span class="self">self</span>.<span class="ident">slot_duration</span>,
-					<span class="ident">chain_head</span>,
-					<span class="prelude-val">None</span>,
-				))
+				<span class="kw">break</span> <span class="prelude-val">Ok</span>(<span class="ident">SlotInfo::new</span>(<span class="ident">slot</span>, <span class="ident">inherent_data</span>, <span class="self">self</span>.<span class="ident">slot_duration</span>, <span class="ident">chain_head</span>, <span class="prelude-val">None</span>))
 			}
 		}
 	}

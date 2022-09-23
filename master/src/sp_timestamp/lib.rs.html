@@ -277,7 +277,6 @@
 <span id="271">271</span>
 <span id="272">272</span>
 <span id="273">273</span>
-<span id="274">274</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -335,6 +334,17 @@
 	<span class="doccomment">/// Checked subtraction that returns `None` on an underflow.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">checked_sub</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
 		<span class="self">self</span>.<span class="number">0</span>.<span class="ident">checked_sub</span>(<span class="ident">other</span>.<span class="number">0</span>).<span class="ident">map</span>(<span class="self">Self</span>)
+	}
+
+	<span class="doccomment">/// The current timestamp using the system time.</span>
+	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current</span>() -&gt; <span class="self">Self</span> {
+		<span class="kw">use</span> <span class="ident">std::time::SystemTime</span>;
+
+		<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">SystemTime::now</span>();
+		<span class="ident">now</span>.<span class="ident">duration_since</span>(<span class="ident">SystemTime::UNIX_EPOCH</span>)
+			.<span class="ident">expect</span>(<span class="string">&quot;Current time is always after unix epoch; qed&quot;</span>)
+			.<span class="ident">into</span>()
 	}
 }
 
@@ -445,18 +455,6 @@
 	}
 }
 
-<span class="doccomment">/// The current timestamp using the system time.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This timestamp is the time since the UNIX epoch.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">fn</span> <span class="ident">current_timestamp</span>() -&gt; <span class="ident">std::time::Duration</span> {
-	<span class="kw">use</span> <span class="ident">std::time::SystemTime</span>;
-
-	<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">SystemTime::now</span>();
-	<span class="ident">now</span>.<span class="ident">duration_since</span>(<span class="ident">SystemTime::UNIX_EPOCH</span>)
-		.<span class="ident">expect</span>(<span class="string">&quot;Current time is always after unix epoch; qed&quot;</span>)
-}
-
 <span class="doccomment">/// Provide duration since unix epoch in millisecond for timestamp inherent.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InherentDataProvider</span> {
@@ -470,7 +468,7 @@
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_system_time</span>() -&gt; <span class="self">Self</span> {
 		<span class="self">Self</span> {
 			<span class="ident">max_drift</span>: <span class="ident">std::time::Duration::from_secs</span>(<span class="number">60</span>).<span class="ident">into</span>(),
-			<span class="ident">timestamp</span>: <span class="ident">current_timestamp</span>().<span class="ident">into</span>(),
+			<span class="ident">timestamp</span>: <span class="ident">Timestamp::current</span>(),
 		}
 	}
 
