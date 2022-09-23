@@ -68,6 +68,7 @@ sourcesIndex["pallet_elections_phragmen"] = {"name":"","dirs":[{"name":"migratio
 sourcesIndex["pallet_example_basic"] = {"name":"","files":["benchmarking.rs","lib.rs","weights.rs"]};
 sourcesIndex["pallet_example_offchain_worker"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["pallet_example_parallel"] = {"name":"","files":["lib.rs"]};
+sourcesIndex["pallet_fast_unstake"] = {"name":"","files":["benchmarking.rs","lib.rs","types.rs","weights.rs"]};
 sourcesIndex["pallet_gilt"] = {"name":"","files":["benchmarking.rs","lib.rs","weights.rs"]};
 sourcesIndex["pallet_grandpa"] = {"name":"","dirs":[{"name":"migrations","files":["v4.rs"]}],"files":["benchmarking.rs","default_weights.rs","equivocation.rs","lib.rs","migrations.rs"]};
 sourcesIndex["pallet_identity"] = {"name":"","files":["benchmarking.rs","lib.rs","types.rs","weights.rs"]};

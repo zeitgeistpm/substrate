@@ -2255,6 +2255,15 @@
 <span id="2249">2249</span>
 <span id="2250">2250</span>
 <span id="2251">2251</span>
+<span id="2252">2252</span>
+<span id="2253">2253</span>
+<span id="2254">2254</span>
+<span id="2255">2255</span>
+<span id="2256">2256</span>
+<span id="2257">2257</span>
+<span id="2258">2258</span>
+<span id="2259">2259</span>
+<span id="2260">2260</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -2834,6 +2843,13 @@
 	<span class="kw">type</span> <span class="ident">OnStakerSlash</span> <span class="op">=</span> <span class="ident">NominationPools</span>;
 	<span class="kw">type</span> <span class="ident">WeightInfo</span> <span class="op">=</span> <span class="ident">pallet_staking::weights::SubstrateWeight</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">BenchmarkingConfig</span> <span class="op">=</span> <span class="ident">StakingBenchmarkingConfig</span>;
+}
+
+<span class="kw">impl</span> <span class="ident">pallet_fast_unstake::Config</span> <span class="kw">for</span> <span class="ident">Runtime</span> {
+	<span class="kw">type</span> <span class="ident">RuntimeEvent</span> <span class="op">=</span> <span class="ident">RuntimeEvent</span>;
+	<span class="kw">type</span> <span class="ident">SlashPerEra</span> <span class="op">=</span> <span class="ident">ConstU128</span><span class="op">&lt;</span>{ <span class="ident">DOLLARS</span> }<span class="op">&gt;</span>;
+	<span class="kw">type</span> <span class="ident">ControlOrigin</span> <span class="op">=</span> <span class="ident">frame_system::EnsureRoot</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>;
+	<span class="kw">type</span> <span class="ident">WeightInfo</span> <span class="op">=</span> ();
 }
 
 <span class="macro">parameter_types!</span> {
@@ -3912,6 +3928,7 @@
 		<span class="ident">NominationPools</span>: <span class="ident">pallet_nomination_pools</span>,
 		<span class="ident">RankedPolls</span>: <span class="ident">pallet_referenda</span>::<span class="op">&lt;</span><span class="ident">Instance2</span><span class="op">&gt;</span>,
 		<span class="ident">RankedCollective</span>: <span class="ident">pallet_ranked_collective</span>,
+		<span class="ident">FastUnstake</span>: <span class="ident">pallet_fast_unstake</span>,
 	}
 );
 
@@ -3998,6 +4015,7 @@
 		[<span class="ident">pallet_election_provider_multi_phase</span>, <span class="ident">ElectionProviderMultiPhase</span>]
 		[<span class="ident">pallet_election_provider_support_benchmarking</span>, <span class="ident">EPSBench</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span>]
 		[<span class="ident">pallet_elections_phragmen</span>, <span class="ident">Elections</span>]
+		[<span class="ident">pallet_fast_unstake</span>, <span class="ident">FastUnstake</span>]
 		[<span class="ident">pallet_gilt</span>, <span class="ident">Gilt</span>]
 		[<span class="ident">pallet_grandpa</span>, <span class="ident">Grandpa</span>]
 		[<span class="ident">pallet_identity</span>, <span class="ident">Identity</span>]

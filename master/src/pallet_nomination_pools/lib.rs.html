@@ -2554,6 +2554,7 @@
 <span id="2548">2548</span>
 <span id="2549">2549</span>
 <span id="2550">2550</span>
+<span id="2551">2551</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -4740,10 +4741,11 @@
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// It is essentially `max { MinNominatorBond, MinCreateBond, MinJoinBond }`, where the former</span>
 	<span class="doccomment">/// is coming from the staking pallet and the latter two are configured in this pallet.</span>
-	<span class="kw">fn</span> <span class="ident">depositor_min_bond</span>() -&gt; <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">depositor_min_bond</span>() -&gt; <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
 		<span class="ident">T::StakingInterface::minimum_bond</span>()
 			.<span class="ident">max</span>(<span class="ident">MinCreateBond</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>())
 			.<span class="ident">max</span>(<span class="ident">MinJoinBond</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>())
+			.<span class="ident">max</span>(<span class="ident">T::Currency::minimum_balance</span>())
 	}
 	<span class="doccomment">/// Remove everything related to the given bonded pool.</span>
 	<span class="doccomment">///</span>

@@ -622,6 +622,13 @@
 <span id="616">616</span>
 <span id="617">617</span>
 <span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -760,7 +767,7 @@
 <span class="doccomment">//!         type BlockNumber = BlockNumber;</span>
 <span class="doccomment">//!         type Error = &amp;&#39;static str;</span>
 <span class="doccomment">//!         type DataProvider = T::DataProvider;</span>
-<span class="doccomment">//!</span>
+<span class="doccomment">//! 	        fn ongoing() -&gt; bool { false }</span>
 <span class="doccomment">//!         fn elect() -&gt; Result&lt;Supports&lt;AccountId&gt;, Self::Error&gt; {</span>
 <span class="doccomment">//!             Self::DataProvider::electable_targets(None)</span>
 <span class="doccomment">//!                 .map_err(|_| &quot;failed to elect&quot;)</span>
@@ -994,6 +1001,9 @@
 		<span class="ident">BlockNumber</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::BlockNumber</span>,
 	<span class="op">&gt;</span>;
 
+	<span class="doccomment">/// Indicate if this election provider is currently ongoing an asynchronous election or not.</span>
+	<span class="kw">fn</span> <span class="ident">ongoing</span>() -&gt; <span class="ident">bool</span>;
+
 	<span class="doccomment">/// Elect a new set of winners, without specifying any bounds on the amount of data fetched from</span>
 	<span class="doccomment">/// [`Self::DataProvider`]. An implementation could nonetheless impose its own custom limits.</span>
 	<span class="doccomment">///</span>
@@ -1043,6 +1053,10 @@
 
 	<span class="kw">fn</span> <span class="ident">elect</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Supports</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
 		<span class="prelude-val">Err</span>(<span class="string">&quot;&lt;NoElection as ElectionProvider&gt; cannot do anything.&quot;</span>)
+	}
+
+	<span class="kw">fn</span> <span class="ident">ongoing</span>() -&gt; <span class="ident">bool</span> {
+		<span class="bool-val">false</span>
 	}
 }
 
