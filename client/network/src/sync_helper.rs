@@ -98,11 +98,12 @@ pub struct SyncingHelper<B: BlockT, Client> {
 	/// Number of slots to allocate to light nodes.
 	default_peers_set_num_light: usize,
 
-	rx: mpsc::Receiver<SyncEvent<B>>,
+	rx: mpsc::UnboundedReceiver<SyncEvent<B>>,
 
 	pending_messages: VecDeque<CustomMessageOutcome<B>>,
 }
 
+#[derive(Debug)]
 pub enum SyncEvent<B: BlockT> {
 	NumConnectedPeers(oneshot::Sender<usize>),
 	SyncState(oneshot::Sender<SyncStatus<B>>),
@@ -112,7 +113,8 @@ pub enum SyncEvent<B: BlockT> {
 	NumDownloadedBlocks(oneshot::Sender<usize>),
 	NumSyncRequests(oneshot::Sender<usize>),
 	UpdateChainInfo(B::Hash, NumberFor<B>),
-	// GetBlockAnnounceData(B::Hash, oneshot::Sender<Vec<u8>>),
+	GetBlockAnnounceData(B::Hash, oneshot::Sender<Option<Vec<u8>>>),
+	InsertKnownBlock(PeerId, B::Hash, oneshot::Sender<bool>),
 	OnBlockFinalized(B::Hash, B::Header),
 	RequestJustification(B::Hash, NumberFor<B>),
 	ClearJustificationRequests,
@@ -141,32 +143,29 @@ pub enum SyncEvent<B: BlockT> {
 
 #[derive(Clone)]
 pub struct SyncingHandle<B: BlockT> {
-	tx: mpsc::Sender<SyncEvent<B>>,
+	tx: mpsc::UnboundedSender<SyncEvent<B>>,
 }
 
 impl<B: BlockT> SyncingHandle<B> {
-	pub fn new(tx: mpsc::Sender<SyncEvent<B>>) -> Self {
+	pub fn new(tx: mpsc::UnboundedSender<SyncEvent<B>>) -> Self {
 		Self { tx }
 	}
 
 	pub async fn on_block_finalized(&mut self, hash: B::Hash, header: B::Header) {
 		self.tx
-			.send(SyncEvent::OnBlockFinalized(hash, header))
-			.await
+			.unbounded_send(SyncEvent::OnBlockFinalized(hash, header))
 			.expect("channel to stay open");
 	}
 
 	pub async fn request_justification(&mut self, hash: B::Hash, number: NumberFor<B>) {
 		self.tx
-			.send(SyncEvent::RequestJustification(hash, number))
-			.await
+			.unbounded_send(SyncEvent::RequestJustification(hash, number))
 			.expect("channel to stay open");
 	}
 
 	pub async fn clear_justification_requests(&mut self) {
 		self.tx
-			.send(SyncEvent::ClearJustificationRequests)
-			.await
+			.unbounded_send(SyncEvent::ClearJustificationRequests)
 			.expect("channel to stay open");
 	}
 
@@ -177,8 +176,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		number: NumberFor<B>,
 	) {
 		self.tx
-			.send(SyncEvent::SetSyncForkRequest(peers, hash, number))
-			.await
+			.unbounded_send(SyncEvent::SetSyncForkRequest(peers, hash, number))
 			.expect("channel to stay open");
 	}
 
@@ -191,8 +189,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx
-			.send(SyncEvent::OnBlocksProcessed(imported, count, results, tx))
-			.await
+			.unbounded_send(SyncEvent::OnBlocksProcessed(imported, count, results, tx))
 			.expect("channel to stay open");
 
 		rx.await.expect("channel to stay open")
@@ -206,8 +203,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		success: bool,
 	) {
 		self.tx
-			.send(SyncEvent::JustificationImportResult(who, hash, number, success))
-			.await
+			.unbounded_send(SyncEvent::JustificationImportResult(who, hash, number, success))
 			.expect("channel to stay open");
 	}
 
@@ -218,8 +214,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx
-			.send(SyncEvent::EncodeBlockRequest(request, tx))
-			.await
+			.unbounded_send(SyncEvent::EncodeBlockRequest(request, tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
@@ -232,8 +227,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx
-			.send(SyncEvent::EncodeStateRequest(request, tx))
-			.await
+			.unbounded_send(SyncEvent::EncodeStateRequest(request, tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
@@ -243,9 +237,7 @@ impl<B: BlockT> SyncingHandle<B> {
 
 		// TODO: zzz
 		self.tx
-			.clone()
-			.send(SyncEvent::NumConnectedPeers(tx))
-			.await
+			.unbounded_send(SyncEvent::NumConnectedPeers(tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
@@ -255,9 +247,7 @@ impl<B: BlockT> SyncingHandle<B> {
 
 		// TODO: zzz
 		self.tx
-			.clone()
-			.send(SyncEvent::SyncState(tx))
-			.await
+			.unbounded_send(SyncEvent::SyncState(tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
@@ -267,9 +257,7 @@ impl<B: BlockT> SyncingHandle<B> {
 
 		// TODO: zzz
 		self.tx
-			.clone()
-			.send(SyncEvent::NumDownloadedBlocks(tx))
-			.await
+			.unbounded_send(SyncEvent::NumDownloadedBlocks(tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
@@ -279,17 +267,14 @@ impl<B: BlockT> SyncingHandle<B> {
 
 		// TODO: zzz
 		self.tx
-			.clone()
-			.send(SyncEvent::NumSyncRequests(tx))
-			.await
+			.unbounded_send(SyncEvent::NumSyncRequests(tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
 
 	pub async fn update_chain_info(&mut self, hash: B::Hash, number: NumberFor<B>) {
 		self.tx
-			.send(SyncEvent::UpdateChainInfo(hash, number))
-			.await
+			.unbounded_send(SyncEvent::UpdateChainInfo(hash, number))
 			.expect("channel to stay open");
 	}
 
@@ -298,9 +283,7 @@ impl<B: BlockT> SyncingHandle<B> {
 
 		// TODO: zzz
 		self.tx
-			.clone()
-			.send(SyncEvent::GetPeers(tx))
-			.await
+			.unbounded_send(SyncEvent::GetPeers(tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
@@ -309,8 +292,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx
-			.send(SyncEvent::CustomProtocolClosed(peer, tx))
-			.await
+			.unbounded_send(SyncEvent::CustomProtocolClosed(peer, tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
@@ -325,14 +307,13 @@ impl<B: BlockT> SyncingHandle<B> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx
-			.send(SyncEvent::CustomProtocolOpen(
+			.unbounded_send(SyncEvent::CustomProtocolOpen(
 				peer_id,
 				received_handshake,
 				notifications_sink,
 				negotiated_fallback,
 				tx,
 			))
-			.await
 			.expect("channel to stay open");
 
 		rx.await.expect("channel to stay open")
@@ -341,7 +322,7 @@ impl<B: BlockT> SyncingHandle<B> {
 	pub async fn get_events(&mut self) -> VecDeque<CustomMessageOutcome<B>> {
 		let (tx, rx) = oneshot::channel();
 
-		self.tx.send(SyncEvent::GetEvents(tx)).await.expect("channel to stay open");
+		self.tx.unbounded_send(SyncEvent::GetEvents(tx)).expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
 
@@ -353,8 +334,25 @@ impl<B: BlockT> SyncingHandle<B> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx
-			.send(SyncEvent::Notification(peer, message, tx))
-			.await
+			.unbounded_send(SyncEvent::Notification(peer, message, tx))
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn get_annouce_data(&mut self, hash: B::Hash) -> Option<Vec<u8>> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.unbounded_send(SyncEvent::GetBlockAnnounceData(hash, tx))
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn insert_known_block(&mut self, peer: PeerId, hash: B::Hash) -> bool {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.unbounded_send(SyncEvent::InsertKnownBlock(peer, hash, tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
@@ -370,7 +368,7 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		default_peers_set_num_full: usize,
 		default_peers_set_num_light: usize,
 	) -> (Self, SyncingHandle<B>) {
-		let (tx, rx) = mpsc::channel(64);
+		let (tx, rx) = mpsc::unbounded();
 
 		(
 			Self {
@@ -479,7 +477,6 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		hash: &B::Hash,
 		number: NumberFor<B>,
 	) {
-		info!(target: "sync", "setting sync for request");
 		self.chain_sync.set_sync_fork_request(peers, hash, number)
 	}
 
@@ -697,16 +694,14 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 			if let Ok(announce) = BlockAnnounce::decode(&mut message.as_ref()) {
 				self.push_block_announce_validation(peer, announce);
 
-				info!(target: "sync", "heeezz");
-
 				// // Make sure that the newly added block announce validation future was
 				// // polled once to be registered in the task.
-				// if let Poll::Ready(res) = self.chain_sync.poll_block_announce_validation(cx) {
+				// if let Poll::Ready(res) = futures::future::poll_fn(|cx|
+				// self.chain_sync.poll_block_announce_validation(cx)) {
 				// 	self.process_block_announce_validation_result(res)
 				// } else {
-				// }
-				// TODO: address this issue
 				CustomMessageOutcome::None
+			// }
 			} else {
 				warn!(target: "sub-libp2p", "Failed to decode block announce");
 				CustomMessageOutcome::None
@@ -805,8 +800,6 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 	) -> CustomMessageOutcome<B> {
 		let (tx, rx) = oneshot::channel();
 
-		info!(target: "sync", "prepareping block requset");
-
 		let new_request = self.chain_sync.create_opaque_block_request(&request);
 
 		self.pending_responses
@@ -826,8 +819,6 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 	) -> CustomMessageOutcome<B> {
 		let (tx, rx) = oneshot::channel();
 
-		info!(target: "sync", "prepareping state requset");
-
 		self.pending_responses
 			.push(Box::pin(async move { (who, PeerRequest::State, rx.await) }));
 
@@ -840,8 +831,6 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		request: WarpProofRequest<B>,
 	) -> CustomMessageOutcome<B> {
 		let (tx, rx) = oneshot::channel();
-
-		info!(target: "sync", "prepareping warp requset");
 
 		self.pending_responses
 			.push(Box::pin(async move { (who, PeerRequest::WarpProof, rx.await) }));
@@ -1218,6 +1207,46 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 			SyncEvent::Notification(peer, bytes, channel_response) => {
 				let _ = channel_response.send(self.notification(peer, bytes));
 			},
+			SyncEvent::GetBlockAnnounceData(hash, channel_response) => {
+				let _ = channel_response.send(self.block_announce_data_cache.get(&hash).cloned());
+			},
+			SyncEvent::InsertKnownBlock(who, hash, channel_response) => {
+				let res = match self.peers.get_mut(&who) {
+					Some(peer) => peer.known_blocks.insert(hash),
+					None => false,
+				};
+
+				let _ = channel_response.send(res);
+			},
+		}
+	}
+
+	fn call_chain_sync(&mut self) {
+		for (id, request) in self
+			.chain_sync
+			.block_requests()
+			.map(|(peer_id, request)| (*peer_id, request))
+			.collect::<Vec<_>>()
+		{
+			// TODO: send block request
+			let event = self.prepare_block_request(id, request);
+			self.pending_messages.push_back(event);
+		}
+
+		if let Some((id, request)) = self.chain_sync.state_request() {
+			let event = self.prepare_state_request(id, request);
+			self.pending_messages.push_back(event);
+		}
+
+		for (id, request) in self.chain_sync.justification_requests().collect::<Vec<_>>() {
+			// TODO: send block request
+			let event = self.prepare_block_request(id, request);
+			self.pending_messages.push_back(event);
+		}
+
+		if let Some((id, request)) = self.chain_sync.warp_sync_request() {
+			let event = self.prepare_warp_sync_request(id, request);
+			self.pending_messages.push_back(event);
 		}
 	}
 
@@ -1225,51 +1254,30 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		loop {
 			futures::select! {
 				command = futures::StreamExt::next(&mut self.rx).fuse() => match command {
-					Some(command) => self.handle_command(command),
-					None => {},
+					Some(command) => {
+    					// println!("command");
+    					// println!("command {:?}", command);
+						self.handle_command(command);
+						self.call_chain_sync();
+					}
+					None => {}
 				},
 				request = self.pending_responses.select_next_some() => {
-					warn!(target: "sync", "new pending response");
+    				// println!("handle pending response");
 					self.handle_pending_response(request.0, request.1, request.2)
 				}
-				_ = futures_timer::Delay::new(std::time::Duration::from_millis(500)).fuse() => {
-					for (id, request) in self
-						.chain_sync
-						.block_requests()
-						.map(|(peer_id, request)| (*peer_id, request))
-						.collect::<Vec<_>>()
-					{
-						// TODO: send block request
-						let event = self.prepare_block_request(id, request);
-						self.pending_messages.push_back(event);
-					}
-
-					if let Some((id, request)) = self.chain_sync.state_request() {
-						let event = self.prepare_state_request(id, request);
-						self.pending_messages.push_back(event);
-					}
-
-					for (id, request) in self.chain_sync.justification_requests().collect::<Vec<_>>() {
-						// TODO: send block request
-						let event = self.prepare_block_request(id, request);
-						self.pending_messages.push_back(event);
-					}
-
-					if let Some((id, request)) = self.chain_sync.warp_sync_request() {
-						let event = self.prepare_warp_sync_request(id, request);
-						self.pending_messages.push_back(event);
+				_ = async_std::task::sleep(std::time::Duration::from_millis(500)).fuse() => {
+    				println!("call chainsync");
+					self.call_chain_sync();
+				}
+				result = futures::future::poll_fn(|cx| self.chain_sync.poll_block_announce_validation(cx)).fuse() => {
+    				// println!("poll block announce validation");
+					match self.process_block_announce_validation_result(result) {
+						CustomMessageOutcome::None => {},
+						outcome => self.pending_messages.push_back(outcome),
 					}
 				}
 			}
 		}
-
-		// TODO: fix this
-		// Check if there is any block announcement validation finished.
-		// while let Poll::Ready(result) = self.chain_sync.poll_block_announce_validation(cx) {
-		// 	match self.process_block_announce_validation_result(result) {
-		// 		CustomMessageOutcome::None => {},
-		// 		outcome => pending_messages.push_back(outcome),
-		// 	}
-		// }
 	}
 }

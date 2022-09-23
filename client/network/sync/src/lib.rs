@@ -1957,6 +1957,7 @@ where
 		&mut self,
 		pre_validation_result: PreValidateBlockAnnounce<B::Header>,
 	) -> PollBlockAnnounceValidation<B::Header> {
+		info!(target: "sync", "finish block announce validation");
 		let (announce, is_best, who) = match pre_validation_result {
 			PreValidateBlockAnnounce::Failure { who, disconnect } => {
 				debug!(
@@ -1978,7 +1979,7 @@ where
 			},
 		};
 
-		trace!(
+		info!(
 			target: "sync",
 			"Finished block announce validation: from {:?}: {:?}. local_best={}",
 			who,
@@ -2027,7 +2028,7 @@ where
 
 		// known block case
 		if known || self.is_already_downloading(&hash) {
-			trace!(target: "sync", "Known block announce from {}: {}", who, hash);
+			info!(target: "sync", "Known block announce from {}: {}", who, hash);
 			if let Some(target) = self.fork_targets.get_mut(&hash) {
 				target.peers.insert(who);
 			}
@@ -2035,7 +2036,7 @@ where
 		}
 
 		if ancient_parent {
-			trace!(
+			info!(
 				target: "sync",
 				"Ignored ancient block announced from {}: {} {:?}",
 				who,
@@ -2058,7 +2059,7 @@ where
 		}
 
 		if self.status().state == SyncState::Idle {
-			trace!(
+			info!(
 				target: "sync",
 				"Added sync target for block announced from {}: {} {:?}",
 				who,
@@ -2076,6 +2077,7 @@ where
 				.insert(who);
 		}
 
+		info!(target: "sync", "here for some reason");
 		PollBlockAnnounceValidation::Nothing { is_best, who, announce }
 	}
 

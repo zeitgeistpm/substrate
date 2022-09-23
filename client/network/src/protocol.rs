@@ -197,6 +197,7 @@ pub struct Protocol<B: BlockT, Client> {
 	/// The `PeerId`'s of all boot nodes.
 	boot_node_ids: HashSet<PeerId>,
 	sync_handle: sync_helper::SyncingHandle<B>,
+	counter: usize,
 }
 
 #[derive(Debug)]
@@ -427,6 +428,7 @@ where
 			},
 			boot_node_ids,
 			sync_handle,
+			counter: Default::default(),
 		};
 
 		Ok((protocol, peerset_handle, known_addresses))
@@ -543,46 +545,47 @@ where
 	/// In chain-based consensus, we often need to make sure non-best forks are
 	/// at least temporarily synced.
 	pub fn announce_block(&mut self, hash: B::Hash, data: Option<Vec<u8>>) {
-		// TODO: enable block announcements
-		// todo!();
-		// let header = match self.chain.header(BlockId::Hash(hash)) {
-		// 	Ok(Some(header)) => header,
-		// 	Ok(None) => {
-		// 		warn!("Trying to announce unknown block: {}", hash);
-		// 		return
-		// 	},
-		// 	Err(e) => {
-		// 		warn!("Error reading block header {}: {}", hash, e);
-		// 		return
-		// 	},
-		// };
+		let header = match self.chain.header(BlockId::Hash(hash)) {
+			Ok(Some(header)) => header,
+			Ok(None) => {
+				warn!("Trying to announce unknown block: {}", hash);
+				return
+			},
+			Err(e) => {
+				warn!("Error reading block header {}: {}", hash, e);
+				return
+			},
+		};
 
-		// // don't announce genesis block since it will be ignored
-		// if header.number().is_zero() {
-		// 	return
-		// }
+		// don't announce genesis block since it will be ignored
+		if header.number().is_zero() {
+			return
+		}
 
-		// let is_best = self.chain.info().best_hash == hash;
-		// debug!(target: "sync", "Reannouncing block {:?} is_best: {}", hash, is_best);
+		let is_best = self.chain.info().best_hash == hash;
+		debug!(target: "sync", "Reannouncing block {:?} is_best: {}", hash, is_best);
 
-		// let data = data
-		// 	.or_else(|| self.sync_helper.block_announce_data_cache.get(&hash).cloned())
-		// 	.unwrap_or_default();
+		let data = data
+			.or_else(|| futures::executor::block_on(self.sync_handle.get_annouce_data(hash)))
+			.unwrap_or_default();
 
-		// for (who, ref mut peer) in self.sync_helper.peers.iter_mut() {
-		// 	let inserted = peer.known_blocks.insert(hash);
-		// 	if inserted {
-		// 		trace!(target: "sync", "Announcing block {:?} to {}", hash, who);
-		// 		let message = BlockAnnounce {
-		// 			header: header.clone(),
-		// 			state: if is_best { Some(BlockState::Best) } else { Some(BlockState::Normal) },
-		// 			data: Some(data.clone()),
-		// 		};
+		for (who, peer) in futures::executor::block_on(self.sync_handle.get_peers()) {
+			let inserted =
+				futures::executor::block_on(self.sync_handle.insert_known_block(who, hash));
+			if inserted {
+				trace!(target: "sync", "Announcing block {:?} to {}", hash, who);
+				let message = BlockAnnounce {
+					header: header.clone(),
+					state: if is_best { Some(BlockState::Best) } else { Some(BlockState::Normal) },
+					data: Some(data.clone()),
+				};
 
-		// 		self.behaviour
-		// 			.write_notification(who, HARDCODED_PEERSETS_SYNC, message.encode());
-		// 	}
-		// }
+				// println!("send block annoucement!");
+
+				self.behaviour
+					.write_notification(&who, HARDCODED_PEERSETS_SYNC, message.encode());
+			}
+		}
 	}
 
 	// TODO: move to `SyncingHelper`
@@ -921,7 +924,15 @@ where
 			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(message))
 		}
 
+		// self.counter += 1;
+		// if self.counter % 1000 == 0 {
+		//   		info!(target: "sync", "poll protocol");
+		// }
+
 		let events = futures::executor::block_on(self.sync_handle.get_events());
+		if events.len() > 0 {
+			info!(target: "sync", "got events: {:#?}", events);
+		}
 		self.pending_messages.extend(events);
 
 		// while let Poll::Ready(Some(())) = self.tick_timeout.poll_next_unpin(cx) {
