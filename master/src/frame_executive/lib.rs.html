@@ -1540,14 +1540,6 @@
 <span id="1534">1534</span>
 <span id="1535">1535</span>
 <span id="1536">1536</span>
-<span id="1537">1537</span>
-<span id="1538">1538</span>
-<span id="1539">1539</span>
-<span id="1540">1540</span>
-<span id="1541">1541</span>
-<span id="1542">1542</span>
-<span id="1543">1543</span>
-<span id="1544">1544</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1837,15 +1829,7 @@
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// This should only be used for testing.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_runtime_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">frame_support::weights::Weight</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="comment">// ensure both `pre_upgrade` and `post_upgrade` won&#39;t change the storage root</span>
-		<span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> {
-			<span class="kw">let</span> <span class="ident">_guard</span> <span class="op">=</span> <span class="ident">frame_support::StorageNoopGuard::default</span>();
-			<span class="op">&lt;</span>(<span class="ident">COnRuntimeUpgrade</span>, <span class="ident">AllPalletsWithSystem</span>) <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::pre_upgrade</span>().<span class="ident">unwrap</span>()
-		};
 		<span class="kw">let</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::execute_on_runtime_upgrade</span>();
-		<span class="kw">let</span> <span class="ident">_guard</span> <span class="op">=</span> <span class="ident">frame_support::StorageNoopGuard::default</span>();
-		<span class="op">&lt;</span>(<span class="ident">COnRuntimeUpgrade</span>, <span class="ident">AllPalletsWithSystem</span>) <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::post_upgrade</span>(<span class="ident">state</span>)
-			.<span class="ident">unwrap</span>();
 		<span class="prelude-val">Ok</span>(<span class="ident">weight</span>)
 	}
 }
