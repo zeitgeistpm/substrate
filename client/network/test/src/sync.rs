@@ -39,7 +39,7 @@ async fn test_ancestor_search_when_common_is(n: usize) {
 	assert!(net.peers()[0].blockchain_canon_equals(peer1));
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_peers_works() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -56,7 +56,7 @@ async fn sync_peers_works() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_cycle_from_offline_to_syncing_to_offline() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -114,7 +114,7 @@ async fn sync_cycle_from_offline_to_syncing_to_offline() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn syncing_node_not_major_syncing_when_disconnected() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -150,7 +150,7 @@ async fn syncing_node_not_major_syncing_when_disconnected() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_from_two_peers_works() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -162,7 +162,7 @@ async fn sync_from_two_peers_works() {
 	assert!(!net.peer(0).is_major_syncing());
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_from_two_peers_with_ancestry_search_works() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -174,7 +174,7 @@ async fn sync_from_two_peers_with_ancestry_search_works() {
 	assert!(net.peers()[0].blockchain_canon_equals(peer1));
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn ancestry_search_works_when_backoff_is_one() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -188,7 +188,7 @@ async fn ancestry_search_works_when_backoff_is_one() {
 	assert!(net.peers()[0].blockchain_canon_equals(peer1));
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn ancestry_search_works_when_ancestor_is_genesis() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -202,22 +202,22 @@ async fn ancestry_search_works_when_ancestor_is_genesis() {
 	assert!(net.peers()[0].blockchain_canon_equals(peer1));
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn ancestry_search_works_when_common_is_one() {
 	test_ancestor_search_when_common_is(1).await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn ancestry_search_works_when_common_is_two() {
 	test_ancestor_search_when_common_is(2).await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn ancestry_search_works_when_common_is_hundred() {
 	test_ancestor_search_when_common_is(100).await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_long_chain_works() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(2);
@@ -227,7 +227,7 @@ async fn sync_long_chain_works() {
 	assert!(net.peers()[0].blockchain_canon_equals(peer1));
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_no_common_longer_chain_fails() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -246,7 +246,7 @@ async fn sync_no_common_longer_chain_fails() {
 	assert!(!net.peers()[0].blockchain_canon_equals(peer1));
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_justifications() {
 	sp_tracing::try_init_simple();
 	let mut net = JustificationTestNet::new(3);
@@ -302,7 +302,7 @@ async fn sync_justifications() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_justifications_across_forks() {
 	sp_tracing::try_init_simple();
 	let mut net = JustificationTestNet::new(3);
@@ -341,7 +341,7 @@ async fn sync_justifications_across_forks() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_after_fork_works() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -364,7 +364,7 @@ async fn sync_after_fork_works() {
 	(net.peers()[2].blockchain_canon_equals(peer1));
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn syncs_all_forks() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(4);
@@ -382,7 +382,7 @@ async fn syncs_all_forks() {
 	assert!(net.peer(1).has_block(&b2));
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn own_blocks_are_announced() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -400,7 +400,7 @@ async fn own_blocks_are_announced() {
 	(net.peers()[2].blockchain_canon_equals(peer0));
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn can_sync_small_non_best_forks() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(2);
@@ -466,7 +466,7 @@ async fn can_sync_small_non_best_forks() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn can_sync_forks_ahead_of_the_best_chain() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(2);
@@ -502,7 +502,7 @@ async fn can_sync_forks_ahead_of_the_best_chain() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn can_sync_explicit_forks() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(2);
@@ -562,7 +562,7 @@ async fn can_sync_explicit_forks() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn syncs_header_only_forks() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(0);
@@ -581,7 +581,7 @@ async fn syncs_header_only_forks() {
 	}
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn does_not_sync_announced_old_best_block() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(3);
@@ -610,7 +610,7 @@ async fn does_not_sync_announced_old_best_block() {
 	assert!(!net.peer(1).is_major_syncing());
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn full_sync_requires_block_body() {
 	// Check that we don't sync headers-only in full mode.
 	sp_tracing::try_init_simple();
@@ -631,7 +631,7 @@ async fn full_sync_requires_block_body() {
 	assert_eq!(net.peer(1).client.info().best_number, 0);
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn imports_stale_once() {
 	sp_tracing::try_init_simple();
 
@@ -668,7 +668,7 @@ async fn imports_stale_once() {
 	assert_eq!(net.peer(1).num_downloaded_blocks(), 2);
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn can_sync_to_peers_with_wrong_common_block() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(2);
@@ -734,7 +734,7 @@ impl BlockAnnounceValidator<Block> for FailingBlockAnnounceValidator {
 	}
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_blocks_when_block_announce_validator_says_it_is_new_best() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(0);
@@ -781,7 +781,7 @@ impl BlockAnnounceValidator<Block> for DeferredBlockAnnounceValidator {
 	}
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn wait_until_deferred_block_announce_validation_is_ready() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(0);
@@ -811,7 +811,7 @@ async fn wait_until_deferred_block_announce_validation_is_ready() {
 
 /// When we don't inform the sync protocol about the best block, a node will not sync from us as the
 /// handshake is not does not contain our best block.
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_to_tip_requires_that_sync_protocol_is_informed_about_best_block() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(1);
@@ -856,7 +856,7 @@ async fn sync_to_tip_requires_that_sync_protocol_is_informed_about_best_block() 
 
 /// Ensures that if we as a syncing node sync to the tip while we are connected to another peer
 /// that is currently also doing a major sync.
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn sync_to_tip_when_we_sync_together_with_multiple_peers() {
 	sp_tracing::try_init_simple();
 
@@ -884,7 +884,7 @@ async fn sync_to_tip_when_we_sync_together_with_multiple_peers() {
 
 /// Ensures that when we receive a block announcement with some data attached, that we propagate
 /// this data when reannouncing the block.
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn block_announce_data_is_propagated() {
 	struct TestBlockAnnounceValidator;
 
@@ -945,7 +945,7 @@ async fn block_announce_data_is_propagated() {
 	}
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn continue_to_sync_after_some_block_announcement_verifications_failed() {
 	struct TestBlockAnnounceValidator;
 
@@ -991,7 +991,7 @@ async fn continue_to_sync_after_some_block_announcement_verifications_failed() {
 /// this peer if the request was successful. In the case of a justification request for example,
 /// we ask our peers multiple times until we got the requested justification. This test ensures that
 /// asking for the same justification multiple times doesn't ban a peer.
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn multiple_requests_are_accepted_as_long_as_they_are_not_fulfilled() {
 	sp_tracing::try_init_simple();
 	let mut net = JustificationTestNet::new(2);
@@ -1037,7 +1037,7 @@ async fn multiple_requests_are_accepted_as_long_as_they_are_not_fulfilled() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn syncs_all_forks_from_single_peer() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(2);
@@ -1070,7 +1070,7 @@ async fn syncs_all_forks_from_single_peer() {
 	assert!(net.peer(1).client().header(&BlockId::Hash(branch2)).unwrap().is_some());
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn syncs_after_missing_announcement() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(0);
@@ -1094,7 +1094,7 @@ async fn syncs_after_missing_announcement() {
 	assert!(net.peer(1).client().header(&BlockId::Hash(final_block)).unwrap().is_some());
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn syncs_state() {
 	sp_tracing::try_init_simple();
 	for skip_proofs in &[false, true] {
@@ -1171,7 +1171,7 @@ async fn syncs_state() {
 	}
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn syncs_indexed_blocks() {
 	use sp_runtime::traits::Hash;
 	sp_tracing::try_init_simple();
@@ -1226,7 +1226,7 @@ async fn syncs_indexed_blocks() {
 		.is_some());
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn warp_sync() {
 	sp_tracing::try_init_simple();
 	let mut net = TestNet::new(0);
@@ -1259,7 +1259,7 @@ async fn warp_sync() {
 	.await;
 }
 
-#[tokio::test(flavor = "multi_thread")]
+#[tokio::test]
 async fn syncs_huge_blocks() {
 	use sp_core::storage::well_known_keys::HEAP_PAGES;
 	use sp_runtime::codec::Encode;
