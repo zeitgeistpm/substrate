@@ -609,6 +609,60 @@
 <span id="603">603</span>
 <span id="604">604</span>
 <span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -841,6 +895,60 @@
 	<span class="kw">let</span> <span class="ident">commands_stream</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">import_notification_stream</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EngineCommand::SealNewBlock</span> {
 		<span class="ident">create_empty</span>: <span class="bool-val">false</span>,
 		<span class="ident">finalize</span>: <span class="bool-val">false</span>,
+		<span class="ident">parent_hash</span>: <span class="prelude-val">None</span>,
+		<span class="ident">sender</span>: <span class="prelude-val">None</span>,
+	});
+
+	<span class="ident">run_manual_seal</span>(<span class="ident">ManualSealParams</span> {
+		<span class="ident">block_import</span>,
+		<span class="ident">env</span>,
+		<span class="ident">client</span>,
+		<span class="ident">pool</span>,
+		<span class="ident">commands_stream</span>,
+		<span class="ident">select_chain</span>,
+		<span class="ident">consensus_data_provider</span>,
+		<span class="ident">create_inherent_data_providers</span>,
+	})
+	.<span class="kw">await</span>
+}
+
+<span class="doccomment">/// Runs the background authorship task for the instant seal engine.</span>
+<span class="doccomment">/// instant-seal creates a new block for every transaction imported into</span>
+<span class="doccomment">/// the transaction pool.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This function will finalize the block immediately as well. If you don&#39;t</span>
+<span class="doccomment">/// want this behavior use `run_instant_seal` instead.</span>
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run_instant_seal_and_finalize</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BI</span>, <span class="ident">CB</span>, <span class="ident">E</span>, <span class="ident">C</span>, <span class="ident">TP</span>, <span class="ident">SC</span>, <span class="ident">CIDP</span>, <span class="ident">P</span><span class="op">&gt;</span>(
+	<span class="ident">InstantSealParams</span> {
+		<span class="ident">block_import</span>,
+		<span class="ident">env</span>,
+		<span class="ident">client</span>,
+		<span class="ident">pool</span>,
+		<span class="ident">select_chain</span>,
+		<span class="ident">consensus_data_provider</span>,
+		<span class="ident">create_inherent_data_providers</span>,
+	}: <span class="ident">InstantSealParams</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BI</span>, <span class="ident">E</span>, <span class="ident">C</span>, <span class="ident">TP</span>, <span class="ident">SC</span>, <span class="ident">CIDP</span>, <span class="ident">P</span><span class="op">&gt;</span>,
+) <span class="kw">where</span>
+	<span class="ident">B</span>: <span class="ident">BlockT</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+	<span class="ident">BI</span>: <span class="ident">BlockImport</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">sp_consensus::Error</span>, <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>
+		<span class="op">+</span> <span class="ident">Send</span>
+		<span class="op">+</span> <span class="ident">Sync</span>
+		<span class="op">+</span> <span class="lifetime">&#39;static</span>,
+	<span class="ident">C</span>: <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Finalizer</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">CB</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+	<span class="ident">CB</span>: <span class="ident">ClientBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+	<span class="ident">E</span>: <span class="ident">Environment</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+	<span class="ident">E::Proposer</span>: <span class="ident">Proposer</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Proof</span> <span class="op">=</span> <span class="ident">P</span>, <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+	<span class="ident">SC</span>: <span class="ident">SelectChain</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+	<span class="ident">TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>: <span class="lifetime">&#39;static</span>,
+	<span class="ident">TP</span>: <span class="ident">TransactionPool</span><span class="op">&lt;</span><span class="ident">Block</span> <span class="op">=</span> <span class="ident">B</span><span class="op">&gt;</span>,
+	<span class="ident">CIDP</span>: <span class="ident">CreateInherentDataProviders</span><span class="op">&lt;</span><span class="ident">B</span>, ()<span class="op">&gt;</span>,
+	<span class="ident">P</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+{
+	<span class="comment">// Creates and finalizes blocks as soon as transactions are imported</span>
+	<span class="comment">// into the transaction pool.</span>
+	<span class="kw">let</span> <span class="ident">commands_stream</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">import_notification_stream</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EngineCommand::SealNewBlock</span> {
+		<span class="ident">create_empty</span>: <span class="bool-val">false</span>,
+		<span class="ident">finalize</span>: <span class="bool-val">true</span>,
 		<span class="ident">parent_hash</span>: <span class="prelude-val">None</span>,
 		<span class="ident">sender</span>: <span class="prelude-val">None</span>,
 	});
