@@ -2619,7 +2619,7 @@
 	<span class="kw">use</span> <span class="kw">crate</span>::{
 		<span class="ident">mock</span>::{
 			<span class="ident">roll_to</span>, <span class="ident">roll_to_with_ocw</span>, <span class="ident">trim_helpers</span>, <span class="ident">witness</span>, <span class="ident">BlockNumber</span>, <span class="ident">ExtBuilder</span>, <span class="ident">Extrinsic</span>,
-			<span class="ident">MinerMaxWeight</span>, <span class="ident">MultiPhase</span>, <span class="ident">Runtime</span>, <span class="ident">RuntimeCall</span> <span class="kw">as</span> <span class="ident">OuterCall</span>, <span class="ident">RuntimeOrigin</span>, <span class="ident">System</span>,
+			<span class="ident">MinerMaxWeight</span>, <span class="ident">MultiPhase</span>, <span class="ident">Runtime</span>, <span class="ident">RuntimeCall</span>, <span class="ident">RuntimeOrigin</span>, <span class="ident">System</span>,
 			<span class="ident">TestNposSolution</span>, <span class="ident">TrimHelpers</span>, <span class="ident">UnsignedPhase</span>,
 		},
 		<span class="ident">CurrentPhase</span>, <span class="ident">InvalidTransaction</span>, <span class="ident">Phase</span>, <span class="ident">QueuedSolution</span>, <span class="ident">TransactionSource</span>,
@@ -2833,8 +2833,8 @@
 				<span class="ident">raw_solution</span>: <span class="ident">Box::new</span>(<span class="ident">solution</span>.<span class="ident">clone</span>()),
 				<span class="ident">witness</span>: <span class="ident">witness</span>(),
 			};
-			<span class="kw">let</span> <span class="ident">outer_call</span>: <span class="ident">OuterCall</span> <span class="op">=</span> <span class="ident">call</span>.<span class="ident">into</span>();
-			<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">outer_call</span>.<span class="ident">dispatch</span>(<span class="ident">RuntimeOrigin::none</span>());
+			<span class="kw">let</span> <span class="ident">runtime_call</span>: <span class="ident">RuntimeCall</span> <span class="op">=</span> <span class="ident">call</span>.<span class="ident">into</span>();
+			<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">runtime_call</span>.<span class="ident">dispatch</span>(<span class="ident">RuntimeOrigin::none</span>());
 		})
 	}
 
@@ -2859,8 +2859,8 @@
 				<span class="ident">raw_solution</span>: <span class="ident">Box::new</span>(<span class="ident">solution</span>.<span class="ident">clone</span>()),
 				<span class="ident">witness</span>: <span class="ident">correct_witness</span>,
 			};
-			<span class="kw">let</span> <span class="ident">outer_call</span>: <span class="ident">OuterCall</span> <span class="op">=</span> <span class="ident">call</span>.<span class="ident">into</span>();
-			<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">outer_call</span>.<span class="ident">dispatch</span>(<span class="ident">RuntimeOrigin::none</span>());
+			<span class="kw">let</span> <span class="ident">runtime_call</span>: <span class="ident">RuntimeCall</span> <span class="op">=</span> <span class="ident">call</span>.<span class="ident">into</span>();
+			<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">runtime_call</span>.<span class="ident">dispatch</span>(<span class="ident">RuntimeOrigin::none</span>());
 		})
 	}
 
@@ -3323,7 +3323,7 @@
 			<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">read</span>().<span class="ident">transactions</span>[<span class="number">0</span>].<span class="ident">clone</span>();
 			<span class="kw">let</span> <span class="ident">extrinsic</span>: <span class="ident">Extrinsic</span> <span class="op">=</span> <span class="ident">codec::Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>).<span class="ident">unwrap</span>();
 			<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">extrinsic</span>.<span class="ident">call</span>;
-			<span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">call</span>, <span class="ident">OuterCall::MultiPhase</span>(<span class="ident">Call::submit_unsigned</span> { .. })));
+			<span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">call</span>, <span class="ident">RuntimeCall::MultiPhase</span>(<span class="ident">Call::submit_unsigned</span> { .. })));
 		})
 	}
 
@@ -3340,7 +3340,7 @@
 			<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">read</span>().<span class="ident">transactions</span>[<span class="number">0</span>].<span class="ident">clone</span>();
 			<span class="kw">let</span> <span class="ident">extrinsic</span> <span class="op">=</span> <span class="ident">Extrinsic::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>).<span class="ident">unwrap</span>();
 			<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">extrinsic</span>.<span class="ident">call</span> {
-				<span class="ident">OuterCall::MultiPhase</span>(<span class="ident">call</span> @ <span class="ident">Call::submit_unsigned</span> { .. }) =&gt; <span class="ident">call</span>,
+				<span class="ident">RuntimeCall::MultiPhase</span>(<span class="ident">call</span> @ <span class="ident">Call::submit_unsigned</span> { .. }) =&gt; <span class="ident">call</span>,
 				<span class="kw">_</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;bad call: unexpected submission&quot;</span>),
 			};
 
