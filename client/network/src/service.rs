@@ -377,6 +377,7 @@ where
 			let behaviour = {
 				let result = Behaviour::new(
 					protocol,
+					sync_handle.clone(),
 					user_agent,
 					local_public,
 					discovery_config,
@@ -512,7 +513,7 @@ where
 
 	/// Returns the number of peers we're connected to.
 	pub fn num_connected_peers(&self) -> usize {
-		self.network_service.behaviour().user_protocol().num_connected_peers()
+		futures::executor::block_on(self.sync_handle.num_connected_peers())
 	}
 
 	/// Returns the number of peers we're connected to and that are being queried.
@@ -522,22 +523,23 @@ where
 
 	/// Current global sync state.
 	pub fn sync_state(&self) -> SyncStatus<B> {
-		self.network_service.behaviour().user_protocol().sync_state()
+		futures::executor::block_on(self.sync_handle.status())
+		// self.network_service.behaviour().user_protocol().sync_state()
 	}
 
 	/// Target sync block number.
 	pub fn best_seen_block(&self) -> Option<NumberFor<B>> {
-		self.network_service.behaviour().user_protocol().best_seen_block()
+		futures::executor::block_on(self.sync_handle.best_seen_block())
 	}
 
 	/// Number of peers participating in syncing.
 	pub fn num_sync_peers(&self) -> u32 {
-		self.network_service.behaviour().user_protocol().num_sync_peers()
+		futures::executor::block_on(self.sync_handle.num_sync_peers())
 	}
 
 	/// Number of blocks in the import queue.
 	pub fn num_queued_blocks(&self) -> u32 {
-		self.network_service.behaviour().user_protocol().num_queued_blocks()
+		futures::executor::block_on(self.sync_handle.num_queued_blocks())
 	}
 
 	/// Returns the number of downloaded blocks.
@@ -1867,8 +1869,9 @@ where
 			};
 		}
 
+		// TODO: remove
 		let num_connected_peers =
-			this.network_service.behaviour_mut().user_protocol_mut().num_connected_peers();
+			futures::executor::block_on(this.sync_handle.num_connected_peers());
 
 		// Update the variables shared with the `NetworkService`.
 		this.num_connected.store(num_connected_peers, Ordering::Relaxed);
@@ -1881,11 +1884,11 @@ where
 			*this.external_addresses.lock() = external_addresses;
 		}
 
-		let is_major_syncing =
-			match this.network_service.behaviour_mut().user_protocol_mut().sync_state().state {
-				SyncState::Idle => false,
-				SyncState::Downloading => true,
-			};
+		// TODO: remove this entirely
+		let is_major_syncing = match futures::executor::block_on(this.sync_handle.status()).state {
+			SyncState::Idle => false,
+			SyncState::Downloading => true,
+		};
 
 		this.is_major_syncing.store(is_major_syncing, Ordering::Relaxed);
 

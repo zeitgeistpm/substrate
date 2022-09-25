@@ -461,38 +461,12 @@ where
 		self.behaviour.peerset_debug_info()
 	}
 
-	/// Returns the number of peers we're connected to.
-	pub fn num_connected_peers(&self) -> usize {
-		futures::executor::block_on(self.sync_handle.num_connected_peers())
-	}
-
 	/// Returns the number of peers we're connected to and that are being queried.
 	pub fn num_active_peers(&self) -> usize {
 		0usize
 		// TODO: reimplement this using something
 		// self.sync_helper.pending_responses.len()
 		// self.peers.values().filter(|p| p.request.is_some()).count()
-	}
-
-	// TODO: remove, not used
-	/// Current global sync state.
-	pub fn sync_state(&self) -> SyncStatus<B> {
-		futures::executor::block_on(self.sync_handle.status())
-	}
-
-	/// Target sync block number.
-	pub fn best_seen_block(&self) -> Option<NumberFor<B>> {
-		futures::executor::block_on(self.sync_handle.status()).best_seen_block
-	}
-
-	/// Number of peers participating in syncing.
-	pub fn num_sync_peers(&self) -> u32 {
-		futures::executor::block_on(self.sync_handle.status()).num_peers
-	}
-
-	/// Number of blocks in the import queue.
-	pub fn num_queued_blocks(&self) -> u32 {
-		futures::executor::block_on(self.sync_handle.status()).queued_blocks
 	}
 
 	/// Inform sync about new best imported block.
@@ -701,15 +675,15 @@ where
 		}
 	}
 
-	/// Encode implementation-specific block request.
-	pub fn encode_block_request(&mut self, request: OpaqueBlockRequest) -> Result<Vec<u8>, String> {
-		futures::executor::block_on(self.sync_handle.encode_block_request(request))
-	}
+	// /// Encode implementation-specific block request.
+	// pub fn encode_block_request(&mut self, request: OpaqueBlockRequest) -> Result<Vec<u8>,
+	// String> { 	futures::executor::block_on(self.sync_handle.encode_block_request(request))
+	// }
 
-	/// Encode implementation-specific state request.
-	pub fn encode_state_request(&mut self, request: OpaqueStateRequest) -> Result<Vec<u8>, String> {
-		futures::executor::block_on(self.sync_handle.encode_state_request(request))
-	}
+	// /// Encode implementation-specific state request.
+	// pub fn encode_state_request(&mut self, request: OpaqueStateRequest) -> Result<Vec<u8>,
+	// String> { 	futures::executor::block_on(self.sync_handle.encode_state_request(request))
+	// }
 
 	// // TODO: move to syncing
 	// fn report_metrics(&self) {

@@ -236,6 +236,24 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	pub async fn num_sync_peers(&self) -> u32 {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.unbounded_send(SyncEvent::NumSyncPeers(tx))
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn num_queued_blocks(&self) -> u32 {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.unbounded_send(SyncEvent::NumQueuedBlocks(tx))
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
 	pub async fn status(&self) -> SyncStatus<B> {
 		let (tx, rx) = oneshot::channel();
 
@@ -257,6 +275,15 @@ impl<B: BlockT> SyncingHandle<B> {
 
 		self.tx
 			.unbounded_send(SyncEvent::NumSyncRequests(tx))
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
+	}
+
+	pub async fn best_seen_block(&self) -> Option<NumberFor<B>> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.unbounded_send(SyncEvent::BestSeenBlock(tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
