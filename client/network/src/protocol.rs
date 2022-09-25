@@ -241,7 +241,7 @@ pub struct BlockAnnouncesHandshake<B: BlockT> {
 }
 
 impl<B: BlockT> BlockAnnouncesHandshake<B> {
-	fn build(
+	pub fn build(
 		roles: Roles,
 		best_number: NumberFor<B>,
 		best_hash: B::Hash,
@@ -469,18 +469,9 @@ where
 		// self.peers.values().filter(|p| p.request.is_some()).count()
 	}
 
-	// TODO: hard to remove
-	/// Inform sync about new best imported block.
-	pub fn new_best_block_imported(&mut self, hash: B::Hash, number: NumberFor<B>) {
-		debug!(target: "sync", "New best block imported {:?}/#{}", hash, number);
-
-		self.sync_handle.update_chain_info(hash, number);
-
-		self.behaviour.set_notif_protocol_handshake(
-			HARDCODED_PEERSETS_SYNC,
-			BlockAnnouncesHandshake::<B>::build(self.roles, number, hash, self.genesis_hash)
-				.encode(),
-		);
+	pub fn set_sync_handshake(&mut self, handshake_message: impl Into<Vec<u8>>) {
+		self.behaviour
+			.set_notif_protocol_handshake(HARDCODED_PEERSETS_SYNC, handshake_message);
 	}
 
 	/// Adjusts the reputation of a node.

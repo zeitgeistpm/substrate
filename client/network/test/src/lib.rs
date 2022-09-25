@@ -400,7 +400,7 @@ where
 		}
 
 		if inform_sync_about_new_best_block {
-			self.network.new_best_block_imported(
+			self.network.service().new_best_block_imported(
 				at,
 				*full_client.header(&BlockId::Hash(at)).ok().flatten().unwrap().number(),
 			);

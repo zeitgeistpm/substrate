@@ -138,6 +138,7 @@ pub enum SyncEvent<B: BlockT> {
 	),
 	GetEvents(oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>),
 	Notification(PeerId, bytes::BytesMut, oneshot::Sender<CustomMessageOutcome<B>>),
+	GetHandshake(B::Hash, NumberFor<B>, oneshot::Sender<Vec<u8>>),
 }
 
 #[derive(Clone)]
@@ -172,6 +173,15 @@ impl<B: BlockT> SyncingHandle<B> {
 		self.tx
 			.unbounded_send(SyncEvent::SetSyncForkRequest(peers, hash, number))
 			.expect("channel to stay open");
+	}
+
+	pub async fn get_handshake(&self, hash: B::Hash, number: NumberFor<B>) -> Vec<u8> {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.unbounded_send(SyncEvent::GetHandshake(hash, number, tx))
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
 	}
 
 	pub fn on_blocks_processed(
@@ -1222,8 +1232,18 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 					Some(peer) => peer.known_blocks.insert(hash),
 					None => false,
 				};
-
 				let _ = channel_response.send(res);
+			},
+			SyncEvent::GetHandshake(hash, number, channel_response) => {
+				let _ = channel_response.send(
+					BlockAnnouncesHandshake::<B>::build(
+						self.roles,
+						number,
+						hash,
+						self.genesis_hash,
+					)
+					.encode(),
+				);
 			},
 		}
 	}

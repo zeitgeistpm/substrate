@@ -567,14 +567,6 @@ where
 		self.sync_handle.on_block_finalized(hash, header)
 	}
 
-	/// Inform the network service about new best imported block.
-	pub fn new_best_block_imported(&mut self, hash: B::Hash, number: NumberFor<B>) {
-		self.network_service
-			.behaviour_mut()
-			.user_protocol_mut()
-			.new_best_block_imported(hash, number);
-	}
-
 	/// Returns the local `PeerId`.
 	pub fn local_peer_id(&self) -> &PeerId {
 		Swarm::<Behaviour<B, Client>>::local_peer_id(&self.network_service)
@@ -1149,9 +1141,9 @@ where
 	}
 
 	fn new_best_block_imported(&self, hash: B::Hash, number: NumberFor<B>) {
-		let _ = self
-			.to_worker
-			.unbounded_send(ServiceToWorkerMsg::NewBestBlockImported(hash, number));
+		self.sync_handle.update_chain_info(hash, number);
+		let handshake = futures::executor::block_on(self.sync_handle.get_handshake(hash, number));
+		let _ = self.to_worker.unbounded_send(ServiceToWorkerMsg::SetSyncHandshake(handshake));
 	}
 }
 
@@ -1258,6 +1250,7 @@ enum ServiceToWorkerMsg<B: BlockT> {
 	},
 	DisconnectPeer(PeerId, ProtocolName),
 	NewBestBlockImported(B::Hash, NumberFor<B>),
+	SetSyncHandshake(Vec<u8>),
 }
 
 /// Main network worker. Must be polled in order for the network to advance.
@@ -1313,12 +1306,8 @@ where
 
 		// TODO: move import queue out of `NetworkWorker`
 		// Poll the import queue for actions to perform.
-		this.import_queue.poll_actions(
-			cx,
-			&mut NetworkLink {
-				sync_handle: &this.sync_handle,
-			},
-		);
+		this.import_queue
+			.poll_actions(cx, &mut NetworkLink { sync_handle: &this.sync_handle });
 
 		// At the time of writing of this comment, due to a high volume of messages, the network
 		// worker sometimes takes a long time to process the loop below. When that happens, the
@@ -1426,11 +1415,11 @@ where
 					.behaviour_mut()
 					.user_protocol_mut()
 					.disconnect_peer(&who, protocol_name),
-				ServiceToWorkerMsg::NewBestBlockImported(hash, number) => this
+				ServiceToWorkerMsg::SetSyncHandshake(handshake) => this
 					.network_service
 					.behaviour_mut()
 					.user_protocol_mut()
-					.new_best_block_imported(hash, number),
+					.set_sync_handshake(handshake),
 				_ => {
 					todo!()
 				},
