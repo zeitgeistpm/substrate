@@ -124,7 +124,6 @@ pub enum SyncEvent<B: BlockT> {
 		usize,
 		usize,
 		Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
-		oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>,
 	),
 	EncodeBlockRequest(OpaqueBlockRequest, oneshot::Sender<Result<Vec<u8>, String>>),
 	EncodeStateRequest(OpaqueStateRequest, oneshot::Sender<Result<Vec<u8>, String>>),
@@ -175,19 +174,15 @@ impl<B: BlockT> SyncingHandle<B> {
 			.expect("channel to stay open");
 	}
 
-	pub async fn on_blocks_processed(
+	pub fn on_blocks_processed(
 		&self,
 		imported: usize,
 		count: usize,
 		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
-	) -> VecDeque<CustomMessageOutcome<B>> {
-		let (tx, rx) = oneshot::channel();
-
+	) {
 		self.tx
-			.unbounded_send(SyncEvent::OnBlocksProcessed(imported, count, results, tx))
+			.unbounded_send(SyncEvent::OnBlocksProcessed(imported, count, results))
 			.expect("channel to stay open");
-
-		rx.await.expect("channel to stay open")
 	}
 
 	pub fn justification_import_result(
@@ -498,20 +493,19 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 		imported: usize,
 		count: usize,
 		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
-	) -> VecDeque<CustomMessageOutcome<B>> {
-		let mut out = VecDeque::new();
-
+	) {
 		for result in self.chain_sync.on_blocks_processed(imported, count, results) {
 			match result {
-				Ok((id, req)) => out.push_back(self.prepare_block_request(id, req)),
+				Ok((id, req)) => {
+					let event = self.prepare_block_request(id, req);
+					self.pending_messages.push_back(event);
+				},
 				Err(BadPeer(id, repu)) => {
 					self.disconnect_peer(id);
 					self.report_peer(id, repu)
 				},
 			}
 		}
-
-		out
 	}
 
 	// TODO: how to fix this???
@@ -1183,8 +1177,8 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 			SyncEvent::JustificationImportResult(peer_id, hash, number, success) => {
 				self.justification_import_result(peer_id, hash, number, success);
 			},
-			SyncEvent::OnBlocksProcessed(imported, count, results, channel_response) => {
-				let _ = channel_response.send(self.on_blocks_processed(imported, count, results));
+			SyncEvent::OnBlocksProcessed(imported, count, results) => {
+				self.on_blocks_processed(imported, count, results);
 			},
 			SyncEvent::EncodeBlockRequest(request, channel_response) => {
 				let _ = channel_response.send(self.encode_block_request(&request));

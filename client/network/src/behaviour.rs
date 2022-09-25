@@ -351,7 +351,6 @@ where
 				.push_back(BehaviourOut::JustificationImport(origin, hash, nb, justification)),
 			CustomMessageOutcome::BlockRequest { target, request, pending_response } => {
 				match futures::executor::block_on(self.sync_handle.encode_block_request(request)) {
-					// self.substrate.encode_block_request(request) {
 					Ok(data) => {
 						self.request_responses.send_request(
 							&target,
@@ -373,7 +372,6 @@ where
 			},
 			CustomMessageOutcome::StateRequest { target, request, pending_response } => {
 				match futures::executor::block_on(self.sync_handle.encode_state_request(request)) {
-					// match self.substrate.encode_state_request(request) {
 					Ok(data) => {
 						self.request_responses.send_request(
 							&target,

@@ -524,7 +524,6 @@ where
 	/// Current global sync state.
 	pub fn sync_state(&self) -> SyncStatus<B> {
 		futures::executor::block_on(self.sync_handle.status())
-		// self.network_service.behaviour().user_protocol().sync_state()
 	}
 
 	/// Target sync block number.
@@ -681,10 +680,10 @@ where
 
 	/// Get currently connected peers.
 	pub fn peers_debug_info(&mut self) -> Vec<(PeerId, PeerInfo<B>)> {
-		self.network_service.behaviour_mut().user_protocol_mut().peers_info()
-		// TODO: fix
-		// .map(|(id, info)| (*id, info.clone()))
-		// .collect()
+		futures::executor::block_on(self.sync_handle.get_peers())
+			.iter()
+			.map(|(id, peer)| (*id, peer.info.clone())) // TODO: don't clone
+			.collect()
 	}
 
 	/// Removes a `PeerId` from the list of reserved peers.
@@ -1312,11 +1311,11 @@ where
 	fn poll(mut self: Pin<&mut Self>, cx: &mut std::task::Context) -> Poll<Self::Output> {
 		let this = &mut *self;
 
+		// TODO: move import queue out of `NetworkWorker`
 		// Poll the import queue for actions to perform.
 		this.import_queue.poll_actions(
 			cx,
 			&mut NetworkLink {
-				protocol: &mut this.network_service,
 				sync_handle: &this.sync_handle,
 			},
 		);
@@ -1939,31 +1938,18 @@ where
 }
 
 // Implementation of `import_queue::Link` trait using the available local variables.
-struct NetworkLink<'a, B, Client>
-where
-	B: BlockT,
-	Client: HeaderBackend<B> + 'static,
-{
-	protocol: &'a mut Swarm<Behaviour<B, Client>>,
+struct NetworkLink<'a, B: BlockT> {
 	sync_handle: &'a sync_helper::SyncingHandle<B>,
 }
 
-impl<'a, B, Client> Link<B> for NetworkLink<'a, B, Client>
-where
-	B: BlockT,
-	Client: HeaderBackend<B> + 'static,
-{
-	// TODO: fix `on_blocks_processed` in protocol.rs
+impl<'a, B: BlockT> Link<B> for NetworkLink<'a, B> {
 	fn blocks_processed(
 		&mut self,
 		imported: usize,
 		count: usize,
 		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
 	) {
-		self.protocol
-			.behaviour_mut()
-			.user_protocol_mut()
-			.on_blocks_processed(imported, count, results)
+		self.sync_handle.on_blocks_processed(imported, count, results);
 	}
 
 	fn justification_imported(

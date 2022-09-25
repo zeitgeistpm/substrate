@@ -469,6 +469,7 @@ where
 		// self.peers.values().filter(|p| p.request.is_some()).count()
 	}
 
+	// TODO: hard to remove
 	/// Inform sync about new best imported block.
 	pub fn new_best_block_imported(&mut self, hash: B::Hash, number: NumberFor<B>) {
 		debug!(target: "sync", "New best block imported {:?}/#{}", hash, number);
@@ -480,14 +481,6 @@ where
 			BlockAnnouncesHandshake::<B>::build(self.roles, number, hash, self.genesis_hash)
 				.encode(),
 		);
-	}
-
-	/// Returns information about all the peers we are connected to after the handshake message.
-	pub fn peers_info(&self) -> Vec<(PeerId, PeerInfo<B>)> {
-		futures::executor::block_on(self.sync_handle.get_peers())
-			.iter()
-			.map(|(id, peer)| (*id, peer.info.clone())) // TODO: fix
-			.collect()
 	}
 
 	/// Adjusts the reputation of a node.
@@ -549,22 +542,6 @@ where
 					.write_notification(&who, HARDCODED_PEERSETS_SYNC, message.encode());
 			}
 		}
-	}
-
-	// TODO: move to `SyncingHelper`
-	/// A batch of blocks have been processed, with or without errors.
-	/// Call this when a batch of blocks have been processed by the importqueue, with or without
-	/// errors.
-	pub fn on_blocks_processed(
-		&mut self,
-		imported: usize,
-		count: usize,
-		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
-	) {
-		let messages = futures::executor::block_on(
-			self.sync_handle.on_blocks_processed(imported, count, results),
-		);
-		self.pending_messages.extend(messages);
 	}
 
 	/// Set whether the syncing peers set is in reserved-only mode.
@@ -674,16 +651,6 @@ where
 			);
 		}
 	}
-
-	// /// Encode implementation-specific block request.
-	// pub fn encode_block_request(&mut self, request: OpaqueBlockRequest) -> Result<Vec<u8>,
-	// String> { 	futures::executor::block_on(self.sync_handle.encode_block_request(request))
-	// }
-
-	// /// Encode implementation-specific state request.
-	// pub fn encode_state_request(&mut self, request: OpaqueStateRequest) -> Result<Vec<u8>,
-	// String> { 	futures::executor::block_on(self.sync_handle.encode_state_request(request))
-	// }
 
 	// // TODO: move to syncing
 	// fn report_metrics(&self) {
@@ -837,6 +804,8 @@ where
 			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(message))
 		}
 
+		// TODO: handle `BlockRequest` directly in SyncingHelper
+		// TODO: move import queue to syncing helper
 		let events = futures::executor::block_on(self.sync_handle.get_events());
 		self.pending_messages.extend(events);
 
