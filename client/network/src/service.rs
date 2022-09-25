@@ -129,6 +129,8 @@ pub struct NetworkService<B: BlockT + 'static, H: ExHashT> {
 	/// Field extracted from the [`Metrics`] struct and necessary to report the
 	/// notifications-related metrics.
 	notifications_sizes_metric: Option<HistogramVec>,
+	/// Handle that is used for the communication with the syncing subsystem
+	sync_handle: sync_helper::SyncingHandle<B>,
 	/// Marker to pin the `H` generic. Serves no purpose except to not break backwards
 	/// compatibility.
 	_marker: PhantomData<H>,
@@ -251,7 +253,7 @@ where
 				.map(|_| default_notif_handshake_message.clone())
 				.collect(),
 			params.metrics_registry.as_ref(),
-			sync_handle,
+			sync_handle.clone(),
 		)?;
 
 		// List of multiaddresses that we know in the network.
@@ -461,6 +463,7 @@ where
 			notifications_sizes_metric: metrics
 				.as_ref()
 				.map(|metrics| metrics.notifications_sizes.clone()),
+			sync_handle: sync_handle.clone(),
 			_marker: PhantomData,
 		});
 
@@ -475,6 +478,7 @@ where
 			event_streams: out_events::OutChannels::new(params.metrics_registry.as_ref())?,
 			peers_notifications_sinks,
 			metrics,
+			sync_handle,
 			boot_node_ids,
 			_marker: Default::default(),
 		})
@@ -538,12 +542,12 @@ where
 
 	/// Returns the number of downloaded blocks.
 	pub fn num_downloaded_blocks(&self) -> usize {
-		self.network_service.behaviour().user_protocol().num_downloaded_blocks()
+		futures::executor::block_on(self.sync_handle.num_downloaded_blocks())
 	}
 
 	/// Number of active sync requests.
 	pub fn num_sync_requests(&self) -> usize {
-		self.network_service.behaviour().user_protocol().num_sync_requests()
+		futures::executor::block_on(self.sync_handle.num_sync_requests())
 	}
 
 	/// Adds an address for a node.
@@ -559,10 +563,7 @@ where
 
 	/// You must call this when a new block is finalized by the client.
 	pub fn on_block_finalized(&mut self, hash: B::Hash, header: B::Header) {
-		self.network_service
-			.behaviour_mut()
-			.user_protocol_mut()
-			.on_block_finalized(hash, &header);
+		self.sync_handle.on_block_finalized(hash, header)
 	}
 
 	/// Inform the network service about new best imported block.
@@ -766,13 +767,11 @@ impl<B: BlockT, H: ExHashT> sc_consensus::JustificationSyncLink<B> for NetworkSe
 	/// On success, the justification will be passed to the import queue that was part at
 	/// initialization as part of the configuration.
 	fn request_justification(&self, hash: &B::Hash, number: NumberFor<B>) {
-		let _ = self
-			.to_worker
-			.unbounded_send(ServiceToWorkerMsg::RequestJustification(*hash, number));
+		let _ = self.sync_handle.request_justification(*hash, number);
 	}
 
 	fn clear_justification_requests(&self) {
-		let _ = self.to_worker.unbounded_send(ServiceToWorkerMsg::ClearJustificationRequests);
+		let _ = self.sync_handle.clear_justification_requests();
 	}
 }
 
@@ -836,7 +835,7 @@ where
 	/// a stale fork missing.
 	/// Passing empty `peers` set effectively removes the sync request.
 	fn set_sync_fork_request(&self, peers: Vec<PeerId>, hash: B::Hash, number: NumberFor<B>) {
-		let _ = self.to_worker.unbounded_send(ServiceToWorkerMsg::SyncFork(peers, hash, number));
+		self.sync_handle.set_sync_fork_request(peers, hash, number);
 	}
 }
 
@@ -1296,6 +1295,8 @@ where
 	/// Marker to pin the `H` generic. Serves no purpose except to not break backwards
 	/// compatibility.
 	_marker: PhantomData<H>,
+	/// Handle that is used for the communication with the syncing subsystem
+	sync_handle: sync_helper::SyncingHandle<B>,
 }
 
 impl<B, H, Client> Future for NetworkWorker<B, H, Client>
@@ -1310,8 +1311,13 @@ where
 		let this = &mut *self;
 
 		// Poll the import queue for actions to perform.
-		this.import_queue
-			.poll_actions(cx, &mut NetworkLink { protocol: &mut this.network_service });
+		this.import_queue.poll_actions(
+			cx,
+			&mut NetworkLink {
+				protocol: &mut this.network_service,
+				sync_handle: &this.sync_handle,
+			},
+		);
 
 		// At the time of writing of this comment, due to a high volume of messages, the network
 		// worker sometimes takes a long time to process the loop below. When that happens, the
@@ -1341,16 +1347,6 @@ where
 					.behaviour_mut()
 					.user_protocol_mut()
 					.announce_block(hash, data),
-				ServiceToWorkerMsg::RequestJustification(hash, number) => this
-					.network_service
-					.behaviour_mut()
-					.user_protocol_mut()
-					.request_justification(&hash, number),
-				ServiceToWorkerMsg::ClearJustificationRequests => this
-					.network_service
-					.behaviour_mut()
-					.user_protocol_mut()
-					.clear_justification_requests(),
 				ServiceToWorkerMsg::GetValue(key) =>
 					this.network_service.behaviour_mut().get_value(key),
 				ServiceToWorkerMsg::PutValue(key, value) =>
@@ -1402,11 +1398,6 @@ where
 					.behaviour_mut()
 					.user_protocol_mut()
 					.remove_from_peers_set(protocol, peer_id),
-				ServiceToWorkerMsg::SyncFork(peer_ids, hash, number) => this
-					.network_service
-					.behaviour_mut()
-					.user_protocol_mut()
-					.set_sync_fork_request(peer_ids, &hash, number),
 				ServiceToWorkerMsg::EventStream(sender) => this.event_streams.push(sender),
 				ServiceToWorkerMsg::Request {
 					target,
@@ -1439,6 +1430,9 @@ where
 					.behaviour_mut()
 					.user_protocol_mut()
 					.new_best_block_imported(hash, number),
+				_ => {
+					todo!()
+				},
 			}
 		}
 
@@ -1948,6 +1942,7 @@ where
 	Client: HeaderBackend<B> + 'static,
 {
 	protocol: &'a mut Swarm<Behaviour<B, Client>>,
+	sync_handle: &'a sync_helper::SyncingHandle<B>,
 }
 
 impl<'a, B, Client> Link<B> for NetworkLink<'a, B, Client>
@@ -1955,6 +1950,7 @@ where
 	B: BlockT,
 	Client: HeaderBackend<B> + 'static,
 {
+	// TODO: fix `on_blocks_processed` in protocol.rs
 	fn blocks_processed(
 		&mut self,
 		imported: usize,
@@ -1966,6 +1962,7 @@ where
 			.user_protocol_mut()
 			.on_blocks_processed(imported, count, results)
 	}
+
 	fn justification_imported(
 		&mut self,
 		who: PeerId,
@@ -1973,16 +1970,11 @@ where
 		number: NumberFor<B>,
 		success: bool,
 	) {
-		self.protocol
-			.behaviour_mut()
-			.user_protocol_mut()
-			.justification_import_result(who, *hash, number, success);
+		self.sync_handle.justification_import_result(who, *hash, number, success)
 	}
+
 	fn request_justification(&mut self, hash: &B::Hash, number: NumberFor<B>) {
-		self.protocol
-			.behaviour_mut()
-			.user_protocol_mut()
-			.request_justification(hash, number)
+		self.sync_handle.request_justification(*hash, number)
 	}
 }
 

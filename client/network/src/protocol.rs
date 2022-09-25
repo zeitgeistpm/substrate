@@ -265,7 +265,6 @@ where
 		network_config: &config::NetworkConfiguration,
 		notifications_protocols_handshakes: Vec<Vec<u8>>,
 		metrics_registry: Option<&Registry>,
-		// chain_sync: Box<dyn ChainSync<B>>,
 		sync_handle: sync_helper::SyncingHandle<B>,
 	) -> error::Result<(Self, sc_peerset::PeersetHandle, Vec<(PeerId, Multiaddr)>)> {
 		let info = chain.info();
@@ -496,21 +495,11 @@ where
 		futures::executor::block_on(self.sync_handle.status()).queued_blocks
 	}
 
-	/// Number of downloaded blocks.
-	pub fn num_downloaded_blocks(&self) -> usize {
-		futures::executor::block_on(self.sync_handle.num_downloaded_blocks())
-	}
-
-	/// Number of active sync requests.
-	pub fn num_sync_requests(&self) -> usize {
-		futures::executor::block_on(self.sync_handle.num_sync_requests())
-	}
-
 	/// Inform sync about new best imported block.
 	pub fn new_best_block_imported(&mut self, hash: B::Hash, number: NumberFor<B>) {
 		debug!(target: "sync", "New best block imported {:?}/#{}", hash, number);
 
-		futures::executor::block_on(self.sync_handle.update_chain_info(hash, number));
+		self.sync_handle.update_chain_info(hash, number);
 
 		self.behaviour.set_notif_protocol_handshake(
 			HARDCODED_PEERSETS_SYNC,
@@ -589,41 +578,6 @@ where
 	}
 
 	// TODO: move to `SyncingHelper`
-	/// Call this when a block has been finalized. The sync layer may have some additional
-	/// requesting to perform.
-	pub fn on_block_finalized(&mut self, hash: B::Hash, header: &B::Header) {
-		futures::executor::block_on(self.sync_handle.on_block_finalized(hash, header.clone()));
-	}
-
-	// TODO: move to `SyncingHelper`
-	/// Request a justification for the given block.
-	///
-	/// Uses `protocol` to queue a new justification request and tries to dispatch all pending
-	/// requests.
-	pub fn request_justification(&mut self, hash: &B::Hash, number: NumberFor<B>) {
-		futures::executor::block_on(self.sync_handle.request_justification(*hash, number));
-	}
-
-	// TODO: move to `SyncingHelper`
-	/// Clear all pending justification requests.
-	pub fn clear_justification_requests(&mut self) {
-		futures::executor::block_on(self.sync_handle.clear_justification_requests());
-	}
-
-	// TODO: move to `SyncingHelper`
-	/// Request syncing for the given block from given set of peers.
-	/// Uses `protocol` to queue a new block download request and tries to dispatch all pending
-	/// requests.
-	pub fn set_sync_fork_request(
-		&mut self,
-		peers: Vec<PeerId>,
-		hash: &B::Hash,
-		number: NumberFor<B>,
-	) {
-		futures::executor::block_on(self.sync_handle.set_sync_fork_request(peers, *hash, number));
-	}
-
-	// TODO: move to `SyncingHelper`
 	/// A batch of blocks have been processed, with or without errors.
 	/// Call this when a batch of blocks have been processed by the importqueue, with or without
 	/// errors.
@@ -637,21 +591,6 @@ where
 			self.sync_handle.on_blocks_processed(imported, count, results),
 		);
 		self.pending_messages.extend(messages);
-	}
-
-	// TODO: move to `SyncingHelper`
-	/// Call this when a justification has been processed by the import queue, with or without
-	/// errors.
-	pub fn justification_import_result(
-		&mut self,
-		who: PeerId,
-		hash: B::Hash,
-		number: NumberFor<B>,
-		success: bool,
-	) {
-		futures::executor::block_on(
-			self.sync_handle.justification_import_result(who, hash, number, success),
-		);
 	}
 
 	/// Set whether the syncing peers set is in reserved-only mode.
@@ -924,15 +863,7 @@ where
 			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(message))
 		}
 
-		// self.counter += 1;
-		// if self.counter % 1000 == 0 {
-		//   		info!(target: "sync", "poll protocol");
-		// }
-
 		let events = futures::executor::block_on(self.sync_handle.get_events());
-		if events.len() > 0 {
-			info!(target: "sync", "got events: {:#?}", events);
-		}
 		self.pending_messages.extend(events);
 
 		// while let Poll::Ready(Some(())) = self.tick_timeout.poll_next_unpin(cx) {

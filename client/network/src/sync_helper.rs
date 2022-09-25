@@ -151,37 +151,32 @@ impl<B: BlockT> SyncingHandle<B> {
 		Self { tx }
 	}
 
-	pub async fn on_block_finalized(&mut self, hash: B::Hash, header: B::Header) {
+	pub fn on_block_finalized(&self, hash: B::Hash, header: B::Header) {
 		self.tx
 			.unbounded_send(SyncEvent::OnBlockFinalized(hash, header))
 			.expect("channel to stay open");
 	}
 
-	pub async fn request_justification(&mut self, hash: B::Hash, number: NumberFor<B>) {
+	pub fn request_justification(&self, hash: B::Hash, number: NumberFor<B>) {
 		self.tx
 			.unbounded_send(SyncEvent::RequestJustification(hash, number))
 			.expect("channel to stay open");
 	}
 
-	pub async fn clear_justification_requests(&mut self) {
+	pub fn clear_justification_requests(&self) {
 		self.tx
 			.unbounded_send(SyncEvent::ClearJustificationRequests)
 			.expect("channel to stay open");
 	}
 
-	pub async fn set_sync_fork_request(
-		&mut self,
-		peers: Vec<PeerId>,
-		hash: B::Hash,
-		number: NumberFor<B>,
-	) {
+	pub fn set_sync_fork_request(&self, peers: Vec<PeerId>, hash: B::Hash, number: NumberFor<B>) {
 		self.tx
 			.unbounded_send(SyncEvent::SetSyncForkRequest(peers, hash, number))
 			.expect("channel to stay open");
 	}
 
 	pub async fn on_blocks_processed(
-		&mut self,
+		&self,
 		imported: usize,
 		count: usize,
 		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
@@ -195,8 +190,8 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
-	pub async fn justification_import_result(
-		&mut self,
+	pub fn justification_import_result(
+		&self,
 		who: PeerId,
 		hash: B::Hash,
 		number: NumberFor<B>,
@@ -208,7 +203,7 @@ impl<B: BlockT> SyncingHandle<B> {
 	}
 
 	pub async fn encode_block_request(
-		&mut self,
+		&self,
 		request: OpaqueBlockRequest,
 	) -> Result<Vec<u8>, String> {
 		let (tx, rx) = oneshot::channel();
@@ -221,7 +216,7 @@ impl<B: BlockT> SyncingHandle<B> {
 
 	/// Encode implementation-specific state request.
 	pub async fn encode_state_request(
-		&mut self,
+		&self,
 		request: OpaqueStateRequest,
 	) -> Result<Vec<u8>, String> {
 		let (tx, rx) = oneshot::channel();
@@ -235,7 +230,6 @@ impl<B: BlockT> SyncingHandle<B> {
 	pub async fn num_connected_peers(&self) -> usize {
 		let (tx, rx) = oneshot::channel();
 
-		// TODO: zzz
 		self.tx
 			.unbounded_send(SyncEvent::NumConnectedPeers(tx))
 			.expect("channel to stay open");
@@ -245,17 +239,13 @@ impl<B: BlockT> SyncingHandle<B> {
 	pub async fn status(&self) -> SyncStatus<B> {
 		let (tx, rx) = oneshot::channel();
 
-		// TODO: zzz
-		self.tx
-			.unbounded_send(SyncEvent::SyncState(tx))
-			.expect("channel to stay open");
+		self.tx.unbounded_send(SyncEvent::SyncState(tx)).expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
 
 	pub async fn num_downloaded_blocks(&self) -> usize {
 		let (tx, rx) = oneshot::channel();
 
-		// TODO: zzz
 		self.tx
 			.unbounded_send(SyncEvent::NumDownloadedBlocks(tx))
 			.expect("channel to stay open");
@@ -265,14 +255,13 @@ impl<B: BlockT> SyncingHandle<B> {
 	pub async fn num_sync_requests(&self) -> usize {
 		let (tx, rx) = oneshot::channel();
 
-		// TODO: zzz
 		self.tx
 			.unbounded_send(SyncEvent::NumSyncRequests(tx))
 			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
 
-	pub async fn update_chain_info(&mut self, hash: B::Hash, number: NumberFor<B>) {
+	pub fn update_chain_info(&self, hash: B::Hash, number: NumberFor<B>) {
 		self.tx
 			.unbounded_send(SyncEvent::UpdateChainInfo(hash, number))
 			.expect("channel to stay open");
@@ -281,14 +270,11 @@ impl<B: BlockT> SyncingHandle<B> {
 	pub async fn get_peers(&self) -> Vec<(PeerId, Peer<B>)> {
 		let (tx, rx) = oneshot::channel();
 
-		// TODO: zzz
-		self.tx
-			.unbounded_send(SyncEvent::GetPeers(tx))
-			.expect("channel to stay open");
+		self.tx.unbounded_send(SyncEvent::GetPeers(tx)).expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
 
-	pub async fn custom_protocol_close(&mut self, peer: PeerId) -> CustomMessageOutcome<B> {
+	pub async fn custom_protocol_close(&self, peer: PeerId) -> CustomMessageOutcome<B> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx
@@ -298,7 +284,7 @@ impl<B: BlockT> SyncingHandle<B> {
 	}
 
 	pub async fn custom_protocol_open(
-		&mut self,
+		&self,
 		peer_id: PeerId,
 		received_handshake: Vec<u8>,
 		notifications_sink: NotificationsSink,
@@ -319,7 +305,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
-	pub async fn get_events(&mut self) -> VecDeque<CustomMessageOutcome<B>> {
+	pub async fn get_events(&self) -> VecDeque<CustomMessageOutcome<B>> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx.unbounded_send(SyncEvent::GetEvents(tx)).expect("channel to stay open");
@@ -327,7 +313,7 @@ impl<B: BlockT> SyncingHandle<B> {
 	}
 
 	pub async fn notification(
-		&mut self,
+		&self,
 		peer: PeerId,
 		message: bytes::BytesMut,
 	) -> CustomMessageOutcome<B> {
@@ -339,7 +325,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
-	pub async fn get_annouce_data(&mut self, hash: B::Hash) -> Option<Vec<u8>> {
+	pub async fn get_annouce_data(&self, hash: B::Hash) -> Option<Vec<u8>> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx
@@ -348,7 +334,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
-	pub async fn insert_known_block(&mut self, peer: PeerId, hash: B::Hash) -> bool {
+	pub async fn insert_known_block(&self, peer: PeerId, hash: B::Hash) -> bool {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx
@@ -1255,23 +1241,18 @@ impl<B: BlockT, Client: HeaderBackend<B> + 'static> SyncingHelper<B, Client> {
 			futures::select! {
 				command = futures::StreamExt::next(&mut self.rx).fuse() => match command {
 					Some(command) => {
-    					// println!("command");
-    					// println!("command {:?}", command);
 						self.handle_command(command);
 						self.call_chain_sync();
 					}
 					None => {}
 				},
 				request = self.pending_responses.select_next_some() => {
-    				// println!("handle pending response");
 					self.handle_pending_response(request.0, request.1, request.2)
 				}
 				_ = async_std::task::sleep(std::time::Duration::from_millis(500)).fuse() => {
-    				println!("call chainsync");
 					self.call_chain_sync();
 				}
 				result = futures::future::poll_fn(|cx| self.chain_sync.poll_block_announce_validation(cx)).fuse() => {
-    				// println!("poll block announce validation");
 					match self.process_block_announce_validation_result(result) {
 						CustomMessageOutcome::None => {},
 						outcome => self.pending_messages.push_back(outcome),
