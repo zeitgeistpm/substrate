@@ -454,61 +454,6 @@
 <span id="448">448</span>
 <span id="449">449</span>
 <span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
@@ -530,8 +475,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! If a nominator is not exposed in any `ErasStakers` (i.e. &quot;has not actively backed any</span>
 <span class="doccomment">//! validators in the last `BondingDuration` days&quot;), then they can register themselves in this</span>
-<span class="doccomment">//! pallet, unstake faster than having to wait an entire bonding duration, and potentially move</span>
-<span class="doccomment">//! into a nomination pool.</span>
+<span class="doccomment">//! pallet, unstake faster than having to wait an entire bonding duration.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Appearing in the exposure of a validator means being exposed equal to that validator from the</span>
 <span class="doccomment">//! point of view of the staking system. This usually means earning rewards with the validator, and</span>
@@ -554,8 +498,7 @@
 <span class="doccomment">//! to prevent them from accidentally exposing themselves behind a validator etc.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Once processed, if successful, no additional fee for the checking process is taken, and the</span>
-<span class="doccomment">//! staker is instantly unbonded. Optionally, if they have asked to join a pool, their *entire*</span>
-<span class="doccomment">//! stake is joined into their pool of choice.</span>
+<span class="doccomment">//! staker is instantly unbonded.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! If unsuccessful, meaning that the staker was exposed sometime in the last `BondingDuration` eras</span>
 <span class="doccomment">//! they will end up being slashed for the amount of wasted work they have inflicted on the chian.</span>
@@ -596,7 +539,6 @@
 	<span class="kw">use</span> <span class="ident">frame_election_provider_support::ElectionProvider</span>;
 	<span class="kw">use</span> <span class="ident">frame_support::pallet_prelude</span>::<span class="kw-2">*</span>;
 	<span class="kw">use</span> <span class="ident">frame_system</span>::{<span class="ident">pallet_prelude</span>::<span class="kw-2">*</span>, <span class="ident">RawOrigin</span>};
-	<span class="kw">use</span> <span class="ident">pallet_nomination_pools::PoolId</span>;
 	<span class="kw">use</span> <span class="ident">pallet_staking::Pallet</span> <span class="kw">as</span> <span class="ident">Staking</span>;
 	<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
 		<span class="ident">traits</span>::{<span class="ident">Saturating</span>, <span class="ident">Zero</span>},
@@ -620,12 +562,7 @@
 	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw">_</span>);
 
 	<span class="attribute">#[<span class="ident">pallet::config</span>]</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Config</span>:
-		<span class="ident">frame_system::Config</span>
-		<span class="op">+</span> <span class="ident">pallet_staking::Config</span><span class="op">&lt;</span>
-			<span class="ident">CurrencyBalance</span> <span class="op">=</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">pallet_nomination_pools::Config</span><span class="op">&gt;</span><span class="ident">::CurrencyBalance</span>,
-		<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">pallet_nomination_pools::Config</span>
-	{
+	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Config</span>: <span class="ident">frame_system::Config</span> <span class="op">+</span> <span class="ident">pallet_staking::Config</span> {
 		<span class="doccomment">/// The overarching event type.</span>
 		<span class="kw">type</span> <span class="ident">RuntimeEvent</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>
 			<span class="op">+</span> <span class="ident">IsType</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::RuntimeEvent</span><span class="op">&gt;</span>
@@ -650,10 +587,9 @@
 
 	<span class="doccomment">/// The map of all accounts wishing to be unstaked.</span>
 	<span class="doccomment">///</span>
-	<span class="doccomment">/// Points the `AccountId` wishing to unstake to the optional `PoolId` they wish to join</span>
-	<span class="doccomment">/// thereafter.</span>
+	<span class="doccomment">/// Keeps track of `AccountId` wishing to unstake.</span>
 	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Queue</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">CountedStorageMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Twox64Concat</span>, <span class="ident">T::AccountId</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PoolId</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Queue</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">CountedStorageMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Twox64Concat</span>, <span class="ident">T::AccountId</span>, ()<span class="op">&gt;</span>;
 
 	<span class="doccomment">/// Number of eras to check per block.</span>
 	<span class="doccomment">///</span>
@@ -669,7 +605,7 @@
 	<span class="attribute">#[<span class="ident">pallet::generate_deposit</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">deposit_event</span>)]</span>
 	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
 		<span class="doccomment">/// A staker was unstaked.</span>
-		<span class="ident">Unstaked</span> { <span class="ident">stash</span>: <span class="ident">T::AccountId</span>, <span class="ident">maybe_pool_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PoolId</span><span class="op">&gt;</span>, <span class="ident">result</span>: <span class="ident">DispatchResult</span> },
+		<span class="ident">Unstaked</span> { <span class="ident">stash</span>: <span class="ident">T::AccountId</span>, <span class="ident">result</span>: <span class="ident">DispatchResult</span> },
 		<span class="doccomment">/// A staker was slashed for requesting fast-unstake whilst being exposed.</span>
 		<span class="ident">Slashed</span> { <span class="ident">stash</span>: <span class="ident">T::AccountId</span>, <span class="ident">amount</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> },
 		<span class="doccomment">/// A staker was partially checked for the given eras, but the process did not finish.</span>
@@ -724,16 +660,13 @@
 		<span class="doccomment">/// they are guaranteed to remain eligible, because the call will chill them as well.</span>
 		<span class="doccomment">///</span>
 		<span class="doccomment">/// If the check works, the entire staking data is removed, i.e. the stash is fully</span>
-		<span class="doccomment">/// unstaked, and they potentially join a pool with their entire bonded stake.</span>
+		<span class="doccomment">/// unstaked.</span>
 		<span class="doccomment">///</span>
 		<span class="doccomment">/// If the check fails, the stash remains chilled and waiting for being unbonded as in with</span>
 		<span class="doccomment">/// the normal staking system, but they lose part of their unbonding chunks due to consuming</span>
 		<span class="doccomment">/// the chain&#39;s resources.</span>
 		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::register_fast_unstake</span>())]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">register_fast_unstake</span>(
-			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">maybe_pool_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PoolId</span><span class="op">&gt;</span>,
-		) -&gt; <span class="ident">DispatchResult</span> {
+		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">register_fast_unstake</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">DispatchResult</span> {
 			<span class="kw">let</span> <span class="ident">ctrl</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
 
 			<span class="kw">let</span> <span class="ident">ledger</span> <span class="op">=</span>
@@ -754,12 +687,11 @@
 			<span class="ident">Staking</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::unbond</span>(<span class="ident">RawOrigin::Signed</span>(<span class="ident">ctrl</span>).<span class="ident">into</span>(), <span class="ident">ledger</span>.<span class="ident">total</span>)<span class="question-mark">?</span>;
 
 			<span class="comment">// enqueue them.</span>
-			<span class="ident">Queue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="ident">ledger</span>.<span class="ident">stash</span>, <span class="ident">maybe_pool_id</span>);
+			<span class="ident">Queue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="ident">ledger</span>.<span class="ident">stash</span>, ());
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Deregister oneself from the fast-unstake (also cancels joining the pool if that was</span>
-		<span class="doccomment">/// supplied on `register_fast_unstake` .</span>
+		<span class="doccomment">/// Deregister oneself from the fast-unstake.</span>
 		<span class="doccomment">///</span>
 		<span class="doccomment">/// This is useful if one is registered, they are still waiting, and they change their mind.</span>
 		<span class="doccomment">///</span>
@@ -838,17 +770,12 @@
 				<span class="kw">return</span> <span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">2</span>)
 			}
 
-			<span class="kw">let</span> <span class="ident">UnstakeRequest</span> { <span class="ident">stash</span>, <span class="kw-2">mut</span> <span class="ident">checked</span>, <span class="ident">maybe_pool_id</span> } <span class="op">=</span> <span class="kw">match</span> <span class="ident">Head</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::take</span>()
-				.<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> {
-					<span class="comment">// NOTE: there is no order guarantees in `Queue`.</span>
-					<span class="ident">Queue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::drain</span>()
-						.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stash</span>, <span class="ident">maybe_pool_id</span>)<span class="op">|</span> <span class="ident">UnstakeRequest</span> {
-							<span class="ident">stash</span>,
-							<span class="ident">maybe_pool_id</span>,
-							<span class="ident">checked</span>: <span class="ident">Default::default</span>(),
-						})
-						.<span class="ident">next</span>()
-				}) {
+			<span class="kw">let</span> <span class="ident">UnstakeRequest</span> { <span class="ident">stash</span>, <span class="kw-2">mut</span> <span class="ident">checked</span> } <span class="op">=</span> <span class="kw">match</span> <span class="ident">Head</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::take</span>().<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> {
+				<span class="comment">// NOTE: there is no order guarantees in `Queue`.</span>
+				<span class="ident">Queue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::drain</span>()
+					.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stash</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">UnstakeRequest</span> { <span class="ident">stash</span>, <span class="ident">checked</span>: <span class="ident">Default::default</span>() })
+					.<span class="ident">next</span>()
+			}) {
 				<span class="prelude-val">None</span> =&gt; {
 					<span class="comment">// There&#39;s no `Head` and nothing in the `Queue`, nothing to do here.</span>
 					<span class="kw">return</span> <span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">4</span>)
@@ -903,48 +830,15 @@
 				<span class="comment">// `stash` is not exposed in any era now -- we can let go of them now.</span>
 				<span class="kw">let</span> <span class="ident">num_slashing_spans</span> <span class="op">=</span> <span class="ident">Staking</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::slashing_spans</span>(<span class="kw-2">&amp;</span><span class="ident">stash</span>).<span class="ident">iter</span>().<span class="ident">count</span>() <span class="kw">as</span> <span class="ident">u32</span>;
 
-				<span class="kw">let</span> <span class="ident">ctrl</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pallet_staking::Bonded</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="kw-2">&amp;</span><span class="ident">stash</span>) {
-					<span class="prelude-val">Some</span>(<span class="ident">ctrl</span>) =&gt; <span class="ident">ctrl</span>,
-					<span class="prelude-val">None</span> =&gt; {
-						<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Errored</span> { <span class="ident">stash</span> });
-						<span class="kw">return</span> <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::on_idle_unstake</span>()
-					},
-				};
-
-				<span class="kw">let</span> <span class="ident">ledger</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pallet_staking::Ledger</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">ctrl</span>) {
-					<span class="prelude-val">Some</span>(<span class="ident">ledger</span>) =&gt; <span class="ident">ledger</span>,
-					<span class="prelude-val">None</span> =&gt; {
-						<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Errored</span> { <span class="ident">stash</span> });
-						<span class="kw">return</span> <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::on_idle_unstake</span>()
-					},
-				};
-
-				<span class="kw">let</span> <span class="ident">unstake_result</span> <span class="op">=</span> <span class="ident">pallet_staking::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::force_unstake</span>(
+				<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">pallet_staking::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::force_unstake</span>(
 					<span class="ident">RawOrigin::Root</span>.<span class="ident">into</span>(),
 					<span class="ident">stash</span>.<span class="ident">clone</span>(),
 					<span class="ident">num_slashing_spans</span>,
 				);
 
-				<span class="kw">let</span> <span class="ident">pool_stake_result</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pool_id</span>) <span class="op">=</span> <span class="ident">maybe_pool_id</span> {
-					<span class="ident">pallet_nomination_pools::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::join</span>(
-						<span class="ident">RawOrigin::Signed</span>(<span class="ident">stash</span>.<span class="ident">clone</span>()).<span class="ident">into</span>(),
-						<span class="ident">ledger</span>.<span class="ident">total</span>,
-						<span class="ident">pool_id</span>,
-					)
-				} <span class="kw">else</span> {
-					<span class="prelude-val">Ok</span>(())
-				};
+				<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;unstaked {:?}, outcome: {:?}&quot;</span>, <span class="ident">stash</span>, <span class="ident">result</span>);
 
-				<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">unstake_result</span>.<span class="ident">and</span>(<span class="ident">pool_stake_result</span>);
-				<span class="macro">log!</span>(
-					<span class="ident">info</span>,
-					<span class="string">&quot;unstaked {:?}, maybe_pool {:?}, outcome: {:?}&quot;</span>,
-					<span class="ident">stash</span>,
-					<span class="ident">maybe_pool_id</span>,
-					<span class="ident">result</span>
-				);
-
-				<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Unstaked</span> { <span class="ident">stash</span>, <span class="ident">maybe_pool_id</span>, <span class="ident">result</span> });
+				<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Unstaked</span> { <span class="ident">stash</span>, <span class="ident">result</span> });
 				<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::on_idle_unstake</span>()
 			} <span class="kw">else</span> {
 				<span class="comment">// eras remaining to be checked.</span>
@@ -982,11 +876,7 @@
 					<span class="comment">// Not exposed in these eras.</span>
 					<span class="kw">match</span> <span class="ident">checked</span>.<span class="ident">try_extend</span>(<span class="ident">unchecked_eras_to_check</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>()) {
 						<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-							<span class="ident">Head</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">UnstakeRequest</span> {
-								<span class="ident">stash</span>: <span class="ident">stash</span>.<span class="ident">clone</span>(),
-								<span class="ident">checked</span>,
-								<span class="ident">maybe_pool_id</span>,
-							});
+							<span class="ident">Head</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">UnstakeRequest</span> { <span class="ident">stash</span>: <span class="ident">stash</span>.<span class="ident">clone</span>(), <span class="ident">checked</span> });
 							<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Checking</span> {
 								<span class="ident">stash</span>,
 								<span class="ident">eras</span>: <span class="ident">unchecked_eras_to_check</span>,
