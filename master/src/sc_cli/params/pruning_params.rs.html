@@ -68,6 +68,21 @@
 <span id="62">62</span>
 <span id="63">63</span>
 <span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -100,13 +115,16 @@
 	<span class="doccomment">/// or for all of the canonical blocks (i.e &#39;archive-canonical&#39;).</span>
 	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;pruning&quot;</span>, <span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PRUNING_MODE&quot;</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">state_pruning</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Specify the number of finalized blocks to keep in the database.</span>
+	<span class="doccomment">/// Specify the blocks pruning mode, a number of blocks to keep or &#39;archive&#39;.</span>
 	<span class="doccomment">///</span>
-	<span class="doccomment">/// Default is to keep all blocks.</span>
+	<span class="doccomment">/// Default is to keep all finalized blocks.</span>
+	<span class="doccomment">/// otherwise, all blocks can be kept (i.e &#39;archive&#39;),</span>
+	<span class="doccomment">/// or for all canonical blocks (i.e &#39;archive-canonical&#39;),</span>
+	<span class="doccomment">/// or for the last N blocks (i.e a number).</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// NOTE: only finalized blocks are subject for removal!</span>
 	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;keep-blocks&quot;</span>, <span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;COUNT&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">blocks_pruning</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+	<span class="kw">pub</span> <span class="ident">blocks_pruning</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">PruningParams</span> {
@@ -116,9 +134,12 @@
 			.<span class="ident">as_ref</span>()
 			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">s</span>.<span class="ident">as_str</span>() {
 				<span class="string">&quot;archive&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">PruningMode::ArchiveAll</span>),
+				<span class="string">&quot;archive-canonical&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">PruningMode::ArchiveCanonical</span>),
 				<span class="ident">bc</span> =&gt; <span class="ident">bc</span>
 					.<span class="ident">parse</span>()
-					.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">error::Error::Input</span>(<span class="string">&quot;Invalid pruning mode specified&quot;</span>.<span class="ident">to_string</span>()))
+					.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+						<span class="ident">error::Error::Input</span>(<span class="string">&quot;Invalid state pruning mode specified&quot;</span>.<span class="ident">to_string</span>())
+					})
 					.<span class="ident">map</span>(<span class="ident">PruningMode::blocks_pruning</span>),
 			})
 			.<span class="ident">transpose</span>()
@@ -126,10 +147,19 @@
 
 	<span class="doccomment">/// Get the block pruning value from the parameters</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">blocks_pruning</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">error::Result</span><span class="op">&lt;</span><span class="ident">BlocksPruning</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">blocks_pruning</span> {
-			<span class="prelude-val">Some</span>(<span class="ident">n</span>) =&gt; <span class="ident">BlocksPruning::Some</span>(<span class="ident">n</span>),
-			<span class="prelude-val">None</span> =&gt; <span class="ident">BlocksPruning::All</span>,
-		})
+		<span class="kw">match</span> <span class="self">self</span>.<span class="ident">blocks_pruning</span>.<span class="ident">as_ref</span>() {
+			<span class="prelude-val">Some</span>(<span class="ident">bp</span>) =&gt; <span class="kw">match</span> <span class="ident">bp</span>.<span class="ident">as_str</span>() {
+				<span class="string">&quot;archive&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">BlocksPruning::KeepAll</span>),
+				<span class="string">&quot;archive-canonical&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">BlocksPruning::KeepFinalized</span>),
+				<span class="ident">bc</span> =&gt; <span class="ident">bc</span>
+					.<span class="ident">parse</span>()
+					.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+						<span class="ident">error::Error::Input</span>(<span class="string">&quot;Invalid blocks pruning mode specified&quot;</span>.<span class="ident">to_string</span>())
+					})
+					.<span class="ident">map</span>(<span class="ident">BlocksPruning::Some</span>),
+			},
+			<span class="prelude-val">None</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">BlocksPruning::KeepFinalized</span>),
+		}
 	}
 }
 </code></pre></div>
