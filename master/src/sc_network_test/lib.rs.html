@@ -1141,12 +1141,6 @@
 <span id="1135">1135</span>
 <span id="1136">1136</span>
 <span id="1137">1137</span>
-<span id="1138">1138</span>
-<span id="1139">1139</span>
-<span id="1140">1140</span>
-<span id="1141">1141</span>
-<span id="1142">1142</span>
-<span id="1143">1143</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1196,16 +1190,14 @@
 	<span class="ident">ForkChoiceStrategy</span>, <span class="ident">ImportResult</span>, <span class="ident">JustificationImport</span>, <span class="ident">JustificationSyncLink</span>, <span class="ident">LongestChain</span>,
 	<span class="ident">Verifier</span>,
 };
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sc_network::config::EmptyTransactionPool</span>;
 <span class="kw">use</span> <span class="ident">sc_network</span>::{
-	<span class="ident">config</span>::{
-		<span class="ident">NetworkConfiguration</span>, <span class="ident">NonDefaultSetConfig</span>, <span class="ident">NonReservedPeerMode</span>, <span class="ident">Role</span>, <span class="ident">SyncMode</span>,
-		<span class="ident">TransportConfig</span>,
-	},
+	<span class="ident">config</span>::{<span class="ident">NetworkConfiguration</span>, <span class="ident">Role</span>, <span class="ident">SyncMode</span>},
 	<span class="ident">Multiaddr</span>, <span class="ident">NetworkService</span>, <span class="ident">NetworkWorker</span>,
 };
 <span class="kw">use</span> <span class="ident">sc_network_common</span>::{
-	<span class="ident">config</span>::{<span class="ident">MultiaddrWithPeerId</span>, <span class="ident">ProtocolId</span>},
+	<span class="ident">config</span>::{
+		<span class="ident">MultiaddrWithPeerId</span>, <span class="ident">NonDefaultSetConfig</span>, <span class="ident">NonReservedPeerMode</span>, <span class="ident">ProtocolId</span>, <span class="ident">TransportConfig</span>,
+	},
 	<span class="ident">protocol::ProtocolName</span>,
 	<span class="ident">service</span>::{<span class="ident">NetworkBlock</span>, <span class="ident">NetworkStateInfo</span>, <span class="ident">NetworkSyncForkRequest</span>},
 	<span class="ident">sync::warp</span>::{<span class="ident">AuthorityList</span>, <span class="ident">EncodedProof</span>, <span class="ident">SetId</span>, <span class="ident">VerificationResult</span>, <span class="ident">WarpSyncProvider</span>},
@@ -2028,12 +2020,8 @@
 		<span class="kw">let</span> <span class="ident">network</span> <span class="op">=</span> <span class="ident">NetworkWorker::new</span>(<span class="ident">sc_network::config::Params</span> {
 			<span class="ident">role</span>: <span class="kw">if</span> <span class="ident">config</span>.<span class="ident">is_authority</span> { <span class="ident">Role::Authority</span> } <span class="kw">else</span> { <span class="ident">Role::Full</span> },
 			<span class="ident">executor</span>: <span class="prelude-val">None</span>,
-			<span class="ident">transactions_handler_executor</span>: <span class="ident">Box::new</span>(<span class="op">|</span><span class="ident">task</span><span class="op">|</span> {
-				<span class="ident">async_std::task::spawn</span>(<span class="ident">task</span>);
-			}),
 			<span class="ident">network_config</span>,
 			<span class="ident">chain</span>: <span class="ident">client</span>.<span class="ident">clone</span>(),
-			<span class="ident">transaction_pool</span>: <span class="ident">Arc::new</span>(<span class="ident">EmptyTransactionPool</span>),
 			<span class="ident">protocol_id</span>,
 			<span class="ident">fork_id</span>,
 			<span class="ident">import_queue</span>,

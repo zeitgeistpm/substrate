@@ -2012,51 +2012,6 @@
 <span id="2006">2006</span>
 <span id="2007">2007</span>
 <span id="2008">2008</span>
-<span id="2009">2009</span>
-<span id="2010">2010</span>
-<span id="2011">2011</span>
-<span id="2012">2012</span>
-<span id="2013">2013</span>
-<span id="2014">2014</span>
-<span id="2015">2015</span>
-<span id="2016">2016</span>
-<span id="2017">2017</span>
-<span id="2018">2018</span>
-<span id="2019">2019</span>
-<span id="2020">2020</span>
-<span id="2021">2021</span>
-<span id="2022">2022</span>
-<span id="2023">2023</span>
-<span id="2024">2024</span>
-<span id="2025">2025</span>
-<span id="2026">2026</span>
-<span id="2027">2027</span>
-<span id="2028">2028</span>
-<span id="2029">2029</span>
-<span id="2030">2030</span>
-<span id="2031">2031</span>
-<span id="2032">2032</span>
-<span id="2033">2033</span>
-<span id="2034">2034</span>
-<span id="2035">2035</span>
-<span id="2036">2036</span>
-<span id="2037">2037</span>
-<span id="2038">2038</span>
-<span id="2039">2039</span>
-<span id="2040">2040</span>
-<span id="2041">2041</span>
-<span id="2042">2042</span>
-<span id="2043">2043</span>
-<span id="2044">2044</span>
-<span id="2045">2045</span>
-<span id="2046">2046</span>
-<span id="2047">2047</span>
-<span id="2048">2048</span>
-<span id="2049">2049</span>
-<span id="2050">2050</span>
-<span id="2051">2051</span>
-<span id="2052">2052</span>
-<span id="2053">2053</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -2088,9 +2043,8 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
 	<span class="ident">behaviour</span>::{<span class="self">self</span>, <span class="ident">Behaviour</span>, <span class="ident">BehaviourOut</span>},
-	<span class="ident">config</span>::{<span class="ident">Params</span>, <span class="ident">TransportConfig</span>},
+	<span class="ident">config::Params</span>,
 	<span class="ident">discovery::DiscoveryConfig</span>,
-	<span class="ident">error::Error</span>,
 	<span class="ident">network_state</span>::{
 		<span class="ident">NetworkState</span>, <span class="ident">NotConnectedPeer</span> <span class="kw">as</span> <span class="ident">NetworkStateNotConnectedPeer</span>, <span class="ident">Peer</span> <span class="kw">as</span> <span class="ident">NetworkStatePeer</span>,
 	},
@@ -2098,7 +2052,7 @@
 		<span class="self">self</span>, <span class="ident">message::generic::Roles</span>, <span class="ident">NotificationsSink</span>, <span class="ident">NotifsHandlerError</span>, <span class="ident">PeerInfo</span>, <span class="ident">Protocol</span>,
 		<span class="ident">Ready</span>,
 	},
-	<span class="ident">transactions</span>, <span class="ident">transport</span>, <span class="ident">ExHashT</span>, <span class="ident">ReputationChange</span>,
+	<span class="ident">transport</span>, <span class="ident">ReputationChange</span>,
 };
 
 <span class="kw">use</span> <span class="ident">codec::Encode</span> <span class="kw">as</span> <span class="kw">_</span>;
@@ -2119,7 +2073,8 @@
 <span class="kw">use</span> <span class="ident">parking_lot::Mutex</span>;
 <span class="kw">use</span> <span class="ident">sc_consensus</span>::{<span class="ident">BlockImportError</span>, <span class="ident">BlockImportStatus</span>, <span class="ident">ImportQueue</span>, <span class="ident">Link</span>};
 <span class="kw">use</span> <span class="ident">sc_network_common</span>::{
-	<span class="ident">config::MultiaddrWithPeerId</span>,
+	<span class="ident">config</span>::{<span class="ident">MultiaddrWithPeerId</span>, <span class="ident">TransportConfig</span>},
+	<span class="ident">error::Error</span>,
 	<span class="ident">protocol</span>::{
 		<span class="ident">event</span>::{<span class="ident">DhtEvent</span>, <span class="ident">Event</span>},
 		<span class="ident">ProtocolName</span>,
@@ -2132,6 +2087,7 @@
 		<span class="ident">NotificationSenderReady</span> <span class="kw">as</span> <span class="ident">NotificationSenderReadyT</span>, <span class="ident">Signature</span>, <span class="ident">SigningError</span>,
 	},
 	<span class="ident">sync</span>::{<span class="ident">SyncState</span>, <span class="ident">SyncStatus</span>},
+	<span class="ident">ExHashT</span>,
 };
 <span class="kw">use</span> <span class="ident">sc_peerset::PeersetHandle</span>;
 <span class="kw">use</span> <span class="ident">sc_utils::mpsc</span>::{<span class="ident">tracing_unbounded</span>, <span class="ident">TracingUnboundedReceiver</span>, <span class="ident">TracingUnboundedSender</span>};
@@ -2160,7 +2116,7 @@
 <span class="kw">mod</span> <span class="ident">tests</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">libp2p::identity</span>::{<span class="ident">error::DecodingError</span>, <span class="ident">Keypair</span>, <span class="ident">PublicKey</span>};
-<span class="kw">use</span> <span class="ident">sc_network_common::service</span>::{<span class="ident">NetworkBlock</span>, <span class="ident">NetworkRequest</span>, <span class="ident">NetworkTransaction</span>};
+<span class="kw">use</span> <span class="ident">sc_network_common::service</span>::{<span class="ident">NetworkBlock</span>, <span class="ident">NetworkRequest</span>};
 
 <span class="doccomment">/// Substrate network service. Handles network IO and manages connectivity.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NetworkService</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">H</span>: <span class="ident">ExHashT</span><span class="op">&gt;</span> {
@@ -2180,7 +2136,7 @@
 	<span class="doccomment">/// nodes it should be connected to or not.</span>
 	<span class="ident">peerset</span>: <span class="ident">PeersetHandle</span>,
 	<span class="doccomment">/// Channel that sends messages to the actual worker.</span>
-	<span class="ident">to_worker</span>: <span class="ident">TracingUnboundedSender</span><span class="op">&lt;</span><span class="ident">ServiceToWorkerMsg</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+	<span class="ident">to_worker</span>: <span class="ident">TracingUnboundedSender</span><span class="op">&lt;</span><span class="ident">ServiceToWorkerMsg</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// For each peer and protocol combination, an object that allows sending notifications to</span>
 	<span class="doccomment">/// that peer. Updated by the [`NetworkWorker`].</span>
 	<span class="ident">peers_notifications_sinks</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span>(<span class="ident">PeerId</span>, <span class="ident">ProtocolName</span>), <span class="ident">NotificationsSink</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -2203,7 +2159,7 @@
 	<span class="doccomment">/// Returns a `NetworkWorker` that implements `Future` and must be regularly polled in order</span>
 	<span class="doccomment">/// for the network processing to advance. From it, you can extract a `NetworkService` using</span>
 	<span class="doccomment">/// `worker.service()`. The `NetworkService` can be shared through the codebase.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">params</span>: <span class="ident">Params</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">H</span>, <span class="ident">Client</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">params</span>: <span class="ident">Params</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
 		<span class="comment">// Private and public keys configuration.</span>
 		<span class="kw">let</span> <span class="ident">local_identity</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">network_config</span>.<span class="ident">node_key</span>.<span class="ident">clone</span>().<span class="ident">into_keypair</span>()<span class="question-mark">?</span>;
 		<span class="kw">let</span> <span class="ident">local_public</span> <span class="op">=</span> <span class="ident">local_identity</span>.<span class="ident">public</span>();
@@ -2274,21 +2230,6 @@
 			<span class="ident">fs::create_dir_all</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 		}
 
-		<span class="kw">let</span> <span class="ident">transactions_handler_proto</span> <span class="op">=</span> <span class="ident">transactions::TransactionsHandlerPrototype::new</span>(
-			<span class="ident">params</span>.<span class="ident">protocol_id</span>.<span class="ident">clone</span>(),
-			<span class="ident">params</span>
-				.<span class="ident">chain</span>
-				.<span class="ident">hash</span>(<span class="number">0u32</span>.<span class="ident">into</span>())
-				.<span class="ident">ok</span>()
-				.<span class="ident">flatten</span>()
-				.<span class="ident">expect</span>(<span class="string">&quot;Genesis block exists; qed&quot;</span>),
-			<span class="ident">params</span>.<span class="ident">fork_id</span>.<span class="ident">clone</span>(),
-		);
-		<span class="ident">params</span>
-			.<span class="ident">network_config</span>
-			.<span class="ident">extra_sets</span>
-			.<span class="ident">insert</span>(<span class="number">0</span>, <span class="ident">transactions_handler_proto</span>.<span class="ident">set_config</span>());
-
 		<span class="macro">info!</span>(
 			<span class="ident">target</span>: <span class="string">&quot;sub-libp2p&quot;</span>,
 			<span class="string">&quot;🏷  Local node identity is: {}&quot;</span>,
@@ -2303,11 +2244,8 @@
 			<span class="ident">params</span>.<span class="ident">protocol_id</span>.<span class="ident">clone</span>(),
 			<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">fork_id</span>,
 			<span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">network_config</span>,
-			<span class="ident">iter::once</span>(<span class="ident">Vec::new</span>())
-				.<span class="ident">chain</span>(
-					(<span class="number">0</span>..<span class="ident">params</span>.<span class="ident">network_config</span>.<span class="ident">extra_sets</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>)
-						.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">default_notif_handshake_message</span>.<span class="ident">clone</span>()),
-				)
+			(<span class="number">0</span>..<span class="ident">params</span>.<span class="ident">network_config</span>.<span class="ident">extra_sets</span>.<span class="ident">len</span>())
+				.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">default_notif_handshake_message</span>.<span class="ident">clone</span>())
 				.<span class="ident">collect</span>(),
 			<span class="ident">params</span>.<span class="ident">metrics_registry</span>.<span class="ident">as_ref</span>(),
 			<span class="ident">params</span>.<span class="ident">chain_sync</span>,
@@ -2524,13 +2462,6 @@
 			<span class="ident">_marker</span>: <span class="ident">PhantomData</span>,
 		});
 
-		<span class="kw">let</span> (<span class="ident">tx_handler</span>, <span class="ident">tx_handler_controller</span>) <span class="op">=</span> <span class="ident">transactions_handler_proto</span>.<span class="ident">build</span>(
-			<span class="ident">service</span>.<span class="ident">clone</span>(),
-			<span class="ident">params</span>.<span class="ident">transaction_pool</span>,
-			<span class="ident">params</span>.<span class="ident">metrics_registry</span>.<span class="ident">as_ref</span>(),
-		)<span class="question-mark">?</span>;
-		(<span class="ident">params</span>.<span class="ident">transactions_handler_executor</span>)(<span class="ident">tx_handler</span>.<span class="ident">run</span>().<span class="ident">boxed</span>());
-
 		<span class="prelude-val">Ok</span>(<span class="ident">NetworkWorker</span> {
 			<span class="ident">external_addresses</span>,
 			<span class="ident">num_connected</span>,
@@ -2541,9 +2472,9 @@
 			<span class="ident">from_service</span>,
 			<span class="ident">event_streams</span>: <span class="ident">out_events::OutChannels::new</span>(<span class="ident">params</span>.<span class="ident">metrics_registry</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>,
 			<span class="ident">peers_notifications_sinks</span>,
-			<span class="ident">tx_handler_controller</span>,
 			<span class="ident">metrics</span>,
 			<span class="ident">boot_node_ids</span>,
+			<span class="ident">_marker</span>: <span class="ident">Default::default</span>(),
 		})
 	}
 
@@ -3208,20 +3139,6 @@
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">H</span><span class="op">&gt;</span> <span class="ident">NetworkTransaction</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NetworkService</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">H</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">B</span>: <span class="ident">BlockT</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">H</span>: <span class="ident">ExHashT</span>,
-{
-	<span class="kw">fn</span> <span class="ident">trigger_repropagate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">to_worker</span>.<span class="ident">unbounded_send</span>(<span class="ident">ServiceToWorkerMsg::PropagateTransactions</span>);
-	}
-
-	<span class="kw">fn</span> <span class="ident">propagate_transaction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">H</span>) {
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">to_worker</span>.<span class="ident">unbounded_send</span>(<span class="ident">ServiceToWorkerMsg::PropagateTransaction</span>(<span class="ident">hash</span>));
-	}
-}
-
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">H</span><span class="op">&gt;</span> <span class="ident">NetworkBlock</span><span class="op">&lt;</span><span class="ident">B::Hash</span>, <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NetworkService</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">H</span><span class="op">&gt;</span>
 <span class="kw">where</span>
 	<span class="ident">B</span>: <span class="ident">BlockT</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
@@ -3308,9 +3225,7 @@
 <span class="doccomment">/// Messages sent from the `NetworkService` to the `NetworkWorker`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Each entry corresponds to a method of `NetworkService`.</span>
-<span class="kw">enum</span> <span class="ident">ServiceToWorkerMsg</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span>, <span class="ident">H</span>: <span class="ident">ExHashT</span><span class="op">&gt;</span> {
-	<span class="ident">PropagateTransaction</span>(<span class="ident">H</span>),
-	<span class="ident">PropagateTransactions</span>,
+<span class="kw">enum</span> <span class="ident">ServiceToWorkerMsg</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
 	<span class="ident">RequestJustification</span>(<span class="ident">B::Hash</span>, <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>),
 	<span class="ident">ClearJustificationRequests</span>,
 	<span class="ident">AnnounceBlock</span>(<span class="ident">B::Hash</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>),
@@ -3368,7 +3283,7 @@
 	<span class="doccomment">/// The import queue that was passed at initialization.</span>
 	<span class="ident">import_queue</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ImportQueue</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// Messages from the [`NetworkService`] that must be processed.</span>
-	<span class="ident">from_service</span>: <span class="ident">TracingUnboundedReceiver</span><span class="op">&lt;</span><span class="ident">ServiceToWorkerMsg</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+	<span class="ident">from_service</span>: <span class="ident">TracingUnboundedReceiver</span><span class="op">&lt;</span><span class="ident">ServiceToWorkerMsg</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// Senders for events that happen on the network.</span>
 	<span class="ident">event_streams</span>: <span class="ident">out_events::OutChannels</span>,
 	<span class="doccomment">/// Prometheus network metrics.</span>
@@ -3378,8 +3293,9 @@
 	<span class="doccomment">/// For each peer and protocol combination, an object that allows sending notifications to</span>
 	<span class="doccomment">/// that peer. Shared with the [`NetworkService`].</span>
 	<span class="ident">peers_notifications_sinks</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span>(<span class="ident">PeerId</span>, <span class="ident">ProtocolName</span>), <span class="ident">NotificationsSink</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Controller for the handler of incoming and outgoing transactions.</span>
-	<span class="ident">tx_handler_controller</span>: <span class="ident">transactions::TransactionsHandlerController</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Marker to pin the `H` generic. Serves no purpose except to not break backwards</span>
+	<span class="doccomment">/// compatibility.</span>
+	<span class="ident">_marker</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">H</span>, <span class="ident">Client</span><span class="op">&gt;</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">NetworkWorker</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">H</span>, <span class="ident">Client</span><span class="op">&gt;</span>
@@ -3435,10 +3351,6 @@
 					.<span class="ident">behaviour_mut</span>()
 					.<span class="ident">user_protocol_mut</span>()
 					.<span class="ident">clear_justification_requests</span>(),
-				<span class="ident">ServiceToWorkerMsg::PropagateTransaction</span>(<span class="ident">hash</span>) =&gt;
-					<span class="ident">this</span>.<span class="ident">tx_handler_controller</span>.<span class="ident">propagate_transaction</span>(<span class="ident">hash</span>),
-				<span class="ident">ServiceToWorkerMsg::PropagateTransactions</span> =&gt;
-					<span class="ident">this</span>.<span class="ident">tx_handler_controller</span>.<span class="ident">propagate_transactions</span>(),
 				<span class="ident">ServiceToWorkerMsg::GetValue</span>(<span class="ident">key</span>) =&gt;
 					<span class="ident">this</span>.<span class="ident">network_service</span>.<span class="ident">behaviour_mut</span>().<span class="ident">get_value</span>(<span class="ident">key</span>),
 				<span class="ident">ServiceToWorkerMsg::PutValue</span>(<span class="ident">key</span>, <span class="ident">value</span>) =&gt;
@@ -3980,8 +3892,6 @@
 				<span class="ident">SyncState::Idle</span> =&gt; <span class="bool-val">false</span>,
 				<span class="ident">SyncState::Downloading</span> =&gt; <span class="bool-val">true</span>,
 			};
-
-		<span class="ident">this</span>.<span class="ident">tx_handler_controller</span>.<span class="ident">set_gossip_enabled</span>(<span class="op">!</span><span class="ident">is_major_syncing</span>);
 
 		<span class="ident">this</span>.<span class="ident">is_major_syncing</span>.<span class="ident">store</span>(<span class="ident">is_major_syncing</span>, <span class="ident">Ordering::Relaxed</span>);
 

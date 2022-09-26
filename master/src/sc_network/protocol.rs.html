@@ -1803,7 +1803,6 @@
 <span id="1797">1797</span>
 <span id="1798">1798</span>
 <span id="1799">1799</span>
-<span id="1800">1800</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1822,10 +1821,7 @@
 <span class="comment">// You should have received a copy of the GNU General Public License</span>
 <span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">config</span>, <span class="ident">error</span>,
-	<span class="ident">utils</span>::{<span class="ident">interval</span>, <span class="ident">LruHashSet</span>},
-};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>;
 
 <span class="kw">use</span> <span class="ident">bytes::Bytes</span>;
 <span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">DecodeAll</span>, <span class="ident">Encode</span>};
@@ -1851,7 +1847,8 @@
 	<span class="ident">BlockImportError</span>, <span class="ident">BlockImportStatus</span>, <span class="ident">IncomingBlock</span>, <span class="ident">RuntimeOrigin</span>,
 };
 <span class="kw">use</span> <span class="ident">sc_network_common</span>::{
-	<span class="ident">config::ProtocolId</span>,
+	<span class="ident">config</span>::{<span class="ident">NonReservedPeerMode</span>, <span class="ident">ProtocolId</span>},
+	<span class="ident">error</span>,
 	<span class="ident">protocol::ProtocolName</span>,
 	<span class="ident">request_responses::RequestFailure</span>,
 	<span class="ident">sync</span>::{
@@ -1863,6 +1860,7 @@
 		<span class="ident">OpaqueBlockResponse</span>, <span class="ident">OpaqueStateRequest</span>, <span class="ident">OpaqueStateResponse</span>, <span class="ident">PollBlockAnnounceValidation</span>,
 		<span class="ident">SyncStatus</span>,
 	},
+	<span class="ident">utils</span>::{<span class="ident">interval</span>, <span class="ident">LruHashSet</span>},
 };
 <span class="kw">use</span> <span class="ident">sp_arithmetic::traits::SaturatedConversion</span>;
 <span class="kw">use</span> <span class="ident">sp_consensus::BlockOrigin</span>;
@@ -2147,7 +2145,7 @@
 				<span class="ident">bootnodes</span>,
 				<span class="ident">reserved_nodes</span>: <span class="ident">default_sets_reserved</span>.<span class="ident">clone</span>(),
 				<span class="ident">reserved_only</span>: <span class="ident">network_config</span>.<span class="ident">default_peers_set</span>.<span class="ident">non_reserved_mode</span> <span class="op">==</span>
-					<span class="ident">config::NonReservedPeerMode::Deny</span>,
+					<span class="ident">NonReservedPeerMode::Deny</span>,
 			});
 
 			<span class="kw">for</span> <span class="ident">set_cfg</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">network_config</span>.<span class="ident">extra_sets</span> {
@@ -2158,7 +2156,7 @@
 				}
 
 				<span class="kw">let</span> <span class="ident">reserved_only</span> <span class="op">=</span>
-					<span class="ident">set_cfg</span>.<span class="ident">set_config</span>.<span class="ident">non_reserved_mode</span> <span class="op">==</span> <span class="ident">config::NonReservedPeerMode::Deny</span>;
+					<span class="ident">set_cfg</span>.<span class="ident">set_config</span>.<span class="ident">non_reserved_mode</span> <span class="op">==</span> <span class="ident">NonReservedPeerMode::Deny</span>;
 
 				<span class="ident">sets</span>.<span class="ident">push</span>(<span class="ident">sc_peerset::SetConfig</span> {
 					<span class="ident">in_peers</span>: <span class="ident">set_cfg</span>.<span class="ident">set_config</span>.<span class="ident">in_peers</span>,

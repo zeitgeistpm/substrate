@@ -635,35 +635,6 @@
 <span id="629">629</span>
 <span id="630">630</span>
 <span id="631">631</span>
-<span id="632">632</span>
-<span id="633">633</span>
-<span id="634">634</span>
-<span id="635">635</span>
-<span id="636">636</span>
-<span id="637">637</span>
-<span id="638">638</span>
-<span id="639">639</span>
-<span id="640">640</span>
-<span id="641">641</span>
-<span id="642">642</span>
-<span id="643">643</span>
-<span id="644">644</span>
-<span id="645">645</span>
-<span id="646">646</span>
-<span id="647">647</span>
-<span id="648">648</span>
-<span id="649">649</span>
-<span id="650">650</span>
-<span id="651">651</span>
-<span id="652">652</span>
-<span id="653">653</span>
-<span id="654">654</span>
-<span id="655">655</span>
-<span id="656">656</span>
-<span id="657">657</span>
-<span id="658">658</span>
-<span id="659">659</span>
-<span id="660">660</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 <span class="comment">//</span>
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1267,35 +1238,6 @@
 		<span class="ident">connect</span>: <span class="ident">IfDisconnected</span>,
 	) {
 		<span class="ident">T::start_request</span>(<span class="self">self</span>, <span class="ident">target</span>, <span class="ident">protocol</span>, <span class="ident">request</span>, <span class="ident">tx</span>, <span class="ident">connect</span>)
-	}
-}
-
-<span class="doccomment">/// Provides ability to propagate transactions over the network.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkTransaction</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// You may call this when new transactions are imported by the transaction pool.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// All transactions will be fetched from the `TransactionPool` that was passed at</span>
-	<span class="doccomment">/// initialization as part of the configuration and propagated to peers.</span>
-	<span class="kw">fn</span> <span class="ident">trigger_repropagate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>);
-
-	<span class="doccomment">/// You must call when new transaction is imported by the transaction pool.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This transaction will be fetched from the `TransactionPool` that was passed at</span>
-	<span class="doccomment">/// initialization as part of the configuration and propagated to peers.</span>
-	<span class="kw">fn</span> <span class="ident">propagate_transaction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">H</span>);
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">H</span><span class="op">&gt;</span> <span class="ident">NetworkTransaction</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkTransaction</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>,
-{
-	<span class="kw">fn</span> <span class="ident">trigger_repropagate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="ident">T::trigger_repropagate</span>(<span class="self">self</span>)
-	}
-
-	<span class="kw">fn</span> <span class="ident">propagate_transaction</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">H</span>) {
-		<span class="ident">T::propagate_transaction</span>(<span class="self">self</span>, <span class="ident">hash</span>)
 	}
 }
 

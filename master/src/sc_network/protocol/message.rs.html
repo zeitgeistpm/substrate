@@ -348,8 +348,6 @@
 <span id="342">342</span>
 <span id="343">343</span>
 <span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -388,9 +386,6 @@
 	<span class="op">&lt;</span><span class="ident">B</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Extrinsic</span>,
 <span class="op">&gt;</span>;
 
-<span class="doccomment">/// A set of transactions.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Transactions</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>;
-
 <span class="doccomment">/// Remote call response.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RemoteCallResponse</span> {
@@ -411,7 +406,7 @@
 
 <span class="doccomment">/// Generic types.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">generic</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">RemoteCallResponse</span>, <span class="ident">RemoteReadResponse</span>, <span class="ident">Transactions</span>};
+	<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">RemoteCallResponse</span>, <span class="ident">RemoteReadResponse</span>};
 	<span class="kw">use</span> <span class="ident">bitflags::bitflags</span>;
 	<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">Input</span>, <span class="ident">Output</span>};
 	<span class="kw">use</span> <span class="ident">sc_client_api::StorageProof</span>;
@@ -498,9 +493,10 @@
 		<span class="ident">BlockResponse</span>(<span class="ident">BlockResponse</span><span class="op">&lt;</span><span class="ident">Header</span>, <span class="ident">Hash</span>, <span class="ident">Extrinsic</span><span class="op">&gt;</span>),
 		<span class="doccomment">/// Block announce.</span>
 		<span class="ident">BlockAnnounce</span>(<span class="ident">BlockAnnounce</span><span class="op">&lt;</span><span class="ident">Header</span><span class="op">&gt;</span>),
-		<span class="doccomment">/// Transactions.</span>
-		<span class="ident">Transactions</span>(<span class="ident">Transactions</span><span class="op">&lt;</span><span class="ident">Extrinsic</span><span class="op">&gt;</span>),
 		<span class="doccomment">/// Consensus protocol message.</span>
+		<span class="comment">// NOTE: index is incremented by 1 due to transaction-related</span>
+		<span class="comment">// message that was removed</span>
+		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">index</span> <span class="op">=</span> <span class="number">6</span>)]</span>
 		<span class="ident">Consensus</span>(<span class="ident">ConsensusMessage</span>),
 		<span class="doccomment">/// Remote method call request.</span>
 		<span class="ident">RemoteCallRequest</span>(<span class="ident">RemoteCallRequest</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>),
