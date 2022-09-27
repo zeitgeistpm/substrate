@@ -988,16 +988,9 @@ pub mod pallet {
 				!Self::is_feature_flag_set(SystemFeature::NoApprovals),
 				Error::<T, I>::MethodDisabled
 			);
-			let maybe_check: Option<T::AccountId> = T::ForceOrigin::try_origin(origin)
+			let maybe_check_caller = T::ForceOrigin::try_origin(origin)
 				.map(|_| None)
 				.or_else(|origin| ensure_signed(origin).map(Some).map_err(DispatchError::from))?;
-
-			let delegate = T::Lookup::lookup(delegate)?;
-
-			let collection_details =
-				Collection::<T, I>::get(&collection).ok_or(Error::<T, I>::UnknownCollection)?;
-			let mut details =
-				Item::<T, I>::get(&collection, &item).ok_or(Error::<T, I>::UnknownCollection)?;
 
 			let (action_allowed, _) = Self::is_collection_setting_disabled(
 				&collection,
@@ -1005,29 +998,15 @@ pub mod pallet {
 			)?;
 			ensure!(action_allowed, Error::<T, I>::ItemsNotTransferable);
 
-			if let Some(check) = maybe_check {
-				let permitted = check == collection_details.admin || check == details.owner;
-				ensure!(permitted, Error::<T, I>::NoPermission);
-			}
+			let delegate = T::Lookup::lookup(delegate)?;
 
-			let now = frame_system::Pallet::<T>::block_number();
-			let deadline = maybe_deadline.map(|d| d.saturating_add(now));
-
-			details
-				.approvals
-				.try_insert(delegate.clone(), deadline)
-				.map_err(|_| Error::<T, I>::ReachedApprovalLimit)?;
-			Item::<T, I>::insert(&collection, &item, &details);
-
-			Self::deposit_event(Event::ApprovedTransfer {
+			Self::do_approve_transfer(
+				maybe_check_caller,
 				collection,
 				item,
-				owner: details.owner,
 				delegate,
-				deadline,
-			});
-
-			Ok(())
+				maybe_deadline,
+			)
 		}
 
 		/// Cancel one of the transfer approvals for a specific item.
@@ -1062,38 +1041,7 @@ pub mod pallet {
 
 			let delegate = T::Lookup::lookup(delegate)?;
 
-			let collection_details =
-				Collection::<T, I>::get(&collection).ok_or(Error::<T, I>::UnknownCollection)?;
-			let mut details =
-				Item::<T, I>::get(&collection, &item).ok_or(Error::<T, I>::UnknownCollection)?;
-
-			let maybe_deadline =
-				details.approvals.get(&delegate).ok_or(Error::<T, I>::NotDelegate)?;
-
-			let is_past_deadline = if let Some(deadline) = maybe_deadline {
-				let now = frame_system::Pallet::<T>::block_number();
-				now > *deadline
-			} else {
-				false
-			};
-
-			if !is_past_deadline {
-				if let Some(check) = maybe_check {
-					let permitted = check == collection_details.admin || check == details.owner;
-					ensure!(permitted, Error::<T, I>::NoPermission);
-				}
-			}
-
-			details.approvals.remove(&delegate);
-			Item::<T, I>::insert(&collection, &item, &details);
-			Self::deposit_event(Event::ApprovalCancelled {
-				collection,
-				item,
-				owner: details.owner,
-				delegate,
-			});
-
-			Ok(())
+			Self::do_cancel_approval(maybe_check, collection, item, delegate)
 		}
 
 		/// Cancel all the approvals of a specific item.
@@ -1124,24 +1072,7 @@ pub mod pallet {
 				.map(|_| None)
 				.or_else(|origin| ensure_signed(origin).map(Some).map_err(DispatchError::from))?;
 
-			let collection_details =
-				Collection::<T, I>::get(&collection).ok_or(Error::<T, I>::UnknownCollection)?;
-			let mut details =
-				Item::<T, I>::get(&collection, &item).ok_or(Error::<T, I>::UnknownCollection)?;
-			if let Some(check) = maybe_check {
-				let permitted = check == collection_details.admin || check == details.owner;
-				ensure!(permitted, Error::<T, I>::NoPermission);
-			}
-
-			details.approvals.clear();
-			Item::<T, I>::insert(&collection, &item, &details);
-			Self::deposit_event(Event::AllApprovalsCancelled {
-				collection,
-				item,
-				owner: details.owner,
-			});
-
-			Ok(())
+			Self::do_clear_all_transfer_approvals(maybe_check, collection, item)
 		}
 
 		/// Alter the attributes of a given collection.

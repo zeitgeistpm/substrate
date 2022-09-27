@@ -15,6 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+pub mod approvals;
 pub mod attributes;
 pub mod buy_sell;
 pub mod metadata;
