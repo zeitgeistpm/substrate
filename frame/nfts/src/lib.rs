@@ -676,7 +676,7 @@ pub mod pallet {
 		/// Origin must be Signed and the sender should be the Admin of the `collection`.
 		///
 		/// - `collection`: The collection of the item to be burned.
-		/// - `item`: The item of the item to be burned.
+		/// - `item`: The item to be burned.
 		/// - `check_owner`: If `Some` then the operation will fail with `WrongOwner` unless the
 		///   item is owned by this value.
 		///
@@ -714,7 +714,7 @@ pub mod pallet {
 		///
 		/// Arguments:
 		/// - `collection`: The collection of the item to be transferred.
-		/// - `item`: The item of the item to be transferred.
+		/// - `item`: The item to be transferred.
 		/// - `dest`: The account to receive ownership of the item.
 		///
 		/// Emits `Transferred`.
@@ -817,7 +817,7 @@ pub mod pallet {
 		/// Origin must be Signed and the sender should be the Freezer of the `collection`.
 		///
 		/// - `collection`: The collection of the item to be frozen.
-		/// - `item`: The item of the item to be frozen.
+		/// - `item`: The item to be frozen.
 		///
 		/// Emits `Frozen`.
 		///
@@ -842,7 +842,7 @@ pub mod pallet {
 		/// Origin must be Signed and the sender should be the Freezer of the `collection`.
 		///
 		/// - `collection`: The collection of the item to be thawed.
-		/// - `item`: The item of the item to be thawed.
+		/// - `item`: The item to be thawed.
 		///
 		/// Emits `Thawed`.
 		///
@@ -978,7 +978,7 @@ pub mod pallet {
 		/// Origin must be Signed and must be the owner of the `item`.
 		///
 		/// - `collection`: The collection of the item to be approved for delegated transfer.
-		/// - `item`: The item of the item to be approved for delegated transfer.
+		/// - `item`: The item to be approved for delegated transfer.
 		/// - `delegate`: The account to delegate permission to transfer the item.
 		/// - `maybe_deadline`: Optional deadline for the approval. Specified by providing the
 		/// 	number of blocks after which the approval will expire
