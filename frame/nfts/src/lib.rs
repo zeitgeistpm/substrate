@@ -45,7 +45,7 @@ pub mod weights;
 use codec::{Decode, Encode};
 use frame_support::{
 	traits::{BalanceStatus::Reserved, Currency, EnsureOriginWithArg, ReservableCurrency},
-	transactional, BoundedBTreeMap,
+	BoundedBTreeMap,
 };
 use frame_system::Config as SystemConfig;
 use sp_runtime::{
