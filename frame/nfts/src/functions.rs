@@ -36,7 +36,6 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 	) -> DispatchResult {
 		let collection_details =
 			Collection::<T, I>::get(&collection).ok_or(Error::<T, I>::UnknownCollection)?;
-		ensure!(!T::Locker::is_locked(collection, item), Error::<T, I>::Locked);
 
 		let (action_allowed, _) = Self::is_collection_setting_disabled(
 			&collection,

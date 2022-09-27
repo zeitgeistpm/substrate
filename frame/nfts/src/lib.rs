@@ -44,9 +44,7 @@ pub mod weights;
 
 use codec::{Decode, Encode};
 use frame_support::{
-	traits::{
-		tokens::Locker, BalanceStatus::Reserved, Currency, EnsureOriginWithArg, ReservableCurrency,
-	},
+	traits::{BalanceStatus::Reserved, Currency, EnsureOriginWithArg, ReservableCurrency},
 	transactional, BoundedBTreeMap,
 };
 use frame_system::Config as SystemConfig;
@@ -137,9 +135,6 @@ pub mod pallet {
 			Self::CollectionId,
 			Success = Self::AccountId,
 		>;
-
-		/// Locker trait to enable Locking mechanism downstream.
-		type Locker: Locker<Self::CollectionId, Self::ItemId>;
 
 		/// The basic amount of funds that must be reserved for collection.
 		#[pallet::constant]
