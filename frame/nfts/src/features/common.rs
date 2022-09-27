@@ -15,12 +15,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-pub mod approvals;
-pub mod attributes;
-pub mod buy_sell;
-pub mod common;
-pub mod create_delete_collection;
-pub mod create_delete_item;
-pub mod metadata;
-pub mod settings;
-pub mod trasnfer;
+use crate::*;
+
+impl<T: Config<I>, I: 'static> Pallet<T, I> {
+	#[cfg(any(test, feature = "runtime-benchmarks"))]
+	pub fn set_next_id(id: T::CollectionId) {
+		NextCollectionId::<T, I>::set(Some(id));
+	}
+
+	#[cfg(test)]
+	pub fn get_next_id() -> T::CollectionId {
+		NextCollectionId::<T, I>::get().unwrap_or(T::CollectionId::initial_value())
+	}
+}

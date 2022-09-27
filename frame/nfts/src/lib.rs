@@ -36,7 +36,6 @@ pub mod mock;
 mod tests;
 
 mod features;
-mod functions;
 mod impl_nonfungibles;
 mod types;
 
