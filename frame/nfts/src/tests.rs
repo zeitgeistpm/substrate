@@ -383,6 +383,10 @@ fn set_collection_metadata_should_work() {
 
 		// Can't set or clear metadata once frozen
 		assert_ok!(Nfts::set_collection_metadata(RuntimeOrigin::signed(1), 0, bvec![0u8; 15]));
+		assert_noop!(
+			Nfts::clear_collection_metadata(RuntimeOrigin::signed(2), 0),
+			Error::<Test>::NoPermission
+		);
 		assert_ok!(Nfts::lock_collection(
 			RuntimeOrigin::signed(1),
 			0,
@@ -399,10 +403,6 @@ fn set_collection_metadata_should_work() {
 
 		// Clear Metadata
 		assert_ok!(Nfts::set_collection_metadata(RuntimeOrigin::root(), 0, bvec![0u8; 15]));
-		assert_noop!(
-			Nfts::clear_collection_metadata(RuntimeOrigin::signed(2), 0),
-			Error::<Test>::NoPermission
-		);
 		assert_noop!(
 			Nfts::clear_collection_metadata(RuntimeOrigin::signed(1), 1),
 			Error::<Test>::UnknownCollection
@@ -452,6 +452,15 @@ fn set_item_metadata_should_work() {
 
 		// Can't set or clear metadata once frozen
 		assert_ok!(Nfts::set_metadata(RuntimeOrigin::signed(1), 0, 42, bvec![0u8; 15]));
+		assert_noop!(
+			Nfts::clear_metadata(RuntimeOrigin::signed(2), 0, 42),
+			Error::<Test>::NoPermission
+		);
+		assert_noop!(
+			Nfts::clear_metadata(RuntimeOrigin::signed(1), 1, 42),
+			Error::<Test>::UnknownItem
+		);
+
 		assert_ok!(Nfts::lock_item(RuntimeOrigin::signed(1), 0, 42, true, false));
 		assert_noop!(
 			Nfts::set_metadata(RuntimeOrigin::signed(1), 0, 42, bvec![0u8; 15]),
@@ -461,14 +470,6 @@ fn set_item_metadata_should_work() {
 
 		// Clear Metadata
 		assert_ok!(Nfts::set_metadata(RuntimeOrigin::root(), 0, 42, bvec![0u8; 15]));
-		assert_noop!(
-			Nfts::clear_metadata(RuntimeOrigin::signed(2), 0, 42),
-			Error::<Test>::NoPermission
-		);
-		assert_noop!(
-			Nfts::clear_metadata(RuntimeOrigin::signed(1), 1, 42),
-			Error::<Test>::UnknownCollection
-		);
 		assert_ok!(Nfts::clear_metadata(RuntimeOrigin::root(), 0, 42));
 		assert!(!ItemMetadataOf::<Test>::contains_key(0, 42));
 	});

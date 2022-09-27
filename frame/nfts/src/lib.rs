@@ -1379,46 +1379,11 @@ pub mod pallet {
 				.map(|_| None)
 				.or_else(|origin| ensure_signed(origin).map(Some))?;
 
-			let mut collection_details =
-				Collection::<T, I>::get(&collection).ok_or(Error::<T, I>::UnknownCollection)?;
-
 			let (action_allowed, _) =
 				Self::is_item_setting_disabled(&collection, &item, ItemSetting::LockedMetadata)?;
 			ensure!(maybe_check_owner.is_none() || action_allowed, Error::<T, I>::Frozen);
 
-			let collection_settings = Self::get_collection_settings(&collection)?;
-
-			if let Some(check_owner) = &maybe_check_owner {
-				ensure!(check_owner == &collection_details.owner, Error::<T, I>::NoPermission);
-			}
-
-			ItemMetadataOf::<T, I>::try_mutate_exists(collection, item, |metadata| {
-				if metadata.is_none() {
-					collection_details.item_metadatas.saturating_inc();
-				}
-				let old_deposit = metadata.take().map_or(Zero::zero(), |m| m.deposit);
-				collection_details.total_deposit.saturating_reduce(old_deposit);
-				let mut deposit = Zero::zero();
-				if !collection_settings.contains(CollectionSetting::FreeHolding) &&
-					maybe_check_owner.is_some()
-				{
-					deposit = T::DepositPerByte::get()
-						.saturating_mul(((data.len()) as u32).into())
-						.saturating_add(T::MetadataDepositBase::get());
-				}
-				if deposit > old_deposit {
-					T::Currency::reserve(&collection_details.owner, deposit - old_deposit)?;
-				} else if deposit < old_deposit {
-					T::Currency::unreserve(&collection_details.owner, old_deposit - deposit);
-				}
-				collection_details.total_deposit.saturating_accrue(deposit);
-
-				*metadata = Some(ItemMetadata { deposit, data: data.clone() });
-
-				Collection::<T, I>::insert(&collection, &collection_details);
-				Self::deposit_event(Event::MetadataSet { collection, item, data });
-				Ok(())
-			})
+			Self::do_set_item_metadata(maybe_check_owner, collection, item, data)
 		}
 
 		/// Clear the metadata for an item.
@@ -1444,28 +1409,11 @@ pub mod pallet {
 				.map(|_| None)
 				.or_else(|origin| ensure_signed(origin).map(Some))?;
 
-			let mut collection_details =
-				Collection::<T, I>::get(&collection).ok_or(Error::<T, I>::UnknownCollection)?;
-			if let Some(check_owner) = &maybe_check_owner {
-				ensure!(check_owner == &collection_details.owner, Error::<T, I>::NoPermission);
-			}
-
 			let (action_allowed, _) =
 				Self::is_item_setting_disabled(&collection, &item, ItemSetting::LockedMetadata)?;
 			ensure!(maybe_check_owner.is_none() || action_allowed, Error::<T, I>::Frozen);
 
-			ItemMetadataOf::<T, I>::try_mutate_exists(collection, item, |metadata| {
-				if metadata.is_some() {
-					collection_details.item_metadatas.saturating_dec();
-				}
-				let deposit = metadata.take().ok_or(Error::<T, I>::UnknownCollection)?.deposit;
-				T::Currency::unreserve(&collection_details.owner, deposit);
-				collection_details.total_deposit.saturating_reduce(deposit);
-
-				Collection::<T, I>::insert(&collection, &collection_details);
-				Self::deposit_event(Event::MetadataCleared { collection, item });
-				Ok(())
-			})
+			Self::do_clear_item_metadata(maybe_check_owner, collection, item)
 		}
 
 		/// Set the metadata for a collection.
@@ -1502,36 +1450,7 @@ pub mod pallet {
 				Error::<T, I>::CollectionMetadataIsLocked
 			);
 
-			let mut details =
-				Collection::<T, I>::get(&collection).ok_or(Error::<T, I>::UnknownCollection)?;
-			if let Some(check_owner) = &maybe_check_owner {
-				ensure!(check_owner == &details.owner, Error::<T, I>::NoPermission);
-			}
-
-			CollectionMetadataOf::<T, I>::try_mutate_exists(collection, |metadata| {
-				let old_deposit = metadata.take().map_or(Zero::zero(), |m| m.deposit);
-				details.total_deposit.saturating_reduce(old_deposit);
-				let mut deposit = Zero::zero();
-				if maybe_check_owner.is_some() && !settings.contains(CollectionSetting::FreeHolding)
-				{
-					deposit = T::DepositPerByte::get()
-						.saturating_mul(((data.len()) as u32).into())
-						.saturating_add(T::MetadataDepositBase::get());
-				}
-				if deposit > old_deposit {
-					T::Currency::reserve(&details.owner, deposit - old_deposit)?;
-				} else if deposit < old_deposit {
-					T::Currency::unreserve(&details.owner, old_deposit - deposit);
-				}
-				details.total_deposit.saturating_accrue(deposit);
-
-				Collection::<T, I>::insert(&collection, details);
-
-				*metadata = Some(CollectionMetadata { deposit, data: data.clone() });
-
-				Self::deposit_event(Event::CollectionMetadataSet { collection, data });
-				Ok(())
-			})
+			Self::do_set_collection_metadata(maybe_check_owner, collection, data, settings)
 		}
 
 		/// Clear the metadata for a collection.
@@ -1555,12 +1474,6 @@ pub mod pallet {
 				.map(|_| None)
 				.or_else(|origin| ensure_signed(origin).map(Some))?;
 
-			let details =
-				Collection::<T, I>::get(&collection).ok_or(Error::<T, I>::UnknownCollection)?;
-			if let Some(check_owner) = &maybe_check_owner {
-				ensure!(check_owner == &details.owner, Error::<T, I>::NoPermission);
-			}
-
 			let (action_allowed, _) = Self::is_collection_setting_disabled(
 				&collection,
 				CollectionSetting::LockedMetadata,
@@ -1570,12 +1483,7 @@ pub mod pallet {
 				Error::<T, I>::CollectionMetadataIsLocked
 			);
 
-			CollectionMetadataOf::<T, I>::try_mutate_exists(collection, |metadata| {
-				let deposit = metadata.take().ok_or(Error::<T, I>::UnknownCollection)?.deposit;
-				T::Currency::unreserve(&details.owner, deposit);
-				Self::deposit_event(Event::CollectionMetadataCleared { collection });
-				Ok(())
-			})
+			Self::do_clear_collection_metadata(maybe_check_owner, collection)
 		}
 
 		/// Set (or reset) the acceptance of ownership for a particular account.
