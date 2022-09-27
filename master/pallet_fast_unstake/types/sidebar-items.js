@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":[["PreventStakingOpsIfUnbonding",""],["UnstakeRequest","An unstake request."]],"type":[["BalanceOf",""]]};
+window.SIDEBAR_ITEMS = {"struct":[["UnstakeRequest","An unstake request."]],"type":[["BalanceOf",""]]};
