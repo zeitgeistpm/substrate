@@ -896,32 +896,7 @@ pub mod pallet {
 		) -> DispatchResult {
 			let origin = ensure_signed(origin)?;
 			let owner = T::Lookup::lookup(owner)?;
-
-			let acceptable_collection = OwnershipAcceptance::<T, I>::get(&owner);
-			ensure!(acceptable_collection.as_ref() == Some(&collection), Error::<T, I>::Unaccepted);
-
-			Collection::<T, I>::try_mutate(collection, |maybe_details| {
-				let details = maybe_details.as_mut().ok_or(Error::<T, I>::UnknownCollection)?;
-				ensure!(origin == details.owner, Error::<T, I>::NoPermission);
-				if details.owner == owner {
-					return Ok(())
-				}
-
-				// Move the deposit to the new owner.
-				T::Currency::repatriate_reserved(
-					&details.owner,
-					&owner,
-					details.total_deposit,
-					Reserved,
-				)?;
-				CollectionAccount::<T, I>::remove(&details.owner, &collection);
-				CollectionAccount::<T, I>::insert(&owner, &collection, ());
-				details.owner = owner.clone();
-				OwnershipAcceptance::<T, I>::remove(&owner);
-
-				Self::deposit_event(Event::OwnerChanged { collection, new_owner: owner });
-				Ok(())
-			})
+			Self::do_transfer_ownership(origin, collection, owner)
 		}
 
 		/// Change the Issuer, Admin and Freezer of a collection.
@@ -1373,23 +1348,7 @@ pub mod pallet {
 			maybe_collection: Option<T::CollectionId>,
 		) -> DispatchResult {
 			let who = ensure_signed(origin)?;
-			let old = OwnershipAcceptance::<T, I>::get(&who);
-			match (old.is_some(), maybe_collection.is_some()) {
-				(false, true) => {
-					frame_system::Pallet::<T>::inc_consumers(&who)?;
-				},
-				(true, false) => {
-					frame_system::Pallet::<T>::dec_consumers(&who);
-				},
-				_ => {},
-			}
-			if let Some(collection) = maybe_collection.as_ref() {
-				OwnershipAcceptance::<T, I>::insert(&who, collection);
-			} else {
-				OwnershipAcceptance::<T, I>::remove(&who);
-			}
-			Self::deposit_event(Event::OwnershipAcceptanceChanged { who, maybe_collection });
-			Ok(())
+			Self::do_set_accept_ownership(who, maybe_collection)
 		}
 
 		/// Set the maximum amount of items a collection could have.

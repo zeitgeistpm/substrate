@@ -66,4 +66,59 @@ impl<T: Config<I>, I: 'static> Pallet<T, I> {
 		});
 		Ok(())
 	}
+
+	pub fn do_transfer_ownership(
+		origin: T::AccountId,
+		collection: T::CollectionId,
+		owner: T::AccountId,
+	) -> DispatchResult {
+		let acceptable_collection = OwnershipAcceptance::<T, I>::get(&owner);
+		ensure!(acceptable_collection.as_ref() == Some(&collection), Error::<T, I>::Unaccepted);
+
+		Collection::<T, I>::try_mutate(collection, |maybe_details| {
+			let details = maybe_details.as_mut().ok_or(Error::<T, I>::UnknownCollection)?;
+			ensure!(origin == details.owner, Error::<T, I>::NoPermission);
+			if details.owner == owner {
+				return Ok(())
+			}
+
+			// Move the deposit to the new owner.
+			T::Currency::repatriate_reserved(
+				&details.owner,
+				&owner,
+				details.total_deposit,
+				Reserved,
+			)?;
+			CollectionAccount::<T, I>::remove(&details.owner, &collection);
+			CollectionAccount::<T, I>::insert(&owner, &collection, ());
+			details.owner = owner.clone();
+			OwnershipAcceptance::<T, I>::remove(&owner);
+
+			Self::deposit_event(Event::OwnerChanged { collection, new_owner: owner });
+			Ok(())
+		})
+	}
+
+	pub fn do_set_accept_ownership(
+		who: T::AccountId,
+		maybe_collection: Option<T::CollectionId>,
+	) -> DispatchResult {
+		let old = OwnershipAcceptance::<T, I>::get(&who);
+		match (old.is_some(), maybe_collection.is_some()) {
+			(false, true) => {
+				frame_system::Pallet::<T>::inc_consumers(&who)?;
+			},
+			(true, false) => {
+				frame_system::Pallet::<T>::dec_consumers(&who);
+			},
+			_ => {},
+		}
+		if let Some(collection) = maybe_collection.as_ref() {
+			OwnershipAcceptance::<T, I>::insert(&who, collection);
+		} else {
+			OwnershipAcceptance::<T, I>::remove(&who);
+		}
+		Self::deposit_event(Event::OwnershipAcceptanceChanged { who, maybe_collection });
+		Ok(())
+	}
 }
