@@ -988,6 +988,8 @@
 <span id="982">982</span>
 <span id="983">983</span>
 <span id="984">984</span>
+<span id="985">985</span>
+<span id="986">986</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1943,7 +1945,9 @@
 		<span class="kw">if</span> <span class="ident">bonded_eras</span>.<span class="ident">first</span>().<span class="ident">filter</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">start</span>)<span class="op">|</span> <span class="ident">offence_session</span> <span class="op">&gt;</span><span class="op">=</span> <span class="kw-2">*</span><span class="ident">start</span>).<span class="ident">is_some</span>() {
 			<span class="ident">R::report_offence</span>(<span class="ident">reporters</span>, <span class="ident">offence</span>)
 		} <span class="kw">else</span> {
-			<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::OldSlashingReportDiscarded</span>(<span class="ident">offence_session</span>));
+			<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::OldSlashingReportDiscarded</span> {
+				<span class="ident">session_index</span>: <span class="ident">offence_session</span>,
+			});
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
