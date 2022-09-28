@@ -31,9 +31,9 @@ use sc_consensus::{
 };
 use sc_network_common::{
 	config::ProtocolId,
-	protocol::ProtocolName,
+	protocol::{event::Event, ProtocolName},
 	request_responses::{IfDisconnected, RequestFailure},
-	service::NetworkRequest,
+	service::{NetworkEventStream, NetworkRequest},
 	sync::{
 		message::{
 			BlockAnnounce, BlockAttributes, BlockData, BlockRequest, BlockResponse, BlockState,
@@ -110,6 +110,8 @@ pub struct SyncingHelper<B: BlockT, Client, N> {
 	block_request_protocol_name: ProtocolName,
 	state_request_protocol_name: ProtocolName,
 	warp_sync_protocol_name: Option<ProtocolName>,
+	block_announces_protocol_name: ProtocolName,
+
 	/// The import queue that was passed at initialization.
 	import_queue: Box<dyn ImportQueue<B>>,
 
@@ -120,13 +122,15 @@ impl<B, Client, N> SyncingHelper<B, Client, N>
 where
 	B: BlockT,
 	Client: HeaderBackend<B> + 'static,
-	N: NetworkRequest,
+	N: NetworkRequest + NetworkEventStream,
 {
 	pub fn new(
 		chain_sync: Box<dyn ChainSync<B>>,
 		import_queue: Box<dyn ImportQueue<B>>,
 		cache_size: usize,
 		genesis_hash: B::Hash,
+		protocol_id: ProtocolId,
+		fork_id: &Option<String>,
 		chain: Arc<Client>,
 		roles: Roles,
 		default_peers_set_num_full: usize,
@@ -134,8 +138,41 @@ where
 		block_request_protocol_name: ProtocolName,
 		state_request_protocol_name: ProtocolName,
 		warp_sync_protocol_name: Option<ProtocolName>,
-	) -> (Self, SyncingHandle<B>) {
+	) -> (Self, SyncingHandle<B>, notifications::ProtocolConfig) {
 		let (tx, rx) = mpsc::unbounded();
+
+		let block_announces_protocol = {
+			let genesis_hash =
+				chain.hash(0u32.into()).ok().flatten().expect("Genesis block exists; qed");
+			let genesis_hash = genesis_hash.as_ref();
+			if let Some(fork_id) = fork_id {
+				format!(
+					"/{}/{}/block-announces/1",
+					array_bytes::bytes2hex("", genesis_hash),
+					fork_id
+				)
+			} else {
+				format!("/{}/block-announces/1", array_bytes::bytes2hex("", genesis_hash))
+			}
+		};
+
+		let legacy_ba_protocol_name = format!("/{}/block-announces/1", protocol_id.as_ref());
+
+		let best_number = chain.info().best_number;
+		let best_hash = chain.info().best_hash;
+		let genesis_hash = chain.info().genesis_hash;
+
+		let block_announces_handshake =
+			BlockAnnouncesHandshake::<B>::build(roles, best_number, best_hash, genesis_hash)
+				.encode();
+
+		let block_announces_protocol_name = block_announces_protocol.clone().into();
+		let sync_protocol_config = notifications::ProtocolConfig {
+			name: block_announces_protocol.into(),
+			fallback_names: iter::once(legacy_ba_protocol_name.into()).collect(),
+			handshake: block_announces_handshake,
+			max_notification_size: MAX_BLOCK_ANNOUNCE_SIZE,
+		};
 
 		(
 			Self {
@@ -158,8 +195,10 @@ where
 				state_request_protocol_name,
 				warp_sync_protocol_name,
 				sync_handle: SyncingHandle::new(tx.clone()),
+				block_announces_protocol_name,
 			},
 			SyncingHandle::new(tx),
+			sync_protocol_config,
 		)
 	}
 
@@ -461,7 +500,7 @@ where
 	pub fn notification(
 		&mut self,
 		peer: PeerId,
-		message: bytes::BytesMut,
+		message: bytes::Bytes,
 		// cx: &mut std::task::Context,
 	) -> CustomMessageOutcome<B> {
 		if self.peers.contains_key(&peer) {
@@ -997,7 +1036,7 @@ where
 				let _ = channel_response.send(std::mem::take(&mut self.pending_messages));
 			},
 			SyncEvent::Notification(peer, bytes, channel_response) => {
-				let _ = channel_response.send(self.notification(peer, bytes));
+				let _ = channel_response.send(self.notification(peer, bytes.freeze()));
 			},
 			SyncEvent::GetBlockAnnounceData(hash, channel_response) => {
 				let _ = channel_response.send(self.block_announce_data_cache.get(&hash).cloned());
@@ -1047,6 +1086,8 @@ where
 	}
 
 	pub async fn run(mut self) {
+		let mut event_stream = self.service.as_ref().unwrap().event_stream("sync-stuff");
+
 		loop {
 			futures::select! {
 				command = futures::StreamExt::next(&mut self.rx).fuse() => match command {
@@ -1056,14 +1097,26 @@ where
 					}
 					None => {}
 				},
+				network_event = futures::StreamExt::next(&mut event_stream).fuse() => {
+					if let Some(network_event) = network_event {
+						match network_event {
+							_ => {},
+						}
+					} else {
+						// Networking has seemingly closed. Closing as well.
+						return;
+					}
+				}
 				request = self.pending_responses.select_next_some() => {
-					self.handle_pending_response(request.0, request.1, request.2)
+					self.handle_pending_response(request.0, request.1, request.2);
+					self.call_chain_sync();
 				}
 				_ = async_std::task::sleep(std::time::Duration::from_millis(500)).fuse() => {
 					self.call_chain_sync();
 				}
 				result = futures::future::poll_fn(|cx| self.chain_sync.poll_block_announce_validation(cx)).fuse() => {
 					self.process_block_announce_validation_result(result);
+					self.call_chain_sync();
 				}
 				_ = futures::future::poll_fn(|cx| {
 					self.import_queue .poll_actions(cx, &mut NetworkLink { sync_handle: &self.sync_handle });

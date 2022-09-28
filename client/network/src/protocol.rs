@@ -76,7 +76,7 @@ use std::{
 	time,
 };
 
-mod notifications;
+pub mod notifications;
 
 pub mod message;
 
@@ -198,6 +198,7 @@ pub struct Protocol<B: BlockT, Client> {
 	boot_node_ids: HashSet<PeerId>,
 	sync_handle: sync_helper::SyncingHandle<B>,
 	counter: usize,
+	block_announces_protocol_name: ProtocolName,
 }
 
 #[derive(Debug)]
@@ -260,11 +261,10 @@ where
 	pub fn new(
 		roles: Roles,
 		chain: Arc<Client>,
-		protocol_id: ProtocolId,
-		fork_id: &Option<String>,
 		network_config: &config::NetworkConfiguration,
 		notifications_protocols_handshakes: Vec<Vec<u8>>,
 		metrics_registry: Option<&Registry>,
+		sync_protocol_config: notifications::ProtocolConfig,
 		sync_handle: sync_helper::SyncingHandle<B>,
 	) -> error::Result<(Self, sc_peerset::PeersetHandle, Vec<(PeerId, Multiaddr)>)> {
 		let info = chain.info();
@@ -357,39 +357,8 @@ where
 			sc_peerset::Peerset::from_config(sc_peerset::PeersetConfig { sets })
 		};
 
-		let block_announces_protocol = {
-			let genesis_hash =
-				chain.hash(0u32.into()).ok().flatten().expect("Genesis block exists; qed");
-			let genesis_hash = genesis_hash.as_ref();
-			if let Some(fork_id) = fork_id {
-				format!(
-					"/{}/{}/block-announces/1",
-					array_bytes::bytes2hex("", genesis_hash),
-					fork_id
-				)
-			} else {
-				format!("/{}/block-announces/1", array_bytes::bytes2hex("", genesis_hash))
-			}
-		};
-
-		let legacy_ba_protocol_name = format!("/{}/block-announces/1", protocol_id.as_ref());
-
+		let block_announces_protocol_name = sync_protocol_config.name.clone();
 		let behaviour = {
-			let best_number = info.best_number;
-			let best_hash = info.best_hash;
-			let genesis_hash = info.genesis_hash;
-
-			let block_announces_handshake =
-				BlockAnnouncesHandshake::<B>::build(roles, best_number, best_hash, genesis_hash)
-					.encode();
-
-			let sync_protocol_config = notifications::ProtocolConfig {
-				name: block_announces_protocol.into(),
-				fallback_names: iter::once(legacy_ba_protocol_name.into()).collect(),
-				handshake: block_announces_handshake,
-				max_notification_size: MAX_BLOCK_ANNOUNCE_SIZE,
-			};
-
 			Notifications::new(
 				peerset,
 				iter::once(sync_protocol_config).chain(
@@ -428,6 +397,7 @@ where
 			boot_node_ids,
 			sync_handle,
 			counter: Default::default(),
+			block_announces_protocol_name,
 		};
 
 		Ok((protocol, peerset_handle, known_addresses))

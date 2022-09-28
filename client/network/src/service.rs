@@ -226,12 +226,14 @@ where
 
 		let default_notif_handshake_message = Roles::from(&params.role).encode();
 
-		let (mut sync_helper, sync_handle) = sync_helper::SyncingHelper::new(
+		let (mut sync_helper, sync_handle, sync_protocol_config) = sync_helper::SyncingHelper::new(
 			params.chain_sync,
 			params.import_queue,
 			params.network_config.default_peers_set.in_peers as usize +
 				params.network_config.default_peers_set.out_peers as usize,
 			params.chain.info().genesis_hash,
+			params.protocol_id.clone(),
+			&params.fork_id,
 			Arc::clone(&params.chain),
 			From::from(&params.role),
 			params.network_config.default_peers_set_num_full as usize,
@@ -248,13 +250,12 @@ where
 		let (protocol, peerset_handle, mut known_addresses) = Protocol::new(
 			From::from(&params.role),
 			params.chain.clone(),
-			params.protocol_id.clone(),
-			&params.fork_id,
 			&params.network_config,
 			(0..params.network_config.extra_sets.len())
 				.map(|_| default_notif_handshake_message.clone())
 				.collect(),
 			params.metrics_registry.as_ref(),
+			sync_protocol_config,
 			sync_handle.clone(),
 		)?;
 
