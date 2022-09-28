@@ -173,6 +173,12 @@
 <span id="167">167</span>
 <span id="168">168</span>
 <span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -210,11 +216,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">clap::Parser</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PalletCmd</span> {
 	<span class="doccomment">/// Select a FRAME Pallet to benchmark, or `*` for all (in which case `extrinsic` must be `*`).</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span>, <span class="ident">long</span>, <span class="ident">parse</span>(<span class="ident">from_str</span> <span class="op">=</span> <span class="ident">parse_pallet_name</span>), <span class="ident">required_unless_present</span> <span class="op">=</span> <span class="string">&quot;list&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span>, <span class="ident">long</span>, <span class="ident">parse</span>(<span class="ident">from_str</span> <span class="op">=</span> <span class="ident">parse_pallet_name</span>), <span class="ident">required_unless_present_any</span> <span class="op">=</span> [<span class="string">&quot;list&quot;</span>, <span class="string">&quot;json-input&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">pallet</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Select an extrinsic inside the pallet to benchmark, or `*` for all.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span>, <span class="ident">long</span>, <span class="ident">required_unless_present</span> <span class="op">=</span> <span class="string">&quot;list&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span>, <span class="ident">long</span>, <span class="ident">required_unless_present_any</span> <span class="op">=</span> [<span class="string">&quot;list&quot;</span>, <span class="string">&quot;json-input&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">extrinsic</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Select how many samples we should take across the variable components.</span>
@@ -341,6 +347,12 @@
 	<span class="doccomment">/// template for that purpose.</span>
 	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">no_storage_info</span>: <span class="ident">bool</span>,
+
+	<span class="doccomment">/// A path to a `.json` file with existing benchmark results generated with `--json` or</span>
+	<span class="doccomment">/// `--json-file`. When specified the benchmarks are not actually executed, and the data for</span>
+	<span class="doccomment">/// the analysis is read from this file.</span>
+	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="kw">pub</span> <span class="ident">json_input</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>

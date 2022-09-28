@@ -94,6 +94,7 @@ sourcesIndex["pallet_ranked_collective"] = {"name":"","files":["benchmarking.rs"
 sourcesIndex["pallet_recovery"] = {"name":"","files":["benchmarking.rs","lib.rs","weights.rs"]};
 sourcesIndex["pallet_referenda"] = {"name":"","files":["benchmarking.rs","branch.rs","lib.rs","types.rs","weights.rs"]};
 sourcesIndex["pallet_remark"] = {"name":"","files":["benchmarking.rs","lib.rs","weights.rs"]};
+sourcesIndex["pallet_root_offences"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["pallet_scheduler"] = {"name":"","files":["benchmarking.rs","lib.rs","weights.rs"]};
 sourcesIndex["pallet_scored_pool"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["pallet_session"] = {"name":"","dirs":[{"name":"historical","files":["mod.rs","offchain.rs","onchain.rs","shared.rs"]},{"name":"migrations","files":["mod.rs","v1.rs"]}],"files":["lib.rs","weights.rs"]};
