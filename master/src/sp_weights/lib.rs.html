@@ -303,6 +303,25 @@
 <span id="297">297</span>
 <span id="298">298</span>
 <span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -335,7 +354,7 @@
 
 <span class="kw">mod</span> <span class="ident">weight_v2</span>;
 
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
+<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">CompactAs</span>, <span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">MaxEncodedLen</span>};
 <span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -357,6 +376,25 @@
 	<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">WEIGHT_PER_MICROS</span>: <span class="ident">Weight</span> <span class="op">=</span> <span class="ident">Weight::from_ref_time</span>(<span class="number">1_000_000</span>);
 	<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">WEIGHT_PER_NANOS</span>: <span class="ident">Weight</span> <span class="op">=</span> <span class="ident">Weight::from_ref_time</span>(<span class="number">1_000</span>);
 }
+
+<span class="doccomment">/// The old weight type.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// NOTE: This type exists purely for compatibility purposes! Use [`weight_v2::Weight`] in all other</span>
+<span class="doccomment">/// cases.</span>
+<span class="attribute">#[<span class="ident">derive</span>(
+	<span class="ident">Decode</span>,
+	<span class="ident">Encode</span>,
+	<span class="ident">CompactAs</span>,
+	<span class="ident">PartialEq</span>,
+	<span class="ident">Eq</span>,
+	<span class="ident">Clone</span>,
+	<span class="ident">Copy</span>,
+	<span class="ident">RuntimeDebug</span>,
+	<span class="ident">Default</span>,
+	<span class="ident">MaxEncodedLen</span>,
+	<span class="ident">TypeInfo</span>,
+)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OldWeight</span>(<span class="kw">pub</span> <span class="ident">u64</span>);
 
 <span class="doccomment">/// The weight of database operations that the runtime can invoke.</span>
 <span class="doccomment">///</span>

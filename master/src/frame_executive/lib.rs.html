@@ -1540,6 +1540,7 @@
 <span id="1534">1534</span>
 <span id="1535">1535</span>
 <span id="1536">1536</span>
+<span id="1537">1537</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -2001,7 +2002,8 @@
 		<span class="kw">let</span> <span class="ident">max_weight</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">System::BlockWeights</span> <span class="kw">as</span> <span class="ident">frame_support::traits::Get</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>().<span class="ident">max_block</span>;
 		<span class="kw">let</span> <span class="ident">remaining_weight</span> <span class="op">=</span> <span class="ident">max_weight</span>.<span class="ident">saturating_sub</span>(<span class="ident">weight</span>.<span class="ident">total</span>());
 
-		<span class="kw">if</span> <span class="ident">remaining_weight</span>.<span class="ident">all_gt</span>(<span class="ident">Weight::zero</span>()) {
+		<span class="comment">// TODO: account for proof size weight</span>
+		<span class="kw">if</span> <span class="ident">remaining_weight</span>.<span class="ident">ref_time</span>() <span class="op">&gt;</span> <span class="number">0</span> {
 			<span class="kw">let</span> <span class="ident">used_weight</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">AllPalletsWithSystem</span> <span class="kw">as</span> <span class="ident">OnIdle</span><span class="op">&lt;</span><span class="ident">System::BlockNumber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::on_idle</span>(
 				<span class="ident">block_number</span>,
 				<span class="ident">remaining_weight</span>,
@@ -2480,13 +2482,13 @@
 		<span class="ident">block_import_works_inner</span>(
 			<span class="ident">new_test_ext_v0</span>(<span class="number">1</span>),
 			<span class="ident">array_bytes::hex_n_into_unchecked</span>(
-				<span class="string">&quot;1039e1a4bd0cf5deefe65f313577e70169c41c7773d6acf31ca8d671397559f5&quot;</span>,
+				<span class="string">&quot;0d786e24c1f9e6ce237806a22c005bbbc7dee4edd6692b6c5442843d164392de&quot;</span>,
 			),
 		);
 		<span class="ident">block_import_works_inner</span>(
 			<span class="ident">new_test_ext</span>(<span class="number">1</span>),
 			<span class="ident">array_bytes::hex_n_into_unchecked</span>(
-				<span class="string">&quot;75e7d8f360d375bbe91bcf8019c01ab6362448b4a89e3b329717eb9d910340e5&quot;</span>,
+				<span class="string">&quot;348485a4ab856467b440167e45f99b491385e8528e09b0e51f85f814a3021c93&quot;</span>,
 			),
 		);
 	}

@@ -310,6 +310,9 @@
 <span id="304">304</span>
 <span id="305">305</span>
 <span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -373,6 +376,8 @@
 	<span class="kw">pub</span> <span class="ident">call_index</span>: <span class="ident">u8</span>,
 	<span class="doccomment">/// Docs, used for metadata.</span>
 	<span class="kw">pub</span> <span class="ident">docs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">syn::Lit</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Attributes annotated at the top of the dispatchable function.</span>
+	<span class="kw">pub</span> <span class="ident">attrs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">syn::Attribute</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Attributes for functions in call impl block.</span>
@@ -599,6 +604,7 @@
 					<span class="ident">call_index</span>: <span class="ident">final_index</span>,
 					<span class="ident">args</span>,
 					<span class="ident">docs</span>,
+					<span class="ident">attrs</span>: <span class="ident">method</span>.<span class="ident">attrs</span>.<span class="ident">clone</span>(),
 				});
 			} <span class="kw">else</span> {
 				<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="string">&quot;Invalid pallet::call, only method accepted&quot;</span>;
