@@ -795,19 +795,6 @@ where
 			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(message))
 		}
 
-		// TODO: handle `BlockRequest` directly in SyncingHelper
-		// TODO: move import queue to syncing helper
-		let events = futures::executor::block_on(self.sync_handle.get_events());
-		self.pending_messages.extend(events);
-
-		// while let Poll::Ready(Some(())) = self.tick_timeout.poll_next_unpin(cx) {
-		// 	self.tick();
-		// }
-
-		if let Some(message) = self.pending_messages.pop_front() {
-			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(message))
-		}
-
 		let event = match self.behaviour.poll(cx, params) {
 			Poll::Pending => return Poll::Pending,
 			Poll::Ready(NetworkBehaviourAction::GenerateEvent(ev)) => ev,

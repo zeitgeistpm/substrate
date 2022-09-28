@@ -25,7 +25,10 @@ use message::{
 };
 use prometheus_endpoint::{register, Gauge, GaugeVec, Opts, PrometheusError, Registry, U64};
 use sc_client_api::HeaderBackend;
-use sc_consensus::import_queue::{BlockImportError, BlockImportStatus, IncomingBlock};
+use sc_consensus::{
+	import_queue::{BlockImportError, BlockImportStatus, IncomingBlock},
+	ImportQueue, Link,
+};
 use sc_network_common::{
 	config::ProtocolId,
 	protocol::ProtocolName,
@@ -100,12 +103,15 @@ pub struct SyncingHelper<B: BlockT, Client, N> {
 	default_peers_set_num_light: usize,
 
 	rx: mpsc::UnboundedReceiver<SyncEvent<B>>,
+	sync_handle: SyncingHandle<B>,
 
 	pending_messages: VecDeque<CustomMessageOutcome<B>>,
 
 	block_request_protocol_name: ProtocolName,
 	state_request_protocol_name: ProtocolName,
 	warp_sync_protocol_name: Option<ProtocolName>,
+	/// The import queue that was passed at initialization.
+	import_queue: Box<dyn ImportQueue<B>>,
 
 	service: Option<Arc<N>>,
 }
@@ -118,6 +124,7 @@ where
 {
 	pub fn new(
 		chain_sync: Box<dyn ChainSync<B>>,
+		import_queue: Box<dyn ImportQueue<B>>,
 		cache_size: usize,
 		genesis_hash: B::Hash,
 		chain: Arc<Client>,
@@ -133,6 +140,7 @@ where
 		(
 			Self {
 				chain_sync,
+				import_queue,
 				pending_responses: Default::default(),
 				block_announce_data_cache: lru::LruCache::new(cache_size),
 				genesis_hash,
@@ -149,6 +157,7 @@ where
 				block_request_protocol_name,
 				state_request_protocol_name,
 				warp_sync_protocol_name,
+				sync_handle: SyncingHandle::new(tx.clone()),
 			},
 			SyncingHandle::new(tx),
 		)
@@ -397,7 +406,9 @@ where
 			let msg = if let Some(OnBlockData::Import(origin, blocks)) =
 				self.chain_sync.peer_disconnected(&peer)
 			{
-				Some(CustomMessageOutcome::BlockImport(origin, blocks))
+				self.import_queue.import_blocks(origin, blocks);
+				Some(CustomMessageOutcome::None)
+			// Some(CustomMessageOutcome::BlockImport(origin, blocks))
 			} else {
 				None
 			};
@@ -628,13 +639,13 @@ where
 		peer_id: PeerId,
 		request: BlockRequest<B>,
 		response: OpaqueBlockResponse,
-	) -> CustomMessageOutcome<B> {
+	) {
 		let blocks = match self.chain_sync.block_response_into_blocks(&request, response) {
 			Ok(blocks) => blocks,
 			Err(err) => {
 				debug!(target: "sync", "Failed to decode block response from {}: {}", peer_id, err);
 				self.report_peer(peer_id, rep::BAD_MESSAGE);
-				return CustomMessageOutcome::None
+				return
 			},
 		};
 
@@ -661,26 +672,32 @@ where
 
 		if request.fields == BlockAttributes::JUSTIFICATION {
 			match self.chain_sync.on_block_justification(peer_id, block_response) {
-				Ok(OnBlockJustification::Nothing) => CustomMessageOutcome::None,
-				Ok(OnBlockJustification::Import { peer, hash, number, justifications }) =>
-					CustomMessageOutcome::JustificationImport(peer, hash, number, justifications),
+				Ok(OnBlockJustification::Nothing) => {},
+				Ok(OnBlockJustification::Import { peer, hash, number, justifications }) => {
+					self.import_queue.import_justifications(peer, hash, number, justifications);
+					// CustomMessageOutcome::JustificationImport(peer, hash, number,
+					// justifications), CustomMessageOutcome::None
+				},
 				Err(BadPeer(id, repu)) => {
 					self.disconnect_and_report_peer(id, repu);
-					CustomMessageOutcome::None
+					// CustomMessageOutcome::None
 				},
 			}
 		} else {
 			match self.chain_sync.on_block_data(&peer_id, Some(request), block_response) {
-				Ok(OnBlockData::Import(origin, blocks)) =>
-					CustomMessageOutcome::BlockImport(origin, blocks),
+				Ok(OnBlockData::Import(origin, blocks)) => {
+					self.import_queue.import_blocks(origin, blocks);
+					// CustomMessageOutcome::BlockImport(origin, blocks)
+					// CustomMessageOutcome::None
+				},
 				Ok(OnBlockData::Request(peer, req)) => {
 					self.prepare_block_request(peer, req);
-					CustomMessageOutcome::None
+					// CustomMessageOutcome::None
 				},
-				Ok(OnBlockData::Continue) => CustomMessageOutcome::None,
+				Ok(OnBlockData::Continue) => {},
 				Err(BadPeer(id, repu)) => {
 					self.disconnect_and_report_peer(id, repu);
-					CustomMessageOutcome::None
+					// CustomMessageOutcome::None
 				},
 			}
 		}
@@ -688,18 +705,14 @@ where
 
 	/// Must be called in response to a [`CustomMessageOutcome::StateRequest`] being emitted.
 	/// Must contain the same `PeerId` and request that have been emitted.
-	pub fn on_state_response(
-		&mut self,
-		peer_id: PeerId,
-		response: OpaqueStateResponse,
-	) -> CustomMessageOutcome<B> {
+	pub fn on_state_response(&mut self, peer_id: PeerId, response: OpaqueStateResponse) {
 		match self.chain_sync.on_state_data(&peer_id, response) {
-			Ok(OnStateData::Import(origin, block)) =>
-				CustomMessageOutcome::BlockImport(origin, vec![block]),
-			Ok(OnStateData::Continue) => CustomMessageOutcome::None,
+			Ok(OnStateData::Import(origin, block)) => {
+				self.import_queue.import_blocks(origin, vec![block]);
+			},
+			Ok(OnStateData::Continue) => {},
 			Err(BadPeer(id, repu)) => {
 				self.disconnect_and_report_peer(id, repu);
-				CustomMessageOutcome::None
 			},
 		}
 	}
@@ -740,9 +753,9 @@ where
 	pub fn process_block_announce_validation_result(
 		&mut self,
 		validation_result: PollBlockAnnounceValidation<B::Header>,
-	) -> CustomMessageOutcome<B> {
+	) {
 		let (header, who) = match validation_result {
-			PollBlockAnnounceValidation::Skip => return CustomMessageOutcome::None,
+			PollBlockAnnounceValidation::Skip => return,
 			PollBlockAnnounceValidation::Nothing { is_best: _, who, announce } => {
 				if let Some(data) = announce.data {
 					if !data.is_empty() {
@@ -750,7 +763,7 @@ where
 					}
 				}
 
-				return CustomMessageOutcome::None
+				return
 			},
 			PollBlockAnnounceValidation::ImportHeader { announce, is_best: _, who } => {
 				if let Some(data) = announce.data {
@@ -767,7 +780,7 @@ where
 				}
 
 				self.report_peer(who, rep::BAD_BLOCK_ANNOUNCEMENT);
-				return CustomMessageOutcome::None
+				return
 			},
 		};
 
@@ -793,16 +806,15 @@ where
 		);
 
 		match blocks_to_import {
-			Ok(OnBlockData::Import(origin, blocks)) =>
-				CustomMessageOutcome::BlockImport(origin, blocks),
+			Ok(OnBlockData::Import(origin, blocks)) => {
+				self.import_queue.import_blocks(origin, blocks);
+			},
 			Ok(OnBlockData::Request(peer, req)) => {
 				self.prepare_block_request(peer, req);
-				CustomMessageOutcome::None
 			},
-			Ok(OnBlockData::Continue) => CustomMessageOutcome::None,
+			Ok(OnBlockData::Continue) => {},
 			Err(BadPeer(id, repu)) => {
 				self.disconnect_and_report_peer(id, repu);
-				CustomMessageOutcome::None
 			},
 		}
 	}
@@ -906,18 +918,15 @@ where
 		}
 
 		for (id, req, response) in finished_block_requests {
-			let ev = self.on_block_response(id, req, response);
-			self.pending_messages.push_back(ev);
+			self.on_block_response(id, req, response);
 		}
 
 		for (id, response) in finished_state_requests {
 			let ev = self.on_state_response(id, response);
-			self.pending_messages.push_back(ev);
 		}
 
 		for (id, response) in finished_warp_sync_requests {
-			let ev = self.on_warp_sync_response(id, EncodedProof(response));
-			self.pending_messages.push_back(ev);
+			self.on_warp_sync_response(id, EncodedProof(response));
 		}
 	}
 
@@ -1064,13 +1073,44 @@ where
 					self.call_chain_sync();
 				}
 				result = futures::future::poll_fn(|cx| self.chain_sync.poll_block_announce_validation(cx)).fuse() => {
-					match self.process_block_announce_validation_result(result) {
-						CustomMessageOutcome::None => {},
-						outcome => self.pending_messages.push_back(outcome),
-					}
+					self.process_block_announce_validation_result(result);
 				}
+				_ = futures::future::poll_fn(|cx| {
+					self.import_queue .poll_actions(cx, &mut NetworkLink { sync_handle: &self.sync_handle });
+					std::task::Poll::Pending::<()>
+				}).fuse() => {}
 			}
 		}
+	}
+}
+
+// Implementation of `import_queue::Link` trait using the available local variables.
+struct NetworkLink<'a, B: BlockT> {
+	sync_handle: &'a SyncingHandle<B>,
+}
+
+impl<'a, B: BlockT> Link<B> for NetworkLink<'a, B> {
+	fn blocks_processed(
+		&mut self,
+		imported: usize,
+		count: usize,
+		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
+	) {
+		self.sync_handle.on_blocks_processed(imported, count, results);
+	}
+
+	fn justification_imported(
+		&mut self,
+		who: PeerId,
+		hash: &B::Hash,
+		number: NumberFor<B>,
+		success: bool,
+	) {
+		self.sync_handle.justification_import_result(who, *hash, number, success)
+	}
+
+	fn request_justification(&mut self, hash: &B::Hash, number: NumberFor<B>) {
+		self.sync_handle.request_justification(*hash, number)
 	}
 }
 

@@ -228,6 +228,7 @@ where
 
 		let (mut sync_helper, sync_handle) = sync_helper::SyncingHelper::new(
 			params.chain_sync,
+			params.import_queue,
 			params.network_config.default_peers_set.in_peers as usize +
 				params.network_config.default_peers_set.out_peers as usize,
 			params.chain.info().genesis_hash,
@@ -478,7 +479,6 @@ where
 			is_major_syncing,
 			network_service: swarm,
 			service,
-			import_queue: params.import_queue,
 			from_service,
 			event_streams: out_events::OutChannels::new(params.metrics_registry.as_ref())?,
 			peers_notifications_sinks,
@@ -1277,8 +1277,6 @@ where
 	service: Arc<NetworkService<B, H>>,
 	/// The *actual* network.
 	network_service: Swarm<Behaviour<B, Client>>,
-	/// The import queue that was passed at initialization.
-	import_queue: Box<dyn ImportQueue<B>>,
 	/// Messages from the [`NetworkService`] that must be processed.
 	from_service: TracingUnboundedReceiver<ServiceToWorkerMsg<B>>,
 	/// Senders for events that happen on the network.
@@ -1308,10 +1306,10 @@ where
 	fn poll(mut self: Pin<&mut Self>, cx: &mut std::task::Context) -> Poll<Self::Output> {
 		let this = &mut *self;
 
-		// TODO: move import queue out of `NetworkWorker`
-		// Poll the import queue for actions to perform.
-		this.import_queue
-			.poll_actions(cx, &mut NetworkLink { sync_handle: &this.sync_handle });
+		// // TODO: move import queue out of `NetworkWorker`
+		// // Poll the import queue for actions to perform.
+		// this.import_queue
+		// 	.poll_actions(cx, &mut NetworkLink { sync_handle: &this.sync_handle });
 
 		// At the time of writing of this comment, due to a high volume of messages, the network
 		// worker sometimes takes a long time to process the loop below. When that happens, the
@@ -1447,22 +1445,24 @@ where
 
 			match poll_value {
 				Poll::Pending => break,
-				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::BlockImport(origin, blocks))) => {
+				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::BlockImport(_origin, _blocks))) => {
 					if let Some(metrics) = this.metrics.as_ref() {
 						metrics.import_queue_blocks_submitted.inc();
 					}
-					this.import_queue.import_blocks(origin, blocks);
+					panic!("not supposed to be here");
+					// this.import_queue.import_blocks(origin, blocks);
 				},
 				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::JustificationImport(
-					origin,
-					hash,
-					nb,
-					justifications,
+					_origin,
+					_hash,
+					_nb,
+					_justifications,
 				))) => {
 					if let Some(metrics) = this.metrics.as_ref() {
 						metrics.import_queue_justifications_submitted.inc();
 					}
-					this.import_queue.import_justifications(origin, hash, nb, justifications);
+					panic!("not supposed to be here");
+					// this.import_queue.import_justifications(origin, hash, nb, justifications);
 				},
 				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::InboundRequest {
 					protocol,
@@ -1930,35 +1930,35 @@ where
 {
 }
 
-// Implementation of `import_queue::Link` trait using the available local variables.
-struct NetworkLink<'a, B: BlockT> {
-	sync_handle: &'a sync_helper::SyncingHandle<B>,
-}
+// // Implementation of `import_queue::Link` trait using the available local variables.
+// struct NetworkLink<'a, B: BlockT> {
+// 	sync_handle: &'a sync_helper::SyncingHandle<B>,
+// }
 
-impl<'a, B: BlockT> Link<B> for NetworkLink<'a, B> {
-	fn blocks_processed(
-		&mut self,
-		imported: usize,
-		count: usize,
-		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
-	) {
-		self.sync_handle.on_blocks_processed(imported, count, results);
-	}
+// impl<'a, B: BlockT> Link<B> for NetworkLink<'a, B> {
+// 	fn blocks_processed(
+// 		&mut self,
+// 		imported: usize,
+// 		count: usize,
+// 		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
+// 	) {
+// 		self.sync_handle.on_blocks_processed(imported, count, results);
+// 	}
 
-	fn justification_imported(
-		&mut self,
-		who: PeerId,
-		hash: &B::Hash,
-		number: NumberFor<B>,
-		success: bool,
-	) {
-		self.sync_handle.justification_import_result(who, *hash, number, success)
-	}
+// 	fn justification_imported(
+// 		&mut self,
+// 		who: PeerId,
+// 		hash: &B::Hash,
+// 		number: NumberFor<B>,
+// 		success: bool,
+// 	) {
+// 		self.sync_handle.justification_import_result(who, *hash, number, success)
+// 	}
 
-	fn request_justification(&mut self, hash: &B::Hash, number: NumberFor<B>) {
-		self.sync_handle.request_justification(*hash, number)
-	}
-}
+// 	fn request_justification(&mut self, hash: &B::Hash, number: NumberFor<B>) {
+// 		self.sync_handle.request_justification(*hash, number)
+// 	}
+// }
 
 fn ensure_addresses_consistent_with_transport<'a>(
 	addresses: impl Iterator<Item = &'a Multiaddr>,
