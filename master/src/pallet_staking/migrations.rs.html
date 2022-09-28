@@ -419,6 +419,10 @@
 <span id="413">413</span>
 <span id="414">414</span>
 <span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -461,10 +465,14 @@
 				<span class="string">&quot;Expected v11 before upgrading to v12&quot;</span>
 			);
 
-			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">T::HistoryDepth::get</span>() <span class="op">==</span> <span class="ident">HistoryDepth</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(),
-				<span class="string">&quot;Provided value of HistoryDepth should be same as the existing storage value&quot;</span>
-			);
+			<span class="kw">if</span> <span class="ident">HistoryDepth</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::exists</span>() {
+				<span class="macro">frame_support::ensure!</span>(
+					<span class="ident">T::HistoryDepth::get</span>() <span class="op">==</span> <span class="ident">HistoryDepth</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(),
+					<span class="string">&quot;Provided value of HistoryDepth should be same as the existing storage value&quot;</span>
+				);
+			} <span class="kw">else</span> {
+				<span class="macro">log::info!</span>(<span class="string">&quot;No HistoryDepth in storage; nothing to remove&quot;</span>);
+			}
 
 			<span class="prelude-val">Ok</span>(<span class="ident">Default::default</span>())
 		}
