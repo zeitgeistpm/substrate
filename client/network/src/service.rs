@@ -226,7 +226,7 @@ where
 
 		let default_notif_handshake_message = Roles::from(&params.role).encode();
 
-		let (sync_helper, sync_handle) = sync_helper::SyncingHelper::new(
+		let (mut sync_helper, sync_handle) = sync_helper::SyncingHelper::new(
 			params.chain_sync,
 			params.network_config.default_peers_set.in_peers as usize +
 				params.network_config.default_peers_set.out_peers as usize,
@@ -239,9 +239,10 @@ where
 					params.network_config.default_peers_set.in_peers;
 				total.saturating_sub(params.network_config.default_peers_set_num_full) as usize
 			},
+			params.block_request_protocol_config.name.clone(),
+			params.state_request_protocol_config.name.clone(),
+			params.warp_sync_protocol_config.as_ref().map(|config| config.name.clone()),
 		);
-
-		(params.syncing_executor)(sync_helper.run().boxed());
 
 		let (protocol, peerset_handle, mut known_addresses) = Protocol::new(
 			From::from(&params.role),
@@ -467,6 +468,9 @@ where
 			sync_handle: sync_handle.clone(),
 			_marker: PhantomData,
 		});
+
+		sync_helper.register_network_service(service.clone());
+		(params.syncing_executor)(sync_helper.run().boxed());
 
 		Ok(NetworkWorker {
 			external_addresses,
