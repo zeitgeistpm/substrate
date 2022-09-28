@@ -282,7 +282,7 @@ where
 		&mut self,
 		who: PeerId,
 		status: BlockAnnouncesHandshake<B>,
-	) -> Result<Option<CustomMessageOutcome<B>>, ()> {
+	) -> Result<(), ()> {
 		trace!(target: "sync", "New peer {} {:?}", who, status);
 
 		if self.peers.contains_key(&who) {
@@ -389,9 +389,9 @@ where
 
 		if let Some(req) = req {
 			self.prepare_block_request(who, req);
-			Ok(None)
+			Ok(())
 		} else {
-			Ok(None)
+			Ok(())
 		}
 	}
 
@@ -507,7 +507,7 @@ where
 		received_handshake: Vec<u8>,
 		notifications_sink: NotificationsSink,
 		negotiated_fallback: Option<ProtocolName>,
-	) -> VecDeque<CustomMessageOutcome<B>> {
+	) -> CustomMessageOutcome<B> {
 		match <Message<B> as DecodeAll>::decode_all(&mut &received_handshake[..]) {
 			Ok(GenericMessage::Status(handshake)) => {
 				let handshake = BlockAnnouncesHandshake {
@@ -518,12 +518,8 @@ where
 				};
 
 				match self.on_sync_peer_connected(peer_id, handshake) {
-					Ok(msg) => match msg {
-						Some(inner) =>
-							VecDeque::from([inner, CustomMessageOutcome::SyncConnected(peer_id)]),
-						None => VecDeque::from([CustomMessageOutcome::SyncConnected(peer_id)]),
-					},
-					Err(_) => VecDeque::from([CustomMessageOutcome::None]),
+					Ok(msg) => CustomMessageOutcome::SyncConnected(peer_id),
+					Err(_) => CustomMessageOutcome::None,
 				}
 			},
 			Ok(msg) => {
@@ -534,21 +530,15 @@ where
 					msg,
 				);
 				self.report_peer(peer_id, rep::BAD_MESSAGE);
-				VecDeque::from([CustomMessageOutcome::None])
+				CustomMessageOutcome::None
 			},
 			Err(err) => {
 				match <BlockAnnouncesHandshake<B> as DecodeAll>::decode_all(
 					&mut &received_handshake[..],
 				) {
 					Ok(handshake) => match self.on_sync_peer_connected(peer_id, handshake) {
-						Ok(msg) => match msg {
-							Some(inner) => VecDeque::from([
-								inner,
-								CustomMessageOutcome::SyncConnected(peer_id),
-							]),
-							None => VecDeque::from([CustomMessageOutcome::SyncConnected(peer_id)]),
-						},
-						Err(_) => VecDeque::from([CustomMessageOutcome::None]),
+						Ok(msg) => CustomMessageOutcome::SyncConnected(peer_id),
+						Err(_) => CustomMessageOutcome::None,
 					},
 					Err(err2) => {
 						debug!(
@@ -560,7 +550,7 @@ where
 							err2,
 						);
 						self.report_peer(peer_id, rep::BAD_MESSAGE);
-						VecDeque::from([CustomMessageOutcome::None])
+						CustomMessageOutcome::None
 					},
 				}
 			},
@@ -1145,7 +1135,7 @@ pub enum SyncEvent<B: BlockT> {
 		Vec<u8>,
 		NotificationsSink,
 		Option<ProtocolName>,
-		oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>,
+		oneshot::Sender<CustomMessageOutcome<B>>,
 	),
 	GetEvents(oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>),
 	Notification(PeerId, bytes::BytesMut, oneshot::Sender<CustomMessageOutcome<B>>),
@@ -1332,7 +1322,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		received_handshake: Vec<u8>,
 		notifications_sink: NotificationsSink,
 		negotiated_fallback: Option<ProtocolName>,
-	) -> VecDeque<CustomMessageOutcome<B>> {
+	) -> CustomMessageOutcome<B> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx

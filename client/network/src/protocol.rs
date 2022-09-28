@@ -823,21 +823,12 @@ where
 				// TODO: remove hardcoded peerset entry
 				// Set number 0 is hardcoded the default set of peers we sync from.
 				if set_id == HARDCODED_PEERSETS_SYNC {
-					let mut events =
-						futures::executor::block_on(self.sync_handle.custom_protocol_open(
-							peer_id,
-							received_handshake,
-							notifications_sink,
-							negotiated_fallback,
-						));
-
-					// TODO: beyond hideous, remove
-					if events.len() > 1 {
-						self.pending_messages
-							.push_back(events.pop_front().expect("event to exist"));
-					}
-
-					events.pop_front().expect("event to exist")
+					futures::executor::block_on(self.sync_handle.custom_protocol_open(
+						peer_id,
+						received_handshake,
+						notifications_sink,
+						negotiated_fallback,
+					))
 				} else {
 					match (
 						message::Roles::decode_all(&mut &received_handshake[..]),
