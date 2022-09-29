@@ -493,6 +493,7 @@
 <span id="487">487</span>
 <span id="488">488</span>
 <span id="489">489</span>
+<span id="490">490</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -511,6 +512,7 @@
 <span class="comment">// limitations under the License.</span>
 
 <span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">Error</span>, <span class="ident">Input</span>};
+<span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
 <span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">cmp</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ValidatorSetId</span>;
@@ -534,7 +536,7 @@
 <span class="doccomment">/// Identifiers MUST be sorted by the [`BeefyPayloadId`] to allow efficient lookup of expected</span>
 <span class="doccomment">/// value. Duplicated identifiers are disallowed. It&#39;s okay for different implementations to only</span>
 <span class="doccomment">/// support a subset of possible values.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Ord</span>, <span class="ident">PartialOrd</span>, <span class="ident">Hash</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Ord</span>, <span class="ident">PartialOrd</span>, <span class="ident">Hash</span>, <span class="ident">TypeInfo</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Payload</span>(<span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">BeefyPayloadId</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;</span>);
 
 <span class="kw">impl</span> <span class="ident">Payload</span> {
@@ -575,7 +577,7 @@
 <span class="doccomment">/// height [block_number](Commitment::block_number).</span>
 <span class="doccomment">/// GRANDPA validators collect signatures on commitments and a stream of such signed commitments</span>
 <span class="doccomment">/// (see [SignedCommitment]) forms the BEEFY protocol.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">TypeInfo</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span> {
 	<span class="doccomment">///  A collection of payloads to be signed, see [`Payload`] for details.</span>
 	<span class="doccomment">///</span>
@@ -633,7 +635,7 @@
 <span class="doccomment">/// Note that SCALE-encoding of the structure is optimized for size efficiency over the wire,</span>
 <span class="doccomment">/// please take a look at custom [`Encode`] and [`Decode`] implementations and</span>
 <span class="doccomment">/// `CompactSignedCommitment` struct.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">TypeInfo</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// The commitment signatures are collected for.</span>
 	<span class="kw">pub</span> <span class="ident">commitment</span>: <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span>,
