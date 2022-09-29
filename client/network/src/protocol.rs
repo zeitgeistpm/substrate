@@ -914,8 +914,10 @@ where
 				}
 			},
 			NotificationsOut::Notification { peer_id, set_id, message } => match set_id {
-				HARDCODED_PEERSETS_SYNC =>
-					futures::executor::block_on(self.sync_handle.notification(peer_id, message)),
+				HARDCODED_PEERSETS_SYNC => CustomMessageOutcome::NotificationsReceived {
+					remote: peer_id,
+					messages: vec![(self.block_announces_protocol_name.clone(), message.freeze())],
+				},
 				_ if self.bad_handshake_substreams.contains(&(peer_id, set_id)) =>
 					CustomMessageOutcome::None,
 				_ => {

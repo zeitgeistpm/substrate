@@ -298,6 +298,7 @@ where
 		count: usize,
 		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
 	) {
+		// println!("here, imported {imported} count {count}");
 		for result in self.chain_sync.on_blocks_processed(imported, count, results) {
 			match result {
 				Ok((id, req)) => {
@@ -497,7 +498,7 @@ where
 		}
 	}
 
-	pub fn notification(
+	pub async fn notification(
 		&mut self,
 		peer: PeerId,
 		message: bytes::Bytes,
@@ -507,14 +508,15 @@ where
 			if let Ok(announce) = BlockAnnounce::decode(&mut message.as_ref()) {
 				self.push_block_announce_validation(peer, announce);
 
-				// // Make sure that the newly added block announce validation future was
-				// // polled once to be registered in the task.
-				// if let Poll::Ready(res) = futures::future::poll_fn(|cx|
-				// self.chain_sync.poll_block_announce_validation(cx)) {
-				// 	self.process_block_announce_validation_result(res)
-				// } else {
+				futures::future::poll_fn(|cx| {
+					if let Poll::Ready(res) = self.chain_sync.poll_block_announce_validation(cx) {
+						self.process_block_announce_validation_result(res)
+					}
+					std::task::Poll::Ready(())
+				})
+				.await;
+
 				CustomMessageOutcome::None
-			// }
 			} else {
 				warn!(target: "sub-libp2p", "Failed to decode block announce");
 				CustomMessageOutcome::None
@@ -1037,7 +1039,7 @@ where
 				let _ = channel_response.send(std::mem::take(&mut self.pending_messages));
 			},
 			SyncEvent::Notification(peer, bytes, channel_response) => {
-				let _ = channel_response.send(self.notification(peer, bytes.freeze()));
+				todo!();
 			},
 			SyncEvent::GetBlockAnnounceData(hash, channel_response) => {
 				let _ = channel_response.send(self.block_announce_data_cache.get(&hash).cloned());
@@ -1113,6 +1115,8 @@ where
 									if protocol != self.block_announces_protocol_name {
 										continue
 									}
+
+									self.notification(remote, message).await;
 								}
 							}
 							_ => {},
@@ -1134,7 +1138,7 @@ where
 					self.call_chain_sync();
 				}
 				_ = futures::future::poll_fn(|cx| {
-					self.import_queue .poll_actions(cx, &mut NetworkLink { sync_handle: &self.sync_handle });
+					self.import_queue.poll_actions(cx, &mut NetworkLink { sync_handle: &self.sync_handle });
 					std::task::Poll::Pending::<()>
 				}).fuse() => {}
 			}
