@@ -3223,6 +3223,8 @@
 <span id="3217">3217</span>
 <span id="3218">3218</span>
 <span id="3219">3219</span>
+<span id="3220">3220</span>
+<span id="3221">3221</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -4399,7 +4401,9 @@
 
 	<span class="macro">parameter_types!</span> {
 		<span class="kw">pub</span> <span class="ident">BlockWeights</span>: <span class="ident">frame_system::limits::BlockWeights</span> <span class="op">=</span>
-			<span class="ident">frame_system::limits::BlockWeights::simple_max</span>(<span class="ident">frame_support::weights::Weight::from_ref_time</span>(<span class="number">1024</span>));
+			<span class="ident">frame_system::limits::BlockWeights::simple_max</span>(
+				<span class="ident">frame_support::weights::Weight::from_ref_time</span>(<span class="number">1024</span>).<span class="ident">set_proof_size</span>(<span class="ident">u64::MAX</span>),
+			);
 	}
 
 	<span class="kw">impl</span> <span class="ident">frame_system::Config</span> <span class="kw">for</span> <span class="ident">Test</span> {

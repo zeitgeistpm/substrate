@@ -686,7 +686,7 @@
 	<span class="kw">fn</span> <span class="ident">multiplier_can_grow_from_zero</span>() {
 		<span class="comment">// if the min is too small, then this will not change, and we are doomed forever.</span>
 		<span class="comment">// the weight is 1/100th bigger than target.</span>
-		<span class="ident">run_with_system_weight</span>(<span class="ident">target</span>() <span class="op">*</span> <span class="number">101</span> <span class="op">/</span> <span class="number">100</span>, <span class="op">|</span><span class="op">|</span> {
+		<span class="ident">run_with_system_weight</span>(<span class="ident">target</span>().<span class="ident">set_ref_time</span>(<span class="ident">target</span>().<span class="ident">ref_time</span>() <span class="op">*</span> <span class="number">101</span> <span class="op">/</span> <span class="number">100</span>), <span class="op">|</span><span class="op">|</span> {
 			<span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="ident">runtime_multiplier_update</span>(<span class="ident">min_multiplier</span>());
 			<span class="macro">assert!</span>(<span class="ident">next</span> <span class="op">&gt;</span> <span class="ident">min_multiplier</span>(), <span class="string">&quot;{:?} !&gt;= {:?}&quot;</span>, <span class="ident">next</span>, <span class="ident">min_multiplier</span>());
 		})

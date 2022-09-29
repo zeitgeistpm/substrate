@@ -1540,7 +1540,6 @@
 <span id="1534">1534</span>
 <span id="1535">1535</span>
 <span id="1536">1536</span>
-<span id="1537">1537</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -2002,8 +2001,7 @@
 		<span class="kw">let</span> <span class="ident">max_weight</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">System::BlockWeights</span> <span class="kw">as</span> <span class="ident">frame_support::traits::Get</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>().<span class="ident">max_block</span>;
 		<span class="kw">let</span> <span class="ident">remaining_weight</span> <span class="op">=</span> <span class="ident">max_weight</span>.<span class="ident">saturating_sub</span>(<span class="ident">weight</span>.<span class="ident">total</span>());
 
-		<span class="comment">// TODO: account for proof size weight</span>
-		<span class="kw">if</span> <span class="ident">remaining_weight</span>.<span class="ident">ref_time</span>() <span class="op">&gt;</span> <span class="number">0</span> {
+		<span class="kw">if</span> <span class="ident">remaining_weight</span>.<span class="ident">all_gt</span>(<span class="ident">Weight::zero</span>()) {
 			<span class="kw">let</span> <span class="ident">used_weight</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">AllPalletsWithSystem</span> <span class="kw">as</span> <span class="ident">OnIdle</span><span class="op">&lt;</span><span class="ident">System::BlockNumber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::on_idle</span>(
 				<span class="ident">block_number</span>,
 				<span class="ident">remaining_weight</span>,
@@ -2311,7 +2309,7 @@
 			<span class="ident">frame_system::limits::BlockWeights::builder</span>()
 				.<span class="ident">base_block</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">10</span>))
 				.<span class="ident">for_class</span>(<span class="ident">DispatchClass::all</span>(), <span class="op">|</span><span class="ident">weights</span><span class="op">|</span> <span class="ident">weights</span>.<span class="ident">base_extrinsic</span> <span class="op">=</span> <span class="ident">Weight::from_ref_time</span>(<span class="number">5</span>))
-				.<span class="ident">for_class</span>(<span class="ident">DispatchClass::non_mandatory</span>(), <span class="op">|</span><span class="ident">weights</span><span class="op">|</span> <span class="ident">weights</span>.<span class="ident">max_total</span> <span class="op">=</span> <span class="ident">Weight::from_ref_time</span>(<span class="number">1024</span>).<span class="ident">into</span>())
+				.<span class="ident">for_class</span>(<span class="ident">DispatchClass::non_mandatory</span>(), <span class="op">|</span><span class="ident">weights</span><span class="op">|</span> <span class="ident">weights</span>.<span class="ident">max_total</span> <span class="op">=</span> <span class="ident">Weight::from_ref_time</span>(<span class="number">1024</span>).<span class="ident">set_proof_size</span>(<span class="ident">u64::MAX</span>).<span class="ident">into</span>())
 				.<span class="ident">build_or_panic</span>();
 		<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DbWeight</span>: <span class="ident">RuntimeDbWeight</span> <span class="op">=</span> <span class="ident">RuntimeDbWeight</span> {
 			<span class="ident">read</span>: <span class="number">10</span>,

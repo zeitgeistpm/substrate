@@ -450,6 +450,10 @@
 <span id="444">444</span>
 <span id="445">445</span>
 <span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -659,7 +663,10 @@
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">BlockWeights</span> {
 	<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-		<span class="ident"><span class="self">Self</span>::with_sensible_defaults</span>(<span class="number">1u64</span> <span class="op">*</span> <span class="ident">constants::WEIGHT_PER_SECOND</span>, <span class="ident">DEFAULT_NORMAL_RATIO</span>)
+		<span class="ident"><span class="self">Self</span>::with_sensible_defaults</span>(
+			<span class="ident">Weight::from_components</span>(<span class="ident">constants::WEIGHT_PER_SECOND</span>.<span class="ident">ref_time</span>(), <span class="ident">u64::MAX</span>),
+			<span class="ident">DEFAULT_NORMAL_RATIO</span>,
+		)
 	}
 }
 
@@ -676,7 +683,6 @@
 		}
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">error</span> <span class="op">=</span> <span class="ident">ValidationErrors::default</span>();
 
-		<span class="comment">// TODO: account for proof size weight in the assertions below</span>
 		<span class="kw">for</span> <span class="ident">class</span> <span class="kw">in</span> <span class="ident">DispatchClass::all</span>() {
 			<span class="kw">let</span> <span class="ident">weights</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">per_class</span>.<span class="ident">get</span>(<span class="kw-2">*</span><span class="ident">class</span>);
 			<span class="kw">let</span> <span class="ident">max_for_class</span> <span class="op">=</span> <span class="ident">or_max</span>(<span class="ident">weights</span>.<span class="ident">max_total</span>);
@@ -685,16 +691,18 @@
 			<span class="comment">// Make sure that if total is set it&#39;s greater than base_block &amp;&amp;</span>
 			<span class="comment">// base_for_class</span>
 			<span class="macro">error_assert!</span>(
-				(<span class="ident">max_for_class</span>.<span class="ident">ref_time</span>() <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">base_block</span>.<span class="ident">ref_time</span>() <span class="op">&amp;&amp;</span> <span class="ident">max_for_class</span>.<span class="ident">ref_time</span>() <span class="op">&gt;</span> <span class="ident">base_for_class</span>.<span class="ident">ref_time</span>())
-				<span class="op">|</span><span class="op">|</span> <span class="ident">max_for_class</span>.<span class="ident">ref_time</span>() <span class="op">==</span> <span class="number">0</span>,
+				(<span class="ident">max_for_class</span>.<span class="ident">all_gt</span>(<span class="self">self</span>.<span class="ident">base_block</span>) <span class="op">&amp;&amp;</span> <span class="ident">max_for_class</span>.<span class="ident">all_gt</span>(<span class="ident">base_for_class</span>))
+				<span class="op">|</span><span class="op">|</span> <span class="ident">max_for_class</span> <span class="op">==</span> <span class="ident">Weight::zero</span>(),
 				<span class="kw-2">&amp;mut</span> <span class="ident">error</span>,
 				<span class="string">&quot;[{:?}] {:?} (total) has to be greater than {:?} (base block) &amp; {:?} (base extrinsic)&quot;</span>,
 				<span class="ident">class</span>, <span class="ident">max_for_class</span>, <span class="self">self</span>.<span class="ident">base_block</span>, <span class="ident">base_for_class</span>,
 			);
 			<span class="comment">// Max extrinsic can&#39;t be greater than max_for_class.</span>
 			<span class="macro">error_assert!</span>(
-				<span class="ident">weights</span>.<span class="ident">max_extrinsic</span>.<span class="ident">unwrap_or</span>(<span class="ident">Weight::zero</span>()).<span class="ident">ref_time</span>() <span class="op">&lt;</span><span class="op">=</span>
-					<span class="ident">max_for_class</span>.<span class="ident">saturating_sub</span>(<span class="ident">base_for_class</span>).<span class="ident">ref_time</span>(),
+				<span class="ident">weights</span>
+					.<span class="ident">max_extrinsic</span>
+					.<span class="ident">unwrap_or</span>(<span class="ident">Weight::zero</span>())
+					.<span class="ident">all_lte</span>(<span class="ident">max_for_class</span>.<span class="ident">saturating_sub</span>(<span class="ident">base_for_class</span>)),
 				<span class="kw-2">&amp;mut</span> <span class="ident">error</span>,
 				<span class="string">&quot;[{:?}] {:?} (max_extrinsic) can&#39;t be greater than {:?} (max for class)&quot;</span>,
 				<span class="ident">class</span>,
@@ -703,14 +711,14 @@
 			);
 			<span class="comment">// Max extrinsic should not be 0</span>
 			<span class="macro">error_assert!</span>(
-				<span class="ident">weights</span>.<span class="ident">max_extrinsic</span>.<span class="ident">unwrap_or_else</span>(<span class="ident">Weight::max_value</span>).<span class="ident">ref_time</span>() <span class="op">&gt;</span> <span class="number">0</span>,
+				<span class="ident">weights</span>.<span class="ident">max_extrinsic</span>.<span class="ident">unwrap_or_else</span>(<span class="ident">Weight::max_value</span>).<span class="ident">all_gt</span>(<span class="ident">Weight::zero</span>()),
 				<span class="kw-2">&amp;mut</span> <span class="ident">error</span>,
 				<span class="string">&quot;[{:?}] {:?} (max_extrinsic) must not be 0. Check base cost and average initialization cost.&quot;</span>,
 				<span class="ident">class</span>, <span class="ident">weights</span>.<span class="ident">max_extrinsic</span>,
 			);
 			<span class="comment">// Make sure that if reserved is set it&#39;s greater than base_for_class.</span>
 			<span class="macro">error_assert!</span>(
-				<span class="ident">reserved</span>.<span class="ident">ref_time</span>() <span class="op">&gt;</span> <span class="ident">base_for_class</span>.<span class="ident">ref_time</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">reserved</span>.<span class="ident">ref_time</span>() <span class="op">==</span> <span class="number">0</span>,
+				<span class="ident">reserved</span>.<span class="ident">all_gt</span>(<span class="ident">base_for_class</span>) <span class="op">|</span><span class="op">|</span> <span class="ident">reserved</span> <span class="op">==</span> <span class="ident">Weight::zero</span>(),
 				<span class="kw-2">&amp;mut</span> <span class="ident">error</span>,
 				<span class="string">&quot;[{:?}] {:?} (reserved) has to be greater than {:?} (base extrinsic) if set&quot;</span>,
 				<span class="ident">class</span>,
@@ -719,7 +727,7 @@
 			);
 			<span class="comment">// Make sure max block is greater than max_total if it&#39;s set.</span>
 			<span class="macro">error_assert!</span>(
-				<span class="self">self</span>.<span class="ident">max_block</span>.<span class="ident">ref_time</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">weights</span>.<span class="ident">max_total</span>.<span class="ident">unwrap_or</span>(<span class="ident">Weight::zero</span>()).<span class="ident">ref_time</span>(),
+				<span class="self">self</span>.<span class="ident">max_block</span>.<span class="ident">all_gte</span>(<span class="ident">weights</span>.<span class="ident">max_total</span>.<span class="ident">unwrap_or</span>(<span class="ident">Weight::zero</span>())),
 				<span class="kw-2">&amp;mut</span> <span class="ident">error</span>,
 				<span class="string">&quot;[{:?}] {:?} (max block) has to be greater than {:?} (max for class)&quot;</span>,
 				<span class="ident">class</span>,
@@ -728,7 +736,7 @@
 			);
 			<span class="comment">// Make sure we can fit at least one extrinsic.</span>
 			<span class="macro">error_assert!</span>(
-				<span class="self">self</span>.<span class="ident">max_block</span>.<span class="ident">ref_time</span>() <span class="op">&gt;</span> (<span class="ident">base_for_class</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">base_block</span>).<span class="ident">ref_time</span>(),
+				<span class="self">self</span>.<span class="ident">max_block</span>.<span class="ident">all_gt</span>(<span class="ident">base_for_class</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">base_block</span>),
 				<span class="kw-2">&amp;mut</span> <span class="ident">error</span>,
 				<span class="string">&quot;[{:?}] {:?} (max block) must fit at least one extrinsic {:?} (base weight)&quot;</span>,
 				<span class="ident">class</span>,

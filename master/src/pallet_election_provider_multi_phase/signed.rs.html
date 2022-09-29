@@ -1079,6 +1079,9 @@
 <span id="1073">1073</span>
 <span id="1074">1074</span>
 <span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -2038,7 +2041,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">cannot_consume_too_much_future_weight</span>() {
 		<span class="ident">ExtBuilder::default</span>()
-			.<span class="ident">signed_weight</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">40</span>))
+			.<span class="ident">signed_weight</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">40</span>).<span class="ident">set_proof_size</span>(<span class="ident">u64::MAX</span>))
 			.<span class="ident">mock_weight_info</span>(<span class="ident">MockedWeightInfo::Basic</span>)
 			.<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
 				<span class="ident">roll_to</span>(<span class="number">15</span>);
@@ -2054,11 +2057,14 @@
 				<span class="comment">// default solution will have 5 edges (5 * 5 + 10)</span>
 				<span class="macro">assert_eq!</span>(<span class="ident">solution_weight</span>, <span class="ident">Weight::from_ref_time</span>(<span class="number">35</span>));
 				<span class="macro">assert_eq!</span>(<span class="ident">raw</span>.<span class="ident">solution</span>.<span class="ident">voter_count</span>(), <span class="number">5</span>);
-				<span class="macro">assert_eq!</span>(<span class="op">&lt;</span><span class="ident">Runtime</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::SignedMaxWeight::get</span>(), <span class="ident">Weight::from_ref_time</span>(<span class="number">40</span>));
+				<span class="macro">assert_eq!</span>(
+					<span class="op">&lt;</span><span class="ident">Runtime</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::SignedMaxWeight::get</span>(),
+					<span class="ident">Weight::from_ref_time</span>(<span class="number">40</span>).<span class="ident">set_proof_size</span>(<span class="ident">u64::MAX</span>)
+				);
 
 				<span class="macro">assert_ok!</span>(<span class="ident">MultiPhase::submit</span>(<span class="ident">RuntimeOrigin::signed</span>(<span class="number">99</span>), <span class="ident">Box::new</span>(<span class="ident">raw</span>.<span class="ident">clone</span>())));
 
-				<span class="op">&lt;</span><span class="ident">SignedMaxWeight</span><span class="op">&gt;</span><span class="ident">::set</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">30</span>));
+				<span class="op">&lt;</span><span class="ident">SignedMaxWeight</span><span class="op">&gt;</span><span class="ident">::set</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">30</span>).<span class="ident">set_proof_size</span>(<span class="ident">u64::MAX</span>));
 
 				<span class="comment">// note: resubmitting the same solution is technically okay as long as the queue has</span>
 				<span class="comment">// space.</span>
