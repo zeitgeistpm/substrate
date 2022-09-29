@@ -67,7 +67,10 @@ use sp_runtime::{
 	Justifications,
 };
 use std::{
-	collections::{HashMap, HashSet, VecDeque},
+	collections::{
+		hash_map::Entry::{Occupied, Vacant},
+		HashMap, HashSet, VecDeque,
+	},
 	io, iter,
 	num::NonZeroUsize,
 	pin::Pin,
@@ -162,6 +165,16 @@ impl Metrics {
 	}
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum PeerStatus {
+	Accepted,
+}
+
+struct NewPeerInfo {
+	status: PeerStatus,
+	roles: Option<Roles>,
+}
+
 // Lock must always be taken in order declared here.
 pub struct Protocol<B: BlockT, Client> {
 	/// Interval at which we call `tick`.
@@ -174,7 +187,7 @@ pub struct Protocol<B: BlockT, Client> {
 	// temporary object that performs all Protocol's syncing-related functionality
 	// sync_helper: sync_helper::SyncingHelper<B, Client>,
 	// All connected peers. Contains both full and light node peers.
-	// peers: HashMap<PeerId, Peer<B>>,
+	peers: HashMap<PeerId, NewPeerInfo>,
 	chain: Arc<Client>,
 	/// List of nodes for which we perform additional logging because they are important for the
 	/// user.
@@ -397,6 +410,7 @@ where
 			boot_node_ids,
 			sync_handle,
 			counter: Default::default(),
+			peers: Default::default(),
 			block_announces_protocol_name,
 		};
 
@@ -793,6 +807,12 @@ where
 				// TODO: remove hardcoded peerset entry
 				// Set number 0 is hardcoded the default set of peers we sync from.
 				if set_id == HARDCODED_PEERSETS_SYNC {
+					match self.peers.entry(peer_id) {
+						Vacant(entry) =>
+							entry.insert(NewPeerInfo { status: PeerStatus::Accepted, roles: None }),
+						Occupied(_) => panic!("peer already exists"),
+					};
+
 					futures::executor::block_on(self.sync_handle.custom_protocol_open(
 						peer_id,
 						received_handshake,
@@ -802,9 +822,9 @@ where
 				} else {
 					match (
 						message::Roles::decode_all(&mut &received_handshake[..]),
-						futures::executor::block_on(self.sync_handle.get_peers())
-							.iter()
-							.find(|(id, _)| id == &peer_id), // TODO: fix
+						self.peers.iter().find(|(id, info)| {
+							*id == &peer_id && info.status == PeerStatus::Accepted
+						}),
 					) {
 						(Ok(roles), _) => CustomMessageOutcome::NotificationStreamOpened {
 							remote: peer_id,
@@ -826,7 +846,7 @@ where
 									[usize::from(set_id) - NUM_HARDCODED_PEERSETS]
 									.clone(),
 								negotiated_fallback,
-								roles: peer.info.roles,
+								roles: peer.roles.expect("roles to exist"),
 								notifications_sink,
 							}
 						},
@@ -859,6 +879,14 @@ where
 				// Set number 0 is hardcoded the default set of peers we sync from.
 				// TODO: remove hardcoded peerset entry
 				if set_id == HARDCODED_PEERSETS_SYNC {
+					if let None = self.peers.remove(&peer_id) {
+						panic!("tried to disconnect peer who doesn't not exist");
+					}
+
+					// TODO: set peer state to disconnecting
+					// TODO: send event to SyncingHelper to close the connection
+					// TODO: wait until SyncingHelper calls `disconnect_sync_peer()`
+					// TODO: broadcast `SyncDisconnected` event
 					futures::executor::block_on(self.sync_handle.custom_protocol_close(peer_id))
 				} else if self.bad_handshake_substreams.remove(&(peer_id, set_id)) {
 					// The substream that has just been closed had been opened with a bad
