@@ -168,6 +168,7 @@ impl Metrics {
 #[derive(Debug, PartialEq, Eq)]
 enum PeerStatus {
 	Accepted,
+	Disconnecting,
 }
 
 struct NewPeerInfo {
@@ -456,6 +457,15 @@ where
 	pub fn set_sync_handshake(&mut self, handshake_message: impl Into<Vec<u8>>) {
 		self.behaviour
 			.set_notif_protocol_handshake(HARDCODED_PEERSETS_SYNC, handshake_message);
+	}
+
+	pub fn disconnect_sync_peer(&mut self, who: PeerId) {
+		match self.peers.remove(&who) {
+			Some(peer) => {
+				self.pending_messages.push_back(CustomMessageOutcome::SyncDisconnected(who));
+			},
+			None => panic!("trying to disconnect peers who doesn't exist"),
+		}
 	}
 
 	/// Adjusts the reputation of a node.
@@ -879,15 +889,16 @@ where
 				// Set number 0 is hardcoded the default set of peers we sync from.
 				// TODO: remove hardcoded peerset entry
 				if set_id == HARDCODED_PEERSETS_SYNC {
-					if let None = self.peers.remove(&peer_id) {
-						panic!("tried to disconnect peer who doesn't not exist");
+					match self.peers.get_mut(&peer_id) {
+						Some(peer) => {
+							peer.status = PeerStatus::Disconnecting;
+							CustomMessageOutcome::NotificationStreamClosed {
+								remote: peer_id,
+								protocol: self.block_announces_protocol_name.clone(),
+							}
+						},
+						None => panic!("tried to disconnect peer who doesn't not exist"),
 					}
-
-					// TODO: set peer state to disconnecting
-					// TODO: send event to SyncingHelper to close the connection
-					// TODO: wait until SyncingHelper calls `disconnect_sync_peer()`
-					// TODO: broadcast `SyncDisconnected` event
-					futures::executor::block_on(self.sync_handle.custom_protocol_close(peer_id))
 				} else if self.bad_handshake_substreams.remove(&(peer_id, set_id)) {
 					// The substream that has just been closed had been opened with a bad
 					// handshake. The outer layers have never received an opening event about this

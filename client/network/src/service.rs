@@ -1014,6 +1014,10 @@ where
 	fn sync_num_connected(&self) -> usize {
 		self.num_connected.load(Ordering::Relaxed)
 	}
+
+	fn disconnect_sync_peer(&self, peer: PeerId) {
+		let _ = self.to_worker.unbounded_send(ServiceToWorkerMsg::DisconnectSyncPeer(peer));
+	}
 }
 
 impl<B, H> NetworkEventStream for NetworkService<B, H>
@@ -1256,6 +1260,7 @@ enum ServiceToWorkerMsg<B: BlockT> {
 	DisconnectPeer(PeerId, ProtocolName),
 	NewBestBlockImported(B::Hash, NumberFor<B>),
 	SetSyncHandshake(Vec<u8>),
+	DisconnectSyncPeer(PeerId),
 }
 
 /// Main network worker. Must be polled in order for the network to advance.
@@ -1423,6 +1428,11 @@ where
 					.behaviour_mut()
 					.user_protocol_mut()
 					.set_sync_handshake(handshake),
+				ServiceToWorkerMsg::DisconnectSyncPeer(peer) => this
+					.network_service
+					.behaviour_mut()
+					.user_protocol_mut()
+					.disconnect_sync_peer(peer),
 				_ => {
 					todo!()
 				},

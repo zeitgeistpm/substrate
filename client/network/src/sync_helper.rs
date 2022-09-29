@@ -33,7 +33,7 @@ use sc_network_common::{
 	config::ProtocolId,
 	protocol::{event::Event, ProtocolName},
 	request_responses::{IfDisconnected, RequestFailure},
-	service::{NetworkEventStream, NetworkRequest},
+	service::{NetworkEventStream, NetworkPeers, NetworkRequest},
 	sync::{
 		message::{
 			BlockAnnounce, BlockAttributes, BlockData, BlockRequest, BlockResponse, BlockState,
@@ -122,7 +122,7 @@ impl<B, Client, N> SyncingHelper<B, Client, N>
 where
 	B: BlockT,
 	Client: HeaderBackend<B> + 'static,
-	N: NetworkRequest + NetworkEventStream,
+	N: NetworkRequest + NetworkEventStream + NetworkPeers,
 {
 	pub fn new(
 		chain_sync: Box<dyn ChainSync<B>>,
@@ -530,7 +530,8 @@ where
 
 	pub fn custom_protocol_close(&mut self, peer: PeerId) -> CustomMessageOutcome<B> {
 		if self.on_sync_peer_disconnected(peer).is_ok() {
-			CustomMessageOutcome::SyncDisconnected(peer)
+			self.service.as_ref().unwrap().disconnect_sync_peer(peer);
+			CustomMessageOutcome::None
 		} else {
 			log::trace!(
 				target: "sync",
@@ -1100,6 +1101,20 @@ where
 				network_event = futures::StreamExt::next(&mut event_stream).fuse() => {
 					if let Some(network_event) = network_event {
 						match network_event {
+							Event::NotificationStreamClosed { remote, protocol } => {
+								if protocol != self.block_announces_protocol_name {
+									continue
+								}
+
+								self.custom_protocol_close(remote);
+							}
+							Event::NotificationsReceived { remote, messages } => {
+								for (protocol, message) in messages {
+									if protocol != self.block_announces_protocol_name {
+										continue
+									}
+								}
+							}
 							_ => {},
 						}
 					} else {
