@@ -22,7 +22,7 @@ use crate::{
 	config::MultiaddrWithPeerId,
 	protocol::{event::Event, ProtocolName},
 	request_responses::{IfDisconnected, RequestFailure},
-	sync::{warp::WarpSyncProgress, StateDownloadProgress, SyncState},
+	sync::{message::Roles, warp::WarpSyncProgress, StateDownloadProgress, SyncState},
 };
 use futures::{channel::oneshot, Stream};
 pub use libp2p::{identity::error::SigningError, kad::record::Key as KademliaKey};
@@ -143,6 +143,11 @@ where
 	}
 }
 
+pub enum PeerValidationResult {
+	Accepted(Roles),
+	Rejected,
+}
+
 /// Provides low-level API for manipulating network peers.
 pub trait NetworkPeers {
 	/// Set authorized peers.
@@ -252,6 +257,9 @@ pub trait NetworkPeers {
 
 	/// Disconnect sync peer
 	fn disconnect_sync_peer(&self, peer: PeerId);
+
+	/// Report peer validation result
+	fn report_peer_validation_result(&self, peer: PeerId, result: PeerValidationResult);
 }
 
 // Manual implementation to avoid extra boxing here
@@ -334,6 +342,10 @@ where
 
 	fn disconnect_sync_peer(&self, peer: PeerId) {
 		T::disconnect_sync_peer(&self, peer)
+	}
+
+	fn report_peer_validation_result(&self, peer: PeerId, result: PeerValidationResult) {
+		T::report_peer_validation_result(self, peer, result)
 	}
 }
 

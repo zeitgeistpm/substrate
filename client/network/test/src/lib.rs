@@ -48,7 +48,7 @@ use sc_consensus::{
 	Verifier,
 };
 use sc_network::{
-	config::{NetworkConfiguration, Role, SyncMode},
+	config::{NetworkConfiguration, SyncMode},
 	Multiaddr, NetworkService, NetworkWorker,
 };
 use sc_network_common::{
@@ -57,7 +57,10 @@ use sc_network_common::{
 	},
 	protocol::ProtocolName,
 	service::{NetworkBlock, NetworkStateInfo, NetworkSyncForkRequest},
-	sync::warp::{AuthorityList, EncodedProof, SetId, VerificationResult, WarpSyncProvider},
+	sync::{
+		message::Role,
+		warp::{AuthorityList, EncodedProof, SetId, VerificationResult, WarpSyncProvider},
+	},
 };
 use sc_network_light::light_client_requests::handler::LightClientRequestHandler;
 use sc_network_sync::{

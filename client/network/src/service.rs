@@ -34,10 +34,7 @@ use crate::{
 	network_state::{
 		NetworkState, NotConnectedPeer as NetworkStateNotConnectedPeer, Peer as NetworkStatePeer,
 	},
-	protocol::{
-		self, message::generic::Roles, NotificationsSink, NotifsHandlerError, PeerInfo, Protocol,
-		Ready,
-	},
+	protocol::{self, NotificationsSink, NotifsHandlerError, PeerInfo, Protocol, Ready},
 	sync_helper, transport, ReputationChange,
 };
 
@@ -70,9 +67,10 @@ use sc_network_common::{
 		NetworkDHTProvider, NetworkEventStream, NetworkNotification, NetworkPeers, NetworkSigner,
 		NetworkStateInfo, NetworkStatus, NetworkStatusProvider, NetworkSyncForkRequest,
 		NotificationSender as NotificationSenderT, NotificationSenderError,
-		NotificationSenderReady as NotificationSenderReadyT, Signature, SigningError,
+		NotificationSenderReady as NotificationSenderReadyT, PeerValidationResult, Signature,
+		SigningError,
 	},
-	sync::{SyncState, SyncStatus},
+	sync::{message::Roles, SyncState, SyncStatus},
 	ExHashT,
 };
 use sc_peerset::PeersetHandle;
@@ -1018,6 +1016,12 @@ where
 	fn disconnect_sync_peer(&self, peer: PeerId) {
 		let _ = self.to_worker.unbounded_send(ServiceToWorkerMsg::DisconnectSyncPeer(peer));
 	}
+
+	fn report_peer_validation_result(&self, peer: PeerId, result: PeerValidationResult) {
+		let _ = self
+			.to_worker
+			.unbounded_send(ServiceToWorkerMsg::ReportValidationResult(peer, result));
+	}
 }
 
 impl<B, H> NetworkEventStream for NetworkService<B, H>
@@ -1261,6 +1265,7 @@ enum ServiceToWorkerMsg<B: BlockT> {
 	NewBestBlockImported(B::Hash, NumberFor<B>),
 	SetSyncHandshake(Vec<u8>),
 	DisconnectSyncPeer(PeerId),
+	ReportValidationResult(PeerId, PeerValidationResult),
 }
 
 /// Main network worker. Must be polled in order for the network to advance.
@@ -1433,6 +1438,11 @@ where
 					.behaviour_mut()
 					.user_protocol_mut()
 					.disconnect_sync_peer(peer),
+				ServiceToWorkerMsg::ReportValidationResult(peer, result) => this
+					.network_service
+					.behaviour_mut()
+					.user_protocol_mut()
+					.report_peer_validation_result(peer, result),
 				_ => {
 					todo!()
 				},
@@ -1661,6 +1671,17 @@ where
 				},
 				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::SyncDisconnected(remote))) => {
 					this.event_streams.send(Event::SyncDisconnected { remote });
+				},
+				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::PeerConnected {
+					peer_id,
+					received_handshake,
+					negotiated_fallback,
+				})) => {
+					this.event_streams.send(Event::PeerConnected {
+						peer_id,
+						received_handshake,
+						negotiated_fallback,
+					});
 				},
 				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::Dht(event, duration))) => {
 					if let Some(metrics) = this.metrics.as_ref() {

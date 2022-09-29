@@ -22,8 +22,10 @@ use crate::config::Configuration;
 use futures_timer::Delay;
 use prometheus_endpoint::{register, Gauge, GaugeVec, Opts, PrometheusError, Registry, U64};
 use sc_client_api::{ClientInfo, UsageProvider};
-use sc_network::config::Role;
-use sc_network_common::service::{NetworkStatus, NetworkStatusProvider};
+use sc_network_common::{
+	service::{NetworkStatus, NetworkStatusProvider},
+	sync::message::Role,
+};
 use sc_telemetry::{telemetry, TelemetryHandle, SUBSTRATE_INFO};
 use sc_transaction_pool_api::{MaintainedTransactionPool, PoolStatus};
 use sc_utils::metrics::register_globals;

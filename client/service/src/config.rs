@@ -24,7 +24,7 @@ pub use sc_executor::WasmExecutionMethod;
 #[cfg(feature = "wasmtime")]
 pub use sc_executor::WasmtimeInstantiationStrategy;
 pub use sc_network::{
-	config::{NetworkConfiguration, NodeKeyConfig, Role},
+	config::{NetworkConfiguration, NodeKeyConfig},
 	Multiaddr,
 };
 pub use sc_network_common::{
@@ -32,6 +32,7 @@ pub use sc_network_common::{
 	request_responses::{
 		IncomingRequest, OutgoingResponse, ProtocolConfig as RequestResponseConfig,
 	},
+	sync::message::Role,
 };
 
 use prometheus_endpoint::Registry;

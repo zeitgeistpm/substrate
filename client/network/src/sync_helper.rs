@@ -19,10 +19,7 @@ use libp2p::{
 	Multiaddr, PeerId,
 };
 use log::{debug, error, info, log, trace, warn, Level};
-use message::{
-	generic::{Message as GenericMessage, Roles},
-	Message,
-};
+use message::{generic::Message as GenericMessage, Message};
 use prometheus_endpoint::{register, Gauge, GaugeVec, Opts, PrometheusError, Registry, U64};
 use sc_client_api::HeaderBackend;
 use sc_consensus::{
@@ -33,10 +30,11 @@ use sc_network_common::{
 	config::ProtocolId,
 	protocol::{event::Event, ProtocolName},
 	request_responses::{IfDisconnected, RequestFailure},
-	service::{NetworkEventStream, NetworkPeers, NetworkRequest},
+	service::{NetworkEventStream, NetworkPeers, NetworkRequest, PeerValidationResult},
 	sync::{
 		message::{
 			BlockAnnounce, BlockAttributes, BlockData, BlockRequest, BlockResponse, BlockState,
+			Roles,
 		},
 		warp::{EncodedProof, WarpProofRequest},
 		BadPeer, ChainSync, OnBlockData, OnBlockJustification, OnStateData, OpaqueBlockRequest,
@@ -547,9 +545,8 @@ where
 		&mut self,
 		peer_id: PeerId,
 		received_handshake: Vec<u8>,
-		notifications_sink: NotificationsSink,
 		negotiated_fallback: Option<ProtocolName>,
-	) -> CustomMessageOutcome<B> {
+	) {
 		match <Message<B> as DecodeAll>::decode_all(&mut &received_handshake[..]) {
 			Ok(GenericMessage::Status(handshake)) => {
 				let handshake = BlockAnnouncesHandshake {
@@ -559,9 +556,17 @@ where
 					genesis_hash: handshake.genesis_hash,
 				};
 
+				let roles = handshake.roles;
 				match self.on_sync_peer_connected(peer_id, handshake) {
-					Ok(msg) => CustomMessageOutcome::SyncConnected(peer_id),
-					Err(_) => CustomMessageOutcome::None,
+					Ok(msg) =>
+						if let Some(service) = &self.service {
+							service.report_peer_validation_result(
+								peer_id,
+								PeerValidationResult::Accepted(roles),
+							);
+						},
+					// Ok(msg) => CustomMessageOutcome::SyncConnected(peer_id),
+					Err(_) => {}, //CustomMessageOutcome::None,
 				}
 			},
 			Ok(msg) => {
@@ -572,15 +577,25 @@ where
 					msg,
 				);
 				self.report_peer(peer_id, rep::BAD_MESSAGE);
-				CustomMessageOutcome::None
+				// CustomMessageOutcome::None
 			},
 			Err(err) => {
 				match <BlockAnnouncesHandshake<B> as DecodeAll>::decode_all(
 					&mut &received_handshake[..],
 				) {
-					Ok(handshake) => match self.on_sync_peer_connected(peer_id, handshake) {
-						Ok(msg) => CustomMessageOutcome::SyncConnected(peer_id),
-						Err(_) => CustomMessageOutcome::None,
+					Ok(handshake) => {
+						let roles = handshake.roles;
+						match self.on_sync_peer_connected(peer_id, handshake) {
+							Ok(msg) =>
+								if let Some(service) = &self.service {
+									service.report_peer_validation_result(
+										peer_id,
+										PeerValidationResult::Accepted(roles),
+									);
+								},
+							// Ok(msg) => CustomMessageOutcome::SyncConnected(peer_id),
+							Err(_) => {}, //CustomMessageOutcome::None,
+						}
 					},
 					Err(err2) => {
 						debug!(
@@ -592,7 +607,7 @@ where
 							err2,
 						);
 						self.report_peer(peer_id, rep::BAD_MESSAGE);
-						CustomMessageOutcome::None
+						// CustomMessageOutcome::None
 					},
 				}
 			},
@@ -1021,20 +1036,6 @@ where
 			SyncEvent::CustomProtocolClosed(peer_id, channel_response) => {
 				let _ = channel_response.send(self.custom_protocol_close(peer_id));
 			},
-			SyncEvent::CustomProtocolOpen(
-				peer_id,
-				received_handshake,
-				notifications_sink,
-				negotiated_fallback,
-				channel_response,
-			) => {
-				let _ = channel_response.send(self.custom_protocol_open(
-					peer_id,
-					received_handshake,
-					notifications_sink,
-					negotiated_fallback,
-				));
-			},
 			SyncEvent::GetEvents(channel_response) => {
 				let _ = channel_response.send(std::mem::take(&mut self.pending_messages));
 			},
@@ -1103,6 +1104,9 @@ where
 				network_event = futures::StreamExt::next(&mut event_stream).fuse() => {
 					if let Some(network_event) = network_event {
 						match network_event {
+							Event::PeerConnected { peer_id, received_handshake, negotiated_fallback, } => {
+								self.custom_protocol_open(peer_id, received_handshake, negotiated_fallback);
+							}
 							Event::NotificationStreamClosed { remote, protocol } => {
 								if protocol != self.block_announces_protocol_name {
 									continue
@@ -1202,13 +1206,6 @@ pub enum SyncEvent<B: BlockT> {
 	EncodeStateRequest(OpaqueStateRequest, oneshot::Sender<Result<Vec<u8>, String>>),
 	GetPeers(oneshot::Sender<Vec<(PeerId, Peer<B>)>>),
 	CustomProtocolClosed(PeerId, oneshot::Sender<CustomMessageOutcome<B>>),
-	CustomProtocolOpen(
-		PeerId,
-		Vec<u8>,
-		NotificationsSink,
-		Option<ProtocolName>,
-		oneshot::Sender<CustomMessageOutcome<B>>,
-	),
 	GetEvents(oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>),
 	Notification(PeerId, bytes::BytesMut, oneshot::Sender<CustomMessageOutcome<B>>),
 	GetHandshake(B::Hash, NumberFor<B>, oneshot::Sender<Vec<u8>>),
@@ -1385,28 +1382,6 @@ impl<B: BlockT> SyncingHandle<B> {
 		self.tx
 			.unbounded_send(SyncEvent::CustomProtocolClosed(peer, tx))
 			.expect("channel to stay open");
-		rx.await.expect("channel to stay open")
-	}
-
-	pub async fn custom_protocol_open(
-		&self,
-		peer_id: PeerId,
-		received_handshake: Vec<u8>,
-		notifications_sink: NotificationsSink,
-		negotiated_fallback: Option<ProtocolName>,
-	) -> CustomMessageOutcome<B> {
-		let (tx, rx) = oneshot::channel();
-
-		self.tx
-			.unbounded_send(SyncEvent::CustomProtocolOpen(
-				peer_id,
-				received_handshake,
-				notifications_sink,
-				negotiated_fallback,
-				tx,
-			))
-			.expect("channel to stay open");
-
 		rx.await.expect("channel to stay open")
 	}
 

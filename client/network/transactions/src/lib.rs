@@ -356,8 +356,10 @@ where
 				}
 			},
 
+			_ => {},
 			// Not our concern.
-			Event::NotificationStreamOpened { .. } | Event::NotificationStreamClosed { .. } => {},
+			// Event::NotificationStreamOpened { .. } | Event::NotificationStreamClosed { .. } =>
+			// {},
 		}
 	}
 

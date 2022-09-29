@@ -33,10 +33,7 @@ use libp2p::{
 	Multiaddr, PeerId,
 };
 use log::{debug, error, info, log, trace, warn, Level};
-use message::{
-	generic::{Message as GenericMessage, Roles},
-	Message,
-};
+use message::{generic::Message as GenericMessage, Message};
 use notifications::{Notifications, NotificationsOut};
 use prometheus_endpoint::{register, Gauge, GaugeVec, Opts, PrometheusError, Registry, U64};
 use sc_client_api::HeaderBackend;
@@ -48,9 +45,11 @@ use sc_network_common::{
 	error,
 	protocol::ProtocolName,
 	request_responses::RequestFailure,
+	service::PeerValidationResult,
 	sync::{
 		message::{
 			BlockAnnounce, BlockAttributes, BlockData, BlockRequest, BlockResponse, BlockState,
+			Roles,
 		},
 		warp::{EncodedProof, WarpProofRequest},
 		BadPeer, ChainSync, OnBlockData, OnBlockJustification, OnStateData, OpaqueBlockRequest,
@@ -167,6 +166,7 @@ impl Metrics {
 
 #[derive(Debug, PartialEq, Eq)]
 enum PeerStatus {
+	OnProbation,
 	Accepted,
 	Disconnecting,
 }
@@ -468,6 +468,22 @@ where
 		}
 	}
 
+	pub fn report_peer_validation_result(&mut self, peer: PeerId, result: PeerValidationResult) {
+		match result {
+			PeerValidationResult::Accepted(roles) => {
+				if let Some(peer) = self.peers.get_mut(&peer) {
+					peer.status = PeerStatus::Accepted;
+					peer.roles = Some(roles);
+				}
+
+				self.pending_messages.push_back(CustomMessageOutcome::SyncConnected(peer));
+			},
+			PeerValidationResult::Rejected => {
+				self.peers.remove(&peer);
+			},
+		}
+	}
+
 	/// Adjusts the reputation of a node.
 	pub fn report_peer(&self, who: PeerId, reputation: sc_peerset::ReputationChange) {
 		self.peerset_handle.report_peer(who, reputation)
@@ -671,6 +687,11 @@ where
 pub enum CustomMessageOutcome<B: BlockT> {
 	BlockImport(BlockOrigin, Vec<IncomingBlock<B>>),
 	JustificationImport(RuntimeOrigin, B::Hash, NumberFor<B>, Justifications),
+	PeerConnected {
+		peer_id: PeerId,
+		received_handshake: Vec<u8>,
+		negotiated_fallback: Option<ProtocolName>,
+	},
 	/// Notification protocols have been opened with a remote.
 	NotificationStreamOpened {
 		remote: PeerId,
@@ -818,20 +839,19 @@ where
 				// Set number 0 is hardcoded the default set of peers we sync from.
 				if set_id == HARDCODED_PEERSETS_SYNC {
 					match self.peers.entry(peer_id) {
-						Vacant(entry) =>
-							entry.insert(NewPeerInfo { status: PeerStatus::Accepted, roles: None }),
+						Vacant(entry) => entry
+							.insert(NewPeerInfo { status: PeerStatus::OnProbation, roles: None }),
 						Occupied(_) => panic!("peer already exists"),
 					};
 
-					futures::executor::block_on(self.sync_handle.custom_protocol_open(
+					CustomMessageOutcome::PeerConnected {
 						peer_id,
 						received_handshake,
-						notifications_sink,
 						negotiated_fallback,
-					))
+					}
 				} else {
 					match (
-						message::Roles::decode_all(&mut &received_handshake[..]),
+						Roles::decode_all(&mut &received_handshake[..]),
 						self.peers.iter().find(|(id, info)| {
 							*id == &peer_id && info.status == PeerStatus::Accepted
 						}),

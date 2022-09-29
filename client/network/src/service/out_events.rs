@@ -247,6 +247,7 @@ impl Metrics {
 					.with_label_values(&["sync-disconnected", "sent", name])
 					.inc_by(num);
 			},
+			Event::PeerConnected { .. } => {},
 			Event::NotificationStreamOpened { protocol, .. } => {
 				format_label("notif-open-", protocol, |protocol_label| {
 					self.events_total
@@ -288,6 +289,7 @@ impl Metrics {
 					.with_label_values(&["sync-disconnected", "received", name])
 					.inc();
 			},
+			Event::PeerConnected { .. } => {},
 			Event::NotificationStreamOpened { protocol, .. } => {
 				format_label("notif-open-", protocol, |protocol_label| {
 					self.events_total.with_label_values(&[protocol_label, "received", name]).inc();
