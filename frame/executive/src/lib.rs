@@ -459,7 +459,8 @@ where
 		let max_weight = <System::BlockWeights as frame_support::traits::Get<_>>::get().max_block;
 		let remaining_weight = max_weight.saturating_sub(weight.total());
 
-		if remaining_weight.all_gt(Weight::zero()) {
+		// TODO: account for proof size weight
+		if remaining_weight.ref_time() > 0 {
 			let used_weight = <AllPalletsWithSystem as OnIdle<System::BlockNumber>>::on_idle(
 				block_number,
 				remaining_weight,
@@ -767,7 +768,7 @@ mod tests {
 			frame_system::limits::BlockWeights::builder()
 				.base_block(Weight::from_ref_time(10))
 				.for_class(DispatchClass::all(), |weights| weights.base_extrinsic = Weight::from_ref_time(5))
-				.for_class(DispatchClass::non_mandatory(), |weights| weights.max_total = Weight::from_ref_time(1024).set_proof_size(u64::MAX).into())
+				.for_class(DispatchClass::non_mandatory(), |weights| weights.max_total = Weight::from_ref_time(1024).into())
 				.build_or_panic();
 		pub const DbWeight: RuntimeDbWeight = RuntimeDbWeight {
 			read: 10,

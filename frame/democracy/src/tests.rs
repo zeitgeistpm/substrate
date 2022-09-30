@@ -78,9 +78,7 @@ impl Contains<RuntimeCall> for BaseFilter {
 
 parameter_types! {
 	pub BlockWeights: frame_system::limits::BlockWeights =
-		frame_system::limits::BlockWeights::simple_max(
-			Weight::from_ref_time(1_000_000).set_proof_size(u64::MAX),
-		);
+		frame_system::limits::BlockWeights::simple_max(Weight::from_ref_time(1_000_000));
 }
 impl frame_system::Config for Test {
 	type BaseCallFilter = BaseFilter;

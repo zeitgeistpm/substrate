@@ -279,9 +279,7 @@ impl RegisteredChainExtension<Test> for TempStorageExtension {
 
 parameter_types! {
 	pub BlockWeights: frame_system::limits::BlockWeights =
-		frame_system::limits::BlockWeights::simple_max(
-			(2u64 * WEIGHT_PER_SECOND).set_proof_size(u64::MAX),
-		);
+		frame_system::limits::BlockWeights::simple_max(2u64 * WEIGHT_PER_SECOND);
 	pub static ExistentialDeposit: u64 = 1;
 }
 impl frame_system::Config for Test {
@@ -415,7 +413,7 @@ pub const BOB: AccountId32 = AccountId32::new([2u8; 32]);
 pub const CHARLIE: AccountId32 = AccountId32::new([3u8; 32]);
 pub const DJANGO: AccountId32 = AccountId32::new([4u8; 32]);
 
-pub const GAS_LIMIT: Weight = Weight::from_ref_time(100_000_000_000).set_proof_size(u64::MAX);
+pub const GAS_LIMIT: Weight = Weight::from_ref_time(100_000_000_000);
 
 pub struct ExtBuilder {
 	existential_deposit: u64,
@@ -630,7 +628,7 @@ fn deposit_event_max_value_limit() {
 			RuntimeOrigin::signed(ALICE),
 			addr.clone(),
 			0,
-			GAS_LIMIT.set_ref_time(GAS_LIMIT.ref_time() * 2), // we are copying a huge buffer,
+			GAS_LIMIT * 2, // we are copying a huge buffer,
 			None,
 			<Test as Config>::Schedule::get().limits.payload_len.encode(),
 		));
@@ -771,7 +769,7 @@ fn storage_max_value_limit() {
 			RuntimeOrigin::signed(ALICE),
 			addr.clone(),
 			0,
-			GAS_LIMIT.set_ref_time(GAS_LIMIT.ref_time() * 2), // we are copying a huge buffer
+			GAS_LIMIT * 2, // we are copying a huge buffer
 			None,
 			<Test as Config>::Schedule::get().limits.payload_len.encode(),
 		));
@@ -2545,7 +2543,7 @@ fn gas_estimation_nested_call_fixed_limit() {
 				ALICE,
 				addr_caller,
 				0,
-				Weight::from_ref_time(result.gas_required).set_proof_size(u64::MAX),
+				Weight::from_ref_time(result.gas_required),
 				Some(result.storage_deposit.charge_or_zero()),
 				input,
 				false,
@@ -2615,7 +2613,7 @@ fn gas_estimation_call_runtime() {
 				ALICE,
 				addr_caller,
 				0,
-				Weight::from_ref_time(result.gas_required).set_proof_size(u64::MAX),
+				Weight::from_ref_time(result.gas_required),
 				None,
 				call.encode(),
 				false,
