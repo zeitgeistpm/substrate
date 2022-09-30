@@ -2265,6 +2265,27 @@
 <span id="2259">2259</span>
 <span id="2260">2260</span>
 <span id="2261">2261</span>
+<span id="2262">2262</span>
+<span id="2263">2263</span>
+<span id="2264">2264</span>
+<span id="2265">2265</span>
+<span id="2266">2266</span>
+<span id="2267">2267</span>
+<span id="2268">2268</span>
+<span id="2269">2269</span>
+<span id="2270">2270</span>
+<span id="2271">2271</span>
+<span id="2272">2272</span>
+<span id="2273">2273</span>
+<span id="2274">2274</span>
+<span id="2275">2275</span>
+<span id="2276">2276</span>
+<span id="2277">2277</span>
+<span id="2278">2278</span>
+<span id="2279">2279</span>
+<span id="2280">2280</span>
+<span id="2281">2281</span>
+<span id="2282">2282</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -4278,10 +4299,7 @@
 		}
 	}
 
-	<span class="kw">impl</span> <span class="ident">pallet_mmr::primitives::MmrApi</span><span class="op">&lt;</span>
-		<span class="ident">Block</span>,
-		<span class="ident">mmr::Hash</span>,
-	<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Runtime</span> {
+	<span class="kw">impl</span> <span class="ident">pallet_mmr::primitives::MmrApi</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">mmr::Hash</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Runtime</span> {
 		<span class="kw">fn</span> <span class="ident">generate_proof</span>(<span class="ident">leaf_index</span>: <span class="ident">pallet_mmr::primitives::LeafIndex</span>)
 			-&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">mmr::EncodableOpaqueLeaf</span>, <span class="ident">mmr::Proof</span><span class="op">&lt;</span><span class="ident">mmr::Hash</span><span class="op">&gt;</span>), <span class="ident">mmr::Error</span><span class="op">&gt;</span>
 		{
@@ -4316,11 +4334,35 @@
 			<span class="prelude-val">Ok</span>(<span class="ident">Mmr::mmr_root</span>())
 		}
 
-		<span class="kw">fn</span> <span class="ident">generate_batch_proof</span>(<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">pallet_mmr::primitives::LeafIndex</span><span class="op">&gt;</span>)
-			-&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">mmr::EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">mmr::BatchProof</span><span class="op">&lt;</span><span class="ident">mmr::Hash</span><span class="op">&gt;</span>), <span class="ident">mmr::Error</span><span class="op">&gt;</span>
-		{
-			<span class="ident">Mmr::generate_batch_proof</span>(<span class="ident">leaf_indices</span>)
-				.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">leaves</span>, <span class="ident">proof</span>)<span class="op">|</span> (<span class="ident">leaves</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">leaf</span><span class="op">|</span> <span class="ident">mmr::EncodableOpaqueLeaf::from_leaf</span>(<span class="kw-2">&amp;</span><span class="ident">leaf</span>)).<span class="ident">collect</span>(), <span class="ident">proof</span>))
+		<span class="kw">fn</span> <span class="ident">generate_batch_proof</span>(
+			<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">pallet_mmr::primitives::LeafIndex</span><span class="op">&gt;</span>,
+		) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">mmr::EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">mmr::BatchProof</span><span class="op">&lt;</span><span class="ident">mmr::Hash</span><span class="op">&gt;</span>), <span class="ident">mmr::Error</span><span class="op">&gt;</span> {
+			<span class="ident">Mmr::generate_batch_proof</span>(<span class="ident">leaf_indices</span>).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">leaves</span>, <span class="ident">proof</span>)<span class="op">|</span> {
+				(
+					<span class="ident">leaves</span>
+						.<span class="ident">into_iter</span>()
+						.<span class="ident">map</span>(<span class="op">|</span><span class="ident">leaf</span><span class="op">|</span> <span class="ident">mmr::EncodableOpaqueLeaf::from_leaf</span>(<span class="kw-2">&amp;</span><span class="ident">leaf</span>))
+						.<span class="ident">collect</span>(),
+					<span class="ident">proof</span>,
+				)
+			})
+		}
+
+		<span class="kw">fn</span> <span class="ident">generate_historical_batch_proof</span>(
+			<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">pallet_mmr::primitives::LeafIndex</span><span class="op">&gt;</span>,
+			<span class="ident">leaves_count</span>: <span class="ident">pallet_mmr::primitives::LeafIndex</span>,
+		) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">mmr::EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">mmr::BatchProof</span><span class="op">&lt;</span><span class="ident">mmr::Hash</span><span class="op">&gt;</span>), <span class="ident">mmr::Error</span><span class="op">&gt;</span> {
+			<span class="ident">Mmr::generate_historical_batch_proof</span>(<span class="ident">leaf_indices</span>, <span class="ident">leaves_count</span>).<span class="ident">map</span>(
+				<span class="op">|</span>(<span class="ident">leaves</span>, <span class="ident">proof</span>)<span class="op">|</span> {
+					(
+						<span class="ident">leaves</span>
+							.<span class="ident">into_iter</span>()
+							.<span class="ident">map</span>(<span class="op">|</span><span class="ident">leaf</span><span class="op">|</span> <span class="ident">mmr::EncodableOpaqueLeaf::from_leaf</span>(<span class="kw-2">&amp;</span><span class="ident">leaf</span>))
+							.<span class="ident">collect</span>(),
+						<span class="ident">proof</span>,
+					)
+				},
+			)
 		}
 
 		<span class="kw">fn</span> <span class="ident">verify_batch_proof</span>(<span class="ident">leaves</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">mmr::EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">proof</span>: <span class="ident">mmr::BatchProof</span><span class="op">&lt;</span><span class="ident">mmr::Hash</span><span class="op">&gt;</span>)

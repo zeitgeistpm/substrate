@@ -372,6 +372,26 @@
 <span id="366">366</span>
 <span id="367">367</span>
 <span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -704,7 +724,27 @@
 		(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">primitives::BatchProof</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span>),
 		<span class="ident">primitives::Error</span>,
 	<span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">mmr</span>: <span class="ident">ModuleMmr</span><span class="op">&lt;</span><span class="ident">mmr::storage::OffchainStorage</span>, <span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">mmr::Mmr::new</span>(<span class="ident"><span class="self">Self</span>::mmr_leaves</span>());
+		<span class="ident"><span class="self">Self</span>::generate_historical_batch_proof</span>(<span class="ident">leaf_indices</span>, <span class="ident"><span class="self">Self</span>::mmr_leaves</span>())
+	}
+
+	<span class="doccomment">/// Generate a MMR proof for the given `leaf_indices` for the MMR of `leaves_count` size.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Note this method can only be used from an off-chain context</span>
+	<span class="doccomment">/// (Offchain Worker or Runtime API call), since it requires</span>
+	<span class="doccomment">/// all the leaves to be present.</span>
+	<span class="doccomment">/// It may return an error or panic if used incorrectly.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_historical_batch_proof</span>(
+		<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafIndex</span><span class="op">&gt;</span>,
+		<span class="ident">leaves_count</span>: <span class="ident">LeafIndex</span>,
+	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>
+		(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">primitives::BatchProof</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span>),
+		<span class="ident">primitives::Error</span>,
+	<span class="op">&gt;</span> {
+		<span class="kw">if</span> <span class="ident">leaves_count</span> <span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::mmr_leaves</span>() {
+			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::InvalidLeavesCount</span>)
+		}
+
+		<span class="kw">let</span> <span class="ident">mmr</span>: <span class="ident">ModuleMmr</span><span class="op">&lt;</span><span class="ident">mmr::storage::OffchainStorage</span>, <span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">mmr::Mmr::new</span>(<span class="ident">leaves_count</span>);
 		<span class="ident">mmr</span>.<span class="ident">generate_batch_proof</span>(<span class="ident">leaf_indices</span>)
 	}
 

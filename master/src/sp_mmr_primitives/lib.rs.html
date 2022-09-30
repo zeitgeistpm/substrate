@@ -667,6 +667,15 @@
 <span id="661">661</span>
 <span id="662">662</span>
 <span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -1071,6 +1080,8 @@
 	<span class="ident">PalletNotIncluded</span>,
 	<span class="doccomment">/// Cannot find the requested leaf index</span>
 	<span class="ident">InvalidLeafIndex</span>,
+	<span class="doccomment">/// The provided leaves count is larger than the actual leaves count.</span>
+	<span class="ident">InvalidLeavesCount</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> {
@@ -1124,7 +1135,14 @@
 		<span class="kw">fn</span> <span class="ident">mmr_root</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Hash</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
 		<span class="doccomment">/// Generate MMR proof for a series of leaves under given indices.</span>
-		<span class="kw">fn</span> <span class="ident">generate_batch_proof</span>(<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafIndex</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
+		<span class="kw">fn</span> <span class="ident">generate_batch_proof</span>(<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafIndex</span><span class="op">&gt;</span>)
+			-&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
+
+		<span class="doccomment">/// Generate MMR proof for a series of leaves under given indices, using MMR at given `leaves_count` size.</span>
+		<span class="kw">fn</span> <span class="ident">generate_historical_batch_proof</span>(
+			<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafIndex</span><span class="op">&gt;</span>,
+			<span class="ident">leaves_count</span>: <span class="ident">LeafIndex</span>
+		) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
 
 		<span class="doccomment">/// Verify MMR proof against on-chain MMR for a batch of leaves.</span>
 		<span class="doccomment">///</span>
