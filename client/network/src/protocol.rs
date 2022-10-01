@@ -16,62 +16,34 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-#![allow(unused)]
-use crate::{config, sync_helper};
+use crate::config;
 
 use bytes::Bytes;
-use codec::{Decode, DecodeAll, Encode};
-use futures::{channel::oneshot, prelude::*, stream::Stream};
-use futures_lite::stream::StreamExt;
+use codec::DecodeAll;
+use futures::stream::Stream;
 use libp2p::{
 	core::{connection::ConnectionId, transport::ListenerId, ConnectedPoint},
-	request_response::OutboundFailure,
 	swarm::{
 		ConnectionHandler, IntoConnectionHandler, NetworkBehaviour, NetworkBehaviourAction,
 		PollParameters,
 	},
 	Multiaddr, PeerId,
 };
-use log::{debug, error, info, log, trace, warn, Level};
-use message::{generic::Message as GenericMessage, Message};
+use log::{debug, error, warn};
 use notifications::{Notifications, NotificationsOut};
-use prometheus_endpoint::{register, Gauge, GaugeVec, Opts, PrometheusError, Registry, U64};
+use prometheus_endpoint::Registry;
 use sc_client_api::HeaderBackend;
-use sc_consensus::import_queue::{
-	BlockImportError, BlockImportStatus, IncomingBlock, RuntimeOrigin,
-};
 use sc_network_common::{
-	config::{NonReservedPeerMode, ProtocolId},
-	error,
-	protocol::ProtocolName,
-	request_responses::RequestFailure,
-	service::PeerValidationResult,
-	sync::{
-		message::{
-			BlockAnnounce, BlockAttributes, BlockData, BlockRequest, BlockResponse, BlockState,
-			Roles,
-		},
-		warp::{EncodedProof, WarpProofRequest},
-		BadPeer, ChainSync, OnBlockData, OnBlockJustification, OnStateData, OpaqueBlockRequest,
-		OpaqueBlockResponse, OpaqueStateRequest, OpaqueStateResponse, PollBlockAnnounceValidation,
-		SyncStatus,
-	},
-	utils::{interval, LruHashSet},
+	config::NonReservedPeerMode, error, protocol::ProtocolName, service::PeerValidationResult,
+	sync::message::Roles, utils::interval,
 };
-use sp_arithmetic::traits::SaturatedConversion;
-use sp_consensus::BlockOrigin;
-use sp_runtime::{
-	generic::BlockId,
-	traits::{Block as BlockT, CheckedSub, Header as HeaderT, NumberFor, Zero},
-	Justifications,
-};
+use sp_runtime::traits::Block as BlockT;
 use std::{
 	collections::{
 		hash_map::Entry::{Occupied, Vacant},
 		HashMap, HashSet, VecDeque,
 	},
 	io, iter,
-	num::NonZeroUsize,
 	pin::Pin,
 	sync::Arc,
 	task::Poll,
@@ -127,43 +99,6 @@ pub mod rep {
 	pub const BAD_BLOCK_ANNOUNCEMENT: Rep = Rep::new(-(1 << 12), "Bad block announcement");
 }
 
-struct Metrics {
-	peers: Gauge<U64>,
-	queued_blocks: Gauge<U64>,
-	fork_targets: Gauge<U64>,
-	justifications: GaugeVec<U64>,
-}
-
-impl Metrics {
-	fn register(r: &Registry) -> Result<Self, PrometheusError> {
-		Ok(Self {
-			peers: {
-				let g = Gauge::new("substrate_sync_peers", "Number of peers we sync with")?;
-				register(g, r)?
-			},
-			queued_blocks: {
-				let g =
-					Gauge::new("substrate_sync_queued_blocks", "Number of blocks in import queue")?;
-				register(g, r)?
-			},
-			fork_targets: {
-				let g = Gauge::new("substrate_sync_fork_targets", "Number of fork sync targets")?;
-				register(g, r)?
-			},
-			justifications: {
-				let g = GaugeVec::new(
-					Opts::new(
-						"substrate_sync_extra_justifications",
-						"Number of extra justifications requests",
-					),
-					&["status"],
-				)?;
-				register(g, r)?
-			},
-		})
-	}
-}
-
 #[derive(Debug, PartialEq, Eq)]
 enum PeerStatus {
 	OnProbation,
@@ -180,20 +115,17 @@ struct NewPeerInfo {
 // Lock must always be taken in order declared here.
 pub struct Protocol<B: BlockT, Client> {
 	/// Interval at which we call `tick`.
-	tick_timeout: Pin<Box<dyn Stream<Item = ()> + Send>>,
+	_tick_timeout: Pin<Box<dyn Stream<Item = ()> + Send>>,
 	/// Pending list of messages to return from `poll` as a priority.
-	pending_messages: VecDeque<CustomMessageOutcome<B>>,
+	pending_messages: VecDeque<CustomMessageOutcome>,
 	/// Assigned roles.
-	roles: Roles,
-	genesis_hash: B::Hash,
-	// temporary object that performs all Protocol's syncing-related functionality
-	// sync_helper: sync_helper::SyncingHelper<B, Client>,
-	// All connected peers. Contains both full and light node peers.
+	_roles: Roles,
+	/// All connected peers. Contains both full and light node peers.
 	peers: HashMap<PeerId, NewPeerInfo>,
-	chain: Arc<Client>,
+	_chain: Arc<Client>,
 	/// List of nodes for which we perform additional logging because they are important for the
 	/// user.
-	important_peers: HashSet<PeerId>,
+	_important_peers: HashSet<PeerId>,
 	/// Used to report reputation changes.
 	peerset_handle: sc_peerset::PeersetHandle,
 	/// Handles opening the unique substream and sending and receiving raw messages.
@@ -207,64 +139,10 @@ pub struct Protocol<B: BlockT, Client> {
 	/// solve this, an entry is added to this map whenever an invalid handshake is received.
 	/// Entries are removed when the corresponding "substream closed" is later received.
 	bad_handshake_substreams: HashSet<(PeerId, sc_peerset::SetId)>,
-	/// Prometheus metrics.
-	metrics: Option<Metrics>,
 	/// The `PeerId`'s of all boot nodes.
-	boot_node_ids: HashSet<PeerId>,
-	sync_handle: sync_helper::SyncingHandle<B>,
-	counter: usize,
+	_boot_node_ids: HashSet<PeerId>,
 	block_announces_protocol_name: ProtocolName,
-}
-
-#[derive(Debug)]
-pub enum PeerRequest<B: BlockT> {
-	Block(BlockRequest<B>),
-	State,
-	WarpProof,
-}
-
-/// Peer information
-// TODO: remove clone when no longer needed
-#[derive(Debug, Clone)]
-pub struct Peer<B: BlockT> {
-	pub info: PeerInfo<B>,
-	/// Holds a set of blocks known to this peer.
-	pub known_blocks: LruHashSet<B::Hash>,
-}
-
-/// Info about a peer's known state.
-#[derive(Clone, Debug)]
-pub struct PeerInfo<B: BlockT> {
-	/// Roles
-	pub roles: Roles,
-	/// Peer best block hash
-	pub best_hash: B::Hash,
-	/// Peer best block number
-	pub best_number: <B::Header as HeaderT>::Number,
-}
-
-/// Handshake sent when we open a block announces substream.
-#[derive(Debug, PartialEq, Eq, Clone, Encode, Decode)]
-pub struct BlockAnnouncesHandshake<B: BlockT> {
-	/// Roles of the node.
-	pub roles: Roles,
-	/// Best block number.
-	pub best_number: NumberFor<B>,
-	/// Best block hash.
-	pub best_hash: B::Hash,
-	/// Genesis block hash.
-	pub genesis_hash: B::Hash,
-}
-
-impl<B: BlockT> BlockAnnouncesHandshake<B> {
-	pub fn build(
-		roles: Roles,
-		best_number: NumberFor<B>,
-		best_hash: B::Hash,
-		genesis_hash: B::Hash,
-	) -> Self {
-		Self { genesis_hash, roles, best_number, best_hash }
-	}
+	_marker: std::marker::PhantomData<B>, // TODO: remove
 }
 
 impl<B, Client> Protocol<B, Client>
@@ -278,13 +156,10 @@ where
 		chain: Arc<Client>,
 		network_config: &config::NetworkConfiguration,
 		notifications_protocols_handshakes: Vec<Vec<u8>>,
-		metrics_registry: Option<&Registry>,
+		_metrics_registry: Option<&Registry>,
 		sync_protocol_config: notifications::ProtocolConfig,
-		sync_handle: sync_helper::SyncingHandle<B>,
 	) -> error::Result<(Self, sc_peerset::PeersetHandle, Vec<(PeerId, Multiaddr)>)> {
-		let info = chain.info();
-
-		let boot_node_ids = {
+		let _boot_node_ids = {
 			let mut list = HashSet::new();
 			for node in &network_config.boot_nodes {
 				list.insert(node.peer_id);
@@ -293,7 +168,8 @@ where
 			list
 		};
 
-		let important_peers = {
+		// TODO: syncing
+		let _important_peers = {
 			let mut imp_p = HashSet::new();
 			for reserved in &network_config.default_peers_set.reserved_nodes {
 				imp_p.insert(reserved.peer_id);
@@ -309,7 +185,8 @@ where
 			imp_p
 		};
 
-		let default_peers_set_no_slot_peers = {
+		// TODO: move to sync?
+		let _default_peers_set_no_slot_peers = {
 			let mut no_slot_p: HashSet<PeerId> = network_config
 				.default_peers_set
 				.reserved_nodes
@@ -390,12 +267,11 @@ where
 		};
 
 		let protocol = Self {
-			tick_timeout: Box::pin(interval(TICK_TIMEOUT)),
+			_tick_timeout: Box::pin(interval(TICK_TIMEOUT)),
 			pending_messages: VecDeque::new(),
-			roles,
-			chain,
-			genesis_hash: info.genesis_hash,
-			important_peers,
+			_roles: roles,
+			_chain: chain,
+			_important_peers,
 			peerset_handle: peerset_handle.clone(),
 			behaviour,
 			notification_protocols: network_config
@@ -404,16 +280,10 @@ where
 				.map(|s| s.notifications_protocol.clone())
 				.collect(),
 			bad_handshake_substreams: Default::default(),
-			metrics: if let Some(r) = metrics_registry {
-				Some(Metrics::register(r)?)
-			} else {
-				None
-			},
-			boot_node_ids,
-			sync_handle,
-			counter: Default::default(),
+			_boot_node_ids,
 			peers: Default::default(),
 			block_announces_protocol_name,
+			_marker: Default::default(),
 		};
 
 		Ok((protocol, peerset_handle, known_addresses))
@@ -462,9 +332,7 @@ where
 
 	pub fn disconnect_sync_peer(&mut self, who: PeerId) {
 		match self.peers.remove(&who) {
-			Some(peer) => {
-				self.pending_messages.push_back(CustomMessageOutcome::SyncDisconnected(who));
-			},
+			Some(_) => self.pending_messages.push_back(CustomMessageOutcome::SyncDisconnected(who)),
 			None => panic!("trying to disconnect peers who doesn't exist"),
 		}
 	}
@@ -514,13 +382,6 @@ where
 	pub fn report_peer(&self, who: PeerId, reputation: sc_peerset::ReputationChange) {
 		self.peerset_handle.report_peer(who, reputation)
 	}
-
-	// /// Perform time based maintenance.
-	// ///
-	// /// > **Note**: This method normally doesn't have to be called except for testing purposes.
-	// pub fn tick(&mut self) {
-	// 	self.report_metrics()
-	// }
 
 	/// Set whether the syncing peers set is in reserved-only mode.
 	pub fn set_reserved_only(&self, reserved_only: bool) {
@@ -629,41 +490,12 @@ where
 			);
 		}
 	}
-
-	// // TODO: move to syncing
-	// fn report_metrics(&self) {
-	// 	if let Some(metrics) = &self.metrics {
-	// 		let n = u64::try_from(self.peers.len()).unwrap_or(std::u64::MAX);
-	// 		metrics.peers.set(n);
-	// 		let m = self.sync_helper.chain_sync.metrics();
-	// 		metrics.fork_targets.set(m.fork_targets.into());
-	// 		metrics.queued_blocks.set(m.queued_blocks.into());
-	// 		metrics
-	// 			.justifications
-	// 			.with_label_values(&["pending"])
-	// 			.set(m.justifications.pending_requests.into());
-	// 		metrics
-	// 			.justifications
-	// 			.with_label_values(&["active"])
-	// 			.set(m.justifications.active_requests.into());
-	// 		metrics
-	// 			.justifications
-	// 			.with_label_values(&["failed"])
-	// 			.set(m.justifications.failed_requests.into());
-	// 		metrics
-	// 			.justifications
-	// 			.with_label_values(&["importing"])
-	// 			.set(m.justifications.importing_requests.into());
-	// 	}
-	// }
 }
 
 /// Outcome of an incoming custom message.
 #[derive(Debug)]
 #[must_use]
-pub enum CustomMessageOutcome<B: BlockT> {
-	BlockImport(BlockOrigin, Vec<IncomingBlock<B>>),
-	JustificationImport(RuntimeOrigin, B::Hash, NumberFor<B>, Justifications),
+pub enum CustomMessageOutcome {
 	PeerConnected {
 		peer_id: PeerId,
 		received_handshake: Vec<u8>,
@@ -694,24 +526,6 @@ pub enum CustomMessageOutcome<B: BlockT> {
 		remote: PeerId,
 		messages: Vec<(ProtocolName, Bytes)>,
 	},
-	/// A new block request must be emitted.
-	BlockRequest {
-		target: PeerId,
-		request: OpaqueBlockRequest,
-		pending_response: oneshot::Sender<Result<Vec<u8>, RequestFailure>>,
-	},
-	/// A new storage request must be emitted.
-	StateRequest {
-		target: PeerId,
-		request: OpaqueStateRequest,
-		pending_response: oneshot::Sender<Result<Vec<u8>, RequestFailure>>,
-	},
-	/// A new warp sync request must be emitted.
-	WarpSyncRequest {
-		target: PeerId,
-		request: WarpProofRequest<B>,
-		pending_response: oneshot::Sender<Result<Vec<u8>, RequestFailure>>,
-	},
 	/// Now connected to a new peer for syncing purposes.
 	SyncConnected(PeerId),
 	/// No longer connected to a peer for syncing purposes.
@@ -725,7 +539,7 @@ where
 	Client: HeaderBackend<B> + 'static,
 {
 	type ConnectionHandler = <Notifications as NetworkBehaviour>::ConnectionHandler;
-	type OutEvent = CustomMessageOutcome<B>;
+	type OutEvent = CustomMessageOutcome;
 
 	fn new_handler(&mut self) -> Self::ConnectionHandler {
 		self.behaviour.new_handler()
@@ -845,7 +659,7 @@ where
 							roles,
 							notifications_sink,
 						},
-						(Err(_), Some((id, peer))) if received_handshake.is_empty() => {
+						(Err(_), Some((_id, peer))) if received_handshake.is_empty() => {
 							// As a convenience, we allow opening substreams for "external"
 							// notification protocols with an empty handshake. This fetches the
 							// roles from the locally-known roles.
@@ -944,7 +758,7 @@ where
 			},
 		};
 
-		if !matches!(outcome, CustomMessageOutcome::<B>::None) {
+		if !matches!(outcome, CustomMessageOutcome::None) {
 			return Poll::Ready(NetworkBehaviourAction::GenerateEvent(outcome))
 		}
 

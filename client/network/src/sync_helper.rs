@@ -1,29 +1,17 @@
-#![allow(unused)]
-use crate::{config, protocol::*};
+use crate::protocol::*;
 
-use bytes::Bytes;
 use codec::{Decode, DecodeAll, Encode};
 use futures::{
 	channel::{mpsc, oneshot},
 	prelude::*,
-	stream::{FuturesUnordered, Stream},
+	stream::FuturesUnordered,
 };
-use futures_lite::stream::StreamExt;
-use libp2p::{
-	core::{connection::ConnectionId, transport::ListenerId, ConnectedPoint},
-	request_response::OutboundFailure,
-	swarm::{
-		ConnectionHandler, IntoConnectionHandler, NetworkBehaviour, NetworkBehaviourAction,
-		PollParameters,
-	},
-	Multiaddr, PeerId,
-};
+use libp2p::{request_response::OutboundFailure, PeerId};
 use log::{debug, error, info, log, trace, warn, Level};
 use message::{generic::Message as GenericMessage, Message};
-use prometheus_endpoint::{register, Gauge, GaugeVec, Opts, PrometheusError, Registry, U64};
 use sc_client_api::HeaderBackend;
 use sc_consensus::{
-	import_queue::{BlockImportError, BlockImportStatus, IncomingBlock},
+	import_queue::{BlockImportError, BlockImportStatus},
 	ImportQueue, Link,
 };
 use sc_network_common::{
@@ -47,21 +35,69 @@ use sc_network_common::{
 };
 use sc_peerset::ReputationChange;
 use sp_arithmetic::traits::SaturatedConversion;
-use sp_consensus::BlockOrigin;
 use sp_runtime::{
 	generic::BlockId,
 	traits::{Block as BlockT, CheckedSub, Header as HeaderT, NumberFor, Zero},
-	Justifications,
 };
 use std::{
-	collections::{HashMap, HashSet, VecDeque},
-	io, iter,
+	collections::{HashMap, HashSet},
+	iter,
 	num::NonZeroUsize,
 	pin::Pin,
 	sync::Arc,
 	task::Poll,
-	time,
 };
+
+#[derive(Debug)]
+pub enum PeerRequest<B: BlockT> {
+	Block(BlockRequest<B>),
+	State,
+	WarpProof,
+}
+
+/// Peer information
+// TODO: remove clone when no longer needed
+#[derive(Debug, Clone)]
+pub struct Peer<B: BlockT> {
+	pub info: PeerInfo<B>,
+	/// Holds a set of blocks known to this peer.
+	pub known_blocks: LruHashSet<B::Hash>,
+}
+
+/// Info about a peer's known state.
+#[derive(Clone, Debug)]
+pub struct PeerInfo<B: BlockT> {
+	/// Roles
+	pub roles: Roles,
+	/// Peer best block hash
+	pub best_hash: B::Hash,
+	/// Peer best block number
+	pub best_number: <B::Header as HeaderT>::Number,
+}
+
+/// Handshake sent when we open a block announces substream.
+#[derive(Debug, PartialEq, Eq, Clone, Encode, Decode)]
+pub struct BlockAnnouncesHandshake<B: BlockT> {
+	/// Roles of the node.
+	pub roles: Roles,
+	/// Best block number.
+	pub best_number: NumberFor<B>,
+	/// Best block hash.
+	pub best_hash: B::Hash,
+	/// Genesis block hash.
+	pub genesis_hash: B::Hash,
+}
+
+impl<B: BlockT> BlockAnnouncesHandshake<B> {
+	pub fn build(
+		roles: Roles,
+		best_number: NumberFor<B>,
+		best_hash: B::Hash,
+		genesis_hash: B::Hash,
+	) -> Self {
+		Self { genesis_hash, roles, best_number, best_hash }
+	}
+}
 
 // TODO: zzz
 pub type PendingResponse<B> =
@@ -105,8 +141,6 @@ pub struct SyncingHelper<B: BlockT, Client, N> {
 	rx: mpsc::UnboundedReceiver<SyncEvent<B>>,
 	sync_handle: SyncingHandle<B>,
 
-	pending_messages: VecDeque<CustomMessageOutcome<B>>,
-
 	block_request_protocol_name: ProtocolName,
 	state_request_protocol_name: ProtocolName,
 	warp_sync_protocol_name: Option<ProtocolName>,
@@ -128,7 +162,6 @@ where
 		chain_sync: Box<dyn ChainSync<B>>,
 		import_queue: Box<dyn ImportQueue<B>>,
 		cache_size: usize,
-		genesis_hash: B::Hash,
 		protocol_id: ProtocolId,
 		fork_id: &Option<String>,
 		chain: Arc<Client>,
@@ -189,7 +222,6 @@ where
 				default_peers_set_num_full,
 				default_peers_set_num_light,
 				rx,
-				pending_messages: Default::default(),
 				service: None,
 				block_request_protocol_name,
 				state_request_protocol_name,
@@ -225,25 +257,6 @@ where
 	/// Encode implementation-specific state request.
 	pub fn encode_state_request(&self, request: &OpaqueStateRequest) -> Result<Vec<u8>, String> {
 		self.chain_sync.encode_state_request(request)
-	}
-
-	pub fn status(&self) -> SyncStatus<B> {
-		self.chain_sync.status()
-	}
-
-	/// Target sync block number.
-	pub fn best_seen_block(&self) -> Option<NumberFor<B>> {
-		self.chain_sync.status().best_seen_block
-	}
-
-	/// Number of peers participating in syncing.
-	pub fn num_sync_peers(&self) -> u32 {
-		self.chain_sync.status().num_peers
-	}
-
-	/// Number of blocks in the import queue.
-	pub fn num_queued_blocks(&self) -> u32 {
-		self.chain_sync.status().queued_blocks
 	}
 
 	/// Number of downloaded blocks.
@@ -494,7 +507,7 @@ where
 	pub fn on_sync_peer_disconnected(
 		&mut self,
 		peer: PeerId,
-	) -> Result<Option<CustomMessageOutcome<B>>, ()> {
+	) -> Result<Option<CustomMessageOutcome>, ()> {
 		if let Some(_peer_data) = self.peers.remove(&peer) {
 			let msg = if let Some(OnBlockData::Import(origin, blocks)) =
 				self.chain_sync.peer_disconnected(&peer)
@@ -551,12 +564,7 @@ where
 		}
 	}
 
-	pub async fn notification(
-		&mut self,
-		peer: PeerId,
-		message: bytes::Bytes,
-		// cx: &mut std::task::Context,
-	) -> CustomMessageOutcome<B> {
+	pub async fn notification(&mut self, peer: PeerId, message: bytes::Bytes) {
 		if self.peers.contains_key(&peer) {
 			if let Ok(announce) = BlockAnnounce::decode(&mut message.as_ref()) {
 				self.push_block_announce_validation(peer, announce);
@@ -568,31 +576,25 @@ where
 					std::task::Poll::Ready(())
 				})
 				.await;
-
-				CustomMessageOutcome::None
 			} else {
 				warn!(target: "sub-libp2p", "Failed to decode block announce");
-				CustomMessageOutcome::None
 			}
 		} else {
 			trace!(
 				target: "sync",
 				"Received sync for peer earlier refused by sync layer: {peer}",
 			);
-			CustomMessageOutcome::None
 		}
 	}
 
-	pub fn custom_protocol_close(&mut self, peer: PeerId) -> CustomMessageOutcome<B> {
+	pub fn custom_protocol_close(&mut self, peer: PeerId) {
 		if self.on_sync_peer_disconnected(peer).is_ok() {
 			self.service.as_ref().unwrap().disconnect_sync_peer(peer);
-			CustomMessageOutcome::None
 		} else {
 			log::trace!(
 				target: "sync",
 				"Disconnected peer which had earlier been refused by on_sync_peer_connected {peer}",
 			);
-			CustomMessageOutcome::None
 		}
 	}
 
@@ -600,7 +602,7 @@ where
 		&mut self,
 		peer_id: PeerId,
 		received_handshake: Vec<u8>,
-		negotiated_fallback: Option<ProtocolName>,
+		_negotiated_fallback: Option<ProtocolName>,
 	) {
 		match <Message<B> as DecodeAll>::decode_all(&mut &received_handshake[..]) {
 			Ok(GenericMessage::Status(handshake)) => {
@@ -613,15 +615,14 @@ where
 
 				let roles = handshake.roles;
 				match self.on_sync_peer_connected(peer_id, handshake) {
-					Ok(msg) =>
+					Ok(()) =>
 						if let Some(service) = &self.service {
 							service.report_peer_validation_result(
 								peer_id,
 								PeerValidationResult::Accepted(roles),
 							);
 						},
-					// Ok(msg) => CustomMessageOutcome::SyncConnected(peer_id),
-					Err(_) => {}, //CustomMessageOutcome::None,
+					Err(_) => {},
 				}
 			},
 			Ok(msg) => {
@@ -632,7 +633,6 @@ where
 					msg,
 				);
 				self.report_peer(peer_id, rep::BAD_MESSAGE);
-				// CustomMessageOutcome::None
 			},
 			Err(err) => {
 				match <BlockAnnouncesHandshake<B> as DecodeAll>::decode_all(
@@ -641,15 +641,14 @@ where
 					Ok(handshake) => {
 						let roles = handshake.roles;
 						match self.on_sync_peer_connected(peer_id, handshake) {
-							Ok(msg) =>
+							Ok(()) =>
 								if let Some(service) = &self.service {
 									service.report_peer_validation_result(
 										peer_id,
 										PeerValidationResult::Accepted(roles),
 									);
 								},
-							// Ok(msg) => CustomMessageOutcome::SyncConnected(peer_id),
-							Err(_) => {}, //CustomMessageOutcome::None,
+							Err(_) => {},
 						}
 					},
 					Err(err2) => {
@@ -662,7 +661,6 @@ where
 							err2,
 						);
 						self.report_peer(peer_id, rep::BAD_MESSAGE);
-						// CustomMessageOutcome::None
 					},
 				}
 			},
@@ -821,16 +819,11 @@ where
 
 	/// Must be called in response to a [`CustomMessageOutcome::WarpSyncRequest`] being emitted.
 	/// Must contain the same `PeerId` and request that have been emitted.
-	pub fn on_warp_sync_response(
-		&mut self,
-		peer_id: PeerId,
-		response: EncodedProof,
-	) -> CustomMessageOutcome<B> {
+	pub fn on_warp_sync_response(&mut self, peer_id: PeerId, response: EncodedProof) {
 		match self.chain_sync.on_warp_sync_data(&peer_id, response) {
-			Ok(()) => CustomMessageOutcome::None,
+			Ok(()) => {},
 			Err(BadPeer(id, repu)) => {
 				self.disconnect_and_report_peer(id, repu);
-				CustomMessageOutcome::None
 			},
 		}
 	}
@@ -858,7 +851,7 @@ where
 	) {
 		let (header, who) = match validation_result {
 			PollBlockAnnounceValidation::Skip => return,
-			PollBlockAnnounceValidation::Nothing { is_best: _, who, announce } => {
+			PollBlockAnnounceValidation::Nothing { is_best: _, who: _, announce } => {
 				if let Some(data) = announce.data {
 					if !data.is_empty() {
 						self.block_announce_data_cache.put(announce.header.hash(), data);
@@ -1024,7 +1017,7 @@ where
 		}
 
 		for (id, response) in finished_state_requests {
-			let ev = self.on_state_response(id, response);
+			self.on_state_response(id, response);
 		}
 
 		for (id, response) in finished_warp_sync_requests {
@@ -1077,35 +1070,10 @@ where
 			SyncEvent::OnBlocksProcessed(imported, count, results) => {
 				self.on_blocks_processed(imported, count, results);
 			},
-			SyncEvent::EncodeBlockRequest(request, channel_response) => {
-				let _ = channel_response.send(self.encode_block_request(&request));
-			},
-			SyncEvent::EncodeStateRequest(request, channel_response) => {
-				let _ = channel_response.send(self.encode_state_request(&request));
-			},
 			SyncEvent::GetPeers(channel_response) => {
 				// TODO: remove clone if possible
 				let _ = channel_response
 					.send(self.peers.iter().map(|(id, peer)| (*id, (*peer).clone())).collect());
-			},
-			SyncEvent::CustomProtocolClosed(peer_id, channel_response) => {
-				let _ = channel_response.send(self.custom_protocol_close(peer_id));
-			},
-			SyncEvent::GetEvents(channel_response) => {
-				let _ = channel_response.send(std::mem::take(&mut self.pending_messages));
-			},
-			SyncEvent::Notification(peer, bytes, channel_response) => {
-				todo!();
-			},
-			SyncEvent::GetBlockAnnounceData(hash, channel_response) => {
-				let _ = channel_response.send(self.block_announce_data_cache.get(&hash).cloned());
-			},
-			SyncEvent::InsertKnownBlock(who, hash, channel_response) => {
-				let res = match self.peers.get_mut(&who) {
-					Some(peer) => peer.known_blocks.insert(hash),
-					None => false,
-				};
-				let _ = channel_response.send(res);
 			},
 			SyncEvent::GetHandshake(hash, number, channel_response) => {
 				let _ = channel_response.send(
@@ -1248,8 +1216,6 @@ pub enum SyncEvent<B: BlockT> {
 	NumDownloadedBlocks(oneshot::Sender<usize>),
 	NumSyncRequests(oneshot::Sender<usize>),
 	UpdateChainInfo(B::Hash, NumberFor<B>),
-	GetBlockAnnounceData(B::Hash, oneshot::Sender<Option<Vec<u8>>>),
-	InsertKnownBlock(PeerId, B::Hash, oneshot::Sender<bool>),
 	OnBlockFinalized(B::Hash, B::Header),
 	RequestJustification(B::Hash, NumberFor<B>),
 	ClearJustificationRequests,
@@ -1260,12 +1226,7 @@ pub enum SyncEvent<B: BlockT> {
 		usize,
 		Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
 	),
-	EncodeBlockRequest(OpaqueBlockRequest, oneshot::Sender<Result<Vec<u8>, String>>),
-	EncodeStateRequest(OpaqueStateRequest, oneshot::Sender<Result<Vec<u8>, String>>),
 	GetPeers(oneshot::Sender<Vec<(PeerId, Peer<B>)>>),
-	CustomProtocolClosed(PeerId, oneshot::Sender<CustomMessageOutcome<B>>),
-	GetEvents(oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>),
-	Notification(PeerId, bytes::BytesMut, oneshot::Sender<CustomMessageOutcome<B>>),
 	GetHandshake(B::Hash, NumberFor<B>, oneshot::Sender<Vec<u8>>),
 	AnnounceBlock(B::Hash, Option<Vec<u8>>, oneshot::Sender<()>),
 }
@@ -1345,31 +1306,6 @@ impl<B: BlockT> SyncingHandle<B> {
 			.expect("channel to stay open");
 	}
 
-	pub async fn encode_block_request(
-		&self,
-		request: OpaqueBlockRequest,
-	) -> Result<Vec<u8>, String> {
-		let (tx, rx) = oneshot::channel();
-
-		self.tx
-			.unbounded_send(SyncEvent::EncodeBlockRequest(request, tx))
-			.expect("channel to stay open");
-		rx.await.expect("channel to stay open")
-	}
-
-	/// Encode implementation-specific state request.
-	pub async fn encode_state_request(
-		&self,
-		request: OpaqueStateRequest,
-	) -> Result<Vec<u8>, String> {
-		let (tx, rx) = oneshot::channel();
-
-		self.tx
-			.unbounded_send(SyncEvent::EncodeStateRequest(request, tx))
-			.expect("channel to stay open");
-		rx.await.expect("channel to stay open")
-	}
-
 	pub async fn num_connected_peers(&self) -> usize {
 		let (tx, rx) = oneshot::channel();
 
@@ -1441,53 +1377,6 @@ impl<B: BlockT> SyncingHandle<B> {
 		let (tx, rx) = oneshot::channel();
 
 		self.tx.unbounded_send(SyncEvent::GetPeers(tx)).expect("channel to stay open");
-		rx.await.expect("channel to stay open")
-	}
-
-	pub async fn custom_protocol_close(&self, peer: PeerId) -> CustomMessageOutcome<B> {
-		let (tx, rx) = oneshot::channel();
-
-		self.tx
-			.unbounded_send(SyncEvent::CustomProtocolClosed(peer, tx))
-			.expect("channel to stay open");
-		rx.await.expect("channel to stay open")
-	}
-
-	pub async fn get_events(&self) -> VecDeque<CustomMessageOutcome<B>> {
-		let (tx, rx) = oneshot::channel();
-
-		self.tx.unbounded_send(SyncEvent::GetEvents(tx)).expect("channel to stay open");
-		rx.await.expect("channel to stay open")
-	}
-
-	pub async fn notification(
-		&self,
-		peer: PeerId,
-		message: bytes::BytesMut,
-	) -> CustomMessageOutcome<B> {
-		let (tx, rx) = oneshot::channel();
-
-		self.tx
-			.unbounded_send(SyncEvent::Notification(peer, message, tx))
-			.expect("channel to stay open");
-		rx.await.expect("channel to stay open")
-	}
-
-	pub async fn get_annouce_data(&self, hash: B::Hash) -> Option<Vec<u8>> {
-		let (tx, rx) = oneshot::channel();
-
-		self.tx
-			.unbounded_send(SyncEvent::GetBlockAnnounceData(hash, tx))
-			.expect("channel to stay open");
-		rx.await.expect("channel to stay open")
-	}
-
-	pub async fn insert_known_block(&self, peer: PeerId, hash: B::Hash) -> bool {
-		let (tx, rx) = oneshot::channel();
-
-		self.tx
-			.unbounded_send(SyncEvent::InsertKnownBlock(peer, hash, tx))
-			.expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
 }

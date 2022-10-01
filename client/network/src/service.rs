@@ -34,8 +34,9 @@ use crate::{
 	network_state::{
 		NetworkState, NotConnectedPeer as NetworkStateNotConnectedPeer, Peer as NetworkStatePeer,
 	},
-	protocol::{self, NotificationsSink, NotifsHandlerError, PeerInfo, Protocol, Ready},
-	sync_helper, transport, ReputationChange,
+	protocol::{self, NotificationsSink, NotifsHandlerError, Protocol, Ready},
+	sync_helper::{self, PeerInfo},
+	transport, ReputationChange,
 };
 
 use codec::Encode as _;
@@ -54,7 +55,6 @@ use libp2p::{
 use log::{debug, error, info, trace, warn};
 use metrics::{Histogram, HistogramVec, MetricSources, Metrics};
 use parking_lot::Mutex;
-use sc_consensus::{BlockImportError, BlockImportStatus, ImportQueue, Link};
 use sc_network_common::{
 	config::{MultiaddrWithPeerId, TransportConfig},
 	error::Error,
@@ -229,7 +229,6 @@ where
 			params.import_queue,
 			params.network_config.default_peers_set.in_peers as usize +
 				params.network_config.default_peers_set.out_peers as usize,
-			params.chain.info().genesis_hash,
 			params.protocol_id.clone(),
 			&params.fork_id,
 			Arc::clone(&params.chain),
@@ -254,7 +253,6 @@ where
 				.collect(),
 			params.metrics_registry.as_ref(),
 			sync_protocol_config,
-			sync_handle.clone(),
 		)?;
 
 		// List of multiaddresses that we know in the network.
@@ -378,7 +376,6 @@ where
 			let behaviour = {
 				let result = Behaviour::new(
 					protocol,
-					sync_handle.clone(),
 					user_agent,
 					local_public,
 					discovery_config,
@@ -516,6 +513,7 @@ where
 
 	/// Returns the number of peers we're connected to.
 	pub fn num_connected_peers(&self) -> usize {
+		// TODO: from protocol.rs
 		futures::executor::block_on(self.sync_handle.num_connected_peers())
 	}
 
@@ -526,31 +524,37 @@ where
 
 	/// Current global sync state.
 	pub fn sync_state(&self) -> SyncStatus<B> {
+		// TODO: from syncing
 		futures::executor::block_on(self.sync_handle.status())
 	}
 
 	/// Target sync block number.
 	pub fn best_seen_block(&self) -> Option<NumberFor<B>> {
+		// TODO: from syncing
 		futures::executor::block_on(self.sync_handle.best_seen_block())
 	}
 
 	/// Number of peers participating in syncing.
 	pub fn num_sync_peers(&self) -> u32 {
+		// TODO: from syncing
 		futures::executor::block_on(self.sync_handle.num_sync_peers())
 	}
 
 	/// Number of blocks in the import queue.
 	pub fn num_queued_blocks(&self) -> u32 {
+		// TODO: from syncing
 		futures::executor::block_on(self.sync_handle.num_queued_blocks())
 	}
 
 	/// Returns the number of downloaded blocks.
 	pub fn num_downloaded_blocks(&self) -> usize {
+		// TODO: from syncing
 		futures::executor::block_on(self.sync_handle.num_downloaded_blocks())
 	}
 
 	/// Number of active sync requests.
 	pub fn num_sync_requests(&self) -> usize {
+		// TODO: from syncing
 		futures::executor::block_on(self.sync_handle.num_sync_requests())
 	}
 
@@ -567,6 +571,7 @@ where
 
 	/// You must call this when a new block is finalized by the client.
 	pub fn on_block_finalized(&mut self, hash: B::Hash, header: B::Header) {
+		// TODO: move to syncing
 		self.sync_handle.on_block_finalized(hash, header)
 	}
 
@@ -675,6 +680,7 @@ where
 
 	/// Get currently connected peers.
 	pub fn peers_debug_info(&mut self) -> Vec<(PeerId, PeerInfo<B>)> {
+		// TODO: from syncing?
 		futures::executor::block_on(self.sync_handle.get_peers())
 			.iter()
 			.map(|(id, peer)| (*id, peer.info.clone())) // TODO: don't clone
@@ -757,6 +763,7 @@ impl<B: BlockT + 'static, H: ExHashT> sp_consensus::SyncOracle for NetworkServic
 	}
 }
 
+// TODO: make this a syncing trait
 impl<B: BlockT, H: ExHashT> sc_consensus::JustificationSyncLink<B> for NetworkService<B, H> {
 	/// Request a justification for the given block from the network.
 	///
@@ -819,6 +826,7 @@ where
 	}
 }
 
+// TODO: make this a syncing trait
 impl<B, H> NetworkSyncForkRequest<B::Hash, NumberFor<B>> for NetworkService<B, H>
 where
 	B: BlockT + 'static,
@@ -1156,6 +1164,7 @@ where
 	}
 }
 
+// TODO: make this a syncing trait
 impl<B, H> NetworkBlock<B::Hash, NumberFor<B>> for NetworkService<B, H>
 where
 	B: BlockT + 'static,
@@ -1244,9 +1253,6 @@ impl<'a> NotificationSenderReadyT for NotificationSenderReady<'a> {
 ///
 /// Each entry corresponds to a method of `NetworkService`.
 enum ServiceToWorkerMsg<B: BlockT> {
-	RequestJustification(B::Hash, NumberFor<B>),
-	ClearJustificationRequests,
-	AnnounceBlock(B::Hash, Option<Vec<u8>>),
 	GetValue(KademliaKey),
 	PutValue(KademliaKey, Vec<u8>),
 	AddKnownAddress(PeerId, Multiaddr),
@@ -1259,7 +1265,6 @@ enum ServiceToWorkerMsg<B: BlockT> {
 	RemoveSetReserved(ProtocolName, PeerId),
 	AddToPeersSet(ProtocolName, PeerId),
 	RemoveFromPeersSet(ProtocolName, PeerId),
-	SyncFork(Vec<PeerId>, B::Hash, NumberFor<B>),
 	EventStream(out_events::Sender),
 	Request {
 		target: PeerId,
@@ -1275,7 +1280,6 @@ enum ServiceToWorkerMsg<B: BlockT> {
 		pending_response: oneshot::Sender<Result<NetworkState, RequestFailure>>,
 	},
 	DisconnectPeer(PeerId, ProtocolName),
-	NewBestBlockImported(B::Hash, NumberFor<B>),
 	SetSyncHandshake(Vec<u8>),
 	DisconnectSyncPeer(PeerId),
 	ReportValidationResult(PeerId, PeerValidationResult),
@@ -1360,11 +1364,6 @@ where
 				Poll::Pending => break,
 			};
 			match msg {
-				// ServiceToWorkerMsg::AnnounceBlock(hash, data) => this
-				// 	.network_service
-				// 	.behaviour_mut()
-				// 	.user_protocol_mut()
-				// 	.announce_block(hash, data),
 				ServiceToWorkerMsg::GetValue(key) =>
 					this.network_service.behaviour_mut().get_value(key),
 				ServiceToWorkerMsg::PutValue(key, value) =>
@@ -1468,9 +1467,6 @@ where
 					.behaviour_mut()
 					.user_protocol_mut()
 					.write_batch_sync_notification(peers, message),
-				_ => {
-					todo!()
-				},
 			}
 		}
 
@@ -1491,25 +1487,6 @@ where
 
 			match poll_value {
 				Poll::Pending => break,
-				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::BlockImport(_origin, _blocks))) => {
-					if let Some(metrics) = this.metrics.as_ref() {
-						metrics.import_queue_blocks_submitted.inc();
-					}
-					panic!("not supposed to be here");
-					// this.import_queue.import_blocks(origin, blocks);
-				},
-				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::JustificationImport(
-					_origin,
-					_hash,
-					_nb,
-					_justifications,
-				))) => {
-					if let Some(metrics) = this.metrics.as_ref() {
-						metrics.import_queue_justifications_submitted.inc();
-					}
-					panic!("not supposed to be here");
-					// this.import_queue.import_justifications(origin, hash, nb, justifications);
-				},
 				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::InboundRequest {
 					protocol,
 					result,
@@ -1986,36 +1963,6 @@ where
 	Client: HeaderBackend<B> + 'static,
 {
 }
-
-// // Implementation of `import_queue::Link` trait using the available local variables.
-// struct NetworkLink<'a, B: BlockT> {
-// 	sync_handle: &'a sync_helper::SyncingHandle<B>,
-// }
-
-// impl<'a, B: BlockT> Link<B> for NetworkLink<'a, B> {
-// 	fn blocks_processed(
-// 		&mut self,
-// 		imported: usize,
-// 		count: usize,
-// 		results: Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
-// 	) {
-// 		self.sync_handle.on_blocks_processed(imported, count, results);
-// 	}
-
-// 	fn justification_imported(
-// 		&mut self,
-// 		who: PeerId,
-// 		hash: &B::Hash,
-// 		number: NumberFor<B>,
-// 		success: bool,
-// 	) {
-// 		self.sync_handle.justification_import_result(who, *hash, number, success)
-// 	}
-
-// 	fn request_justification(&mut self, hash: &B::Hash, number: NumberFor<B>) {
-// 		self.sync_handle.request_justification(*hash, number)
-// 	}
-// }
 
 fn ensure_addresses_consistent_with_transport<'a>(
 	addresses: impl Iterator<Item = &'a Multiaddr>,
