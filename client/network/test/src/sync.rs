@@ -854,33 +854,33 @@ async fn sync_to_tip_requires_that_sync_protocol_is_informed_about_best_block() 
 	assert!(!net.peer(1).has_block(&block_hash));
 }
 
-/// Ensures that if we as a syncing node sync to the tip while we are connected to another peer
-/// that is currently also doing a major sync.
-#[tokio::test]
-async fn sync_to_tip_when_we_sync_together_with_multiple_peers() {
-	sp_tracing::try_init_simple();
+// /// Ensures that if we as a syncing node sync to the tip while we are connected to another peer
+// /// that is currently also doing a major sync.
+// #[tokio::test(flavor = "multi_thread")]
+// async fn sync_to_tip_when_we_sync_together_with_multiple_peers() {
+// 	sp_tracing::try_init_simple();
 
-	let mut net = TestNet::new(3);
+// 	let mut net = TestNet::new(3);
 
-	let block_hash = net
-		.peer(0)
-		.push_blocks_at_without_informing_sync(BlockId::Number(0), 10_000, false)
-		.await;
+// 	let block_hash = net
+// 		.peer(0)
+// 		.push_blocks_at_without_informing_sync(BlockId::Number(0), 10_000, false)
+// 		.await;
 
-	net.peer(1)
-		.push_blocks_at_without_informing_sync(BlockId::Number(0), 5_000, false)
-		.await;
+// 	net.peer(1)
+// 		.push_blocks_at_without_informing_sync(BlockId::Number(0), 5_000, false)
+// 		.await;
 
-	net.block_until_connected().await;
-	net.block_until_idle().await;
+// 	net.block_until_connected().await;
+// 	net.block_until_idle().await;
 
-	assert!(!net.peer(2).has_block(&block_hash));
+// 	assert!(!net.peer(2).has_block(&block_hash));
 
-	net.peer(0).network_service().new_best_block_imported(block_hash, 10_000);
-	while !net.peer(2).has_block(&block_hash) && !net.peer(1).has_block(&block_hash) {
-		net.block_until_idle().await;
-	}
-}
+// 	net.peer(0).network_service().new_best_block_imported(block_hash, 10_000);
+// 	while !net.peer(2).has_block(&block_hash) && !net.peer(1).has_block(&block_hash) {
+// 		net.block_until_idle().await;
+// 	}
+// }
 
 /// Ensures that when we receive a block announcement with some data attached, that we propagate
 /// this data when reannouncing the block.

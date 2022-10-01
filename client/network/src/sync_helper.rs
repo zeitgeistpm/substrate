@@ -30,7 +30,9 @@ use sc_network_common::{
 	config::ProtocolId,
 	protocol::{event::Event, ProtocolName},
 	request_responses::{IfDisconnected, RequestFailure},
-	service::{NetworkEventStream, NetworkPeers, NetworkRequest, PeerValidationResult},
+	service::{
+		NetworkEventStream, NetworkNotification, NetworkPeers, NetworkRequest, PeerValidationResult,
+	},
 	sync::{
 		message::{
 			BlockAnnounce, BlockAttributes, BlockData, BlockRequest, BlockResponse, BlockState,
@@ -120,7 +122,7 @@ impl<B, Client, N> SyncingHelper<B, Client, N>
 where
 	B: BlockT,
 	Client: HeaderBackend<B> + 'static,
-	N: NetworkRequest + NetworkEventStream + NetworkPeers,
+	N: NetworkRequest + NetworkEventStream + NetworkPeers + NetworkNotification,
 {
 	pub fn new(
 		chain_sync: Box<dyn ChainSync<B>>,
@@ -306,6 +308,59 @@ where
 					self.disconnect_peer(id);
 					self.report_peer(id, repu)
 				},
+			}
+		}
+	}
+
+	pub fn announce_block(&mut self, hash: B::Hash, data: Option<Vec<u8>>) -> () {
+		let header = match self.chain.header(BlockId::Hash(hash)) {
+			Ok(Some(header)) => header,
+			Ok(None) => {
+				warn!("Trying to announce unknown block: {}", hash);
+				return
+			},
+			Err(e) => {
+				warn!("Error reading block header {}: {}", hash, e);
+				return
+			},
+		};
+
+		// don't announce genesis block since it will be ignored
+		if header.number().is_zero() {
+			return
+		}
+
+		let is_best = self.chain.info().best_hash == hash;
+		debug!(target: "sync", "Reannouncing block {:?} is_best: {}", hash, is_best);
+
+		let data = data
+			.or_else(|| self.block_announce_data_cache.get(&hash).cloned())
+			.unwrap_or_default();
+
+		let message = BlockAnnounce {
+			header: header.clone(),
+			state: if is_best { Some(BlockState::Best) } else { Some(BlockState::Normal) },
+			data: Some(data.clone()),
+		}
+		.encode();
+
+		let mut peers = Vec::new();
+
+		for (who, peer) in self.peers.iter_mut() {
+			let inserted = peer.known_blocks.insert(hash);
+			// futures::executor::block_on(self.sync_handle.insert_known_block(who, hash));
+			if inserted {
+				trace!(target: "sync", "Announcing block {:?} to {}", hash, who);
+				peers.push(*who);
+				// if let Some(service) = &self.service {
+				// 				service.write_sync_notification(*who, message.clone());
+				// }
+			}
+		}
+
+		if peers.len() > 0 {
+			if let Some(service) = &self.service {
+				service.write_batch_sync_notification(peers, message);
 			}
 		}
 	}
@@ -1063,6 +1118,9 @@ where
 					.encode(),
 				);
 			},
+			SyncEvent::AnnounceBlock(hash, data, channel_response) => {
+				let _ = channel_response.send(self.announce_block(hash, data));
+			},
 		}
 	}
 
@@ -1209,6 +1267,7 @@ pub enum SyncEvent<B: BlockT> {
 	GetEvents(oneshot::Sender<VecDeque<CustomMessageOutcome<B>>>),
 	Notification(PeerId, bytes::BytesMut, oneshot::Sender<CustomMessageOutcome<B>>),
 	GetHandshake(B::Hash, NumberFor<B>, oneshot::Sender<Vec<u8>>),
+	AnnounceBlock(B::Hash, Option<Vec<u8>>, oneshot::Sender<()>),
 }
 
 #[derive(Clone)]
@@ -1219,6 +1278,15 @@ pub struct SyncingHandle<B: BlockT> {
 impl<B: BlockT> SyncingHandle<B> {
 	pub fn new(tx: mpsc::UnboundedSender<SyncEvent<B>>) -> Self {
 		Self { tx }
+	}
+
+	pub async fn announce_block(&self, hash: B::Hash, data: Option<Vec<u8>>) -> () {
+		let (tx, rx) = oneshot::channel();
+
+		self.tx
+			.unbounded_send(SyncEvent::AnnounceBlock(hash, data, tx))
+			.expect("channel to stay open");
+		rx.await.expect("channel to stay open")
 	}
 
 	pub fn on_block_finalized(&self, hash: B::Hash, header: B::Header) {

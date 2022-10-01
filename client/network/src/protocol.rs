@@ -174,6 +174,7 @@ enum PeerStatus {
 struct NewPeerInfo {
 	status: PeerStatus,
 	roles: Option<Roles>,
+	pending_notifs: VecDeque<(PeerId, Bytes)>,
 }
 
 // Lock must always be taken in order declared here.
@@ -468,16 +469,41 @@ where
 		}
 	}
 
+	pub fn write_sync_notification(&mut self, who: PeerId, message: Vec<u8>) {
+		self.behaviour.write_notification(&who, HARDCODED_PEERSETS_SYNC, message);
+	}
+
+	pub fn write_batch_sync_notification(&mut self, peers: Vec<PeerId>, message: Vec<u8>) {
+		for peer in peers {
+			self.behaviour
+				.write_notification(&peer, HARDCODED_PEERSETS_SYNC, message.clone());
+		}
+	}
+
 	pub fn report_peer_validation_result(&mut self, peer: PeerId, result: PeerValidationResult) {
 		match result {
-			PeerValidationResult::Accepted(roles) => {
-				if let Some(peer) = self.peers.get_mut(&peer) {
-					peer.status = PeerStatus::Accepted;
-					peer.roles = Some(roles);
-				}
+			PeerValidationResult::Accepted(roles) =>
+				if let Some(peer_info) = self.peers.get_mut(&peer) {
+					peer_info.status = PeerStatus::Accepted;
+					peer_info.roles = Some(roles);
 
-				self.pending_messages.push_back(CustomMessageOutcome::SyncConnected(peer));
-			},
+					self.pending_messages.push_back(CustomMessageOutcome::SyncConnected(peer));
+
+					// TODO: optimize
+					for (peer_id, message) in
+						std::mem::take(&mut peer_info.pending_notifs).into_iter()
+					{
+						self.pending_messages.push_back(
+							CustomMessageOutcome::NotificationsReceived {
+								remote: peer_id,
+								messages: vec![(
+									self.block_announces_protocol_name.clone(),
+									message,
+								)],
+							},
+						);
+					}
+				},
 			PeerValidationResult::Rejected => {
 				self.peers.remove(&peer);
 			},
@@ -495,55 +521,6 @@ where
 	// pub fn tick(&mut self) {
 	// 	self.report_metrics()
 	// }
-
-	// TODO: move to `SyncingHelper`
-	/// Make sure an important block is propagated to peers.
-	///
-	/// In chain-based consensus, we often need to make sure non-best forks are
-	/// at least temporarily synced.
-	pub fn announce_block(&mut self, hash: B::Hash, data: Option<Vec<u8>>) {
-		let header = match self.chain.header(BlockId::Hash(hash)) {
-			Ok(Some(header)) => header,
-			Ok(None) => {
-				warn!("Trying to announce unknown block: {}", hash);
-				return
-			},
-			Err(e) => {
-				warn!("Error reading block header {}: {}", hash, e);
-				return
-			},
-		};
-
-		// don't announce genesis block since it will be ignored
-		if header.number().is_zero() {
-			return
-		}
-
-		let is_best = self.chain.info().best_hash == hash;
-		debug!(target: "sync", "Reannouncing block {:?} is_best: {}", hash, is_best);
-
-		let data = data
-			.or_else(|| futures::executor::block_on(self.sync_handle.get_annouce_data(hash)))
-			.unwrap_or_default();
-
-		for (who, peer) in futures::executor::block_on(self.sync_handle.get_peers()) {
-			let inserted =
-				futures::executor::block_on(self.sync_handle.insert_known_block(who, hash));
-			if inserted {
-				trace!(target: "sync", "Announcing block {:?} to {}", hash, who);
-				let message = BlockAnnounce {
-					header: header.clone(),
-					state: if is_best { Some(BlockState::Best) } else { Some(BlockState::Normal) },
-					data: Some(data.clone()),
-				};
-
-				// println!("send block annoucement!");
-
-				self.behaviour
-					.write_notification(&who, HARDCODED_PEERSETS_SYNC, message.encode());
-			}
-		}
-	}
 
 	/// Set whether the syncing peers set is in reserved-only mode.
 	pub fn set_reserved_only(&self, reserved_only: bool) {
@@ -839,8 +816,11 @@ where
 				// Set number 0 is hardcoded the default set of peers we sync from.
 				if set_id == HARDCODED_PEERSETS_SYNC {
 					match self.peers.entry(peer_id) {
-						Vacant(entry) => entry
-							.insert(NewPeerInfo { status: PeerStatus::OnProbation, roles: None }),
+						Vacant(entry) => entry.insert(NewPeerInfo {
+							status: PeerStatus::OnProbation,
+							roles: None,
+							pending_notifs: Default::default(),
+						}),
 						Occupied(_) => panic!("peer already exists"),
 					};
 
@@ -934,9 +914,21 @@ where
 				}
 			},
 			NotificationsOut::Notification { peer_id, set_id, message } => match set_id {
-				HARDCODED_PEERSETS_SYNC => CustomMessageOutcome::NotificationsReceived {
-					remote: peer_id,
-					messages: vec![(self.block_announces_protocol_name.clone(), message.freeze())],
+				HARDCODED_PEERSETS_SYNC => match self.peers.get_mut(&peer_id) {
+					Some(peer) =>
+						if peer.status == PeerStatus::OnProbation {
+							peer.pending_notifs.push_back((peer_id, message.freeze()));
+							CustomMessageOutcome::None
+						} else {
+							CustomMessageOutcome::NotificationsReceived {
+								remote: peer_id,
+								messages: vec![(
+									self.block_announces_protocol_name.clone(),
+									message.freeze(),
+								)],
+							}
+						},
+					None => panic!("unknown peer"),
 				},
 				_ if self.bad_handshake_substreams.contains(&(peer_id, set_id)) =>
 					CustomMessageOutcome::None,

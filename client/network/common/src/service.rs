@@ -523,6 +523,12 @@ pub trait NetworkNotification {
 		target: PeerId,
 		protocol: ProtocolName,
 	) -> Result<Box<dyn NotificationSender>, NotificationSenderError>;
+
+	/// Write sync notification
+	fn write_sync_notification(&self, peer: PeerId, message: Vec<u8>);
+
+	/// Write batched sync notification
+	fn write_batch_sync_notification(&self, peers: Vec<PeerId>, message: Vec<u8>);
 }
 
 impl<T> NetworkNotification for Arc<T>
@@ -540,6 +546,14 @@ where
 		protocol: ProtocolName,
 	) -> Result<Box<dyn NotificationSender>, NotificationSenderError> {
 		T::notification_sender(self, target, protocol)
+	}
+
+	fn write_sync_notification(&self, peer: PeerId, message: Vec<u8>) {
+		T::write_sync_notification(self, peer, message)
+	}
+
+	fn write_batch_sync_notification(&self, peers: Vec<PeerId>, message: Vec<u8>) {
+		T::write_batch_sync_notification(self, peers, message)
 	}
 }
 
