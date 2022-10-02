@@ -503,6 +503,10 @@ pub mod pallet {
 			let who = T::Lookup::lookup(who)?;
 			let mut record = Self::ensure_member(&who)?;
 			let rank = record.rank;
+			if max_rank < rank {
+				// dont merge this
+				panic!("demote_member: {} < {}", max_rank, rank);
+			}
 			ensure!(max_rank >= rank, Error::<T, I>::NoPermission);
 
 			Self::remove_from_rank(&who, rank)?;
@@ -538,6 +542,10 @@ pub mod pallet {
 			let who = T::Lookup::lookup(who)?;
 			let MemberRecord { rank, .. } = Self::ensure_member(&who)?;
 			ensure!(min_rank >= rank, Error::<T, I>::InvalidWitness);
+			if max_rank < rank {
+				// dont merge this
+				panic!("remove_member: {} < {}", max_rank, rank);
+			}
 			ensure!(max_rank >= rank, Error::<T, I>::NoPermission);
 
 			for r in 0..=rank {
@@ -696,6 +704,10 @@ pub mod pallet {
 			let record = Self::ensure_member(&who)?;
 			let rank = record.rank.checked_add(1).ok_or(Overflow)?;
 			if let Some(max_rank) = maybe_max_rank {
+				if max_rank < rank {
+					// todo dont merge this
+					panic!("max rank: {}, rank: {}", max_rank, rank);
+				}
 				ensure!(max_rank >= rank, Error::<T, I>::NoPermission);
 			}
 			let index = MemberCount::<T, I>::get(rank);

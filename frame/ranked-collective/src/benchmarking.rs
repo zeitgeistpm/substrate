@@ -34,15 +34,19 @@ fn assert_last_event<T: Config<I>, I: 'static>(generic_event: <T as Config<I>>::
 fn make_member<T: Config<I>, I: 'static>(rank: Rank) -> T::AccountId {
 	let who = account::<T::AccountId>("member", MemberCount::<T, I>::get(0), SEED);
 	let who_lookup = T::Lookup::unlookup(who.clone());
-	assert_ok!(Pallet::<T, I>::add_member(
+	if Pallet::<T, I>::add_member(
 		T::PromoteOrigin::successful_origin(),
 		who_lookup.clone()
-	));
+	).is_err() {
+		panic!("failed to add member");
+	}
 	for _ in 0..rank {
-		assert_ok!(Pallet::<T, I>::promote_member(
+		if Pallet::<T, I>::promote_member(
 			T::PromoteOrigin::successful_origin(),
 			who_lookup.clone()
-		));
+		).is_err() {
+			panic!("failed to promote member");
+		}
 	}
 	who
 }
