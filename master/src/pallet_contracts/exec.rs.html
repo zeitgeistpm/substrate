@@ -3246,7 +3246,6 @@
 <span id="3240">3240</span>
 <span id="3241">3241</span>
 <span id="3242">3242</span>
-<span id="3243">3243</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -4633,7 +4632,6 @@
 	<span class="kw">use</span> <span class="ident">frame_system</span>::{<span class="ident">EventRecord</span>, <span class="ident">Phase</span>};
 	<span class="kw">use</span> <span class="ident">pallet_contracts_primitives::ReturnFlags</span>;
 	<span class="kw">use</span> <span class="ident">pretty_assertions::assert_eq</span>;
-	<span class="kw">use</span> <span class="ident">sp_core::Bytes</span>;
 	<span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">traits::Hash</span>, <span class="ident">DispatchError</span>};
 	<span class="kw">use</span> <span class="ident">std</span>::{
 		<span class="ident">cell::RefCell</span>,
@@ -4766,7 +4764,7 @@
 	}
 
 	<span class="kw">fn</span> <span class="ident">exec_success</span>() -&gt; <span class="ident">ExecResult</span> {
-		<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="ident">Vec::new</span>()) })
+		<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Vec::new</span>() })
 	}
 
 	<span class="kw">fn</span> <span class="ident">exec_trapped</span>() -&gt; <span class="ident">ExecResult</span> {
@@ -4835,7 +4833,7 @@
 
 		<span class="kw">let</span> <span class="ident">success_ch</span> <span class="op">=</span> <span class="ident">MockLoader::insert</span>(<span class="ident">Call</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">ctx</span>, <span class="kw">_</span><span class="op">|</span> {
 			<span class="macro">assert_eq!</span>(<span class="ident">ctx</span>.<span class="ident">ext</span>.<span class="ident">value_transferred</span>(), <span class="ident">value</span>);
-			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="ident">Vec::new</span>()) })
+			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Vec::new</span>() })
 		});
 
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
@@ -4870,13 +4868,13 @@
 
 		<span class="kw">let</span> <span class="ident">success_ch</span> <span class="op">=</span> <span class="ident">MockLoader::insert</span>(<span class="ident">Call</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">ctx</span>, <span class="kw">_</span><span class="op">|</span> {
 			<span class="macro">assert_eq!</span>(<span class="ident">ctx</span>.<span class="ident">ext</span>.<span class="ident">value_transferred</span>(), <span class="ident">value</span>);
-			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="ident">Vec::new</span>()) })
+			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Vec::new</span>() })
 		});
 
 		<span class="kw">let</span> <span class="ident">delegate_ch</span> <span class="op">=</span> <span class="ident">MockLoader::insert</span>(<span class="ident">Call</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">ctx</span>, <span class="kw">_</span><span class="op">|</span> {
 			<span class="macro">assert_eq!</span>(<span class="ident">ctx</span>.<span class="ident">ext</span>.<span class="ident">value_transferred</span>(), <span class="ident">value</span>);
 			<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">ctx</span>.<span class="ident">ext</span>.<span class="ident">delegate_call</span>(<span class="ident">success_ch</span>, <span class="ident">Vec::new</span>())<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="ident">Vec::new</span>()) })
+			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Vec::new</span>() })
 		});
 
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
@@ -4911,7 +4909,7 @@
 		<span class="kw">let</span> <span class="ident">dest</span> <span class="op">=</span> <span class="ident">BOB</span>;
 
 		<span class="kw">let</span> <span class="ident">return_ch</span> <span class="op">=</span> <span class="ident">MockLoader::insert</span>(<span class="ident">Call</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
-			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::REVERT</span>, <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="ident">Vec::new</span>()) })
+			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::REVERT</span>, <span class="ident">data</span>: <span class="ident">Vec::new</span>() })
 		});
 
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
@@ -4964,7 +4962,7 @@
 		<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">ALICE</span>;
 		<span class="kw">let</span> <span class="ident">dest</span> <span class="op">=</span> <span class="ident">BOB</span>;
 		<span class="kw">let</span> <span class="ident">return_ch</span> <span class="op">=</span> <span class="ident">MockLoader::insert</span>(<span class="ident">Call</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
-			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]) })
+			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>] })
 		});
 
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
@@ -4985,7 +4983,7 @@
 
 			<span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">unwrap</span>();
 			<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">output</span>.<span class="ident">did_revert</span>());
-			<span class="macro">assert_eq!</span>(<span class="ident">output</span>.<span class="ident">data</span>, <span class="ident">Bytes</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]));
+			<span class="macro">assert_eq!</span>(<span class="ident">output</span>.<span class="ident">data</span>, <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
 		});
 	}
 
@@ -4996,7 +4994,7 @@
 		<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">ALICE</span>;
 		<span class="kw">let</span> <span class="ident">dest</span> <span class="op">=</span> <span class="ident">BOB</span>;
 		<span class="kw">let</span> <span class="ident">return_ch</span> <span class="op">=</span> <span class="ident">MockLoader::insert</span>(<span class="ident">Call</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
-			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::REVERT</span>, <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]) })
+			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::REVERT</span>, <span class="ident">data</span>: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>] })
 		});
 
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
@@ -5017,7 +5015,7 @@
 
 			<span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">unwrap</span>();
 			<span class="macro">assert!</span>(<span class="ident">output</span>.<span class="ident">did_revert</span>());
-			<span class="macro">assert_eq!</span>(<span class="ident">output</span>.<span class="ident">data</span>, <span class="ident">Bytes</span>(<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]));
+			<span class="macro">assert_eq!</span>(<span class="ident">output</span>.<span class="ident">data</span>, <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
 		});
 	}
 
@@ -5364,7 +5362,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">instantiation_work_with_success_output</span>() {
 		<span class="kw">let</span> <span class="ident">dummy_ch</span> <span class="op">=</span> <span class="ident">MockLoader::insert</span>(<span class="ident">Constructor</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
-			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="macro">vec!</span>[<span class="number">80</span>, <span class="number">65</span>, <span class="number">83</span>, <span class="number">83</span>]) })
+			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="macro">vec!</span>[<span class="number">80</span>, <span class="number">65</span>, <span class="number">83</span>, <span class="number">83</span>] })
 		});
 
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">existential_deposit</span>(<span class="number">15</span>).<span class="ident">build</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
@@ -5389,7 +5387,7 @@
 					<span class="kw-2">&amp;</span>[],
 					<span class="prelude-val">None</span>,
 				),
-				<span class="prelude-val">Ok</span>((<span class="ident">address</span>, <span class="kw-2">ref</span> <span class="ident">output</span>)) <span class="kw">if</span> <span class="ident">output</span>.<span class="ident">data</span> <span class="op">==</span> <span class="ident">Bytes</span>(<span class="macro">vec!</span>[<span class="number">80</span>, <span class="number">65</span>, <span class="number">83</span>, <span class="number">83</span>]) =&gt; <span class="ident">address</span>
+				<span class="prelude-val">Ok</span>((<span class="ident">address</span>, <span class="kw-2">ref</span> <span class="ident">output</span>)) <span class="kw">if</span> <span class="ident">output</span>.<span class="ident">data</span> <span class="op">==</span> <span class="macro">vec!</span>[<span class="number">80</span>, <span class="number">65</span>, <span class="number">83</span>, <span class="number">83</span>] =&gt; <span class="ident">address</span>
 			);
 
 			<span class="comment">// Check that the newly created account has the expected code hash and</span>
@@ -5408,7 +5406,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">instantiation_fails_with_failing_output</span>() {
 		<span class="kw">let</span> <span class="ident">dummy_ch</span> <span class="op">=</span> <span class="ident">MockLoader::insert</span>(<span class="ident">Constructor</span>, <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
-			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::REVERT</span>, <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="macro">vec!</span>[<span class="number">70</span>, <span class="number">65</span>, <span class="number">73</span>, <span class="number">76</span>]) })
+			<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::REVERT</span>, <span class="ident">data</span>: <span class="macro">vec!</span>[<span class="number">70</span>, <span class="number">65</span>, <span class="number">73</span>, <span class="number">76</span>] })
 		});
 
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">existential_deposit</span>(<span class="number">15</span>).<span class="ident">build</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
@@ -5433,7 +5431,7 @@
 					<span class="kw-2">&amp;</span>[],
 					<span class="prelude-val">None</span>,
 				),
-				<span class="prelude-val">Ok</span>((<span class="ident">address</span>, <span class="kw-2">ref</span> <span class="ident">output</span>)) <span class="kw">if</span> <span class="ident">output</span>.<span class="ident">data</span> <span class="op">==</span> <span class="ident">Bytes</span>(<span class="macro">vec!</span>[<span class="number">70</span>, <span class="number">65</span>, <span class="number">73</span>, <span class="number">76</span>]) =&gt; <span class="ident">address</span>
+				<span class="prelude-val">Ok</span>((<span class="ident">address</span>, <span class="kw-2">ref</span> <span class="ident">output</span>)) <span class="kw">if</span> <span class="ident">output</span>.<span class="ident">data</span> <span class="op">==</span> <span class="macro">vec!</span>[<span class="number">70</span>, <span class="number">65</span>, <span class="number">73</span>, <span class="number">76</span>] =&gt; <span class="ident">address</span>
 			);
 
 			<span class="comment">// Check that the account has not been created.</span>

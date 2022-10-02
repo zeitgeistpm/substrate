@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"trait":[["ContractsApi","The API to interact with contracts without using executive."]]};

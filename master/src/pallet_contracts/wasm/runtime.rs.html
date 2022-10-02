@@ -2486,7 +2486,7 @@
 <span class="kw">use</span> <span class="ident">frame_support</span>::{<span class="ident">dispatch::DispatchError</span>, <span class="ident">ensure</span>, <span class="ident">traits::Get</span>, <span class="ident">weights::Weight</span>};
 <span class="kw">use</span> <span class="ident">pallet_contracts_primitives</span>::{<span class="ident">ExecReturnValue</span>, <span class="ident">ReturnFlags</span>};
 <span class="kw">use</span> <span class="ident">pallet_contracts_proc_macro::define_env</span>;
-<span class="kw">use</span> <span class="ident">sp_core</span>::{<span class="ident">crypto::UncheckedFrom</span>, <span class="ident">Bytes</span>};
+<span class="kw">use</span> <span class="ident">sp_core::crypto::UncheckedFrom</span>;
 <span class="kw">use</span> <span class="ident">sp_io::hashing</span>::{<span class="ident">blake2_128</span>, <span class="ident">blake2_256</span>, <span class="ident">keccak_256</span>, <span class="ident">sha2_256</span>};
 <span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Bounded</span>, <span class="ident">Zero</span>};
 <span class="kw">use</span> <span class="ident">sp_sandbox::SandboxMemory</span>;
@@ -2939,10 +2939,10 @@
 				<span class="ident">TrapReason::Return</span>(<span class="ident">ReturnData</span> { <span class="ident">flags</span>, <span class="ident">data</span> }) =&gt; {
 					<span class="kw">let</span> <span class="ident">flags</span> <span class="op">=</span>
 						<span class="ident">ReturnFlags::from_bits</span>(<span class="ident">flags</span>).<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">E::T</span><span class="op">&gt;</span><span class="ident">::InvalidCallFlags</span>)<span class="question-mark">?</span>;
-					<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>, <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="ident">data</span>) })
+					<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>, <span class="ident">data</span> })
 				},
 				<span class="ident">TrapReason::Termination</span> =&gt;
-					<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="ident">Vec::new</span>()) }),
+					<span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Vec::new</span>() }),
 				<span class="ident">TrapReason::SupervisorError</span>(<span class="ident">error</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>.<span class="ident">into</span>()),
 			}
 		}
@@ -2950,7 +2950,7 @@
 		<span class="comment">// Check the exact type of the error.</span>
 		<span class="kw">match</span> <span class="ident">sandbox_result</span> {
 			<span class="comment">// No traps were generated. Proceed normally.</span>
-			<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Bytes</span>(<span class="ident">Vec::new</span>()) }),
+			<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ExecReturnValue</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags::empty</span>(), <span class="ident">data</span>: <span class="ident">Vec::new</span>() }),
 			<span class="comment">// `Error::Module` is returned only if instantiation or linking failed (i.e.</span>
 			<span class="comment">// wasm binary tried to import a function that is not provided by the host).</span>
 			<span class="comment">// This shouldn&#39;t happen because validation process ought to reject such binaries.</span>
@@ -3335,7 +3335,7 @@
 			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">return_value</span>) <span class="op">=</span> <span class="ident">call_outcome</span> {
 				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TrapReason::Return</span>(<span class="ident">ReturnData</span> {
 					<span class="ident">flags</span>: <span class="ident">return_value</span>.<span class="ident">flags</span>.<span class="ident">bits</span>(),
-					<span class="ident">data</span>: <span class="ident">return_value</span>.<span class="ident">data</span>.<span class="number">0</span>,
+					<span class="ident">data</span>: <span class="ident">return_value</span>.<span class="ident">data</span>,
 				}))
 			}
 		}
