@@ -1,6 +1,6 @@
 var sourcesIndex = {};
 sourcesIndex["bags_list"] = {"name":"","files":["main.rs"]};
-sourcesIndex["beefy_gadget"] = {"name":"","files":["error.rs","gossip.rs","import.rs","justification.rs","keystore.rs","lib.rs","metrics.rs","notification.rs","round.rs","worker.rs"]};
+sourcesIndex["beefy_gadget"] = {"name":"","dirs":[{"name":"communication","dirs":[{"name":"request_response","files":["incoming_requests_handler.rs","mod.rs","outgoing_requests_engine.rs"]}],"files":["gossip.rs","mod.rs","notification.rs","peers.rs"]}],"files":["error.rs","import.rs","justification.rs","keystore.rs","lib.rs","metrics.rs","round.rs","worker.rs"]};
 sourcesIndex["beefy_gadget_rpc"] = {"name":"","files":["lib.rs","notification.rs"]};
 sourcesIndex["beefy_merkle_tree"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["beefy_primitives"] = {"name":"","files":["commitment.rs","lib.rs","mmr.rs","witness.rs"]};

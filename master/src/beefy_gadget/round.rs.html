@@ -456,6 +456,8 @@
 <span id="450">450</span>
 <span id="451">451</span>
 <span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -491,7 +493,7 @@
 <span class="doccomment">/// whether the local `self` validator has voted/signed.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Does not do any validation on votes or signatures, layers above need to handle that (gossip).</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">struct</span> <span class="ident">RoundTracker</span> {
 	<span class="ident">self_vote</span>: <span class="ident">bool</span>,
 	<span class="ident">votes</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Public</span>, <span class="ident">Signature</span><span class="op">&gt;</span>,
@@ -527,6 +529,7 @@
 <span class="doccomment">/// Only round numbers &gt; `best_done` are of interest, all others are considered stale.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Does not do any validation on votes or signatures, layers above need to handle that (gossip).</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Rounds</span><span class="op">&lt;</span><span class="ident">Payload</span>, <span class="ident">B</span>: <span class="ident">Block</span><span class="op">&gt;</span> {
 	<span class="ident">rounds</span>: <span class="ident">BTreeMap</span><span class="op">&lt;</span>(<span class="ident">Payload</span>, <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>), <span class="ident">RoundTracker</span><span class="op">&gt;</span>,
 	<span class="ident">session_start</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
@@ -593,7 +596,7 @@
 		}
 	}
 
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">try_conclude</span>(
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">should_conclude</span>(
 		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
 		<span class="ident">round</span>: <span class="kw-2">&amp;</span>(<span class="ident">P</span>, <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>),
 	) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Signature</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
@@ -606,7 +609,6 @@
 
 		<span class="kw">if</span> <span class="ident">done</span> {
 			<span class="kw">let</span> <span class="ident">signatures</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">rounds</span>.<span class="ident">remove</span>(<span class="ident">round</span>)<span class="question-mark">?</span>.<span class="ident">votes</span>;
-			<span class="self">self</span>.<span class="ident">conclude</span>(<span class="ident">round</span>.<span class="number">1</span>);
 			<span class="prelude-val">Some</span>(
 				<span class="self">self</span>.<span class="ident">validators</span>()
 					.<span class="ident">iter</span>()
@@ -737,7 +739,7 @@
 			<span class="bool-val">true</span>
 		));
 		<span class="comment">// round not concluded</span>
-		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">try_conclude</span>(<span class="kw-2">&amp;</span><span class="ident">round</span>).<span class="ident">is_none</span>());
+		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">should_conclude</span>(<span class="kw-2">&amp;</span><span class="ident">round</span>).<span class="ident">is_none</span>());
 		<span class="comment">// self vote already present, should not self vote</span>
 		<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">rounds</span>.<span class="ident">should_self_vote</span>(<span class="kw-2">&amp;</span><span class="ident">round</span>));
 
@@ -754,7 +756,7 @@
 			(<span class="ident">Keyring::Dave</span>.<span class="ident">public</span>(), <span class="ident">Keyring::Dave</span>.<span class="ident">sign</span>(<span class="string">b&quot;I am committed&quot;</span>)),
 			<span class="bool-val">false</span>
 		));
-		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">try_conclude</span>(<span class="kw-2">&amp;</span><span class="ident">round</span>).<span class="ident">is_none</span>());
+		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">should_conclude</span>(<span class="kw-2">&amp;</span><span class="ident">round</span>).<span class="ident">is_none</span>());
 
 		<span class="comment">// add 2nd good vote</span>
 		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">add_vote</span>(
@@ -763,7 +765,7 @@
 			<span class="bool-val">false</span>
 		));
 		<span class="comment">// round not concluded</span>
-		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">try_conclude</span>(<span class="kw-2">&amp;</span><span class="ident">round</span>).<span class="ident">is_none</span>());
+		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">should_conclude</span>(<span class="kw-2">&amp;</span><span class="ident">round</span>).<span class="ident">is_none</span>());
 
 		<span class="comment">// add 3rd good vote</span>
 		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">add_vote</span>(
@@ -772,7 +774,8 @@
 			<span class="bool-val">false</span>
 		));
 		<span class="comment">// round concluded</span>
-		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">try_conclude</span>(<span class="kw-2">&amp;</span><span class="ident">round</span>).<span class="ident">is_some</span>());
+		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">should_conclude</span>(<span class="kw-2">&amp;</span><span class="ident">round</span>).<span class="ident">is_some</span>());
+		<span class="ident">rounds</span>.<span class="ident">conclude</span>(<span class="ident">round</span>.<span class="number">1</span>);
 
 		<span class="comment">// Eve is a validator, but round was concluded, adding vote disallowed</span>
 		<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">rounds</span>.<span class="ident">add_vote</span>(
@@ -890,11 +893,12 @@
 		<span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">rounds</span>.<span class="ident">rounds</span>.<span class="ident">len</span>());
 
 		<span class="comment">// conclude unknown round</span>
-		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">try_conclude</span>(<span class="kw-2">&amp;</span>(<span class="ident">H256::from_low_u64_le</span>(<span class="number">5</span>), <span class="number">5</span>)).<span class="ident">is_none</span>());
+		<span class="macro">assert!</span>(<span class="ident">rounds</span>.<span class="ident">should_conclude</span>(<span class="kw-2">&amp;</span>(<span class="ident">H256::from_low_u64_le</span>(<span class="number">5</span>), <span class="number">5</span>)).<span class="ident">is_none</span>());
 		<span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">rounds</span>.<span class="ident">rounds</span>.<span class="ident">len</span>());
 
 		<span class="comment">// conclude round 2</span>
-		<span class="kw">let</span> <span class="ident">signatures</span> <span class="op">=</span> <span class="ident">rounds</span>.<span class="ident">try_conclude</span>(<span class="kw-2">&amp;</span>(<span class="ident">H256::from_low_u64_le</span>(<span class="number">2</span>), <span class="number">2</span>)).<span class="ident">unwrap</span>();
+		<span class="kw">let</span> <span class="ident">signatures</span> <span class="op">=</span> <span class="ident">rounds</span>.<span class="ident">should_conclude</span>(<span class="kw-2">&amp;</span>(<span class="ident">H256::from_low_u64_le</span>(<span class="number">2</span>), <span class="number">2</span>)).<span class="ident">unwrap</span>();
+		<span class="ident">rounds</span>.<span class="ident">conclude</span>(<span class="number">2</span>);
 		<span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">rounds</span>.<span class="ident">rounds</span>.<span class="ident">len</span>());
 
 		<span class="macro">assert_eq!</span>(

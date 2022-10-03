@@ -1141,6 +1141,11 @@
 <span id="1135">1135</span>
 <span id="1136">1136</span>
 <span id="1137">1137</span>
+<span id="1138">1138</span>
+<span id="1139">1139</span>
+<span id="1140">1140</span>
+<span id="1141">1141</span>
+<span id="1142">1142</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1191,7 +1196,7 @@
 	<span class="ident">Verifier</span>,
 };
 <span class="kw">use</span> <span class="ident">sc_network</span>::{
-	<span class="ident">config</span>::{<span class="ident">NetworkConfiguration</span>, <span class="ident">Role</span>, <span class="ident">SyncMode</span>},
+	<span class="ident">config</span>::{<span class="ident">NetworkConfiguration</span>, <span class="ident">RequestResponseConfig</span>, <span class="ident">Role</span>, <span class="ident">SyncMode</span>},
 	<span class="ident">Multiaddr</span>, <span class="ident">NetworkService</span>, <span class="ident">NetworkWorker</span>,
 };
 <span class="kw">use</span> <span class="ident">sc_network_common</span>::{
@@ -1831,6 +1836,8 @@
 	<span class="kw">pub</span> <span class="ident">block_announce_validator</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">BlockAnnounceValidator</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// List of notification protocols that the network must support.</span>
 	<span class="kw">pub</span> <span class="ident">notifications_protocols</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ProtocolName</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// List of request-response protocols that the network must support.</span>
+	<span class="kw">pub</span> <span class="ident">request_response_protocols</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">RequestResponseConfig</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// The indices of the peers the peer should be connected to.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// If `None`, it will be connected to all other peers.</span>
@@ -1933,6 +1940,9 @@
 		<span class="ident">network_config</span>.<span class="ident">transport</span> <span class="op">=</span> <span class="ident">TransportConfig::MemoryOnly</span>;
 		<span class="ident">network_config</span>.<span class="ident">listen_addresses</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">listen_addr</span>.<span class="ident">clone</span>()];
 		<span class="ident">network_config</span>.<span class="ident">allow_non_globals_in_dht</span> <span class="op">=</span> <span class="bool-val">true</span>;
+		<span class="ident">network_config</span>
+			.<span class="ident">request_response_protocols</span>
+			.<span class="ident">extend</span>(<span class="ident">config</span>.<span class="ident">request_response_protocols</span>);
 		<span class="ident">network_config</span>.<span class="ident">extra_sets</span> <span class="op">=</span> <span class="ident">config</span>
 			.<span class="ident">notifications_protocols</span>
 			.<span class="ident">into_iter</span>()

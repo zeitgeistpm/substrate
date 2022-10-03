@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["beefy_peers_set_config","Returns the configuration value to put in [`sc_network::config::NetworkConfiguration::extra_sets`]. For standard protocol name see [`beefy_protocol_name::gossip_protocol_name`]."]],"mod":[["notification",""],["request_response","Request/response protocol for syncing BEEFY justifications."]]};

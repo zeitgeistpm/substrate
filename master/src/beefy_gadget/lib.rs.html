@@ -280,6 +280,9 @@
 <span id="274">274</span>
 <span id="275">275</span>
 <span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -299,10 +302,12 @@
 <span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
 <span class="kw">use</span> <span class="ident">beefy_primitives</span>::{<span class="ident">BeefyApi</span>, <span class="ident">MmrRootHash</span>};
+<span class="kw">use</span> <span class="ident">parking_lot::Mutex</span>;
 <span class="kw">use</span> <span class="ident">prometheus::Registry</span>;
-<span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">Backend</span>, <span class="ident">BlockchainEvents</span>, <span class="ident">Finalizer</span>};
+<span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">Backend</span>, <span class="ident">BlockBackend</span>, <span class="ident">BlockchainEvents</span>, <span class="ident">Finalizer</span>};
 <span class="kw">use</span> <span class="ident">sc_consensus::BlockImport</span>;
 <span class="kw">use</span> <span class="ident">sc_network::ProtocolName</span>;
+<span class="kw">use</span> <span class="ident">sc_network_common::service::NetworkRequest</span>;
 <span class="kw">use</span> <span class="ident">sc_network_gossip::Network</span> <span class="kw">as</span> <span class="ident">GossipNetwork</span>;
 <span class="kw">use</span> <span class="ident">sp_api::ProvideRuntimeApi</span>;
 <span class="kw">use</span> <span class="ident">sp_blockchain::HeaderBackend</span>;
@@ -310,68 +315,38 @@
 <span class="kw">use</span> <span class="ident">sp_keystore::SyncCryptoStorePtr</span>;
 <span class="kw">use</span> <span class="ident">sp_mmr_primitives::MmrApi</span>;
 <span class="kw">use</span> <span class="ident">sp_runtime::traits::Block</span>;
-<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">sync::Arc</span>};
 
 <span class="kw">mod</span> <span class="ident">error</span>;
-<span class="kw">mod</span> <span class="ident">gossip</span>;
 <span class="kw">mod</span> <span class="ident">keystore</span>;
 <span class="kw">mod</span> <span class="ident">metrics</span>;
 <span class="kw">mod</span> <span class="ident">round</span>;
 <span class="kw">mod</span> <span class="ident">worker</span>;
 
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">communication</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">import</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">justification</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">notification</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">import::BeefyBlockImport</span>,
-	<span class="ident">notification</span>::{
-		<span class="ident">BeefyBestBlockSender</span>, <span class="ident">BeefyBestBlockStream</span>, <span class="ident">BeefyVersionedFinalityProofSender</span>,
-		<span class="ident">BeefyVersionedFinalityProofStream</span>,
+	<span class="ident">communication</span>::{
+		<span class="ident">notification</span>::{
+			<span class="ident">BeefyBestBlockSender</span>, <span class="ident">BeefyBestBlockStream</span>, <span class="ident">BeefyVersionedFinalityProofSender</span>,
+			<span class="ident">BeefyVersionedFinalityProofStream</span>,
+		},
+		<span class="ident">peers::KnownPeers</span>,
+		<span class="ident">request_response</span>::{
+			<span class="ident">outgoing_requests_engine::OnDemandJustificationsEngine</span>, <span class="ident">BeefyJustifsRequestHandler</span>,
+		},
 	},
+	<span class="ident">import::BeefyBlockImport</span>,
 };
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">beefy_protocol_name::standard_name</span> <span class="kw">as</span> <span class="ident">protocol_standard_name</span>;
-
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">beefy_protocol_name</span> {
-	<span class="kw">use</span> <span class="ident">sc_chain_spec::ChainSpec</span>;
-	<span class="kw">use</span> <span class="ident">sc_network::ProtocolName</span>;
-
-	<span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;/beefy/1&quot;</span>;
-	<span class="doccomment">/// Old names for the notifications protocol, used for backward compatibility.</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">LEGACY_NAMES</span>: [<span class="kw-2">&amp;</span><span class="ident">str</span>; <span class="number">1</span>] <span class="op">=</span> [<span class="string">&quot;/paritytech/beefy/1&quot;</span>];
-
-	<span class="doccomment">/// Name of the notifications protocol used by BEEFY.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Must be registered towards the networking in order for BEEFY to properly function.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">standard_name</span><span class="op">&lt;</span><span class="ident">Hash</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(
-		<span class="ident">genesis_hash</span>: <span class="kw-2">&amp;</span><span class="ident">Hash</span>,
-		<span class="ident">chain_spec</span>: <span class="kw-2">&amp;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ChainSpec</span><span class="op">&gt;</span>,
-	) -&gt; <span class="ident">ProtocolName</span> {
-		<span class="kw">let</span> <span class="ident">genesis_hash</span> <span class="op">=</span> <span class="ident">genesis_hash</span>.<span class="ident">as_ref</span>();
-		<span class="kw">let</span> <span class="ident">chain_prefix</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">chain_spec</span>.<span class="ident">fork_id</span>() {
-			<span class="prelude-val">Some</span>(<span class="ident">fork_id</span>) =&gt; <span class="macro">format!</span>(<span class="string">&quot;/{}/{}&quot;</span>, <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">genesis_hash</span>), <span class="ident">fork_id</span>),
-			<span class="prelude-val">None</span> =&gt; <span class="macro">format!</span>(<span class="string">&quot;/{}&quot;</span>, <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">genesis_hash</span>)),
-		};
-		<span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">chain_prefix</span>, <span class="ident">NAME</span>).<span class="ident">into</span>()
-	}
-}
-
-<span class="doccomment">/// Returns the configuration value to put in</span>
-<span class="doccomment">/// [`sc_network::config::NetworkConfiguration::extra_sets`].</span>
-<span class="doccomment">/// For standard protocol name see [`beefy_protocol_name::standard_name`].</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">beefy_peers_set_config</span>(
-	<span class="ident">protocol_name</span>: <span class="ident">ProtocolName</span>,
-) -&gt; <span class="ident">sc_network_common::config::NonDefaultSetConfig</span> {
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cfg</span> <span class="op">=</span> <span class="ident">sc_network_common::config::NonDefaultSetConfig::new</span>(<span class="ident">protocol_name</span>, <span class="number">1024</span> <span class="op">*</span> <span class="number">1024</span>);
-
-	<span class="ident">cfg</span>.<span class="ident">allow_non_reserved</span>(<span class="number">25</span>, <span class="number">25</span>);
-	<span class="ident">cfg</span>.<span class="ident">add_fallback_names</span>(<span class="ident">beefy_protocol_name::LEGACY_NAMES</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">n</span><span class="op">|</span> <span class="ident">n</span>.<span class="ident">into</span>()).<span class="ident">collect</span>());
-	<span class="ident">cfg</span>
-}
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">communication::beefy_protocol_name</span>::{
+	<span class="ident">gossip_protocol_name</span>, <span class="ident">justifications_protocol_name</span> <span class="kw">as</span> <span class="ident">justifs_protocol_name</span>,
+};
 
 <span class="doccomment">/// A convenience BEEFY client trait that defines all the type bounds a BEEFY client</span>
 <span class="doccomment">/// has to satisfy. Ideally that should actually be a trait alias. Unfortunately as</span>
@@ -441,13 +416,13 @@
 {
 	<span class="comment">// Voter -&gt; RPC links</span>
 	<span class="kw">let</span> (<span class="ident">to_rpc_justif_sender</span>, <span class="ident">from_voter_justif_stream</span>) <span class="op">=</span>
-		<span class="ident">notification::BeefyVersionedFinalityProofStream</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::channel</span>();
+		<span class="ident">BeefyVersionedFinalityProofStream</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::channel</span>();
 	<span class="kw">let</span> (<span class="ident">to_rpc_best_block_sender</span>, <span class="ident">from_voter_best_beefy_stream</span>) <span class="op">=</span>
-		<span class="ident">notification::BeefyBestBlockStream</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::channel</span>();
+		<span class="ident">BeefyBestBlockStream</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::channel</span>();
 
 	<span class="comment">// BlockImport -&gt; Voter links</span>
 	<span class="kw">let</span> (<span class="ident">to_voter_justif_sender</span>, <span class="ident">from_block_import_justif_stream</span>) <span class="op">=</span>
-		<span class="ident">notification::BeefyVersionedFinalityProofStream</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::channel</span>();
+		<span class="ident">BeefyVersionedFinalityProofStream</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::channel</span>();
 
 	<span class="comment">// BlockImport</span>
 	<span class="kw">let</span> <span class="ident">import</span> <span class="op">=</span>
@@ -462,6 +437,24 @@
 	(<span class="ident">import</span>, <span class="ident">voter_links</span>, <span class="ident">rpc_links</span>)
 }
 
+<span class="doccomment">/// BEEFY gadget network parameters.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BeefyNetworkParams</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">N</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+	<span class="ident">B</span>: <span class="ident">Block</span>,
+	<span class="ident">N</span>: <span class="ident">GossipNetwork</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">NetworkRequest</span> <span class="op">+</span> <span class="ident">SyncOracle</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+{
+	<span class="doccomment">/// Network implementing gossip, requests and sync-oracle.</span>
+	<span class="kw">pub</span> <span class="ident">network</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Chain specific BEEFY gossip protocol name. See</span>
+	<span class="doccomment">/// [`communication::beefy_protocol_name::gossip_protocol_name`].</span>
+	<span class="kw">pub</span> <span class="ident">gossip_protocol_name</span>: <span class="ident">ProtocolName</span>,
+	<span class="doccomment">/// Chain specific BEEFY on-demand justifications protocol name. See</span>
+	<span class="doccomment">/// [`communication::beefy_protocol_name::justifications_protocol_name`].</span>
+	<span class="kw">pub</span> <span class="ident">justifications_protocol_name</span>: <span class="ident">ProtocolName</span>,
+
+	<span class="kw">pub</span> <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+}
+
 <span class="doccomment">/// BEEFY gadget initialization parameters.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BeefyParams</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BE</span>, <span class="ident">C</span>, <span class="ident">N</span>, <span class="ident">R</span><span class="op">&gt;</span>
 <span class="kw">where</span>
@@ -470,7 +463,7 @@
 	<span class="ident">C</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BE</span><span class="op">&gt;</span>,
 	<span class="ident">R</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 	<span class="ident">R::Api</span>: <span class="ident">BeefyApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">MmrApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">MmrRootHash</span><span class="op">&gt;</span>,
-	<span class="ident">N</span>: <span class="ident">GossipNetwork</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">SyncOracle</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+	<span class="ident">N</span>: <span class="ident">GossipNetwork</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">NetworkRequest</span> <span class="op">+</span> <span class="ident">SyncOracle</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
 	<span class="doccomment">/// BEEFY client</span>
 	<span class="kw">pub</span> <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
@@ -480,16 +473,16 @@
 	<span class="kw">pub</span> <span class="ident">runtime</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// Local key store</span>
 	<span class="kw">pub</span> <span class="ident">key_store</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SyncCryptoStorePtr</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Gossip network</span>
-	<span class="kw">pub</span> <span class="ident">network</span>: <span class="ident">N</span>,
+	<span class="doccomment">/// BEEFY voter network params</span>
+	<span class="kw">pub</span> <span class="ident">network_params</span>: <span class="ident">BeefyNetworkParams</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">N</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// Minimal delta between blocks, BEEFY should vote for</span>
 	<span class="kw">pub</span> <span class="ident">min_block_delta</span>: <span class="ident">u32</span>,
 	<span class="doccomment">/// Prometheus metric registry</span>
 	<span class="kw">pub</span> <span class="ident">prometheus_registry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Registry</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Chain specific GRANDPA protocol name. See [`beefy_protocol_name::standard_name`].</span>
-	<span class="kw">pub</span> <span class="ident">protocol_name</span>: <span class="ident">ProtocolName</span>,
 	<span class="doccomment">/// Links between the block importer, the background voter and the RPC layer.</span>
 	<span class="kw">pub</span> <span class="ident">links</span>: <span class="ident">BeefyVoterLinks</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Handler for incoming BEEFY justifications requests from a remote peer.</span>
+	<span class="kw">pub</span> <span class="ident">on_demand_justifications_handler</span>: <span class="ident">BeefyJustifsRequestHandler</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">C</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// Start the BEEFY gadget.</span>
@@ -499,30 +492,41 @@
 <span class="kw">where</span>
 	<span class="ident">B</span>: <span class="ident">Block</span>,
 	<span class="ident">BE</span>: <span class="ident">Backend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="ident">C</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BE</span><span class="op">&gt;</span>,
+	<span class="ident">C</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BE</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">BlockBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 	<span class="ident">R</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 	<span class="ident">R::Api</span>: <span class="ident">BeefyApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">MmrApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">MmrRootHash</span><span class="op">&gt;</span>,
-	<span class="ident">N</span>: <span class="ident">GossipNetwork</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">SyncOracle</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+	<span class="ident">N</span>: <span class="ident">GossipNetwork</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">NetworkRequest</span> <span class="op">+</span> <span class="ident">SyncOracle</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
 	<span class="kw">let</span> <span class="ident">BeefyParams</span> {
 		<span class="ident">client</span>,
 		<span class="ident">backend</span>,
 		<span class="ident">runtime</span>,
 		<span class="ident">key_store</span>,
-		<span class="ident">network</span>,
+		<span class="ident">network_params</span>,
 		<span class="ident">min_block_delta</span>,
 		<span class="ident">prometheus_registry</span>,
-		<span class="ident">protocol_name</span>,
 		<span class="ident">links</span>,
+		<span class="ident">on_demand_justifications_handler</span>,
 	} <span class="op">=</span> <span class="ident">beefy_params</span>;
 
-	<span class="kw">let</span> <span class="ident">sync_oracle</span> <span class="op">=</span> <span class="ident">network</span>.<span class="ident">clone</span>();
-	<span class="kw">let</span> <span class="ident">gossip_validator</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">gossip::GossipValidator::new</span>());
+	<span class="kw">let</span> <span class="ident">BeefyNetworkParams</span> { <span class="ident">network</span>, <span class="ident">gossip_protocol_name</span>, <span class="ident">justifications_protocol_name</span>, .. } <span class="op">=</span>
+		<span class="ident">network_params</span>;
+
+	<span class="kw">let</span> <span class="ident">known_peers</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">KnownPeers::new</span>()));
+	<span class="kw">let</span> <span class="ident">gossip_validator</span> <span class="op">=</span>
+		<span class="ident">Arc::new</span>(<span class="ident">communication::gossip::GossipValidator::new</span>(<span class="ident">known_peers</span>.<span class="ident">clone</span>()));
 	<span class="kw">let</span> <span class="ident">gossip_engine</span> <span class="op">=</span> <span class="ident">sc_network_gossip::GossipEngine::new</span>(
-		<span class="ident">network</span>,
-		<span class="ident">protocol_name</span>,
+		<span class="ident">network</span>.<span class="ident">clone</span>(),
+		<span class="ident">gossip_protocol_name</span>,
 		<span class="ident">gossip_validator</span>.<span class="ident">clone</span>(),
 		<span class="prelude-val">None</span>,
+	);
+
+	<span class="kw">let</span> <span class="ident">on_demand_justifications</span> <span class="op">=</span> <span class="ident">OnDemandJustificationsEngine::new</span>(
+		<span class="ident">network</span>.<span class="ident">clone</span>(),
+		<span class="ident">runtime</span>.<span class="ident">clone</span>(),
+		<span class="ident">justifications_protocol_name</span>,
+		<span class="ident">known_peers</span>.<span class="ident">clone</span>(),
 	);
 
 	<span class="kw">let</span> <span class="ident">metrics</span> <span class="op">=</span>
@@ -543,10 +547,12 @@
 		<span class="ident">client</span>,
 		<span class="ident">backend</span>,
 		<span class="ident">runtime</span>,
-		<span class="ident">sync_oracle</span>,
+		<span class="ident">network</span>,
 		<span class="ident">key_store</span>: <span class="ident">key_store</span>.<span class="ident">into</span>(),
+		<span class="ident">known_peers</span>,
 		<span class="ident">gossip_engine</span>,
 		<span class="ident">gossip_validator</span>,
+		<span class="ident">on_demand_justifications</span>,
 		<span class="ident">links</span>,
 		<span class="ident">metrics</span>,
 		<span class="ident">min_block_delta</span>,
@@ -554,7 +560,7 @@
 
 	<span class="kw">let</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">worker::BeefyWorker</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">worker_params</span>);
 
-	<span class="ident">worker</span>.<span class="ident">run</span>().<span class="kw">await</span>
+	<span class="ident">futures::future::join</span>(<span class="ident">worker</span>.<span class="ident">run</span>(), <span class="ident">on_demand_justifications_handler</span>.<span class="ident">run</span>()).<span class="kw">await</span>;
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beefy_gadget" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>

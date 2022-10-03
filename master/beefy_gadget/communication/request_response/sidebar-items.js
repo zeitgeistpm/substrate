@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":[["Error",""]],"struct":[["BeefyJustifsRequestHandler","Handler for incoming BEEFY justifications requests from a remote peer."],["JustificationRequest","BEEFY justification request."]]};
