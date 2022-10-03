@@ -186,6 +186,7 @@ impl<B: BlockT> Future for GossipEngine<B> {
 									vec![remote],
 								);
 							},
+							Event::PeerConnected { .. } => {},
 							Event::NotificationStreamOpened { remote, protocol, role, .. } => {
 								if protocol != this.protocol {
 									continue

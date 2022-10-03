@@ -222,7 +222,7 @@ pub struct Config {
 	/// observer protocol is enabled).
 	pub observer_enabled: bool,
 	/// The role of the local node (i.e. authority, full-node or light).
-	pub local_role: sc_network::config::Role,
+	pub local_role: sc_network_common::sync::message::Role,
 	/// Some local identifier of the voter.
 	pub name: Option<String>,
 	/// The keystore that manages the keys of this node.

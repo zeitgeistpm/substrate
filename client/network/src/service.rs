@@ -58,6 +58,7 @@ use parking_lot::Mutex;
 use sc_network_common::{
 	config::{MultiaddrWithPeerId, TransportConfig},
 	error::Error,
+	notifications::ProtocolConfig as NotifProtocolConfig,
 	protocol::{
 		event::{DhtEvent, Event},
 		ProtocolName,
@@ -145,7 +146,11 @@ where
 	/// Returns a `NetworkWorker` that implements `Future` and must be regularly polled in order
 	/// for the network processing to advance. From it, you can extract a `NetworkService` using
 	/// `worker.service()`. The `NetworkService` can be shared through the codebase.
-	pub fn new(mut params: Params<B, Client>) -> Result<Self, Error> {
+	pub fn new(
+		mut params: Params<B, Client>,
+		sync_handle: sync_helper::SyncingHandle<B>,
+		sync_protocol_config: NotifProtocolConfig,
+	) -> Result<Self, Error> {
 		// Private and public keys configuration.
 		let local_identity = params.network_config.node_key.clone().into_keypair()?;
 		let local_public = local_identity.public();
@@ -223,26 +228,6 @@ where
 		);
 
 		let default_notif_handshake_message = Roles::from(&params.role).encode();
-
-		let (mut sync_helper, sync_handle, sync_protocol_config) = sync_helper::SyncingHelper::new(
-			params.chain_sync,
-			params.import_queue,
-			params.network_config.default_peers_set.in_peers as usize +
-				params.network_config.default_peers_set.out_peers as usize,
-			params.protocol_id.clone(),
-			&params.fork_id,
-			Arc::clone(&params.chain),
-			From::from(&params.role),
-			params.network_config.default_peers_set_num_full as usize,
-			{
-				let total = params.network_config.default_peers_set.out_peers +
-					params.network_config.default_peers_set.in_peers;
-				total.saturating_sub(params.network_config.default_peers_set_num_full) as usize
-			},
-			params.block_request_protocol_config.name.clone(),
-			params.state_request_protocol_config.name.clone(),
-			params.warp_sync_protocol_config.as_ref().map(|config| config.name.clone()),
-		);
 
 		let (protocol, peerset_handle, mut known_addresses) = Protocol::new(
 			From::from(&params.role),
@@ -465,9 +450,6 @@ where
 			sync_handle: sync_handle.clone(),
 			_marker: PhantomData,
 		});
-
-		sync_helper.register_network_service(service.clone());
-		(params.syncing_executor)(sync_helper.run().boxed());
 
 		Ok(NetworkWorker {
 			external_addresses,

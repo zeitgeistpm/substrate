@@ -18,7 +18,8 @@
 
 #![cfg(test)]
 
-use crate::protocol::notifications::{Notifications, NotificationsOut, ProtocolConfig};
+use crate::protocol::notifications::{Notifications, NotificationsOut};
+use sc_network_common::notifications::ProtocolConfig;
 
 use futures::prelude::*;
 use libp2p::{

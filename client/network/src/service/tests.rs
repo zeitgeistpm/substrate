@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-use crate::{config, NetworkService, NetworkWorker};
+use crate::{config, sync_helper, NetworkService, NetworkWorker};
 
 use futures::prelude::*;
 use libp2p::PeerId;
@@ -132,25 +132,56 @@ fn build_test_full_node(
 		None,
 	)
 	.unwrap();
-	let worker = NetworkWorker::new(config::Params {
-		role: config::Role::Full,
-		executor: None,
-		network_config,
-		chain: client.clone(),
-		protocol_id,
-		fork_id,
+
+	// initialize syncing engine
+	let (mut sync_helper, sync_handle, sync_protocol_config) = sync_helper::SyncingHelper::new(
+		Box::new(chain_sync),
 		import_queue,
-		chain_sync: Box::new(chain_sync),
-		metrics_registry: None,
-		block_request_protocol_config,
-		state_request_protocol_config,
-		warp_sync_protocol_config: None,
-		request_response_protocol_configs: vec![light_client_request_protocol_config],
-	})
+		network_config.default_peers_set.in_peers as usize +
+			network_config.default_peers_set.out_peers as usize,
+		protocol_id.clone(),
+		&fork_id,
+		Arc::clone(&client),
+		From::from(&sc_network_common::sync::message::Role::Full),
+		// From::from(&network_config.clone()),
+		network_config.default_peers_set_num_full as usize,
+		{
+			let total = network_config.default_peers_set.out_peers +
+				network_config.default_peers_set.in_peers;
+			total.saturating_sub(network_config.default_peers_set_num_full) as usize
+		},
+		block_request_protocol_config.clone().name,
+		state_request_protocol_config.clone().name,
+		None,
+	);
+
+	let worker = NetworkWorker::new(
+		config::Params {
+			role: sc_network_common::sync::message::Role::Full,
+			executor: None,
+			network_config,
+			chain: client.clone(),
+			protocol_id,
+			fork_id,
+			// import_queue,
+			// chain_sync: Box::new(chain_sync),
+			metrics_registry: None,
+			block_request_protocol_config,
+			state_request_protocol_config,
+			warp_sync_protocol_config: None,
+			request_response_protocol_configs: vec![light_client_request_protocol_config],
+			_marker: Default::default(),
+		},
+		sync_handle,
+		sync_protocol_config,
+	)
 	.unwrap();
 
 	let service = worker.service().clone();
 	let event_stream = service.event_stream("test");
+
+	sync_helper.register_network_service(service.clone());
+	async_std::task::spawn(sync_helper.run());
 
 	async_std::task::spawn(async move {
 		futures::pin_mut!(worker);
@@ -352,6 +383,8 @@ fn notifications_state_consistent() {
 				future::Either::Right(Event::SyncDisconnected { .. }) => {},
 				future::Either::Left(Event::Dht(_)) => {},
 				future::Either::Right(Event::Dht(_)) => {},
+				future::Either::Left(Event::PeerConnected { .. }) => {},
+				future::Either::Right(Event::PeerConnected { .. }) => {},
 			};
 		}
 	});

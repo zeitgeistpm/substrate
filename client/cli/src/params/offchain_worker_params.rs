@@ -24,7 +24,7 @@
 //! a reasonable abstraction.
 
 use clap::Args;
-use sc_network::config::Role;
+use sc_network_common::sync::message::Role;
 use sc_service::config::OffchainWorkerConfig;
 
 use crate::{error, OffchainWorkerEnabled};

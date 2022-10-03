@@ -49,7 +49,7 @@ use sc_consensus::{
 };
 use sc_network::{
 	config::{NetworkConfiguration, SyncMode},
-	Multiaddr, NetworkService, NetworkWorker,
+	sync_helper, Multiaddr, NetworkService, NetworkWorker,
 };
 use sc_network_common::{
 	config::{
@@ -899,25 +899,49 @@ where
 		)
 		.unwrap();
 
-		let network = NetworkWorker::new(sc_network::config::Params {
-			role: if config.is_authority { Role::Authority } else { Role::Full },
-			executor: None,
-			syncing_executor: Box::new(|task| {
-				async_std::task::spawn(task);
-			}),
-			network_config,
-			chain: client.clone(),
-			protocol_id,
-			fork_id,
+		// initialize syncing engine
+		let (mut sync_helper, sync_handle, sync_protocol_config) = sync_helper::SyncingHelper::new(
+			Box::new(chain_sync),
 			import_queue,
-			chain_sync: Box::new(chain_sync),
-			metrics_registry: None,
-			block_request_protocol_config,
-			state_request_protocol_config,
-			warp_sync_protocol_config: Some(warp_protocol_config),
-			request_response_protocol_configs: vec![light_client_request_protocol_config],
-		})
+			network_config.default_peers_set.in_peers as usize +
+				network_config.default_peers_set.out_peers as usize,
+			protocol_id.clone(),
+			&fork_id,
+			Arc::clone(&client),
+			From::from(if config.is_authority { &Role::Authority } else { &Role::Full }),
+			network_config.default_peers_set_num_full as usize,
+			{
+				let total = network_config.default_peers_set.out_peers +
+					network_config.default_peers_set.in_peers;
+				total.saturating_sub(network_config.default_peers_set_num_full) as usize
+			},
+			block_request_protocol_config.name.clone(),
+			state_request_protocol_config.name.clone(),
+			Some(warp_protocol_config.name.clone()),
+		);
+
+		let network = NetworkWorker::new(
+			sc_network::config::Params {
+				role: if config.is_authority { Role::Authority } else { Role::Full },
+				executor: None,
+				network_config,
+				chain: client.clone(),
+				protocol_id,
+				fork_id,
+				metrics_registry: None,
+				block_request_protocol_config,
+				state_request_protocol_config,
+				warp_sync_protocol_config: Some(warp_protocol_config),
+				request_response_protocol_configs: vec![light_client_request_protocol_config],
+				_marker: Default::default(),
+			},
+			sync_handle,
+			sync_protocol_config,
+		)
 		.unwrap();
+
+		sync_helper.register_network_service(network.service().clone());
+		async_std::task::spawn(sync_helper.run());
 
 		trace!(target: "test_network", "Peer identifier: {}", network.service().local_peer_id());
 

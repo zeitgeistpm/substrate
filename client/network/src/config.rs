@@ -68,9 +68,6 @@ where
 	/// default.
 	pub executor: Option<Box<dyn Fn(Pin<Box<dyn Future<Output = ()> + Send>>) + Send>>,
 
-	/// How to spawn the background task dedicated to the transactions handler.
-	pub syncing_executor: Box<dyn Fn(Pin<Box<dyn Future<Output = ()> + Send>>) + Send>,
-
 	/// Network layer configuration.
 	pub network_config: NetworkConfiguration,
 
@@ -83,15 +80,6 @@ where
 	/// Fork ID to distinguish protocols of different hard forks. Part of the standard protocol
 	/// name on the wire.
 	pub fork_id: Option<String>,
-
-	/// Import queue to use.
-	///
-	/// The import queue is the component that verifies that blocks received from other nodes are
-	/// valid.
-	pub import_queue: Box<dyn ImportQueue<B>>,
-
-	/// Instance of chain sync implementation.
-	pub chain_sync: Box<dyn ChainSync<B>>,
 
 	/// Registry for recording prometheus metrics to.
 	pub metrics_registry: Option<Registry>,
@@ -122,6 +110,7 @@ where
 
 	/// Request response protocol configurations
 	pub request_response_protocol_configs: Vec<RequestResponseConfig>,
+	pub _marker: std::marker::PhantomData<B>,
 }
 
 /// Sync operation mode.

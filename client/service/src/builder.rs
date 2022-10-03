@@ -37,7 +37,7 @@ use sc_client_db::{Backend, DatabaseSettings};
 use sc_consensus::import_queue::ImportQueue;
 use sc_executor::RuntimeVersionOf;
 use sc_keystore::LocalKeystore;
-use sc_network::{config::SyncMode, NetworkService};
+use sc_network::{config::SyncMode, sync_helper, NetworkService};
 use sc_network_bitswap::BitswapRequestHandler;
 use sc_network_common::{
 	service::{NetworkStateInfo, NetworkStatusProvider},
@@ -858,26 +858,20 @@ where
 				spawn_handle.spawn("libp2p-node", Some("networking"), fut);
 			}))
 		},
-		syncing_executor: {
-			let spawn_handle = Clone::clone(&spawn_handle);
-			Box::new(move |fut| {
-				spawn_handle.spawn("network-syncing-handler", Some("networking"), fut);
-			})
-		},
 		network_config: config.network.clone(),
 		chain: client.clone(),
 		protocol_id: protocol_id.clone(),
 		fork_id: config.chain_spec.fork_id().map(ToOwned::to_owned),
-		import_queue: Box::new(import_queue),
-		chain_sync: Box::new(chain_sync),
 		metrics_registry: config.prometheus_config.as_ref().map(|config| config.registry.clone()),
-		block_request_protocol_config,
-		state_request_protocol_config,
-		warp_sync_protocol_config,
+		// TODO: remove these three?
+		block_request_protocol_config: block_request_protocol_config.clone(),
+		state_request_protocol_config: state_request_protocol_config.clone(),
+		warp_sync_protocol_config: warp_sync_protocol_config.clone(),
 		request_response_protocol_configs: request_response_protocol_configs
 			.into_iter()
 			.flatten()
 			.collect::<Vec<_>>(),
+		_marker: Default::default(),
 	};
 
 	// crate transactions protocol and add it to the list of supported protocols of `network_params`
@@ -895,8 +889,30 @@ where
 		.extra_sets
 		.insert(0, transactions_handler_proto.set_config());
 
+	// initialize syncing engine
+	let (mut sync_helper, sync_handle, sync_protocol_config) = sync_helper::SyncingHelper::new(
+		Box::new(chain_sync),
+		Box::new(import_queue),
+		config.network.default_peers_set.in_peers as usize +
+			config.network.default_peers_set.out_peers as usize,
+		protocol_id.clone(),
+		&config.chain_spec.fork_id().map(ToOwned::to_owned),
+		Arc::clone(&client),
+		From::from(&config.role.clone()),
+		config.network.default_peers_set_num_full as usize,
+		{
+			let total = config.network.default_peers_set.out_peers +
+				config.network.default_peers_set.in_peers;
+			total.saturating_sub(config.network.default_peers_set_num_full) as usize
+		},
+		block_request_protocol_config.name.clone(),
+		state_request_protocol_config.name.clone(),
+		warp_sync_protocol_config.as_ref().map(|config| config.name.clone()),
+	);
+
 	let has_bootnodes = !network_params.network_config.boot_nodes.is_empty();
-	let network_mut = sc_network::NetworkWorker::new(network_params)?;
+	let network_mut =
+		sc_network::NetworkWorker::new(network_params, sync_handle, sync_protocol_config)?;
 	let network = network_mut.service().clone();
 
 	let (tx_handler, tx_handler_controller) = transactions_handler_proto.build(
@@ -905,6 +921,10 @@ where
 		config.prometheus_config.as_ref().map(|config| &config.registry),
 	)?;
 	spawn_handle.spawn("network-transactions-handler", Some("networking"), tx_handler.run());
+
+	// TODO: add comment
+	sync_helper.register_network_service(network.clone());
+	spawn_handle.spawn("network-syncing-handler", Some("networking"), sync_helper.run());
 
 	let (system_rpc_tx, system_rpc_rx) = tracing_unbounded("mpsc_system_rpc");
 
