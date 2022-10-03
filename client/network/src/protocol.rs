@@ -34,8 +34,8 @@ use notifications::{Notifications, NotificationsOut};
 use prometheus_endpoint::Registry;
 use sc_client_api::HeaderBackend;
 use sc_network_common::{
-	config::NonReservedPeerMode, error, protocol::ProtocolName, service::PeerValidationResult,
-	sync::message::Roles, utils::interval,
+	config::NonReservedPeerMode, error, notifications::ProtocolConfig as NotifProtocolConfig,
+	protocol::ProtocolName, service::PeerValidationResult, sync::message::Roles, utils::interval,
 };
 use sp_runtime::traits::Block as BlockT;
 use std::{
@@ -59,44 +59,16 @@ pub use notifications::{NotificationsSink, NotifsHandlerError, Ready};
 /// Interval at which we perform time based maintenance
 const TICK_TIMEOUT: time::Duration = time::Duration::from_millis(1100);
 
-/// Maximum number of known block hashes to keep for a peer.
-pub const MAX_KNOWN_BLOCKS: usize = 1024; // ~32kb per peer + LruHashSet overhead
-/// Maximum allowed size for a block announce.
-pub const MAX_BLOCK_ANNOUNCE_SIZE: u64 = 1024 * 1024;
-
-/// Maximum size used for notifications in the block announce and transaction protocols.
-// Must be equal to `max(MAX_BLOCK_ANNOUNCE_SIZE, MAX_TRANSACTIONS_SIZE)`.
-pub(crate) const BLOCK_ANNOUNCES_TRANSACTIONS_SUBSTREAM_SIZE: u64 = 16 * 1024 * 1024;
-
 /// Identifier of the peerset for the block announces protocol.
 const HARDCODED_PEERSETS_SYNC: sc_peerset::SetId = sc_peerset::SetId::from(0);
 /// Number of hardcoded peersets (the constants right above). Any set whose identifier is equal or
 /// superior to this value corresponds to a user-defined protocol.
 const NUM_HARDCODED_PEERSETS: usize = 1;
 
-/// When light node connects to the full node and the full node is behind light node
-/// for at least `LIGHT_MAXIMAL_BLOCKS_DIFFERENCE` blocks, we consider it not useful
-/// and disconnect to free connection slot.
-pub const LIGHT_MAXIMAL_BLOCKS_DIFFERENCE: u64 = 8192;
-
-pub mod rep {
+mod rep {
 	use sc_peerset::ReputationChange as Rep;
-	/// Reputation change when a peer doesn't respond in time to our messages.
-	pub const TIMEOUT: Rep = Rep::new(-(1 << 10), "Request timeout");
-	/// Reputation change when a peer refuses a request.
-	pub const REFUSED: Rep = Rep::new(-(1 << 10), "Request refused");
-	/// Reputation change when we are a light client and a peer is behind us.
-	pub const PEER_BEHIND_US_LIGHT: Rep = Rep::new(-(1 << 8), "Useless for a light peer");
 	/// We received a message that failed to decode.
 	pub const BAD_MESSAGE: Rep = Rep::new(-(1 << 12), "Bad message");
-	/// Peer has different genesis.
-	pub const GENESIS_MISMATCH: Rep = Rep::new_fatal("Genesis mismatch");
-	/// Peer is on unsupported protocol version.
-	pub const BAD_PROTOCOL: Rep = Rep::new_fatal("Unsupported protocol");
-	/// Peer role does not match (e.g. light peer connecting to another light peer).
-	pub const BAD_ROLE: Rep = Rep::new_fatal("Unsupported role");
-	/// Peer send us a block announcement that failed at validation.
-	pub const BAD_BLOCK_ANNOUNCEMENT: Rep = Rep::new(-(1 << 12), "Bad block announcement");
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -157,7 +129,7 @@ where
 		network_config: &config::NetworkConfiguration,
 		notifications_protocols_handshakes: Vec<Vec<u8>>,
 		_metrics_registry: Option<&Registry>,
-		sync_protocol_config: notifications::ProtocolConfig,
+		sync_protocol_config: NotifProtocolConfig,
 	) -> error::Result<(Self, sc_peerset::PeersetHandle, Vec<(PeerId, Multiaddr)>)> {
 		let _boot_node_ids = {
 			let mut list = HashSet::new();
@@ -255,7 +227,7 @@ where
 				peerset,
 				iter::once(sync_protocol_config).chain(
 					network_config.extra_sets.iter().zip(notifications_protocols_handshakes).map(
-						|(s, hs)| notifications::ProtocolConfig {
+						|(s, hs)| NotifProtocolConfig {
 							name: s.notifications_protocol.clone(),
 							fallback_names: s.fallback_names.clone(),
 							handshake: hs,

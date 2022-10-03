@@ -1,6 +1,6 @@
 // This file is part of Substrate.
 
-// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
 // This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-//! Implementation of libp2p's `NetworkBehaviour` trait that establishes communications and opens
-//! notifications substreams.
+// TODO: remove this file and use NonDefafultSetConfig
 
-pub use self::{
-	behaviour::{Notifications, NotificationsOut},
-	handler::{NotificationsSink, NotifsHandlerError, Ready},
-};
+use crate::protocol::ProtocolName;
 
-mod behaviour;
-mod handler;
-mod tests;
-mod upgrade;
+/// Configuration for a notifications protocol.
+#[derive(Debug, Clone)]
+pub struct ProtocolConfig {
+	/// Name of the protocol.
+	pub name: ProtocolName,
+	/// Names of the protocol to use if the main one isn't available.
+	pub fallback_names: Vec<ProtocolName>,
+	/// Handshake of the protocol.
+	pub handshake: Vec<u8>,
+	/// Maximum allowed size for a notification.
+	pub max_notification_size: u64,
+}

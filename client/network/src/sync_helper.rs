@@ -1,5 +1,3 @@
-use crate::protocol::*;
-
 use codec::{Decode, DecodeAll, Encode};
 use futures::{
 	channel::{mpsc, oneshot},
@@ -8,7 +6,6 @@ use futures::{
 };
 use libp2p::{request_response::OutboundFailure, PeerId};
 use log::{debug, error, info, log, trace, warn, Level};
-use message::{generic::Message as GenericMessage, Message};
 use sc_client_api::HeaderBackend;
 use sc_consensus::{
 	import_queue::{BlockImportError, BlockImportStatus},
@@ -16,6 +13,7 @@ use sc_consensus::{
 };
 use sc_network_common::{
 	config::ProtocolId,
+	notifications::ProtocolConfig as NotifProtocolConfig,
 	protocol::{event::Event, ProtocolName},
 	request_responses::{IfDisconnected, RequestFailure},
 	service::{
@@ -23,8 +21,8 @@ use sc_network_common::{
 	},
 	sync::{
 		message::{
-			BlockAnnounce, BlockAttributes, BlockData, BlockRequest, BlockResponse, BlockState,
-			Roles,
+			generic::Message as GenericMessage, BlockAnnounce, BlockAttributes, BlockData,
+			BlockRequest, BlockResponse, BlockState, Message, Roles,
 		},
 		warp::{EncodedProof, WarpProofRequest},
 		BadPeer, ChainSync, OnBlockData, OnBlockJustification, OnStateData, OpaqueBlockRequest,
@@ -47,6 +45,41 @@ use std::{
 	sync::Arc,
 	task::Poll,
 };
+
+/// Maximum number of known block hashes to keep for a peer.
+pub const MAX_KNOWN_BLOCKS: usize = 1024; // ~32kb per peer + LruHashSet overhead
+
+/// Maximum allowed size for a block announce.
+pub const MAX_BLOCK_ANNOUNCE_SIZE: u64 = 1024 * 1024;
+
+/// Maximum size used for notifications in the block announce and transaction protocols.
+// Must be equal to `max(MAX_BLOCK_ANNOUNCE_SIZE, MAX_TRANSACTIONS_SIZE)`.
+pub(crate) const BLOCK_ANNOUNCES_TRANSACTIONS_SUBSTREAM_SIZE: u64 = 16 * 1024 * 1024;
+
+/// When light node connects to the full node and the full node is behind light node
+/// for at least `LIGHT_MAXIMAL_BLOCKS_DIFFERENCE` blocks, we consider it not useful
+/// and disconnect to free connection slot.
+pub const LIGHT_MAXIMAL_BLOCKS_DIFFERENCE: u64 = 8192;
+
+mod rep {
+	use sc_peerset::ReputationChange as Rep;
+	/// Reputation change when a peer doesn't respond in time to our messages.
+	pub const TIMEOUT: Rep = Rep::new(-(1 << 10), "Request timeout");
+	/// Reputation change when a peer refuses a request.
+	pub const REFUSED: Rep = Rep::new(-(1 << 10), "Request refused");
+	/// Reputation change when we are a light client and a peer is behind us.
+	pub const PEER_BEHIND_US_LIGHT: Rep = Rep::new(-(1 << 8), "Useless for a light peer");
+	/// We received a message that failed to decode.
+	pub const BAD_MESSAGE: Rep = Rep::new(-(1 << 12), "Bad message");
+	/// Peer has different genesis.
+	pub const GENESIS_MISMATCH: Rep = Rep::new_fatal("Genesis mismatch");
+	/// Peer is on unsupported protocol version.
+	pub const BAD_PROTOCOL: Rep = Rep::new_fatal("Unsupported protocol");
+	/// Peer role does not match (e.g. light peer connecting to another light peer).
+	pub const BAD_ROLE: Rep = Rep::new_fatal("Unsupported role");
+	/// Peer send us a block announcement that failed at validation.
+	pub const BAD_BLOCK_ANNOUNCEMENT: Rep = Rep::new(-(1 << 12), "Bad block announcement");
+}
 
 #[derive(Debug)]
 pub enum PeerRequest<B: BlockT> {
@@ -171,7 +204,7 @@ where
 		block_request_protocol_name: ProtocolName,
 		state_request_protocol_name: ProtocolName,
 		warp_sync_protocol_name: Option<ProtocolName>,
-	) -> (Self, SyncingHandle<B>, notifications::ProtocolConfig) {
+	) -> (Self, SyncingHandle<B>, NotifProtocolConfig) {
 		let (tx, rx) = mpsc::unbounded();
 
 		let block_announces_protocol = {
@@ -200,7 +233,7 @@ where
 				.encode();
 
 		let block_announces_protocol_name = block_announces_protocol.clone().into();
-		let sync_protocol_config = notifications::ProtocolConfig {
+		let sync_protocol_config = NotifProtocolConfig {
 			name: block_announces_protocol.into(),
 			fallback_names: iter::once(legacy_ba_protocol_name.into()).collect(),
 			handshake: block_announces_handshake,
@@ -504,23 +537,16 @@ where
 	/// Called by peer when it is disconnecting.
 	///
 	/// Returns a result if the handshake of this peer was indeed accepted.
-	pub fn on_sync_peer_disconnected(
-		&mut self,
-		peer: PeerId,
-	) -> Result<Option<CustomMessageOutcome>, ()> {
+	pub fn on_sync_peer_disconnected(&mut self, peer: PeerId) -> Result<(), ()> {
 		if let Some(_peer_data) = self.peers.remove(&peer) {
-			let msg = if let Some(OnBlockData::Import(origin, blocks)) =
+			if let Some(OnBlockData::Import(origin, blocks)) =
 				self.chain_sync.peer_disconnected(&peer)
 			{
 				self.import_queue.import_blocks(origin, blocks);
-				Some(CustomMessageOutcome::None)
-			// Some(CustomMessageOutcome::BlockImport(origin, blocks))
-			} else {
-				None
-			};
+			}
 
 			self.default_peers_set_no_slot_connected_peers.remove(&peer);
-			Ok(msg)
+			Ok(())
 		} else {
 			Err(())
 		}

@@ -34,7 +34,7 @@ use crate::{
 	network_state::{
 		NetworkState, NotConnectedPeer as NetworkStateNotConnectedPeer, Peer as NetworkStatePeer,
 	},
-	protocol::{self, NotificationsSink, NotifsHandlerError, Protocol, Ready},
+	protocol::{NotificationsSink, NotifsHandlerError, Protocol, Ready},
 	sync_helper::{self, PeerInfo},
 	transport, ReputationChange,
 };
@@ -352,7 +352,7 @@ where
 					// kademlia, block announces, and transactions.
 					let default_max = cmp::max(
 						1024 * 1024,
-						usize::try_from(protocol::BLOCK_ANNOUNCES_TRANSACTIONS_SUBSTREAM_SIZE)
+						usize::try_from(sync_helper::BLOCK_ANNOUNCES_TRANSACTIONS_SUBSTREAM_SIZE)
 							.unwrap_or(usize::MAX),
 					);
 
@@ -552,7 +552,7 @@ where
 		futures::executor::block_on(self.sync_handle.num_downloaded_blocks())
 	}
 
-	/// Number of active sync requests.
+	// /// Number of active sync requests.
 	pub fn num_sync_requests(&self) -> usize {
 		// TODO: from syncing
 		futures::executor::block_on(self.sync_handle.num_sync_requests())
@@ -569,7 +569,7 @@ where
 		&self.service
 	}
 
-	/// You must call this when a new block is finalized by the client.
+	// /// You must call this when a new block is finalized by the client.
 	pub fn on_block_finalized(&mut self, hash: B::Hash, header: B::Header) {
 		// TODO: move to syncing
 		self.sync_handle.on_block_finalized(hash, header)
@@ -753,6 +753,7 @@ impl<B: BlockT + 'static, H: ExHashT> NetworkService<B, H> {
 	}
 }
 
+// TODO: implement sync oracle for syncinghandle
 impl<B: BlockT + 'static, H: ExHashT> sp_consensus::SyncOracle for NetworkService<B, H> {
 	fn is_major_syncing(&self) -> bool {
 		self.is_major_syncing.load(Ordering::Relaxed)

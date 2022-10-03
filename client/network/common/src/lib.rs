@@ -21,6 +21,7 @@
 pub mod config;
 pub mod error;
 pub mod message;
+pub mod notifications;
 pub mod protocol;
 pub mod request_responses;
 pub mod service;

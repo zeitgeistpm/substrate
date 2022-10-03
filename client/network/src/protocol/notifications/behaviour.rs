@@ -33,7 +33,7 @@ use libp2p::{
 use log::{error, trace, warn};
 use parking_lot::RwLock;
 use rand::distributions::{Distribution as _, Uniform};
-use sc_network_common::protocol::ProtocolName;
+use sc_network_common::{notifications::ProtocolConfig, protocol::ProtocolName};
 use sc_peerset::DropReason;
 use smallvec::SmallVec;
 use std::{
@@ -133,19 +133,6 @@ pub struct Notifications {
 
 	/// Events to produce from `poll()`.
 	events: VecDeque<NetworkBehaviourAction<NotificationsOut, NotifsHandlerProto>>,
-}
-
-/// Configuration for a notifications protocol.
-#[derive(Debug, Clone)]
-pub struct ProtocolConfig {
-	/// Name of the protocol.
-	pub name: ProtocolName,
-	/// Names of the protocol to use if the main one isn't available.
-	pub fallback_names: Vec<ProtocolName>,
-	/// Handshake of the protocol.
-	pub handshake: Vec<u8>,
-	/// Maximum allowed size for a notification.
-	pub max_notification_size: u64,
 }
 
 /// Identifier for a delay firing.
