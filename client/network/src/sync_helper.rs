@@ -27,7 +27,7 @@ use sc_network_common::{
 		warp::{EncodedProof, WarpProofRequest},
 		BadPeer, ChainSync, OnBlockData, OnBlockJustification, OnStateData, OpaqueBlockRequest,
 		OpaqueBlockResponse, OpaqueStateRequest, OpaqueStateResponse, PollBlockAnnounceValidation,
-		SyncStatus,
+		SyncState, SyncStatus,
 	},
 	utils::LruHashSet,
 };
@@ -42,7 +42,10 @@ use std::{
 	iter,
 	num::NonZeroUsize,
 	pin::Pin,
-	sync::Arc,
+	sync::{
+		atomic::{AtomicBool, AtomicUsize, Ordering},
+		Arc,
+	},
 	task::Poll,
 };
 
@@ -172,7 +175,7 @@ pub struct SyncingHelper<B: BlockT, Client, N> {
 	default_peers_set_num_light: usize,
 
 	rx: mpsc::UnboundedReceiver<SyncEvent<B>>,
-	sync_handle: SyncingHandle<B>,
+	sync_handle: Arc<SyncingHandle<B>>,
 
 	block_request_protocol_name: ProtocolName,
 	state_request_protocol_name: ProtocolName,
@@ -204,7 +207,7 @@ where
 		block_request_protocol_name: ProtocolName,
 		state_request_protocol_name: ProtocolName,
 		warp_sync_protocol_name: Option<ProtocolName>,
-	) -> (Self, SyncingHandle<B>, NotifProtocolConfig) {
+	) -> (Self, Arc<SyncingHandle<B>>, NotifProtocolConfig) {
 		let (tx, rx) = mpsc::unbounded();
 
 		let block_announces_protocol = {
@@ -240,6 +243,8 @@ where
 			max_notification_size: MAX_BLOCK_ANNOUNCE_SIZE,
 		};
 
+		let sync_handle = Arc::new(SyncingHandle::new(tx.clone()));
+
 		(
 			Self {
 				chain_sync,
@@ -259,10 +264,10 @@ where
 				block_request_protocol_name,
 				state_request_protocol_name,
 				warp_sync_protocol_name,
-				sync_handle: SyncingHandle::new(tx.clone()),
+				sync_handle: Arc::clone(&sync_handle),
 				block_announces_protocol_name,
 			},
-			SyncingHandle::new(tx),
+			sync_handle,
 			sync_protocol_config,
 		)
 	}
@@ -801,29 +806,22 @@ where
 				Ok(OnBlockJustification::Nothing) => {},
 				Ok(OnBlockJustification::Import { peer, hash, number, justifications }) => {
 					self.import_queue.import_justifications(peer, hash, number, justifications);
-					// CustomMessageOutcome::JustificationImport(peer, hash, number,
-					// justifications), CustomMessageOutcome::None
 				},
 				Err(BadPeer(id, repu)) => {
 					self.disconnect_and_report_peer(id, repu);
-					// CustomMessageOutcome::None
 				},
 			}
 		} else {
 			match self.chain_sync.on_block_data(&peer_id, Some(request), block_response) {
 				Ok(OnBlockData::Import(origin, blocks)) => {
 					self.import_queue.import_blocks(origin, blocks);
-					// CustomMessageOutcome::BlockImport(origin, blocks)
-					// CustomMessageOutcome::None
 				},
 				Ok(OnBlockData::Request(peer, req)) => {
 					self.prepare_block_request(peer, req);
-					// CustomMessageOutcome::None
 				},
 				Ok(OnBlockData::Continue) => {},
 				Err(BadPeer(id, repu)) => {
 					self.disconnect_and_report_peer(id, repu);
-					// CustomMessageOutcome::None
 				},
 			}
 		}
@@ -1198,6 +1196,15 @@ where
 					std::task::Poll::Pending::<()>
 				}).fuse() => {}
 			}
+
+			// Update the variables
+			self.sync_handle.num_connected.store(self.peers.len(), Ordering::Relaxed);
+
+			let is_major_syncing = match self.chain_sync.status().state {
+				SyncState::Idle => false,
+				SyncState::Downloading => true,
+			};
+			self.sync_handle.is_major_syncing.store(is_major_syncing, Ordering::Relaxed);
 		}
 	}
 }
@@ -1257,14 +1264,15 @@ pub enum SyncEvent<B: BlockT> {
 	AnnounceBlock(B::Hash, Option<Vec<u8>>, oneshot::Sender<()>),
 }
 
-#[derive(Clone)]
 pub struct SyncingHandle<B: BlockT> {
 	tx: mpsc::UnboundedSender<SyncEvent<B>>,
+	pub is_major_syncing: AtomicBool,
+	pub num_connected: AtomicUsize,
 }
 
 impl<B: BlockT> SyncingHandle<B> {
 	pub fn new(tx: mpsc::UnboundedSender<SyncEvent<B>>) -> Self {
-		Self { tx }
+		Self { tx, is_major_syncing: AtomicBool::new(false), num_connected: AtomicUsize::new(0) }
 	}
 
 	pub async fn announce_block(&self, hash: B::Hash, data: Option<Vec<u8>>) -> () {

@@ -105,12 +105,8 @@ use sc_network_common::service::{NetworkBlock, NetworkRequest};
 
 /// Substrate network service. Handles network IO and manages connectivity.
 pub struct NetworkService<B: BlockT + 'static, H: ExHashT> {
-	/// Number of peers we're connected to.
-	num_connected: Arc<AtomicUsize>,
 	/// The local external addresses.
 	external_addresses: Arc<Mutex<Vec<Multiaddr>>>,
-	/// Are we actively catching up with the chain?
-	is_major_syncing: Arc<AtomicBool>,
 	/// Local copy of the `PeerId` of the local node.
 	local_peer_id: PeerId,
 	/// The `KeyPair` that defines the `PeerId` of the local node.
@@ -129,7 +125,7 @@ pub struct NetworkService<B: BlockT + 'static, H: ExHashT> {
 	/// notifications-related metrics.
 	notifications_sizes_metric: Option<HistogramVec>,
 	/// Handle that is used for the communication with the syncing subsystem
-	sync_handle: sync_helper::SyncingHandle<B>,
+	sync_handle: Arc<sync_helper::SyncingHandle<B>>,
 	/// Marker to pin the `H` generic. Serves no purpose except to not break backwards
 	/// compatibility.
 	_marker: PhantomData<H>,
@@ -148,7 +144,7 @@ where
 	/// `worker.service()`. The `NetworkService` can be shared through the codebase.
 	pub fn new(
 		mut params: Params<B, Client>,
-		sync_handle: sync_helper::SyncingHandle<B>,
+		sync_handle: Arc<sync_helper::SyncingHandle<B>>,
 		sync_protocol_config: NotifProtocolConfig,
 	) -> Result<Self, Error> {
 		// Private and public keys configuration.
@@ -269,9 +265,6 @@ where
 				Ok(())
 			}
 		})?;
-
-		let num_connected = Arc::new(AtomicUsize::new(0));
-		let is_major_syncing = Arc::new(AtomicBool::new(false));
 
 		// Build the swarm.
 		let (mut swarm, bandwidth): (Swarm<Behaviour<B, Client>>, _) = {
@@ -408,8 +401,8 @@ where
 				registry,
 				MetricSources {
 					bandwidth: bandwidth.clone(),
-					major_syncing: is_major_syncing.clone(),
-					connected_peers: num_connected.clone(),
+					major_syncing: Arc::new(AtomicBool::new(false)),
+					connected_peers: Arc::new(AtomicUsize::new(0)),
 				},
 			)?),
 			None => None,
@@ -437,8 +430,6 @@ where
 		let service = Arc::new(NetworkService {
 			bandwidth,
 			external_addresses: external_addresses.clone(),
-			num_connected: num_connected.clone(),
-			is_major_syncing: is_major_syncing.clone(),
 			peerset: peerset_handle,
 			local_peer_id,
 			local_identity,
@@ -447,14 +438,12 @@ where
 			notifications_sizes_metric: metrics
 				.as_ref()
 				.map(|metrics| metrics.notifications_sizes.clone()),
-			sync_handle: sync_handle.clone(),
+			sync_handle: Arc::clone(&sync_handle),
 			_marker: PhantomData,
 		});
 
 		Ok(NetworkWorker {
 			external_addresses,
-			num_connected,
-			is_major_syncing,
 			network_service: swarm,
 			service,
 			from_service,
@@ -474,7 +463,11 @@ where
 			sync_state: status.state,
 			best_seen_block: self.best_seen_block(),
 			num_sync_peers: self.num_sync_peers(),
-			num_connected_peers: self.num_connected_peers(),
+			num_connected_peers: self
+				.network_service
+				.behaviour()
+				.user_protocol()
+				.num_connected_peers(),
 			num_active_peers: self.num_active_peers(),
 			total_bytes_inbound: self.total_bytes_inbound(),
 			total_bytes_outbound: self.total_bytes_outbound(),
@@ -493,15 +486,15 @@ where
 		self.service.bandwidth.total_outbound()
 	}
 
+	/// Returns the number of peers we're connected to and that are being queried.
+	pub fn num_active_peers(&self) -> usize {
+		self.network_service.behaviour().user_protocol().num_active_peers()
+	}
+
 	/// Returns the number of peers we're connected to.
 	pub fn num_connected_peers(&self) -> usize {
 		// TODO: from protocol.rs
 		futures::executor::block_on(self.sync_handle.num_connected_peers())
-	}
-
-	/// Returns the number of peers we're connected to and that are being queried.
-	pub fn num_active_peers(&self) -> usize {
-		self.network_service.behaviour().user_protocol().num_active_peers()
 	}
 
 	/// Current global sync state.
@@ -738,11 +731,11 @@ impl<B: BlockT + 'static, H: ExHashT> NetworkService<B, H> {
 // TODO: implement sync oracle for syncinghandle
 impl<B: BlockT + 'static, H: ExHashT> sp_consensus::SyncOracle for NetworkService<B, H> {
 	fn is_major_syncing(&self) -> bool {
-		self.is_major_syncing.load(Ordering::Relaxed)
+		self.sync_handle.is_major_syncing.load(Ordering::Relaxed)
 	}
 
 	fn is_offline(&self) -> bool {
-		self.num_connected.load(Ordering::Relaxed) == 0
+		self.sync_handle.num_connected.load(Ordering::Relaxed) == 0
 	}
 }
 
@@ -1001,7 +994,7 @@ where
 	}
 
 	fn sync_num_connected(&self) -> usize {
-		self.num_connected.load(Ordering::Relaxed)
+		todo!();
 	}
 
 	fn disconnect_sync_peer(&self, peer: PeerId) {
@@ -1282,10 +1275,6 @@ where
 {
 	/// Updated by the `NetworkWorker` and loaded by the `NetworkService`.
 	external_addresses: Arc<Mutex<Vec<Multiaddr>>>,
-	/// Updated by the `NetworkWorker` and loaded by the `NetworkService`.
-	num_connected: Arc<AtomicUsize>,
-	/// Updated by the `NetworkWorker` and loaded by the `NetworkService`.
-	is_major_syncing: Arc<AtomicBool>,
 	/// The network service that can be extracted and shared through the codebase.
 	service: Arc<NetworkService<B, H>>,
 	/// The *actual* network.
@@ -1305,7 +1294,7 @@ where
 	/// compatibility.
 	_marker: PhantomData<H>,
 	/// Handle that is used for the communication with the syncing subsystem
-	sync_handle: sync_helper::SyncingHandle<B>,
+	sync_handle: Arc<sync_helper::SyncingHandle<B>>,
 }
 
 impl<B, H, Client> Future for NetworkWorker<B, H, Client>
@@ -1318,11 +1307,6 @@ where
 
 	fn poll(mut self: Pin<&mut Self>, cx: &mut std::task::Context) -> Poll<Self::Output> {
 		let this = &mut *self;
-
-		// // TODO: move import queue out of `NetworkWorker`
-		// // Poll the import queue for actions to perform.
-		// this.import_queue
-		// 	.poll_actions(cx, &mut NetworkLink { sync_handle: &this.sync_handle });
 
 		// At the time of writing of this comment, due to a high volume of messages, the network
 		// worker sometimes takes a long time to process the loop below. When that happens, the
@@ -1878,12 +1862,6 @@ where
 			};
 		}
 
-		// TODO: remove
-		let num_connected_peers =
-			futures::executor::block_on(this.sync_handle.num_connected_peers());
-
-		// Update the variables shared with the `NetworkService`.
-		this.num_connected.store(num_connected_peers, Ordering::Relaxed);
 		{
 			let external_addresses =
 				Swarm::<Behaviour<B, Client>>::external_addresses(&this.network_service)
@@ -1892,14 +1870,6 @@ where
 					.collect();
 			*this.external_addresses.lock() = external_addresses;
 		}
-
-		// TODO: remove this entirely
-		let is_major_syncing = match futures::executor::block_on(this.sync_handle.status()).state {
-			SyncState::Idle => false,
-			SyncState::Downloading => true,
-		};
-
-		this.is_major_syncing.store(is_major_syncing, Ordering::Relaxed);
 
 		if let Some(metrics) = this.metrics.as_ref() {
 			for (proto, buckets) in this.network_service.behaviour_mut().num_entries_per_kbucket() {

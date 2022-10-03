@@ -297,6 +297,10 @@ where
 		// self.peers.values().filter(|p| p.request.is_some()).count()
 	}
 
+	pub fn num_connected_peers(&self) -> usize {
+		self.peers.len() // TODO: active peers only?
+	}
+
 	pub fn set_sync_handshake(&mut self, handshake_message: impl Into<Vec<u8>>) {
 		self.behaviour
 			.set_notif_protocol_handshake(HARDCODED_PEERSETS_SYNC, handshake_message);
