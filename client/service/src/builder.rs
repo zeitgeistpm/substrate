@@ -911,8 +911,11 @@ where
 	);
 
 	let has_bootnodes = !network_params.network_config.boot_nodes.is_empty();
-	let network_mut =
-		sc_network::NetworkWorker::new(network_params, sync_handle, sync_protocol_config)?;
+	let network_mut = sc_network::NetworkWorker::new(
+		network_params,
+		Arc::clone(&sync_handle),
+		sync_protocol_config,
+	)?;
 	let network = network_mut.service().clone();
 
 	let (tx_handler, tx_handler_controller) = transactions_handler_proto.build(
@@ -933,6 +936,7 @@ where
 		network_mut,
 		client,
 		system_rpc_rx,
+		sync_handle,
 		has_bootnodes,
 		config.announce_block,
 	);

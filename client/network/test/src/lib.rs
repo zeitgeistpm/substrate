@@ -234,6 +234,7 @@ pub struct Peer<D, BlockImport> {
 	select_chain: Option<LongestChain<substrate_test_runtime_client::Backend, Block>>,
 	backend: Option<Arc<substrate_test_runtime_client::Backend>>,
 	network: NetworkWorker<Block, <Block as BlockT>::Hash, PeersFullClient>,
+	sync_handle: Arc<sync_helper::SyncingHandle<Block>>,
 	imported_blocks_stream: Pin<Box<dyn Stream<Item = BlockImportNotification<Block>> + Send>>,
 	finality_notification_stream: Pin<Box<dyn Stream<Item = FinalityNotification<Block>> + Send>>,
 	listen_addr: Multiaddr,
@@ -262,18 +263,18 @@ where
 	}
 
 	/// Returns the number of peers we're connected to.
-	pub fn num_peers(&self) -> usize {
-		self.network.num_connected_peers()
+	pub async fn num_peers(&self) -> usize {
+		self.sync_handle.num_connected_peers().await
 	}
 
 	/// Returns the number of downloaded blocks.
-	pub fn num_downloaded_blocks(&self) -> usize {
-		self.network.num_downloaded_blocks()
+	pub async fn num_downloaded_blocks(&self) -> usize {
+		self.sync_handle.num_downloaded_blocks().await
 	}
 
 	/// Returns true if we have no peer.
-	pub fn is_offline(&self) -> bool {
-		self.num_peers() == 0
+	pub async fn is_offline(&self) -> bool {
+		self.num_peers().await == 0
 	}
 
 	/// Request a justification for the given block.
@@ -530,6 +531,10 @@ where
 	/// Get a reference to the network worker.
 	pub fn network(&self) -> &NetworkWorker<Block, <Block as BlockT>::Hash, PeersFullClient> {
 		&self.network
+	}
+
+	pub fn syncing(&self) -> &Arc<sync_helper::SyncingHandle<Block>> {
+		&self.sync_handle
 	}
 
 	/// Test helper to compare the blockchain state of multiple (networked)
@@ -935,7 +940,7 @@ where
 				request_response_protocol_configs: vec![light_client_request_protocol_config],
 				_marker: Default::default(),
 			},
-			sync_handle,
+			Arc::clone(&sync_handle),
 			sync_protocol_config,
 		)
 		.unwrap();
@@ -963,6 +968,7 @@ where
 				imported_blocks_stream,
 				finality_notification_stream,
 				block_import,
+				sync_handle,
 				verifier,
 				network,
 				listen_addr,
@@ -984,10 +990,12 @@ where
 		// Return `NotReady` if there's a mismatch in the highest block number.
 		let mut highest = None;
 		for peer in self.peers().iter() {
-			if peer.is_major_syncing() || peer.network.num_queued_blocks() != 0 {
+			if peer.is_major_syncing() ||
+				futures::executor::block_on(peer.sync_handle.num_queued_blocks()) != 0
+			{
 				return Poll::Pending
 			}
-			if peer.network.num_sync_requests() != 0 {
+			if futures::executor::block_on(peer.sync_handle.num_sync_requests()) != 0 {
 				return Poll::Pending
 			}
 			match (highest, peer.client.info().best_hash) {
@@ -1006,10 +1014,12 @@ where
 		self.poll(cx);
 
 		for peer in self.peers().iter() {
-			if peer.is_major_syncing() || peer.network.num_queued_blocks() != 0 {
+			if peer.is_major_syncing() ||
+				futures::executor::block_on(peer.sync_handle.num_queued_blocks()) != 0
+			{
 				return Poll::Pending
 			}
-			if peer.network.num_sync_requests() != 0 {
+			if futures::executor::block_on(peer.sync_handle.num_sync_requests()) != 0 {
 				return Poll::Pending
 			}
 		}
@@ -1023,7 +1033,11 @@ where
 		self.poll(cx);
 
 		let num_peers = self.peers().len();
-		if self.peers().iter().all(|p| p.num_peers() == num_peers - 1) {
+		if self
+			.peers()
+			.iter()
+			.all(|p| futures::executor::block_on(p.num_peers()) == num_peers - 1)
+		{
 			return Poll::Ready(())
 		}
 
@@ -1078,7 +1092,7 @@ where
 				while let Poll::Ready(Some(notification)) =
 					peer.finality_notification_stream.as_mut().poll_next(cx)
 				{
-					peer.network.on_block_finalized(notification.hash, notification.header);
+					peer.sync_handle.on_block_finalized(notification.hash, notification.header);
 				}
 			}
 		});

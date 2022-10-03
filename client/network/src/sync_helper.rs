@@ -1413,4 +1413,17 @@ impl<B: BlockT> SyncingHandle<B> {
 		self.tx.unbounded_send(SyncEvent::GetPeers(tx)).expect("channel to stay open");
 		rx.await.expect("channel to stay open")
 	}
+
+	/// Get currently connected peers.
+	pub async fn peers_debug_info(&self) -> Vec<(PeerId, PeerInfo<B>)> {
+		todo!();
+		let (tx, rx) = oneshot::channel();
+
+		self.tx.unbounded_send(SyncEvent::GetPeers(tx)).expect("channel to stay open");
+		rx.await
+			.expect("channel to stay open")
+			.iter()
+			.map(|(id, peer)| (*id, peer.info.clone())) // TODO: don't clone
+			.collect()
+	}
 }

@@ -456,25 +456,25 @@ where
 		})
 	}
 
-	/// High-level network status information.
-	pub fn status(&self) -> NetworkStatus<B> {
-		let status = self.sync_state();
-		NetworkStatus {
-			sync_state: status.state,
-			best_seen_block: self.best_seen_block(),
-			num_sync_peers: self.num_sync_peers(),
-			num_connected_peers: self
-				.network_service
-				.behaviour()
-				.user_protocol()
-				.num_connected_peers(),
-			num_active_peers: self.num_active_peers(),
-			total_bytes_inbound: self.total_bytes_inbound(),
-			total_bytes_outbound: self.total_bytes_outbound(),
-			state_sync: status.state_sync,
-			warp_sync: status.warp_sync,
-		}
-	}
+	// /// High-level network status information.
+	// pub fn status(&self) -> NetworkStatus<B> {
+	// 	let status = self.sync_state();
+	// 	NetworkStatus {
+	// 		sync_state: status.state,
+	// 		best_seen_block: self.best_seen_block(),
+	// 		num_sync_peers: self.num_sync_peers(),
+	// 		num_connected_peers: self
+	// 			.network_service
+	// 			.behaviour()
+	// 			.user_protocol()
+	// 			.num_connected_peers(),
+	// 		num_active_peers: self.num_active_peers(),
+	// 		total_bytes_inbound: self.total_bytes_inbound(),
+	// 		total_bytes_outbound: self.total_bytes_outbound(),
+	// 		state_sync: status.state_sync,
+	// 		warp_sync: status.warp_sync,
+	// 	}
+	// }
 
 	/// Returns the total number of bytes received so far.
 	pub fn total_bytes_inbound(&self) -> u64 {
@@ -491,48 +491,6 @@ where
 		self.network_service.behaviour().user_protocol().num_active_peers()
 	}
 
-	/// Returns the number of peers we're connected to.
-	pub fn num_connected_peers(&self) -> usize {
-		// TODO: from protocol.rs
-		futures::executor::block_on(self.sync_handle.num_connected_peers())
-	}
-
-	/// Current global sync state.
-	pub fn sync_state(&self) -> SyncStatus<B> {
-		// TODO: from syncing
-		futures::executor::block_on(self.sync_handle.status())
-	}
-
-	/// Target sync block number.
-	pub fn best_seen_block(&self) -> Option<NumberFor<B>> {
-		// TODO: from syncing
-		futures::executor::block_on(self.sync_handle.best_seen_block())
-	}
-
-	/// Number of peers participating in syncing.
-	pub fn num_sync_peers(&self) -> u32 {
-		// TODO: from syncing
-		futures::executor::block_on(self.sync_handle.num_sync_peers())
-	}
-
-	/// Number of blocks in the import queue.
-	pub fn num_queued_blocks(&self) -> u32 {
-		// TODO: from syncing
-		futures::executor::block_on(self.sync_handle.num_queued_blocks())
-	}
-
-	/// Returns the number of downloaded blocks.
-	pub fn num_downloaded_blocks(&self) -> usize {
-		// TODO: from syncing
-		futures::executor::block_on(self.sync_handle.num_downloaded_blocks())
-	}
-
-	// /// Number of active sync requests.
-	pub fn num_sync_requests(&self) -> usize {
-		// TODO: from syncing
-		futures::executor::block_on(self.sync_handle.num_sync_requests())
-	}
-
 	/// Adds an address for a node.
 	pub fn add_known_address(&mut self, peer_id: PeerId, addr: Multiaddr) {
 		self.network_service.behaviour_mut().add_known_address(peer_id, addr);
@@ -542,12 +500,6 @@ where
 	/// manipulate the worker.
 	pub fn service(&self) -> &Arc<NetworkService<B, H>> {
 		&self.service
-	}
-
-	// /// You must call this when a new block is finalized by the client.
-	pub fn on_block_finalized(&mut self, hash: B::Hash, header: B::Header) {
-		// TODO: move to syncing
-		self.sync_handle.on_block_finalized(hash, header)
 	}
 
 	/// Returns the local `PeerId`.
@@ -651,15 +603,6 @@ where
 			not_connected_peers,
 			peerset: swarm.behaviour_mut().user_protocol_mut().peerset_debug_info(),
 		}
-	}
-
-	/// Get currently connected peers.
-	pub fn peers_debug_info(&mut self) -> Vec<(PeerId, PeerInfo<B>)> {
-		// TODO: from syncing?
-		futures::executor::block_on(self.sync_handle.get_peers())
-			.iter()
-			.map(|(id, peer)| (*id, peer.info.clone())) // TODO: don't clone
-			.collect()
 	}
 
 	/// Removes a `PeerId` from the list of reserved peers.
@@ -819,6 +762,7 @@ where
 	}
 }
 
+// TODO: implement for sync handle
 #[async_trait::async_trait]
 impl<B, H> NetworkStatusProvider<B> for NetworkService<B, H>
 where
@@ -826,17 +770,18 @@ where
 	H: ExHashT,
 {
 	async fn status(&self) -> Result<NetworkStatus<B>, ()> {
-		let (tx, rx) = oneshot::channel();
+		todo!();
+		// let (tx, rx) = oneshot::channel();
 
-		let _ = self
-			.to_worker
-			.unbounded_send(ServiceToWorkerMsg::NetworkStatus { pending_response: tx });
+		// let _ = self
+		// 	.to_worker
+		// 	.unbounded_send(ServiceToWorkerMsg::NetworkStatus { pending_response: tx });
 
-		match rx.await {
-			Ok(v) => v.map_err(|_| ()),
-			// The channel can only be closed if the network worker no longer exists.
-			Err(_) => Err(()),
-		}
+		// match rx.await {
+		// 	Ok(v) => v.map_err(|_| ()),
+		// 	// The channel can only be closed if the network worker no longer exists.
+		// 	Err(_) => Err(()),
+		// }
 	}
 }
 
@@ -1398,8 +1343,8 @@ where
 						connect,
 					);
 				},
-				ServiceToWorkerMsg::NetworkStatus { pending_response } => {
-					let _ = pending_response.send(Ok(this.status()));
+				ServiceToWorkerMsg::NetworkStatus { pending_response: _ } => {
+					// let _ = pending_response.send(Ok(this.status()));
 				},
 				ServiceToWorkerMsg::NetworkState { pending_response } => {
 					let _ = pending_response.send(Ok(this.network_state()));

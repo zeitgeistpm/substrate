@@ -47,7 +47,7 @@ async fn sync_peers_works() {
 	futures::future::poll_fn::<(), _>(|cx| {
 		net.poll(cx);
 		for peer in 0..3 {
-			if net.peer(peer).num_peers() != 2 {
+			if futures::executor::block_on(net.peer(peer).num_peers()) != 2 {
 				return Poll::Pending
 			}
 		}
@@ -62,7 +62,7 @@ async fn sync_cycle_from_offline_to_syncing_to_offline() {
 	let mut net = TestNet::new(3);
 	for peer in 0..3 {
 		// Offline, and not major syncing.
-		assert!(net.peer(peer).is_offline());
+		assert!(futures::executor::block_on(net.peer(peer).is_offline()));
 		assert!(!net.peer(peer).is_major_syncing());
 	}
 
@@ -74,7 +74,7 @@ async fn sync_cycle_from_offline_to_syncing_to_offline() {
 		net.poll(cx);
 		for peer in 0..3 {
 			// Online
-			if net.peer(peer).is_offline() {
+			if futures::executor::block_on(net.peer(peer).is_offline()) {
 				return Poll::Pending
 			}
 			if peer < 2 {
@@ -105,7 +105,7 @@ async fn sync_cycle_from_offline_to_syncing_to_offline() {
 	net.peers.remove(1);
 	futures::future::poll_fn::<(), _>(|cx| {
 		net.poll(cx);
-		if !net.peer(0).is_offline() {
+		if !futures::executor::block_on(net.peer(0).is_offline()) {
 			Poll::Pending
 		} else {
 			Poll::Ready(())
@@ -423,7 +423,7 @@ async fn can_sync_small_non_best_forks() {
 	// poll until the two nodes connect, otherwise announcing the block will not work
 	futures::future::poll_fn::<(), _>(|cx| {
 		net.poll(cx);
-		if net.peer(0).num_peers() == 0 {
+		if futures::executor::block_on(net.peer(0).num_peers()) == 0 {
 			Poll::Pending
 		} else {
 			Poll::Ready(())
@@ -526,7 +526,9 @@ async fn can_sync_explicit_forks() {
 	// poll until the two nodes connect, otherwise announcing the block will not work
 	futures::future::poll_fn::<(), _>(|cx| {
 		net.poll(cx);
-		if net.peer(0).num_peers() == 0 || net.peer(1).num_peers() == 0 {
+		if futures::executor::block_on(net.peer(0).num_peers()) == 0 ||
+			futures::executor::block_on(net.peer(1).num_peers()) == 0
+		{
 			Poll::Pending
 		} else {
 			Poll::Ready(())
@@ -620,7 +622,9 @@ async fn full_sync_requires_block_body() {
 	// Wait for nodes to connect
 	futures::future::poll_fn::<(), _>(|cx| {
 		net.poll(cx);
-		if net.peer(0).num_peers() == 0 || net.peer(1).num_peers() == 0 {
+		if futures::executor::block_on(net.peer(0).num_peers()) == 0 ||
+			futures::executor::block_on(net.peer(1).num_peers()) == 0
+		{
 			Poll::Pending
 		} else {
 			Poll::Ready(())
@@ -660,12 +664,12 @@ async fn imports_stale_once() {
 	// check that NEW block is imported from announce message
 	let new_hash = net.peer(0).push_blocks(1, false).await;
 	import_with_announce(&mut net, new_hash).await;
-	assert_eq!(net.peer(1).num_downloaded_blocks(), 1);
+	assert_eq!(futures::executor::block_on(net.peer(1).num_downloaded_blocks()), 1);
 
 	// check that KNOWN STALE block is imported from announce message
 	let known_stale_hash = net.peer(0).push_blocks_at(BlockId::Number(0), 1, true).await;
 	import_with_announce(&mut net, known_stale_hash).await;
-	assert_eq!(net.peer(1).num_downloaded_blocks(), 2);
+	assert_eq!(futures::executor::block_on(net.peer(1).num_downloaded_blocks()), 2);
 }
 
 #[tokio::test]
@@ -925,9 +929,9 @@ async fn block_announce_data_is_propagated() {
 	// Wait until peer 1 is connected to both nodes.
 	futures::future::poll_fn::<(), _>(|cx| {
 		net.poll(cx);
-		if net.peer(1).num_peers() == 2 &&
-			net.peer(0).num_peers() == 1 &&
-			net.peer(2).num_peers() == 1
+		if futures::executor::block_on(net.peer(1).num_peers()) == 2 &&
+			futures::executor::block_on(net.peer(0).num_peers()) == 1 &&
+			futures::executor::block_on(net.peer(2).num_peers()) == 1
 		{
 			Poll::Ready(())
 		} else {
@@ -1014,7 +1018,7 @@ async fn multiple_requests_are_accepted_as_long_as_they_are_not_fulfilled() {
 		std::thread::sleep(std::time::Duration::from_secs(10));
 		net.peer(0).push_blocks(1, false).await;
 		net.block_until_sync().await;
-		assert_eq!(1, net.peer(0).num_peers());
+		assert_eq!(1, futures::executor::block_on(net.peer(0).num_peers()));
 	}
 
 	// Finalize the block and make the justification available.
@@ -1053,7 +1057,7 @@ async fn syncs_all_forks_from_single_peer() {
 	// Wait till peer 1 starts downloading
 	futures::future::poll_fn::<(), _>(|cx| {
 		net.poll(cx);
-		if net.peer(1).network().best_seen_block() != Some(12) {
+		if futures::executor::block_on(net.peer(1).syncing().best_seen_block()) != Some(12) {
 			return Poll::Pending
 		}
 		Poll::Ready(())

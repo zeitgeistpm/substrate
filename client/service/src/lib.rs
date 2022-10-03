@@ -41,7 +41,7 @@ use futures::{channel::mpsc, FutureExt, StreamExt};
 use jsonrpsee::{core::Error as JsonRpseeError, RpcModule};
 use log::{debug, error, warn};
 use sc_client_api::{blockchain::HeaderBackend, BlockBackend, BlockchainEvents, ProofProvider};
-use sc_network::PeerId;
+use sc_network::{sync_helper, PeerId};
 use sc_network_common::{config::MultiaddrWithPeerId, service::NetworkBlock};
 use sc_rpc_server::WsConfig;
 use sc_utils::mpsc::TracingUnboundedReceiver;
@@ -154,6 +154,7 @@ async fn build_network_future<
 	mut network: sc_network::NetworkWorker<B, H, C>,
 	client: Arc<C>,
 	mut rpc_rx: TracingUnboundedReceiver<sc_rpc::system::Request<B>>,
+	sync_handle: Arc<sync_helper::SyncingHandle<B>>,
 	should_have_peers: bool,
 	announce_imported_blocks: bool,
 ) {
@@ -190,7 +191,7 @@ async fn build_network_future<
 
 			// List of blocks that the client has finalized.
 			notification = finality_notification_stream.select_next_some() => {
-				network.on_block_finalized(notification.hash, notification.header);
+				sync_handle.on_block_finalized(notification.hash, notification.header);
 			}
 
 			// Answer incoming RPC requests.
@@ -198,7 +199,7 @@ async fn build_network_future<
 				match request {
 					sc_rpc::system::Request::Health(sender) => {
 						let _ = sender.send(sc_rpc::system::Health {
-							peers: network.peers_debug_info().len(),
+							peers: sync_handle.peers_debug_info().await.len(),
 							is_syncing: network.service().is_major_syncing(),
 							should_have_peers,
 						});
@@ -215,7 +216,7 @@ async fn build_network_future<
 						let _ = sender.send(addresses);
 					},
 					sc_rpc::system::Request::Peers(sender) => {
-						let _ = sender.send(network.peers_debug_info().into_iter().map(|(peer_id, p)|
+						let _ = sender.send(sync_handle.peers_debug_info().await.into_iter().map(|(peer_id, p)|
 							sc_rpc::system::PeerInfo {
 								peer_id: peer_id.to_base58(),
 								roles: format!("{:?}", p.roles),
@@ -278,7 +279,7 @@ async fn build_network_future<
 						let _ = sender.send(SyncState {
 							starting_block,
 							current_block: best_number,
-							highest_block: network.best_seen_block().unwrap_or(best_number),
+							highest_block: sync_handle.best_seen_block().await.unwrap_or(best_number),
 						});
 					}
 				}
