@@ -27,8 +27,8 @@ use sc_network_common::{
 		},
 		warp::{EncodedProof, WarpProofRequest},
 		BadPeer, ChainSync, OnBlockData, OnBlockJustification, OnStateData, OpaqueBlockRequest,
-		OpaqueBlockResponse, OpaqueStateRequest, OpaqueStateResponse, PollBlockAnnounceValidation,
-		SyncState, SyncStatus,
+		OpaqueBlockResponse, OpaqueStateRequest, OpaqueStateResponse, PeerInfo,
+		PollBlockAnnounceValidation, SyncPeerInfo, SyncState, SyncStatus,
 	},
 	utils::LruHashSet,
 };
@@ -55,10 +55,6 @@ pub const MAX_KNOWN_BLOCKS: usize = 1024; // ~32kb per peer + LruHashSet overhea
 
 /// Maximum allowed size for a block announce.
 pub const MAX_BLOCK_ANNOUNCE_SIZE: u64 = 1024 * 1024;
-
-/// Maximum size used for notifications in the block announce and transaction protocols.
-// Must be equal to `max(MAX_BLOCK_ANNOUNCE_SIZE, MAX_TRANSACTIONS_SIZE)`.
-pub(crate) const BLOCK_ANNOUNCES_TRANSACTIONS_SUBSTREAM_SIZE: u64 = 16 * 1024 * 1024;
 
 /// When light node connects to the full node and the full node is behind light node
 /// for at least `LIGHT_MAXIMAL_BLOCKS_DIFFERENCE` blocks, we consider it not useful
@@ -101,20 +97,9 @@ pub enum PeerRequest<B: BlockT> {
 #[derive(Debug, Clone)]
 pub struct Peer<B: BlockT> {
 	/// Empty documentation
-	pub info: PeerInfo<B>,
+	pub info: SyncPeerInfo<B>,
 	/// Holds a set of blocks known to this peer.
 	pub known_blocks: LruHashSet<B::Hash>,
-}
-
-/// Info about a peer's known state.
-#[derive(Clone, Debug)]
-pub struct PeerInfo<B: BlockT> {
-	/// Roles
-	pub roles: Roles,
-	/// Peer best block hash
-	pub best_hash: B::Hash,
-	/// Peer best block number
-	pub best_number: <B::Header as HeaderT>::Number,
 }
 
 /// Handshake sent when we open a block announces substream.
@@ -570,7 +555,7 @@ where
 		}
 
 		let peer = Peer {
-			info: PeerInfo {
+			info: SyncPeerInfo {
 				roles: status.roles,
 				best_hash: status.best_hash,
 				best_number: status.best_number,
@@ -1546,7 +1531,7 @@ impl<B: BlockT> SyncingHandle<B> {
 	}
 
 	/// Get currently connected peers.
-	pub async fn peers_debug_info(&self) -> Vec<(PeerId, PeerInfo<B>)> {
+	pub async fn peers_debug_info(&self) -> Vec<(PeerId, SyncPeerInfo<B>)> {
 		todo!();
 		// let (tx, rx) = oneshot::channel();
 

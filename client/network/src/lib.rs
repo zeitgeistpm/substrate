@@ -255,9 +255,6 @@ mod transport;
 pub mod config;
 pub mod network_state;
 
-// TODO: remove from here
-pub mod sync_helper;
-
 #[doc(inline)]
 pub use libp2p::{multiaddr, Multiaddr, PeerId};
 pub use sc_network_common::{

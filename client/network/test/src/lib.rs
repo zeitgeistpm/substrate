@@ -49,7 +49,7 @@ use sc_consensus::{
 };
 use sc_network::{
 	config::{NetworkConfiguration, SyncMode},
-	sync_helper, Multiaddr, NetworkService, NetworkWorker,
+	Multiaddr, NetworkService, NetworkWorker,
 };
 use sc_network_common::{
 	config::{
@@ -65,7 +65,7 @@ use sc_network_common::{
 use sc_network_light::light_client_requests::handler::LightClientRequestHandler;
 use sc_network_sync::{
 	block_request_handler::BlockRequestHandler, state_request_handler::StateRequestHandler,
-	warp_request_handler, ChainSync,
+	sync_helper, warp_request_handler, ChainSync,
 };
 use sc_service::client::Client;
 use sp_blockchain::{

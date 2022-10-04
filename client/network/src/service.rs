@@ -35,7 +35,6 @@ use crate::{
 		NetworkState, NotConnectedPeer as NetworkStateNotConnectedPeer, Peer as NetworkStatePeer,
 	},
 	protocol::{NotificationsSink, NotifsHandlerError, Protocol, Ready},
-	sync_helper::{self, PeerInfo},
 	transport, ReputationChange,
 };
 
@@ -71,7 +70,7 @@ use sc_network_common::{
 		NotificationSenderReady as NotificationSenderReadyT, PeerValidationResult, Signature,
 		SigningError,
 	},
-	sync::{message::Roles, SyncState, SyncStatus},
+	sync::{message::Roles, SyncState, SyncStatus, BLOCK_ANNOUNCES_TRANSACTIONS_SUBSTREAM_SIZE},
 	ExHashT,
 };
 use sc_peerset::PeersetHandle;
@@ -327,7 +326,7 @@ where
 					// kademlia, block announces, and transactions.
 					let default_max = cmp::max(
 						1024 * 1024,
-						usize::try_from(sync_helper::BLOCK_ANNOUNCES_TRANSACTIONS_SUBSTREAM_SIZE)
+						usize::try_from(BLOCK_ANNOUNCES_TRANSACTIONS_SUBSTREAM_SIZE)
 							.unwrap_or(usize::MAX),
 					);
 

@@ -37,7 +37,7 @@ use sc_client_db::{Backend, DatabaseSettings};
 use sc_consensus::import_queue::ImportQueue;
 use sc_executor::RuntimeVersionOf;
 use sc_keystore::LocalKeystore;
-use sc_network::{config::SyncMode, sync_helper, NetworkService};
+use sc_network::{config::SyncMode, NetworkService};
 use sc_network_bitswap::BitswapRequestHandler;
 use sc_network_common::{
 	service::{NetworkStateInfo, NetworkStatusProvider},
@@ -46,7 +46,7 @@ use sc_network_common::{
 use sc_network_light::light_client_requests::handler::LightClientRequestHandler;
 use sc_network_sync::{
 	block_request_handler::BlockRequestHandler, state_request_handler::StateRequestHandler,
-	warp_request_handler::RequestHandler as WarpSyncRequestHandler, ChainSync,
+	sync_helper, warp_request_handler::RequestHandler as WarpSyncRequestHandler, ChainSync,
 };
 use sc_rpc::{
 	author::AuthorApiServer,
@@ -727,7 +727,7 @@ pub fn build_network<TBl, TExPool, TImpQu, TCl>(
 		Arc<NetworkService<TBl, <TBl as BlockT>::Hash>>,
 		TracingUnboundedSender<sc_rpc::system::Request<TBl>>,
 		sc_network_transactions::TransactionsHandlerController<<TBl as BlockT>::Hash>,
-		Arc<sc_network::sync_helper::SyncingHandle<TBl>>,
+		Arc<sc_network_sync::sync_helper::SyncingHandle<TBl>>,
 		NetworkStarter,
 	),
 	Error,

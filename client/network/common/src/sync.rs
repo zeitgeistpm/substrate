@@ -22,6 +22,8 @@ pub mod message;
 pub mod metrics;
 pub mod warp;
 
+use crate::sync::message::Roles;
+
 use libp2p::PeerId;
 use message::{BlockAnnounce, BlockData, BlockRequest, BlockResponse};
 use sc_consensus::{BlockImportError, BlockImportStatus, IncomingBlock};
@@ -33,6 +35,7 @@ use sp_runtime::{
 use std::{any::Any, fmt, fmt::Formatter, task::Poll};
 use warp::{EncodedProof, WarpProofRequest, WarpSyncProgress};
 
+// TODO: remove?
 /// The sync status of a peer we are trying to sync with
 #[derive(Debug)]
 pub struct PeerInfo<Block: BlockT> {
@@ -393,4 +396,19 @@ pub trait ChainSync<Block: BlockT>: Send {
 
 	/// Decode implementation-specific state response.
 	fn decode_state_response(&self, response: &[u8]) -> Result<OpaqueStateResponse, String>;
+}
+
+/// Maximum size used for notifications in the block announce and transaction protocols.
+// Must be equal to `max(MAX_BLOCK_ANNOUNCE_SIZE, MAX_TRANSACTIONS_SIZE)`.
+pub const BLOCK_ANNOUNCES_TRANSACTIONS_SUBSTREAM_SIZE: u64 = 16 * 1024 * 1024;
+
+/// Info about a peer's known state.
+#[derive(Clone, Debug)]
+pub struct SyncPeerInfo<B: BlockT> {
+	/// Roles
+	pub roles: Roles,
+	/// Peer best block hash
+	pub best_hash: B::Hash,
+	/// Peer best block number
+	pub best_number: NumberFor<B>,
 }

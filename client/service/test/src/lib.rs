@@ -79,7 +79,7 @@ pub trait TestNetNode:
 	fn network(
 		&self,
 	) -> Arc<sc_network::NetworkService<Self::Block, <Self::Block as BlockT>::Hash>>;
-	fn syncing(&self) -> Arc<sc_network::sync_helper::SyncingHandle<Self::Block>>;
+	fn syncing(&self) -> Arc<sc_network_sync::sync_helper::SyncingHandle<Self::Block>>;
 	fn spawn_handle(&self) -> SpawnTaskHandle;
 }
 
@@ -88,7 +88,7 @@ pub struct TestNetComponents<TBl: BlockT, TBackend, TExec, TRtApi, TExPool> {
 	client: Arc<Client<TBackend, TExec, TBl, TRtApi>>,
 	transaction_pool: Arc<TExPool>,
 	network: Arc<sc_network::NetworkService<TBl, <TBl as BlockT>::Hash>>,
-	sync_handle: Arc<sc_network::sync_helper::SyncingHandle<TBl>>,
+	sync_handle: Arc<sc_network_sync::sync_helper::SyncingHandle<TBl>>,
 }
 
 impl<TBl: BlockT, TBackend, TExec, TRtApi, TExPool>
@@ -98,7 +98,7 @@ impl<TBl: BlockT, TBackend, TExec, TRtApi, TExPool>
 		task_manager: TaskManager,
 		client: Arc<Client<TBackend, TExec, TBl, TRtApi>>,
 		network: Arc<sc_network::NetworkService<TBl, <TBl as BlockT>::Hash>>,
-		sync_handle: Arc<sc_network::sync_helper::SyncingHandle<TBl>>,
+		sync_handle: Arc<sc_network_sync::sync_helper::SyncingHandle<TBl>>,
 		transaction_pool: Arc<TExPool>,
 	) -> Self {
 		Self {
@@ -161,7 +161,7 @@ where
 	) -> Arc<sc_network::NetworkService<Self::Block, <Self::Block as BlockT>::Hash>> {
 		self.network.clone()
 	}
-	fn syncing(&self) -> Arc<sc_network::sync_helper::SyncingHandle<Self::Block>> {
+	fn syncing(&self) -> Arc<sc_network_sync::sync_helper::SyncingHandle<Self::Block>> {
 		self.sync_handle.clone()
 	}
 	fn spawn_handle(&self) -> SpawnTaskHandle {

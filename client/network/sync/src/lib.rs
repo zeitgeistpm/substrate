@@ -33,6 +33,7 @@ pub mod blocks;
 mod schema;
 pub mod state;
 pub mod state_request_handler;
+pub mod sync_helper;
 pub mod warp;
 pub mod warp_request_handler;
 
