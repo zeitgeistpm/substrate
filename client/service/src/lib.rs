@@ -178,11 +178,11 @@ async fn build_network_future<
 				};
 
 				if announce_imported_blocks {
-					network.service().announce_block(notification.hash, None);
+					sync_handle.announce_block(notification.hash, None);
 				}
 
 				if notification.is_new_best {
-					network.service().new_best_block_imported(
+					sync_handle.new_best_block_imported(
 						notification.hash,
 						*notification.header.number(),
 					);
@@ -200,7 +200,7 @@ async fn build_network_future<
 					sc_rpc::system::Request::Health(sender) => {
 						let _ = sender.send(sc_rpc::system::Health {
 							peers: sync_handle.peers_debug_info().await.len(),
-							is_syncing: network.service().is_major_syncing(),
+							is_syncing: sync_handle.is_major_syncing(),
 							should_have_peers,
 						});
 					},

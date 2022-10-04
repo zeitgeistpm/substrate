@@ -727,6 +727,7 @@ pub fn build_network<TBl, TExPool, TImpQu, TCl>(
 		Arc<NetworkService<TBl, <TBl as BlockT>::Hash>>,
 		TracingUnboundedSender<sc_rpc::system::Request<TBl>>,
 		sc_network_transactions::TransactionsHandlerController<<TBl as BlockT>::Hash>,
+		Arc<sc_network::sync_helper::SyncingHandle<TBl>>,
 		NetworkStarter,
 	),
 	Error,
@@ -911,15 +912,12 @@ where
 	);
 
 	let has_bootnodes = !network_params.network_config.boot_nodes.is_empty();
-	let network_mut = sc_network::NetworkWorker::new(
-		network_params,
-		Arc::clone(&sync_handle),
-		sync_protocol_config,
-	)?;
+	let network_mut = sc_network::NetworkWorker::new(network_params, sync_protocol_config)?;
 	let network = network_mut.service().clone();
 
 	let (tx_handler, tx_handler_controller) = transactions_handler_proto.build(
 		network.clone(),
+		sync_handle.clone(),
 		Arc::new(TransactionPoolAdapter { pool: transaction_pool, client: client.clone() }),
 		config.prometheus_config.as_ref().map(|config| &config.registry),
 	)?;
@@ -936,7 +934,7 @@ where
 		network_mut,
 		client,
 		system_rpc_rx,
-		sync_handle,
+		sync_handle.clone(),
 		has_bootnodes,
 		config.announce_block,
 	);
@@ -977,7 +975,13 @@ where
 		future.await
 	});
 
-	Ok((network, system_rpc_tx, tx_handler_controller, NetworkStarter(network_start_tx)))
+	Ok((
+		network,
+		system_rpc_tx,
+		tx_handler_controller,
+		sync_handle,
+		NetworkStarter(network_start_tx),
+	))
 }
 
 /// Object used to start the network.

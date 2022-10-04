@@ -651,6 +651,18 @@ mod tests {
 		fn sync_num_connected(&self) -> usize {
 			unimplemented!();
 		}
+
+		fn disconnect_sync_peer(&self, _peer: PeerId) {
+			unimplemented!();
+		}
+
+		fn report_peer_validation_result(
+			&self,
+			_peer: PeerId,
+			_result: sc_network_common::service::PeerValidationResult,
+		) {
+			unimplemented!();
+		}
 	}
 
 	impl NetworkEventStream for NoOpNetwork {
@@ -669,6 +681,18 @@ mod tests {
 			_target: PeerId,
 			_protocol: ProtocolName,
 		) -> Result<Box<dyn NotificationSender>, NotificationSenderError> {
+			unimplemented!();
+		}
+
+		fn set_sync_handshake(&self, _handshake_message: Vec<u8>) {
+			unimplemented!();
+		}
+
+		fn write_sync_notification(&self, _who: PeerId, _message: Vec<u8>) {
+			unimplemented!();
+		}
+
+		fn write_batch_sync_notification(&self, _peers: Vec<PeerId>, _message: Vec<u8>) {
 			unimplemented!();
 		}
 	}

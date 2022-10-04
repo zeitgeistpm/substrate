@@ -46,7 +46,7 @@ use finality_grandpa::{
 };
 use parity_scale_codec::{Decode, Encode};
 use sc_network::ReputationChange;
-use sc_network_gossip::{GossipEngine, Network as GossipNetwork};
+use sc_network_gossip::{GossipEngine, Network as GossipNetwork, Syncing as GossipSyncing};
 use sc_telemetry::{telemetry, TelemetryHandle, CONSENSUS_DEBUG, CONSENSUS_INFO};
 use sp_keystore::SyncCryptoStorePtr;
 use sp_runtime::traits::{Block as BlockT, Hash as HashT, Header as HeaderT, NumberFor};
@@ -159,24 +159,36 @@ const TELEMETRY_VOTERS_LIMIT: usize = 10;
 ///
 /// Something that provides both the capabilities needed for the `gossip_network::Network` trait as
 /// well as the ability to set a fork sync request for a particular block.
-pub trait Network<Block: BlockT>:
-	NetworkSyncForkRequest<Block::Hash, NumberFor<Block>>
-	+ NetworkBlock<Block::Hash, NumberFor<Block>>
-	+ GossipNetwork<Block>
-	+ Clone
-	+ Send
-	+ 'static
-{
-}
+pub trait Network<Block: BlockT>: GossipNetwork<Block> + Clone + Send + 'static {}
 
 impl<Block, T> Network<Block> for T
 where
 	Block: BlockT,
+	T: GossipNetwork<Block> + Clone + Send + 'static,
+{
+}
+
+// TODO: document
+pub trait Syncing<Block: BlockT>:
+	NetworkSyncForkRequest<Block::Hash, NumberFor<Block>>
+	+ NetworkBlock<Block::Hash, NumberFor<Block>>
+	+ GossipSyncing<Block>
+	+ Clone
+	+ Send
+	+ Sync
+	+ 'static
+{
+}
+
+impl<Block, T> Syncing<Block> for T
+where
+	Block: BlockT,
 	T: NetworkSyncForkRequest<Block::Hash, NumberFor<Block>>
 		+ NetworkBlock<Block::Hash, NumberFor<Block>>
-		+ GossipNetwork<Block>
+		+ GossipSyncing<Block>
 		+ Clone
 		+ Send
+		+ Sync
 		+ 'static,
 {
 }
@@ -192,8 +204,9 @@ pub(crate) fn global_topic<B: BlockT>(set_id: SetIdNumber) -> B::Hash {
 }
 
 /// Bridge between the underlying network service, gossiping consensus messages and Grandpa
-pub(crate) struct NetworkBridge<B: BlockT, N: Network<B>> {
+pub(crate) struct NetworkBridge<B: BlockT, N: Network<B>, S: Syncing<B>> {
 	service: N,
+	sync_handle: S,
 	gossip_engine: Arc<Mutex<GossipEngine<B>>>,
 	validator: Arc<GossipValidator<B>>,
 
@@ -219,15 +232,16 @@ pub(crate) struct NetworkBridge<B: BlockT, N: Network<B>> {
 	telemetry: Option<TelemetryHandle>,
 }
 
-impl<B: BlockT, N: Network<B>> Unpin for NetworkBridge<B, N> {}
+impl<B: BlockT, N: Network<B>, S: Syncing<B>> Unpin for NetworkBridge<B, N, S> {}
 
-impl<B: BlockT, N: Network<B>> NetworkBridge<B, N> {
+impl<B: BlockT, N: Network<B>, S: Syncing<B>> NetworkBridge<B, N, S> {
 	/// Create a new NetworkBridge to the given NetworkService. Returns the service
 	/// handle.
 	/// On creation it will register previous rounds' votes with the gossip
 	/// service taken from the VoterSetState.
 	pub(crate) fn new(
 		service: N,
+		sync_handle: S,
 		config: crate::Config,
 		set_state: crate::environment::SharedVoterSetState<B>,
 		prometheus_registry: Option<&Registry>,
@@ -240,6 +254,7 @@ impl<B: BlockT, N: Network<B>> NetworkBridge<B, N> {
 		let validator = Arc::new(validator);
 		let gossip_engine = Arc::new(Mutex::new(GossipEngine::new(
 			service.clone(),
+			sync_handle.clone(),
 			protocol,
 			validator.clone(),
 			prometheus_registry,
@@ -283,6 +298,7 @@ impl<B: BlockT, N: Network<B>> NetworkBridge<B, N> {
 
 		NetworkBridge {
 			service,
+			sync_handle,
 			gossip_engine,
 			validator,
 			neighbor_sender: neighbor_packet_sender,
@@ -462,11 +478,14 @@ impl<B: BlockT, N: Network<B>> NetworkBridge<B, N> {
 		hash: B::Hash,
 		number: NumberFor<B>,
 	) {
-		self.service.set_sync_fork_request(peers, hash, number)
+		self.sync_handle.set_sync_fork_request(peers, hash, number)
 	}
 }
 
-impl<B: BlockT, N: Network<B>> Future for NetworkBridge<B, N> {
+impl<B: BlockT, N: Network<B>, S> Future for NetworkBridge<B, N, S>
+where
+	S: Syncing<B>,
+{
 	type Output = Result<(), Error>;
 
 	fn poll(self: Pin<&mut Self>, cx: &mut Context) -> Poll<Self::Output> {
@@ -643,10 +662,14 @@ fn incoming_global<B: BlockT>(
 		})
 }
 
-impl<B: BlockT, N: Network<B>> Clone for NetworkBridge<B, N> {
+impl<B: BlockT, N: Network<B>, S> Clone for NetworkBridge<B, N, S>
+where
+	S: Syncing<B>,
+{
 	fn clone(&self) -> Self {
 		NetworkBridge {
 			service: self.service.clone(),
+			sync_handle: self.sync_handle.clone(),
 			gossip_engine: self.gossip_engine.clone(),
 			validator: Arc::clone(&self.validator),
 			neighbor_sender: self.neighbor_sender.clone(),

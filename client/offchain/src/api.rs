@@ -409,6 +409,18 @@ mod tests {
 		fn sync_num_connected(&self) -> usize {
 			unimplemented!();
 		}
+
+		fn report_peer_validation_result(
+			&self,
+			_peer: PeerId,
+			_result: sc_network_common::service::PeerValidationResult,
+		) {
+			unimplemented!();
+		}
+
+		fn disconnect_sync_peer(&self, _peer: PeerId) {
+			unimplemented!();
+		}
 	}
 
 	impl NetworkStateInfo for TestNetwork {

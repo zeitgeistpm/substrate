@@ -138,7 +138,7 @@ pub use voting_rule::{
 };
 
 use aux_schema::PersistentData;
-use communication::{Network as NetworkT, NetworkBridge};
+use communication::{Network as NetworkT, NetworkBridge, Syncing};
 use environment::{Environment, VoterSetState};
 use sp_finality_grandpa::{AuthorityList, AuthoritySignature, SetId};
 use until_imported::UntilGlobalMessageBlocksImported;
@@ -347,10 +347,11 @@ pub(crate) trait BlockSyncRequester<Block: BlockT> {
 	);
 }
 
-impl<Block, Network> BlockSyncRequester<Block> for NetworkBridge<Block, Network>
+impl<Block, Network, S> BlockSyncRequester<Block> for NetworkBridge<Block, Network, S>
 where
 	Block: BlockT,
 	Network: NetworkT<Block>,
+	S: Syncing<Block>,
 {
 	fn set_sync_fork_request(
 		&self,
@@ -614,11 +615,11 @@ where
 	))
 }
 
-fn global_communication<BE, Block: BlockT, C, N>(
+fn global_communication<BE, Block: BlockT, C, N, S>(
 	set_id: SetId,
 	voters: &Arc<VoterSet<AuthorityId>>,
 	client: Arc<C>,
-	network: &NetworkBridge<Block, N>,
+	network: &NetworkBridge<Block, N, S>,
 	keystore: Option<&SyncCryptoStorePtr>,
 	metrics: Option<until_imported::Metrics>,
 ) -> (
@@ -638,6 +639,7 @@ where
 	C: ClientForGrandpa<Block, BE> + 'static,
 	N: NetworkT<Block>,
 	NumberFor<Block>: BlockNumberOps,
+	S: Syncing<Block>,
 {
 	let is_voter = local_authority_id(voters, keystore).is_some();
 
@@ -662,7 +664,7 @@ where
 }
 
 /// Parameters used to run Grandpa.
-pub struct GrandpaParams<Block: BlockT, C, N, SC, VR> {
+pub struct GrandpaParams<Block: BlockT, C, N, SC, SS, VR> {
 	/// Configuration for the GRANDPA service.
 	pub config: Config,
 	/// A link to the block import worker.
@@ -673,6 +675,8 @@ pub struct GrandpaParams<Block: BlockT, C, N, SC, VR> {
 	/// `sc_network` crate, it is assumed that the Grandpa notifications protocol has been passed
 	/// to the configuration of the networking. See [`grandpa_peers_set_config`].
 	pub network: N,
+	/// Syncing service
+	pub sync_handle: SS,
 	/// A voting rule used to potentially restrict target votes.
 	pub voting_rule: VR,
 	/// The prometheus metrics registry.
@@ -706,8 +710,8 @@ pub fn grandpa_peers_set_config(
 
 /// Run a GRANDPA voter as a task. Provide configuration and a link to a
 /// block import worker that has already been instantiated with `block_import`.
-pub fn run_grandpa_voter<Block: BlockT, BE: 'static, C, N, SC, VR>(
-	grandpa_params: GrandpaParams<Block, C, N, SC, VR>,
+pub fn run_grandpa_voter<Block: BlockT, BE: 'static, C, N, SC, SS, VR>(
+	grandpa_params: GrandpaParams<Block, C, N, SC, SS, VR>,
 ) -> sp_blockchain::Result<impl Future<Output = ()> + Send>
 where
 	Block::Hash: Ord,
@@ -718,11 +722,13 @@ where
 	NumberFor<Block>: BlockNumberOps,
 	C: ClientForGrandpa<Block, BE> + 'static,
 	C::Api: GrandpaApi<Block>,
+	SS: Syncing<Block>,
 {
 	let GrandpaParams {
 		mut config,
 		link,
 		network,
+		sync_handle,
 		voting_rule,
 		prometheus_registry,
 		shared_voter_state,
@@ -747,6 +753,7 @@ where
 
 	let network = NetworkBridge::new(
 		network,
+		sync_handle,
 		config.clone(),
 		persistent_data.set_state.clone(),
 		prometheus_registry.as_ref(),
@@ -831,20 +838,23 @@ impl Metrics {
 
 /// Future that powers the voter.
 #[must_use]
-struct VoterWork<B, Block: BlockT, C, N: NetworkT<Block>, SC, VR> {
+struct VoterWork<B, Block: BlockT, C, N: NetworkT<Block>, SC, SS, VR>
+where
+	SS: Syncing<Block>,
+{
 	voter: Pin<
 		Box<dyn Future<Output = Result<(), CommandOrError<Block::Hash, NumberFor<Block>>>> + Send>,
 	>,
 	shared_voter_state: SharedVoterState,
-	env: Arc<Environment<B, Block, C, N, SC, VR>>,
+	env: Arc<Environment<B, Block, C, N, SC, SS, VR>>,
 	voter_commands_rx: TracingUnboundedReceiver<VoterCommand<Block::Hash, NumberFor<Block>>>,
-	network: NetworkBridge<Block, N>,
+	network: NetworkBridge<Block, N, SS>,
 	telemetry: Option<TelemetryHandle>,
 	/// Prometheus metrics.
 	metrics: Option<Metrics>,
 }
 
-impl<B, Block, C, N, SC, VR> VoterWork<B, Block, C, N, SC, VR>
+impl<B, Block, C, N, SC, SS, VR> VoterWork<B, Block, C, N, SC, SS, VR>
 where
 	Block: BlockT,
 	B: Backend<Block> + 'static,
@@ -854,11 +864,12 @@ where
 	NumberFor<Block>: BlockNumberOps,
 	SC: SelectChain<Block> + 'static,
 	VR: VotingRule<Block, C> + Clone + 'static,
+	SS: Syncing<Block>,
 {
 	fn new(
 		client: Arc<C>,
 		config: Config,
-		network: NetworkBridge<Block, N>,
+		network: NetworkBridge<Block, N, SS>,
 		select_chain: SC,
 		voting_rule: VR,
 		persistent_data: PersistentData<Block>,
@@ -1061,7 +1072,7 @@ where
 	}
 }
 
-impl<B, Block, C, N, SC, VR> Future for VoterWork<B, Block, C, N, SC, VR>
+impl<B, Block, C, N, SC, SS, VR> Future for VoterWork<B, Block, C, N, SC, SS, VR>
 where
 	Block: BlockT,
 	B: Backend<Block> + 'static,
@@ -1071,6 +1082,7 @@ where
 	C: ClientForGrandpa<Block, B> + 'static,
 	C::Api: GrandpaApi<Block>,
 	VR: VotingRule<Block, C> + Clone + 'static,
+	SS: Syncing<Block>,
 {
 	type Output = Result<(), Error>;
 

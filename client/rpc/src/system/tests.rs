@@ -24,7 +24,8 @@ use jsonrpsee::{
 	types::{error::CallError, EmptyParams},
 	RpcModule,
 };
-use sc_network::{self, config::Role, PeerId};
+use sc_network::{self, PeerId};
+use sc_network_common::sync::message::Role;
 use sc_rpc_api::system::helpers::PeerInfo;
 use sc_utils::mpsc::tracing_unbounded;
 use sp_core::H256;

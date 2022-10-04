@@ -944,7 +944,7 @@ pub(crate) mod tests {
 	use futures::{executor::block_on, future::poll_fn, task::Poll};
 
 	use sc_client_api::{Backend as BackendT, HeaderBackend};
-	use sc_network::NetworkService;
+	use sc_network::sync_helper;
 	use sc_network_test::{PeersFullClient, TestNetFactory};
 	use sp_api::HeaderT;
 	use sp_blockchain::Backend as BlockchainBackendT;
@@ -957,7 +957,8 @@ pub(crate) mod tests {
 		peer: &BeefyPeer,
 		key: &Keyring,
 		min_block_delta: u32,
-	) -> BeefyWorker<Block, Backend, PeersFullClient, TestApi, Arc<NetworkService<Block, H256>>> {
+	) -> BeefyWorker<Block, Backend, PeersFullClient, TestApi, Arc<sync_helper::SyncingHandle<Block>>>
+	{
 		let keystore = create_beefy_keystore(*key);
 
 		let (to_rpc_justif_sender, from_voter_justif_stream) =
@@ -979,11 +980,16 @@ pub(crate) mod tests {
 
 		let api = Arc::new(TestApi {});
 		let network = peer.network_service().clone();
-		let sync_oracle = network.clone();
+		let sync_oracle = peer.syncing().clone();
 		let gossip_validator = Arc::new(crate::gossip::GossipValidator::new());
-		let gossip_engine =
-			GossipEngine::new(network, BEEFY_PROTOCOL_NAME, gossip_validator.clone(), None);
-		let worker_params = crate::worker::WorkerParams {
+		let gossip_engine = GossipEngine::new(
+			network,
+			sync_oracle.clone(),
+			BEEFY_PROTOCOL_NAME,
+			gossip_validator.clone(),
+			None,
+		);
+		let worker_params = WorkerParams {
 			client: peer.client().as_client(),
 			backend: peer.client().as_backend(),
 			runtime: api,
@@ -1271,6 +1277,7 @@ pub(crate) mod tests {
 		let mut net = BeefyTestNet::new(1, 0);
 		let backend = net.peer(0).client().as_backend();
 		let mut worker = create_beefy_worker(&net.peer(0), &keys[0], 1);
+		let runtime = tokio::runtime::Runtime::new().unwrap();
 
 		let (mut best_block_streams, mut finality_proofs) = get_beefy_streams(&mut net, keys);
 		let mut best_block_stream = best_block_streams.drain(..).next().unwrap();
@@ -1319,7 +1326,7 @@ pub(crate) mod tests {
 		// generate 2 blocks, try again expect success
 		let (mut best_block_streams, _) = get_beefy_streams(&mut net, keys);
 		let mut best_block_stream = best_block_streams.drain(..).next().unwrap();
-		net.peer(0).push_blocks(2, false);
+		runtime.block_on(net.peer(0).push_blocks(2, false));
 		// finalize 1 and 2 without justifications
 		backend.finalize_block(BlockId::number(1), None).unwrap();
 		backend.finalize_block(BlockId::number(2), None).unwrap();
@@ -1452,9 +1459,10 @@ pub(crate) mod tests {
 		let validator_set = ValidatorSet::new(make_beefy_ids(keys), 1).unwrap();
 		let mut net = BeefyTestNet::new(1, 0);
 		let backend = net.peer(0).client().as_backend();
+		let runtime = tokio::runtime::Runtime::new().unwrap();
 
 		// push 15 blocks with `AuthorityChange` digests every 10 blocks
-		net.generate_blocks_and_sync(15, 10, &validator_set, false);
+		runtime.block_on(net.generate_blocks_and_sync(15, 10, &validator_set, false));
 		// finalize 13 without justifications
 		net.peer(0)
 			.client()

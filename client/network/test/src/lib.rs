@@ -252,7 +252,7 @@ where
 
 	/// Returns true if we're major syncing.
 	pub fn is_major_syncing(&self) -> bool {
-		self.network.service().is_major_syncing()
+		self.sync_handle.is_major_syncing()
 	}
 
 	// Returns a clone of the local SelectChain, only available on full nodes
@@ -279,12 +279,12 @@ where
 
 	/// Request a justification for the given block.
 	pub fn request_justification(&self, hash: &<Block as BlockT>::Hash, number: NumberFor<Block>) {
-		self.network.service().request_justification(hash, number);
+		self.sync_handle.request_justification(hash, number);
 	}
 
 	/// Announces an important block on the network.
 	pub fn announce_block(&self, hash: <Block as BlockT>::Hash, data: Option<Vec<u8>>) {
-		self.network.service().announce_block(hash, data);
+		self.sync_handle.announce_block(hash, data);
 	}
 
 	/// Request explicit fork sync.
@@ -294,7 +294,7 @@ where
 		hash: <Block as BlockT>::Hash,
 		number: NumberFor<Block>,
 	) {
-		self.network.service().set_sync_fork_request(peers, hash, number);
+		self.sync_handle.set_sync_fork_request(peers, hash, number);
 	}
 
 	/// Add blocks to the peer -- edit the block before adding
@@ -398,13 +398,13 @@ where
 				.await
 				.expect("block_import failed");
 			if announce_block {
-				self.network.service().announce_block(hash, None);
+				self.sync_handle.announce_block(hash, None);
 			}
 			at = hash;
 		}
 
 		if inform_sync_about_new_best_block {
-			self.network.service().new_best_block_imported(
+			self.sync_handle.new_best_block_imported(
 				at,
 				*full_client.header(&BlockId::Hash(at)).ok().flatten().unwrap().number(),
 			);
@@ -940,7 +940,6 @@ where
 				request_response_protocol_configs: vec![light_client_request_protocol_config],
 				_marker: Default::default(),
 			},
-			Arc::clone(&sync_handle),
 			sync_protocol_config,
 		)
 		.unwrap();
@@ -1085,7 +1084,7 @@ where
 				while let Poll::Ready(Some(notification)) =
 					peer.imported_blocks_stream.as_mut().poll_next(cx)
 				{
-					peer.network.service().announce_block(notification.hash, None);
+					peer.sync_handle.announce_block(notification.hash, None);
 				}
 
 				// We poll `finality_notification_stream`.

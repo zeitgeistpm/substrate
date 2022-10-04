@@ -172,7 +172,6 @@ fn build_test_full_node(
 			request_response_protocol_configs: vec![light_client_request_protocol_config],
 			_marker: Default::default(),
 		},
-		sync_handle,
 		sync_protocol_config,
 	)
 	.unwrap();

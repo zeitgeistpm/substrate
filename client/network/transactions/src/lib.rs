@@ -162,10 +162,11 @@ impl TransactionsHandlerPrototype {
 	pub fn build<
 		B: BlockT + 'static,
 		H: ExHashT,
-		S: NetworkPeers + NetworkEventStream + NetworkNotification + sp_consensus::SyncOracle,
+		S: NetworkPeers + NetworkEventStream + NetworkNotification,
 	>(
 		self,
 		service: S,
+		sync_oracle: Arc<dyn sp_consensus::SyncOracle + Send + Sync>,
 		transaction_pool: Arc<dyn TransactionPool<H, B>>,
 		metrics_registry: Option<&Registry>,
 	) -> error::Result<(TransactionsHandler<B, H, S>, TransactionsHandlerController<H>)> {
@@ -178,6 +179,7 @@ impl TransactionsHandlerPrototype {
 			pending_transactions: FuturesUnordered::new(),
 			pending_transactions_peers: HashMap::new(),
 			service,
+			sync_oracle,
 			event_stream,
 			peers: HashMap::new(),
 			transaction_pool,
@@ -227,7 +229,7 @@ enum ToHandler<H: ExHashT> {
 pub struct TransactionsHandler<
 	B: BlockT + 'static,
 	H: ExHashT,
-	S: NetworkPeers + NetworkEventStream + NetworkNotification + sp_consensus::SyncOracle,
+	S: NetworkPeers + NetworkEventStream + NetworkNotification,
 > {
 	protocol_name: ProtocolName,
 	/// Interval at which we call `propagate_transactions`.
@@ -241,6 +243,8 @@ pub struct TransactionsHandler<
 	pending_transactions_peers: HashMap<H, Vec<PeerId>>,
 	/// Network service to use to send messages and manage peers.
 	service: S,
+	/// Sync oracle
+	sync_oracle: Arc<dyn sp_consensus::SyncOracle + Send + Sync>,
 	/// Stream of networking events.
 	event_stream: Pin<Box<dyn Stream<Item = Event> + Send>>,
 	// All connected peers
@@ -263,7 +267,7 @@ impl<B, H, S> TransactionsHandler<B, H, S>
 where
 	B: BlockT + 'static,
 	H: ExHashT,
-	S: NetworkPeers + NetworkEventStream + NetworkNotification + sp_consensus::SyncOracle,
+	S: NetworkPeers + NetworkEventStream + NetworkNotification,
 {
 	/// Turns the [`TransactionsHandler`] into a future that should run forever and not be
 	/// interrupted.
@@ -366,7 +370,7 @@ where
 	/// Called when peer sends us new transactions
 	fn on_transactions(&mut self, who: PeerId, transactions: Transactions<B::Extrinsic>) {
 		// Accept transactions only when node is not major syncing
-		if self.service.is_major_syncing() {
+		if self.sync_oracle.is_major_syncing() {
 			trace!(target: "sync", "{} Ignoring transactions while major syncing", who);
 			return
 		}
@@ -417,7 +421,7 @@ where
 	/// Propagate one transaction.
 	pub fn propagate_transaction(&mut self, hash: &H) {
 		// Accept transactions only when node is not major syncing
-		if self.service.is_major_syncing() {
+		if self.sync_oracle.is_major_syncing() {
 			return
 		}
 
@@ -469,7 +473,7 @@ where
 	/// Call when we must propagate ready transactions to peers.
 	fn propagate_transactions(&mut self) {
 		// Accept transactions only when node is not major syncing
-		if self.service.is_major_syncing() {
+		if self.sync_oracle.is_major_syncing() {
 			return
 		}
 

@@ -87,7 +87,7 @@ use std::{
 	pin::Pin,
 	str,
 	sync::{
-		atomic::{AtomicBool, AtomicUsize, Ordering},
+		atomic::{AtomicBool, AtomicUsize},
 		Arc,
 	},
 	task::Poll,
@@ -101,7 +101,7 @@ mod out_events;
 mod tests;
 
 pub use libp2p::identity::{error::DecodingError, Keypair, PublicKey};
-use sc_network_common::service::{NetworkBlock, NetworkRequest};
+use sc_network_common::service::NetworkRequest;
 
 /// Substrate network service. Handles network IO and manages connectivity.
 pub struct NetworkService<B: BlockT + 'static, H: ExHashT> {
@@ -124,8 +124,6 @@ pub struct NetworkService<B: BlockT + 'static, H: ExHashT> {
 	/// Field extracted from the [`Metrics`] struct and necessary to report the
 	/// notifications-related metrics.
 	notifications_sizes_metric: Option<HistogramVec>,
-	/// Handle that is used for the communication with the syncing subsystem
-	sync_handle: Arc<sync_helper::SyncingHandle<B>>,
 	/// Marker to pin the `H` generic. Serves no purpose except to not break backwards
 	/// compatibility.
 	_marker: PhantomData<H>,
@@ -144,7 +142,6 @@ where
 	/// `worker.service()`. The `NetworkService` can be shared through the codebase.
 	pub fn new(
 		mut params: Params<B, Client>,
-		sync_handle: Arc<sync_helper::SyncingHandle<B>>,
 		sync_protocol_config: NotifProtocolConfig,
 	) -> Result<Self, Error> {
 		// Private and public keys configuration.
@@ -438,7 +435,6 @@ where
 			notifications_sizes_metric: metrics
 				.as_ref()
 				.map(|metrics| metrics.notifications_sizes.clone()),
-			sync_handle: Arc::clone(&sync_handle),
 			_marker: PhantomData,
 		});
 
@@ -450,7 +446,6 @@ where
 			event_streams: out_events::OutChannels::new(params.metrics_registry.as_ref())?,
 			peers_notifications_sinks,
 			metrics,
-			sync_handle,
 			boot_node_ids,
 			_marker: Default::default(),
 		})
@@ -671,32 +666,6 @@ impl<B: BlockT + 'static, H: ExHashT> NetworkService<B, H> {
 	}
 }
 
-// TODO: implement sync oracle for syncinghandle
-impl<B: BlockT + 'static, H: ExHashT> sp_consensus::SyncOracle for NetworkService<B, H> {
-	fn is_major_syncing(&self) -> bool {
-		self.sync_handle.is_major_syncing.load(Ordering::Relaxed)
-	}
-
-	fn is_offline(&self) -> bool {
-		self.sync_handle.num_connected.load(Ordering::Relaxed) == 0
-	}
-}
-
-// TODO: make this a syncing trait
-impl<B: BlockT, H: ExHashT> sc_consensus::JustificationSyncLink<B> for NetworkService<B, H> {
-	/// Request a justification for the given block from the network.
-	///
-	/// On success, the justification will be passed to the import queue that was part at
-	/// initialization as part of the configuration.
-	fn request_justification(&self, hash: &B::Hash, number: NumberFor<B>) {
-		let _ = self.sync_handle.request_justification(*hash, number);
-	}
-
-	fn clear_justification_requests(&self) {
-		let _ = self.sync_handle.clear_justification_requests();
-	}
-}
-
 impl<B, H> NetworkStateInfo for NetworkService<B, H>
 where
 	B: sp_runtime::traits::Block,
@@ -745,24 +714,7 @@ where
 	}
 }
 
-// TODO: make this a syncing trait
-impl<B, H> NetworkSyncForkRequest<B::Hash, NumberFor<B>> for NetworkService<B, H>
-where
-	B: BlockT + 'static,
-	H: ExHashT,
-{
-	/// Configure an explicit fork sync request.
-	/// Note that this function should not be used for recent blocks.
-	/// Sync should be able to download all the recent forks normally.
-	/// `set_sync_fork_request` should only be used if external code detects that there's
-	/// a stale fork missing.
-	/// Passing empty `peers` set effectively removes the sync request.
-	fn set_sync_fork_request(&self, peers: Vec<PeerId>, hash: B::Hash, number: NumberFor<B>) {
-		self.sync_handle.set_sync_fork_request(peers, hash, number);
-	}
-}
-
-// TODO: implement for sync handle
+// TODO: what to do about this?
 #[async_trait::async_trait]
 impl<B, H> NetworkStatusProvider<B> for NetworkService<B, H>
 where
@@ -1028,6 +980,10 @@ where
 		Ok(Box::new(NotificationSender { sink, protocol_name: protocol, notification_size_metric }))
 	}
 
+	fn set_sync_handshake(&self, handshake: Vec<u8>) {
+		let _ = self.to_worker.unbounded_send(ServiceToWorkerMsg::SetSyncHandshake(handshake));
+	}
+
 	fn write_sync_notification(&self, peer: PeerId, message: Vec<u8>) {
 		let _ = self
 			.to_worker
@@ -1082,24 +1038,6 @@ where
 			pending_response: tx,
 			connect,
 		});
-	}
-}
-
-// TODO: make this a syncing trait
-impl<B, H> NetworkBlock<B::Hash, NumberFor<B>> for NetworkService<B, H>
-where
-	B: BlockT + 'static,
-	H: ExHashT,
-{
-	fn announce_block(&self, hash: B::Hash, data: Option<Vec<u8>>) {
-		let _ = futures::executor::block_on(self.sync_handle.announce_block(hash, data));
-		// let _ = self.to_worker.unbounded_send(ServiceToWorkerMsg::AnnounceBlock(hash, data));
-	}
-
-	fn new_best_block_imported(&self, hash: B::Hash, number: NumberFor<B>) {
-		self.sync_handle.update_chain_info(hash, number);
-		let handshake = futures::executor::block_on(self.sync_handle.get_handshake(hash, number));
-		let _ = self.to_worker.unbounded_send(ServiceToWorkerMsg::SetSyncHandshake(handshake));
 	}
 }
 
@@ -1238,8 +1176,6 @@ where
 	/// Marker to pin the `H` generic. Serves no purpose except to not break backwards
 	/// compatibility.
 	_marker: PhantomData<H>,
-	/// Handle that is used for the communication with the syncing subsystem
-	sync_handle: Arc<sync_helper::SyncingHandle<B>>,
 }
 
 impl<B, H, Client> Future for NetworkWorker<B, H, Client>
@@ -1354,11 +1290,6 @@ where
 					.behaviour_mut()
 					.user_protocol_mut()
 					.disconnect_peer(&who, protocol_name),
-				ServiceToWorkerMsg::SetSyncHandshake(handshake) => this
-					.network_service
-					.behaviour_mut()
-					.user_protocol_mut()
-					.set_sync_handshake(handshake),
 				ServiceToWorkerMsg::DisconnectSyncPeer(peer) => this
 					.network_service
 					.behaviour_mut()
@@ -1369,6 +1300,11 @@ where
 					.behaviour_mut()
 					.user_protocol_mut()
 					.report_peer_validation_result(peer, result),
+				ServiceToWorkerMsg::SetSyncHandshake(handshake) => this
+					.network_service
+					.behaviour_mut()
+					.user_protocol_mut()
+					.set_sync_handshake(handshake),
 				ServiceToWorkerMsg::WriteSyncNotification(peer, message) => this
 					.network_service
 					.behaviour_mut()

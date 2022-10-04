@@ -70,7 +70,9 @@ pub use self::{
 use libp2p::{multiaddr, PeerId};
 use sc_network_common::{
 	protocol::ProtocolName,
-	service::{NetworkBlock, NetworkEventStream, NetworkNotification, NetworkPeers},
+	service::{
+		NetworkBlock, NetworkEventStream, NetworkNotification, NetworkPeers, NetworkSyncForkRequest,
+	},
 };
 use sp_runtime::traits::{Block as BlockT, NumberFor};
 use std::iter;
@@ -79,10 +81,18 @@ mod bridge;
 mod state_machine;
 mod validator;
 
-/// Abstraction over a network.
-pub trait Network<B: BlockT>:
-	NetworkPeers + NetworkEventStream + NetworkNotification + NetworkBlock<B::Hash, NumberFor<B>>
+pub trait Syncing<B: BlockT>:
+	NetworkBlock<B::Hash, NumberFor<B>> + NetworkSyncForkRequest<B::Hash, NumberFor<B>>
 {
+}
+
+impl<T, B: BlockT> Syncing<B> for T where
+	T: NetworkBlock<B::Hash, NumberFor<B>> + NetworkSyncForkRequest<B::Hash, NumberFor<B>>
+{
+}
+
+/// Abstraction over a network.
+pub trait Network<B: BlockT>: NetworkPeers + NetworkEventStream + NetworkNotification {
 	fn add_set_reserved(&self, who: PeerId, protocol: ProtocolName) {
 		let addr =
 			iter::once(multiaddr::Protocol::P2p(who.into())).collect::<multiaddr::Multiaddr>();
@@ -94,9 +104,7 @@ pub trait Network<B: BlockT>:
 }
 
 impl<T, B: BlockT> Network<B> for T where
-	T: NetworkPeers
-		+ NetworkEventStream
-		+ NetworkNotification
-		+ NetworkBlock<B::Hash, NumberFor<B>>
+	T: NetworkPeers + NetworkEventStream + NetworkNotification /* + NetworkBlock<B::Hash,
+	                                                            * NumberFor<B>> */
 {
 }

@@ -21,7 +21,7 @@ use prometheus::Registry;
 use sc_client_api::{Backend, BlockchainEvents, Finalizer};
 use sc_consensus::BlockImport;
 use sc_network::ProtocolName;
-use sc_network_gossip::Network as GossipNetwork;
+use sc_network_gossip::{Network as GossipNetwork, Syncing as GossipSyncing};
 use sp_api::ProvideRuntimeApi;
 use sp_blockchain::HeaderBackend;
 use sp_consensus::{Error as ConsensusError, SyncOracle};
@@ -181,14 +181,15 @@ where
 }
 
 /// BEEFY gadget initialization parameters.
-pub struct BeefyParams<B, BE, C, N, R>
+pub struct BeefyParams<B, BE, C, N, R, S>
 where
 	B: Block,
 	BE: Backend<B>,
 	C: Client<B, BE>,
 	R: ProvideRuntimeApi<B>,
 	R::Api: BeefyApi<B> + MmrApi<B, MmrRootHash>,
-	N: GossipNetwork<B> + Clone + SyncOracle + Send + Sync + 'static,
+	N: GossipNetwork<B> + Clone + Send + Sync + 'static,
+	S: GossipSyncing<B> + SyncOracle + Clone + Send + Sync + 'static,
 {
 	/// BEEFY client
 	pub client: Arc<C>,
@@ -200,6 +201,8 @@ where
 	pub key_store: Option<SyncCryptoStorePtr>,
 	/// Gossip network
 	pub network: N,
+	/// Gossip syncing
+	pub sync_handle: S,
 	/// Minimal delta between blocks, BEEFY should vote for
 	pub min_block_delta: u32,
 	/// Prometheus metric registry
@@ -213,14 +216,15 @@ where
 /// Start the BEEFY gadget.
 ///
 /// This is a thin shim around running and awaiting a BEEFY worker.
-pub async fn start_beefy_gadget<B, BE, C, N, R>(beefy_params: BeefyParams<B, BE, C, N, R>)
+pub async fn start_beefy_gadget<B, BE, C, N, R, S>(beefy_params: BeefyParams<B, BE, C, N, R, S>)
 where
 	B: Block,
 	BE: Backend<B>,
 	C: Client<B, BE>,
 	R: ProvideRuntimeApi<B>,
 	R::Api: BeefyApi<B> + MmrApi<B, MmrRootHash>,
-	N: GossipNetwork<B> + Clone + SyncOracle + Send + Sync + 'static,
+	N: GossipNetwork<B> + Clone + Send + Sync + 'static,
+	S: GossipSyncing<B> + SyncOracle + Clone + Send + Sync + 'static,
 {
 	let BeefyParams {
 		client,
@@ -228,16 +232,18 @@ where
 		runtime,
 		key_store,
 		network,
+		sync_handle,
 		min_block_delta,
 		prometheus_registry,
 		protocol_name,
 		links,
 	} = beefy_params;
 
-	let sync_oracle = network.clone();
+	let sync_oracle = sync_handle.clone();
 	let gossip_validator = Arc::new(gossip::GossipValidator::new());
 	let gossip_engine = sc_network_gossip::GossipEngine::new(
 		network,
+		sync_handle,
 		protocol_name,
 		gossip_validator.clone(),
 		None,

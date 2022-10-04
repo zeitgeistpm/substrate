@@ -79,6 +79,7 @@ pub trait TestNetNode:
 	fn network(
 		&self,
 	) -> Arc<sc_network::NetworkService<Self::Block, <Self::Block as BlockT>::Hash>>;
+	fn syncing(&self) -> Arc<sc_network::sync_helper::SyncingHandle<Self::Block>>;
 	fn spawn_handle(&self) -> SpawnTaskHandle;
 }
 
@@ -87,6 +88,7 @@ pub struct TestNetComponents<TBl: BlockT, TBackend, TExec, TRtApi, TExPool> {
 	client: Arc<Client<TBackend, TExec, TBl, TRtApi>>,
 	transaction_pool: Arc<TExPool>,
 	network: Arc<sc_network::NetworkService<TBl, <TBl as BlockT>::Hash>>,
+	sync_handle: Arc<sc_network::sync_helper::SyncingHandle<TBl>>,
 }
 
 impl<TBl: BlockT, TBackend, TExec, TRtApi, TExPool>
@@ -96,9 +98,16 @@ impl<TBl: BlockT, TBackend, TExec, TRtApi, TExPool>
 		task_manager: TaskManager,
 		client: Arc<Client<TBackend, TExec, TBl, TRtApi>>,
 		network: Arc<sc_network::NetworkService<TBl, <TBl as BlockT>::Hash>>,
+		sync_handle: Arc<sc_network::sync_helper::SyncingHandle<TBl>>,
 		transaction_pool: Arc<TExPool>,
 	) -> Self {
-		Self { client, transaction_pool, network, task_manager: Arc::new(Mutex::new(task_manager)) }
+		Self {
+			client,
+			transaction_pool,
+			network,
+			sync_handle,
+			task_manager: Arc::new(Mutex::new(task_manager)),
+		}
 	}
 }
 
@@ -111,6 +120,7 @@ impl<TBl: BlockT, TBackend, TExec, TRtApi, TExPool> Clone
 			client: self.client.clone(),
 			transaction_pool: self.transaction_pool.clone(),
 			network: self.network.clone(),
+			sync_handle: self.sync_handle.clone(),
 		}
 	}
 }
@@ -150,6 +160,9 @@ where
 		&self,
 	) -> Arc<sc_network::NetworkService<Self::Block, <Self::Block as BlockT>::Hash>> {
 		self.network.clone()
+	}
+	fn syncing(&self) -> Arc<sc_network::sync_helper::SyncingHandle<Self::Block>> {
+		self.sync_handle.clone()
 	}
 	fn spawn_handle(&self) -> SpawnTaskHandle {
 		self.task_manager.lock().spawn_handle()
@@ -470,7 +483,7 @@ pub fn sync<G, E, Fb, F, B, ExF, U>(
 		let info = network.full_nodes[0].1.client().info();
 		network.full_nodes[0]
 			.1
-			.network()
+			.syncing()
 			.new_best_block_imported(info.best_hash, info.best_number);
 		network.full_nodes[0].3.clone()
 	};

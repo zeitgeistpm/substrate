@@ -25,7 +25,7 @@ use super::{
 use crate::{communication::grandpa_protocol_name, environment::SharedVoterSetState};
 use futures::prelude::*;
 use parity_scale_codec::Encode;
-use sc_network::{config::Role, Multiaddr, PeerId, ReputationChange};
+use sc_network::{Multiaddr, PeerId, ReputationChange};
 use sc_network_common::{
 	config::MultiaddrWithPeerId,
 	protocol::{
@@ -36,6 +36,7 @@ use sc_network_common::{
 		NetworkBlock, NetworkEventStream, NetworkNotification, NetworkPeers,
 		NetworkSyncForkRequest, NotificationSender, NotificationSenderError,
 	},
+	sync::message::Role,
 };
 use sc_network_gossip::Validator;
 use sc_network_test::{Block, Hash};
@@ -131,6 +132,18 @@ impl NetworkPeers for TestNetwork {
 	fn sync_num_connected(&self) -> usize {
 		unimplemented!();
 	}
+
+	fn disconnect_sync_peer(&self, _peer: PeerId) {
+		unimplemented!();
+	}
+
+	fn report_peer_validation_result(
+		&self,
+		_peer: PeerId,
+		_result: sc_network_common::service::PeerValidationResult,
+	) {
+		unimplemented!();
+	}
 }
 
 impl NetworkEventStream for TestNetwork {
@@ -156,20 +169,18 @@ impl NetworkNotification for TestNetwork {
 	) -> Result<Box<dyn NotificationSender>, NotificationSenderError> {
 		unimplemented!();
 	}
-}
 
-impl NetworkBlock<Hash, NumberFor<Block>> for TestNetwork {
-	fn announce_block(&self, hash: Hash, _data: Option<Vec<u8>>) {
-		let _ = self.sender.unbounded_send(Event::Announce(hash));
-	}
-
-	fn new_best_block_imported(&self, _hash: Hash, _number: NumberFor<Block>) {
+	fn set_sync_handshake(&self, _handshake_message: Vec<u8>) {
 		unimplemented!();
 	}
-}
 
-impl NetworkSyncForkRequest<Hash, NumberFor<Block>> for TestNetwork {
-	fn set_sync_fork_request(&self, _peers: Vec<PeerId>, _hash: Hash, _number: NumberFor<Block>) {}
+	fn write_sync_notification(&self, _who: PeerId, _message: Vec<u8>) {
+		unimplemented!();
+	}
+
+	fn write_batch_sync_notification(&self, _peers: Vec<PeerId>, _message: Vec<u8>) {
+		unimplemented!();
+	}
 }
 
 impl sc_network_gossip::ValidatorContext<Block> for TestNetwork {
@@ -189,8 +200,29 @@ impl sc_network_gossip::ValidatorContext<Block> for TestNetwork {
 	fn send_topic(&mut self, _: &PeerId, _: Hash, _: bool) {}
 }
 
+#[derive(Clone)]
+pub(crate) struct TestSync {
+	sender: TracingUnboundedSender<Event>,
+}
+
+impl NetworkBlock<Hash, NumberFor<Block>> for TestSync {
+	fn announce_block(&self, hash: Hash, _data: Option<Vec<u8>>) {
+		let _ = self.sender.unbounded_send(Event::Announce(hash));
+	}
+
+	fn new_best_block_imported(&self, _hash: Hash, _number: NumberFor<Block>) {
+		unimplemented!();
+	}
+}
+
+impl NetworkSyncForkRequest<Hash, NumberFor<Block>> for TestSync {
+	fn set_sync_fork_request(&self, _peers: Vec<PeerId>, _hash: Hash, _number: NumberFor<Block>) {
+		unimplemented!();
+	}
+}
+
 pub(crate) struct Tester {
-	pub(crate) net_handle: super::NetworkBridge<Block, TestNetwork>,
+	pub(crate) net_handle: super::NetworkBridge<Block, TestNetwork, TestSync>,
 	gossip_validator: Arc<GossipValidator<Block>>,
 	pub(crate) events: TracingUnboundedReceiver<Event>,
 }
@@ -257,7 +289,8 @@ fn voter_set_state() -> SharedVoterSetState<Block> {
 // needs to run in a tokio runtime.
 pub(crate) fn make_test_network() -> (impl Future<Output = Tester>, TestNetwork) {
 	let (tx, rx) = tracing_unbounded("test");
-	let net = TestNetwork { sender: tx };
+	let net = TestNetwork { sender: tx.clone() };
+	let sync = TestSync { sender: tx };
 
 	#[derive(Clone)]
 	struct Exit;
@@ -270,7 +303,8 @@ pub(crate) fn make_test_network() -> (impl Future<Output = Tester>, TestNetwork)
 		}
 	}
 
-	let bridge = super::NetworkBridge::new(net.clone(), config(), voter_set_state(), None, None);
+	let bridge =
+		super::NetworkBridge::new(net.clone(), sync, config(), voter_set_state(), None, None);
 
 	(
 		futures::future::ready(Tester {

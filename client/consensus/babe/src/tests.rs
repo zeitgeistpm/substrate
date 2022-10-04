@@ -359,7 +359,11 @@ fn rejects_empty_block() {
 	let mut net = BabeTestNet::new(3);
 	let block_builder = |builder: BlockBuilder<_, _, _>| builder.build().unwrap().block;
 	net.mut_peers(|peer| {
-		peer[0].generate_blocks(1, BlockOrigin::NetworkInitialSync, block_builder);
+		futures::executor::block_on(peer[0].generate_blocks(
+			1,
+			BlockOrigin::NetworkInitialSync,
+			block_builder,
+		));
 	})
 }
 

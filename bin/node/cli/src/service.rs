@@ -29,7 +29,7 @@ use node_primitives::Block;
 use sc_client_api::BlockBackend;
 use sc_consensus_babe::{self, SlotProportion};
 use sc_executor::NativeElseWasmExecutor;
-use sc_network::NetworkService;
+use sc_network::{sync_helper, NetworkService};
 use sc_network_common::{protocol::event::Event, service::NetworkEventStream};
 use sc_service::{config::Configuration, error::Error as ServiceError, RpcHandlers, TaskManager};
 use sc_telemetry::{Telemetry, TelemetryWorker};
@@ -302,6 +302,8 @@ pub struct NewFullBase {
 	pub client: Arc<FullClient>,
 	/// The networking service of the node.
 	pub network: Arc<NetworkService<Block, <Block as BlockT>::Hash>>,
+	/// Syncing service
+	pub sync_handle: Arc<sync_helper::SyncingHandle<Block>>,
 	/// The transaction pool of the node.
 	pub transaction_pool: Arc<TransactionPool>,
 	/// The rpc handlers of the node.
@@ -354,7 +356,7 @@ pub fn new_full_base(
 		Vec::default(),
 	));
 
-	let (network, system_rpc_tx, tx_handler_controller, network_starter) =
+	let (network, system_rpc_tx, tx_handler_controller, sync_handle, network_starter) =
 		sc_service::build_network(sc_service::BuildNetworkParams {
 			config: &config,
 			client: client.clone(),
@@ -430,8 +432,8 @@ pub fn new_full_base(
 			select_chain,
 			env: proposer,
 			block_import,
-			sync_oracle: network.clone(),
-			justification_sync_link: network.clone(),
+			sync_oracle: sync_handle.clone(),
+			justification_sync_link: sync_handle.clone(),
 			create_inherent_data_providers: move |parent, ()| {
 				let client_clone = client_clone.clone();
 				async move {
@@ -532,6 +534,7 @@ pub fn new_full_base(
 			config,
 			link: grandpa_link,
 			network: network.clone(),
+			sync_handle: sync_handle.clone(),
 			telemetry: telemetry.as_ref().map(|x| x.handle()),
 			voting_rule: grandpa::VotingRulesBuilder::default().build(),
 			prometheus_registry,
@@ -548,7 +551,7 @@ pub fn new_full_base(
 	}
 
 	network_starter.start_network();
-	Ok(NewFullBase { task_manager, client, network, transaction_pool, rpc_handlers })
+	Ok(NewFullBase { task_manager, client, network, transaction_pool, rpc_handlers, sync_handle })
 }
 
 /// Builds a new service for a full client.
@@ -621,20 +624,27 @@ mod tests {
 			chain_spec,
 			|config| {
 				let mut setup_handles = None;
-				let NewFullBase { task_manager, client, network, transaction_pool, .. } =
-					new_full_base(
-						config,
-						false,
-						|block_import: &sc_consensus_babe::BabeBlockImport<Block, _, _>,
-						 babe_link: &sc_consensus_babe::BabeLink<Block>| {
-							setup_handles = Some((block_import.clone(), babe_link.clone()));
-						},
-					)?;
+				let NewFullBase {
+					task_manager,
+					client,
+					network,
+					transaction_pool,
+					sync_handle,
+					..
+				} = new_full_base(
+					config,
+					false,
+					|block_import: &sc_consensus_babe::BabeBlockImport<Block, _, _>,
+					 babe_link: &sc_consensus_babe::BabeLink<Block>| {
+						setup_handles = Some((block_import.clone(), babe_link.clone()));
+					},
+				)?;
 
 				let node = sc_service_test::TestNetComponents::new(
 					task_manager,
 					client,
 					network,
+					sync_handle,
 					transaction_pool,
 				);
 				Ok((node, setup_handles.unwrap()))
@@ -800,12 +810,19 @@ mod tests {
 		sc_service_test::consensus(
 			crate::chain_spec::tests::integration_test_config_with_two_authorities(),
 			|config| {
-				let NewFullBase { task_manager, client, network, transaction_pool, .. } =
-					new_full_base(config, false, |_, _| ())?;
+				let NewFullBase {
+					task_manager,
+					client,
+					network,
+					transaction_pool,
+					sync_handle,
+					..
+				} = new_full_base(config, false, |_, _| ())?;
 				Ok(sc_service_test::TestNetComponents::new(
 					task_manager,
 					client,
 					network,
+					sync_handle,
 					transaction_pool,
 				))
 			},

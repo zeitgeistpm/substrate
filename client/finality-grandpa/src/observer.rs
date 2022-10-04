@@ -39,7 +39,7 @@ use sp_runtime::traits::{Block as BlockT, NumberFor};
 use crate::{
 	authorities::SharedAuthoritySet,
 	aux_schema::PersistentData,
-	communication::{Network as NetworkT, NetworkBridge},
+	communication::{Network as NetworkT, NetworkBridge, Syncing},
 	environment, global_communication,
 	notification::GrandpaJustificationSender,
 	ClientForGrandpa, CommandOrError, CommunicationIn, Config, Error, LinkHalf, VoterCommand,
@@ -163,10 +163,11 @@ where
 /// already been instantiated with `block_import`.
 /// NOTE: this is currently not part of the crate's public API since we don't consider
 /// it stable enough to use on a live network.
-pub fn run_grandpa_observer<BE, Block: BlockT, Client, N, SC>(
+pub fn run_grandpa_observer<BE, Block: BlockT, Client, N, SC, SS>(
 	config: Config,
 	link: LinkHalf<Block, Client, SC>,
 	network: N,
+	sync_handle: SS,
 ) -> sp_blockchain::Result<impl Future<Output = ()> + Send>
 where
 	BE: Backend<Block> + Unpin + 'static,
@@ -174,6 +175,7 @@ where
 	SC: SelectChain<Block>,
 	NumberFor<Block>: BlockNumberOps,
 	Client: ClientForGrandpa<Block, BE> + 'static,
+	SS: Syncing<Block>,
 {
 	let LinkHalf {
 		client,
@@ -186,6 +188,7 @@ where
 
 	let network = NetworkBridge::new(
 		network,
+		sync_handle,
 		config.clone(),
 		persistent_data.set_state.clone(),
 		None,
@@ -211,11 +214,14 @@ where
 
 /// Future that powers the observer.
 #[must_use]
-struct ObserverWork<B: BlockT, BE, Client, N: NetworkT<B>> {
+struct ObserverWork<B: BlockT, BE, Client, N: NetworkT<B>, SS>
+where
+	SS: Syncing<B>,
+{
 	observer:
 		Pin<Box<dyn Future<Output = Result<(), CommandOrError<B::Hash, NumberFor<B>>>> + Send>>,
 	client: Arc<Client>,
-	network: NetworkBridge<B, N>,
+	network: NetworkBridge<B, N, SS>,
 	persistent_data: PersistentData<B>,
 	keystore: Option<SyncCryptoStorePtr>,
 	voter_commands_rx: TracingUnboundedReceiver<VoterCommand<B::Hash, NumberFor<B>>>,
@@ -224,17 +230,18 @@ struct ObserverWork<B: BlockT, BE, Client, N: NetworkT<B>> {
 	_phantom: PhantomData<BE>,
 }
 
-impl<B, BE, Client, Network> ObserverWork<B, BE, Client, Network>
+impl<B, BE, Client, Network, SS> ObserverWork<B, BE, Client, Network, SS>
 where
 	B: BlockT,
 	BE: Backend<B> + 'static,
 	Client: ClientForGrandpa<B, BE> + 'static,
 	Network: NetworkT<B>,
 	NumberFor<B>: BlockNumberOps,
+	SS: Syncing<B>,
 {
 	fn new(
 		client: Arc<Client>,
-		network: NetworkBridge<B, Network>,
+		network: NetworkBridge<B, Network, SS>,
 		persistent_data: PersistentData<B>,
 		keystore: Option<SyncCryptoStorePtr>,
 		voter_commands_rx: TracingUnboundedReceiver<VoterCommand<B::Hash, NumberFor<B>>>,
@@ -347,13 +354,14 @@ where
 	}
 }
 
-impl<B, BE, C, N> Future for ObserverWork<B, BE, C, N>
+impl<B, BE, C, N, SS> Future for ObserverWork<B, BE, C, N, SS>
 where
 	B: BlockT,
 	BE: Backend<B> + Unpin + 'static,
 	C: ClientForGrandpa<B, BE> + 'static,
 	N: NetworkT<B>,
 	NumberFor<B>: BlockNumberOps,
+	SS: Syncing<B>,
 {
 	type Output = Result<(), Error>;
 

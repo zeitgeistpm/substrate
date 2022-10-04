@@ -524,6 +524,9 @@ pub trait NetworkNotification {
 		protocol: ProtocolName,
 	) -> Result<Box<dyn NotificationSender>, NotificationSenderError>;
 
+	/// Set handshake for block announcement protocol
+	fn set_sync_handshake(&self, handshake: Vec<u8>);
+
 	/// Write sync notification
 	fn write_sync_notification(&self, peer: PeerId, message: Vec<u8>);
 
@@ -546,6 +549,10 @@ where
 		protocol: ProtocolName,
 	) -> Result<Box<dyn NotificationSender>, NotificationSenderError> {
 		T::notification_sender(self, target, protocol)
+	}
+
+	fn set_sync_handshake(&self, handshake: Vec<u8>) {
+		T::set_sync_handshake(self, handshake)
 	}
 
 	fn write_sync_notification(&self, peer: PeerId, message: Vec<u8>) {

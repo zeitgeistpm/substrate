@@ -53,7 +53,7 @@ use sp_runtime::{
 
 use crate::{
 	authorities::{AuthoritySet, SharedAuthoritySet},
-	communication::Network as NetworkT,
+	communication::{Network as NetworkT, Syncing},
 	justification::GrandpaJustification,
 	local_authority_id,
 	notification::GrandpaJustificationSender,
@@ -426,13 +426,16 @@ impl Metrics {
 }
 
 /// The environment we run GRANDPA in.
-pub(crate) struct Environment<Backend, Block: BlockT, C, N: NetworkT<Block>, SC, VR> {
+pub(crate) struct Environment<Backend, Block: BlockT, C, N: NetworkT<Block>, SC, SS, VR>
+where
+	SS: Syncing<Block>,
+{
 	pub(crate) client: Arc<C>,
 	pub(crate) select_chain: SC,
 	pub(crate) voters: Arc<VoterSet<AuthorityId>>,
 	pub(crate) config: Config,
 	pub(crate) authority_set: SharedAuthoritySet<Block::Hash, NumberFor<Block>>,
-	pub(crate) network: crate::communication::NetworkBridge<Block, N>,
+	pub(crate) network: crate::communication::NetworkBridge<Block, N, SS>,
 	pub(crate) set_id: SetId,
 	pub(crate) voter_set_state: SharedVoterSetState<Block>,
 	pub(crate) voting_rule: VR,
@@ -442,7 +445,10 @@ pub(crate) struct Environment<Backend, Block: BlockT, C, N: NetworkT<Block>, SC,
 	pub(crate) _phantom: PhantomData<Backend>,
 }
 
-impl<BE, Block: BlockT, C, N: NetworkT<Block>, SC, VR> Environment<BE, Block, C, N, SC, VR> {
+impl<BE, Block: BlockT, C, N: NetworkT<Block>, SC, SS, VR> Environment<BE, Block, C, N, SC, SS, VR>
+where
+	SS: Syncing<Block>,
+{
 	/// Updates the voter set state using the given closure. The write lock is
 	/// held during evaluation of the closure and the environment's voter set
 	/// state is set to its result if successful.
@@ -472,7 +478,7 @@ impl<BE, Block: BlockT, C, N: NetworkT<Block>, SC, VR> Environment<BE, Block, C,
 	}
 }
 
-impl<BE, Block, C, N, SC, VR> Environment<BE, Block, C, N, SC, VR>
+impl<BE, Block, C, N, SC, SS, VR> Environment<BE, Block, C, N, SC, SS, VR>
 where
 	Block: BlockT,
 	BE: BackendT<Block>,
@@ -480,6 +486,7 @@ where
 	C::Api: GrandpaApi<Block>,
 	N: NetworkT<Block>,
 	SC: SelectChainT<Block>,
+	SS: Syncing<Block>,
 {
 	/// Report the given equivocation to the GRANDPA runtime module. This method
 	/// generates a session membership proof of the offender and then submits an
@@ -572,8 +579,8 @@ where
 	}
 }
 
-impl<BE, Block, C, N, SC, VR> finality_grandpa::Chain<Block::Hash, NumberFor<Block>>
-	for Environment<BE, Block, C, N, SC, VR>
+impl<BE, Block, C, N, SC, SS, VR> finality_grandpa::Chain<Block::Hash, NumberFor<Block>>
+	for Environment<BE, Block, C, N, SC, SS, VR>
 where
 	Block: BlockT,
 	BE: BackendT<Block>,
@@ -582,6 +589,7 @@ where
 	SC: SelectChainT<Block>,
 	VR: VotingRuleT<Block, C>,
 	NumberFor<Block>: BlockNumberOps,
+	SS: Syncing<Block>,
 {
 	fn ancestry(
 		&self,
@@ -625,8 +633,8 @@ where
 	Ok(tree_route.retracted().iter().skip(1).map(|e| e.hash).collect())
 }
 
-impl<B, Block, C, N, SC, VR> voter::Environment<Block::Hash, NumberFor<Block>>
-	for Environment<B, Block, C, N, SC, VR>
+impl<B, Block, C, N, SC, SS, VR> voter::Environment<Block::Hash, NumberFor<Block>>
+	for Environment<B, Block, C, N, SC, SS, VR>
 where
 	Block: BlockT,
 	B: BackendT<Block>,
@@ -636,6 +644,7 @@ where
 	SC: SelectChainT<Block> + 'static,
 	VR: VotingRuleT<Block, C> + Clone + 'static,
 	NumberFor<Block>: BlockNumberOps,
+	SS: Syncing<Block>,
 {
 	type Timer = Pin<Box<dyn Future<Output = Result<(), Self::Error>> + Send>>;
 	type BestChain = Pin<

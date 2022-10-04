@@ -145,30 +145,32 @@ impl BeefyTestNet {
 		})
 	}
 
-	pub(crate) fn generate_blocks_and_sync(
+	pub(crate) async fn generate_blocks_and_sync(
 		&mut self,
 		count: usize,
 		session_length: u64,
 		validator_set: &BeefyValidatorSet,
 		include_mmr_digest: bool,
 	) {
-		self.peer(0).generate_blocks(count, BlockOrigin::File, |builder| {
-			let mut block = builder.build().unwrap().block;
+		self.peer(0)
+			.generate_blocks(count, BlockOrigin::File, |builder| {
+				let mut block = builder.build().unwrap().block;
 
-			if include_mmr_digest {
-				let block_num = *block.header.number();
-				let num_byte = block_num.to_le_bytes().into_iter().next().unwrap();
-				let mmr_root = MmrRootHash::repeat_byte(num_byte);
-				add_mmr_digest(&mut block.header, mmr_root);
-			}
+				if include_mmr_digest {
+					let block_num = *block.header.number();
+					let num_byte = block_num.to_le_bytes().into_iter().next().unwrap();
+					let mmr_root = MmrRootHash::repeat_byte(num_byte);
+					add_mmr_digest(&mut block.header, mmr_root);
+				}
 
-			if *block.header.number() % session_length == 0 {
-				add_auth_change_digest(&mut block.header, validator_set.clone());
-			}
+				if *block.header.number() % session_length == 0 {
+					add_auth_change_digest(&mut block.header, validator_set.clone());
+				}
 
-			block
-		});
-		self.block_until_sync();
+				block
+			})
+			.await;
+		self.block_until_sync().await;
 	}
 }
 
@@ -367,12 +369,13 @@ where
 			runtime: api.clone(),
 			key_store: Some(keystore),
 			network: peer.network_service().clone(),
+			sync_handle: peer.syncing().clone(),
 			links: beefy_voter_links.unwrap(),
 			min_block_delta,
 			prometheus_registry: None,
 			protocol_name: BEEFY_PROTOCOL_NAME.into(),
 		};
-		let gadget = crate::start_beefy_gadget::<_, _, _, _, _>(beefy_params);
+		let gadget = crate::start_beefy_gadget::<_, _, _, _, _, _>(beefy_params);
 
 		fn assert_send<T: Send>(_: &T) {}
 		assert_send(&gadget);
@@ -529,7 +532,7 @@ fn beefy_finalizing_blocks() {
 	runtime.spawn(initialize_beefy(&mut net, beefy_peers, min_block_delta));
 
 	// push 42 blocks including `AuthorityChange` digests every 10 blocks.
-	net.generate_blocks_and_sync(42, session_len, &validator_set, true);
+	runtime.block_on(net.generate_blocks_and_sync(42, session_len, &validator_set, true));
 
 	let net = Arc::new(Mutex::new(net));
 
@@ -567,7 +570,7 @@ fn lagging_validators() {
 	runtime.spawn(initialize_beefy(&mut net, beefy_peers, min_block_delta));
 
 	// push 62 blocks including `AuthorityChange` digests every 30 blocks.
-	net.generate_blocks_and_sync(62, session_len, &validator_set, true);
+	runtime.block_on(net.generate_blocks_and_sync(62, session_len, &validator_set, true));
 
 	let net = Arc::new(Mutex::new(net));
 
@@ -643,7 +646,7 @@ fn correct_beefy_payload() {
 	runtime.spawn(initialize_beefy(&mut net, bad_peers, min_block_delta));
 
 	// push 10 blocks
-	net.generate_blocks_and_sync(12, session_len, &validator_set, false);
+	runtime.block_on(net.generate_blocks_and_sync(12, session_len, &validator_set, false));
 
 	let net = Arc::new(Mutex::new(net));
 	// with 3 good voters and 1 bad one, consensus should happen and best blocks produced.
@@ -831,7 +834,7 @@ fn voter_initialization() {
 	runtime.spawn(initialize_beefy(&mut net, beefy_peers, min_block_delta));
 
 	// push 30 blocks
-	net.generate_blocks_and_sync(26, session_len, &validator_set, false);
+	runtime.block_on(net.generate_blocks_and_sync(26, session_len, &validator_set, false));
 	let net = Arc::new(Mutex::new(net));
 
 	// Finalize multiple blocks at once to get a burst of finality notifications right from start.

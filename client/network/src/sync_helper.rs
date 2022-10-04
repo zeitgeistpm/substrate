@@ -17,7 +17,8 @@ use sc_network_common::{
 	protocol::{event::Event, ProtocolName},
 	request_responses::{IfDisconnected, RequestFailure},
 	service::{
-		NetworkEventStream, NetworkNotification, NetworkPeers, NetworkRequest, PeerValidationResult,
+		NetworkBlock, NetworkEventStream, NetworkNotification, NetworkPeers, NetworkRequest,
+		NetworkSyncForkRequest, PeerValidationResult,
 	},
 	sync::{
 		message::{
@@ -84,10 +85,14 @@ mod rep {
 	pub const BAD_BLOCK_ANNOUNCEMENT: Rep = Rep::new(-(1 << 12), "Bad block announcement");
 }
 
+/// Empty documentation
 #[derive(Debug)]
 pub enum PeerRequest<B: BlockT> {
+	/// Empty documentation
 	Block(BlockRequest<B>),
+	/// Empty documentation
 	State,
+	/// Empty documentation
 	WarpProof,
 }
 
@@ -95,6 +100,7 @@ pub enum PeerRequest<B: BlockT> {
 // TODO: remove clone when no longer needed
 #[derive(Debug, Clone)]
 pub struct Peer<B: BlockT> {
+	/// Empty documentation
 	pub info: PeerInfo<B>,
 	/// Holds a set of blocks known to this peer.
 	pub known_blocks: LruHashSet<B::Hash>,
@@ -125,6 +131,7 @@ pub struct BlockAnnouncesHandshake<B: BlockT> {
 }
 
 impl<B: BlockT> BlockAnnouncesHandshake<B> {
+	/// Empty documentation
 	pub fn build(
 		roles: Roles,
 		best_number: NumberFor<B>,
@@ -135,12 +142,65 @@ impl<B: BlockT> BlockAnnouncesHandshake<B> {
 	}
 }
 
+// TODO: implement sync oracle for syncinghandle
+impl<B: BlockT + 'static> sp_consensus::SyncOracle for SyncingHandle<B> {
+	fn is_major_syncing(&self) -> bool {
+		self.is_major_syncing.load(Ordering::Relaxed)
+	}
+
+	fn is_offline(&self) -> bool {
+		self.num_connected.load(Ordering::Relaxed) == 0
+	}
+}
+
+// TODO: make this a syncing trait
+impl<B: BlockT> sc_consensus::JustificationSyncLink<B> for SyncingHandle<B> {
+	/// Request a justification for the given block from the network.
+	///
+	/// On success, the justification will be passed to the import queue that was part at
+	/// initialization as part of the configuration.
+	fn request_justification(&self, hash: &B::Hash, number: NumberFor<B>) {
+		let _ = self.request_justification(*hash, number);
+	}
+
+	fn clear_justification_requests(&self) {
+		let _ = self.clear_justification_requests();
+	}
+}
+
+// TODO: make this a syncing trait
+impl<B: BlockT + 'static> NetworkBlock<B::Hash, NumberFor<B>> for SyncingHandle<B> {
+	fn announce_block(&self, hash: B::Hash, data: Option<Vec<u8>>) {
+		let _ = futures::executor::block_on(self.announce_block(hash, data));
+	}
+
+	// TODO: how to fix this?
+	fn new_best_block_imported(&self, hash: B::Hash, number: NumberFor<B>) {
+		self.new_best_block_imported(hash, number);
+	}
+}
+
+impl<B: BlockT + 'static> NetworkSyncForkRequest<B::Hash, NumberFor<B>> for SyncingHandle<B> {
+	/// Configure an explicit fork sync request.
+	/// Note that this function should not be used for recent blocks.
+	/// Sync should be able to download all the recent forks normally.
+	/// `set_sync_fork_request` should only be used if external code detects that there's
+	/// a stale fork missing.
+	/// Passing empty `peers` set effectively removes the sync request.
+	fn set_sync_fork_request(&self, peers: Vec<PeerId>, hash: B::Hash, number: NumberFor<B>) {
+		self.set_sync_fork_request(peers, hash, number);
+	}
+}
+
 // TODO: zzz
+/// Empty documentation
 pub type PendingResponse<B> =
 	(PeerId, PeerRequest<B>, Result<Result<Vec<u8>, RequestFailure>, oneshot::Canceled>);
 
 // TODO: move chainsync here
+/// Empty documentation
 pub struct SyncingHelper<B: BlockT, Client, N> {
+	/// Empty documentation
 	pub pending_responses:
 		FuturesUnordered<Pin<Box<dyn Future<Output = PendingResponse<B>> + Send>>>,
 
@@ -160,6 +220,7 @@ pub struct SyncingHelper<B: BlockT, Client, N> {
 	/// Set of all peers
 	pub peers: HashMap<PeerId, Peer<B>>,
 
+	/// Empty documentation
 	pub roles: Roles,
 
 	/// Value that was passed as part of the configuration. Used to cap the number of full nodes.
@@ -194,6 +255,7 @@ where
 	Client: HeaderBackend<B> + 'static,
 	N: NetworkRequest + NetworkEventStream + NetworkPeers + NetworkNotification,
 {
+	/// Empty documentation
 	pub fn new(
 		chain_sync: Box<dyn ChainSync<B>>,
 		import_queue: Box<dyn ImportQueue<B>>,
@@ -272,6 +334,7 @@ where
 		)
 	}
 
+	/// Empty documentation
 	pub fn justification_import_result(
 		&mut self,
 		who: PeerId,
@@ -303,14 +366,17 @@ where
 	}
 
 	/// Number of active sync requests.
+	/// 	/// Empty documentation
 	pub fn num_sync_requests(&self) -> usize {
 		self.chain_sync.num_sync_requests()
 	}
 
+	/// Empty documentation
 	pub fn update_chain_info(&mut self, hash: B::Hash, number: NumberFor<B>) {
 		self.chain_sync.update_chain_info(&hash, number);
 	}
 
+	/// Empty documentation
 	pub fn on_block_finalized(&mut self, hash: B::Hash, header: B::Header) {
 		self.chain_sync.on_block_finalized(&hash, *header.number())
 	}
@@ -343,6 +409,7 @@ where
 		self.chain_sync.set_sync_fork_request(peers, hash, number)
 	}
 
+	/// Empty documentation
 	pub fn on_blocks_processed(
 		&mut self,
 		imported: usize,
@@ -363,6 +430,7 @@ where
 		}
 	}
 
+	/// Empty documentation
 	pub fn announce_block(&mut self, hash: B::Hash, data: Option<Vec<u8>>) -> () {
 		let header = match self.chain.header(BlockId::Hash(hash)) {
 			Ok(Some(header)) => header,
@@ -595,6 +663,7 @@ where
 		}
 	}
 
+	/// Empty documentation
 	pub async fn notification(&mut self, peer: PeerId, message: bytes::Bytes) {
 		if self.peers.contains_key(&peer) {
 			if let Ok(announce) = BlockAnnounce::decode(&mut message.as_ref()) {
@@ -618,6 +687,7 @@ where
 		}
 	}
 
+	/// Empty documentation
 	pub fn custom_protocol_close(&mut self, peer: PeerId) {
 		if self.on_sync_peer_disconnected(peer).is_ok() {
 			self.service.as_ref().unwrap().disconnect_sync_peer(peer);
@@ -629,6 +699,7 @@ where
 		}
 	}
 
+	/// Empty documentation
 	pub fn custom_protocol_open(
 		&mut self,
 		peer_id: PeerId,
@@ -698,6 +769,7 @@ where
 		}
 	}
 
+	/// Empty documentation
 	pub fn prepare_block_request(&mut self, who: PeerId, request: BlockRequest<B>) {
 		let (tx, rx) = oneshot::channel();
 
@@ -720,6 +792,7 @@ where
 		}
 	}
 
+	/// Empty documentation
 	pub fn prepare_state_request(&mut self, who: PeerId, request: OpaqueStateRequest) {
 		let (tx, rx) = oneshot::channel();
 
@@ -740,6 +813,7 @@ where
 		}
 	}
 
+	/// Empty documentation
 	pub fn prepare_warp_sync_request(&mut self, who: PeerId, request: WarpProofRequest<B>) {
 		let (tx, rx) = oneshot::channel();
 
@@ -867,7 +941,6 @@ where
 		// todo!();
 	}
 
-	// TODO: move to `SyncingHelper`
 	/// Process the result of the block announce validation.
 	pub fn process_block_announce_validation_result(
 		&mut self,
@@ -938,6 +1011,7 @@ where
 		}
 	}
 
+	/// Empty documentation
 	pub fn register_network_service(&mut self, service: Arc<N>) {
 		self.service = Some(service);
 	}
@@ -1113,6 +1187,21 @@ where
 			SyncEvent::AnnounceBlock(hash, data, channel_response) => {
 				let _ = channel_response.send(self.announce_block(hash, data));
 			},
+			SyncEvent::NewBestBlockImported(hash, number) => {
+				self.update_chain_info(hash, number);
+				let handshake = BlockAnnouncesHandshake::<B>::build(
+					self.roles,
+					number,
+					hash,
+					self.genesis_hash,
+				)
+				.encode();
+				if let Some(service) = &self.service {
+					service.set_sync_handshake(handshake);
+				}
+				// let _ = self.to_worker.
+				// unbounded_send(ServiceToWorkerMsg::SetSyncHandshake(handshake));
+			},
 		}
 	}
 
@@ -1139,6 +1228,7 @@ where
 		}
 	}
 
+	/// Empty documentation
 	pub async fn run(mut self) {
 		let mut event_stream = self.service.as_ref().unwrap().event_stream("sync-stuff");
 
@@ -1239,42 +1329,67 @@ impl<'a, B: BlockT> Link<B> for NetworkLink<'a, B> {
 	}
 }
 
+/// Empty documentation
 #[derive(Debug)]
 pub enum SyncEvent<B: BlockT> {
+	/// Empty documentation
 	NumConnectedPeers(oneshot::Sender<usize>),
+	/// Empty documentation
 	SyncState(oneshot::Sender<SyncStatus<B>>),
+	/// Empty documentation
 	BestSeenBlock(oneshot::Sender<Option<NumberFor<B>>>),
+	/// Empty documentation
 	NumSyncPeers(oneshot::Sender<u32>),
+	/// Empty documentation
 	NumQueuedBlocks(oneshot::Sender<u32>),
+	/// Empty documentation
 	NumDownloadedBlocks(oneshot::Sender<usize>),
+	/// Empty documentation
 	NumSyncRequests(oneshot::Sender<usize>),
+	/// Empty documentation
 	UpdateChainInfo(B::Hash, NumberFor<B>),
+	/// Empty documentation
 	OnBlockFinalized(B::Hash, B::Header),
+	/// Empty documentation
 	RequestJustification(B::Hash, NumberFor<B>),
+	/// Empty documentation
 	ClearJustificationRequests,
+	/// Empty documentation
 	SetSyncForkRequest(Vec<PeerId>, B::Hash, NumberFor<B>),
+	/// Empty documentation
 	JustificationImportResult(PeerId, B::Hash, NumberFor<B>, bool),
+	/// Empty documentation
 	OnBlocksProcessed(
 		usize,
 		usize,
 		Vec<(Result<BlockImportStatus<NumberFor<B>>, BlockImportError>, B::Hash)>,
 	),
+	/// Empty documentation
 	GetPeers(oneshot::Sender<Vec<(PeerId, Peer<B>)>>),
+	/// Empty documentation
 	GetHandshake(B::Hash, NumberFor<B>, oneshot::Sender<Vec<u8>>),
+	/// Empty documentation
 	AnnounceBlock(B::Hash, Option<Vec<u8>>, oneshot::Sender<()>),
+	/// Empty documentation
+	NewBestBlockImported(B::Hash, NumberFor<B>),
 }
 
+/// Empty documentation
 pub struct SyncingHandle<B: BlockT> {
 	tx: mpsc::UnboundedSender<SyncEvent<B>>,
+	/// Empty documentation
 	pub is_major_syncing: AtomicBool,
+	/// Empty documentation
 	pub num_connected: AtomicUsize,
 }
 
 impl<B: BlockT> SyncingHandle<B> {
+	/// Empty documentation
 	pub fn new(tx: mpsc::UnboundedSender<SyncEvent<B>>) -> Self {
 		Self { tx, is_major_syncing: AtomicBool::new(false), num_connected: AtomicUsize::new(0) }
 	}
 
+	/// Empty documentation
 	pub async fn announce_block(&self, hash: B::Hash, data: Option<Vec<u8>>) -> () {
 		let (tx, rx) = oneshot::channel();
 
@@ -1284,30 +1399,35 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	/// Empty documentation
 	pub fn on_block_finalized(&self, hash: B::Hash, header: B::Header) {
 		self.tx
 			.unbounded_send(SyncEvent::OnBlockFinalized(hash, header))
 			.expect("channel to stay open");
 	}
 
+	/// Empty documentation
 	pub fn request_justification(&self, hash: B::Hash, number: NumberFor<B>) {
 		self.tx
 			.unbounded_send(SyncEvent::RequestJustification(hash, number))
 			.expect("channel to stay open");
 	}
 
+	/// Empty documentation
 	pub fn clear_justification_requests(&self) {
 		self.tx
 			.unbounded_send(SyncEvent::ClearJustificationRequests)
 			.expect("channel to stay open");
 	}
 
+	/// Empty documentation
 	pub fn set_sync_fork_request(&self, peers: Vec<PeerId>, hash: B::Hash, number: NumberFor<B>) {
 		self.tx
 			.unbounded_send(SyncEvent::SetSyncForkRequest(peers, hash, number))
 			.expect("channel to stay open");
 	}
 
+	/// Empty documentation
 	pub async fn get_handshake(&self, hash: B::Hash, number: NumberFor<B>) -> Vec<u8> {
 		let (tx, rx) = oneshot::channel();
 
@@ -1317,6 +1437,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	/// Empty documentation
 	pub fn on_blocks_processed(
 		&self,
 		imported: usize,
@@ -1328,6 +1449,7 @@ impl<B: BlockT> SyncingHandle<B> {
 			.expect("channel to stay open");
 	}
 
+	/// Empty documentation
 	pub fn justification_import_result(
 		&self,
 		who: PeerId,
@@ -1340,6 +1462,7 @@ impl<B: BlockT> SyncingHandle<B> {
 			.expect("channel to stay open");
 	}
 
+	/// Empty documentation
 	pub async fn num_connected_peers(&self) -> usize {
 		let (tx, rx) = oneshot::channel();
 
@@ -1349,6 +1472,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	/// Empty documentation
 	pub async fn num_sync_peers(&self) -> u32 {
 		let (tx, rx) = oneshot::channel();
 
@@ -1358,6 +1482,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	/// Empty documentation
 	pub async fn num_queued_blocks(&self) -> u32 {
 		let (tx, rx) = oneshot::channel();
 
@@ -1367,6 +1492,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	/// Empty documentation
 	pub async fn status(&self) -> SyncStatus<B> {
 		let (tx, rx) = oneshot::channel();
 
@@ -1374,6 +1500,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	/// Empty documentation
 	pub async fn num_downloaded_blocks(&self) -> usize {
 		let (tx, rx) = oneshot::channel();
 
@@ -1383,6 +1510,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	/// Empty documentation
 	pub async fn num_sync_requests(&self) -> usize {
 		let (tx, rx) = oneshot::channel();
 
@@ -1392,6 +1520,7 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	/// Empty documentation
 	pub async fn best_seen_block(&self) -> Option<NumberFor<B>> {
 		let (tx, rx) = oneshot::channel();
 
@@ -1401,12 +1530,14 @@ impl<B: BlockT> SyncingHandle<B> {
 		rx.await.expect("channel to stay open")
 	}
 
+	/// Empty documentation
 	pub fn update_chain_info(&self, hash: B::Hash, number: NumberFor<B>) {
 		self.tx
 			.unbounded_send(SyncEvent::UpdateChainInfo(hash, number))
 			.expect("channel to stay open");
 	}
 
+	/// Empty documentation
 	pub async fn get_peers(&self) -> Vec<(PeerId, Peer<B>)> {
 		let (tx, rx) = oneshot::channel();
 
@@ -1417,13 +1548,20 @@ impl<B: BlockT> SyncingHandle<B> {
 	/// Get currently connected peers.
 	pub async fn peers_debug_info(&self) -> Vec<(PeerId, PeerInfo<B>)> {
 		todo!();
-		let (tx, rx) = oneshot::channel();
+		// let (tx, rx) = oneshot::channel();
 
-		self.tx.unbounded_send(SyncEvent::GetPeers(tx)).expect("channel to stay open");
-		rx.await
-			.expect("channel to stay open")
-			.iter()
-			.map(|(id, peer)| (*id, peer.info.clone())) // TODO: don't clone
-			.collect()
+		// self.tx.unbounded_send(SyncEvent::GetPeers(tx)).expect("channel to stay open");
+		// rx.await
+		// 	.expect("channel to stay open")
+		// 	.iter()
+		// 	.map(|(id, peer)| (*id, peer.info.clone())) // TODO: don't clone
+		// 	.collect()
+	}
+
+	/// Empty documentation
+	pub fn new_best_block_imported(&self, hash: B::Hash, number: NumberFor<B>) {
+		self.tx
+			.unbounded_send(SyncEvent::NewBestBlockImported(hash, number))
+			.expect("channel to stay open");
 	}
 }

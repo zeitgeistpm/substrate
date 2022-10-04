@@ -1649,7 +1649,7 @@ pub(super) struct PeerReport {
 mod tests {
 	use super::{environment::SharedVoterSetState, *};
 	use crate::communication;
-	use sc_network::config::Role;
+	use sc_network_common::sync::message::Role;
 	use sc_network_gossip::Validator as GossipValidatorT;
 	use sp_core::{crypto::UncheckedFrom, H256};
 	use substrate_test_runtime_client::runtime::{Block, Header};
