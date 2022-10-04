@@ -830,34 +830,6 @@
 <span id="824">824</span>
 <span id="825">825</span>
 <span id="826">826</span>
-<span id="827">827</span>
-<span id="828">828</span>
-<span id="829">829</span>
-<span id="830">830</span>
-<span id="831">831</span>
-<span id="832">832</span>
-<span id="833">833</span>
-<span id="834">834</span>
-<span id="835">835</span>
-<span id="836">836</span>
-<span id="837">837</span>
-<span id="838">838</span>
-<span id="839">839</span>
-<span id="840">840</span>
-<span id="841">841</span>
-<span id="842">842</span>
-<span id="843">843</span>
-<span id="844">844</span>
-<span id="845">845</span>
-<span id="846">846</span>
-<span id="847">847</span>
-<span id="848">848</span>
-<span id="849">849</span>
-<span id="850">850</span>
-<span id="851">851</span>
-<span id="852">852</span>
-<span id="853">853</span>
-<span id="854">854</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -885,88 +857,49 @@
 <span class="doccomment">//! compilation targets.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Merkle Tree is constructed from arbitrary-length leaves, that are initially hashed using the</span>
-<span class="doccomment">//! same [Hasher] as the inner nodes.</span>
+<span class="doccomment">//! same hasher as the inner nodes.</span>
 <span class="doccomment">//! Inner nodes are created by concatenating child hashes and hashing again. The implementation</span>
 <span class="doccomment">//! does not perform any sorting of the input data (leaves) nor when inner nodes are created.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! If the number of leaves is not even, last leave (hash of) is promoted to the upper layer.</span>
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">alloc</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">use</span> <span class="ident">alloc::vec::Vec</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sp_runtime::traits::Keccak256</span>;
+<span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">app_crypto::sp_core</span>, <span class="ident">sp_std</span>, <span class="ident">traits::Hash</span> <span class="kw">as</span> <span class="ident">HashT</span>};
+<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">vec</span>, <span class="ident">vec::Vec</span>};
 
 <span class="kw">use</span> <span class="ident">beefy_primitives::mmr</span>::{<span class="ident">BeefyAuthoritySet</span>, <span class="ident">BeefyNextAuthoritySet</span>};
-
-<span class="doccomment">/// Supported hashing output size.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The size is restricted to 32 bytes to allow for a more optimised implementation.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Hash</span> <span class="op">=</span> [<span class="ident">u8</span>; <span class="number">32</span>];
-
-<span class="doccomment">/// Generic hasher trait.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Implement the function to support custom way of hashing data.</span>
-<span class="doccomment">/// The implementation must return a [Hash](type@Hash) type, so only 32-byte output hashes are</span>
-<span class="doccomment">/// supported.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Hasher</span> {
-	<span class="doccomment">/// Hash given arbitrary-length piece of data.</span>
-	<span class="kw">fn</span> <span class="ident">hash</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">Hash</span>;
-}
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keccak&quot;</span>)]</span>
-<span class="kw">mod</span> <span class="ident">keccak256</span> {
-	<span class="kw">use</span> <span class="ident">tiny_keccak</span>::{<span class="ident">Hasher</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">Keccak</span>};
-
-	<span class="doccomment">/// Keccak256 hasher implementation.</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Keccak256</span>;
-	<span class="kw">impl</span> <span class="ident">Keccak256</span> {
-		<span class="doccomment">/// Hash given data.</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hash</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident"><span class="kw">super</span>::Hash</span> {
-			<span class="op">&lt;</span><span class="ident">Keccak256</span> <span class="kw">as</span> <span class="ident"><span class="kw">super</span>::Hasher</span><span class="op">&gt;</span><span class="ident">::hash</span>(<span class="ident">data</span>)
-		}
-	}
-	<span class="kw">impl</span> <span class="ident"><span class="kw">super</span>::Hasher</span> <span class="kw">for</span> <span class="ident">Keccak256</span> {
-		<span class="kw">fn</span> <span class="ident">hash</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident"><span class="kw">super</span>::Hash</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">keccak</span> <span class="op">=</span> <span class="ident">Keccak::v256</span>();
-			<span class="ident">keccak</span>.<span class="ident">update</span>(<span class="ident">data</span>);
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> [<span class="number">0_u8</span>; <span class="number">32</span>];
-			<span class="ident">keccak</span>.<span class="ident">finalize</span>(<span class="kw-2">&amp;mut</span> <span class="ident">output</span>);
-			<span class="ident">output</span>
-		}
-	}
-}
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keccak&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">keccak256::Keccak256</span>;
 
 <span class="doccomment">/// Construct a root hash of a Binary Merkle Tree created from given leaves.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// See crate-level docs for details about Merkle Tree construction.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// In case an empty list of leaves is passed the function returns a 0-filled hash.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">merkle_root</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">leaves</span>: <span class="ident">I</span>) -&gt; <span class="ident">Hash</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">merkle_root</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">leaves</span>: <span class="ident">I</span>) -&gt; <span class="ident">H::Output</span>
 <span class="kw">where</span>
-	<span class="ident">H</span>: <span class="ident">Hasher</span>,
-	<span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+	<span class="ident">H</span>: <span class="ident">HashT</span>,
+	<span class="ident">H::Output</span>: <span class="ident">Default</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+	<span class="ident">I</span>: <span class="ident">IntoIterator</span>,
+	<span class="ident">I::Item</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
 {
-	<span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">leaves</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">H::hash</span>(<span class="ident">l</span>.<span class="ident">as_ref</span>()));
-	<span class="ident">merkelize</span>::<span class="op">&lt;</span><span class="ident">H</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">iter</span>, <span class="kw-2">&amp;mut</span> ())
+	<span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">leaves</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="op">&lt;</span><span class="ident">H</span> <span class="kw">as</span> <span class="ident">HashT</span><span class="op">&gt;</span><span class="ident">::hash</span>(<span class="ident">l</span>.<span class="ident">as_ref</span>()));
+	<span class="ident">merkelize</span>::<span class="op">&lt;</span><span class="ident">H</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">iter</span>, <span class="kw-2">&amp;mut</span> ()).<span class="ident">into</span>()
 }
 
-<span class="kw">fn</span> <span class="ident">merkelize</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">V</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">leaves</span>: <span class="ident">I</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>) -&gt; <span class="ident">Hash</span>
+<span class="kw">fn</span> <span class="ident">merkelize</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">V</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">leaves</span>: <span class="ident">I</span>, <span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>) -&gt; <span class="ident">H::Output</span>
 <span class="kw">where</span>
-	<span class="ident">H</span>: <span class="ident">Hasher</span>,
-	<span class="ident">V</span>: <span class="ident">Visitor</span>,
-	<span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Hash</span><span class="op">&gt;</span>,
+	<span class="ident">H</span>: <span class="ident">HashT</span>,
+	<span class="ident">H::Output</span>: <span class="ident">Default</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+	<span class="ident">V</span>: <span class="ident">Visitor</span><span class="op">&lt;</span><span class="ident">H::Output</span><span class="op">&gt;</span>,
+	<span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">H::Output</span><span class="op">&gt;</span>,
 {
-	<span class="kw">let</span> <span class="ident">upper</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">leaves</span>.<span class="ident">size_hint</span>().<span class="number">0</span>);
+	<span class="kw">let</span> <span class="ident">upper</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>((<span class="ident">leaves</span>.<span class="ident">size_hint</span>().<span class="number">1</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>).<span class="ident">saturating_add</span>(<span class="number">1</span>)) <span class="op">/</span> <span class="number">2</span>);
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">merkelize_row</span>::<span class="op">&lt;</span><span class="ident">H</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">leaves</span>, <span class="ident">upper</span>, <span class="ident">visitor</span>) {
 		<span class="prelude-val">Ok</span>(<span class="ident">root</span>) =&gt; <span class="kw">return</span> <span class="ident">root</span>,
-		<span class="prelude-val">Err</span>(<span class="ident">next</span>) <span class="kw">if</span> <span class="ident">next</span>.<span class="ident">is_empty</span>() =&gt; <span class="kw">return</span> <span class="ident">Hash::default</span>(),
+		<span class="prelude-val">Err</span>(<span class="ident">next</span>) <span class="kw">if</span> <span class="ident">next</span>.<span class="ident">is_empty</span>() =&gt; <span class="kw">return</span> <span class="ident">H::Output::default</span>(),
 		<span class="prelude-val">Err</span>(<span class="ident">next</span>) =&gt; <span class="ident">next</span>,
 	};
 
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">upper</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>((<span class="ident">next</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="number">1</span>) <span class="op">/</span> <span class="number">2</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">upper</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>((<span class="ident">next</span>.<span class="ident">len</span>().<span class="ident">saturating_add</span>(<span class="number">1</span>)) <span class="op">/</span> <span class="number">2</span>);
 	<span class="kw">loop</span> {
 		<span class="ident">visitor</span>.<span class="ident">move_up</span>();
 
@@ -985,14 +918,14 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// The structure contains all necessary data to later on verify the proof and the leaf itself.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MerkleProof</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MerkleProof</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// Root hash of generated merkle tree.</span>
-	<span class="kw">pub</span> <span class="ident">root</span>: <span class="ident">Hash</span>,
+	<span class="kw">pub</span> <span class="ident">root</span>: <span class="ident">H</span>,
 	<span class="doccomment">/// Proof items (does not contain the leaf hash, nor the root obviously).</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// This vec contains all inner node hashes necessary to reconstruct the root hash given the</span>
 	<span class="doccomment">/// leaf hash.</span>
-	<span class="kw">pub</span> <span class="ident">proof</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
+	<span class="kw">pub</span> <span class="ident">proof</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// Number of leaves in the original tree.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// This is needed to detect a case where we have an odd number of leaves that &quot;get promoted&quot;</span>
@@ -1001,14 +934,14 @@
 	<span class="doccomment">/// Index of the leaf the proof is for (0-based).</span>
 	<span class="kw">pub</span> <span class="ident">leaf_index</span>: <span class="ident">usize</span>,
 	<span class="doccomment">/// Leaf content.</span>
-	<span class="kw">pub</span> <span class="ident">leaf</span>: <span class="ident">T</span>,
+	<span class="kw">pub</span> <span class="ident">leaf</span>: <span class="ident">L</span>,
 }
 
 <span class="doccomment">/// A trait of object inspecting merkle root creation.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// It can be passed to [`merkelize_row`] or [`merkelize`] functions and will be notified</span>
 <span class="doccomment">/// about tree traversal.</span>
-<span class="kw">trait</span> <span class="ident">Visitor</span> {
+<span class="kw">trait</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// We are moving one level up in the tree.</span>
 	<span class="kw">fn</span> <span class="ident">move_up</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>);
 
@@ -1018,13 +951,13 @@
 	<span class="doccomment">/// The method will also visit the `root` hash (level 0).</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// The `index` is an index of `left` item.</span>
-	<span class="kw">fn</span> <span class="ident">visit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>, <span class="ident">left</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>, <span class="ident">right</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>);
+	<span class="kw">fn</span> <span class="ident">visit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>, <span class="ident">left</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">right</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
 }
 
 <span class="doccomment">/// No-op implementation of the visitor.</span>
-<span class="kw">impl</span> <span class="ident">Visitor</span> <span class="kw">for</span> () {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> () {
 	<span class="kw">fn</span> <span class="ident">move_up</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {}
-	<span class="kw">fn</span> <span class="ident">visit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_index</span>: <span class="ident">usize</span>, <span class="ident">_left</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>, <span class="ident">_right</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>) {}
+	<span class="kw">fn</span> <span class="ident">visit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_index</span>: <span class="ident">usize</span>, <span class="ident">_left</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">_right</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {}
 }
 
 <span class="doccomment">/// Construct a Merkle Proof for leaves given by indices.</span>
@@ -1037,16 +970,17 @@
 <span class="doccomment">/// # Panic</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The function will panic if given `leaf_index` is greater than the number of leaves.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">merkle_proof</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">leaves</span>: <span class="ident">I</span>, <span class="ident">leaf_index</span>: <span class="ident">usize</span>) -&gt; <span class="ident">MerkleProof</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">merkle_proof</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">leaves</span>: <span class="ident">I</span>, <span class="ident">leaf_index</span>: <span class="ident">usize</span>) -&gt; <span class="ident">MerkleProof</span><span class="op">&lt;</span><span class="ident">H::Output</span>, <span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-	<span class="ident">H</span>: <span class="ident">Hasher</span>,
+	<span class="ident">H</span>: <span class="ident">HashT</span>,
+	<span class="ident">H::Output</span>: <span class="ident">Default</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
 	<span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
 	<span class="ident">I::IntoIter</span>: <span class="ident">ExactSizeIterator</span>,
 	<span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
 {
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leaf</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 	<span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">leaves</span>.<span class="ident">into_iter</span>().<span class="ident">enumerate</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">idx</span>, <span class="ident">l</span>)<span class="op">|</span> {
-		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident">H::hash</span>(<span class="ident">l</span>.<span class="ident">as_ref</span>());
+		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">H</span> <span class="kw">as</span> <span class="ident">HashT</span><span class="op">&gt;</span><span class="ident">::hash</span>(<span class="ident">l</span>.<span class="ident">as_ref</span>());
 		<span class="kw">if</span> <span class="ident">idx</span> <span class="op">==</span> <span class="ident">leaf_index</span> {
 			<span class="ident">leaf</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">l</span>);
 		}
@@ -1054,23 +988,23 @@
 	});
 
 	<span class="doccomment">/// The struct collects a proof for single leaf.</span>
-	<span class="kw">struct</span> <span class="ident">ProofCollection</span> {
-		<span class="ident">proof</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
+	<span class="kw">struct</span> <span class="ident">ProofCollection</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+		<span class="ident">proof</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 		<span class="ident">position</span>: <span class="ident">usize</span>,
 	}
 
-	<span class="kw">impl</span> <span class="ident">ProofCollection</span> {
+	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">ProofCollection</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
 		<span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">position</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
 			<span class="ident">ProofCollection</span> { <span class="ident">proof</span>: <span class="ident">Default::default</span>(), <span class="ident">position</span> }
 		}
 	}
 
-	<span class="kw">impl</span> <span class="ident">Visitor</span> <span class="kw">for</span> <span class="ident">ProofCollection</span> {
+	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Copy</span><span class="op">&gt;</span> <span class="ident">Visitor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ProofCollection</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
 		<span class="kw">fn</span> <span class="ident">move_up</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
 			<span class="self">self</span>.<span class="ident">position</span> <span class="op">/</span><span class="op">=</span> <span class="number">2</span>;
 		}
 
-		<span class="kw">fn</span> <span class="ident">visit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>, <span class="ident">left</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>, <span class="ident">right</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>) {
+		<span class="kw">fn</span> <span class="ident">visit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>, <span class="ident">left</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">right</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
 			<span class="comment">// we are at left branch - right goes to the proof.</span>
 			<span class="kw">if</span> <span class="self">self</span>.<span class="ident">position</span> <span class="op">==</span> <span class="ident">index</span> {
 				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">right</span>) <span class="op">=</span> <span class="ident">right</span> {
@@ -1098,7 +1032,7 @@
 		<span class="ident">collect_proof</span>
 			.<span class="ident">proof</span>
 			.<span class="ident">iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">s</span>))
+			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">s</span>.<span class="ident">as_ref</span>()))
 			.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
 	);
 
@@ -1110,22 +1044,16 @@
 <span class="doccomment">/// Can be either a value that needs to be hashed first,</span>
 <span class="doccomment">/// or the hash itself.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Leaf</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Leaf</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">H</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// Leaf content.</span>
 	<span class="ident">Value</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]),
 	<span class="doccomment">/// Hash of the leaf content.</span>
-	<span class="ident">Hash</span>(<span class="ident">Hash</span>),
+	<span class="ident">Hash</span>(<span class="ident">H</span>),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Leaf</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">H</span>, <span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Leaf</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">H</span><span class="op">&gt;</span> {
 	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span>) -&gt; <span class="self">Self</span> {
 		<span class="ident">Leaf::Value</span>(<span class="ident">v</span>.<span class="ident">as_ref</span>())
-	}
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Leaf</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">v</span>: <span class="ident">Hash</span>) -&gt; <span class="self">Self</span> {
-		<span class="ident">Leaf::Hash</span>(<span class="ident">v</span>)
 	}
 }
 
@@ -1137,45 +1065,47 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// The proof must not contain the root hash.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">verify_proof</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">H</span>, <span class="ident">P</span>, <span class="ident">L</span><span class="op">&gt;</span>(
-	<span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Hash</span>,
+	<span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">H::Output</span>,
 	<span class="ident">proof</span>: <span class="ident">P</span>,
 	<span class="ident">number_of_leaves</span>: <span class="ident">usize</span>,
 	<span class="ident">leaf_index</span>: <span class="ident">usize</span>,
 	<span class="ident">leaf</span>: <span class="ident">L</span>,
 ) -&gt; <span class="ident">bool</span>
 <span class="kw">where</span>
-	<span class="ident">H</span>: <span class="ident">Hasher</span>,
-	<span class="ident">P</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Hash</span><span class="op">&gt;</span>,
-	<span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Leaf</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+	<span class="ident">H</span>: <span class="ident">HashT</span>,
+	<span class="ident">H::Output</span>: <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+	<span class="ident">P</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">H::Output</span><span class="op">&gt;</span>,
+	<span class="ident">L</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Leaf</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">H::Output</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 {
 	<span class="kw">if</span> <span class="ident">leaf_index</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">number_of_leaves</span> {
 		<span class="kw">return</span> <span class="bool-val">false</span>
 	}
 
 	<span class="kw">let</span> <span class="ident">leaf_hash</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">leaf</span>.<span class="ident">into</span>() {
-		<span class="ident">Leaf::Value</span>(<span class="ident">content</span>) =&gt; <span class="ident">H::hash</span>(<span class="ident">content</span>),
+		<span class="ident">Leaf::Value</span>(<span class="ident">content</span>) =&gt; <span class="op">&lt;</span><span class="ident">H</span> <span class="kw">as</span> <span class="ident">HashT</span><span class="op">&gt;</span><span class="ident">::hash</span>(<span class="ident">content</span>),
 		<span class="ident">Leaf::Hash</span>(<span class="ident">hash</span>) =&gt; <span class="ident">hash</span>,
 	};
 
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">combined</span> <span class="op">=</span> [<span class="number">0_u8</span>; <span class="number">64</span>];
+	<span class="kw">let</span> <span class="ident">hash_len</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">H</span> <span class="kw">as</span> <span class="ident">sp_core::Hasher</span><span class="op">&gt;</span><span class="ident">::LENGTH</span>;
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">combined</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0_u8</span>; <span class="ident">hash_len</span> <span class="op">*</span> <span class="number">2</span>];
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">leaf_index</span>;
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">width</span> <span class="op">=</span> <span class="ident">number_of_leaves</span>;
 	<span class="kw">let</span> <span class="ident">computed</span> <span class="op">=</span> <span class="ident">proof</span>.<span class="ident">into_iter</span>().<span class="ident">fold</span>(<span class="ident">leaf_hash</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> {
 		<span class="kw">if</span> <span class="ident">position</span> <span class="op">%</span> <span class="number">2</span> <span class="op">==</span> <span class="number">1</span> <span class="op">|</span><span class="op">|</span> <span class="ident">position</span> <span class="op">+</span> <span class="number">1</span> <span class="op">==</span> <span class="ident">width</span> {
-			<span class="ident">combined</span>[<span class="number">0</span>..<span class="number">32</span>].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>);
-			<span class="ident">combined</span>[<span class="number">32</span>..<span class="number">64</span>].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>);
+			<span class="ident">combined</span>[..<span class="ident">hash_len</span>].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">as_ref</span>());
+			<span class="ident">combined</span>[<span class="ident">hash_len</span>..].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">as_ref</span>());
 		} <span class="kw">else</span> {
-			<span class="ident">combined</span>[<span class="number">0</span>..<span class="number">32</span>].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>);
-			<span class="ident">combined</span>[<span class="number">32</span>..<span class="number">64</span>].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>);
+			<span class="ident">combined</span>[..<span class="ident">hash_len</span>].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">as_ref</span>());
+			<span class="ident">combined</span>[<span class="ident">hash_len</span>..].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">as_ref</span>());
 		}
-		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident">H::hash</span>(<span class="kw-2">&amp;</span><span class="ident">combined</span>);
+		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">H</span> <span class="kw">as</span> <span class="ident">HashT</span><span class="op">&gt;</span><span class="ident">::hash</span>(<span class="kw-2">&amp;</span><span class="ident">combined</span>);
 		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>)]</span>
 		<span class="macro">log::debug!</span>(
 			<span class="string">&quot;[verify_proof]: (a, b) {:?}, {:?} =&gt; {:?} ({:?}) hash&quot;</span>,
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">a</span>),
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">b</span>),
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">hash</span>),
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">combined</span>)
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">a</span>.<span class="ident">as_ref</span>()),
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">as_ref</span>()),
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">hash</span>.<span class="ident">as_ref</span>()),
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">combined</span>.<span class="ident">as_ref</span>())
 		);
 		<span class="ident">position</span> <span class="op">/</span><span class="op">=</span> <span class="number">2</span>;
 		<span class="ident">width</span> <span class="op">=</span> ((<span class="ident">width</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">/</span> <span class="number">2</span>) <span class="op">+</span> <span class="number">1</span>;
@@ -1192,20 +1122,22 @@
 <span class="doccomment">/// empty iterator) an `Err` with the inner nodes of upper layer is returned.</span>
 <span class="kw">fn</span> <span class="ident">merkelize_row</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">V</span>, <span class="ident">I</span><span class="op">&gt;</span>(
 	<span class="kw-2">mut</span> <span class="ident">iter</span>: <span class="ident">I</span>,
-	<span class="kw-2">mut</span> <span class="ident">next</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
+	<span class="kw-2">mut</span> <span class="ident">next</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">H::Output</span><span class="op">&gt;</span>,
 	<span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="ident">V</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Hash</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">H::Output</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">H::Output</span><span class="op">&gt;</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-	<span class="ident">H</span>: <span class="ident">Hasher</span>,
-	<span class="ident">V</span>: <span class="ident">Visitor</span>,
-	<span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Hash</span><span class="op">&gt;</span>,
+	<span class="ident">H</span>: <span class="ident">HashT</span>,
+	<span class="ident">H::Output</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+	<span class="ident">V</span>: <span class="ident">Visitor</span><span class="op">&lt;</span><span class="ident">H::Output</span><span class="op">&gt;</span>,
+	<span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">H::Output</span><span class="op">&gt;</span>,
 {
 	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>)]</span>
 	<span class="macro">log::debug!</span>(<span class="string">&quot;[merkelize_row]&quot;</span>);
 	<span class="ident">next</span>.<span class="ident">clear</span>();
 
+	<span class="kw">let</span> <span class="ident">hash_len</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">H</span> <span class="kw">as</span> <span class="ident">sp_core::Hasher</span><span class="op">&gt;</span><span class="ident">::LENGTH</span>;
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">index</span> <span class="op">=</span> <span class="number">0</span>;
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">combined</span> <span class="op">=</span> [<span class="number">0_u8</span>; <span class="number">64</span>];
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">combined</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0_u8</span>; <span class="ident">hash_len</span> <span class="op">*</span> <span class="number">2</span>];
 	<span class="kw">loop</span> {
 		<span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">next</span>();
 		<span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">next</span>();
@@ -1214,17 +1146,17 @@
 		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>)]</span>
 		<span class="macro">log::debug!</span>(
 			<span class="string">&quot;  {:?}\n  {:?}&quot;</span>,
-			<span class="ident">a</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">s</span>)),
-			<span class="ident">b</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">s</span>))
+			<span class="ident">a</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">s</span>.<span class="ident">as_ref</span>())),
+			<span class="ident">b</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">s</span>.<span class="ident">as_ref</span>()))
 		);
 
 		<span class="ident">index</span> <span class="op">+</span><span class="op">=</span> <span class="number">2</span>;
 		<span class="kw">match</span> (<span class="ident">a</span>, <span class="ident">b</span>) {
 			(<span class="prelude-val">Some</span>(<span class="ident">a</span>), <span class="prelude-val">Some</span>(<span class="ident">b</span>)) =&gt; {
-				<span class="ident">combined</span>[<span class="number">0</span>..<span class="number">32</span>].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>);
-				<span class="ident">combined</span>[<span class="number">32</span>..<span class="number">64</span>].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>);
+				<span class="ident">combined</span>[..<span class="ident">hash_len</span>].<span class="ident">copy_from_slice</span>(<span class="ident">a</span>.<span class="ident">as_ref</span>());
+				<span class="ident">combined</span>[<span class="ident">hash_len</span>..].<span class="ident">copy_from_slice</span>(<span class="ident">b</span>.<span class="ident">as_ref</span>());
 
-				<span class="ident">next</span>.<span class="ident">push</span>(<span class="ident">H::hash</span>(<span class="kw-2">&amp;</span><span class="ident">combined</span>));
+				<span class="ident">next</span>.<span class="ident">push</span>(<span class="op">&lt;</span><span class="ident">H</span> <span class="kw">as</span> <span class="ident">HashT</span><span class="op">&gt;</span><span class="ident">::hash</span>(<span class="kw-2">&amp;</span><span class="ident">combined</span>));
 			},
 			<span class="comment">// Odd number of items. Promote the item to the upper layer.</span>
 			(<span class="prelude-val">Some</span>(<span class="ident">a</span>), <span class="prelude-val">None</span>) <span class="kw">if</span> <span class="op">!</span><span class="ident">next</span>.<span class="ident">is_empty</span>() =&gt; {
@@ -1237,7 +1169,7 @@
 				<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;debug&quot;</span>)]</span>
 				<span class="macro">log::debug!</span>(
 					<span class="string">&quot;[merkelize_row] Next: {:?}&quot;</span>,
-					<span class="ident">next</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">s</span>)).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+					<span class="ident">next</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">s</span>.<span class="ident">as_ref</span>())).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
 				);
 				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">next</span>)
 			},
@@ -1249,7 +1181,6 @@
 	<span class="doccomment">/// API useful for BEEFY light clients.</span>
 	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">BeefyMmrApi</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>
 	<span class="kw">where</span>
-		<span class="ident">H</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
 		<span class="ident">BeefyAuthoritySet</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>: <span class="ident">sp_api::Decode</span>,
 	{
 		<span class="doccomment">/// Return the currently active BEEFY authority set proof.</span>
@@ -1263,6 +1194,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
 	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::sp_core::H256</span>;
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">should_generate_empty_root</span>() {
@@ -1271,11 +1203,11 @@
 		<span class="kw">let</span> <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span>[<span class="ident">u8</span>; <span class="number">1</span>]<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Default::default</span>();
 
 		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="ident">merkle_root</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">data</span>);
+		<span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="ident">merkle_root</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">data</span>);
 
 		<span class="comment">// then</span>
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">out</span>),
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">out</span>.<span class="ident">as_ref</span>()),
 			<span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000000&quot;</span>
 		);
 	}
@@ -1289,11 +1221,11 @@
 		)];
 
 		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="ident">merkle_root</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">data</span>);
+		<span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="ident">merkle_root</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">data</span>);
 
 		<span class="comment">// then</span>
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">out</span>),
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">out</span>.<span class="ident">as_ref</span>()),
 			<span class="string">&quot;aeb47a269393297f4b0a3c9c9cfd00c7a4195255274cf39d83dabc2fcc9ff3d7&quot;</span>
 		);
 	}
@@ -1308,11 +1240,11 @@
 		];
 
 		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="ident">merkle_root</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">data</span>);
+		<span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="ident">merkle_root</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">data</span>);
 
 		<span class="comment">// then</span>
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">out</span>),
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">out</span>.<span class="ident">as_ref</span>()),
 			<span class="string">&quot;697ea2a8fe5b03468548a7a413424a6292ab44a82a6f5cc594c3fa7dda7ce402&quot;</span>
 		);
 	}
@@ -1321,7 +1253,10 @@
 	<span class="kw">fn</span> <span class="ident">should_generate_root_complex</span>() {
 		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">env_logger::try_init</span>();
 		<span class="kw">let</span> <span class="ident">test</span> <span class="op">=</span> <span class="op">|</span><span class="ident">root</span>, <span class="ident">data</span><span class="op">|</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">merkle_root</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">data</span>)), <span class="ident">root</span>);
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">merkle_root</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">data</span>).<span class="ident">as_ref</span>()),
+				<span class="ident">root</span>
+			);
 		};
 
 		<span class="ident">test</span>(
@@ -1381,18 +1316,19 @@
 
 		<span class="comment">// then</span>
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof0</span>.<span class="ident">root</span>),
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof1</span>.<span class="ident">root</span>)
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof0</span>.<span class="ident">root</span>.<span class="ident">as_ref</span>()),
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof1</span>.<span class="ident">root</span>.<span class="ident">as_ref</span>())
 		);
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof2</span>.<span class="ident">root</span>),
-			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof1</span>.<span class="ident">root</span>)
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof2</span>.<span class="ident">root</span>.<span class="ident">as_ref</span>()),
+			<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof1</span>.<span class="ident">root</span>.<span class="ident">as_ref</span>())
 		);
 
 		<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">verify_proof</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(
 			<span class="kw-2">&amp;</span><span class="ident">array_bytes::hex2array_unchecked</span>(
 				<span class="string">&quot;fb3b3be94be9e983ba5e094c9c51a7d96a4fa2e5d8e891df00ca89ba05bb1239&quot;</span>
-			),
+			)
+			.<span class="ident">into</span>(),
 			<span class="ident">proof0</span>.<span class="ident">proof</span>,
 			<span class="ident">data</span>.<span class="ident">len</span>(),
 			<span class="ident">proof0</span>.<span class="ident">leaf_index</span>,
@@ -1400,7 +1336,7 @@
 		));
 
 		<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">verify_proof</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-			<span class="kw-2">&amp;</span><span class="ident">proof0</span>.<span class="ident">root</span>,
+			<span class="kw-2">&amp;</span><span class="ident">proof0</span>.<span class="ident">root</span>.<span class="ident">into</span>(),
 			<span class="macro">vec!</span>[],
 			<span class="ident">data</span>.<span class="ident">len</span>(),
 			<span class="ident">proof0</span>.<span class="ident">leaf_index</span>,
@@ -1656,9 +1592,10 @@
 			<span class="string">&quot;0xA4cDc98593CE52d01Fe5Ca47CB3dA5320e0D7592&quot;</span>,
 			<span class="string">&quot;0xc26B34D375533fFc4c5276282Fa5D660F3d8cbcB&quot;</span>,
 		];
-		<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">array_bytes::hex2array_unchecked</span>(
+		<span class="kw">let</span> <span class="ident">root</span>: <span class="ident">H256</span> <span class="op">=</span> <span class="ident">array_bytes::hex2array_unchecked</span>(
 			<span class="string">&quot;72b0acd7c302a84f1f6b6cefe0ba7194b7398afb440e1b44a9dbbe270394ca53&quot;</span>,
-		);
+		)
+		.<span class="ident">into</span>();
 
 		<span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">addresses</span>
 			.<span class="ident">into_iter</span>()
@@ -1668,7 +1605,10 @@
 		<span class="kw">for</span> <span class="ident">l</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">data</span>.<span class="ident">len</span>() {
 			<span class="comment">// when</span>
 			<span class="kw">let</span> <span class="ident">proof</span> <span class="op">=</span> <span class="ident">merkle_proof</span>::<span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">data</span>.<span class="ident">clone</span>(), <span class="ident">l</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof</span>.<span class="ident">root</span>), <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">root</span>));
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">proof</span>.<span class="ident">root</span>.<span class="ident">as_ref</span>()),
+				<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">root</span>.<span class="ident">as_ref</span>())
+			);
 			<span class="macro">assert_eq!</span>(<span class="ident">proof</span>.<span class="ident">leaf_index</span>, <span class="ident">l</span>);
 			<span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">proof</span>.<span class="ident">leaf</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>[<span class="ident">l</span>]);
 
@@ -1691,16 +1631,20 @@
 				<span class="ident">proof</span>: <span class="macro">vec!</span>[
 					<span class="ident">array_bytes::hex2array_unchecked</span>(
 						<span class="string">&quot;340bcb1d49b2d82802ddbcf5b85043edb3427b65d09d7f758fbc76932ad2da2f&quot;</span>
-					),
+					)
+					.<span class="ident">into</span>(),
 					<span class="ident">array_bytes::hex2array_unchecked</span>(
 						<span class="string">&quot;ba0580e5bd530bc93d61276df7969fb5b4ae8f1864b4a28c280249575198ff1f&quot;</span>
-					),
+					)
+					.<span class="ident">into</span>(),
 					<span class="ident">array_bytes::hex2array_unchecked</span>(
 						<span class="string">&quot;d02609d2bbdb28aa25f58b85afec937d5a4c85d37925bce6d0cf802f9d76ba79&quot;</span>
-					),
+					)
+					.<span class="ident">into</span>(),
 					<span class="ident">array_bytes::hex2array_unchecked</span>(
 						<span class="string">&quot;ae3f8991955ed884613b0a5f40295902eea0e0abe5858fc520b72959bc016d4e&quot;</span>
-					),
+					)
+					.<span class="ident">into</span>(),
 				],
 				<span class="ident">number_of_leaves</span>: <span class="ident">data</span>.<span class="ident">len</span>(),
 				<span class="ident">leaf_index</span>: <span class="ident">data</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>,
