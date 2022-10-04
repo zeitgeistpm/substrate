@@ -1956,6 +1956,33 @@
 <span id="1950">1950</span>
 <span id="1951">1951</span>
 <span id="1952">1952</span>
+<span id="1953">1953</span>
+<span id="1954">1954</span>
+<span id="1955">1955</span>
+<span id="1956">1956</span>
+<span id="1957">1957</span>
+<span id="1958">1958</span>
+<span id="1959">1959</span>
+<span id="1960">1960</span>
+<span id="1961">1961</span>
+<span id="1962">1962</span>
+<span id="1963">1963</span>
+<span id="1964">1964</span>
+<span id="1965">1965</span>
+<span id="1966">1966</span>
+<span id="1967">1967</span>
+<span id="1968">1968</span>
+<span id="1969">1969</span>
+<span id="1970">1970</span>
+<span id="1971">1971</span>
+<span id="1972">1972</span>
+<span id="1973">1973</span>
+<span id="1974">1974</span>
+<span id="1975">1975</span>
+<span id="1976">1976</span>
+<span id="1977">1977</span>
+<span id="1978">1978</span>
+<span id="1979">1979</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -3008,11 +3035,12 @@
 	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 	<span class="kw">use</span> <span class="kw">crate</span>::{
 		<span class="ident">mock</span>::{
-			<span class="ident">roll_to</span>, <span class="ident">roll_to_with_ocw</span>, <span class="ident">trim_helpers</span>, <span class="ident">witness</span>, <span class="ident">BlockNumber</span>, <span class="ident">ExtBuilder</span>, <span class="ident">Extrinsic</span>,
-			<span class="ident">MinerMaxWeight</span>, <span class="ident">MultiPhase</span>, <span class="ident">Runtime</span>, <span class="ident">RuntimeCall</span>, <span class="ident">RuntimeOrigin</span>, <span class="ident">System</span>,
-			<span class="ident">TestNposSolution</span>, <span class="ident">TrimHelpers</span>, <span class="ident">UnsignedPhase</span>,
+			<span class="ident">multi_phase_events</span>, <span class="ident">roll_to</span>, <span class="ident">roll_to_signed</span>, <span class="ident">roll_to_unsigned</span>, <span class="ident">roll_to_with_ocw</span>,
+			<span class="ident">trim_helpers</span>, <span class="ident">witness</span>, <span class="ident">BlockNumber</span>, <span class="ident">ExtBuilder</span>, <span class="ident">Extrinsic</span>, <span class="ident">MinerMaxWeight</span>, <span class="ident">MultiPhase</span>,
+			<span class="ident">Runtime</span>, <span class="ident">RuntimeCall</span>, <span class="ident">RuntimeOrigin</span>, <span class="ident">System</span>, <span class="ident">TestNposSolution</span>, <span class="ident">TrimHelpers</span>,
+			<span class="ident">UnsignedPhase</span>,
 		},
-		<span class="ident">CurrentPhase</span>, <span class="ident">InvalidTransaction</span>, <span class="ident">Phase</span>, <span class="ident">QueuedSolution</span>, <span class="ident">TransactionSource</span>,
+		<span class="ident">CurrentPhase</span>, <span class="ident">Event</span>, <span class="ident">InvalidTransaction</span>, <span class="ident">Phase</span>, <span class="ident">QueuedSolution</span>, <span class="ident">TransactionSource</span>,
 		<span class="ident">TransactionValidityError</span>,
 	};
 	<span class="kw">use</span> <span class="ident">codec::Decode</span>;
@@ -3058,7 +3086,7 @@
 			));
 
 			<span class="comment">// signed</span>
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert_eq!</span>(<span class="ident">MultiPhase::current_phase</span>(), <span class="ident">Phase::Signed</span>);
 			<span class="macro">assert!</span>(<span class="macro">matches!</span>(
 				<span class="op">&lt;</span><span class="ident">MultiPhase</span> <span class="kw">as</span> <span class="ident">ValidateUnsigned</span><span class="op">&gt;</span><span class="ident">::validate_unsigned</span>(
@@ -3074,7 +3102,7 @@
 			));
 
 			<span class="comment">// unsigned</span>
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="macro">assert!</span>(<span class="op">&lt;</span><span class="ident">MultiPhase</span> <span class="kw">as</span> <span class="ident">ValidateUnsigned</span><span class="op">&gt;</span><span class="ident">::validate_unsigned</span>(
@@ -3105,7 +3133,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">validate_unsigned_retracts_low_score</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">desired_targets</span>(<span class="number">0</span>).<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="kw">let</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">RawSolution</span>::<span class="op">&lt;</span><span class="ident">TestNposSolution</span><span class="op">&gt;</span> {
@@ -3151,7 +3179,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">validate_unsigned_retracts_incorrect_winner_count</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">desired_targets</span>(<span class="number">1</span>).<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">RawSolution</span>::<span class="op">&lt;</span><span class="ident">TestNposSolution</span><span class="op">&gt;</span> {
@@ -3180,7 +3208,7 @@
 			.<span class="ident">miner_tx_priority</span>(<span class="number">20</span>)
 			.<span class="ident">desired_targets</span>(<span class="number">0</span>)
 			.<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-				<span class="ident">roll_to</span>(<span class="number">25</span>);
+				<span class="ident">roll_to_unsigned</span>();
 				<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 				<span class="kw">let</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">RawSolution</span>::<span class="op">&lt;</span><span class="ident">TestNposSolution</span><span class="op">&gt;</span> {
@@ -3211,7 +3239,7 @@
 	                           Some(\&quot;PreDispatchWrongWinnerCount\&quot;) })&quot;</span>)]</span>
 	<span class="kw">fn</span> <span class="ident">unfeasible_solution_panics</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="comment">// This is in itself an invalid BS solution.</span>
@@ -3233,7 +3261,7 @@
 	                           deprive validator from their authoring reward.&quot;</span>)]</span>
 	<span class="kw">fn</span> <span class="ident">wrong_witness_panics</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="comment">// This solution is unfeasible as well, but we won&#39;t even get there.</span>
@@ -3257,7 +3285,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">miner_works</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="comment">// ensure we have snapshots in place.</span>
@@ -3275,6 +3303,17 @@
 				<span class="ident">witness</span>
 			));
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::queued_solution</span>().<span class="ident">is_some</span>());
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">multi_phase_events</span>(),
+				<span class="macro">vec!</span>[
+					<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::UnsignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::SolutionStored</span> {
+						<span class="ident">compute</span>: <span class="ident">ElectionCompute::Unsigned</span>,
+						<span class="ident">prev_ejected</span>: <span class="bool-val">false</span>
+					}
+				]
+			);
 		})
 	}
 
@@ -3284,7 +3323,7 @@
 			.<span class="ident">miner_weight</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">100</span>).<span class="ident">set_proof_size</span>(<span class="ident">u64::MAX</span>))
 			.<span class="ident">mock_weight_info</span>(<span class="ident"><span class="kw">crate</span>::mock::MockedWeightInfo::Basic</span>)
 			.<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-				<span class="ident">roll_to</span>(<span class="number">25</span>);
+				<span class="ident">roll_to_unsigned</span>();
 				<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 				<span class="kw">let</span> (<span class="ident">raw</span>, <span class="ident">witness</span>) <span class="op">=</span> <span class="ident">MultiPhase::mine_solution</span>().<span class="ident">unwrap</span>();
@@ -3318,7 +3357,7 @@
 	<span class="kw">fn</span> <span class="ident">miner_will_not_submit_if_not_enough_winners</span>() {
 		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">ext</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ExtBuilder::default</span>().<span class="ident">desired_targets</span>(<span class="number">8</span>).<span class="ident">build_offchainify</span>(<span class="number">0</span>);
 		<span class="ident">ext</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="comment">// Force the number of winners to be bigger to fail</span>
@@ -3344,7 +3383,7 @@
 			.<span class="ident">add_voter</span>(<span class="number">8</span>, <span class="number">5</span>, <span class="macro">bounded_vec!</span>[<span class="number">10</span>])
 			.<span class="ident">better_unsigned_threshold</span>(<span class="ident">Perbill::from_percent</span>(<span class="number">50</span>))
 			.<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-				<span class="ident">roll_to</span>(<span class="number">25</span>);
+				<span class="ident">roll_to_unsigned</span>();
 				<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 				<span class="macro">assert_eq!</span>(<span class="ident">MultiPhase::desired_targets</span>().<span class="ident">unwrap</span>(), <span class="number">1</span>);
 
@@ -3446,7 +3485,7 @@
 		<span class="ident">ext</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
 			<span class="kw">let</span> <span class="ident">offchain_repeat</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Runtime</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::OffchainRepeat::get</span>();
 
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="comment">// first execution -- okay.</span>
@@ -3487,7 +3526,7 @@
 			<span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="ident">StorageValueRef::persistent</span>(<span class="kw-2">&amp;</span><span class="ident">OFFCHAIN_LOCK</span>);
 			<span class="kw">let</span> <span class="ident">last_block</span> <span class="op">=</span> <span class="ident">StorageValueRef::persistent</span>(<span class="ident">OFFCHAIN_LAST_BLOCK</span>);
 
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="comment">// initially, the lock is not set.</span>
@@ -3508,7 +3547,7 @@
 		<span class="comment">// ensure that if the guard is in hold, a new execution is not allowed.</span>
 		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">ext</span>, <span class="ident">pool</span>) <span class="op">=</span> <span class="ident">ExtBuilder::default</span>().<span class="ident">build_offchainify</span>(<span class="number">0</span>);
 		<span class="ident">ext</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_unsigned</span>());
 
 			<span class="comment">// artificially set the value, as if another thread is mid-way.</span>
@@ -3536,7 +3575,7 @@
 	<span class="kw">fn</span> <span class="ident">ocw_only_runs_when_unsigned_open_now</span>() {
 		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">ext</span>, <span class="ident">pool</span>) <span class="op">=</span> <span class="ident">ExtBuilder::default</span>().<span class="ident">build_offchainify</span>(<span class="number">0</span>);
 		<span class="ident">ext</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="macro">assert_eq!</span>(<span class="ident">MultiPhase::current_phase</span>(), <span class="ident">Phase::Unsigned</span>((<span class="bool-val">true</span>, <span class="number">25</span>)));
 
 			<span class="comment">// we must clear the offchain storage to ensure the offchain execution check doesn&#39;t get</span>
@@ -3616,6 +3655,21 @@
 
 			<span class="comment">// the submitted solution changes because the cache was cleared.</span>
 			<span class="macro">assert_eq!</span>(<span class="ident">tx_cache_1</span>, <span class="ident">tx_cache_3</span>);
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">multi_phase_events</span>(),
+				<span class="macro">vec!</span>[
+					<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::UnsignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::ElectionFinalized</span> {
+						<span class="ident">compute</span>: <span class="ident">ElectionCompute::Fallback</span>,
+						<span class="ident">score</span>: <span class="ident">ElectionScore</span> {
+							<span class="ident">minimal_stake</span>: <span class="number">0</span>,
+							<span class="ident">sum_stake</span>: <span class="number">0</span>,
+							<span class="ident">sum_stake_squared</span>: <span class="number">0</span>
+						}
+					}
+				]
+			);
 		})
 	}
 
@@ -3755,7 +3809,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">trim_assignments_length_does_not_modify_when_short_enough</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 
 			<span class="comment">// given</span>
 			<span class="kw">let</span> <span class="ident">TrimHelpers</span> { <span class="kw-2">mut</span> <span class="ident">assignments</span>, <span class="ident">encoded_size_of</span>, .. } <span class="op">=</span> <span class="ident">trim_helpers</span>();
@@ -3780,7 +3834,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">trim_assignments_length_modifies_when_too_long</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 
 			<span class="comment">// given</span>
 			<span class="kw">let</span> <span class="ident">TrimHelpers</span> { <span class="kw-2">mut</span> <span class="ident">assignments</span>, <span class="ident">encoded_size_of</span>, .. } <span class="op">=</span> <span class="ident">trim_helpers</span>();
@@ -3806,7 +3860,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">trim_assignments_length_trims_lowest_stake</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 
 			<span class="comment">// given</span>
 			<span class="kw">let</span> <span class="ident">TrimHelpers</span> { <span class="ident">voters</span>, <span class="kw-2">mut</span> <span class="ident">assignments</span>, <span class="ident">encoded_size_of</span>, <span class="ident">voter_index</span> } <span class="op">=</span>
@@ -3869,7 +3923,7 @@
 		<span class="comment">// or when we trim it to zero.</span>
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
 			<span class="comment">// we need snapshot for `trim_helpers` to work.</span>
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 			<span class="kw">let</span> <span class="ident">TrimHelpers</span> { <span class="kw-2">mut</span> <span class="ident">assignments</span>, <span class="ident">encoded_size_of</span>, .. } <span class="op">=</span> <span class="ident">trim_helpers</span>();
 			<span class="macro">assert!</span>(<span class="ident">assignments</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span>);
 
@@ -3891,7 +3945,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">mine_solution_solutions_always_within_acceptable_length</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">25</span>);
+			<span class="ident">roll_to_unsigned</span>();
 
 			<span class="comment">// how long would the default solution be?</span>
 			<span class="kw">let</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">MultiPhase::mine_solution</span>().<span class="ident">unwrap</span>();

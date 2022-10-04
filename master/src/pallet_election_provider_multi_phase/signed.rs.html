@@ -1082,6 +1082,96 @@
 <span id="1076">1076</span>
 <span id="1077">1077</span>
 <span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
+<span id="1102">1102</span>
+<span id="1103">1103</span>
+<span id="1104">1104</span>
+<span id="1105">1105</span>
+<span id="1106">1106</span>
+<span id="1107">1107</span>
+<span id="1108">1108</span>
+<span id="1109">1109</span>
+<span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
+<span id="1113">1113</span>
+<span id="1114">1114</span>
+<span id="1115">1115</span>
+<span id="1116">1116</span>
+<span id="1117">1117</span>
+<span id="1118">1118</span>
+<span id="1119">1119</span>
+<span id="1120">1120</span>
+<span id="1121">1121</span>
+<span id="1122">1122</span>
+<span id="1123">1123</span>
+<span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
+<span id="1128">1128</span>
+<span id="1129">1129</span>
+<span id="1130">1130</span>
+<span id="1131">1131</span>
+<span id="1132">1132</span>
+<span id="1133">1133</span>
+<span id="1134">1134</span>
+<span id="1135">1135</span>
+<span id="1136">1136</span>
+<span id="1137">1137</span>
+<span id="1138">1138</span>
+<span id="1139">1139</span>
+<span id="1140">1140</span>
+<span id="1141">1141</span>
+<span id="1142">1142</span>
+<span id="1143">1143</span>
+<span id="1144">1144</span>
+<span id="1145">1145</span>
+<span id="1146">1146</span>
+<span id="1147">1147</span>
+<span id="1148">1148</span>
+<span id="1149">1149</span>
+<span id="1150">1150</span>
+<span id="1151">1151</span>
+<span id="1152">1152</span>
+<span id="1153">1153</span>
+<span id="1154">1154</span>
+<span id="1155">1155</span>
+<span id="1156">1156</span>
+<span id="1157">1157</span>
+<span id="1158">1158</span>
+<span id="1159">1159</span>
+<span id="1160">1160</span>
+<span id="1161">1161</span>
+<span id="1162">1162</span>
+<span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
+<span id="1166">1166</span>
+<span id="1167">1167</span>
+<span id="1168">1168</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -1612,10 +1702,11 @@
 	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 	<span class="kw">use</span> <span class="kw">crate</span>::{
 		<span class="ident">mock</span>::{
-			<span class="ident">balances</span>, <span class="ident">raw_solution</span>, <span class="ident">roll_to</span>, <span class="ident">Balances</span>, <span class="ident">ExtBuilder</span>, <span class="ident">MockedWeightInfo</span>, <span class="ident">MultiPhase</span>,
-			<span class="ident">Runtime</span>, <span class="ident">RuntimeOrigin</span>, <span class="ident">SignedMaxRefunds</span>, <span class="ident">SignedMaxSubmissions</span>, <span class="ident">SignedMaxWeight</span>,
+			<span class="ident">balances</span>, <span class="ident">multi_phase_events</span>, <span class="ident">raw_solution</span>, <span class="ident">roll_to</span>, <span class="ident">roll_to_signed</span>, <span class="ident">Balances</span>,
+			<span class="ident">ExtBuilder</span>, <span class="ident">MockedWeightInfo</span>, <span class="ident">MultiPhase</span>, <span class="ident">Runtime</span>, <span class="ident">RuntimeOrigin</span>, <span class="ident">SignedMaxRefunds</span>,
+			<span class="ident">SignedMaxSubmissions</span>, <span class="ident">SignedMaxWeight</span>,
 		},
-		<span class="ident">Error</span>, <span class="ident">Perbill</span>, <span class="ident">Phase</span>,
+		<span class="ident">Error</span>, <span class="ident">Event</span>, <span class="ident">Perbill</span>, <span class="ident">Phase</span>,
 	};
 	<span class="kw">use</span> <span class="ident">frame_support</span>::{<span class="ident">assert_noop</span>, <span class="ident">assert_ok</span>, <span class="ident">assert_storage_noop</span>};
 
@@ -1639,7 +1730,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">should_pay_deposit</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">let</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">raw_solution</span>();
@@ -1649,13 +1740,21 @@
 
 			<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="number">99</span>), (<span class="number">95</span>, <span class="number">5</span>));
 			<span class="macro">assert_eq!</span>(<span class="ident">MultiPhase::signed_submissions</span>().<span class="ident">iter</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">deposit</span>, <span class="number">5</span>);
+
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">multi_phase_events</span>(),
+				<span class="macro">vec!</span>[
+					<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> }
+				]
+			);
 		})
 	}
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">good_solution_is_rewarded</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">let</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">raw_solution</span>();
@@ -1666,13 +1765,22 @@
 
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::finalize_signed_phase</span>());
 			<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="number">99</span>), (<span class="number">100</span> <span class="op">+</span> <span class="number">7</span> <span class="op">+</span> <span class="number">8</span>, <span class="number">0</span>));
+
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">multi_phase_events</span>(),
+				<span class="macro">vec!</span>[
+					<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::Rewarded</span> { <span class="ident">account</span>: <span class="number">99</span>, <span class="ident">value</span>: <span class="number">7</span> }
+				]
+			);
 		})
 	}
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">bad_solution_is_slashed</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">raw_solution</span>();
@@ -1688,13 +1796,22 @@
 			<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">MultiPhase::finalize_signed_phase</span>());
 			<span class="comment">// and the bond is gone.</span>
 			<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="number">99</span>), (<span class="number">95</span>, <span class="number">0</span>));
+
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">multi_phase_events</span>(),
+				<span class="macro">vec!</span>[
+					<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::Slashed</span> { <span class="ident">account</span>: <span class="number">99</span>, <span class="ident">value</span>: <span class="number">5</span> }
+				]
+			);
 		})
 	}
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">suppressed_solution_gets_bond_back</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">raw_solution</span>();
@@ -1717,13 +1834,22 @@
 			<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="number">99</span>), (<span class="number">100</span> <span class="op">+</span> <span class="number">7</span> <span class="op">+</span> <span class="number">8</span>, <span class="number">0</span>));
 			<span class="comment">// 999 gets everything back, including the call fee.</span>
 			<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="number">999</span>), (<span class="number">100</span> <span class="op">+</span> <span class="number">8</span>, <span class="number">0</span>));
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">multi_phase_events</span>(),
+				<span class="macro">vec!</span>[
+					<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::Rewarded</span> { <span class="ident">account</span>: <span class="number">99</span>, <span class="ident">value</span>: <span class="number">7</span> }
+				]
+			);
 		})
 	}
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">cannot_submit_worse_with_full_queue</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">SignedMaxSubmissions::get</span>() {
@@ -1751,7 +1877,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">call_fee_refund_is_limited_by_signed_max_refunds</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 			<span class="macro">assert_eq!</span>(<span class="ident">SignedMaxRefunds::get</span>(), <span class="number">1</span>);
 			<span class="macro">assert!</span>(<span class="ident">SignedMaxSubmissions::get</span>() <span class="op">&gt;</span> <span class="number">2</span>);
@@ -1767,7 +1893,7 @@
 				<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="ident">account</span>), (<span class="number">95</span>, <span class="number">5</span>));
 			}
 
-			<span class="macro">assert!</span>(<span class="ident">MultiPhase::finalize_signed_phase</span>());
+			<span class="macro">assert_ok!</span>(<span class="ident">MultiPhase::do_elect</span>());
 
 			<span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">SignedMaxSubmissions::get</span>() {
 				<span class="kw">let</span> <span class="ident">account</span> <span class="op">=</span> <span class="number">99</span> <span class="op">+</span> <span class="ident">s</span> <span class="kw">as</span> <span class="ident">u64</span>;
@@ -1783,6 +1909,26 @@
 					<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="ident">account</span>), (<span class="number">100</span>, <span class="number">0</span>));
 				}
 			}
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">multi_phase_events</span>(),
+				<span class="macro">vec!</span>[
+					<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::Rewarded</span> { <span class="ident">account</span>: <span class="number">99</span>, <span class="ident">value</span>: <span class="number">7</span> },
+					<span class="ident">Event::ElectionFinalized</span> {
+						<span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>,
+						<span class="ident">score</span>: <span class="ident">ElectionScore</span> {
+							<span class="ident">minimal_stake</span>: <span class="number">40</span>,
+							<span class="ident">sum_stake</span>: <span class="number">100</span>,
+							<span class="ident">sum_stake_squared</span>: <span class="number">5200</span>
+						}
+					}
+				]
+			);
 		});
 	}
 
@@ -1792,7 +1938,7 @@
 			.<span class="ident">signed_max_submission</span>(<span class="number">1</span>)
 			.<span class="ident">better_signed_threshold</span>(<span class="ident">Perbill::from_percent</span>(<span class="number">20</span>))
 			.<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-				<span class="ident">roll_to</span>(<span class="number">15</span>);
+				<span class="ident">roll_to_signed</span>();
 				<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">RawSolution</span> {
@@ -1831,13 +1977,27 @@
 				};
 
 				<span class="macro">assert_ok!</span>(<span class="ident">MultiPhase::submit</span>(<span class="ident">RuntimeOrigin::signed</span>(<span class="number">99</span>), <span class="ident">Box::new</span>(<span class="ident">solution</span>)));
+				<span class="macro">assert_eq!</span>(
+					<span class="ident">multi_phase_events</span>(),
+					<span class="macro">vec!</span>[
+						<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+						<span class="ident">Event::SolutionStored</span> {
+							<span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>,
+							<span class="ident">prev_ejected</span>: <span class="bool-val">false</span>
+						},
+						<span class="ident">Event::SolutionStored</span> {
+							<span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>,
+							<span class="ident">prev_ejected</span>: <span class="bool-val">true</span>
+						}
+					]
+				);
 			})
 	}
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">weakest_is_removed_if_better_provided</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">SignedMaxSubmissions::get</span>() {
@@ -1884,7 +2044,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">replace_weakest_works</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span>..<span class="ident">SignedMaxSubmissions::get</span>() {
@@ -1931,7 +2091,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">early_ejected_solution_gets_bond_back</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">signed_deposit</span>(<span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>).<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">SignedMaxSubmissions::get</span>() {
@@ -1962,7 +2122,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">equally_good_solution_is_not_accepted</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">signed_max_submission</span>(<span class="number">3</span>).<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">SignedMaxSubmissions::get</span>() {
@@ -1999,7 +2159,7 @@
 		<span class="comment">// - bad_solution_is_slashed</span>
 		<span class="comment">// - suppressed_solution_gets_bond_back</span>
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="number">99</span>), (<span class="number">100</span>, <span class="number">0</span>));
@@ -2035,6 +2195,17 @@
 			<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="number">999</span>), (<span class="number">95</span>, <span class="number">0</span>));
 			<span class="comment">// 9999 gets everything back, including the call fee.</span>
 			<span class="macro">assert_eq!</span>(<span class="ident">balances</span>(<span class="kw-2">&amp;</span><span class="number">9999</span>), (<span class="number">100</span> <span class="op">+</span> <span class="number">8</span>, <span class="number">0</span>));
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">multi_phase_events</span>(),
+				<span class="macro">vec!</span>[
+					<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::Slashed</span> { <span class="ident">account</span>: <span class="number">999</span>, <span class="ident">value</span>: <span class="number">5</span> },
+					<span class="ident">Event::Rewarded</span> { <span class="ident">account</span>: <span class="number">99</span>, <span class="ident">value</span>: <span class="number">7</span> }
+				]
+			);
 		})
 	}
 
@@ -2044,7 +2215,7 @@
 			.<span class="ident">signed_weight</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">40</span>).<span class="ident">set_proof_size</span>(<span class="ident">u64::MAX</span>))
 			.<span class="ident">mock_weight_info</span>(<span class="ident">MockedWeightInfo::Basic</span>)
 			.<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-				<span class="ident">roll_to</span>(<span class="number">15</span>);
+				<span class="ident">roll_to_signed</span>();
 				<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 				<span class="kw">let</span> (<span class="ident">raw</span>, <span class="ident">witness</span>) <span class="op">=</span> <span class="ident">MultiPhase::mine_solution</span>().<span class="ident">unwrap</span>();
@@ -2078,7 +2249,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">insufficient_deposit_does_not_store_submission</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">let</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">raw_solution</span>();
@@ -2098,7 +2269,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">insufficient_deposit_with_full_queue_works_properly</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">SignedMaxSubmissions::get</span>() {
@@ -2144,7 +2315,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">finalize_signed_phase_is_idempotent_given_submissions</span>() {
 		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">roll_to</span>(<span class="number">15</span>);
+			<span class="ident">roll_to_signed</span>();
 			<span class="macro">assert!</span>(<span class="ident">MultiPhase::current_phase</span>().<span class="ident">is_signed</span>());
 
 			<span class="kw">let</span> <span class="ident">solution</span> <span class="op">=</span> <span class="ident">raw_solution</span>();
@@ -2157,6 +2328,15 @@
 
 			<span class="comment">// calling it again doesn&#39;t change anything</span>
 			<span class="macro">assert_storage_noop!</span>(<span class="ident">MultiPhase::finalize_signed_phase</span>());
+
+			<span class="macro">assert_eq!</span>(
+				<span class="ident">multi_phase_events</span>(),
+				<span class="macro">vec!</span>[
+					<span class="ident">Event::SignedPhaseStarted</span> { <span class="ident">round</span>: <span class="number">1</span> },
+					<span class="ident">Event::SolutionStored</span> { <span class="ident">compute</span>: <span class="ident">ElectionCompute::Signed</span>, <span class="ident">prev_ejected</span>: <span class="bool-val">false</span> },
+					<span class="ident">Event::Rewarded</span> { <span class="ident">account</span>: <span class="number">99</span>, <span class="ident">value</span>: <span class="number">7</span> }
+				]
+			);
 		})
 	}
 }
