@@ -255,6 +255,7 @@
 <span id="249">249</span>
 <span id="250">250</span>
 <span id="251">251</span>
+<span id="252">252</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -283,17 +284,18 @@
 	<span class="ident">DispatchError</span>, <span class="ident">RuntimeDebug</span>,
 };
 <span class="kw">use</span> <span class="ident">sp_std::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">sp_weights::Weight</span>;
 
 <span class="doccomment">/// Result type of a `bare_call` or `bare_instantiate` call.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// It contains the execution result together with some auxiliary information.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">RuntimeDebug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ContractResult</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Balance</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// How much gas was consumed during execution.</span>
-	<span class="kw">pub</span> <span class="ident">gas_consumed</span>: <span class="ident">u64</span>,
-	<span class="doccomment">/// How much gas is required as gas limit in order to execute this call.</span>
+	<span class="doccomment">/// How much weight was consumed during execution.</span>
+	<span class="kw">pub</span> <span class="ident">gas_consumed</span>: <span class="ident">Weight</span>,
+	<span class="doccomment">/// How much weight is required as gas limit in order to execute this call.</span>
 	<span class="doccomment">///</span>
-	<span class="doccomment">/// This value should be used to determine the gas limit for on-chain execution.</span>
+	<span class="doccomment">/// This value should be used to determine the weight limit for on-chain execution.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// # Note</span>
 	<span class="doccomment">///</span>
@@ -301,7 +303,7 @@
 	<span class="doccomment">/// is used. Currently, only `seal_call_runtime` makes use of pre charging.</span>
 	<span class="doccomment">/// Additionally, any `seal_call` or `seal_instantiate` makes use of pre-charging</span>
 	<span class="doccomment">/// when a non-zero `gas_limit` argument is supplied.</span>
-	<span class="kw">pub</span> <span class="ident">gas_required</span>: <span class="ident">u64</span>,
+	<span class="kw">pub</span> <span class="ident">gas_required</span>: <span class="ident">Weight</span>,
 	<span class="doccomment">/// How much balance was deposited and reserved during execution in order to pay for storage.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// The storage deposit is never actually charged from the caller in case of [`Self::result`]</span>

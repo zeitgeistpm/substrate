@@ -242,11 +242,6 @@
 <span id="236">236</span>
 <span id="237">237</span>
 <span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -477,17 +472,12 @@
 		<span class="comment">// contract code. This is why we subtract `T::*::(0)`. We need to do this at this</span>
 		<span class="comment">// point because when charging the general weight for calling the contract we not know the</span>
 		<span class="comment">// size of the contract.</span>
-		<span class="kw">let</span> <span class="ident">ref_time_weight</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+		<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
 			<span class="ident">Reinstrument</span>(<span class="ident">len</span>) =&gt; <span class="ident">T::WeightInfo::reinstrument</span>(<span class="ident">len</span>),
-			<span class="ident">Load</span>(<span class="ident">len</span>) =&gt; {
-				<span class="kw">let</span> <span class="ident">computation</span> <span class="op">=</span> <span class="ident">T::WeightInfo::call_with_code_per_byte</span>(<span class="ident">len</span>)
-					.<span class="ident">saturating_sub</span>(<span class="ident">T::WeightInfo::call_with_code_per_byte</span>(<span class="number">0</span>));
-				<span class="kw">let</span> <span class="ident">bandwidth</span> <span class="op">=</span> <span class="ident">T::ContractAccessWeight::get</span>().<span class="ident">saturating_mul</span>(<span class="ident">len</span> <span class="kw">as</span> <span class="ident">u64</span>);
-				<span class="ident">computation</span>.<span class="ident">max</span>(<span class="ident">bandwidth</span>)
-			},
-		};
-
-		<span class="ident">ref_time_weight</span>
+			<span class="ident">Load</span>(<span class="ident">len</span>) =&gt; <span class="ident">T::WeightInfo::call_with_code_per_byte</span>(<span class="ident">len</span>)
+				.<span class="ident">saturating_sub</span>(<span class="ident">T::WeightInfo::call_with_code_per_byte</span>(<span class="number">0</span>))
+				.<span class="ident">set_proof_size</span>(<span class="ident">len</span>.<span class="ident">into</span>()),
+		}
 	}
 }
 </code></pre></div>
