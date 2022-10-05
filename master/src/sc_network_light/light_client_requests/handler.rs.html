@@ -328,12 +328,6 @@
 <span id="322">322</span>
 <span id="323">323</span>
 <span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -364,7 +358,7 @@
 <span class="kw">use</span> <span class="ident">libp2p::PeerId</span>;
 <span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">debug</span>, <span class="ident">trace</span>};
 <span class="kw">use</span> <span class="ident">prost::Message</span>;
-<span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">BlockBackend</span>, <span class="ident">ProofProvider</span>, <span class="ident">StorageProof</span>};
+<span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">BlockBackend</span>, <span class="ident">ProofProvider</span>};
 <span class="kw">use</span> <span class="ident">sc_network_common</span>::{
 	<span class="ident">config::ProtocolId</span>,
 	<span class="ident">request_responses</span>::{<span class="ident">IncomingRequest</span>, <span class="ident">OutgoingResponse</span>, <span class="ident">ProtocolConfig</span>},
@@ -512,12 +506,15 @@
 
 		<span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="ident">Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">request</span>.<span class="ident">block</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="ident">proof</span> <span class="op">=</span>
+		<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span>
 			<span class="kw">match</span> <span class="self">self</span>
 				.<span class="ident">client</span>
 				.<span class="ident">execution_proof</span>(<span class="kw-2">&amp;</span><span class="ident">BlockId::Hash</span>(<span class="ident">block</span>), <span class="kw-2">&amp;</span><span class="ident">request</span>.<span class="ident">method</span>, <span class="kw-2">&amp;</span><span class="ident">request</span>.<span class="ident">data</span>)
 			{
-				<span class="prelude-val">Ok</span>((<span class="kw">_</span>, <span class="ident">proof</span>)) =&gt; <span class="ident">proof</span>,
+				<span class="prelude-val">Ok</span>((<span class="kw">_</span>, <span class="ident">proof</span>)) =&gt; {
+					<span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">schema::v1::light::RemoteCallResponse</span> { <span class="ident">proof</span>: <span class="ident">proof</span>.<span class="ident">encode</span>() };
+					<span class="prelude-val">Some</span>(<span class="ident">schema::v1::light::response::Response::RemoteCallResponse</span>(<span class="ident">r</span>))
+				},
 				<span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; {
 					<span class="macro">trace!</span>(
 						<span class="string">&quot;remote call request from {} ({} at {:?}) failed with: {}&quot;</span>,
@@ -526,16 +523,11 @@
 						<span class="ident">request</span>.<span class="ident">block</span>,
 						<span class="ident">e</span>,
 					);
-					<span class="ident">StorageProof::empty</span>()
+					<span class="prelude-val">None</span>
 				},
 			};
 
-		<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> {
-			<span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">schema::v1::light::RemoteCallResponse</span> { <span class="ident">proof</span>: <span class="ident">proof</span>.<span class="ident">encode</span>() };
-			<span class="ident">schema::v1::light::response::Response::RemoteCallResponse</span>(<span class="ident">r</span>)
-		};
-
-		<span class="prelude-val">Ok</span>(<span class="ident">schema::v1::light::Response</span> { <span class="ident">response</span>: <span class="prelude-val">Some</span>(<span class="ident">response</span>) })
+		<span class="prelude-val">Ok</span>(<span class="ident">schema::v1::light::Response</span> { <span class="ident">response</span> })
 	}
 
 	<span class="kw">fn</span> <span class="ident">on_remote_read_request</span>(
@@ -557,11 +549,14 @@
 
 		<span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="ident">Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">request</span>.<span class="ident">block</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="ident">proof</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>
+		<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>
 			.<span class="ident">client</span>
 			.<span class="ident">read_proof</span>(<span class="kw-2">&amp;</span><span class="ident">BlockId::Hash</span>(<span class="ident">block</span>), <span class="kw-2">&amp;mut</span> <span class="ident">request</span>.<span class="ident">keys</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">AsRef::as_ref</span>))
 		{
-			<span class="prelude-val">Ok</span>(<span class="ident">proof</span>) =&gt; <span class="ident">proof</span>,
+			<span class="prelude-val">Ok</span>(<span class="ident">proof</span>) =&gt; {
+				<span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">schema::v1::light::RemoteReadResponse</span> { <span class="ident">proof</span>: <span class="ident">proof</span>.<span class="ident">encode</span>() };
+				<span class="prelude-val">Some</span>(<span class="ident">schema::v1::light::response::Response::RemoteReadResponse</span>(<span class="ident">r</span>))
+			},
 			<span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; {
 				<span class="macro">trace!</span>(
 					<span class="string">&quot;remote read request from {} ({} at {:?}) failed with: {}&quot;</span>,
@@ -570,16 +565,11 @@
 					<span class="ident">request</span>.<span class="ident">block</span>,
 					<span class="ident">error</span>,
 				);
-				<span class="ident">StorageProof::empty</span>()
+				<span class="prelude-val">None</span>
 			},
 		};
 
-		<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> {
-			<span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">schema::v1::light::RemoteReadResponse</span> { <span class="ident">proof</span>: <span class="ident">proof</span>.<span class="ident">encode</span>() };
-			<span class="ident">schema::v1::light::response::Response::RemoteReadResponse</span>(<span class="ident">r</span>)
-		};
-
-		<span class="prelude-val">Ok</span>(<span class="ident">schema::v1::light::Response</span> { <span class="ident">response</span>: <span class="prelude-val">Some</span>(<span class="ident">response</span>) })
+		<span class="prelude-val">Ok</span>(<span class="ident">schema::v1::light::Response</span> { <span class="ident">response</span> })
 	}
 
 	<span class="kw">fn</span> <span class="ident">on_remote_read_child_request</span>(
@@ -607,14 +597,17 @@
 			<span class="prelude-val">Some</span>((<span class="ident">ChildType::ParentKeyId</span>, <span class="ident">storage_key</span>)) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ChildInfo::new_default</span>(<span class="ident">storage_key</span>)),
 			<span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">sp_blockchain::Error::InvalidChildStorageKey</span>),
 		};
-		<span class="kw">let</span> <span class="ident">proof</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">child_info</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">child_info</span><span class="op">|</span> {
+		<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">child_info</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">child_info</span><span class="op">|</span> {
 			<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">read_child_proof</span>(
 				<span class="kw-2">&amp;</span><span class="ident">BlockId::Hash</span>(<span class="ident">block</span>),
 				<span class="kw-2">&amp;</span><span class="ident">child_info</span>,
 				<span class="kw-2">&amp;mut</span> <span class="ident">request</span>.<span class="ident">keys</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">AsRef::as_ref</span>),
 			)
 		}) {
-			<span class="prelude-val">Ok</span>(<span class="ident">proof</span>) =&gt; <span class="ident">proof</span>,
+			<span class="prelude-val">Ok</span>(<span class="ident">proof</span>) =&gt; {
+				<span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">schema::v1::light::RemoteReadResponse</span> { <span class="ident">proof</span>: <span class="ident">proof</span>.<span class="ident">encode</span>() };
+				<span class="prelude-val">Some</span>(<span class="ident">schema::v1::light::response::Response::RemoteReadResponse</span>(<span class="ident">r</span>))
+			},
 			<span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; {
 				<span class="macro">trace!</span>(
 					<span class="string">&quot;remote read child request from {} ({} {} at {:?}) failed with: {}&quot;</span>,
@@ -624,16 +617,11 @@
 					<span class="ident">request</span>.<span class="ident">block</span>,
 					<span class="ident">error</span>,
 				);
-				<span class="ident">StorageProof::empty</span>()
+				<span class="prelude-val">None</span>
 			},
 		};
 
-		<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> {
-			<span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">schema::v1::light::RemoteReadResponse</span> { <span class="ident">proof</span>: <span class="ident">proof</span>.<span class="ident">encode</span>() };
-			<span class="ident">schema::v1::light::response::Response::RemoteReadResponse</span>(<span class="ident">r</span>)
-		};
-
-		<span class="prelude-val">Ok</span>(<span class="ident">schema::v1::light::Response</span> { <span class="ident">response</span>: <span class="prelude-val">Some</span>(<span class="ident">response</span>) })
+		<span class="prelude-val">Ok</span>(<span class="ident">schema::v1::light::Response</span> { <span class="ident">response</span> })
 	}
 }
 

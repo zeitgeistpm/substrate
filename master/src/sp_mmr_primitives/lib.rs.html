@@ -676,6 +676,7 @@
 <span id="670">670</span>
 <span id="671">671</span>
 <span id="672">672</span>
+<span id="673">673</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -698,6 +699,7 @@
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
 <span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
 
+<span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
 <span class="kw">use</span> <span class="ident">sp_debug_derive::RuntimeDebug</span>;
 <span class="kw">use</span> <span class="ident">sp_runtime::traits</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>))]</span>
@@ -747,7 +749,7 @@
 }
 
 <span class="doccomment">/// A MMR proof data for one of the leaves.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">TypeInfo</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// The index of the leaf the proof is for.</span>
 	<span class="kw">pub</span> <span class="ident">leaf_index</span>: <span class="ident">LeafIndex</span>,
@@ -1030,7 +1032,7 @@
 <span class="macro">impl_leaf_data_for_tuple!</span>(<span class="ident">A</span>:<span class="number">0</span>, <span class="ident">B</span>:<span class="number">1</span>, <span class="ident">C</span>:<span class="number">2</span>, <span class="ident">D</span>:<span class="number">3</span>, <span class="ident">E</span>:<span class="number">4</span>);
 
 <span class="doccomment">/// A MMR proof data for a group of leaves.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">TypeInfo</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// The indices of the leaves the proof is for.</span>
 	<span class="kw">pub</span> <span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafIndex</span><span class="op">&gt;</span>,
