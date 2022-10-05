@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["image_count","Returns the number of images or `None` if the storage is corrupted."]],"struct":[["Migration","Migration for moving preimage from V0 to V1 storage."]]};

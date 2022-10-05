@@ -287,6 +287,21 @@
 <span id="281">281</span>
 <span id="282">282</span>
 <span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -307,201 +322,219 @@
 <span class="doccomment">//! Scheduler pallet benchmarking.</span>
 
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">frame_benchmarking::benchmarks</span>;
+<span class="kw">use</span> <span class="ident">frame_benchmarking</span>::{<span class="ident">account</span>, <span class="ident">benchmarks</span>};
 <span class="kw">use</span> <span class="ident">frame_support</span>::{
 	<span class="ident">ensure</span>,
-	<span class="ident">traits</span>::{<span class="ident">OnInitialize</span>, <span class="ident">PreimageProvider</span>, <span class="ident">PreimageRecipient</span>},
+	<span class="ident">traits</span>::{<span class="ident">schedule::Priority</span>, <span class="ident">BoundedInline</span>},
 };
-<span class="kw">use</span> <span class="ident">sp_runtime::traits::Hash</span>;
+<span class="kw">use</span> <span class="ident">frame_system::RawOrigin</span>;
 <span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">prelude</span>::<span class="kw-2">*</span>, <span class="ident">vec</span>};
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Pallet</span> <span class="kw">as</span> <span class="ident">Scheduler</span>;
-<span class="kw">use</span> <span class="ident">frame_system::Pallet</span> <span class="kw">as</span> <span class="ident">System</span>;
+<span class="kw">use</span> <span class="ident">frame_system::Call</span> <span class="kw">as</span> <span class="ident">SystemCall</span>;
+
+<span class="kw">const</span> <span class="ident">SEED</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>;
 
 <span class="kw">const</span> <span class="ident">BLOCK_NUMBER</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">2</span>;
 
 <span class="kw">type</span> <span class="ident">SystemOrigin</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::RuntimeOrigin</span>;
 
-<span class="doccomment">/// Add `n` named items to the schedule.</span>
+<span class="doccomment">/// Add `n` items to the schedule.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// For `resolved`:</span>
+<span class="doccomment">/// - `</span>
 <span class="doccomment">/// - `None`: aborted (hash without preimage)</span>
 <span class="doccomment">/// - `Some(true)`: hash resolves into call if possible, plain call otherwise</span>
 <span class="doccomment">/// - `Some(false)`: plain call</span>
-<span class="kw">fn</span> <span class="ident">fill_schedule</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(
-	<span class="ident">when</span>: <span class="ident">T::BlockNumber</span>,
-	<span class="ident">n</span>: <span class="ident">u32</span>,
-	<span class="ident">periodic</span>: <span class="ident">bool</span>,
-	<span class="ident">named</span>: <span class="ident">bool</span>,
-	<span class="ident">resolved</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">fill_schedule</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(<span class="ident">when</span>: <span class="ident">T::BlockNumber</span>, <span class="ident">n</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">DispatchTime::At</span>(<span class="ident">when</span>);
+	<span class="kw">let</span> <span class="ident">origin</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::PalletsOrigin</span> <span class="op">=</span> <span class="ident">frame_system::RawOrigin::Root</span>.<span class="ident">into</span>();
 	<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">n</span> {
-		<span class="comment">// Named schedule is strictly heavier than anonymous</span>
-		<span class="kw">let</span> (<span class="ident">call</span>, <span class="ident">hash</span>) <span class="op">=</span> <span class="ident">call_and_hash</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">i</span>);
-		<span class="kw">let</span> <span class="ident">call_or_hash</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">resolved</span> {
-			<span class="prelude-val">Some</span>(<span class="bool-val">true</span>) =&gt; {
-				<span class="ident">T::PreimageProvider::note_preimage</span>(<span class="ident">call</span>.<span class="ident">encode</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>());
-				<span class="kw">if</span> <span class="ident">T::PreimageProvider::have_preimage</span>(<span class="kw-2">&amp;</span><span class="ident">hash</span>) {
-					<span class="ident">CallOrHashOf</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Hash</span>(<span class="ident">hash</span>)
-				} <span class="kw">else</span> {
-					<span class="ident">call</span>.<span class="ident">into</span>()
-				}
-			},
-			<span class="prelude-val">Some</span>(<span class="bool-val">false</span>) =&gt; <span class="ident">call</span>.<span class="ident">into</span>(),
-			<span class="prelude-val">None</span> =&gt; <span class="ident">CallOrHashOf</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Hash</span>(<span class="ident">hash</span>),
-		};
-		<span class="kw">let</span> <span class="ident">period</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">periodic</span> {
-			<span class="bool-val">true</span> =&gt; <span class="prelude-val">Some</span>(((<span class="ident">i</span> <span class="op">+</span> <span class="number">100</span>).<span class="ident">into</span>(), <span class="number">100</span>)),
-			<span class="bool-val">false</span> =&gt; <span class="prelude-val">None</span>,
-		};
-		<span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">DispatchTime::At</span>(<span class="ident">when</span>);
-		<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">frame_system::RawOrigin::Root</span>.<span class="ident">into</span>();
-		<span class="kw">if</span> <span class="ident">named</span> {
-			<span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::do_schedule_named</span>(<span class="ident">i</span>.<span class="ident">encode</span>(), <span class="ident">t</span>, <span class="ident">period</span>, <span class="number">0</span>, <span class="ident">origin</span>, <span class="ident">call_or_hash</span>)<span class="question-mark">?</span>;
-		} <span class="kw">else</span> {
-			<span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::do_schedule</span>(<span class="ident">t</span>, <span class="ident">period</span>, <span class="number">0</span>, <span class="ident">origin</span>, <span class="ident">call_or_hash</span>)<span class="question-mark">?</span>;
-		}
+		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">make_call</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-val">None</span>);
+		<span class="kw">let</span> <span class="ident">period</span> <span class="op">=</span> <span class="prelude-val">Some</span>(((<span class="ident">i</span> <span class="op">+</span> <span class="number">100</span>).<span class="ident">into</span>(), <span class="number">100</span>));
+		<span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">u32_to_name</span>(<span class="ident">i</span>);
+		<span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::do_schedule_named</span>(<span class="ident">name</span>, <span class="ident">t</span>, <span class="ident">period</span>, <span class="number">0</span>, <span class="ident">origin</span>.<span class="ident">clone</span>(), <span class="ident">call</span>)<span class="question-mark">?</span>;
 	}
 	<span class="macro">ensure!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span>).<span class="ident">len</span>() <span class="op">==</span> <span class="ident">n</span> <span class="kw">as</span> <span class="ident">usize</span>, <span class="string">&quot;didn&#39;t fill schedule&quot;</span>);
 	<span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">fn</span> <span class="ident">call_and_hash</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(<span class="ident">i</span>: <span class="ident">u32</span>) -&gt; (<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span>, <span class="ident">T::Hash</span>) {
-	<span class="comment">// Essentially a no-op call.</span>
-	<span class="kw">let</span> <span class="ident">call</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span> <span class="op">=</span> <span class="ident">frame_system::Call::remark</span> { <span class="ident">remark</span>: <span class="ident">i</span>.<span class="ident">encode</span>() }.<span class="ident">into</span>();
-	<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident">T::Hashing::hash_of</span>(<span class="kw-2">&amp;</span><span class="ident">call</span>);
-	(<span class="ident">call</span>, <span class="ident">hash</span>)
+<span class="kw">fn</span> <span class="ident">u32_to_name</span>(<span class="ident">i</span>: <span class="ident">u32</span>) -&gt; <span class="ident">TaskName</span> {
+	<span class="ident">i</span>.<span class="ident">using_encoded</span>(<span class="ident">blake2_256</span>)
+}
+
+<span class="kw">fn</span> <span class="ident">make_task</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(
+	<span class="ident">periodic</span>: <span class="ident">bool</span>,
+	<span class="ident">named</span>: <span class="ident">bool</span>,
+	<span class="ident">signed</span>: <span class="ident">bool</span>,
+	<span class="ident">maybe_lookup_len</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+	<span class="ident">priority</span>: <span class="ident">Priority</span>,
+) -&gt; <span class="ident">ScheduledOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+	<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">make_call</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">maybe_lookup_len</span>);
+	<span class="kw">let</span> <span class="ident">maybe_periodic</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">periodic</span> {
+		<span class="bool-val">true</span> =&gt; <span class="prelude-val">Some</span>((<span class="number">100u32</span>.<span class="ident">into</span>(), <span class="number">100</span>)),
+		<span class="bool-val">false</span> =&gt; <span class="prelude-val">None</span>,
+	};
+	<span class="kw">let</span> <span class="ident">maybe_id</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">named</span> {
+		<span class="bool-val">true</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">u32_to_name</span>(<span class="number">0</span>)),
+		<span class="bool-val">false</span> =&gt; <span class="prelude-val">None</span>,
+	};
+	<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">make_origin</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">signed</span>);
+	<span class="ident">Scheduled</span> { <span class="ident">maybe_id</span>, <span class="ident">priority</span>, <span class="ident">call</span>, <span class="ident">maybe_periodic</span>, <span class="ident">origin</span>, <span class="ident">_phantom</span>: <span class="ident">PhantomData</span> }
+}
+
+<span class="kw">fn</span> <span class="ident">bounded</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(<span class="ident">len</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Bounded</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+	<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span>
+		<span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span><span class="op">&gt;</span><span class="ident">::from</span>(<span class="ident">SystemCall::remark</span> { <span class="ident">remark</span>: <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">len</span> <span class="kw">as</span> <span class="ident">usize</span>] });
+	<span class="ident">T::Preimages::bound</span>(<span class="ident">call</span>).<span class="ident">ok</span>()
+}
+
+<span class="kw">fn</span> <span class="ident">make_call</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(<span class="ident">maybe_lookup_len</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>) -&gt; <span class="ident">Bounded</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span><span class="op">&gt;</span> {
+	<span class="kw">let</span> <span class="ident">bound</span> <span class="op">=</span> <span class="ident">BoundedInline::bound</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">len</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">maybe_lookup_len</span> {
+		<span class="prelude-val">Some</span>(<span class="ident">len</span>) =&gt; <span class="ident">len</span>.<span class="ident">min</span>(<span class="ident">T::Preimages::MAX_LENGTH</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">-</span> <span class="number">2</span>).<span class="ident">max</span>(<span class="ident">bound</span>) <span class="op">-</span> <span class="number">3</span>,
+		<span class="prelude-val">None</span> =&gt; <span class="ident">bound</span>.<span class="ident">saturating_sub</span>(<span class="number">4</span>),
+	};
+
+	<span class="kw">loop</span> {
+		<span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">bounded</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">len</span>) {
+			<span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
+			<span class="prelude-val">None</span> =&gt; {
+				<span class="ident">len</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+				<span class="kw">continue</span>
+			},
+		};
+		<span class="kw">if</span> <span class="ident">c</span>.<span class="ident">lookup_needed</span>() <span class="op">==</span> <span class="ident">maybe_lookup_len</span>.<span class="ident">is_some</span>() {
+			<span class="kw">break</span> <span class="ident">c</span>
+		}
+		<span class="kw">if</span> <span class="ident">maybe_lookup_len</span>.<span class="ident">is_some</span>() {
+			<span class="ident">len</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+		} <span class="kw">else</span> {
+			<span class="kw">if</span> <span class="ident">len</span> <span class="op">&gt;</span> <span class="number">0</span> {
+				<span class="ident">len</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+			} <span class="kw">else</span> {
+				<span class="kw">break</span> <span class="ident">c</span>
+			}
+		}
+	}
+}
+
+<span class="kw">fn</span> <span class="ident">make_origin</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(<span class="ident">signed</span>: <span class="ident">bool</span>) -&gt; <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::PalletsOrigin</span> {
+	<span class="kw">match</span> <span class="ident">signed</span> {
+		<span class="bool-val">true</span> =&gt; <span class="ident">frame_system::RawOrigin::Signed</span>(<span class="ident">account</span>(<span class="string">&quot;origin&quot;</span>, <span class="number">0</span>, <span class="ident">SEED</span>)).<span class="ident">into</span>(),
+		<span class="bool-val">false</span> =&gt; <span class="ident">frame_system::RawOrigin::Root</span>.<span class="ident">into</span>(),
+	}
+}
+
+<span class="kw">fn</span> <span class="ident">dummy_counter</span>() -&gt; <span class="ident">WeightCounter</span> {
+	<span class="ident">WeightCounter</span> { <span class="ident">used</span>: <span class="ident">Weight::zero</span>(), <span class="ident">limit</span>: <span class="ident">Weight::MAX</span> }
 }
 
 <span class="macro">benchmarks!</span> {
-	<span class="ident">on_initialize_periodic_named_resolved</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>))<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>()); }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="ident">s</span> <span class="op">*</span> <span class="number">2</span>);
-		<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">s</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span> <span class="op">+</span> (<span class="ident">i</span> <span class="op">+</span> <span class="number">100</span>).<span class="ident">into</span>()).<span class="ident">len</span>(), <span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span>);
-		}
+	<span class="comment">// `service_agendas` when no work is done.</span>
+	<span class="ident">service_agendas_base</span> {
+		<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">T::BlockNumber::from</span>(<span class="ident">BLOCK_NUMBER</span>);
+		<span class="ident">IncompleteSince</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">now</span> <span class="op">-</span> <span class="ident">One::one</span>());
+	}: {
+		<span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::service_agendas</span>(<span class="kw-2">&amp;mut</span> <span class="ident">dummy_counter</span>(), <span class="ident">now</span>, <span class="number">0</span>);
+	} <span class="ident">verify</span> {
+		<span class="macro">assert_eq!</span>(<span class="ident">IncompleteSince</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(), <span class="prelude-val">Some</span>(<span class="ident">now</span> <span class="op">-</span> <span class="ident">One::one</span>()));
 	}
 
-	<span class="ident">on_initialize_named_resolved</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>))<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>()); }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="ident">s</span> <span class="op">*</span> <span class="number">2</span>);
-		<span class="macro">assert!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="op">==</span> <span class="number">0</span>);
+	<span class="comment">// `service_agenda` when no work is done.</span>
+	<span class="ident">service_agenda_base</span> {
+		<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
+		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
+		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">now</span>, <span class="ident">s</span>)<span class="question-mark">?</span>;
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">executed</span> <span class="op">=</span> <span class="number">0</span>;
+	}: {
+		<span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::service_agenda</span>(<span class="kw-2">&amp;mut</span> <span class="ident">dummy_counter</span>(), <span class="kw-2">&amp;mut</span> <span class="ident">executed</span>, <span class="ident">now</span>, <span class="ident">now</span>, <span class="number">0</span>);
+	} <span class="ident">verify</span> {
+		<span class="macro">assert_eq!</span>(<span class="ident">executed</span>, <span class="number">0</span>);
 	}
 
-	<span class="ident">on_initialize_periodic_resolved</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>))<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>()); }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="ident">s</span> <span class="op">*</span> <span class="number">2</span>);
-		<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">s</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span> <span class="op">+</span> (<span class="ident">i</span> <span class="op">+</span> <span class="number">100</span>).<span class="ident">into</span>()).<span class="ident">len</span>(), <span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span>);
-		}
+	<span class="comment">// `service_task` when the task is a non-periodic, non-named, non-fetched call which is not</span>
+	<span class="comment">// dispatched (e.g. due to being overweight).</span>
+	<span class="ident">service_task_base</span> {
+		<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
+		<span class="kw">let</span> <span class="ident">task</span> <span class="op">=</span> <span class="ident">make_task</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="prelude-val">None</span>, <span class="number">0</span>);
+		<span class="comment">// prevent any tasks from actually being executed as we only want the surrounding weight.</span>
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">counter</span> <span class="op">=</span> <span class="ident">WeightCounter</span> { <span class="ident">used</span>: <span class="ident">Weight::zero</span>(), <span class="ident">limit</span>: <span class="ident">Weight::zero</span>() };
+	}: {
+		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::service_task</span>(<span class="kw-2">&amp;mut</span> <span class="ident">counter</span>, <span class="ident">now</span>, <span class="ident">now</span>, <span class="number">0</span>, <span class="bool-val">true</span>, <span class="ident">task</span>);
+	} <span class="ident">verify</span> {
+		<span class="comment">//assert_eq!(result, Ok(()));</span>
 	}
 
-	<span class="ident">on_initialize_resolved</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(<span class="bool-val">true</span>))<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>()); }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="ident">s</span> <span class="op">*</span> <span class="number">2</span>);
-		<span class="macro">assert!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="op">==</span> <span class="number">0</span>);
+	<span class="comment">// `service_task` when the task is a non-periodic, non-named, fetched call (with a known</span>
+	<span class="comment">// preimage length) and which is not dispatched (e.g. due to being overweight).</span>
+	<span class="ident">service_task_fetched</span> {
+		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> (<span class="ident">BoundedInline::bound</span>() <span class="kw">as</span> <span class="ident">u32</span>) .. (<span class="ident">T::Preimages::MAX_LENGTH</span> <span class="kw">as</span> <span class="ident">u32</span>);
+		<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
+		<span class="kw">let</span> <span class="ident">task</span> <span class="op">=</span> <span class="ident">make_task</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(<span class="ident">s</span>), <span class="number">0</span>);
+		<span class="comment">// prevent any tasks from actually being executed as we only want the surrounding weight.</span>
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">counter</span> <span class="op">=</span> <span class="ident">WeightCounter</span> { <span class="ident">used</span>: <span class="ident">Weight::zero</span>(), <span class="ident">limit</span>: <span class="ident">Weight::zero</span>() };
+	}: {
+		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::service_task</span>(<span class="kw-2">&amp;mut</span> <span class="ident">counter</span>, <span class="ident">now</span>, <span class="ident">now</span>, <span class="number">0</span>, <span class="bool-val">true</span>, <span class="ident">task</span>);
+	} <span class="ident">verify</span> {
 	}
 
-	<span class="ident">on_initialize_named_aborted</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>()); }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="number">0</span>);
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">delay</span>) <span class="op">=</span> <span class="ident">T::NoPreimagePostponement::get</span>() {
-			<span class="macro">assert_eq!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span> <span class="op">+</span> <span class="ident">delay</span>).<span class="ident">len</span>(), <span class="ident">s</span> <span class="kw">as</span> <span class="ident">usize</span>);
-		} <span class="kw">else</span> {
-			<span class="macro">assert!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="op">==</span> <span class="number">0</span>);
-		}
+	<span class="comment">// `service_task` when the task is a non-periodic, named, non-fetched call which is not</span>
+	<span class="comment">// dispatched (e.g. due to being overweight).</span>
+	<span class="ident">service_task_named</span> {
+		<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
+		<span class="kw">let</span> <span class="ident">task</span> <span class="op">=</span> <span class="ident">make_task</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="prelude-val">None</span>, <span class="number">0</span>);
+		<span class="comment">// prevent any tasks from actually being executed as we only want the surrounding weight.</span>
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">counter</span> <span class="op">=</span> <span class="ident">WeightCounter</span> { <span class="ident">used</span>: <span class="ident">Weight::zero</span>(), <span class="ident">limit</span>: <span class="ident">Weight::zero</span>() };
+	}: {
+		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::service_task</span>(<span class="kw-2">&amp;mut</span> <span class="ident">counter</span>, <span class="ident">now</span>, <span class="ident">now</span>, <span class="number">0</span>, <span class="bool-val">true</span>, <span class="ident">task</span>);
+	} <span class="ident">verify</span> {
 	}
 
-	<span class="ident">on_initialize_aborted</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>()); }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="number">0</span>);
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">delay</span>) <span class="op">=</span> <span class="ident">T::NoPreimagePostponement::get</span>() {
-			<span class="macro">assert_eq!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span> <span class="op">+</span> <span class="ident">delay</span>).<span class="ident">len</span>(), <span class="ident">s</span> <span class="kw">as</span> <span class="ident">usize</span>);
-		} <span class="kw">else</span> {
-			<span class="macro">assert!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="op">==</span> <span class="number">0</span>);
-		}
+	<span class="comment">// `service_task` when the task is a periodic, non-named, non-fetched call which is not</span>
+	<span class="comment">// dispatched (e.g. due to being overweight).</span>
+	<span class="ident">service_task_periodic</span> {
+		<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
+		<span class="kw">let</span> <span class="ident">task</span> <span class="op">=</span> <span class="ident">make_task</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="prelude-val">None</span>, <span class="number">0</span>);
+		<span class="comment">// prevent any tasks from actually being executed as we only want the surrounding weight.</span>
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">counter</span> <span class="op">=</span> <span class="ident">WeightCounter</span> { <span class="ident">used</span>: <span class="ident">Weight::zero</span>(), <span class="ident">limit</span>: <span class="ident">Weight::zero</span>() };
+	}: {
+		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::service_task</span>(<span class="kw-2">&amp;mut</span> <span class="ident">counter</span>, <span class="ident">now</span>, <span class="ident">now</span>, <span class="number">0</span>, <span class="bool-val">true</span>, <span class="ident">task</span>);
+	} <span class="ident">verify</span> {
 	}
 
-	<span class="ident">on_initialize_periodic_named</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>()); }
+	<span class="comment">// `execute_dispatch` when the origin is `Signed`, not counting the dispatable&#39;s weight.</span>
+	<span class="ident">execute_dispatch_signed</span> {
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">counter</span> <span class="op">=</span> <span class="ident">WeightCounter</span> { <span class="ident">used</span>: <span class="ident">Weight::zero</span>(), <span class="ident">limit</span>: <span class="ident">Weight::MAX</span> };
+		<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">make_origin</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="bool-val">true</span>);
+		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">T::Preimages::realize</span>(<span class="kw-2">&amp;</span><span class="ident">make_call</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-val">None</span>)).<span class="ident">unwrap</span>().<span class="number">0</span>;
+	}: {
+		<span class="macro">assert!</span>(<span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::execute_dispatch</span>(<span class="kw-2">&amp;mut</span> <span class="ident">counter</span>, <span class="ident">origin</span>, <span class="ident">call</span>).<span class="ident">is_ok</span>());
+	}
 	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="ident">s</span>);
-		<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">s</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span> <span class="op">+</span> (<span class="ident">i</span> <span class="op">+</span> <span class="number">100</span>).<span class="ident">into</span>()).<span class="ident">len</span>(), <span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span>);
-		}
 	}
 
-	<span class="ident">on_initialize_periodic</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">when</span>); }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="ident">s</span>);
-		<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">s</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span> <span class="op">+</span> (<span class="ident">i</span> <span class="op">+</span> <span class="number">100</span>).<span class="ident">into</span>()).<span class="ident">len</span>(), <span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span>);
-		}
+	<span class="comment">// `execute_dispatch` when the origin is not `Signed`, not counting the dispatable&#39;s weight.</span>
+	<span class="ident">execute_dispatch_unsigned</span> {
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">counter</span> <span class="op">=</span> <span class="ident">WeightCounter</span> { <span class="ident">used</span>: <span class="ident">Weight::zero</span>(), <span class="ident">limit</span>: <span class="ident">Weight::MAX</span> };
+		<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">make_origin</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="bool-val">false</span>);
+		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">T::Preimages::realize</span>(<span class="kw-2">&amp;</span><span class="ident">make_call</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-val">None</span>)).<span class="ident">unwrap</span>().<span class="number">0</span>;
+	}: {
+		<span class="macro">assert!</span>(<span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::execute_dispatch</span>(<span class="kw-2">&amp;mut</span> <span class="ident">counter</span>, <span class="ident">origin</span>, <span class="ident">call</span>).<span class="ident">is_ok</span>());
 	}
-
-	<span class="ident">on_initialize_named</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>()); }
 	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="ident">s</span>);
-		<span class="macro">assert!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="op">==</span> <span class="number">0</span>);
-	}
-
-	<span class="ident">on_initialize</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
-	}: { <span class="ident">Scheduler</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>()); }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">System</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::event_count</span>(), <span class="ident">s</span>);
-		<span class="macro">assert!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="op">==</span> <span class="number">0</span>);
 	}
 
 	<span class="ident">schedule</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
+		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span> .. (<span class="ident">T::MaxScheduledPerBlock::get</span>() <span class="op">-</span> <span class="number">1</span>);
 		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
 		<span class="kw">let</span> <span class="ident">periodic</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">T::BlockNumber::one</span>(), <span class="number">100</span>));
 		<span class="kw">let</span> <span class="ident">priority</span> <span class="op">=</span> <span class="number">0</span>;
 		<span class="comment">// Essentially a no-op call.</span>
-		<span class="kw">let</span> <span class="ident">inner_call</span> <span class="op">=</span> <span class="ident">frame_system::Call::set_storage</span> { <span class="ident">items</span>: <span class="macro">vec!</span>[] }.<span class="ident">into</span>();
-		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">CallOrHashOf</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Value</span>(<span class="ident">inner_call</span>));
+		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">SystemCall::set_storage</span> { <span class="ident">items</span>: <span class="macro">vec!</span>[] }.<span class="ident">into</span>());
 
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">schedule_origin</span> <span class="op">=</span> <span class="ident">T::ScheduleOrigin::successful_origin</span>();
-	}: <span class="kw">_</span><span class="op">&lt;</span><span class="ident">SystemOrigin</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">schedule_origin</span>, <span class="ident">when</span>, <span class="ident">periodic</span>, <span class="ident">priority</span>, <span class="ident">call</span>)
+		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>)<span class="question-mark">?</span>;
+	}: <span class="kw">_</span>(<span class="ident">RawOrigin::Root</span>, <span class="ident">when</span>, <span class="ident">periodic</span>, <span class="ident">priority</span>, <span class="ident">call</span>)
 	<span class="ident">verify</span> {
 		<span class="macro">ensure!</span>(
 			<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span>).<span class="ident">len</span>() <span class="op">==</span> (<span class="ident">s</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>,
@@ -513,13 +546,13 @@
 		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
 		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
 
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
+		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>)<span class="question-mark">?</span>;
 		<span class="macro">assert_eq!</span>(<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span>).<span class="ident">len</span>(), <span class="ident">s</span> <span class="kw">as</span> <span class="ident">usize</span>);
 		<span class="kw">let</span> <span class="ident">schedule_origin</span> <span class="op">=</span> <span class="ident">T::ScheduleOrigin::successful_origin</span>();
 	}: <span class="kw">_</span><span class="op">&lt;</span><span class="ident">SystemOrigin</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">schedule_origin</span>, <span class="ident">when</span>, <span class="number">0</span>)
 	<span class="ident">verify</span> {
 		<span class="macro">ensure!</span>(
-			<span class="ident">Lookup</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">0</span>.<span class="ident">encode</span>()).<span class="ident">is_none</span>(),
+			<span class="ident">Lookup</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">u32_to_name</span>(<span class="number">0</span>)).<span class="ident">is_none</span>(),
 			<span class="string">&quot;didn&#39;t remove from lookup&quot;</span>
 		);
 		<span class="comment">// Removed schedule is NONE</span>
@@ -530,18 +563,16 @@
 	}
 
 	<span class="ident">schedule_named</span> {
-		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
-		<span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">encode</span>();
+		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span> .. (<span class="ident">T::MaxScheduledPerBlock::get</span>() <span class="op">-</span> <span class="number">1</span>);
+		<span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">u32_to_name</span>(<span class="ident">s</span>);
 		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
 		<span class="kw">let</span> <span class="ident">periodic</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">T::BlockNumber::one</span>(), <span class="number">100</span>));
 		<span class="kw">let</span> <span class="ident">priority</span> <span class="op">=</span> <span class="number">0</span>;
 		<span class="comment">// Essentially a no-op call.</span>
-		<span class="kw">let</span> <span class="ident">inner_call</span> <span class="op">=</span> <span class="ident">frame_system::Call::set_storage</span> { <span class="ident">items</span>: <span class="macro">vec!</span>[] }.<span class="ident">into</span>();
-		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">CallOrHashOf</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Value</span>(<span class="ident">inner_call</span>));
+		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">SystemCall::set_storage</span> { <span class="ident">items</span>: <span class="macro">vec!</span>[] }.<span class="ident">into</span>());
 
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">schedule_origin</span> <span class="op">=</span> <span class="ident">T::ScheduleOrigin::successful_origin</span>();
-	}: <span class="kw">_</span><span class="op">&lt;</span><span class="ident">SystemOrigin</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">schedule_origin</span>, <span class="ident">id</span>, <span class="ident">when</span>, <span class="ident">periodic</span>, <span class="ident">priority</span>, <span class="ident">call</span>)
+		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>)<span class="question-mark">?</span>;
+	}: <span class="kw">_</span>(<span class="ident">RawOrigin::Root</span>, <span class="ident">id</span>, <span class="ident">when</span>, <span class="ident">periodic</span>, <span class="ident">priority</span>, <span class="ident">call</span>)
 	<span class="ident">verify</span> {
 		<span class="macro">ensure!</span>(
 			<span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">when</span>).<span class="ident">len</span>() <span class="op">==</span> (<span class="ident">s</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>,
@@ -553,12 +584,11 @@
 		<span class="kw">let</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxScheduledPerBlock::get</span>();
 		<span class="kw">let</span> <span class="ident">when</span> <span class="op">=</span> <span class="ident">BLOCK_NUMBER</span>.<span class="ident">into</span>();
 
-		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>, <span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="bool-val">false</span>))<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">schedule_origin</span> <span class="op">=</span> <span class="ident">T::ScheduleOrigin::successful_origin</span>();
-	}: <span class="kw">_</span><span class="op">&lt;</span><span class="ident">SystemOrigin</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">schedule_origin</span>, <span class="number">0</span>.<span class="ident">encode</span>())
+		<span class="ident">fill_schedule</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">when</span>, <span class="ident">s</span>)<span class="question-mark">?</span>;
+	}: <span class="kw">_</span>(<span class="ident">RawOrigin::Root</span>, <span class="ident">u32_to_name</span>(<span class="number">0</span>))
 	<span class="ident">verify</span> {
 		<span class="macro">ensure!</span>(
-			<span class="ident">Lookup</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">0</span>.<span class="ident">encode</span>()).<span class="ident">is_none</span>(),
+			<span class="ident">Lookup</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">u32_to_name</span>(<span class="number">0</span>)).<span class="ident">is_none</span>(),
 			<span class="string">&quot;didn&#39;t remove from lookup&quot;</span>
 		);
 		<span class="comment">// Removed schedule is NONE</span>

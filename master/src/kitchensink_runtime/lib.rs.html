@@ -2283,8 +2283,6 @@
 <span id="2277">2277</span>
 <span id="2278">2278</span>
 <span id="2279">2279</span>
-<span id="2280">2280</span>
-<span id="2281">2281</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -2627,8 +2625,6 @@
 <span class="macro">parameter_types!</span> {
 	<span class="kw">pub</span> <span class="ident">MaximumSchedulerWeight</span>: <span class="ident">Weight</span> <span class="op">=</span> <span class="ident">Perbill::from_percent</span>(<span class="number">80</span>) <span class="op">*</span>
 		<span class="ident">RuntimeBlockWeights::get</span>().<span class="ident">max_block</span>;
-	<span class="comment">// Retry a scheduled item every 10 blocks (1 minute) until the preimage exists.</span>
-	<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NoPreimagePostponement</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="number">10</span>);
 }
 
 <span class="kw">impl</span> <span class="ident">pallet_scheduler::Config</span> <span class="kw">for</span> <span class="ident">Runtime</span> {
@@ -2638,11 +2634,10 @@
 	<span class="kw">type</span> <span class="ident">RuntimeCall</span> <span class="op">=</span> <span class="ident">RuntimeCall</span>;
 	<span class="kw">type</span> <span class="ident">MaximumWeight</span> <span class="op">=</span> <span class="ident">MaximumSchedulerWeight</span>;
 	<span class="kw">type</span> <span class="ident">ScheduleOrigin</span> <span class="op">=</span> <span class="ident">EnsureRoot</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">MaxScheduledPerBlock</span> <span class="op">=</span> <span class="ident">ConstU32</span><span class="op">&lt;</span><span class="number">50</span><span class="op">&gt;</span>;
+	<span class="kw">type</span> <span class="ident">MaxScheduledPerBlock</span> <span class="op">=</span> <span class="ident">ConstU32</span><span class="op">&lt;</span><span class="number">512</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">WeightInfo</span> <span class="op">=</span> <span class="ident">pallet_scheduler::weights::SubstrateWeight</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">OriginPrivilegeCmp</span> <span class="op">=</span> <span class="ident">EqualPrivilegeOnly</span>;
-	<span class="kw">type</span> <span class="ident">PreimageProvider</span> <span class="op">=</span> <span class="ident">Preimage</span>;
-	<span class="kw">type</span> <span class="ident">NoPreimagePostponement</span> <span class="op">=</span> <span class="ident">NoPreimagePostponement</span>;
+	<span class="kw">type</span> <span class="ident">Preimages</span> <span class="op">=</span> <span class="ident">Preimage</span>;
 }
 
 <span class="macro">parameter_types!</span> {
@@ -2657,7 +2652,6 @@
 	<span class="kw">type</span> <span class="ident">RuntimeEvent</span> <span class="op">=</span> <span class="ident">RuntimeEvent</span>;
 	<span class="kw">type</span> <span class="ident">Currency</span> <span class="op">=</span> <span class="ident">Balances</span>;
 	<span class="kw">type</span> <span class="ident">ManagerOrigin</span> <span class="op">=</span> <span class="ident">EnsureRoot</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">MaxSize</span> <span class="op">=</span> <span class="ident">PreimageMaxSize</span>;
 	<span class="kw">type</span> <span class="ident">BaseDeposit</span> <span class="op">=</span> <span class="ident">PreimageBaseDeposit</span>;
 	<span class="kw">type</span> <span class="ident">ByteDeposit</span> <span class="op">=</span> <span class="ident">PreimageByteDeposit</span>;
 }
@@ -3149,6 +3143,7 @@
 	<span class="kw">type</span> <span class="ident">UndecidingTimeout</span> <span class="op">=</span> <span class="ident">UndecidingTimeout</span>;
 	<span class="kw">type</span> <span class="ident">AlarmInterval</span> <span class="op">=</span> <span class="ident">AlarmInterval</span>;
 	<span class="kw">type</span> <span class="ident">Tracks</span> <span class="op">=</span> <span class="ident">TracksInfo</span>;
+	<span class="kw">type</span> <span class="ident">Preimages</span> <span class="op">=</span> <span class="ident">Preimage</span>;
 }
 
 <span class="kw">impl</span> <span class="ident">pallet_referenda::Config</span><span class="op">&lt;</span><span class="ident">pallet_referenda::Instance2</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Runtime</span> {
@@ -3168,6 +3163,7 @@
 	<span class="kw">type</span> <span class="ident">UndecidingTimeout</span> <span class="op">=</span> <span class="ident">UndecidingTimeout</span>;
 	<span class="kw">type</span> <span class="ident">AlarmInterval</span> <span class="op">=</span> <span class="ident">AlarmInterval</span>;
 	<span class="kw">type</span> <span class="ident">Tracks</span> <span class="op">=</span> <span class="ident">TracksInfo</span>;
+	<span class="kw">type</span> <span class="ident">Preimages</span> <span class="op">=</span> <span class="ident">Preimage</span>;
 }
 
 <span class="kw">impl</span> <span class="ident">pallet_ranked_collective::Config</span> <span class="kw">for</span> <span class="ident">Runtime</span> {
@@ -3196,7 +3192,6 @@
 }
 
 <span class="kw">impl</span> <span class="ident">pallet_democracy::Config</span> <span class="kw">for</span> <span class="ident">Runtime</span> {
-	<span class="kw">type</span> <span class="ident">Proposal</span> <span class="op">=</span> <span class="ident">RuntimeCall</span>;
 	<span class="kw">type</span> <span class="ident">RuntimeEvent</span> <span class="op">=</span> <span class="ident">RuntimeEvent</span>;
 	<span class="kw">type</span> <span class="ident">Currency</span> <span class="op">=</span> <span class="ident">Balances</span>;
 	<span class="kw">type</span> <span class="ident">EnactmentPeriod</span> <span class="op">=</span> <span class="ident">EnactmentPeriod</span>;
@@ -3236,14 +3231,15 @@
 	<span class="comment">// only do it once and it lasts only for the cool-off period.</span>
 	<span class="kw">type</span> <span class="ident">VetoOrigin</span> <span class="op">=</span> <span class="ident">pallet_collective::EnsureMember</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">TechnicalCollective</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">CooloffPeriod</span> <span class="op">=</span> <span class="ident">CooloffPeriod</span>;
-	<span class="kw">type</span> <span class="ident">PreimageByteDeposit</span> <span class="op">=</span> <span class="ident">PreimageByteDeposit</span>;
-	<span class="kw">type</span> <span class="ident">OperationalPreimageOrigin</span> <span class="op">=</span> <span class="ident">pallet_collective::EnsureMember</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">CouncilCollective</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">Slash</span> <span class="op">=</span> <span class="ident">Treasury</span>;
 	<span class="kw">type</span> <span class="ident">Scheduler</span> <span class="op">=</span> <span class="ident">Scheduler</span>;
 	<span class="kw">type</span> <span class="ident">PalletsOrigin</span> <span class="op">=</span> <span class="ident">OriginCaller</span>;
 	<span class="kw">type</span> <span class="ident">MaxVotes</span> <span class="op">=</span> <span class="ident">ConstU32</span><span class="op">&lt;</span><span class="number">100</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">WeightInfo</span> <span class="op">=</span> <span class="ident">pallet_democracy::weights::SubstrateWeight</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">MaxProposals</span> <span class="op">=</span> <span class="ident">MaxProposals</span>;
+	<span class="kw">type</span> <span class="ident">Preimages</span> <span class="op">=</span> <span class="ident">Preimage</span>;
+	<span class="kw">type</span> <span class="ident">MaxDeposits</span> <span class="op">=</span> <span class="ident">ConstU32</span><span class="op">&lt;</span><span class="number">100</span><span class="op">&gt;</span>;
+	<span class="kw">type</span> <span class="ident">MaxBlacklisted</span> <span class="op">=</span> <span class="ident">ConstU32</span><span class="op">&lt;</span><span class="number">100</span><span class="op">&gt;</span>;
 }
 
 <span class="macro">parameter_types!</span> {

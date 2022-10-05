@@ -369,6 +369,30 @@
 <span id="363">363</span>
 <span id="364">364</span>
 <span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -607,17 +631,25 @@
 	<span class="kw">fn</span> <span class="ident">dispatch_bypass_filter</span>(<span class="self">self</span>, <span class="ident">origin</span>: <span class="ident"><span class="self">Self</span>::RuntimeOrigin</span>) -&gt; <span class="ident">DispatchResultWithPostInfo</span>;
 }
 
+<span class="doccomment">/// The trait implemented by the overarching enumeration of the different pallets&#39; origins.</span>
+<span class="doccomment">/// Unlike `OriginTrait` impls, this does not include any kind of dispatch/call filter. Also, this</span>
+<span class="doccomment">/// trait is more flexible in terms of how it can be used: it is a `Parameter` and `Member`, so it</span>
+<span class="doccomment">/// can be used as dispatchable parameters as well as in storage items.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">CallerTrait</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>: <span class="ident">Parameter</span> <span class="op">+</span> <span class="ident">Member</span> <span class="op">+</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">RawOrigin</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Extract the signer from the message if it is a `Signed` origin.</span>
+	<span class="kw">fn</span> <span class="ident">into_system</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">RawOrigin</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+
+	<span class="doccomment">/// Extract a reference to the system-level `RawOrigin` if it is that.</span>
+	<span class="kw">fn</span> <span class="ident">as_system_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">RawOrigin</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+}
+
 <span class="doccomment">/// Methods available on `frame_system::Config::RuntimeOrigin`.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OriginTrait</span>: <span class="ident">Sized</span> {
 	<span class="doccomment">/// Runtime call type, as in `frame_system::Config::Call`</span>
 	<span class="kw">type</span> <span class="ident">Call</span>;
 
 	<span class="doccomment">/// The caller origin, overarching type of all pallets origins.</span>
-	<span class="kw">type</span> <span class="ident">PalletsOrigin</span>: <span class="ident">Parameter</span>
-		<span class="op">+</span> <span class="ident">Member</span>
-		<span class="op">+</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">RawOrigin</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">MaxEncodedLen</span>;
+	<span class="kw">type</span> <span class="ident">PalletsOrigin</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">CallerTrait</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">MaxEncodedLen</span>;
 
 	<span class="doccomment">/// The AccountId used across the system.</span>
 	<span class="kw">type</span> <span class="ident">AccountId</span>;
@@ -637,8 +669,11 @@
 	<span class="doccomment">/// For root origin caller, the filters are bypassed and true is returned.</span>
 	<span class="kw">fn</span> <span class="ident">filter_call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">call</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Call</span>) -&gt; <span class="ident">bool</span>;
 
-	<span class="doccomment">/// Get the caller.</span>
+	<span class="doccomment">/// Get a reference to the caller (`CallerTrait` impl).</span>
 	<span class="kw">fn</span> <span class="ident">caller</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::PalletsOrigin</span>;
+
+	<span class="doccomment">/// Consume `self` and return the caller.</span>
+	<span class="kw">fn</span> <span class="ident">into_caller</span>(<span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::PalletsOrigin</span>;
 
 	<span class="doccomment">/// Do something with the caller, consuming self but returning it if the caller was unused.</span>
 	<span class="kw">fn</span> <span class="ident">try_with_caller</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
@@ -656,7 +691,20 @@
 	<span class="kw">fn</span> <span class="ident">signed</span>(<span class="ident">by</span>: <span class="ident"><span class="self">Self</span>::AccountId</span>) -&gt; <span class="self">Self</span>;
 
 	<span class="doccomment">/// Extract the signer from the message if it is a `Signed` origin.</span>
-	<span class="kw">fn</span> <span class="ident">as_signed</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span>;
+	<span class="kw">fn</span> <span class="ident">as_signed</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">into_caller</span>().<span class="ident">into_system</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> {
+			<span class="kw">if</span> <span class="kw">let</span> <span class="ident">RawOrigin::Signed</span>(<span class="ident">who</span>) <span class="op">=</span> <span class="ident">s</span> {
+				<span class="prelude-val">Some</span>(<span class="ident">who</span>)
+			} <span class="kw">else</span> {
+				<span class="prelude-val">None</span>
+			}
+		})
+	}
+
+	<span class="doccomment">/// Extract a reference to the sytsem origin, if that&#39;s what the caller is.</span>
+	<span class="kw">fn</span> <span class="ident">as_system_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">RawOrigin</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">caller</span>().<span class="ident">as_system_ref</span>()
+	}
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>

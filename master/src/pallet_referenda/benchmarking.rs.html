@@ -542,6 +542,12 @@
 <span id="536">536</span>
 <span id="537">537</span>
 <span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2021 Parity Technologies (UK) Ltd.</span>
@@ -568,10 +574,10 @@
 <span class="kw">use</span> <span class="ident">frame_support</span>::{
 	<span class="ident">assert_ok</span>,
 	<span class="ident">dispatch::UnfilteredDispatchable</span>,
-	<span class="ident">traits</span>::{<span class="ident">Currency</span>, <span class="ident">EnsureOrigin</span>},
+	<span class="ident">traits</span>::{<span class="ident">Bounded</span>, <span class="ident">Currency</span>, <span class="ident">EnsureOrigin</span>},
 };
 <span class="kw">use</span> <span class="ident">frame_system::RawOrigin</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Bounded</span>, <span class="ident">Hash</span>};
+<span class="kw">use</span> <span class="ident">sp_runtime::traits::Bounded</span> <span class="kw">as</span> <span class="ident">ArithBounded</span>;
 
 <span class="kw">const</span> <span class="ident">SEED</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>;
 
@@ -586,6 +592,12 @@
 	<span class="ident">caller</span>
 }
 
+<span class="kw">fn</span> <span class="ident">dummy_call</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>() -&gt; <span class="ident">Bounded</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span><span class="op">&gt;</span> {
+	<span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">frame_system::Call::remark</span> { <span class="ident">remark</span>: <span class="macro">vec!</span>[] };
+	<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::RuntimeCall::from</span>(<span class="ident">inner</span>);
+	<span class="ident">T::Preimages::bound</span>(<span class="ident">call</span>).<span class="ident">unwrap</span>()
+}
+
 <span class="kw">fn</span> <span class="ident">create_referendum</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>() -&gt; (<span class="ident">T::RuntimeOrigin</span>, <span class="ident">ReferendumIndex</span>) {
 	<span class="kw">let</span> <span class="ident">origin</span>: <span class="ident">T::RuntimeOrigin</span> <span class="op">=</span> <span class="ident">T::SubmitOrigin::successful_origin</span>();
 	<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">caller</span>) <span class="op">=</span> <span class="ident">frame_system::ensure_signed</span>(<span class="ident">origin</span>.<span class="ident">clone</span>()) {
@@ -594,9 +606,9 @@
 	}
 
 	<span class="kw">let</span> <span class="ident">proposal_origin</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">RawOrigin::Root</span>.<span class="ident">into</span>());
-	<span class="kw">let</span> <span class="ident">proposal_hash</span> <span class="op">=</span> <span class="ident">T::Hashing::hash_of</span>(<span class="kw-2">&amp;</span><span class="number">0</span>);
+	<span class="kw">let</span> <span class="ident">proposal</span> <span class="op">=</span> <span class="ident">dummy_call</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>();
 	<span class="kw">let</span> <span class="ident">enactment_moment</span> <span class="op">=</span> <span class="ident">DispatchTime::After</span>(<span class="number">0u32</span>.<span class="ident">into</span>());
-	<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Call</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::submit</span> { <span class="ident">proposal_origin</span>, <span class="ident">proposal_hash</span>, <span class="ident">enactment_moment</span> };
+	<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::Call</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::submit</span> { <span class="ident">proposal_origin</span>, <span class="ident">proposal</span>, <span class="ident">enactment_moment</span> };
 	<span class="macro">assert_ok!</span>(<span class="ident">call</span>.<span class="ident">dispatch_bypass_filter</span>(<span class="ident">origin</span>.<span class="ident">clone</span>()));
 	<span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">ReferendumCount</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">-</span> <span class="number">1</span>;
 	(<span class="ident">origin</span>, <span class="ident">index</span>)
@@ -740,7 +752,7 @@
 	}: <span class="kw">_</span><span class="op">&lt;</span><span class="ident">T::RuntimeOrigin</span><span class="op">&gt;</span>(
 		<span class="ident">origin</span>,
 		<span class="ident">Box::new</span>(<span class="ident">RawOrigin::Root</span>.<span class="ident">into</span>()),
-		<span class="ident">T::Hashing::hash_of</span>(<span class="kw-2">&amp;</span><span class="number">0</span>),
+		<span class="ident">dummy_call</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(),
 		<span class="ident">DispatchTime::After</span>(<span class="number">0u32</span>.<span class="ident">into</span>())
 	) <span class="ident">verify</span> {
 		<span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">ReferendumCount</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>().<span class="ident">checked_sub</span>(<span class="number">1</span>).<span class="ident">unwrap</span>();

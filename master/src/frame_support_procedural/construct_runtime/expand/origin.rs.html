@@ -420,6 +420,17 @@
 <span id="414">414</span>
 <span id="415">415</span>
 <span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -591,6 +602,10 @@
 				<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">caller</span>
 			}
 
+			<span class="kw">fn</span> <span class="ident">into_caller</span>(<span class="self">self</span>) -&gt; <span class="ident"><span class="self">Self</span>::PalletsOrigin</span> {
+				<span class="self">self</span>.<span class="ident">caller</span>
+			}
+
 			<span class="kw">fn</span> <span class="ident">try_with_caller</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
 				<span class="kw-2">mut</span> <span class="self">self</span>,
 				<span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>(<span class="ident"><span class="self">Self</span>::PalletsOrigin</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident"><span class="self">Self</span>::PalletsOrigin</span><span class="op">&gt;</span>,
@@ -612,13 +627,6 @@
 			<span class="kw">fn</span> <span class="ident">signed</span>(<span class="ident">by</span>: <span class="ident"><span class="self">Self</span>::AccountId</span>) -&gt; <span class="self">Self</span> {
 				#<span class="ident">system_path::RawOrigin::Signed</span>(<span class="ident">by</span>).<span class="ident">into</span>()
 			}
-
-			<span class="kw">fn</span> <span class="ident">as_signed</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span> {
-				<span class="kw">match</span> <span class="self">self</span>.<span class="ident">caller</span> {
-					<span class="ident">OriginCaller::system</span>(#<span class="ident">system_path::RawOrigin::Signed</span>(<span class="ident">by</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">by</span>),
-					<span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
-				}
-			}
 		}
 
 		<span class="attribute">#[<span class="ident">derive</span>(
@@ -637,7 +645,6 @@
 		<span class="comment">// For backwards compatibility and ease of accessing these functions.</span>
 		<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 		<span class="kw">impl</span> <span class="ident">RuntimeOrigin</span> {
-
 			<span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> #<span class="ident">doc_string_none_origin</span>]</span>
 			<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">none</span>() -&gt; <span class="self">Self</span> {
 				<span class="op">&lt;</span><span class="ident">RuntimeOrigin</span> <span class="kw">as</span> #<span class="ident">scrate::traits::OriginTrait</span><span class="op">&gt;</span><span class="ident">::none</span>()
@@ -657,6 +664,21 @@
 		<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>#<span class="ident">system_path::Origin</span><span class="op">&lt;</span>#<span class="ident">runtime</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">OriginCaller</span> {
 			<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">x</span>: #<span class="ident">system_path::Origin</span><span class="op">&lt;</span>#<span class="ident">runtime</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
 				<span class="ident">OriginCaller::system</span>(<span class="ident">x</span>)
+			}
+		}
+
+		<span class="kw">impl</span> #<span class="ident">scrate::traits::CallerTrait</span><span class="op">&lt;</span><span class="op">&lt;</span>#<span class="ident">runtime</span> <span class="kw">as</span> #<span class="ident">system_path::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">OriginCaller</span> {
+			<span class="kw">fn</span> <span class="ident">into_system</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>#<span class="ident">system_path::RawOrigin</span><span class="op">&lt;</span><span class="op">&lt;</span>#<span class="ident">runtime</span> <span class="kw">as</span> #<span class="ident">system_path::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+				<span class="kw">match</span> <span class="self">self</span> {
+					<span class="ident">OriginCaller::system</span>(<span class="ident">x</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">x</span>),
+					<span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+				}
+			}
+			<span class="kw">fn</span> <span class="ident">as_system_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>#<span class="ident">system_path::RawOrigin</span><span class="op">&lt;</span><span class="op">&lt;</span>#<span class="ident">runtime</span> <span class="kw">as</span> #<span class="ident">system_path::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+				<span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span> {
+					<span class="ident">OriginCaller::system</span>(<span class="ident">o</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">o</span>),
+					<span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+				}
 			}
 		}
 
