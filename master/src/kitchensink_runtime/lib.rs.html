@@ -2282,7 +2282,6 @@
 <span id="2276">2276</span>
 <span id="2277">2277</span>
 <span id="2278">2278</span>
-<span id="2279">2279</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -4224,33 +4223,32 @@
 		}
 	}
 
-	<span class="kw">impl</span> <span class="ident">pallet_contracts_runtime_api::ContractsApi</span><span class="op">&lt;</span>
-		<span class="ident">Block</span>, <span class="ident">AccountId</span>, <span class="ident">Balance</span>, <span class="ident">BlockNumber</span>, <span class="ident">Hash</span>,
-	<span class="op">&gt;</span>
-		<span class="kw">for</span> <span class="ident">Runtime</span>
+	<span class="kw">impl</span> <span class="ident">pallet_contracts::ContractsApi</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">AccountId</span>, <span class="ident">Balance</span>, <span class="ident">BlockNumber</span>, <span class="ident">Hash</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Runtime</span>
 	{
 		<span class="kw">fn</span> <span class="ident">call</span>(
 			<span class="ident">origin</span>: <span class="ident">AccountId</span>,
 			<span class="ident">dest</span>: <span class="ident">AccountId</span>,
 			<span class="ident">value</span>: <span class="ident">Balance</span>,
-			<span class="ident">gas_limit</span>: <span class="ident">u64</span>,
+			<span class="ident">gas_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Weight</span><span class="op">&gt;</span>,
 			<span class="ident">storage_deposit_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Balance</span><span class="op">&gt;</span>,
 			<span class="ident">input_data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 		) -&gt; <span class="ident">pallet_contracts_primitives::ContractExecResult</span><span class="op">&lt;</span><span class="ident">Balance</span><span class="op">&gt;</span> {
-			<span class="ident">Contracts::bare_call</span>(<span class="ident">origin</span>, <span class="ident">dest</span>, <span class="ident">value</span>, <span class="ident">Weight::from_ref_time</span>(<span class="ident">gas_limit</span>), <span class="ident">storage_deposit_limit</span>, <span class="ident">input_data</span>, <span class="bool-val">true</span>)
+			<span class="kw">let</span> <span class="ident">gas_limit</span> <span class="op">=</span> <span class="ident">gas_limit</span>.<span class="ident">unwrap_or</span>(<span class="ident">RuntimeBlockWeights::get</span>().<span class="ident">max_block</span>);
+			<span class="ident">Contracts::bare_call</span>(<span class="ident">origin</span>, <span class="ident">dest</span>, <span class="ident">value</span>, <span class="ident">gas_limit</span>, <span class="ident">storage_deposit_limit</span>, <span class="ident">input_data</span>, <span class="bool-val">true</span>)
 		}
 
 		<span class="kw">fn</span> <span class="ident">instantiate</span>(
 			<span class="ident">origin</span>: <span class="ident">AccountId</span>,
 			<span class="ident">value</span>: <span class="ident">Balance</span>,
-			<span class="ident">gas_limit</span>: <span class="ident">u64</span>,
+			<span class="ident">gas_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Weight</span><span class="op">&gt;</span>,
 			<span class="ident">storage_deposit_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Balance</span><span class="op">&gt;</span>,
 			<span class="ident">code</span>: <span class="ident">pallet_contracts_primitives::Code</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
 			<span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 			<span class="ident">salt</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 		) -&gt; <span class="ident">pallet_contracts_primitives::ContractInstantiateResult</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">Balance</span><span class="op">&gt;</span>
 		{
-			<span class="ident">Contracts::bare_instantiate</span>(<span class="ident">origin</span>, <span class="ident">value</span>, <span class="ident">Weight::from_ref_time</span>(<span class="ident">gas_limit</span>), <span class="ident">storage_deposit_limit</span>, <span class="ident">code</span>, <span class="ident">data</span>, <span class="ident">salt</span>, <span class="bool-val">true</span>)
+			<span class="kw">let</span> <span class="ident">gas_limit</span> <span class="op">=</span> <span class="ident">gas_limit</span>.<span class="ident">unwrap_or</span>(<span class="ident">RuntimeBlockWeights::get</span>().<span class="ident">max_block</span>);
+			<span class="ident">Contracts::bare_instantiate</span>(<span class="ident">origin</span>, <span class="ident">value</span>, <span class="ident">gas_limit</span>, <span class="ident">storage_deposit_limit</span>, <span class="ident">code</span>, <span class="ident">data</span>, <span class="ident">salt</span>, <span class="bool-val">true</span>)
 		}
 
 		<span class="kw">fn</span> <span class="ident">upload_code</span>(
