@@ -271,6 +271,11 @@
 <span id="265">265</span>
 <span id="266">266</span>
 <span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -289,7 +294,7 @@
 <span class="comment">// You should have received a copy of the GNU General Public License</span>
 <span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
-<span class="kw">use</span> <span class="ident">beefy_primitives</span>::{<span class="ident">BeefyApi</span>, <span class="ident">MmrRootHash</span>};
+<span class="kw">use</span> <span class="ident">beefy_primitives</span>::{<span class="ident">BeefyApi</span>, <span class="ident">MmrRootHash</span>, <span class="ident">PayloadProvider</span>};
 <span class="kw">use</span> <span class="ident">parking_lot::Mutex</span>;
 <span class="kw">use</span> <span class="ident">prometheus::Registry</span>;
 <span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">Backend</span>, <span class="ident">BlockBackend</span>, <span class="ident">BlockchainEvents</span>, <span class="ident">Finalizer</span>};
@@ -440,11 +445,13 @@
 }
 
 <span class="doccomment">/// BEEFY gadget initialization parameters.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BeefyParams</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Block</span>, <span class="ident">BE</span>, <span class="ident">C</span>, <span class="ident">N</span>, <span class="ident">R</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BeefyParams</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Block</span>, <span class="ident">BE</span>, <span class="ident">C</span>, <span class="ident">N</span>, <span class="ident">P</span>, <span class="ident">R</span><span class="op">&gt;</span> {
 	<span class="doccomment">/// BEEFY client</span>
 	<span class="kw">pub</span> <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// Client Backend</span>
 	<span class="kw">pub</span> <span class="ident">backend</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">BE</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// BEEFY Payload provider</span>
+	<span class="kw">pub</span> <span class="ident">payload_provider</span>: <span class="ident">P</span>,
 	<span class="doccomment">/// Runtime Api Provider</span>
 	<span class="kw">pub</span> <span class="ident">runtime</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// Local key store</span>
@@ -464,11 +471,12 @@
 <span class="doccomment">/// Start the BEEFY gadget.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This is a thin shim around running and awaiting a BEEFY worker.</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">start_beefy_gadget</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BE</span>, <span class="ident">C</span>, <span class="ident">N</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">beefy_params</span>: <span class="ident">BeefyParams</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BE</span>, <span class="ident">C</span>, <span class="ident">N</span>, <span class="ident">R</span><span class="op">&gt;</span>)
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">start_beefy_gadget</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BE</span>, <span class="ident">C</span>, <span class="ident">N</span>, <span class="ident">P</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">beefy_params</span>: <span class="ident">BeefyParams</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BE</span>, <span class="ident">C</span>, <span class="ident">N</span>, <span class="ident">P</span>, <span class="ident">R</span><span class="op">&gt;</span>)
 <span class="kw">where</span>
 	<span class="ident">B</span>: <span class="ident">Block</span>,
 	<span class="ident">BE</span>: <span class="ident">Backend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 	<span class="ident">C</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BE</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">BlockBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+	<span class="ident">P</span>: <span class="ident">PayloadProvider</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 	<span class="ident">R</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 	<span class="ident">R::Api</span>: <span class="ident">BeefyApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">MmrApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">MmrRootHash</span><span class="op">&gt;</span>,
 	<span class="ident">N</span>: <span class="ident">GossipNetwork</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">NetworkRequest</span> <span class="op">+</span> <span class="ident">SyncOracle</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
@@ -476,6 +484,7 @@
 	<span class="kw">let</span> <span class="ident">BeefyParams</span> {
 		<span class="ident">client</span>,
 		<span class="ident">backend</span>,
+		<span class="ident">payload_provider</span>,
 		<span class="ident">runtime</span>,
 		<span class="ident">key_store</span>,
 		<span class="ident">network_params</span>,
@@ -522,6 +531,7 @@
 	<span class="kw">let</span> <span class="ident">worker_params</span> <span class="op">=</span> <span class="ident">worker::WorkerParams</span> {
 		<span class="ident">client</span>,
 		<span class="ident">backend</span>,
+		<span class="ident">payload_provider</span>,
 		<span class="ident">runtime</span>,
 		<span class="ident">network</span>,
 		<span class="ident">key_store</span>: <span class="ident">key_store</span>.<span class="ident">into</span>(),
@@ -534,7 +544,7 @@
 		<span class="ident">min_block_delta</span>,
 	};
 
-	<span class="kw">let</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">worker::BeefyWorker</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">worker_params</span>);
+	<span class="kw">let</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">worker::BeefyWorker</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">worker_params</span>);
 
 	<span class="ident">futures::future::join</span>(<span class="ident">worker</span>.<span class="ident">run</span>(), <span class="ident">on_demand_justifications_handler</span>.<span class="ident">run</span>()).<span class="kw">await</span>;
 }

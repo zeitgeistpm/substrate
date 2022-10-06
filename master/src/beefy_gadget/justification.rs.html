@@ -275,7 +275,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">tests</span> {
 	<span class="kw">use</span> <span class="ident">beefy_primitives</span>::{
-		<span class="ident">known_payload_ids</span>, <span class="ident">Commitment</span>, <span class="ident">Payload</span>, <span class="ident">SignedCommitment</span>, <span class="ident">VersionedFinalityProof</span>,
+		<span class="ident">known_payloads</span>, <span class="ident">Commitment</span>, <span class="ident">Payload</span>, <span class="ident">SignedCommitment</span>, <span class="ident">VersionedFinalityProof</span>,
 	};
 	<span class="kw">use</span> <span class="ident">substrate_test_runtime_client::runtime::Block</span>;
 
@@ -288,7 +288,7 @@
 		<span class="ident">keys</span>: <span class="kw-2">&amp;</span>[<span class="ident">Keyring</span>],
 	) -&gt; <span class="ident">BeefyVersionedFinalityProof</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
 		<span class="kw">let</span> <span class="ident">commitment</span> <span class="op">=</span> <span class="ident">Commitment</span> {
-			<span class="ident">payload</span>: <span class="ident">Payload::new</span>(<span class="ident">known_payload_ids::MMR_ROOT_ID</span>, <span class="macro">vec!</span>[]),
+			<span class="ident">payload</span>: <span class="ident">Payload::from_single_entry</span>(<span class="ident">known_payloads::MMR_ROOT_ID</span>, <span class="macro">vec!</span>[]),
 			<span class="ident">block_number</span>: <span class="ident">block_num</span>,
 			<span class="ident">validator_set_id</span>: <span class="ident">validator_set</span>.<span class="ident">id</span>(),
 		};

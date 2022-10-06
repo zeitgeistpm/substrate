@@ -166,6 +166,8 @@
 <span id="160">160</span>
 <span id="161">161</span>
 <span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -249,7 +251,7 @@
 	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 	<span class="kw">use</span> <span class="ident">codec::Decode</span>;
 
-	<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">crypto</span>, <span class="ident">known_payload_ids</span>, <span class="ident">Payload</span>, <span class="ident">KEY_TYPE</span>};
+	<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">crypto</span>, <span class="ident">known_payloads</span>, <span class="ident">Payload</span>, <span class="ident">KEY_TYPE</span>};
 
 	<span class="kw">type</span> <span class="ident">TestCommitment</span> <span class="op">=</span> <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">u128</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">TestSignedCommitment</span> <span class="op">=</span> <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">u128</span>, <span class="ident">crypto::Signature</span><span class="op">&gt;</span>;
@@ -279,8 +281,10 @@
 	}
 
 	<span class="kw">fn</span> <span class="ident">signed_commitment</span>() -&gt; <span class="ident">TestSignedCommitment</span> {
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span>
-			<span class="ident">Payload::new</span>(<span class="ident">known_payload_ids::MMR_ROOT_ID</span>, <span class="string">&quot;Hello World!&quot;</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>());
+		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Payload::from_single_entry</span>(
+			<span class="ident">known_payloads::MMR_ROOT_ID</span>,
+			<span class="string">&quot;Hello World!&quot;</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>(),
+		);
 		<span class="kw">let</span> <span class="ident">commitment</span>: <span class="ident">TestCommitment</span> <span class="op">=</span>
 			<span class="ident">Commitment</span> { <span class="ident">payload</span>, <span class="ident">block_number</span>: <span class="number">5</span>, <span class="ident">validator_set_id</span>: <span class="number">0</span> };
 

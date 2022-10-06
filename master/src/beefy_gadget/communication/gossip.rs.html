@@ -468,6 +468,8 @@
 <span id="462">462</span>
 <span id="463">463</span>
 <span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -707,8 +709,7 @@
 
 	<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::keystore</span>::{<span class="ident">tests::Keyring</span>, <span class="ident">BeefyKeystore</span>};
 	<span class="kw">use</span> <span class="ident">beefy_primitives</span>::{
-		<span class="ident">crypto::Signature</span>, <span class="ident">known_payload_ids</span>, <span class="ident">Commitment</span>, <span class="ident">MmrRootHash</span>, <span class="ident">Payload</span>, <span class="ident">VoteMessage</span>,
-		<span class="ident">KEY_TYPE</span>,
+		<span class="ident">crypto::Signature</span>, <span class="ident">known_payloads</span>, <span class="ident">Commitment</span>, <span class="ident">MmrRootHash</span>, <span class="ident">Payload</span>, <span class="ident">VoteMessage</span>, <span class="ident">KEY_TYPE</span>,
 	};
 
 	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
@@ -818,7 +819,10 @@
 	}
 
 	<span class="kw">fn</span> <span class="ident">dummy_vote</span>(<span class="ident">block_number</span>: <span class="ident">u64</span>) -&gt; <span class="ident">VoteMessage</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Public</span>, <span class="ident">Signature</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Payload::new</span>(<span class="ident">known_payload_ids::MMR_ROOT_ID</span>, <span class="ident">MmrRootHash::default</span>().<span class="ident">encode</span>());
+		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Payload::from_single_entry</span>(
+			<span class="ident">known_payloads::MMR_ROOT_ID</span>,
+			<span class="ident">MmrRootHash::default</span>().<span class="ident">encode</span>(),
+		);
 		<span class="kw">let</span> <span class="ident">commitment</span> <span class="op">=</span> <span class="ident">Commitment</span> { <span class="ident">payload</span>, <span class="ident">block_number</span>, <span class="ident">validator_set_id</span>: <span class="number">0</span> };
 		<span class="kw">let</span> <span class="ident">signature</span> <span class="op">=</span> <span class="ident">sign_commitment</span>(<span class="kw-2">&amp;</span><span class="ident">Keyring::Alice</span>, <span class="kw-2">&amp;</span><span class="ident">commitment</span>);
 
