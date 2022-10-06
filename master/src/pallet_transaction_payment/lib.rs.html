@@ -1795,6 +1795,20 @@
 <span id="1789">1789</span>
 <span id="1790">1790</span>
 <span id="1791">1791</span>
+<span id="1792">1792</span>
+<span id="1793">1793</span>
+<span id="1794">1794</span>
+<span id="1795">1795</span>
+<span id="1796">1796</span>
+<span id="1797">1797</span>
+<span id="1798">1798</span>
+<span id="1799">1799</span>
+<span id="1800">1800</span>
+<span id="1801">1801</span>
+<span id="1802">1802</span>
+<span id="1803">1803</span>
+<span id="1804">1804</span>
+<span id="1805">1805</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -1924,12 +1938,14 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// More info can be found at:</span>
 <span class="doccomment">/// &lt;https://research.web3.foundation/en/latest/polkadot/overview/2-token-economics.html&gt;</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TargetedFeeAdjustment</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span>)<span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TargetedFeeAdjustment</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span>, <span class="ident">X</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span>, <span class="ident">X</span>)<span class="op">&gt;</span>);
 
 <span class="doccomment">/// Something that can convert the current multiplier to the next one.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">MultiplierUpdate</span>: <span class="ident">Convert</span><span class="op">&lt;</span><span class="ident">Multiplier</span>, <span class="ident">Multiplier</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Minimum multiplier</span>
+	<span class="doccomment">/// Minimum multiplier. Any outcome of the `convert` function should be at least this.</span>
 	<span class="kw">fn</span> <span class="ident">min</span>() -&gt; <span class="ident">Multiplier</span>;
+	<span class="doccomment">/// Maximum multiplier. Any outcome of the `convert` function should be less or equal this.</span>
+	<span class="kw">fn</span> <span class="ident">max</span>() -&gt; <span class="ident">Multiplier</span>;
 	<span class="doccomment">/// Target block saturation level</span>
 	<span class="kw">fn</span> <span class="ident">target</span>() -&gt; <span class="ident">Perquintill</span>;
 	<span class="doccomment">/// Variability factor</span>
@@ -1940,6 +1956,9 @@
 	<span class="kw">fn</span> <span class="ident">min</span>() -&gt; <span class="ident">Multiplier</span> {
 		<span class="ident">Default::default</span>()
 	}
+	<span class="kw">fn</span> <span class="ident">max</span>() -&gt; <span class="ident">Multiplier</span> {
+		<span class="op">&lt;</span><span class="ident">Multiplier</span> <span class="kw">as</span> <span class="ident">sp_runtime::traits::Bounded</span><span class="op">&gt;</span><span class="ident">::max_value</span>()
+	}
 	<span class="kw">fn</span> <span class="ident">target</span>() -&gt; <span class="ident">Perquintill</span> {
 		<span class="ident">Default::default</span>()
 	}
@@ -1948,15 +1967,19 @@
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span><span class="op">&gt;</span> <span class="ident">MultiplierUpdate</span> <span class="kw">for</span> <span class="ident">TargetedFeeAdjustment</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span>, <span class="ident">X</span><span class="op">&gt;</span> <span class="ident">MultiplierUpdate</span> <span class="kw">for</span> <span class="ident">TargetedFeeAdjustment</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span>, <span class="ident">X</span><span class="op">&gt;</span>
 <span class="kw">where</span>
 	<span class="ident">T</span>: <span class="ident">frame_system::Config</span>,
 	<span class="ident">S</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">Perquintill</span><span class="op">&gt;</span>,
 	<span class="ident">V</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">Multiplier</span><span class="op">&gt;</span>,
 	<span class="ident">M</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">Multiplier</span><span class="op">&gt;</span>,
+	<span class="ident">X</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">Multiplier</span><span class="op">&gt;</span>,
 {
 	<span class="kw">fn</span> <span class="ident">min</span>() -&gt; <span class="ident">Multiplier</span> {
 		<span class="ident">M::get</span>()
+	}
+	<span class="kw">fn</span> <span class="ident">max</span>() -&gt; <span class="ident">Multiplier</span> {
+		<span class="ident">X::get</span>()
 	}
 	<span class="kw">fn</span> <span class="ident">target</span>() -&gt; <span class="ident">Perquintill</span> {
 		<span class="ident">S::get</span>()
@@ -1966,18 +1989,20 @@
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span><span class="op">&gt;</span> <span class="ident">Convert</span><span class="op">&lt;</span><span class="ident">Multiplier</span>, <span class="ident">Multiplier</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TargetedFeeAdjustment</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span>, <span class="ident">X</span><span class="op">&gt;</span> <span class="ident">Convert</span><span class="op">&lt;</span><span class="ident">Multiplier</span>, <span class="ident">Multiplier</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TargetedFeeAdjustment</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span>, <span class="ident">V</span>, <span class="ident">M</span>, <span class="ident">X</span><span class="op">&gt;</span>
 <span class="kw">where</span>
 	<span class="ident">T</span>: <span class="ident">frame_system::Config</span>,
 	<span class="ident">S</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">Perquintill</span><span class="op">&gt;</span>,
 	<span class="ident">V</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">Multiplier</span><span class="op">&gt;</span>,
 	<span class="ident">M</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">Multiplier</span><span class="op">&gt;</span>,
+	<span class="ident">X</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">Multiplier</span><span class="op">&gt;</span>,
 {
 	<span class="kw">fn</span> <span class="ident">convert</span>(<span class="ident">previous</span>: <span class="ident">Multiplier</span>) -&gt; <span class="ident">Multiplier</span> {
 		<span class="comment">// Defensive only. The multiplier in storage should always be at most positive. Nonetheless</span>
 		<span class="comment">// we recover here in case of errors, because any value below this would be stale and can</span>
 		<span class="comment">// never change.</span>
 		<span class="kw">let</span> <span class="ident">min_multiplier</span> <span class="op">=</span> <span class="ident">M::get</span>();
+		<span class="kw">let</span> <span class="ident">max_multiplier</span> <span class="op">=</span> <span class="ident">X::get</span>();
 		<span class="kw">let</span> <span class="ident">previous</span> <span class="op">=</span> <span class="ident">previous</span>.<span class="ident">max</span>(<span class="ident">min_multiplier</span>);
 
 		<span class="kw">let</span> <span class="ident">weights</span> <span class="op">=</span> <span class="ident">T::BlockWeights::get</span>();
@@ -2014,11 +2039,11 @@
 
 		<span class="kw">if</span> <span class="ident">positive</span> {
 			<span class="kw">let</span> <span class="ident">excess</span> <span class="op">=</span> <span class="ident">first_term</span>.<span class="ident">saturating_add</span>(<span class="ident">second_term</span>).<span class="ident">saturating_mul</span>(<span class="ident">previous</span>);
-			<span class="ident">previous</span>.<span class="ident">saturating_add</span>(<span class="ident">excess</span>).<span class="ident">max</span>(<span class="ident">min_multiplier</span>)
+			<span class="ident">previous</span>.<span class="ident">saturating_add</span>(<span class="ident">excess</span>).<span class="ident">max</span>(<span class="ident">min_multiplier</span>).<span class="ident">min</span>(<span class="ident">max_multiplier</span>)
 		} <span class="kw">else</span> {
 			<span class="comment">// Defensive-only: first_term &gt; second_term. Safe subtraction.</span>
 			<span class="kw">let</span> <span class="ident">negative</span> <span class="op">=</span> <span class="ident">first_term</span>.<span class="ident">saturating_sub</span>(<span class="ident">second_term</span>).<span class="ident">saturating_mul</span>(<span class="ident">previous</span>);
-			<span class="ident">previous</span>.<span class="ident">saturating_sub</span>(<span class="ident">negative</span>).<span class="ident">max</span>(<span class="ident">min_multiplier</span>)
+			<span class="ident">previous</span>.<span class="ident">saturating_sub</span>(<span class="ident">negative</span>).<span class="ident">max</span>(<span class="ident">min_multiplier</span>).<span class="ident">min</span>(<span class="ident">max_multiplier</span>)
 		}
 	}
 }
@@ -2028,6 +2053,9 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">Multiplier</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">MultiplierUpdate</span> <span class="kw">for</span> <span class="ident">ConstFeeMultiplier</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span> {
 	<span class="kw">fn</span> <span class="ident">min</span>() -&gt; <span class="ident">Multiplier</span> {
+		<span class="ident">M::get</span>()
+	}
+	<span class="kw">fn</span> <span class="ident">max</span>() -&gt; <span class="ident">Multiplier</span> {
 		<span class="ident">M::get</span>()
 	}
 	<span class="kw">fn</span> <span class="ident">target</span>() -&gt; <span class="ident">Perquintill</span> {

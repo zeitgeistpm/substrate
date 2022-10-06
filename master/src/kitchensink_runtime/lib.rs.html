@@ -2282,6 +2282,12 @@
 <span id="2276">2276</span>
 <span id="2277">2277</span>
 <span id="2278">2278</span>
+<span id="2279">2279</span>
+<span id="2280">2280</span>
+<span id="2281">2281</span>
+<span id="2282">2282</span>
+<span id="2283">2283</span>
+<span id="2284">2284</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
@@ -2349,7 +2355,7 @@
 	<span class="ident">curve::PiecewiseLinear</span>,
 	<span class="ident">generic</span>, <span class="ident">impl_opaque_keys</span>,
 	<span class="ident">traits</span>::{
-		<span class="self">self</span>, <span class="ident">BlakeTwo256</span>, <span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">ConvertInto</span>, <span class="ident">NumberFor</span>, <span class="ident">OpaqueKeys</span>,
+		<span class="self">self</span>, <span class="ident">BlakeTwo256</span>, <span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">Bounded</span>, <span class="ident">ConvertInto</span>, <span class="ident">NumberFor</span>, <span class="ident">OpaqueKeys</span>,
 		<span class="ident">SaturatedConversion</span>, <span class="ident">StaticLookup</span>,
 	},
 	<span class="ident">transaction_validity</span>::{<span class="ident">TransactionPriority</span>, <span class="ident">TransactionSource</span>, <span class="ident">TransactionValidity</span>},
@@ -2727,6 +2733,7 @@
 	<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TargetBlockFullness</span>: <span class="ident">Perquintill</span> <span class="op">=</span> <span class="ident">Perquintill::from_percent</span>(<span class="number">25</span>);
 	<span class="kw">pub</span> <span class="ident">AdjustmentVariable</span>: <span class="ident">Multiplier</span> <span class="op">=</span> <span class="ident">Multiplier::saturating_from_rational</span>(<span class="number">1</span>, <span class="number">100_000</span>);
 	<span class="kw">pub</span> <span class="ident">MinimumMultiplier</span>: <span class="ident">Multiplier</span> <span class="op">=</span> <span class="ident">Multiplier::saturating_from_rational</span>(<span class="number">1</span>, <span class="number">1_000_000_000u128</span>);
+	<span class="kw">pub</span> <span class="ident">MaximumMultiplier</span>: <span class="ident">Multiplier</span> <span class="op">=</span> <span class="ident">Bounded::max_value</span>();
 }
 
 <span class="kw">impl</span> <span class="ident">pallet_transaction_payment::Config</span> <span class="kw">for</span> <span class="ident">Runtime</span> {
@@ -2735,8 +2742,13 @@
 	<span class="kw">type</span> <span class="ident">OperationalFeeMultiplier</span> <span class="op">=</span> <span class="ident">OperationalFeeMultiplier</span>;
 	<span class="kw">type</span> <span class="ident">WeightToFee</span> <span class="op">=</span> <span class="ident">IdentityFee</span><span class="op">&lt;</span><span class="ident">Balance</span><span class="op">&gt;</span>;
 	<span class="kw">type</span> <span class="ident">LengthToFee</span> <span class="op">=</span> <span class="ident">ConstantMultiplier</span><span class="op">&lt;</span><span class="ident">Balance</span>, <span class="ident">TransactionByteFee</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">FeeMultiplierUpdate</span> <span class="op">=</span>
-		<span class="ident">TargetedFeeAdjustment</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">TargetBlockFullness</span>, <span class="ident">AdjustmentVariable</span>, <span class="ident">MinimumMultiplier</span><span class="op">&gt;</span>;
+	<span class="kw">type</span> <span class="ident">FeeMultiplierUpdate</span> <span class="op">=</span> <span class="ident">TargetedFeeAdjustment</span><span class="op">&lt;</span>
+		<span class="self">Self</span>,
+		<span class="ident">TargetBlockFullness</span>,
+		<span class="ident">AdjustmentVariable</span>,
+		<span class="ident">MinimumMultiplier</span>,
+		<span class="ident">MaximumMultiplier</span>,
+	<span class="op">&gt;</span>;
 }
 
 <span class="kw">impl</span> <span class="ident">pallet_asset_tx_payment::Config</span> <span class="kw">for</span> <span class="ident">Runtime</span> {
