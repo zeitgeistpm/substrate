@@ -125,8 +125,8 @@ mod multiplier_tests {
 
 	use crate::{
 		constants::{currency::*, time::*},
-		AdjustmentVariable, MinimumMultiplier, Runtime, RuntimeBlockWeights as BlockWeights,
-		System, TargetBlockFullness, TransactionPayment,
+		AdjustmentVariable, MaximumMultiplier, MinimumMultiplier, Runtime,
+		RuntimeBlockWeights as BlockWeights, System, TargetBlockFullness, TransactionPayment,
 	};
 	use frame_support::weights::{DispatchClass, Weight, WeightToFee};
 
@@ -152,6 +152,7 @@ mod multiplier_tests {
 			TargetBlockFullness,
 			AdjustmentVariable,
 			MinimumMultiplier,
+			MaximumMultiplier,
 		>::convert(fm)
 	}
 
