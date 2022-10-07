@@ -132,6 +132,19 @@
 <span id="126">126</span>
 <span id="127">127</span>
 <span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -198,7 +211,7 @@
 
 	<span class="attribute">#[<span class="ident">skip_meta</span>]</span>
 	<span class="ident">set_storage</span> {
-		<span class="kw">let</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="number">1000</span>;
+		<span class="kw">let</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">1000</span>;
 
 		<span class="comment">// Set up i items to add</span>
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">items</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
@@ -206,56 +219,69 @@
 			<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> (<span class="ident">i</span>, <span class="ident">j</span>).<span class="ident">using_encoded</span>(<span class="ident">T::Hashing::hash</span>).<span class="ident">as_ref</span>().<span class="ident">to_vec</span>();
 			<span class="ident">items</span>.<span class="ident">push</span>((<span class="ident">hash</span>.<span class="ident">clone</span>(), <span class="ident">hash</span>.<span class="ident">clone</span>()));
 		}
+
+		<span class="kw">let</span> <span class="ident">items_to_verify</span> <span class="op">=</span> <span class="ident">items</span>.<span class="ident">clone</span>();
 	}: <span class="kw">_</span>(<span class="ident">RawOrigin::Root</span>, <span class="ident">items</span>)
 	<span class="ident">verify</span> {
-		<span class="kw">let</span> <span class="ident">last_hash</span> <span class="op">=</span> (<span class="ident">i</span>, <span class="ident">i</span> <span class="op">-</span> <span class="number">1</span>).<span class="ident">using_encoded</span>(<span class="ident">T::Hashing::hash</span>);
-		<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">storage::unhashed::get_raw</span>(<span class="ident">last_hash</span>.<span class="ident">as_ref</span>()).<span class="ident">ok_or</span>(<span class="string">&quot;No value stored&quot;</span>)<span class="question-mark">?</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="ident">last_hash</span>.<span class="ident">as_ref</span>().<span class="ident">to_vec</span>());
+		<span class="comment">// Verify that they&#39;re actually in the storage.</span>
+		<span class="kw">for</span> (<span class="ident">item</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="ident">items_to_verify</span> {
+			<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">storage::unhashed::get_raw</span>(<span class="kw-2">&amp;</span><span class="ident">item</span>).<span class="ident">ok_or</span>(<span class="string">&quot;No value stored&quot;</span>)<span class="question-mark">?</span>;
+			<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="kw-2">*</span><span class="ident">item</span>);
+		}
 	}
 
 	<span class="attribute">#[<span class="ident">skip_meta</span>]</span>
 	<span class="ident">kill_storage</span> {
-		<span class="kw">let</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="number">1000</span>;
+		<span class="kw">let</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">1000</span>;
 
 		<span class="comment">// Add i items to storage</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">items</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">items</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">i</span> <span class="kw">as</span> <span class="ident">usize</span>);
 		<span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">i</span> {
 			<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> (<span class="ident">i</span>, <span class="ident">j</span>).<span class="ident">using_encoded</span>(<span class="ident">T::Hashing::hash</span>).<span class="ident">as_ref</span>().<span class="ident">to_vec</span>();
 			<span class="ident">storage::unhashed::put_raw</span>(<span class="kw-2">&amp;</span><span class="ident">hash</span>, <span class="kw-2">&amp;</span><span class="ident">hash</span>);
 			<span class="ident">items</span>.<span class="ident">push</span>(<span class="ident">hash</span>);
 		}
 
-		<span class="comment">// We will verify this value is removed</span>
-		<span class="kw">let</span> <span class="ident">last_hash</span> <span class="op">=</span> (<span class="ident">i</span>, <span class="ident">i</span> <span class="op">-</span> <span class="number">1</span>).<span class="ident">using_encoded</span>(<span class="ident">T::Hashing::hash</span>);
-		<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">storage::unhashed::get_raw</span>(<span class="ident">last_hash</span>.<span class="ident">as_ref</span>()).<span class="ident">ok_or</span>(<span class="string">&quot;No value stored&quot;</span>)<span class="question-mark">?</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="ident">last_hash</span>.<span class="ident">as_ref</span>().<span class="ident">to_vec</span>());
+		<span class="comment">// Verify that they&#39;re actually in the storage.</span>
+		<span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">items</span> {
+			<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">storage::unhashed::get_raw</span>(<span class="ident">item</span>).<span class="ident">ok_or</span>(<span class="string">&quot;No value stored&quot;</span>)<span class="question-mark">?</span>;
+			<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="kw-2">*</span><span class="ident">item</span>);
+		}
 
+		<span class="kw">let</span> <span class="ident">items_to_verify</span> <span class="op">=</span> <span class="ident">items</span>.<span class="ident">clone</span>();
 	}: <span class="kw">_</span>(<span class="ident">RawOrigin::Root</span>, <span class="ident">items</span>)
 	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">storage::unhashed::get_raw</span>(<span class="ident">last_hash</span>.<span class="ident">as_ref</span>()), <span class="prelude-val">None</span>);
+		<span class="comment">// Verify that they&#39;re not in the storage anymore.</span>
+		<span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="ident">items_to_verify</span> {
+			<span class="macro">assert!</span>(<span class="ident">storage::unhashed::get_raw</span>(<span class="kw-2">&amp;</span><span class="ident">item</span>).<span class="ident">is_none</span>());
+		}
 	}
 
 	<span class="attribute">#[<span class="ident">skip_meta</span>]</span>
 	<span class="ident">kill_prefix</span> {
-		<span class="kw">let</span> <span class="ident">p</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="number">1000</span>;
+		<span class="kw">let</span> <span class="ident">p</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">1000</span>;
 
 		<span class="kw">let</span> <span class="ident">prefix</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">using_encoded</span>(<span class="ident">T::Hashing::hash</span>).<span class="ident">as_ref</span>().<span class="ident">to_vec</span>();
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">items</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">p</span> <span class="kw">as</span> <span class="ident">usize</span>);
 		<span class="comment">// add p items that share a prefix</span>
 		<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">p</span> {
 			<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> (<span class="ident">p</span>, <span class="ident">i</span>).<span class="ident">using_encoded</span>(<span class="ident">T::Hashing::hash</span>).<span class="ident">as_ref</span>().<span class="ident">to_vec</span>();
 			<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> [<span class="kw-2">&amp;</span><span class="ident">prefix</span>[..], <span class="kw-2">&amp;</span><span class="ident">hash</span>[..]].<span class="ident">concat</span>();
 			<span class="ident">storage::unhashed::put_raw</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>);
+			<span class="ident">items</span>.<span class="ident">push</span>(<span class="ident">key</span>);
 		}
 
-		<span class="comment">// We will verify this value is removed</span>
-		<span class="kw">let</span> <span class="ident">last_hash</span> <span class="op">=</span> (<span class="ident">p</span>, <span class="ident">p</span> <span class="op">-</span> <span class="number">1</span>).<span class="ident">using_encoded</span>(<span class="ident">T::Hashing::hash</span>).<span class="ident">as_ref</span>().<span class="ident">to_vec</span>();
-		<span class="kw">let</span> <span class="ident">last_key</span> <span class="op">=</span> [<span class="kw-2">&amp;</span><span class="ident">prefix</span>[..], <span class="kw-2">&amp;</span><span class="ident">last_hash</span>[..]].<span class="ident">concat</span>();
-		<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">storage::unhashed::get_raw</span>(<span class="kw-2">&amp;</span><span class="ident">last_key</span>).<span class="ident">ok_or</span>(<span class="string">&quot;No value stored&quot;</span>)<span class="question-mark">?</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="ident">last_key</span>);
-
+		<span class="comment">// Verify that they&#39;re actually in the storage.</span>
+		<span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">items</span> {
+			<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">storage::unhashed::get_raw</span>(<span class="ident">item</span>).<span class="ident">ok_or</span>(<span class="string">&quot;No value stored&quot;</span>)<span class="question-mark">?</span>;
+			<span class="macro">assert_eq!</span>(<span class="ident">value</span>, <span class="kw-2">*</span><span class="ident">item</span>);
+		}
 	}: <span class="kw">_</span>(<span class="ident">RawOrigin::Root</span>, <span class="ident">prefix</span>, <span class="ident">p</span>)
 	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">storage::unhashed::get_raw</span>(<span class="kw-2">&amp;</span><span class="ident">last_key</span>), <span class="prelude-val">None</span>);
+		<span class="comment">// Verify that they&#39;re not in the storage anymore.</span>
+		<span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="ident">items</span> {
+			<span class="macro">assert!</span>(<span class="ident">storage::unhashed::get_raw</span>(<span class="kw-2">&amp;</span><span class="ident">item</span>).<span class="ident">is_none</span>());
+		}
 	}
 
 	<span class="macro">impl_benchmark_test_suite!</span>(<span class="ident">Pallet</span>, <span class="ident"><span class="kw">crate</span>::mock::new_test_ext</span>(), <span class="ident"><span class="kw">crate</span>::mock::Test</span>);

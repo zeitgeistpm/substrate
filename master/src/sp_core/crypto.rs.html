@@ -1429,6 +1429,11 @@
 <span id="1423">1423</span>
 <span id="1424">1424</span>
 <span id="1425">1425</span>
+<span id="1426">1426</span>
+<span id="1427">1427</span>
+<span id="1428">1428</span>
+<span id="1429">1429</span>
+<span id="1430">1430</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -2415,6 +2420,11 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Wraps</span>: <span class="ident">Sized</span> {
 	<span class="doccomment">/// The inner type it is wrapping.</span>
 	<span class="kw">type</span> <span class="ident">Inner</span>: <span class="ident">IsWrappedBy</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
+
+	<span class="doccomment">/// Get a reference to the inner type that is wrapped.</span>
+	<span class="kw">fn</span> <span class="ident">as_inner_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Inner</span> {
+		<span class="ident"><span class="self">Self</span>::Inner::from_ref</span>(<span class="self">self</span>)
+	}
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Outer</span><span class="op">&gt;</span> <span class="ident">IsWrappedBy</span><span class="op">&lt;</span><span class="ident">Outer</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span>

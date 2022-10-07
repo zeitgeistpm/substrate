@@ -1053,6 +1053,7 @@
 <span id="1047">1047</span>
 <span id="1048">1048</span>
 <span id="1049">1049</span>
+<span id="1050">1050</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -1143,6 +1144,7 @@
 	<span class="ident">points_total</span> <span class="op">+</span><span class="op">=</span> <span class="number">10</span>;
 	<span class="ident">points_individual</span>.<span class="ident">push</span>((<span class="ident">v_stash</span>.<span class="ident">clone</span>(), <span class="number">10</span>));
 
+	<span class="kw">let</span> <span class="ident">original_nominator_count</span> <span class="op">=</span> <span class="ident">Nominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>();
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">nominators</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
 
 	<span class="comment">// Give the validator n nominators, but keep total users in the system the same.</span>
@@ -1169,7 +1171,7 @@
 	<span class="macro">assert_eq!</span>(<span class="ident">new_validators</span>.<span class="ident">len</span>(), <span class="number">1</span>);
 	<span class="macro">assert_eq!</span>(<span class="ident">new_validators</span>[<span class="number">0</span>], <span class="ident">v_stash</span>, <span class="string">&quot;Our validator was not selected!&quot;</span>);
 	<span class="macro">assert_ne!</span>(<span class="ident">Validators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>(), <span class="number">0</span>);
-	<span class="macro">assert_ne!</span>(<span class="ident">Nominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>(), <span class="number">0</span>);
+	<span class="macro">assert_eq!</span>(<span class="ident">Nominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>(), <span class="ident">original_nominator_count</span> <span class="op">+</span> <span class="ident">nominators</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>);
 
 	<span class="comment">// Give Era Points</span>
 	<span class="kw">let</span> <span class="ident">reward</span> <span class="op">=</span> <span class="ident">EraRewardPoints</span>::<span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span> {
@@ -1599,7 +1601,7 @@
 	}
 
 	<span class="ident">payout_stakers_dead_controller</span> {
-		<span class="kw">let</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxNominatorRewardedPerValidator::get</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+		<span class="kw">let</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">T::MaxNominatorRewardedPerValidator::get</span>() <span class="kw">as</span> <span class="ident">u32</span>;
 		<span class="kw">let</span> (<span class="ident">validator</span>, <span class="ident">nominators</span>) <span class="op">=</span> <span class="ident">create_validator_with_nominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
 			<span class="ident">n</span>,
 			<span class="ident">T::MaxNominatorRewardedPerValidator::get</span>() <span class="kw">as</span> <span class="ident">u32</span>,
@@ -1632,7 +1634,7 @@
 	}
 
 	<span class="ident">payout_stakers_alive_staked</span> {
-		<span class="kw">let</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">T::MaxNominatorRewardedPerValidator::get</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+		<span class="kw">let</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="ident">T::MaxNominatorRewardedPerValidator::get</span>() <span class="kw">as</span> <span class="ident">u32</span>;
 		<span class="kw">let</span> (<span class="ident">validator</span>, <span class="ident">nominators</span>) <span class="op">=</span> <span class="ident">create_validator_with_nominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
 			<span class="ident">n</span>,
 			<span class="ident">T::MaxNominatorRewardedPerValidator::get</span>() <span class="kw">as</span> <span class="ident">u32</span>,
@@ -1750,7 +1752,7 @@
 
 	<span class="ident">new_era</span> {
 		<span class="kw">let</span> <span class="ident">v</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="number">10</span>;
-		<span class="kw">let</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="number">100</span>;
+		<span class="kw">let</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">100</span>;
 
 		<span class="ident">create_validators_with_nominators_for_era</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
 			<span class="ident">v</span>,
@@ -1769,7 +1771,7 @@
 	<span class="attribute">#[<span class="ident">extra</span>]</span>
 	<span class="ident">payout_all</span> {
 		<span class="kw">let</span> <span class="ident">v</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="number">10</span>;
-		<span class="kw">let</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="number">100</span>;
+		<span class="kw">let</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">100</span>;
 		<span class="ident">create_validators_with_nominators_for_era</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
 			<span class="ident">v</span>,
 			<span class="ident">n</span>,
