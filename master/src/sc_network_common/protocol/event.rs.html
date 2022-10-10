@@ -104,28 +104,6 @@
 <span id="98">98</span>
 <span id="99">99</span>
 <span id="100">100</span>
-<span id="101">101</span>
-<span id="102">102</span>
-<span id="103">103</span>
-<span id="104">104</span>
-<span id="105">105</span>
-<span id="106">106</span>
-<span id="107">107</span>
-<span id="108">108</span>
-<span id="109">109</span>
-<span id="110">110</span>
-<span id="111">111</span>
-<span id="112">112</span>
-<span id="113">113</span>
-<span id="114">114</span>
-<span id="115">115</span>
-<span id="116">116</span>
-<span id="117">117</span>
-<span id="118">118</span>
-<span id="119">119</span>
-<span id="120">120</span>
-<span id="121">121</span>
-<span id="122">122</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -148,6 +126,7 @@
 <span class="doccomment">//! events that happen on the network like DHT get/put results received.</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ProtocolName</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::protocol::role::ObservedRole</span>;
 <span class="kw">use</span> <span class="ident">bytes::Bytes</span>;
 <span class="kw">use</span> <span class="ident">libp2p</span>::{<span class="ident">core::PeerId</span>, <span class="ident">kad::record::Key</span>};
 
@@ -224,29 +203,6 @@
 		<span class="doccomment">/// Concerned protocol and associated message.</span>
 		<span class="ident">messages</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">ProtocolName</span>, <span class="ident">Bytes</span>)<span class="op">&gt;</span>,
 	},
-}
-
-<span class="doccomment">/// Role that the peer sent to us during the handshake, with the addition of what our local node</span>
-<span class="doccomment">/// knows about that peer.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// &gt; **Note**: This enum is different from the `Role` enum. The `Role` enum indicates what a</span>
-<span class="doccomment">/// &gt;			node says about itself, while `ObservedRole` is a `Role` merged with the</span>
-<span class="doccomment">/// &gt;			information known locally about that node.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ObservedRole</span> {
-	<span class="doccomment">/// Full node.</span>
-	<span class="ident">Full</span>,
-	<span class="doccomment">/// Light node.</span>
-	<span class="ident">Light</span>,
-	<span class="doccomment">/// Third-party authority.</span>
-	<span class="ident">Authority</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">ObservedRole</span> {
-	<span class="doccomment">/// Returns `true` for `ObservedRole::Light`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_light</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-		<span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident"><span class="self">Self</span>::Light</span>)
-	}
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="sc_network_common" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>

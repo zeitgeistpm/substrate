@@ -1722,87 +1722,6 @@
 <span id="1716">1716</span>
 <span id="1717">1717</span>
 <span id="1718">1718</span>
-<span id="1719">1719</span>
-<span id="1720">1720</span>
-<span id="1721">1721</span>
-<span id="1722">1722</span>
-<span id="1723">1723</span>
-<span id="1724">1724</span>
-<span id="1725">1725</span>
-<span id="1726">1726</span>
-<span id="1727">1727</span>
-<span id="1728">1728</span>
-<span id="1729">1729</span>
-<span id="1730">1730</span>
-<span id="1731">1731</span>
-<span id="1732">1732</span>
-<span id="1733">1733</span>
-<span id="1734">1734</span>
-<span id="1735">1735</span>
-<span id="1736">1736</span>
-<span id="1737">1737</span>
-<span id="1738">1738</span>
-<span id="1739">1739</span>
-<span id="1740">1740</span>
-<span id="1741">1741</span>
-<span id="1742">1742</span>
-<span id="1743">1743</span>
-<span id="1744">1744</span>
-<span id="1745">1745</span>
-<span id="1746">1746</span>
-<span id="1747">1747</span>
-<span id="1748">1748</span>
-<span id="1749">1749</span>
-<span id="1750">1750</span>
-<span id="1751">1751</span>
-<span id="1752">1752</span>
-<span id="1753">1753</span>
-<span id="1754">1754</span>
-<span id="1755">1755</span>
-<span id="1756">1756</span>
-<span id="1757">1757</span>
-<span id="1758">1758</span>
-<span id="1759">1759</span>
-<span id="1760">1760</span>
-<span id="1761">1761</span>
-<span id="1762">1762</span>
-<span id="1763">1763</span>
-<span id="1764">1764</span>
-<span id="1765">1765</span>
-<span id="1766">1766</span>
-<span id="1767">1767</span>
-<span id="1768">1768</span>
-<span id="1769">1769</span>
-<span id="1770">1770</span>
-<span id="1771">1771</span>
-<span id="1772">1772</span>
-<span id="1773">1773</span>
-<span id="1774">1774</span>
-<span id="1775">1775</span>
-<span id="1776">1776</span>
-<span id="1777">1777</span>
-<span id="1778">1778</span>
-<span id="1779">1779</span>
-<span id="1780">1780</span>
-<span id="1781">1781</span>
-<span id="1782">1782</span>
-<span id="1783">1783</span>
-<span id="1784">1784</span>
-<span id="1785">1785</span>
-<span id="1786">1786</span>
-<span id="1787">1787</span>
-<span id="1788">1788</span>
-<span id="1789">1789</span>
-<span id="1790">1790</span>
-<span id="1791">1791</span>
-<span id="1792">1792</span>
-<span id="1793">1793</span>
-<span id="1794">1794</span>
-<span id="1795">1795</span>
-<span id="1796">1796</span>
-<span id="1797">1797</span>
-<span id="1798">1798</span>
-<span id="1799">1799</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1836,10 +1755,7 @@
 	<span class="ident">Multiaddr</span>, <span class="ident">PeerId</span>,
 };
 <span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">info</span>, <span class="ident">log</span>, <span class="ident">trace</span>, <span class="ident">warn</span>, <span class="ident">Level</span>};
-<span class="kw">use</span> <span class="ident">message</span>::{
-	<span class="ident">generic</span>::{<span class="ident">Message</span> <span class="kw">as</span> <span class="ident">GenericMessage</span>, <span class="ident">Roles</span>},
-	<span class="ident">Message</span>,
-};
+<span class="kw">use</span> <span class="ident">message</span>::{<span class="ident">generic::Message</span> <span class="kw">as</span> <span class="ident">GenericMessage</span>, <span class="ident">Message</span>};
 <span class="kw">use</span> <span class="ident">notifications</span>::{<span class="ident">Notifications</span>, <span class="ident">NotificationsOut</span>};
 <span class="kw">use</span> <span class="ident">prometheus_endpoint</span>::{<span class="ident">register</span>, <span class="ident">Gauge</span>, <span class="ident">GaugeVec</span>, <span class="ident">Opts</span>, <span class="ident">PrometheusError</span>, <span class="ident">Registry</span>, <span class="ident">U64</span>};
 <span class="kw">use</span> <span class="ident">sc_client_api::HeaderBackend</span>;
@@ -1847,13 +1763,14 @@
 	<span class="ident">BlockImportError</span>, <span class="ident">BlockImportStatus</span>, <span class="ident">IncomingBlock</span>, <span class="ident">RuntimeOrigin</span>,
 };
 <span class="kw">use</span> <span class="ident">sc_network_common</span>::{
-	<span class="ident">config</span>::{<span class="ident">NonReservedPeerMode</span>, <span class="ident">ProtocolId</span>},
+	<span class="ident">config::NonReservedPeerMode</span>,
 	<span class="ident">error</span>,
-	<span class="ident">protocol::ProtocolName</span>,
+	<span class="ident">protocol</span>::{<span class="ident">role::Roles</span>, <span class="ident">ProtocolName</span>},
 	<span class="ident">request_responses::RequestFailure</span>,
 	<span class="ident">sync</span>::{
 		<span class="ident">message</span>::{
-			<span class="ident">BlockAnnounce</span>, <span class="ident">BlockAttributes</span>, <span class="ident">BlockData</span>, <span class="ident">BlockRequest</span>, <span class="ident">BlockResponse</span>, <span class="ident">BlockState</span>,
+			<span class="ident">BlockAnnounce</span>, <span class="ident">BlockAnnouncesHandshake</span>, <span class="ident">BlockAttributes</span>, <span class="ident">BlockData</span>, <span class="ident">BlockRequest</span>,
+			<span class="ident">BlockResponse</span>, <span class="ident">BlockState</span>,
 		},
 		<span class="ident">warp</span>::{<span class="ident">EncodedProof</span>, <span class="ident">WarpProofRequest</span>},
 		<span class="ident">BadPeer</span>, <span class="ident">ChainSync</span>, <span class="ident">OnBlockData</span>, <span class="ident">OnBlockJustification</span>, <span class="ident">OnStateData</span>, <span class="ident">OpaqueBlockRequest</span>,
@@ -1890,8 +1807,6 @@
 
 <span class="doccomment">/// Maximum number of known block hashes to keep for a peer.</span>
 <span class="kw">const</span> <span class="ident">MAX_KNOWN_BLOCKS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1024</span>; <span class="comment">// ~32kb per peer + LruHashSet overhead</span>
-<span class="doccomment">/// Maximum allowed size for a block announce.</span>
-<span class="kw">const</span> <span class="ident">MAX_BLOCK_ANNOUNCE_SIZE</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">1024</span> <span class="op">*</span> <span class="number">1024</span>;
 
 <span class="doccomment">/// Maximum size used for notifications in the block announce and transaction protocols.</span>
 <span class="comment">// Must be equal to `max(MAX_BLOCK_ANNOUNCE_SIZE, MAX_TRANSACTIONS_SIZE)`.</span>
@@ -2040,30 +1955,6 @@
 	<span class="kw">pub</span> <span class="ident">best_number</span>: <span class="op">&lt;</span><span class="ident">B::Header</span> <span class="kw">as</span> <span class="ident">HeaderT</span><span class="op">&gt;</span><span class="ident">::Number</span>,
 }
 
-<span class="doccomment">/// Handshake sent when we open a block announces substream.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-<span class="kw">struct</span> <span class="ident">BlockAnnouncesHandshake</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Roles of the node.</span>
-	<span class="ident">roles</span>: <span class="ident">Roles</span>,
-	<span class="doccomment">/// Best block number.</span>
-	<span class="ident">best_number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Best block hash.</span>
-	<span class="ident">best_hash</span>: <span class="ident">B::Hash</span>,
-	<span class="doccomment">/// Genesis block hash.</span>
-	<span class="ident">genesis_hash</span>: <span class="ident">B::Hash</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">BlockAnnouncesHandshake</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">build</span>(
-		<span class="ident">roles</span>: <span class="ident">Roles</span>,
-		<span class="ident">best_number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">best_hash</span>: <span class="ident">B::Hash</span>,
-		<span class="ident">genesis_hash</span>: <span class="ident">B::Hash</span>,
-	) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">genesis_hash</span>, <span class="ident">roles</span>, <span class="ident">best_number</span>, <span class="ident">best_hash</span> }
-	}
-}
-
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span> <span class="ident">Protocol</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span>
 <span class="kw">where</span>
 	<span class="ident">B</span>: <span class="ident">BlockT</span>,
@@ -2073,12 +1964,10 @@
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
 		<span class="ident">roles</span>: <span class="ident">Roles</span>,
 		<span class="ident">chain</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>,
-		<span class="ident">protocol_id</span>: <span class="ident">ProtocolId</span>,
-		<span class="ident">fork_id</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 		<span class="ident">network_config</span>: <span class="kw-2">&amp;</span><span class="ident">config::NetworkConfiguration</span>,
-		<span class="ident">notifications_protocols_handshakes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 		<span class="ident">metrics_registry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Registry</span><span class="op">&gt;</span>,
 		<span class="ident">chain_sync</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">ChainSync</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+		<span class="ident">block_announces_protocol</span>: <span class="ident">sc_network_common::config::NonDefaultSetConfig</span>,
 	) -&gt; <span class="ident">error::Result</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">sc_peerset::PeersetHandle</span>, <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">PeerId</span>, <span class="ident">Multiaddr</span>)<span class="op">&gt;</span>)<span class="op">&gt;</span> {
 		<span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">chain</span>.<span class="ident">info</span>();
 
@@ -2170,51 +2059,24 @@
 			<span class="ident">sc_peerset::Peerset::from_config</span>(<span class="ident">sc_peerset::PeersetConfig</span> { <span class="ident">sets</span> })
 		};
 
-		<span class="kw">let</span> <span class="ident">block_announces_protocol</span> <span class="op">=</span> {
-			<span class="kw">let</span> <span class="ident">genesis_hash</span> <span class="op">=</span>
-				<span class="ident">chain</span>.<span class="ident">hash</span>(<span class="number">0u32</span>.<span class="ident">into</span>()).<span class="ident">ok</span>().<span class="ident">flatten</span>().<span class="ident">expect</span>(<span class="string">&quot;Genesis block exists; qed&quot;</span>);
-			<span class="kw">let</span> <span class="ident">genesis_hash</span> <span class="op">=</span> <span class="ident">genesis_hash</span>.<span class="ident">as_ref</span>();
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">fork_id</span>) <span class="op">=</span> <span class="ident">fork_id</span> {
-				<span class="macro">format!</span>(
-					<span class="string">&quot;/{}/{}/block-announces/1&quot;</span>,
-					<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">genesis_hash</span>),
-					<span class="ident">fork_id</span>
-				)
-			} <span class="kw">else</span> {
-				<span class="macro">format!</span>(<span class="string">&quot;/{}/block-announces/1&quot;</span>, <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">genesis_hash</span>))
-			}
-		};
-
-		<span class="kw">let</span> <span class="ident">legacy_ba_protocol_name</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;/{}/block-announces/1&quot;</span>, <span class="ident">protocol_id</span>.<span class="ident">as_ref</span>());
-
 		<span class="kw">let</span> <span class="ident">behaviour</span> <span class="op">=</span> {
-			<span class="kw">let</span> <span class="ident">best_number</span> <span class="op">=</span> <span class="ident">info</span>.<span class="ident">best_number</span>;
-			<span class="kw">let</span> <span class="ident">best_hash</span> <span class="op">=</span> <span class="ident">info</span>.<span class="ident">best_hash</span>;
-			<span class="kw">let</span> <span class="ident">genesis_hash</span> <span class="op">=</span> <span class="ident">info</span>.<span class="ident">genesis_hash</span>;
-
-			<span class="kw">let</span> <span class="ident">block_announces_handshake</span> <span class="op">=</span>
-				<span class="ident">BlockAnnouncesHandshake</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::build</span>(<span class="ident">roles</span>, <span class="ident">best_number</span>, <span class="ident">best_hash</span>, <span class="ident">genesis_hash</span>)
-					.<span class="ident">encode</span>();
-
-			<span class="kw">let</span> <span class="ident">sync_protocol_config</span> <span class="op">=</span> <span class="ident">notifications::ProtocolConfig</span> {
-				<span class="ident">name</span>: <span class="ident">block_announces_protocol</span>.<span class="ident">into</span>(),
-				<span class="ident">fallback_names</span>: <span class="ident">iter::once</span>(<span class="ident">legacy_ba_protocol_name</span>.<span class="ident">into</span>()).<span class="ident">collect</span>(),
-				<span class="ident">handshake</span>: <span class="ident">block_announces_handshake</span>,
-				<span class="ident">max_notification_size</span>: <span class="ident">MAX_BLOCK_ANNOUNCE_SIZE</span>,
-			};
-
 			<span class="ident">Notifications::new</span>(
 				<span class="ident">peerset</span>,
-				<span class="ident">iter::once</span>(<span class="ident">sync_protocol_config</span>).<span class="ident">chain</span>(
-					<span class="ident">network_config</span>.<span class="ident">extra_sets</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">notifications_protocols_handshakes</span>).<span class="ident">map</span>(
-						<span class="op">|</span>(<span class="ident">s</span>, <span class="ident">hs</span>)<span class="op">|</span> <span class="ident">notifications::ProtocolConfig</span> {
-							<span class="ident">name</span>: <span class="ident">s</span>.<span class="ident">notifications_protocol</span>.<span class="ident">clone</span>(),
-							<span class="ident">fallback_names</span>: <span class="ident">s</span>.<span class="ident">fallback_names</span>.<span class="ident">clone</span>(),
-							<span class="ident">handshake</span>: <span class="ident">hs</span>,
-							<span class="ident">max_notification_size</span>: <span class="ident">s</span>.<span class="ident">max_notification_size</span>,
-						},
-					),
-				),
+				<span class="comment">// NOTE: Block announcement protocol is still very much hardcoded into `Protocol`.</span>
+				<span class="comment">// 	This protocol must be the first notification protocol given to</span>
+				<span class="comment">// `Notifications`</span>
+				<span class="ident">iter::once</span>(<span class="ident">notifications::ProtocolConfig</span> {
+					<span class="ident">name</span>: <span class="ident">block_announces_protocol</span>.<span class="ident">notifications_protocol</span>.<span class="ident">clone</span>(),
+					<span class="ident">fallback_names</span>: <span class="ident">block_announces_protocol</span>.<span class="ident">fallback_names</span>.<span class="ident">clone</span>(),
+					<span class="ident">handshake</span>: <span class="ident">block_announces_protocol</span>.<span class="ident">handshake</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">to_vec</span>(),
+					<span class="ident">max_notification_size</span>: <span class="ident">block_announces_protocol</span>.<span class="ident">max_notification_size</span>,
+				})
+				.<span class="ident">chain</span>(<span class="ident">network_config</span>.<span class="ident">extra_sets</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">notifications::ProtocolConfig</span> {
+					<span class="ident">name</span>: <span class="ident">s</span>.<span class="ident">notifications_protocol</span>.<span class="ident">clone</span>(),
+					<span class="ident">fallback_names</span>: <span class="ident">s</span>.<span class="ident">fallback_names</span>.<span class="ident">clone</span>(),
+					<span class="ident">handshake</span>: <span class="ident">s</span>.<span class="ident">handshake</span>.<span class="ident">as_ref</span>().<span class="ident">map_or</span>(<span class="ident">roles</span>.<span class="ident">encode</span>(), <span class="op">|</span><span class="ident">h</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">h</span>).<span class="ident">to_vec</span>()),
+					<span class="ident">max_notification_size</span>: <span class="ident">s</span>.<span class="ident">max_notification_size</span>,
+				})),
 			)
 		};
 
@@ -2242,10 +2104,8 @@
 			},
 			<span class="ident">peerset_handle</span>: <span class="ident">peerset_handle</span>.<span class="ident">clone</span>(),
 			<span class="ident">behaviour</span>,
-			<span class="ident">notification_protocols</span>: <span class="ident">network_config</span>
-				.<span class="ident">extra_sets</span>
-				.<span class="ident">iter</span>()
-				.<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">notifications_protocol</span>.<span class="ident">clone</span>())
+			<span class="ident">notification_protocols</span>: <span class="ident">iter::once</span>(<span class="ident">block_announces_protocol</span>.<span class="ident">notifications_protocol</span>)
+				.<span class="ident">chain</span>(<span class="ident">network_config</span>.<span class="ident">extra_sets</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">notifications_protocol</span>.<span class="ident">clone</span>()))
 				.<span class="ident">collect</span>(),
 			<span class="ident">bad_handshake_substreams</span>: <span class="ident">Default::default</span>(),
 			<span class="ident">metrics</span>: <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">r</span>) <span class="op">=</span> <span class="ident">metrics_registry</span> {
@@ -2274,10 +2134,7 @@
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">disconnect_peer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">peer_id</span>: <span class="kw-2">&amp;</span><span class="ident">PeerId</span>, <span class="ident">protocol_name</span>: <span class="ident">ProtocolName</span>) {
 		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">position</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">notification_protocols</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">p</span> <span class="op">==</span> <span class="ident">protocol_name</span>)
 		{
-			<span class="self">self</span>.<span class="ident">behaviour</span>.<span class="ident">disconnect_peer</span>(
-				<span class="ident">peer_id</span>,
-				<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">position</span> <span class="op">+</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>),
-			);
+			<span class="self">self</span>.<span class="ident">behaviour</span>.<span class="ident">disconnect_peer</span>(<span class="ident">peer_id</span>, <span class="ident">sc_peerset::SetId::from</span>(<span class="ident">position</span>));
 		} <span class="kw">else</span> {
 			<span class="macro">warn!</span>(<span class="ident">target</span>: <span class="string">&quot;sub-libp2p&quot;</span>, <span class="string">&quot;disconnect_peer() with invalid protocol name&quot;</span>)
 		}
@@ -2900,8 +2757,7 @@
 	<span class="doccomment">/// Sets the list of reserved peers for the given protocol/peerset.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_reserved_peerset_peers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>) {
 		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">notification_protocols</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">p</span> <span class="op">==</span> <span class="ident">protocol</span>) {
-			<span class="self">self</span>.<span class="ident">peerset_handle</span>
-				.<span class="ident">set_reserved_peers</span>(<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span> <span class="op">+</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>), <span class="ident">peers</span>);
+			<span class="self">self</span>.<span class="ident">peerset_handle</span>.<span class="ident">set_reserved_peers</span>(<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span>), <span class="ident">peers</span>);
 		} <span class="kw">else</span> {
 			<span class="macro">error!</span>(
 				<span class="ident">target</span>: <span class="string">&quot;sub-libp2p&quot;</span>,
@@ -2914,10 +2770,7 @@
 	<span class="doccomment">/// Removes a `PeerId` from the list of reserved peers.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_set_reserved_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">peer</span>: <span class="ident">PeerId</span>) {
 		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">notification_protocols</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">p</span> <span class="op">==</span> <span class="ident">protocol</span>) {
-			<span class="self">self</span>.<span class="ident">peerset_handle</span>.<span class="ident">remove_reserved_peer</span>(
-				<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span> <span class="op">+</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>),
-				<span class="ident">peer</span>,
-			);
+			<span class="self">self</span>.<span class="ident">peerset_handle</span>.<span class="ident">remove_reserved_peer</span>(<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span>), <span class="ident">peer</span>);
 		} <span class="kw">else</span> {
 			<span class="macro">error!</span>(
 				<span class="ident">target</span>: <span class="string">&quot;sub-libp2p&quot;</span>,
@@ -2930,8 +2783,7 @@
 	<span class="doccomment">/// Adds a `PeerId` to the list of reserved peers.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_set_reserved_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">peer</span>: <span class="ident">PeerId</span>) {
 		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">notification_protocols</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">p</span> <span class="op">==</span> <span class="ident">protocol</span>) {
-			<span class="self">self</span>.<span class="ident">peerset_handle</span>
-				.<span class="ident">add_reserved_peer</span>(<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span> <span class="op">+</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>), <span class="ident">peer</span>);
+			<span class="self">self</span>.<span class="ident">peerset_handle</span>.<span class="ident">add_reserved_peer</span>(<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span>), <span class="ident">peer</span>);
 		} <span class="kw">else</span> {
 			<span class="macro">error!</span>(
 				<span class="ident">target</span>: <span class="string">&quot;sub-libp2p&quot;</span>,
@@ -2953,8 +2805,7 @@
 	<span class="doccomment">/// Add a peer to a peers set.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_to_peers_set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">peer</span>: <span class="ident">PeerId</span>) {
 		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">notification_protocols</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">p</span> <span class="op">==</span> <span class="ident">protocol</span>) {
-			<span class="self">self</span>.<span class="ident">peerset_handle</span>
-				.<span class="ident">add_to_peers_set</span>(<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span> <span class="op">+</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>), <span class="ident">peer</span>);
+			<span class="self">self</span>.<span class="ident">peerset_handle</span>.<span class="ident">add_to_peers_set</span>(<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span>), <span class="ident">peer</span>);
 		} <span class="kw">else</span> {
 			<span class="macro">error!</span>(
 				<span class="ident">target</span>: <span class="string">&quot;sub-libp2p&quot;</span>,
@@ -2967,10 +2818,7 @@
 	<span class="doccomment">/// Remove a peer from a peers set.</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove_from_peers_set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">peer</span>: <span class="ident">PeerId</span>) {
 		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">index</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">notification_protocols</span>.<span class="ident">iter</span>().<span class="ident">position</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">p</span> <span class="op">==</span> <span class="ident">protocol</span>) {
-			<span class="self">self</span>.<span class="ident">peerset_handle</span>.<span class="ident">remove_from_peers_set</span>(
-				<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span> <span class="op">+</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>),
-				<span class="ident">peer</span>,
-			);
+			<span class="self">self</span>.<span class="ident">peerset_handle</span>.<span class="ident">remove_from_peers_set</span>(<span class="ident">sc_peerset::SetId::from</span>(<span class="ident">index</span>), <span class="ident">peer</span>);
 		} <span class="kw">else</span> {
 			<span class="macro">error!</span>(
 				<span class="ident">target</span>: <span class="string">&quot;sub-libp2p&quot;</span>,
@@ -3432,14 +3280,12 @@
 					}
 				} <span class="kw">else</span> {
 					<span class="kw">match</span> (
-						<span class="ident">message::Roles::decode_all</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="ident">received_handshake</span>[..]),
+						<span class="ident">Roles::decode_all</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="ident">received_handshake</span>[..]),
 						<span class="self">self</span>.<span class="ident">peers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">peer_id</span>),
 					) {
 						(<span class="prelude-val">Ok</span>(<span class="ident">roles</span>), <span class="kw">_</span>) =&gt; <span class="ident">CustomMessageOutcome::NotificationStreamOpened</span> {
 							<span class="ident">remote</span>: <span class="ident">peer_id</span>,
-							<span class="ident">protocol</span>: <span class="self">self</span>.<span class="ident">notification_protocols</span>
-								[<span class="ident">usize::from</span>(<span class="ident">set_id</span>) <span class="op">-</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>]
-								.<span class="ident">clone</span>(),
+							<span class="ident">protocol</span>: <span class="self">self</span>.<span class="ident">notification_protocols</span>[<span class="ident">usize::from</span>(<span class="ident">set_id</span>)].<span class="ident">clone</span>(),
 							<span class="ident">negotiated_fallback</span>,
 							<span class="ident">roles</span>,
 							<span class="ident">notifications_sink</span>,
@@ -3451,9 +3297,7 @@
 							<span class="comment">// TODO: remove this after https://github.com/paritytech/substrate/issues/5685</span>
 							<span class="ident">CustomMessageOutcome::NotificationStreamOpened</span> {
 								<span class="ident">remote</span>: <span class="ident">peer_id</span>,
-								<span class="ident">protocol</span>: <span class="self">self</span>.<span class="ident">notification_protocols</span>
-									[<span class="ident">usize::from</span>(<span class="ident">set_id</span>) <span class="op">-</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>]
-									.<span class="ident">clone</span>(),
+								<span class="ident">protocol</span>: <span class="self">self</span>.<span class="ident">notification_protocols</span>[<span class="ident">usize::from</span>(<span class="ident">set_id</span>)].<span class="ident">clone</span>(),
 								<span class="ident">negotiated_fallback</span>,
 								<span class="ident">roles</span>: <span class="ident">peer</span>.<span class="ident">info</span>.<span class="ident">roles</span>,
 								<span class="ident">notifications_sink</span>,
@@ -3477,9 +3321,7 @@
 				} <span class="kw">else</span> {
 					<span class="ident">CustomMessageOutcome::NotificationStreamReplaced</span> {
 						<span class="ident">remote</span>: <span class="ident">peer_id</span>,
-						<span class="ident">protocol</span>: <span class="self">self</span>.<span class="ident">notification_protocols</span>
-							[<span class="ident">usize::from</span>(<span class="ident">set_id</span>) <span class="op">-</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>]
-							.<span class="ident">clone</span>(),
+						<span class="ident">protocol</span>: <span class="self">self</span>.<span class="ident">notification_protocols</span>[<span class="ident">usize::from</span>(<span class="ident">set_id</span>)].<span class="ident">clone</span>(),
 						<span class="ident">notifications_sink</span>,
 					}
 				},
@@ -3504,9 +3346,7 @@
 				} <span class="kw">else</span> {
 					<span class="ident">CustomMessageOutcome::NotificationStreamClosed</span> {
 						<span class="ident">remote</span>: <span class="ident">peer_id</span>,
-						<span class="ident">protocol</span>: <span class="self">self</span>.<span class="ident">notification_protocols</span>
-							[<span class="ident">usize::from</span>(<span class="ident">set_id</span>) <span class="op">-</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>]
-							.<span class="ident">clone</span>(),
+						<span class="ident">protocol</span>: <span class="self">self</span>.<span class="ident">notification_protocols</span>[<span class="ident">usize::from</span>(<span class="ident">set_id</span>)].<span class="ident">clone</span>(),
 					}
 				}
 			},
@@ -3539,9 +3379,7 @@
 				<span class="kw">_</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">bad_handshake_substreams</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span>(<span class="ident">peer_id</span>, <span class="ident">set_id</span>)) =&gt;
 					<span class="ident">CustomMessageOutcome::None</span>,
 				<span class="kw">_</span> =&gt; {
-					<span class="kw">let</span> <span class="ident">protocol_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">notification_protocols</span>
-						[<span class="ident">usize::from</span>(<span class="ident">set_id</span>) <span class="op">-</span> <span class="ident">NUM_HARDCODED_PEERSETS</span>]
-						.<span class="ident">clone</span>();
+					<span class="kw">let</span> <span class="ident">protocol_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">notification_protocols</span>[<span class="ident">usize::from</span>(<span class="ident">set_id</span>)].<span class="ident">clone</span>();
 					<span class="ident">CustomMessageOutcome::NotificationsReceived</span> {
 						<span class="ident">remote</span>: <span class="ident">peer_id</span>,
 						<span class="ident">messages</span>: <span class="macro">vec!</span>[(<span class="ident">protocol_name</span>, <span class="ident">message</span>.<span class="ident">freeze</span>())],

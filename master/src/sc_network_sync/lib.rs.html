@@ -3415,6 +3415,63 @@
 <span id="3409">3409</span>
 <span id="3410">3410</span>
 <span id="3411">3411</span>
+<span id="3412">3412</span>
+<span id="3413">3413</span>
+<span id="3414">3414</span>
+<span id="3415">3415</span>
+<span id="3416">3416</span>
+<span id="3417">3417</span>
+<span id="3418">3418</span>
+<span id="3419">3419</span>
+<span id="3420">3420</span>
+<span id="3421">3421</span>
+<span id="3422">3422</span>
+<span id="3423">3423</span>
+<span id="3424">3424</span>
+<span id="3425">3425</span>
+<span id="3426">3426</span>
+<span id="3427">3427</span>
+<span id="3428">3428</span>
+<span id="3429">3429</span>
+<span id="3430">3430</span>
+<span id="3431">3431</span>
+<span id="3432">3432</span>
+<span id="3433">3433</span>
+<span id="3434">3434</span>
+<span id="3435">3435</span>
+<span id="3436">3436</span>
+<span id="3437">3437</span>
+<span id="3438">3438</span>
+<span id="3439">3439</span>
+<span id="3440">3440</span>
+<span id="3441">3441</span>
+<span id="3442">3442</span>
+<span id="3443">3443</span>
+<span id="3444">3444</span>
+<span id="3445">3445</span>
+<span id="3446">3446</span>
+<span id="3447">3447</span>
+<span id="3448">3448</span>
+<span id="3449">3449</span>
+<span id="3450">3450</span>
+<span id="3451">3451</span>
+<span id="3452">3452</span>
+<span id="3453">3453</span>
+<span id="3454">3454</span>
+<span id="3455">3455</span>
+<span id="3456">3456</span>
+<span id="3457">3457</span>
+<span id="3458">3458</span>
+<span id="3459">3459</span>
+<span id="3460">3460</span>
+<span id="3461">3461</span>
+<span id="3462">3462</span>
+<span id="3463">3463</span>
+<span id="3464">3464</span>
+<span id="3465">3465</span>
+<span id="3466">3466</span>
+<span id="3467">3467</span>
+<span id="3468">3468</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -3467,15 +3524,21 @@
 <span class="kw">use</span> <span class="ident">prost::Message</span>;
 <span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">BlockBackend</span>, <span class="ident">ProofProvider</span>};
 <span class="kw">use</span> <span class="ident">sc_consensus</span>::{<span class="ident">BlockImportError</span>, <span class="ident">BlockImportStatus</span>, <span class="ident">IncomingBlock</span>};
-<span class="kw">use</span> <span class="ident">sc_network_common::sync</span>::{
-	<span class="ident">message</span>::{
-		<span class="ident">BlockAnnounce</span>, <span class="ident">BlockAttributes</span>, <span class="ident">BlockData</span>, <span class="ident">BlockRequest</span>, <span class="ident">BlockResponse</span>, <span class="ident">Direction</span>,
-		<span class="ident">FromBlock</span>,
+<span class="kw">use</span> <span class="ident">sc_network_common</span>::{
+	<span class="ident">config</span>::{
+		<span class="ident">NonDefaultSetConfig</span>, <span class="ident">NonReservedPeerMode</span>, <span class="ident">NotificationHandshake</span>, <span class="ident">ProtocolId</span>, <span class="ident">SetConfig</span>,
 	},
-	<span class="ident">warp</span>::{<span class="ident">EncodedProof</span>, <span class="ident">WarpProofRequest</span>, <span class="ident">WarpSyncPhase</span>, <span class="ident">WarpSyncProgress</span>, <span class="ident">WarpSyncProvider</span>},
-	<span class="ident">BadPeer</span>, <span class="ident">ChainSync</span> <span class="kw">as</span> <span class="ident">ChainSyncT</span>, <span class="ident">Metrics</span>, <span class="ident">OnBlockData</span>, <span class="ident">OnBlockJustification</span>, <span class="ident">OnStateData</span>,
-	<span class="ident">OpaqueBlockRequest</span>, <span class="ident">OpaqueBlockResponse</span>, <span class="ident">OpaqueStateRequest</span>, <span class="ident">OpaqueStateResponse</span>, <span class="ident">PeerInfo</span>,
-	<span class="ident">PollBlockAnnounceValidation</span>, <span class="ident">SyncMode</span>, <span class="ident">SyncState</span>, <span class="ident">SyncStatus</span>,
+	<span class="ident">protocol::role::Roles</span>,
+	<span class="ident">sync</span>::{
+		<span class="ident">message</span>::{
+			<span class="ident">BlockAnnounce</span>, <span class="ident">BlockAnnouncesHandshake</span>, <span class="ident">BlockAttributes</span>, <span class="ident">BlockData</span>, <span class="ident">BlockRequest</span>,
+			<span class="ident">BlockResponse</span>, <span class="ident">Direction</span>, <span class="ident">FromBlock</span>,
+		},
+		<span class="ident">warp</span>::{<span class="ident">EncodedProof</span>, <span class="ident">WarpProofRequest</span>, <span class="ident">WarpSyncPhase</span>, <span class="ident">WarpSyncProgress</span>, <span class="ident">WarpSyncProvider</span>},
+		<span class="ident">BadPeer</span>, <span class="ident">ChainSync</span> <span class="kw">as</span> <span class="ident">ChainSyncT</span>, <span class="ident">Metrics</span>, <span class="ident">OnBlockData</span>, <span class="ident">OnBlockJustification</span>, <span class="ident">OnStateData</span>,
+		<span class="ident">OpaqueBlockRequest</span>, <span class="ident">OpaqueBlockResponse</span>, <span class="ident">OpaqueStateRequest</span>, <span class="ident">OpaqueStateResponse</span>, <span class="ident">PeerInfo</span>,
+		<span class="ident">PollBlockAnnounceValidation</span>, <span class="ident">SyncMode</span>, <span class="ident">SyncState</span>, <span class="ident">SyncStatus</span>,
+	},
 };
 <span class="kw">use</span> <span class="ident">sp_arithmetic::traits::Saturating</span>;
 <span class="kw">use</span> <span class="ident">sp_blockchain</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">ClientError</span>, <span class="ident">HeaderBackend</span>, <span class="ident">HeaderMetadata</span>};
@@ -3493,6 +3556,7 @@
 };
 <span class="kw">use</span> <span class="ident">std</span>::{
 	<span class="ident">collections</span>::{<span class="ident">hash_map::Entry</span>, <span class="ident">HashMap</span>, <span class="ident">HashSet</span>},
+	<span class="ident">iter</span>,
 	<span class="ident">ops::Range</span>,
 	<span class="ident">pin::Pin</span>,
 	<span class="ident">sync::Arc</span>,
@@ -3537,6 +3601,9 @@
 
 <span class="doccomment">/// Number of peers that need to be connected before warp sync is started.</span>
 <span class="kw">const</span> <span class="ident">MIN_PEERS_TO_START_WARP_SYNC</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">3</span>;
+
+<span class="doccomment">/// Maximum allowed size for a block announce.</span>
+<span class="kw">const</span> <span class="ident">MAX_BLOCK_ANNOUNCE_SIZE</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">1024</span> <span class="op">*</span> <span class="number">1024</span>;
 
 <span class="kw">mod</span> <span class="ident">rep</span> {
 	<span class="kw">use</span> <span class="ident">sc_peerset::ReputationChange</span> <span class="kw">as</span> <span class="ident">Rep</span>;
@@ -5647,6 +5714,53 @@
 			}
 		}
 		<span class="prelude-val">None</span>
+	}
+
+	<span class="doccomment">/// Get config for the block announcement protocol</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_block_announce_proto_config</span>(
+		<span class="kw-2">&amp;</span><span class="self">self</span>,
+		<span class="ident">protocol_id</span>: <span class="ident">ProtocolId</span>,
+		<span class="ident">fork_id</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+		<span class="ident">roles</span>: <span class="ident">Roles</span>,
+		<span class="ident">best_number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+		<span class="ident">best_hash</span>: <span class="ident">B::Hash</span>,
+		<span class="ident">genesis_hash</span>: <span class="ident">B::Hash</span>,
+	) -&gt; <span class="ident">NonDefaultSetConfig</span> {
+		<span class="kw">let</span> <span class="ident">block_announces_protocol</span> <span class="op">=</span> {
+			<span class="kw">let</span> <span class="ident">genesis_hash</span> <span class="op">=</span> <span class="ident">genesis_hash</span>.<span class="ident">as_ref</span>();
+			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">fork_id</span>) <span class="op">=</span> <span class="ident">fork_id</span> {
+				<span class="macro">format!</span>(
+					<span class="string">&quot;/{}/{}/block-announces/1&quot;</span>,
+					<span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">genesis_hash</span>),
+					<span class="ident">fork_id</span>
+				)
+			} <span class="kw">else</span> {
+				<span class="macro">format!</span>(<span class="string">&quot;/{}/block-announces/1&quot;</span>, <span class="ident">array_bytes::bytes2hex</span>(<span class="string">&quot;&quot;</span>, <span class="ident">genesis_hash</span>))
+			}
+		};
+
+		<span class="ident">NonDefaultSetConfig</span> {
+			<span class="ident">notifications_protocol</span>: <span class="ident">block_announces_protocol</span>.<span class="ident">into</span>(),
+			<span class="ident">fallback_names</span>: <span class="ident">iter::once</span>(
+				<span class="macro">format!</span>(<span class="string">&quot;/{}/block-announces/1&quot;</span>, <span class="ident">protocol_id</span>.<span class="ident">as_ref</span>()).<span class="ident">into</span>(),
+			)
+			.<span class="ident">collect</span>(),
+			<span class="ident">max_notification_size</span>: <span class="ident">MAX_BLOCK_ANNOUNCE_SIZE</span>,
+			<span class="ident">handshake</span>: <span class="prelude-val">Some</span>(<span class="ident">NotificationHandshake::new</span>(<span class="ident">BlockAnnouncesHandshake</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::build</span>(
+				<span class="ident">roles</span>,
+				<span class="ident">best_number</span>,
+				<span class="ident">best_hash</span>,
+				<span class="ident">genesis_hash</span>,
+			))),
+			<span class="comment">// NOTE: `set_config` will be ignored by `protocol.rs` as the block announcement</span>
+			<span class="comment">// protocol is still hardcoded into the peerset.</span>
+			<span class="ident">set_config</span>: <span class="ident">SetConfig</span> {
+				<span class="ident">in_peers</span>: <span class="number">0</span>,
+				<span class="ident">out_peers</span>: <span class="number">0</span>,
+				<span class="ident">reserved_nodes</span>: <span class="ident">Vec::new</span>(),
+				<span class="ident">non_reserved_mode</span>: <span class="ident">NonReservedPeerMode::Deny</span>,
+			},
+		}
 	}
 }
 
