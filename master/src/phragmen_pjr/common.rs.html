@@ -256,7 +256,7 @@
 		}
 		<span class="ident">candidates</span>.<span class="ident">push</span>(<span class="ident">id</span>);
 	}
-	<span class="ident">candidates</span>.<span class="ident">sort_unstable</span>();
+	<span class="ident">candidates</span>.<span class="ident">sort</span>();
 	<span class="ident">candidates</span>.<span class="ident">dedup</span>();
 	<span class="macro">assert_eq!</span>(<span class="ident">candidates</span>.<span class="ident">len</span>(), <span class="ident">candidate_count</span>);
 
@@ -275,11 +275,11 @@
 
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chosen_candidates</span> <span class="op">=</span> <span class="ident">Vec::with_capacity</span>(<span class="ident">n_candidates_chosen</span>);
 		<span class="ident">chosen_candidates</span>.<span class="ident">extend</span>(<span class="ident">candidates</span>.<span class="ident">choose_multiple</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>, <span class="ident">n_candidates_chosen</span>));
-		<span class="ident">chosen_candidates</span>.<span class="ident">sort_unstable</span>();
+		<span class="ident">chosen_candidates</span>.<span class="ident">sort</span>();
 		<span class="ident">voters</span>.<span class="ident">push</span>((<span class="ident">id</span>, <span class="ident">vote_weight</span>, <span class="ident">chosen_candidates</span>));
 	}
 
-	<span class="ident">voters</span>.<span class="ident">sort_unstable</span>();
+	<span class="ident">voters</span>.<span class="ident">sort</span>();
 	<span class="ident">voters</span>.<span class="ident">dedup_by_key</span>(<span class="op">|</span>(<span class="ident">id</span>, <span class="ident">_weight</span>, <span class="ident">_chosen_candidates</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">id</span>);
 	<span class="macro">assert_eq!</span>(<span class="ident">voters</span>.<span class="ident">len</span>(), <span class="ident">voter_count</span>);
 

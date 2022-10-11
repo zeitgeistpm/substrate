@@ -420,7 +420,7 @@
 
 <span class="kw">fn</span> <span class="ident">build_rpc_api</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">rpc_api</span>: <span class="ident">RpcModule</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span>) -&gt; <span class="ident">RpcModule</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span> {
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_methods</span> <span class="op">=</span> <span class="ident">rpc_api</span>.<span class="ident">method_names</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-	<span class="ident">available_methods</span>.<span class="ident">sort_unstable</span>();
+	<span class="ident">available_methods</span>.<span class="ident">sort</span>();
 
 	<span class="ident">rpc_api</span>
 		.<span class="ident">register_method</span>(<span class="string">&quot;rpc_methods&quot;</span>, <span class="kw">move</span> <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
