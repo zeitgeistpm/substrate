@@ -442,7 +442,7 @@
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">nested</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">amount</span>: <span class="ident">Weight</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">DispatchError</span><span class="op">&gt;</span> {
 		<span class="comment">// NOTE that it is ok to allocate all available gas since it still ensured</span>
 		<span class="comment">// by `charge` that it doesn&#39;t reach zero.</span>
-		<span class="kw">let</span> <span class="ident">amount</span> <span class="op">=</span> <span class="ident">Weight::from_components</span>(
+		<span class="kw">let</span> <span class="ident">amount</span> <span class="op">=</span> <span class="ident">Weight::from_parts</span>(
 			<span class="kw">if</span> <span class="ident">amount</span>.<span class="ident">ref_time</span>().<span class="ident">is_zero</span>() {
 				<span class="self">self</span>.<span class="ident">gas_left</span>().<span class="ident">ref_time</span>()
 			} <span class="kw">else</span> {
