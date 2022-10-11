@@ -988,6 +988,18 @@
 <span id="982">982</span>
 <span id="983">983</span>
 <span id="984">984</span>
+<span id="985">985</span>
+<span id="986">986</span>
+<span id="987">987</span>
+<span id="988">988</span>
+<span id="989">989</span>
+<span id="990">990</span>
+<span id="991">991</span>
+<span id="992">992</span>
+<span id="993">993</span>
+<span id="994">994</span>
+<span id="995">995</span>
+<span id="996">996</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1047,6 +1059,7 @@
 	<span class="ident">system::SystemApiServer</span>,
 	<span class="ident">DenyUnsafe</span>, <span class="ident">SubscriptionTaskExecutor</span>,
 };
+<span class="kw">use</span> <span class="ident">sc_rpc_spec_v2::transaction::TransactionApiServer</span>;
 <span class="kw">use</span> <span class="ident">sc_telemetry</span>::{<span class="ident">telemetry</span>, <span class="ident">ConnectionMessage</span>, <span class="ident">Telemetry</span>, <span class="ident">TelemetryHandle</span>, <span class="ident">SUBSTRATE_INFO</span>};
 <span class="kw">use</span> <span class="ident">sc_transaction_pool_api::MaintainedTransactionPool</span>;
 <span class="kw">use</span> <span class="ident">sc_utils::mpsc</span>::{<span class="ident">tracing_unbounded</span>, <span class="ident">TracingUnboundedSender</span>};
@@ -1663,6 +1676,13 @@
 		(<span class="ident">chain</span>, <span class="ident">state</span>, <span class="ident">child_state</span>)
 	};
 
+	<span class="kw">let</span> <span class="ident">transaction_v2</span> <span class="op">=</span> <span class="ident">sc_rpc_spec_v2::transaction::Transaction::new</span>(
+		<span class="ident">client</span>.<span class="ident">clone</span>(),
+		<span class="ident">transaction_pool</span>.<span class="ident">clone</span>(),
+		<span class="ident">task_executor</span>.<span class="ident">clone</span>(),
+	)
+	.<span class="ident">into_rpc</span>();
+
 	<span class="kw">let</span> <span class="ident">author</span> <span class="op">=</span> <span class="ident">sc_rpc::author::Author::new</span>(
 		<span class="ident">client</span>.<span class="ident">clone</span>(),
 		<span class="ident">transaction_pool</span>,
@@ -1680,6 +1700,10 @@
 		<span class="ident">rpc_api</span>.<span class="ident">merge</span>(<span class="ident">offchain</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Application</span>(<span class="ident">e</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 	}
 
+	<span class="comment">// Part of the RPC v2 spec.</span>
+	<span class="ident">rpc_api</span>.<span class="ident">merge</span>(<span class="ident">transaction_v2</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Application</span>(<span class="ident">e</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+
+	<span class="comment">// Part of the old RPC spec.</span>
 	<span class="ident">rpc_api</span>.<span class="ident">merge</span>(<span class="ident">chain</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Application</span>(<span class="ident">e</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 	<span class="ident">rpc_api</span>.<span class="ident">merge</span>(<span class="ident">author</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Application</span>(<span class="ident">e</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 	<span class="ident">rpc_api</span>.<span class="ident">merge</span>(<span class="ident">system</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Application</span>(<span class="ident">e</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;

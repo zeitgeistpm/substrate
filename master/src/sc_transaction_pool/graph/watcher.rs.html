@@ -224,13 +224,13 @@
 	}
 
 	<span class="doccomment">/// Extrinsic has been included in block with given hash.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">BH</span>) {
-		<span class="self">self</span>.<span class="ident">send</span>(<span class="ident">TransactionStatus::InBlock</span>(<span class="ident">hash</span>));
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">BH</span>, <span class="ident">index</span>: <span class="ident">usize</span>) {
+		<span class="self">self</span>.<span class="ident">send</span>(<span class="ident">TransactionStatus::InBlock</span>((<span class="ident">hash</span>, <span class="ident">index</span>)));
 	}
 
 	<span class="doccomment">/// Extrinsic has been finalized by a finality gadget.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finalized</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">BH</span>) {
-		<span class="self">self</span>.<span class="ident">send</span>(<span class="ident">TransactionStatus::Finalized</span>(<span class="ident">hash</span>));
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finalized</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">BH</span>, <span class="ident">index</span>: <span class="ident">usize</span>) {
+		<span class="self">self</span>.<span class="ident">send</span>(<span class="ident">TransactionStatus::Finalized</span>((<span class="ident">hash</span>, <span class="ident">index</span>)));
 		<span class="self">self</span>.<span class="ident">is_finalized</span> <span class="op">=</span> <span class="bool-val">true</span>;
 	}
 

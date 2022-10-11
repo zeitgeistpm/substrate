@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":[["chain_spec","Substrate chain specification API."]]};
+window.SIDEBAR_ITEMS = {"mod":[["chain_spec","Substrate chain specification API."],["transaction","Substrate transaction API."]],"type":[["SubscriptionTaskExecutor","Task executor that is being used by RPC subscriptions."]]};
