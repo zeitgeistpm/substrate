@@ -289,6 +289,13 @@
 <span id="283">283</span>
 <span id="284">284</span>
 <span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -467,6 +474,13 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">TreeRoute</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Creates a new `TreeRoute`.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// It is required that `pivot &gt;= route.len()`, otherwise it may panics.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">route</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pivot</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span> {
+		<span class="ident">TreeRoute</span> { <span class="ident">route</span>, <span class="ident">pivot</span> }
+	}
+
 	<span class="doccomment">/// Get a slice of all retracted blocks in reverse order (towards common ancestor).</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">retracted</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>] {
 		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">route</span>[..<span class="self">self</span>.<span class="ident">pivot</span>]
