@@ -310,7 +310,7 @@
 		<span class="comment">// Store the time that it took to write each value.</span>
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">record</span> <span class="op">=</span> <span class="ident">BenchRecord::default</span>();
 
-		<span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="ident">BlockId::Number</span>(<span class="ident">client</span>.<span class="ident">usage_info</span>().<span class="ident">chain</span>.<span class="ident">best_number</span>);
+		<span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="ident">BlockId::Hash</span>(<span class="ident">client</span>.<span class="ident">usage_info</span>().<span class="ident">chain</span>.<span class="ident">best_hash</span>);
 		<span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">header</span>(<span class="ident">block</span>)<span class="question-mark">?</span>.<span class="ident">ok_or</span>(<span class="string">&quot;Header not found&quot;</span>)<span class="question-mark">?</span>;
 		<span class="kw">let</span> <span class="ident">original_root</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">header</span>.<span class="ident">state_root</span>();
 		<span class="kw">let</span> <span class="ident">trie</span> <span class="op">=</span> <span class="ident">DbStateBuilder</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">storage</span>.<span class="ident">clone</span>(), <span class="ident">original_root</span>).<span class="ident">build</span>();
