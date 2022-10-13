@@ -677,6 +677,7 @@
 <span id="671">671</span>
 <span id="672">672</span>
 <span id="673">673</span>
+<span id="674">674</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -1066,6 +1067,8 @@
 <span class="doccomment">/// Merkle Mountain Range operation error.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">RuntimeDebug</span>, <span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
+	<span class="doccomment">/// Error during translation of a block number into a leaf index.</span>
+	<span class="ident">BlockNumToLeafIndex</span>,
 	<span class="doccomment">/// Error while pushing new node.</span>
 	<span class="ident">Push</span>,
 	<span class="doccomment">/// Error getting the new root.</span>
@@ -1082,8 +1085,8 @@
 	<span class="ident">PalletNotIncluded</span>,
 	<span class="doccomment">/// Cannot find the requested leaf index</span>
 	<span class="ident">InvalidLeafIndex</span>,
-	<span class="doccomment">/// The provided leaves count is larger than the actual leaves count.</span>
-	<span class="ident">InvalidLeavesCount</span>,
+	<span class="doccomment">/// The provided best know block number is invalid.</span>
+	<span class="ident">InvalidBestKnownBlock</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> {
@@ -1113,9 +1116,9 @@
 
 <span class="macro">sp_api::decl_runtime_apis!</span> {
 	<span class="doccomment">/// API to interact with MMR pallet.</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">MmrApi</span><span class="op">&lt;</span><span class="ident">Hash</span>: <span class="ident">codec::Codec</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Generate MMR proof for a leaf under given index.</span>
-		<span class="kw">fn</span> <span class="ident">generate_proof</span>(<span class="ident">leaf_index</span>: <span class="ident">LeafIndex</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">EncodableOpaqueLeaf</span>, <span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
+	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">MmrApi</span><span class="op">&lt;</span><span class="ident">Hash</span>: <span class="ident">codec::Codec</span>, <span class="ident">BlockNumber</span>: <span class="ident">codec::Codec</span><span class="op">&gt;</span> {
+		<span class="doccomment">/// Generate MMR proof for a block with a specified `block_number`.</span>
+		<span class="kw">fn</span> <span class="ident">generate_proof</span>(<span class="ident">block_number</span>: <span class="ident">BlockNumber</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">EncodableOpaqueLeaf</span>, <span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
 
 		<span class="doccomment">/// Verify MMR proof against on-chain MMR.</span>
 		<span class="doccomment">///</span>
@@ -1136,14 +1139,13 @@
 		<span class="doccomment">/// Return the on-chain MMR root hash.</span>
 		<span class="kw">fn</span> <span class="ident">mmr_root</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Hash</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
-		<span class="doccomment">/// Generate MMR proof for a series of leaves under given indices.</span>
-		<span class="kw">fn</span> <span class="ident">generate_batch_proof</span>(<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafIndex</span><span class="op">&gt;</span>)
-			-&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// Generate MMR proof for a series of blocks with the specified block numbers.</span>
+		<span class="kw">fn</span> <span class="ident">generate_batch_proof</span>(<span class="ident">block_numbers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
 
-		<span class="doccomment">/// Generate MMR proof for a series of leaves under given indices, using MMR at given `leaves_count` size.</span>
+		<span class="doccomment">/// Generate MMR proof for a series of `block_numbers`, given the `best_known_block_number`.</span>
 		<span class="kw">fn</span> <span class="ident">generate_historical_batch_proof</span>(
-			<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafIndex</span><span class="op">&gt;</span>,
-			<span class="ident">leaves_count</span>: <span class="ident">LeafIndex</span>
+			<span class="ident">block_numbers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span>,
+			<span class="ident">best_known_block_number</span>: <span class="ident">BlockNumber</span>
 		) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
 
 		<span class="doccomment">/// Verify MMR proof against on-chain MMR for a batch of leaves.</span>
