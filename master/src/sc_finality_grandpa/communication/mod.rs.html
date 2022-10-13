@@ -1073,6 +1073,12 @@
 <span id="1067">1067</span>
 <span id="1068">1068</span>
 <span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -1112,6 +1118,7 @@
 	<span class="ident">pin::Pin</span>,
 	<span class="ident">sync::Arc</span>,
 	<span class="ident">task</span>::{<span class="ident">Context</span>, <span class="ident">Poll</span>},
+	<span class="ident">time::Duration</span>,
 };
 
 <span class="kw">use</span> <span class="ident">finality_grandpa</span>::{
@@ -1142,6 +1149,9 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">tests</span>;
+
+<span class="comment">// How often to rebroadcast neighbor packets, in cases where no new packets are created.</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">NEIGHBOR_REBROADCAST_PERIOD</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">2</span> <span class="op">*</span> <span class="number">60</span>);
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">grandpa_protocol_name</span> {
 	<span class="kw">use</span> <span class="ident">sc_chain_spec::ChainSpec</span>;
@@ -1178,6 +1188,8 @@
 	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="ident">UNKNOWN_VOTER</span>: <span class="ident">Rep</span> <span class="op">=</span> <span class="ident">Rep::new</span>(<span class="op">-</span><span class="number">150</span>, <span class="string">&quot;Grandpa: Unknown voter&quot;</span>);
 
 	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="ident">INVALID_VIEW_CHANGE</span>: <span class="ident">Rep</span> <span class="op">=</span> <span class="ident">Rep::new</span>(<span class="op">-</span><span class="number">500</span>, <span class="string">&quot;Grandpa: Invalid view change&quot;</span>);
+	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="ident">DUPLICATE_NEIGHBOR_MESSAGE</span>: <span class="ident">Rep</span> <span class="op">=</span>
+		<span class="ident">Rep::new</span>(<span class="op">-</span><span class="number">500</span>, <span class="string">&quot;Grandpa: Duplicate neighbor message without grace period&quot;</span>);
 	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="ident">PER_UNDECODABLE_BYTE</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="op">-</span><span class="number">5</span>;
 	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="ident">PER_SIGNATURE_CHECKED</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="op">-</span><span class="number">25</span>;
 	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const</span> <span class="ident">PER_BLOCK_LOADED</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="op">-</span><span class="number">10</span>;
@@ -1354,7 +1366,7 @@
 		}
 
 		<span class="kw">let</span> (<span class="ident">neighbor_packet_worker</span>, <span class="ident">neighbor_packet_sender</span>) <span class="op">=</span>
-			<span class="ident">periodic::NeighborPacketWorker::new</span>();
+			<span class="ident">periodic::NeighborPacketWorker::new</span>(<span class="ident">NEIGHBOR_REBROADCAST_PERIOD</span>);
 
 		<span class="ident">NetworkBridge</span> {
 			<span class="ident">service</span>,

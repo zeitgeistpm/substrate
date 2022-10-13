@@ -2543,6 +2543,71 @@
 <span id="2537">2537</span>
 <span id="2538">2538</span>
 <span id="2539">2539</span>
+<span id="2540">2540</span>
+<span id="2541">2541</span>
+<span id="2542">2542</span>
+<span id="2543">2543</span>
+<span id="2544">2544</span>
+<span id="2545">2545</span>
+<span id="2546">2546</span>
+<span id="2547">2547</span>
+<span id="2548">2548</span>
+<span id="2549">2549</span>
+<span id="2550">2550</span>
+<span id="2551">2551</span>
+<span id="2552">2552</span>
+<span id="2553">2553</span>
+<span id="2554">2554</span>
+<span id="2555">2555</span>
+<span id="2556">2556</span>
+<span id="2557">2557</span>
+<span id="2558">2558</span>
+<span id="2559">2559</span>
+<span id="2560">2560</span>
+<span id="2561">2561</span>
+<span id="2562">2562</span>
+<span id="2563">2563</span>
+<span id="2564">2564</span>
+<span id="2565">2565</span>
+<span id="2566">2566</span>
+<span id="2567">2567</span>
+<span id="2568">2568</span>
+<span id="2569">2569</span>
+<span id="2570">2570</span>
+<span id="2571">2571</span>
+<span id="2572">2572</span>
+<span id="2573">2573</span>
+<span id="2574">2574</span>
+<span id="2575">2575</span>
+<span id="2576">2576</span>
+<span id="2577">2577</span>
+<span id="2578">2578</span>
+<span id="2579">2579</span>
+<span id="2580">2580</span>
+<span id="2581">2581</span>
+<span id="2582">2582</span>
+<span id="2583">2583</span>
+<span id="2584">2584</span>
+<span id="2585">2585</span>
+<span id="2586">2586</span>
+<span id="2587">2587</span>
+<span id="2588">2588</span>
+<span id="2589">2589</span>
+<span id="2590">2590</span>
+<span id="2591">2591</span>
+<span id="2592">2592</span>
+<span id="2593">2593</span>
+<span id="2594">2594</span>
+<span id="2595">2595</span>
+<span id="2596">2596</span>
+<span id="2597">2597</span>
+<span id="2598">2598</span>
+<span id="2599">2599</span>
+<span id="2600">2600</span>
+<span id="2601">2601</span>
+<span id="2602">2602</span>
+<span id="2603">2603</span>
+<span id="2604">2604</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
@@ -2580,7 +2645,8 @@
 <span class="doccomment">//! impolite to send messages about r+1 or later. &quot;future-round&quot; messages can</span>
 <span class="doccomment">//!  be dropped and ignored.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! It is impolite to send a neighbor packet which moves backwards in protocol state.</span>
+<span class="doccomment">//! It is impolite to send a neighbor packet which moves backwards or does not progress</span>
+<span class="doccomment">//! protocol state.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This is beneficial if it conveys some progress in the protocol state of the peer.</span>
 <span class="doccomment">//!</span>
@@ -2642,7 +2708,7 @@
 <span class="kw">use</span> <span class="ident">sp_finality_grandpa::AuthorityId</span>;
 <span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">NumberFor</span>, <span class="ident">Zero</span>};
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">benefit</span>, <span class="ident">cost</span>, <span class="ident">Round</span>, <span class="ident">SetId</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">benefit</span>, <span class="ident">cost</span>, <span class="ident">Round</span>, <span class="ident">SetId</span>, <span class="ident">NEIGHBOR_REBROADCAST_PERIOD</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">environment</span>, <span class="ident">CatchUp</span>, <span class="ident">CompactCommit</span>, <span class="ident">SignedMessage</span>};
 
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -2693,14 +2759,15 @@
 <span class="doccomment">/// A view of protocol state.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">View</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> {
-	<span class="ident">round</span>: <span class="ident">Round</span>,           <span class="comment">// the current round we are at.</span>
-	<span class="ident">set_id</span>: <span class="ident">SetId</span>,          <span class="comment">// the current voter set id.</span>
-	<span class="ident">last_commit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>, <span class="comment">// commit-finalized block height, if any.</span>
+	<span class="ident">round</span>: <span class="ident">Round</span>,                 <span class="comment">// the current round we are at.</span>
+	<span class="ident">set_id</span>: <span class="ident">SetId</span>,                <span class="comment">// the current voter set id.</span>
+	<span class="ident">last_commit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>,       <span class="comment">// commit-finalized block height, if any.</span>
+	<span class="ident">last_update</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Instant</span><span class="op">&gt;</span>, <span class="comment">// last time we heard from peer, used for spamming detection.</span>
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">View</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> {
 	<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-		<span class="ident">View</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">1</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">0</span>), <span class="ident">last_commit</span>: <span class="prelude-val">None</span> }
+		<span class="ident">View</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">1</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">0</span>), <span class="ident">last_commit</span>: <span class="prelude-val">None</span>, <span class="ident">last_update</span>: <span class="prelude-val">None</span> }
 	}
 }
 
@@ -2770,7 +2837,12 @@
 	<span class="doccomment">/// Converts the local view to a `View` discarding round and set id</span>
 	<span class="doccomment">/// information about the last commit.</span>
 	<span class="kw">fn</span> <span class="ident">as_view</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">View</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">N</span><span class="op">&gt;</span> {
-		<span class="ident">View</span> { <span class="ident">round</span>: <span class="self">self</span>.<span class="ident">round</span>, <span class="ident">set_id</span>: <span class="self">self</span>.<span class="ident">set_id</span>, <span class="ident">last_commit</span>: <span class="self">self</span>.<span class="ident">last_commit_height</span>() }
+		<span class="ident">View</span> {
+			<span class="ident">round</span>: <span class="self">self</span>.<span class="ident">round</span>,
+			<span class="ident">set_id</span>: <span class="self">self</span>.<span class="ident">set_id</span>,
+			<span class="ident">last_commit</span>: <span class="self">self</span>.<span class="ident">last_commit_height</span>(),
+			<span class="ident">last_update</span>: <span class="prelude-val">None</span>,
+		}
 	}
 
 	<span class="doccomment">/// Update the set ID. implies a reset to round 1.</span>
@@ -2962,6 +3034,8 @@
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum</span> <span class="ident">Misbehavior</span> {
 	<span class="comment">// invalid neighbor message, considering the last one.</span>
 	<span class="ident">InvalidViewChange</span>,
+	<span class="comment">// duplicate neighbor message.</span>
+	<span class="ident">DuplicateNeighborMessage</span>,
 	<span class="comment">// could not decode neighbor message. bytes-length of the packet.</span>
 	<span class="ident">UndecodablePacket</span>(<span class="ident">i32</span>),
 	<span class="comment">// Bad catch up message (invalid signatures).</span>
@@ -2983,6 +3057,7 @@
 
 		<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
 			<span class="ident">InvalidViewChange</span> =&gt; <span class="ident">cost::INVALID_VIEW_CHANGE</span>,
+			<span class="ident">DuplicateNeighborMessage</span> =&gt; <span class="ident">cost::DUPLICATE_NEIGHBOR_MESSAGE</span>,
 			<span class="ident">UndecodablePacket</span>(<span class="ident">bytes</span>) =&gt; <span class="ident">ReputationChange::new</span>(
 				<span class="ident">bytes</span>.<span class="ident">saturating_mul</span>(<span class="ident">cost::PER_UNDECODABLE_BYTE</span>),
 				<span class="string">&quot;Grandpa: Bad packet&quot;</span>,
@@ -3033,20 +3108,22 @@
 	<span class="ident">second_stage_peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>,
 	<span class="doccomment">/// The randomly picked set of `LUCKY_PEERS` light clients we&#39;ll gossip commit messages to.</span>
 	<span class="ident">lucky_light_peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Neighbor packet rebroadcast period --- we reduce the reputation of peers sending duplicate</span>
+	<span class="doccomment">/// packets too often.</span>
+	<span class="ident">neighbor_rebroadcast_period</span>: <span class="ident">Duration</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Peers</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">Ord</span><span class="op">&gt;</span> <span class="ident">Peers</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> {
+	<span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">neighbor_rebroadcast_period</span>: <span class="ident">Duration</span>) -&gt; <span class="self">Self</span> {
 		<span class="ident">Peers</span> {
 			<span class="ident">inner</span>: <span class="ident">Default::default</span>(),
 			<span class="ident">first_stage_peers</span>: <span class="ident">Default::default</span>(),
 			<span class="ident">second_stage_peers</span>: <span class="ident">Default::default</span>(),
 			<span class="ident">lucky_light_peers</span>: <span class="ident">Default::default</span>(),
+			<span class="ident">neighbor_rebroadcast_period</span>,
 		}
 	}
-}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>: <span class="ident">Ord</span><span class="op">&gt;</span> <span class="ident">Peers</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span> {
 	<span class="kw">fn</span> <span class="ident">new_peer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">who</span>: <span class="ident">PeerId</span>, <span class="ident">role</span>: <span class="ident">ObservedRole</span>) {
 		<span class="kw">match</span> <span class="ident">role</span> {
 			<span class="ident">ObservedRole::Authority</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">first_stage_peers</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">LUCKY_PEERS</span> =&gt; {
@@ -3092,10 +3169,23 @@
 			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Misbehavior::InvalidViewChange</span>)
 		}
 
+		<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">Instant::now</span>();
+		<span class="kw">let</span> <span class="ident">duplicate_packet</span> <span class="op">=</span> (<span class="ident">update</span>.<span class="ident">set_id</span>, <span class="ident">update</span>.<span class="ident">round</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">update</span>.<span class="ident">commit_finalized_height</span>)) <span class="op">==</span>
+			(<span class="ident">peer</span>.<span class="ident">view</span>.<span class="ident">set_id</span>, <span class="ident">peer</span>.<span class="ident">view</span>.<span class="ident">round</span>, <span class="ident">peer</span>.<span class="ident">view</span>.<span class="ident">last_commit</span>.<span class="ident">as_ref</span>());
+
+		<span class="kw">if</span> <span class="ident">duplicate_packet</span> {
+			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last_update</span>) <span class="op">=</span> <span class="ident">peer</span>.<span class="ident">view</span>.<span class="ident">last_update</span> {
+				<span class="kw">if</span> <span class="ident">now</span> <span class="op">&lt;</span> <span class="ident">last_update</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">neighbor_rebroadcast_period</span> <span class="op">/</span> <span class="number">2</span> {
+					<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Misbehavior::DuplicateNeighborMessage</span>)
+				}
+			}
+		}
+
 		<span class="ident">peer</span>.<span class="ident">view</span> <span class="op">=</span> <span class="ident">View</span> {
 			<span class="ident">round</span>: <span class="ident">update</span>.<span class="ident">round</span>,
 			<span class="ident">set_id</span>: <span class="ident">update</span>.<span class="ident">set_id</span>,
 			<span class="ident">last_commit</span>: <span class="prelude-val">Some</span>(<span class="ident">update</span>.<span class="ident">commit_finalized_height</span>),
+			<span class="ident">last_update</span>: <span class="prelude-val">Some</span>(<span class="ident">now</span>),
 		};
 
 		<span class="macro">trace!</span>(<span class="ident">target</span>: <span class="string">&quot;afg&quot;</span>, <span class="string">&quot;Peer {} updated view. Now at {:?}, {:?}&quot;</span>,
@@ -3293,7 +3383,7 @@
 
 		<span class="ident">Inner</span> {
 			<span class="ident">local_view</span>: <span class="prelude-val">None</span>,
-			<span class="ident">peers</span>: <span class="ident">Peers::default</span>(),
+			<span class="ident">peers</span>: <span class="ident">Peers::new</span>(<span class="ident">NEIGHBOR_REBROADCAST_PERIOD</span>),
 			<span class="ident">live_topics</span>: <span class="ident">KeepTopics::new</span>(),
 			<span class="ident">next_rebroadcast</span>: <span class="ident">Instant::now</span>() <span class="op">+</span> <span class="ident">REBROADCAST_AFTER</span>,
 			<span class="ident">authorities</span>: <span class="ident">Vec::new</span>(),
@@ -3303,13 +3393,16 @@
 		}
 	}
 
-	<span class="doccomment">/// Note a round in the current set has started.</span>
+	<span class="doccomment">/// Note a round in the current set has started. Does nothing if the last</span>
+	<span class="doccomment">/// call to the function was with the same `round`.</span>
 	<span class="kw">fn</span> <span class="ident">note_round</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">round</span>: <span class="ident">Round</span>) -&gt; <span class="ident">MaybeMessage</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
 		{
 			<span class="kw">let</span> <span class="ident">local_view</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">local_view</span> {
 				<span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
 				<span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) =&gt;
 					<span class="kw">if</span> <span class="ident">v</span>.<span class="ident">round</span> <span class="op">==</span> <span class="ident">round</span> {
+						<span class="comment">// Do not send neighbor packets out if `round` has not changed ---</span>
+						<span class="comment">// such behavior is punishable.</span>
 						<span class="kw">return</span> <span class="prelude-val">None</span>
 					} <span class="kw">else</span> {
 						<span class="ident">v</span>
@@ -3348,6 +3441,8 @@
 							);
 							<span class="self">self</span>.<span class="ident">authorities</span> <span class="op">=</span> <span class="ident">authorities</span>;
 						}
+						<span class="comment">// Do not send neighbor packets out if the `set_id` has not changed ---</span>
+						<span class="comment">// such behavior is punishable.</span>
 						<span class="kw">return</span> <span class="prelude-val">None</span>
 					} <span class="kw">else</span> {
 						<span class="ident">v</span>
@@ -3361,7 +3456,9 @@
 		<span class="self">self</span>.<span class="ident">multicast_neighbor_packet</span>()
 	}
 
-	<span class="doccomment">/// Note that we&#39;ve imported a commit finalizing a given block.</span>
+	<span class="doccomment">/// Note that we&#39;ve imported a commit finalizing a given block. Does nothing if the last</span>
+	<span class="doccomment">/// call to the function was with the same or higher `finalized` number.</span>
+	<span class="doccomment">/// `set_id` &amp; `round` are the ones the commit message is from.</span>
 	<span class="kw">fn</span> <span class="ident">note_commit_finalized</span>(
 		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
 		<span class="ident">round</span>: <span class="ident">Round</span>,
@@ -3902,6 +3999,8 @@
 	}
 
 	<span class="doccomment">/// Note that we&#39;ve imported a commit finalizing a given block.</span>
+	<span class="doccomment">/// `set_id` &amp; `round` are the ones the commit message is from and not necessarily</span>
+	<span class="doccomment">/// the latest set ID &amp; round started.</span>
 	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">note_commit_finalized</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		<span class="ident">round</span>: <span class="ident">Round</span>,
@@ -4192,11 +4291,12 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">environment::SharedVoterSetState</span>, <span class="kw-2">*</span>};
+	<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident"><span class="kw">super</span>::NEIGHBOR_REBROADCAST_PERIOD</span>, <span class="ident">environment::SharedVoterSetState</span>, <span class="kw-2">*</span>};
 	<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::communication</span>;
 	<span class="kw">use</span> <span class="ident">sc_network::config::Role</span>;
 	<span class="kw">use</span> <span class="ident">sc_network_gossip::Validator</span> <span class="kw">as</span> <span class="ident">GossipValidatorT</span>;
 	<span class="kw">use</span> <span class="ident">sp_core</span>::{<span class="ident">crypto::UncheckedFrom</span>, <span class="ident">H256</span>};
+	<span class="kw">use</span> <span class="ident">std::time::Instant</span>;
 	<span class="kw">use</span> <span class="ident">substrate_test_runtime_client::runtime</span>::{<span class="ident">Block</span>, <span class="ident">Header</span>};
 
 	<span class="comment">// some random config (not really needed)</span>
@@ -4229,7 +4329,12 @@
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">view_vote_rules</span>() {
-		<span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="ident">View</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">100</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">1</span>), <span class="ident">last_commit</span>: <span class="prelude-val">Some</span>(<span class="number">1000u64</span>) };
+		<span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="ident">View</span> {
+			<span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">100</span>),
+			<span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">1</span>),
+			<span class="ident">last_commit</span>: <span class="prelude-val">Some</span>(<span class="number">1000u64</span>),
+			<span class="ident">last_update</span>: <span class="prelude-val">None</span>,
+		};
 
 		<span class="macro">assert_eq!</span>(<span class="ident">view</span>.<span class="ident">consider_vote</span>(<span class="ident">Round</span>(<span class="number">98</span>), <span class="ident">SetId</span>(<span class="number">1</span>)), <span class="ident">Consider::RejectPast</span>);
 		<span class="macro">assert_eq!</span>(<span class="ident">view</span>.<span class="ident">consider_vote</span>(<span class="ident">Round</span>(<span class="number">1</span>), <span class="ident">SetId</span>(<span class="number">0</span>)), <span class="ident">Consider::RejectPast</span>);
@@ -4246,7 +4351,12 @@
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">view_global_message_rules</span>() {
-		<span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="ident">View</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">100</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">2</span>), <span class="ident">last_commit</span>: <span class="prelude-val">Some</span>(<span class="number">1000u64</span>) };
+		<span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="ident">View</span> {
+			<span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">100</span>),
+			<span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">2</span>),
+			<span class="ident">last_commit</span>: <span class="prelude-val">Some</span>(<span class="number">1000u64</span>),
+			<span class="ident">last_update</span>: <span class="prelude-val">None</span>,
+		};
 
 		<span class="macro">assert_eq!</span>(<span class="ident">view</span>.<span class="ident">consider_global</span>(<span class="ident">SetId</span>(<span class="number">3</span>), <span class="number">1</span>), <span class="ident">Consider::RejectFuture</span>);
 		<span class="macro">assert_eq!</span>(<span class="ident">view</span>.<span class="ident">consider_global</span>(<span class="ident">SetId</span>(<span class="number">3</span>), <span class="number">1000</span>), <span class="ident">Consider::RejectFuture</span>);
@@ -4264,7 +4374,7 @@
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">unknown_peer_cannot_be_updated</span>() {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">peers</span> <span class="op">=</span> <span class="ident">Peers::default</span>();
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">peers</span> <span class="op">=</span> <span class="ident">Peers::new</span>(<span class="ident">NEIGHBOR_REBROADCAST_PERIOD</span>);
 		<span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">PeerId::random</span>();
 
 		<span class="kw">let</span> <span class="ident">update</span> <span class="op">=</span>
@@ -4295,27 +4405,35 @@
 		<span class="kw">let</span> <span class="ident">update4</span> <span class="op">=</span>
 			<span class="ident">NeighborPacket</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">3</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">11</span>), <span class="ident">commit_finalized_height</span>: <span class="number">80</span> };
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">peers</span> <span class="op">=</span> <span class="ident">Peers::default</span>();
+		<span class="comment">// Use shorter rebroadcast period to safely roll the clock back in the last test</span>
+		<span class="comment">// and don&#39;t hit the system boot time on systems with unsigned time.</span>
+		<span class="kw">const</span> <span class="ident">SHORT_NEIGHBOR_REBROADCAST_PERIOD</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">1</span>);
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">peers</span> <span class="op">=</span> <span class="ident">Peers::new</span>(<span class="ident">SHORT_NEIGHBOR_REBROADCAST_PERIOD</span>);
 		<span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">PeerId::random</span>();
 
 		<span class="ident">peers</span>.<span class="ident">new_peer</span>(<span class="ident">id</span>, <span class="ident">ObservedRole::Authority</span>);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">check_update</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">|</span><span class="ident">update</span>: <span class="ident">NeighborPacket</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">|</span> {
+		<span class="kw">let</span> <span class="ident">check_update</span> <span class="op">=</span> <span class="op">|</span><span class="ident">peers</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Peers</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="ident">update</span>: <span class="ident">NeighborPacket</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">|</span> {
 			<span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="ident">peers</span>.<span class="ident">update_peer_state</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>, <span class="ident">update</span>.<span class="ident">clone</span>()).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
 			<span class="macro">assert_eq!</span>(<span class="ident">view</span>.<span class="ident">round</span>, <span class="ident">update</span>.<span class="ident">round</span>);
 			<span class="macro">assert_eq!</span>(<span class="ident">view</span>.<span class="ident">set_id</span>, <span class="ident">update</span>.<span class="ident">set_id</span>);
 			<span class="macro">assert_eq!</span>(<span class="ident">view</span>.<span class="ident">last_commit</span>, <span class="prelude-val">Some</span>(<span class="ident">update</span>.<span class="ident">commit_finalized_height</span>));
 		};
 
-		<span class="ident">check_update</span>(<span class="ident">update1</span>);
-		<span class="ident">check_update</span>(<span class="ident">update2</span>);
-		<span class="ident">check_update</span>(<span class="ident">update3</span>);
-		<span class="ident">check_update</span>(<span class="ident">update4</span>);
+		<span class="ident">check_update</span>(<span class="kw-2">&amp;mut</span> <span class="ident">peers</span>, <span class="ident">update1</span>);
+		<span class="ident">check_update</span>(<span class="kw-2">&amp;mut</span> <span class="ident">peers</span>, <span class="ident">update2</span>);
+		<span class="ident">check_update</span>(<span class="kw-2">&amp;mut</span> <span class="ident">peers</span>, <span class="ident">update3</span>);
+		<span class="ident">check_update</span>(<span class="kw-2">&amp;mut</span> <span class="ident">peers</span>, <span class="ident">update4</span>.<span class="ident">clone</span>());
+
+		<span class="comment">// Allow duplicate neighbor packets if enough time has passed.</span>
+		<span class="ident">peers</span>.<span class="ident">inner</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>).<span class="ident">unwrap</span>().<span class="ident">view</span>.<span class="ident">last_update</span> <span class="op">=</span>
+			<span class="prelude-val">Some</span>(<span class="ident">Instant::now</span>() <span class="op">-</span> <span class="ident">SHORT_NEIGHBOR_REBROADCAST_PERIOD</span>);
+		<span class="ident">check_update</span>(<span class="kw-2">&amp;mut</span> <span class="ident">peers</span>, <span class="ident">update4</span>);
 	}
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">invalid_view_change</span>() {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">peers</span> <span class="op">=</span> <span class="ident">Peers::default</span>();
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">peers</span> <span class="op">=</span> <span class="ident">Peers::new</span>(<span class="ident">NEIGHBOR_REBROADCAST_PERIOD</span>);
 
 		<span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">PeerId::random</span>();
 		<span class="ident">peers</span>.<span class="ident">new_peer</span>(<span class="ident">id</span>, <span class="ident">ObservedRole::Authority</span>);
@@ -4328,29 +4446,41 @@
 			.<span class="ident">unwrap</span>()
 			.<span class="ident">unwrap</span>();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">check_update</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">|</span><span class="ident">update</span>: <span class="ident">NeighborPacket</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">|</span> {
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">check_update</span> <span class="op">=</span> <span class="kw">move</span> <span class="op">|</span><span class="ident">update</span>: <span class="ident">NeighborPacket</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="ident">misbehavior</span><span class="op">|</span> {
 			<span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">peers</span>.<span class="ident">update_peer_state</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>, <span class="ident">update</span>.<span class="ident">clone</span>()).<span class="ident">unwrap_err</span>();
-			<span class="macro">assert_eq!</span>(<span class="ident">err</span>, <span class="ident">Misbehavior::InvalidViewChange</span>);
+			<span class="macro">assert_eq!</span>(<span class="ident">err</span>, <span class="ident">misbehavior</span>);
 		};
 
 		<span class="comment">// round moves backwards.</span>
-		<span class="ident">check_update</span>(<span class="ident">NeighborPacket</span> {
-			<span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">9</span>),
-			<span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">10</span>),
-			<span class="ident">commit_finalized_height</span>: <span class="number">10</span>,
-		});
-		<span class="comment">// commit finalized height moves backwards.</span>
-		<span class="ident">check_update</span>(<span class="ident">NeighborPacket</span> {
-			<span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">10</span>),
-			<span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">10</span>),
-			<span class="ident">commit_finalized_height</span>: <span class="number">9</span>,
-		});
+		<span class="ident">check_update</span>(
+			<span class="ident">NeighborPacket</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">9</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">10</span>), <span class="ident">commit_finalized_height</span>: <span class="number">10</span> },
+			<span class="ident">Misbehavior::InvalidViewChange</span>,
+		);
 		<span class="comment">// set ID moves backwards.</span>
-		<span class="ident">check_update</span>(<span class="ident">NeighborPacket</span> {
-			<span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">10</span>),
-			<span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">9</span>),
-			<span class="ident">commit_finalized_height</span>: <span class="number">10</span>,
-		});
+		<span class="ident">check_update</span>(
+			<span class="ident">NeighborPacket</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">10</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">9</span>), <span class="ident">commit_finalized_height</span>: <span class="number">10</span> },
+			<span class="ident">Misbehavior::InvalidViewChange</span>,
+		);
+		<span class="comment">// commit finalized height moves backwards.</span>
+		<span class="ident">check_update</span>(
+			<span class="ident">NeighborPacket</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">10</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">10</span>), <span class="ident">commit_finalized_height</span>: <span class="number">9</span> },
+			<span class="ident">Misbehavior::InvalidViewChange</span>,
+		);
+		<span class="comment">// duplicate packet without grace period.</span>
+		<span class="ident">check_update</span>(
+			<span class="ident">NeighborPacket</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">10</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">10</span>), <span class="ident">commit_finalized_height</span>: <span class="number">10</span> },
+			<span class="ident">Misbehavior::DuplicateNeighborMessage</span>,
+		);
+		<span class="comment">// commit finalized height moves backwards while round moves forward.</span>
+		<span class="ident">check_update</span>(
+			<span class="ident">NeighborPacket</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">11</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">10</span>), <span class="ident">commit_finalized_height</span>: <span class="number">9</span> },
+			<span class="ident">Misbehavior::InvalidViewChange</span>,
+		);
+		<span class="comment">// commit finalized height moves backwards while set ID moves forward.</span>
+		<span class="ident">check_update</span>(
+			<span class="ident">NeighborPacket</span> { <span class="ident">round</span>: <span class="ident">Round</span>(<span class="number">10</span>), <span class="ident">set_id</span>: <span class="ident">SetId</span>(<span class="number">11</span>), <span class="ident">commit_finalized_height</span>: <span class="number">9</span> },
+			<span class="ident">Misbehavior::InvalidViewChange</span>,
+		);
 	}
 
 	<span class="attribute">#[<span class="ident">test</span>]</span>
