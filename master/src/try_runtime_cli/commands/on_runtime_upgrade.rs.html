@@ -96,6 +96,8 @@
 <span id="90">90</span>
 <span id="91">91</span>
 <span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -119,6 +121,7 @@
 <span class="kw">use</span> <span class="ident">sc_executor::NativeExecutionDispatch</span>;
 <span class="kw">use</span> <span class="ident">sc_service::Configuration</span>;
 <span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">NumberFor</span>};
+<span class="kw">use</span> <span class="ident">sp_weights::Weight</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
 	<span class="ident">build_executor</span>, <span class="ident">ensure_matching_spec</span>, <span class="ident">extract_code</span>, <span class="ident">local_spec</span>, <span class="ident">state_machine_call_with_proof</span>,
@@ -176,14 +179,15 @@
 		<span class="ident">Default::default</span>(), <span class="comment">// we don&#39;t really need any extensions here.</span>
 	)<span class="question-mark">?</span>;
 
-	<span class="kw">let</span> (<span class="ident">weight</span>, <span class="ident">total_weight</span>) <span class="op">=</span> <span class="op">&lt;</span>(<span class="ident">u64</span>, <span class="ident">u64</span>) <span class="kw">as</span> <span class="ident">Decode</span><span class="op">&gt;</span><span class="ident">::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded_result</span>)
-		.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;failed to decode output: {:?}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
+	<span class="kw">let</span> (<span class="ident">weight</span>, <span class="ident">total_weight</span>) <span class="op">=</span> <span class="op">&lt;</span>(<span class="ident">Weight</span>, <span class="ident">Weight</span>) <span class="kw">as</span> <span class="ident">Decode</span><span class="op">&gt;</span><span class="ident">::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded_result</span>)
+		.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;failed to decode weight: {:?}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
 	<span class="macro">log::info!</span>(
 		<span class="ident">target</span>: <span class="ident">LOG_TARGET</span>,
-		<span class="string">&quot;TryRuntime_on_runtime_upgrade executed without errors. Consumed weight = {}, total weight = {} ({})&quot;</span>,
-		<span class="ident">weight</span>,
-		<span class="ident">total_weight</span>,
-		<span class="ident">weight</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">total_weight</span>.<span class="ident">max</span>(<span class="number">1</span>) <span class="kw">as</span> <span class="ident">f64</span>
+		<span class="string">&quot;TryRuntime_on_runtime_upgrade executed without errors. Consumed weight = ({} ps, {} byte), total weight = ({} ps, {} byte) ({:.2} %, {:.2} %).&quot;</span>,
+		<span class="ident">weight</span>.<span class="ident">ref_time</span>(), <span class="ident">weight</span>.<span class="ident">proof_size</span>(),
+		<span class="ident">total_weight</span>.<span class="ident">ref_time</span>(), <span class="ident">total_weight</span>.<span class="ident">proof_size</span>(),
+		(<span class="ident">weight</span>.<span class="ident">ref_time</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">total_weight</span>.<span class="ident">ref_time</span>().<span class="ident">max</span>(<span class="number">1</span>) <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">*</span> <span class="number">100.0</span>,
+		(<span class="ident">weight</span>.<span class="ident">proof_size</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">total_weight</span>.<span class="ident">proof_size</span>().<span class="ident">max</span>(<span class="number">1</span>) <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">*</span> <span class="number">100.0</span>,
 	);
 
 	<span class="prelude-val">Ok</span>(())
