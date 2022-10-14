@@ -371,8 +371,8 @@
 	<span class="doccomment">/// Convert an arbitrary block ID into a block hash. Returns `UnknownBlock` error if block is</span>
 	<span class="doccomment">/// not found.</span>
 	<span class="kw">fn</span> <span class="ident">expect_block_hash_from_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Block::Hash</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">block_hash_from_id</span>(<span class="ident">id</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> {
-			<span class="ident">n</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error::UnknownBlock</span>(<span class="macro">format!</span>(<span class="string">&quot;Expect block hash from id: {}&quot;</span>, <span class="ident">id</span>)))
+		<span class="self">self</span>.<span class="ident">block_hash_from_id</span>(<span class="ident">id</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> {
+			<span class="ident">h</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error::UnknownBlock</span>(<span class="macro">format!</span>(<span class="string">&quot;Expect block hash from id: {}&quot;</span>, <span class="ident">id</span>)))
 		})
 	}
 }
