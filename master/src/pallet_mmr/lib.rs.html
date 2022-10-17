@@ -428,6 +428,43 @@
 <span id="422">422</span>
 <span id="423">423</span>
 <span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -487,9 +524,9 @@
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
 
 <span class="kw">use</span> <span class="ident">codec::Encode</span>;
-<span class="kw">use</span> <span class="ident">frame_support::weights::Weight</span>;
+<span class="kw">use</span> <span class="ident">frame_support</span>::{<span class="ident">log</span>, <span class="ident">traits::Get</span>, <span class="ident">weights::Weight</span>};
 <span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">traits</span>::{<span class="self">self</span>, <span class="ident">CheckedSub</span>, <span class="ident">One</span>, <span class="ident">Saturating</span>},
+	<span class="ident">traits</span>::{<span class="self">self</span>, <span class="ident">CheckedSub</span>, <span class="ident">One</span>, <span class="ident">Saturating</span>, <span class="ident">UniqueSaturatedInto</span>},
 	<span class="ident">SaturatedConversion</span>,
 };
 
@@ -532,6 +569,15 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">WeightInfo</span> {
 	<span class="kw">fn</span> <span class="ident">on_initialize</span>(<span class="ident">peaks</span>: <span class="ident">NodeIndex</span>) -&gt; <span class="ident">Weight</span>;
 }
+
+<span class="doccomment">/// A MMR specific to the pallet.</span>
+<span class="kw">type</span> <span class="ident">ModuleMmr</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">mmr::Mmr</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">LeafOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+
+<span class="doccomment">/// Leaf data.</span>
+<span class="kw">type</span> <span class="ident">LeafOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::LeafData</span> <span class="kw">as</span> <span class="ident">primitives::LeafDataProvider</span><span class="op">&gt;</span><span class="ident">::LeafData</span>;
+
+<span class="doccomment">/// Hashing used for the pallet.</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">HashingOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Hashing</span>;
 
 <span class="attribute">#[<span class="ident">frame_support::pallet</span>]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pallet</span> {
@@ -596,7 +642,7 @@
 		<span class="doccomment">/// Note that the leaf at each block MUST be unique. You may want to include a block hash or</span>
 		<span class="doccomment">/// block number as an easiest way to ensure that.</span>
 		<span class="doccomment">/// Also note that the leaf added by each block is expected to only reference data coming</span>
-		<span class="doccomment">/// from ancestor blocks (leaves are saved offchain using `(parent_hash, pos)` key to be</span>
+		<span class="doccomment">/// from ancestor blocks (leaves are saved offchain using `(pos, parent_hash)` key to be</span>
 		<span class="doccomment">/// fork-resistant, as such conflicts could only happen on 1-block deep forks, which means</span>
 		<span class="doccomment">/// two forks with identical line of ancestors compete to write the same offchain key, but</span>
 		<span class="doccomment">/// that&#39;s fine as long as leaves only contain data coming from ancestors - conflicting</span>
@@ -642,12 +688,22 @@
 			<span class="kw">let</span> <span class="ident">leaves</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::mmr_leaves</span>();
 			<span class="kw">let</span> <span class="ident">peaks_before</span> <span class="op">=</span> <span class="ident">mmr::utils::NodesUtils::new</span>(<span class="ident">leaves</span>).<span class="ident">number_of_peaks</span>();
 			<span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">T::LeafData::leaf_data</span>();
+
 			<span class="comment">// append new leaf to MMR</span>
 			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mmr</span>: <span class="ident">ModuleMmr</span><span class="op">&lt;</span><span class="ident">mmr::storage::RuntimeStorage</span>, <span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">mmr::Mmr::new</span>(<span class="ident">leaves</span>);
-			<span class="ident">mmr</span>.<span class="ident">push</span>(<span class="ident">data</span>).<span class="ident">expect</span>(<span class="string">&quot;MMR push never fails.&quot;</span>);
-
-			<span class="comment">// update the size</span>
-			<span class="kw">let</span> (<span class="ident">leaves</span>, <span class="ident">root</span>) <span class="op">=</span> <span class="ident">mmr</span>.<span class="ident">finalize</span>().<span class="ident">expect</span>(<span class="string">&quot;MMR finalize never fails.&quot;</span>);
+			<span class="comment">// MMR push never fails, but better safe than sorry.</span>
+			<span class="kw">if</span> <span class="ident">mmr</span>.<span class="ident">push</span>(<span class="ident">data</span>).<span class="ident">is_none</span>() {
+				<span class="macro">log::error!</span>(<span class="ident">target</span>: <span class="string">&quot;runtime::mmr&quot;</span>, <span class="string">&quot;MMR push failed&quot;</span>);
+				<span class="kw">return</span> <span class="ident">T::WeightInfo::on_initialize</span>(<span class="ident">peaks_before</span>)
+			}
+			<span class="comment">// Update the size, `mmr.finalize()` should also never fail.</span>
+			<span class="kw">let</span> (<span class="ident">leaves</span>, <span class="ident">root</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">mmr</span>.<span class="ident">finalize</span>() {
+				<span class="prelude-val">Ok</span>((<span class="ident">leaves</span>, <span class="ident">root</span>)) =&gt; (<span class="ident">leaves</span>, <span class="ident">root</span>),
+				<span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; {
+					<span class="macro">log::error!</span>(<span class="ident">target</span>: <span class="string">&quot;runtime::mmr&quot;</span>, <span class="string">&quot;MMR finalize failed: {:?}&quot;</span>, <span class="ident">e</span>);
+					<span class="kw">return</span> <span class="ident">T::WeightInfo::on_initialize</span>(<span class="ident">peaks_before</span>)
+				},
+			};
 			<span class="op">&lt;</span><span class="ident">T::OnNewRoot</span> <span class="kw">as</span> <span class="ident">primitives::OnNewRoot</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::on_new_root</span>(<span class="kw-2">&amp;</span><span class="ident">root</span>);
 
 			<span class="op">&lt;</span><span class="ident">NumberOfLeaves</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">leaves</span>);
@@ -660,36 +716,41 @@
 
 		<span class="kw">fn</span> <span class="ident">offchain_worker</span>(<span class="ident">n</span>: <span class="ident">T::BlockNumber</span>) {
 			<span class="kw">use</span> <span class="ident">mmr::storage</span>::{<span class="ident">OffchainStorage</span>, <span class="ident">Storage</span>};
-			<span class="comment">// MMR pallet uses offchain storage to hold full MMR and leaves.</span>
-			<span class="comment">// The leaves are saved under fork-unique keys `(parent_hash, pos)`.</span>
-			<span class="comment">// MMR Runtime depends on `frame_system::block_hash(block_num)` mappings to find</span>
-			<span class="comment">// parent hashes for particular nodes or leaves.</span>
-			<span class="comment">// This MMR offchain worker function moves a rolling window of the same size</span>
-			<span class="comment">// as `frame_system::block_hash` map, where nodes/leaves added by blocks that are just</span>
+			<span class="comment">// The MMR nodes can be found in offchain db under either:</span>
+			<span class="comment">//   - fork-unique keys `(prefix, pos, parent_hash)`, or,</span>
+			<span class="comment">//   - &quot;canonical&quot; keys `(prefix, pos)`,</span>
+			<span class="comment">//   depending on how many blocks in the past the node at position `pos` was</span>
+			<span class="comment">//   added to the MMR.</span>
+			<span class="comment">//</span>
+			<span class="comment">// For the fork-unique keys, the MMR pallet depends on</span>
+			<span class="comment">// `frame_system::block_hash(parent_num)` mappings to find the relevant parent block</span>
+			<span class="comment">// hashes, so it is limited by `frame_system::BlockHashCount` in terms of how many</span>
+			<span class="comment">// historical forks it can track. Nodes added to MMR by block `N` can be found in</span>
+			<span class="comment">// offchain db at:</span>
+			<span class="comment">//   - fork-unique keys `(prefix, pos, parent_hash)` when (`N` &gt;= `latest_block` -</span>
+			<span class="comment">//     `frame_system::BlockHashCount`);</span>
+			<span class="comment">//   - &quot;canonical&quot; keys `(prefix, pos)` when (`N` &lt; `latest_block` -</span>
+			<span class="comment">//     `frame_system::BlockHashCount`);</span>
+			<span class="comment">//</span>
+			<span class="comment">// The offchain worker is responsible for maintaining the nodes&#39; positions in</span>
+			<span class="comment">// offchain db as the chain progresses by moving a rolling window of the same size as</span>
+			<span class="comment">// `frame_system::block_hash` map, where nodes/leaves added by blocks that are just</span>
 			<span class="comment">// about to exit the window are &quot;canonicalized&quot; so that their offchain key no longer</span>
-			<span class="comment">// depends on `parent_hash` therefore on access to `frame_system::block_hash`.</span>
+			<span class="comment">// depends on `parent_hash`.</span>
 			<span class="comment">//</span>
 			<span class="comment">// This approach works to eliminate fork-induced leaf collisions in offchain db,</span>
 			<span class="comment">// under the assumption that no fork will be deeper than `frame_system::BlockHashCount`</span>
-			<span class="comment">// blocks (2400 blocks on Polkadot, Kusama, Rococo, etc):</span>
-			<span class="comment">//   entries pertaining to block `N` where `N &lt; current-2400` are moved to a key based</span>
-			<span class="comment">//   solely on block number. The only way to have collisions is if two competing forks</span>
-			<span class="comment">//   are deeper than 2400 blocks and they both &quot;canonicalize&quot; their view of block `N`.</span>
+			<span class="comment">// blocks:</span>
+			<span class="comment">//   entries pertaining to block `N` where `N &lt; current-BlockHashCount` are moved to a</span>
+			<span class="comment">//   key based solely on block number. The only way to have collisions is if two</span>
+			<span class="comment">//   competing forks are deeper than `frame_system::BlockHashCount` blocks and they</span>
+			<span class="comment">//   both &quot;canonicalize&quot; their view of block `N`</span>
 			<span class="comment">// Once a block is canonicalized, all MMR entries pertaining to sibling blocks from</span>
 			<span class="comment">// other forks are pruned from offchain db.</span>
 			<span class="ident">Storage</span>::<span class="op">&lt;</span><span class="ident">OffchainStorage</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">LeafOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::canonicalize_and_prune</span>(<span class="ident">n</span>);
 		}
 	}
 }
-
-<span class="doccomment">/// A MMR specific to the pallet.</span>
-<span class="kw">type</span> <span class="ident">ModuleMmr</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">mmr::Mmr</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">LeafOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>;
-
-<span class="doccomment">/// Leaf data.</span>
-<span class="kw">type</span> <span class="ident">LeafOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::LeafData</span> <span class="kw">as</span> <span class="ident">primitives::LeafDataProvider</span><span class="op">&gt;</span><span class="ident">::LeafData</span>;
-
-<span class="doccomment">/// Hashing used for the pallet.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">HashingOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Hashing</span>;
 
 <span class="doccomment">/// Stateless MMR proof verification for batch of leaves.</span>
 <span class="doccomment">///</span>
@@ -720,17 +781,30 @@
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// This combination makes the offchain (key,value) entry resilient to chain forks.</span>
 	<span class="kw">fn</span> <span class="ident">node_offchain_key</span>(
-		<span class="ident">parent_hash</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span>,
 		<span class="ident">pos</span>: <span class="ident">NodeIndex</span>,
+		<span class="ident">parent_hash</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span>,
 	) -&gt; <span class="ident">sp_std::prelude::Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-		(<span class="ident">T::INDEXING_PREFIX</span>, <span class="ident">parent_hash</span>, <span class="ident">pos</span>).<span class="ident">encode</span>()
+		(<span class="ident">T::INDEXING_PREFIX</span>, <span class="ident">pos</span>, <span class="ident">parent_hash</span>).<span class="ident">encode</span>()
 	}
 
 	<span class="doccomment">/// Build canonical offchain key for node `pos` in MMR.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// Used for nodes added by now finalized blocks.</span>
+	<span class="doccomment">/// Never read keys using `node_canon_offchain_key` unless you sure that</span>
+	<span class="doccomment">/// there&#39;s no `node_offchain_key` key in the storage.</span>
 	<span class="kw">fn</span> <span class="ident">node_canon_offchain_key</span>(<span class="ident">pos</span>: <span class="ident">NodeIndex</span>) -&gt; <span class="ident">sp_std::prelude::Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
 		(<span class="ident">T::INDEXING_PREFIX</span>, <span class="ident">pos</span>).<span class="ident">encode</span>()
+	}
+
+	<span class="doccomment">/// Return size of rolling window of leaves saved in offchain under fork-unique keys.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Leaves outside this window are canonicalized.</span>
+	<span class="doccomment">/// Window size is `frame_system::BlockHashCount - 1` to make sure fork-unique keys</span>
+	<span class="doccomment">/// can be built using `frame_system::block_hash` map.</span>
+	<span class="kw">fn</span> <span class="ident">offchain_canonicalization_window</span>() -&gt; <span class="ident">LeafIndex</span> {
+		<span class="kw">let</span> <span class="ident">window_size</span>: <span class="ident">LeafIndex</span> <span class="op">=</span>
+			<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockHashCount::get</span>().<span class="ident">unique_saturated_into</span>();
+		<span class="ident">window_size</span>.<span class="ident">saturating_sub</span>(<span class="number">1</span>)
 	}
 
 	<span class="doccomment">/// Provide the parent number for the block that added `leaf_index` to the MMR.</span>
