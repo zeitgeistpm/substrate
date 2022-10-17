@@ -299,6 +299,18 @@
 <span id="293">293</span>
 <span id="294">294</span>
 <span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -580,6 +592,7 @@
 	<span class="ident">DecodingError</span>, <span class="ident">Keypair</span>, <span class="ident">NetworkService</span>, <span class="ident">NetworkWorker</span>, <span class="ident">NotificationSender</span>,
 	<span class="ident">NotificationSenderReady</span>, <span class="ident">OutboundFailure</span>, <span class="ident">PublicKey</span>,
 };
+<span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">NumberFor</span>};
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sc_peerset::ReputationChange</span>;
 
@@ -594,6 +607,17 @@
 
 <span class="doccomment">/// The maximum number of concurrent established connections that were incoming.</span>
 <span class="kw">const</span> <span class="ident">MAX_CONNECTIONS_ESTABLISHED_INCOMING</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">10_000</span>;
+
+<span class="doccomment">/// Abstraction over syncing-related services</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ChainSyncInterface</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span>:
+	<span class="ident">NetworkSyncForkRequest</span><span class="op">&lt;</span><span class="ident">B::Hash</span>, <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>
+{
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">ChainSyncInterface</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span> <span class="kw">where</span>
+	<span class="ident">T</span>: <span class="ident">NetworkSyncForkRequest</span><span class="op">&lt;</span><span class="ident">B::Hash</span>, <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>
+{
+}
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_network" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
 </body></html>

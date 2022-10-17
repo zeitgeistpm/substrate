@@ -402,6 +402,16 @@
 <span id="396">396</span>
 <span id="397">397</span>
 <span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -799,6 +809,16 @@
 
 	<span class="doccomment">/// Decode implementation-specific state response.</span>
 	<span class="kw">fn</span> <span class="ident">decode_state_response</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OpaqueStateResponse</span>, <span class="ident">String</span><span class="op">&gt;</span>;
+
+	<span class="doccomment">/// Advance the state of `ChainSync`</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Internally calls [`ChainSync::poll_block_announce_validation()`] and</span>
+	<span class="doccomment">/// this function should be polled until it returns [`Poll::Pending`] to</span>
+	<span class="doccomment">/// consume all pending events.</span>
+	<span class="kw">fn</span> <span class="ident">poll</span>(
+		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+		<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::task::Context</span>,
+	) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">PollBlockAnnounceValidation</span><span class="op">&lt;</span><span class="ident">Block::Header</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_network_common" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>

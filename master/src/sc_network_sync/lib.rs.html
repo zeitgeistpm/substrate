@@ -3475,6 +3475,31 @@
 <span id="3469">3469</span>
 <span id="3470">3470</span>
 <span id="3471">3471</span>
+<span id="3472">3472</span>
+<span id="3473">3473</span>
+<span id="3474">3474</span>
+<span id="3475">3475</span>
+<span id="3476">3476</span>
+<span id="3477">3477</span>
+<span id="3478">3478</span>
+<span id="3479">3479</span>
+<span id="3480">3480</span>
+<span id="3481">3481</span>
+<span id="3482">3482</span>
+<span id="3483">3483</span>
+<span id="3484">3484</span>
+<span id="3485">3485</span>
+<span id="3486">3486</span>
+<span id="3487">3487</span>
+<span id="3488">3488</span>
+<span id="3489">3489</span>
+<span id="3490">3490</span>
+<span id="3491">3491</span>
+<span id="3492">3492</span>
+<span id="3493">3493</span>
+<span id="3494">3494</span>
+<span id="3495">3495</span>
+<span id="3496">3496</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -3509,14 +3534,18 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">blocks</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">mock</span>;
 <span class="kw">mod</span> <span class="ident">schema</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">service</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">state</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">state_request_handler</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">tests</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">warp</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">warp_request_handler</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
 	<span class="ident">blocks::BlockCollection</span>,
 	<span class="ident">schema::v1</span>::{<span class="ident">StateRequest</span>, <span class="ident">StateResponse</span>},
+	<span class="ident">service::chain_sync</span>::{<span class="ident">ChainSyncInterfaceHandle</span>, <span class="ident">ToServiceCommand</span>},
 	<span class="ident">state::StateSync</span>,
 	<span class="ident">warp</span>::{<span class="ident">WarpProofImportResult</span>, <span class="ident">WarpSync</span>},
 };
@@ -3544,6 +3573,7 @@
 		<span class="ident">PollBlockAnnounceValidation</span>, <span class="ident">SyncMode</span>, <span class="ident">SyncState</span>, <span class="ident">SyncStatus</span>,
 	},
 };
+<span class="kw">use</span> <span class="ident">sc_utils::mpsc</span>::{<span class="ident">tracing_unbounded</span>, <span class="ident">TracingUnboundedReceiver</span>};
 <span class="kw">use</span> <span class="ident">sp_arithmetic::traits::Saturating</span>;
 <span class="kw">use</span> <span class="ident">sp_blockchain</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">ClientError</span>, <span class="ident">HeaderBackend</span>, <span class="ident">HeaderMetadata</span>};
 <span class="kw">use</span> <span class="ident">sp_consensus</span>::{
@@ -3741,6 +3771,8 @@
 	<span class="ident">import_existing</span>: <span class="ident">bool</span>,
 	<span class="doccomment">/// Gap download process.</span>
 	<span class="ident">gap_sync</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">GapSync</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Channel for receiving service commands</span>
+	<span class="ident">service_rx</span>: <span class="ident">TracingUnboundedReceiver</span><span class="op">&lt;</span><span class="ident">ToServiceCommand</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="doccomment">/// All the data we have about a Peer that we are trying to sync with</span>
@@ -5202,6 +5234,21 @@
 
 		<span class="prelude-val">Ok</span>(<span class="ident">OpaqueStateResponse</span>(<span class="ident">Box::new</span>(<span class="ident">response</span>)))
 	}
+
+	<span class="kw">fn</span> <span class="ident">poll</span>(
+		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
+		<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::task::Context</span>,
+	) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">PollBlockAnnounceValidation</span><span class="op">&lt;</span><span class="ident">B::Header</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+		<span class="kw">while</span> <span class="kw">let</span> <span class="ident">Poll::Ready</span>(<span class="prelude-val">Some</span>(<span class="ident">event</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">service_rx</span>.<span class="ident">poll_next_unpin</span>(<span class="ident">cx</span>) {
+			<span class="kw">match</span> <span class="ident">event</span> {
+				<span class="ident">ToServiceCommand::SetSyncForkRequest</span>(<span class="ident">peers</span>, <span class="ident">hash</span>, <span class="ident">number</span>) =&gt; {
+					<span class="self">self</span>.<span class="ident">set_sync_fork_request</span>(<span class="ident">peers</span>, <span class="kw-2">&amp;</span><span class="ident">hash</span>, <span class="ident">number</span>);
+				},
+			}
+		}
+
+		<span class="self">self</span>.<span class="ident">poll_block_announce_validation</span>(<span class="ident">cx</span>)
+	}
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span> <span class="ident">ChainSync</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span>
@@ -5223,7 +5270,9 @@
 		<span class="ident">block_announce_validator</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">BlockAnnounceValidator</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>,
 		<span class="ident">max_parallel_downloads</span>: <span class="ident">u32</span>,
 		<span class="ident">warp_sync_provider</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">WarpSyncProvider</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ClientError</span><span class="op">&gt;</span> {
+	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="self">Self</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ChainSyncInterfaceHandle</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>), <span class="ident">ClientError</span><span class="op">&gt;</span> {
+		<span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">service_rx</span>) <span class="op">=</span> <span class="ident">tracing_unbounded</span>(<span class="string">&quot;mpsc_chain_sync&quot;</span>);
+
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sync</span> <span class="op">=</span> <span class="self">Self</span> {
 			<span class="ident">client</span>,
 			<span class="ident">peers</span>: <span class="ident">HashMap::new</span>(),
@@ -5245,9 +5294,10 @@
 			<span class="ident">warp_sync_provider</span>,
 			<span class="ident">import_existing</span>: <span class="bool-val">false</span>,
 			<span class="ident">gap_sync</span>: <span class="prelude-val">None</span>,
+			<span class="ident">service_rx</span>,
 		};
 		<span class="ident">sync</span>.<span class="ident">reset_sync_start_point</span>()<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(<span class="ident">sync</span>)
+		<span class="prelude-val">Ok</span>((<span class="ident">sync</span>, <span class="ident">Box::new</span>(<span class="ident">ChainSyncInterfaceHandle::new</span>(<span class="ident">tx</span>))))
 	}
 
 	<span class="doccomment">/// Returns the best seen block number if we don&#39;t have that block yet, `None` otherwise.</span>
@@ -6141,7 +6191,7 @@
 		<span class="kw">let</span> <span class="ident">block_announce_validator</span> <span class="op">=</span> <span class="ident">Box::new</span>(<span class="ident">DefaultBlockAnnounceValidator</span>);
 		<span class="kw">let</span> <span class="ident">peer_id</span> <span class="op">=</span> <span class="ident">PeerId::random</span>();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sync</span> <span class="op">=</span>
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sync</span>, <span class="kw">_</span>) <span class="op">=</span>
 			<span class="ident">ChainSync::new</span>(<span class="ident">SyncMode::Full</span>, <span class="ident">client</span>.<span class="ident">clone</span>(), <span class="ident">block_announce_validator</span>, <span class="number">1</span>, <span class="prelude-val">None</span>)
 				.<span class="ident">unwrap</span>();
 
@@ -6189,7 +6239,7 @@
 	<span class="attribute">#[<span class="ident">test</span>]</span>
 	<span class="kw">fn</span> <span class="ident">restart_doesnt_affect_peers_downloading_finality_data</span>() {
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">TestClientBuilder::new</span>().<span class="ident">build</span>());
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sync</span> <span class="op">=</span> <span class="ident">ChainSync::new</span>(
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sync</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ChainSync::new</span>(
 			<span class="ident">SyncMode::Full</span>,
 			<span class="ident">client</span>.<span class="ident">clone</span>(),
 			<span class="ident">Box::new</span>(<span class="ident">DefaultBlockAnnounceValidator</span>),
@@ -6356,7 +6406,7 @@
 
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">TestClientBuilder::new</span>().<span class="ident">build</span>());
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sync</span> <span class="op">=</span> <span class="ident">ChainSync::new</span>(
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sync</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ChainSync::new</span>(
 			<span class="ident">SyncMode::Full</span>,
 			<span class="ident">client</span>.<span class="ident">clone</span>(),
 			<span class="ident">Box::new</span>(<span class="ident">DefaultBlockAnnounceValidator</span>),
@@ -6471,7 +6521,7 @@
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">TestClientBuilder::new</span>().<span class="ident">build</span>());
 		<span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">info</span>();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sync</span> <span class="op">=</span> <span class="ident">ChainSync::new</span>(
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sync</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ChainSync::new</span>(
 			<span class="ident">SyncMode::Full</span>,
 			<span class="ident">client</span>.<span class="ident">clone</span>(),
 			<span class="ident">Box::new</span>(<span class="ident">DefaultBlockAnnounceValidator</span>),
@@ -6614,7 +6664,7 @@
 
 		<span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">info</span>();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sync</span> <span class="op">=</span> <span class="ident">ChainSync::new</span>(
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sync</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ChainSync::new</span>(
 			<span class="ident">SyncMode::Full</span>,
 			<span class="ident">client</span>.<span class="ident">clone</span>(),
 			<span class="ident">Box::new</span>(<span class="ident">DefaultBlockAnnounceValidator</span>),
@@ -6745,7 +6795,7 @@
 
 		<span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">info</span>();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sync</span> <span class="op">=</span> <span class="ident">ChainSync::new</span>(
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sync</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ChainSync::new</span>(
 			<span class="ident">SyncMode::Full</span>,
 			<span class="ident">client</span>.<span class="ident">clone</span>(),
 			<span class="ident">Box::new</span>(<span class="ident">DefaultBlockAnnounceValidator</span>),
@@ -6876,7 +6926,7 @@
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">TestClientBuilder::new</span>().<span class="ident">build</span>());
 		<span class="kw">let</span> <span class="ident">blocks</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">3</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">build_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">client</span>, <span class="prelude-val">None</span>, <span class="bool-val">false</span>)).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sync</span> <span class="op">=</span> <span class="ident">ChainSync::new</span>(
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sync</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ChainSync::new</span>(
 			<span class="ident">SyncMode::Full</span>,
 			<span class="ident">client</span>.<span class="ident">clone</span>(),
 			<span class="ident">Box::new</span>(<span class="ident">DefaultBlockAnnounceValidator</span>),
@@ -6909,7 +6959,7 @@
 
 		<span class="kw">let</span> <span class="ident">empty_client</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">TestClientBuilder::new</span>().<span class="ident">build</span>());
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sync</span> <span class="op">=</span> <span class="ident">ChainSync::new</span>(
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sync</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">ChainSync::new</span>(
 			<span class="ident">SyncMode::Full</span>,
 			<span class="ident">empty_client</span>.<span class="ident">clone</span>(),
 			<span class="ident">Box::new</span>(<span class="ident">DefaultBlockAnnounceValidator</span>),

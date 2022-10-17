@@ -1713,15 +1713,6 @@
 <span id="1707">1707</span>
 <span id="1708">1708</span>
 <span id="1709">1709</span>
-<span id="1710">1710</span>
-<span id="1711">1711</span>
-<span id="1712">1712</span>
-<span id="1713">1713</span>
-<span id="1714">1714</span>
-<span id="1715">1715</span>
-<span id="1716">1716</span>
-<span id="1717">1717</span>
-<span id="1718">1718</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -2671,18 +2662,6 @@
 		<span class="self">self</span>.<span class="ident">chain_sync</span>.<span class="ident">clear_justification_requests</span>();
 	}
 
-	<span class="doccomment">/// Request syncing for the given block from given set of peers.</span>
-	<span class="doccomment">/// Uses `protocol` to queue a new block download request and tries to dispatch all pending</span>
-	<span class="doccomment">/// requests.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_sync_fork_request</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">peers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>,
-		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">B::Hash</span>,
-		<span class="ident">number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	) {
-		<span class="self">self</span>.<span class="ident">chain_sync</span>.<span class="ident">set_sync_fork_request</span>(<span class="ident">peers</span>, <span class="ident">hash</span>, <span class="ident">number</span>)
-	}
-
 	<span class="doccomment">/// A batch of blocks have been processed, with or without errors.</span>
 	<span class="doccomment">/// Call this when a batch of blocks have been processed by the importqueue, with or without</span>
 	<span class="doccomment">/// errors.</span>
@@ -3185,8 +3164,11 @@
 			<span class="self">self</span>.<span class="ident">pending_messages</span>.<span class="ident">push_back</span>(<span class="ident">event</span>);
 		}
 
-		<span class="comment">// Check if there is any block announcement validation finished.</span>
-		<span class="kw">while</span> <span class="kw">let</span> <span class="ident">Poll::Ready</span>(<span class="ident">result</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">chain_sync</span>.<span class="ident">poll_block_announce_validation</span>(<span class="ident">cx</span>) {
+		<span class="comment">// Advance the state of `ChainSync`</span>
+		<span class="comment">//</span>
+		<span class="comment">// Process any received requests received from `NetworkService` and</span>
+		<span class="comment">// check if there is any block announcement validation finished.</span>
+		<span class="kw">while</span> <span class="kw">let</span> <span class="ident">Poll::Ready</span>(<span class="ident">result</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">chain_sync</span>.<span class="ident">poll</span>(<span class="ident">cx</span>) {
 			<span class="kw">match</span> <span class="self">self</span>.<span class="ident">process_block_announce_validation_result</span>(<span class="ident">result</span>) {
 				<span class="ident">CustomMessageOutcome::None</span> =&gt; {},
 				<span class="ident">outcome</span> =&gt; <span class="self">self</span>.<span class="ident">pending_messages</span>.<span class="ident">push_back</span>(<span class="ident">outcome</span>),
