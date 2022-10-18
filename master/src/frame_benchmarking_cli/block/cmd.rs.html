@@ -119,6 +119,8 @@
 <span id="113">113</span>
 <span id="114">114</span>
 <span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
@@ -143,6 +145,7 @@
 <span class="kw">use</span> <span class="ident">sc_cli</span>::{<span class="ident">CliConfiguration</span>, <span class="ident">ImportParams</span>, <span class="prelude-ty">Result</span>, <span class="ident">SharedParams</span>};
 <span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">Backend</span> <span class="kw">as</span> <span class="ident">ClientBackend</span>, <span class="ident">BlockBackend</span>, <span class="ident">StorageProvider</span>, <span class="ident">UsageProvider</span>};
 <span class="kw">use</span> <span class="ident">sp_api</span>::{<span class="ident">ApiExt</span>, <span class="ident">ProvideRuntimeApi</span>};
+<span class="kw">use</span> <span class="ident">sp_blockchain::HeaderBackend</span>;
 <span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">traits::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">OpaqueExtrinsic</span>};
 
 <span class="kw">use</span> <span class="ident">clap::Parser</span>;
@@ -208,7 +211,8 @@
 			<span class="op">+</span> <span class="ident">BlockBackend</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
 			<span class="op">+</span> <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
 			<span class="op">+</span> <span class="ident">StorageProvider</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">BA</span><span class="op">&gt;</span>
-			<span class="op">+</span> <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+			<span class="op">+</span> <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
+			<span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
 		<span class="ident">C::Api</span>: <span class="ident">ApiExt</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">StateBackend</span> <span class="op">=</span> <span class="ident">BA::State</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">BlockBuilderApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
 	{
 		<span class="comment">// Put everything in the benchmark type to have the generic types handy.</span>

@@ -69,11 +69,6 @@
 <span id="63">63</span>
 <span id="64">64</span>
 <span id="65">65</span>
-<span id="66">66</span>
-<span id="67">67</span>
-<span id="68">68</span>
-<span id="69">69</span>
-<span id="70">70</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -95,25 +90,20 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error::Error</span>;
 <span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">StorageProvider</span>, <span class="ident">UsageProvider</span>};
 <span class="kw">use</span> <span class="ident">sp_core::storage</span>::{<span class="ident">well_known_keys</span>, <span class="ident">ChildInfo</span>, <span class="ident">Storage</span>, <span class="ident">StorageChild</span>, <span class="ident">StorageKey</span>, <span class="ident">StorageMap</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">generic::BlockId</span>, <span class="ident">traits::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>};
+<span class="kw">use</span> <span class="ident">sp_runtime::traits::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashMap</span>, <span class="ident">sync::Arc</span>};
 
 <span class="doccomment">/// Export the raw state at the given `block`. If `block` is `None`, the</span>
 <span class="doccomment">/// best block will be used.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">export_raw_state</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BA</span>, <span class="ident">C</span><span class="op">&gt;</span>(
-	<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-	<span class="ident">block</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Storage</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">export_raw_state</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BA</span>, <span class="ident">C</span><span class="op">&gt;</span>(<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>, <span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">B::Hash</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Storage</span>, <span class="ident">Error</span><span class="op">&gt;</span>
 <span class="kw">where</span>
 	<span class="ident">C</span>: <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">StorageProvider</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">BA</span><span class="op">&gt;</span>,
 	<span class="ident">B</span>: <span class="ident">BlockT</span>,
 	<span class="ident">BA</span>: <span class="ident">sc_client_api::backend::Backend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 {
-	<span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="ident">block</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">BlockId::Hash</span>(<span class="ident">client</span>.<span class="ident">usage_info</span>().<span class="ident">chain</span>.<span class="ident">best_hash</span>));
-
 	<span class="kw">let</span> <span class="ident">empty_key</span> <span class="op">=</span> <span class="ident">StorageKey</span>(<span class="ident">Vec::new</span>());
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">top_storage</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">storage_pairs</span>(<span class="kw-2">&amp;</span><span class="ident">block</span>, <span class="kw-2">&amp;</span><span class="ident">empty_key</span>)<span class="question-mark">?</span>;
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">top_storage</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">storage_pairs</span>(<span class="ident">hash</span>, <span class="kw-2">&amp;</span><span class="ident">empty_key</span>)<span class="question-mark">?</span>;
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">children_default</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
 
 	<span class="comment">// Remove all default child storage roots from the top storage and collect the child storage</span>
@@ -128,10 +118,10 @@
 			<span class="ident">StorageKey</span>(<span class="ident">key</span>.<span class="number">0</span>[<span class="ident">well_known_keys::DEFAULT_CHILD_STORAGE_KEY_PREFIX</span>.<span class="ident">len</span>()..].<span class="ident">to_vec</span>());
 		<span class="kw">let</span> <span class="ident">child_info</span> <span class="op">=</span> <span class="ident">ChildInfo::new_default</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>.<span class="number">0</span>);
 
-		<span class="kw">let</span> <span class="ident">keys</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">child_storage_keys</span>(<span class="kw-2">&amp;</span><span class="ident">block</span>, <span class="kw-2">&amp;</span><span class="ident">child_info</span>, <span class="kw-2">&amp;</span><span class="ident">empty_key</span>)<span class="question-mark">?</span>;
+		<span class="kw">let</span> <span class="ident">keys</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">child_storage_keys</span>(<span class="ident">hash</span>, <span class="kw-2">&amp;</span><span class="ident">child_info</span>, <span class="kw-2">&amp;</span><span class="ident">empty_key</span>)<span class="question-mark">?</span>;
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pairs</span> <span class="op">=</span> <span class="ident">StorageMap::new</span>();
 		<span class="ident">keys</span>.<span class="ident">into_iter</span>().<span class="ident">try_for_each</span>(<span class="op">|</span><span class="ident">k</span><span class="op">|</span> {
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">client</span>.<span class="ident">child_storage</span>(<span class="kw-2">&amp;</span><span class="ident">block</span>, <span class="kw-2">&amp;</span><span class="ident">child_info</span>, <span class="kw-2">&amp;</span><span class="ident">k</span>)<span class="question-mark">?</span> {
+			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>) <span class="op">=</span> <span class="ident">client</span>.<span class="ident">child_storage</span>(<span class="ident">hash</span>, <span class="kw-2">&amp;</span><span class="ident">child_info</span>, <span class="kw-2">&amp;</span><span class="ident">k</span>)<span class="question-mark">?</span> {
 				<span class="ident">pairs</span>.<span class="ident">insert</span>(<span class="ident">k</span>.<span class="number">0</span>, <span class="ident">value</span>.<span class="number">0</span>);
 			}
 

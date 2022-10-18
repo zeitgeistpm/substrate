@@ -925,77 +925,77 @@
 
 <span class="doccomment">/// Provides acess to storage primitives</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">StorageProvider</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Given a `BlockId` and a key, return the value under the key in that block.</span>
+	<span class="doccomment">/// Given a block&#39;s `Hash` and a key, return the value under the key in that block.</span>
 	<span class="kw">fn</span> <span class="ident">storage</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
 		<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">StorageKey</span>,
 	) -&gt; <span class="ident">sp_blockchain::Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StorageData</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-	<span class="doccomment">/// Given a `BlockId` and a key prefix, return the matching storage keys in that block.</span>
+	<span class="doccomment">/// Given a block&#39;s `Hash` and a key prefix, return the matching storage keys in that block.</span>
 	<span class="kw">fn</span> <span class="ident">storage_keys</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
 		<span class="ident">key_prefix</span>: <span class="kw-2">&amp;</span><span class="ident">StorageKey</span>,
 	) -&gt; <span class="ident">sp_blockchain::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StorageKey</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-	<span class="doccomment">/// Given a `BlockId` and a key, return the value under the hash in that block.</span>
+	<span class="doccomment">/// Given a block&#39;s `Hash` and a key, return the value under the hash in that block.</span>
 	<span class="kw">fn</span> <span class="ident">storage_hash</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
 		<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">StorageKey</span>,
 	) -&gt; <span class="ident">sp_blockchain::Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Block::Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-	<span class="doccomment">/// Given a `BlockId` and a key prefix, return the matching child storage keys and values in</span>
-	<span class="doccomment">/// that block.</span>
+	<span class="doccomment">/// Given a block&#39;s `Hash` and a key prefix, return the matching child storage keys and values</span>
+	<span class="doccomment">/// in that block.</span>
 	<span class="kw">fn</span> <span class="ident">storage_pairs</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
 		<span class="ident">key_prefix</span>: <span class="kw-2">&amp;</span><span class="ident">StorageKey</span>,
 	) -&gt; <span class="ident">sp_blockchain::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">StorageKey</span>, <span class="ident">StorageData</span>)<span class="op">&gt;</span><span class="op">&gt;</span>;
 
-	<span class="doccomment">/// Given a `BlockId` and a key prefix, return a `KeyIterator` iterates matching storage keys in</span>
-	<span class="doccomment">/// that block.</span>
+	<span class="doccomment">/// Given a block&#39;s `Hash` and a key prefix, return a `KeyIterator` iterates matching storage</span>
+	<span class="doccomment">/// keys in that block.</span>
 	<span class="kw">fn</span> <span class="ident">storage_keys_iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
 		<span class="ident">prefix</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">StorageKey</span><span class="op">&gt;</span>,
 		<span class="ident">start_key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">StorageKey</span><span class="op">&gt;</span>,
 	) -&gt; <span class="ident">sp_blockchain::Result</span><span class="op">&lt;</span><span class="ident">KeyIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">B::State</span>, <span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-	<span class="doccomment">/// Given a `BlockId`, a key and a child storage key, return the value under the key in that</span>
-	<span class="doccomment">/// block.</span>
+	<span class="doccomment">/// Given a block&#39;s `Hash`, a key and a child storage key, return the value under the key in</span>
+	<span class="doccomment">/// that block.</span>
 	<span class="kw">fn</span> <span class="ident">child_storage</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
 		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
 		<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">StorageKey</span>,
 	) -&gt; <span class="ident">sp_blockchain::Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StorageData</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-	<span class="doccomment">/// Given a `BlockId`, a key prefix, and a child storage key, return the matching child storage</span>
-	<span class="doccomment">/// keys.</span>
+	<span class="doccomment">/// Given a block&#39;s `Hash`, a key prefix, and a child storage key, return the matching child</span>
+	<span class="doccomment">/// storage keys.</span>
 	<span class="kw">fn</span> <span class="ident">child_storage_keys</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
 		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
 		<span class="ident">key_prefix</span>: <span class="kw-2">&amp;</span><span class="ident">StorageKey</span>,
 	) -&gt; <span class="ident">sp_blockchain::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StorageKey</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-	<span class="doccomment">/// Given a `BlockId` and a key `prefix` and a child storage key,</span>
+	<span class="doccomment">/// Given a block&#39;s `Hash` and a key `prefix` and a child storage key,</span>
 	<span class="doccomment">/// return a `KeyIterator` that iterates matching storage keys in that block.</span>
 	<span class="kw">fn</span> <span class="ident">child_storage_keys_iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
 		<span class="ident">child_info</span>: <span class="ident">ChildInfo</span>,
 		<span class="ident">prefix</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">StorageKey</span><span class="op">&gt;</span>,
 		<span class="ident">start_key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">StorageKey</span><span class="op">&gt;</span>,
 	) -&gt; <span class="ident">sp_blockchain::Result</span><span class="op">&lt;</span><span class="ident">KeyIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">B::State</span>, <span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-	<span class="doccomment">/// Given a `BlockId`, a key and a child storage key, return the hash under the key in that</span>
+	<span class="doccomment">/// Given a block&#39;s `Hash`, a key and a child storage key, return the hash under the key in that</span>
 	<span class="doccomment">/// block.</span>
 	<span class="kw">fn</span> <span class="ident">child_storage_hash</span>(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
 		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
 		<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">StorageKey</span>,
 	) -&gt; <span class="ident">sp_blockchain::Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Block::Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>;
