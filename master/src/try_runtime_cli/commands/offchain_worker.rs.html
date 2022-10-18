@@ -173,8 +173,6 @@
 <span id="167">167</span>
 <span id="168">168</span>
 <span id="169">169</span>
-<span id="170">170</span>
-<span id="171">171</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -208,17 +206,16 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">clap::Parser</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OffchainWorkerCmd</span> {
 	<span class="doccomment">/// Overwrite the wasm code in state or not.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">overwrite_wasm_code</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// The block hash at which to fetch the header.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// If the `live` state type is being used, then this can be omitted, and is equal to whatever</span>
 	<span class="doccomment">/// the `state::at` is. Only use this (with care) when combined with a snapshot.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">long</span>,
-		<span class="ident">multiple_values</span> <span class="op">=</span> <span class="bool-val">false</span>,
-		<span class="ident">parse</span>(<span class="ident">try_from_str</span> <span class="op">=</span> <span class="ident">parse::hash</span>)
+		<span class="ident">value_parser</span> <span class="op">=</span> <span class="ident">parse::hash</span>
 	)]</span>
 	<span class="ident">header_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
@@ -226,15 +223,14 @@
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// If the `live` state type is being used, then this can be omitted, and is equal to whatever</span>
 	<span class="doccomment">/// the `state::uri` is. Only use this (with care) when combined with a snapshot.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">long</span>,
-		<span class="ident">multiple_values</span> <span class="op">=</span> <span class="bool-val">false</span>,
-		<span class="ident">parse</span>(<span class="ident">try_from_str</span> <span class="op">=</span> <span class="ident">parse::url</span>)
+		<span class="ident">value_parser</span> <span class="op">=</span> <span class="ident">parse::url</span>
 	)]</span>
 	<span class="ident">header_ws_uri</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// The state type to use.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">subcommand</span>)]</span>
+	<span class="attribute">#[<span class="ident">command</span>(<span class="ident">subcommand</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">state</span>: <span class="ident">State</span>,
 }
 

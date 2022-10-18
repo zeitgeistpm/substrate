@@ -216,8 +216,6 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -253,11 +251,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">clap::Parser</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExecuteBlockCmd</span> {
 	<span class="doccomment">/// Overwrite the wasm code in state or not.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">overwrite_wasm_code</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// If set the state root check is disabled.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">no_state_root_check</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Which try-state targets to execute when running this command.</span>
@@ -269,17 +267,16 @@
 	<span class="doccomment">///   `Staking, System`).</span>
 	<span class="doccomment">/// - `rr-[x]` where `[x]` is a number. Then, the given number of pallets are checked in a</span>
 	<span class="doccomment">///   round-robin fashion.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>)]</span>
 	<span class="ident">try_state</span>: <span class="ident">frame_try_runtime::TryStateSelect</span>,
 
 	<span class="doccomment">/// The block hash at which to fetch the block.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// If the `live` state type is being used, then this can be omitted, and is equal to whatever</span>
 	<span class="doccomment">/// the `state::at` is. Only use this (with care) when combined with a snapshot.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">long</span>,
-		<span class="ident">multiple_values</span> <span class="op">=</span> <span class="bool-val">false</span>,
-		<span class="ident">parse</span>(<span class="ident">try_from_str</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::parse::hash</span>)
+		<span class="ident">value_parser</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::parse::hash</span>
 	)]</span>
 	<span class="ident">block_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
@@ -287,10 +284,9 @@
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// If the `live` state type is being used, then this can be omitted, and is equal to whatever</span>
 	<span class="doccomment">/// the `state::uri` is. Only use this (with care) when combined with a snapshot.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">long</span>,
-		<span class="ident">multiple_values</span> <span class="op">=</span> <span class="bool-val">false</span>,
-		<span class="ident">parse</span>(<span class="ident">try_from_str</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::parse::url</span>)
+		<span class="ident">value_parser</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::parse::url</span>
 	)]</span>
 	<span class="ident">block_ws_uri</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
@@ -299,7 +295,7 @@
 	<span class="doccomment">/// For this command only, if the `live` is used, then state of the parent block is fetched.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// If `block_at` is provided, then the [`State::Live::at`] is being ignored.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">subcommand</span>)]</span>
+	<span class="attribute">#[<span class="ident">command</span>(<span class="ident">subcommand</span>)]</span>
 	<span class="ident">state</span>: <span class="ident">State</span>,
 }
 

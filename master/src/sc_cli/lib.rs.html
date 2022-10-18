@@ -245,10 +245,6 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -380,9 +376,9 @@
 		<span class="kw">let</span> <span class="ident">about</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::description</span>();
 		<span class="kw">let</span> <span class="ident">app</span> <span class="op">=</span> <span class="ident">app</span>
 			.<span class="ident">name</span>(<span class="ident">name</span>)
-			.<span class="ident">author</span>(<span class="ident">author</span>.<span class="ident">as_str</span>())
-			.<span class="ident">about</span>(<span class="ident">about</span>.<span class="ident">as_str</span>())
-			.<span class="ident">version</span>(<span class="ident">full_version</span>.<span class="ident">as_str</span>())
+			.<span class="ident">author</span>(<span class="ident">author</span>)
+			.<span class="ident">about</span>(<span class="ident">about</span>)
+			.<span class="ident">version</span>(<span class="ident">full_version</span>)
 			.<span class="ident">propagate_version</span>(<span class="bool-val">true</span>)
 			.<span class="ident">args_conflicts_with_subcommands</span>(<span class="bool-val">true</span>)
 			.<span class="ident">subcommand_negates_reqs</span>(<span class="bool-val">true</span>);
@@ -404,9 +400,9 @@
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// **NOTE:** This method WILL NOT exit when `--help` or `--version` (or short versions) are</span>
 	<span class="doccomment">/// used. It will return a [`clap::Error`], where the [`clap::Error::kind`] is a</span>
-	<span class="doccomment">/// [`clap::ErrorKind::DisplayHelp`] or [`clap::ErrorKind::DisplayVersion`] respectively.</span>
-	<span class="doccomment">/// You must call [`clap::Error::exit`] or perform a [`std::process::exit`].</span>
-	<span class="kw">fn</span> <span class="ident">try_from_iter</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="ident">I</span>) -&gt; <span class="ident">clap::Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+	<span class="doccomment">/// [`clap::error::ErrorKind::DisplayHelp`] or [`clap::error::ErrorKind::DisplayVersion`]</span>
+	<span class="doccomment">/// respectively. You must call [`clap::Error::exit`] or perform a [`std::process::exit`].</span>
+	<span class="kw">fn</span> <span class="ident">try_from_iter</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="ident">I</span>) -&gt; <span class="ident">clap::error::Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
 	<span class="kw">where</span>
 		<span class="self">Self</span>: <span class="ident">Parser</span> <span class="op">+</span> <span class="ident">Sized</span>,
 		<span class="ident">I</span>: <span class="ident">IntoIterator</span>,
@@ -420,11 +416,7 @@
 		<span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::executable_name</span>();
 		<span class="kw">let</span> <span class="ident">author</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::author</span>();
 		<span class="kw">let</span> <span class="ident">about</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::description</span>();
-		<span class="kw">let</span> <span class="ident">app</span> <span class="op">=</span> <span class="ident">app</span>
-			.<span class="ident">name</span>(<span class="ident">name</span>)
-			.<span class="ident">author</span>(<span class="ident">author</span>.<span class="ident">as_str</span>())
-			.<span class="ident">about</span>(<span class="ident">about</span>.<span class="ident">as_str</span>())
-			.<span class="ident">version</span>(<span class="ident">full_version</span>.<span class="ident">as_str</span>());
+		<span class="kw">let</span> <span class="ident">app</span> <span class="op">=</span> <span class="ident">app</span>.<span class="ident">name</span>(<span class="ident">name</span>).<span class="ident">author</span>(<span class="ident">author</span>).<span class="ident">about</span>(<span class="ident">about</span>).<span class="ident">version</span>(<span class="ident">full_version</span>);
 
 		<span class="kw">let</span> <span class="ident">matches</span> <span class="op">=</span> <span class="ident">app</span>.<span class="ident">try_get_matches_from</span>(<span class="ident">iter</span>)<span class="question-mark">?</span>;
 

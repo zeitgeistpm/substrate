@@ -689,12 +689,12 @@
 	<span class="doccomment">/// The node will be started with the authority role and actively</span>
 	<span class="doccomment">/// participate in any consensus task that it can (e.g. depending on</span>
 	<span class="doccomment">/// availability of local keys).</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">validator</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Disable GRANDPA voter when running in validator mode, otherwise disable the GRANDPA</span>
 	<span class="doccomment">/// observer.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">no_grandpa</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Listen to all RPC interfaces.</span>
@@ -703,13 +703,13 @@
 	<span class="doccomment">/// proxy server to filter out dangerous methods. More details:</span>
 	<span class="doccomment">/// &lt;https://docs.substrate.io/main-docs/build/custom-rpc/#public-rpcs&gt;.</span>
 	<span class="doccomment">/// Use `--unsafe-rpc-external` to suppress the warning if you understand the risks.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">rpc_external</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Listen to all RPC interfaces.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// Same as `--rpc-external`.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">unsafe_rpc_external</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// RPC methods to expose.</span>
@@ -718,12 +718,12 @@
 	<span class="doccomment">/// - `safe`: Exposes only a safe subset of RPC methods, denying unsafe RPC methods.</span>
 	<span class="doccomment">/// - `auto`: Acts as `safe` if RPC is served externally, e.g. when `--{rpc,ws}-external` is</span>
 	<span class="doccomment">///   passed, otherwise acts as `unsafe`.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">long</span>,
 		<span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;METHOD SET&quot;</span>,
-		<span class="ident">arg_enum</span>,
+		<span class="ident">value_enum</span>,
 		<span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>,
-		<span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;auto&quot;</span>,
+		<span class="ident">default_value_t</span> <span class="op">=</span> <span class="ident">RpcMethods::Auto</span>,
 		<span class="ident">verbatim_doc_comment</span>
 	)]</span>
 	<span class="kw">pub</span> <span class="ident">rpc_methods</span>: <span class="ident">RpcMethods</span>,
@@ -734,59 +734,59 @@
 	<span class="doccomment">/// proxy server to filter out dangerous methods. More details:</span>
 	<span class="doccomment">/// &lt;https://docs.substrate.io/main-docs/build/custom-rpc/#public-rpcs&gt;.</span>
 	<span class="doccomment">/// Use `--unsafe-ws-external` to suppress the warning if you understand the risks.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">ws_external</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Listen to all Websocket interfaces.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// Same as `--ws-external` but doesn&#39;t warn you about it.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">unsafe_ws_external</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// DEPRECATED, this has no affect anymore. Use `rpc_max_request_size` or</span>
 	<span class="doccomment">/// `rpc_max_response_size` instead.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">rpc_max_payload</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Set the the maximum RPC request payload size for both HTTP and WS in megabytes.</span>
 	<span class="doccomment">/// Default is 15MiB.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">rpc_max_request_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Set the the maximum RPC response payload size for both HTTP and WS in megabytes.</span>
 	<span class="doccomment">/// Default is 15MiB.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">rpc_max_response_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Set the the maximum concurrent subscriptions per connection.</span>
 	<span class="doccomment">/// Default is 1024.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">rpc_max_subscriptions_per_connection</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Expose Prometheus exporter on all interfaces.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// Default is local.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">prometheus_external</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// DEPRECATED, IPC support has been removed.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PATH&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PATH&quot;</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">ipc_path</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Specify HTTP RPC server TCP port.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PORT&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PORT&quot;</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">rpc_port</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Specify WebSockets RPC server TCP port.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PORT&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PORT&quot;</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">ws_port</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Maximum number of WS RPC server connections.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;COUNT&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;COUNT&quot;</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">ws_max_connections</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// DEPRECATED, this has no affect anymore. Use `rpc_max_response_size` instead.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">ws_max_out_buffer_capacity</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Specify browser Origins allowed to access the HTTP &amp; WS RPC servers.</span>
@@ -795,29 +795,29 @@
 	<span class="doccomment">/// value). Value of `all` will disable origin validation. Default is to</span>
 	<span class="doccomment">/// allow localhost and &lt;https://polkadot.js.org&gt; origins. When running in</span>
 	<span class="doccomment">/// --dev mode the default is to allow all origins.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;ORIGINS&quot;</span>, <span class="ident">parse</span>(<span class="ident">from_str</span> <span class="op">=</span> <span class="ident">parse_cors</span>))]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;ORIGINS&quot;</span>, <span class="ident">value_parser</span> <span class="op">=</span> <span class="ident">parse_cors</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">rpc_cors</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cors</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Specify Prometheus exporter TCP Port.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PORT&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PORT&quot;</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">prometheus_port</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Do not expose a Prometheus exporter endpoint.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// Prometheus metric endpoint is enabled by default.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">no_prometheus</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// The human-readable name for this node.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// The node name will be reported to the telemetry server, if enabled.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;NAME&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;NAME&quot;</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Disable connecting to the Substrate telemetry server.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// Telemetry is on by default on global chains.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">no_telemetry</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// The URL of the telemetry server to connect to.</span>
@@ -826,7 +826,7 @@
 	<span class="doccomment">/// telemetry endpoints. Verbosity levels range from 0-9, with 0 denoting</span>
 	<span class="doccomment">/// the least verbosity.</span>
 	<span class="doccomment">/// Expected format is &#39;URL VERBOSITY&#39;, e.g. `--telemetry-url &#39;wss://foo/bar 0&#39;`.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;telemetry-url&quot;</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;URL VERBOSITY&quot;</span>, <span class="ident">parse</span>(<span class="ident">try_from_str</span> <span class="op">=</span> <span class="ident">parse_telemetry_endpoints</span>))]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;telemetry-url&quot;</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;URL VERBOSITY&quot;</span>, <span class="ident">value_parser</span> <span class="op">=</span> <span class="ident">parse_telemetry_endpoints</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">telemetry_endpoints</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">u8</span>)<span class="op">&gt;</span>,
 
 	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
@@ -850,40 +850,40 @@
 	<span class="kw">pub</span> <span class="ident">pool_config</span>: <span class="ident">TransactionPoolParams</span>,
 
 	<span class="doccomment">/// Shortcut for `--name Alice --validator` with session keys for `Alice` added to keystore.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">alice</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Shortcut for `--name Bob --validator` with session keys for `Bob` added to keystore.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">bob</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Shortcut for `--name Charlie --validator` with session keys for `Charlie` added to</span>
 	<span class="doccomment">/// keystore.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">charlie</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Shortcut for `--name Dave --validator` with session keys for `Dave` added to keystore.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">dave</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Shortcut for `--name Eve --validator` with session keys for `Eve` added to keystore.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">eve</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Shortcut for `--name Ferdie --validator` with session keys for `Ferdie` added to keystore.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">ferdie</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Shortcut for `--name One --validator` with session keys for `One` added to keystore.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;two&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">one</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Shortcut for `--name Two --validator` with session keys for `Two` added to keystore.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>]</span>)]
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;alice&quot;</span>, <span class="string">&quot;bob&quot;</span>, <span class="string">&quot;charlie&quot;</span>, <span class="string">&quot;dave&quot;</span>, <span class="string">&quot;eve&quot;</span>, <span class="string">&quot;ferdie&quot;</span>, <span class="string">&quot;one&quot;</span>]</span>)]
 	<span class="kw">pub</span> <span class="ident">two</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Enable authoring even when offline.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">force_authoring</span>: <span class="ident">bool</span>,
 
 	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
@@ -893,11 +893,11 @@
 	<span class="doccomment">/// The size of the instances cache for each runtime.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// The default value is 8 and the values higher than 256 are ignored.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">max_runtime_instances</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Maximum number of different runtimes that can be cached.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;2&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="number">2</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">runtime_cache_size</span>: <span class="ident">u8</span>,
 
 	<span class="doccomment">/// Run a temporary node.</span>
@@ -909,7 +909,7 @@
 	<span class="doccomment">/// which includes: database, node key and keystore.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// When `--dev` is given and no explicit `--base-path`, this option is implied.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">conflicts_with</span> <span class="op">=</span> <span class="string">&quot;base-path&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">conflicts_with</span> <span class="op">=</span> <span class="string">&quot;base_path&quot;</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">tmp</span>: <span class="ident">bool</span>,
 }
 
@@ -1244,7 +1244,7 @@
 }
 
 <span class="doccomment">/// Parse cors origins.</span>
-<span class="kw">fn</span> <span class="ident">parse_cors</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">Cors</span> {
+<span class="kw">fn</span> <span class="ident">parse_cors</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Cors</span><span class="op">&gt;</span> {
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">is_all</span> <span class="op">=</span> <span class="bool-val">false</span>;
 	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">origins</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
 	<span class="kw">for</span> <span class="ident">part</span> <span class="kw">in</span> <span class="ident">s</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>) {
@@ -1258,9 +1258,9 @@
 	}
 
 	<span class="kw">if</span> <span class="ident">is_all</span> {
-		<span class="ident">Cors::All</span>
+		<span class="prelude-val">Ok</span>(<span class="ident">Cors::All</span>)
 	} <span class="kw">else</span> {
-		<span class="ident">Cors::List</span>(<span class="ident">origins</span>)
+		<span class="prelude-val">Ok</span>(<span class="ident">Cors::List</span>(<span class="ident">origins</span>))
 	}
 }
 

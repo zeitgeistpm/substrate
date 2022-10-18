@@ -133,7 +133,7 @@
 
 <span class="doccomment">/// The `inspect-node-key` command</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
-<span class="attribute">#[<span class="ident">clap</span>(
+<span class="attribute">#[<span class="ident">command</span>(
 	<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;inspect-node-key&quot;</span>,
 	<span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Load a node key from a file or stdin and print the corresponding peer-id.&quot;</span>
 )]</span>
@@ -141,18 +141,18 @@
 	<span class="doccomment">/// Name of file to read the secret key from.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// If not given, the secret key is read from stdin (up to EOF).</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">file</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// The input is in raw binary format.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// If not given, the input is read as an hex encoded string.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">bin</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// This argument is deprecated and has no effect for this command.</span>
 	<span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Network identifier is not used for node-key inspection&quot;</span>)]</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;n&#39;</span>, <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;network&quot;</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;NETWORK&quot;</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;n&#39;</span>, <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;network&quot;</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;NETWORK&quot;</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">network_scheme</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 

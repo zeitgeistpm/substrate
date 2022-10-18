@@ -92,7 +92,6 @@
 <span id="86">86</span>
 <span id="87">87</span>
 <span id="88">88</span>
-<span id="89">89</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -123,31 +122,30 @@
 
 <span class="doccomment">/// The `palletid` command</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
-<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;palletid&quot;</span>, <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Inspect a module ID address&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">command</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;palletid&quot;</span>, <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Inspect a module ID address&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PalletIdCmd</span> {
 	<span class="doccomment">/// The module ID used to derive the account</span>
 	<span class="ident">id</span>: <span class="ident">String</span>,
 
 	<span class="doccomment">/// network address format</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">long</span>,
 		<span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;NETWORK&quot;</span>,
-		<span class="ident">possible_values</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">Ss58AddressFormat::all_names</span>()[..]</span>,
-		<span class="ident">parse</span>(<span class="ident">try_from_str</span> <span class="op">=</span> <span class="ident">Ss58AddressFormat::try_from</span>),
+		<span class="ident">value_parser</span> <span class="op">=</span> <span class="ident">sc_cli::parse_ss58_address_format</span>,
 		<span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>,
-	)]
+	)]</span>
 	<span class="kw">pub</span> <span class="ident">network</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Ss58AddressFormat</span><span class="op">&gt;</span>,
 
 	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">flatten</span>)]</span>
+	<span class="attribute">#[<span class="ident">command</span>(<span class="ident">flatten</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">output_scheme</span>: <span class="ident">OutputTypeFlag</span>,
 
 	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">flatten</span>)]</span>
+	<span class="attribute">#[<span class="ident">command</span>(<span class="ident">flatten</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">crypto_scheme</span>: <span class="ident">CryptoSchemeFlag</span>,
 
 	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">flatten</span>)]</span>
+	<span class="attribute">#[<span class="ident">command</span>(<span class="ident">flatten</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">keystore_params</span>: <span class="ident">KeystoreParams</span>,
 }
 

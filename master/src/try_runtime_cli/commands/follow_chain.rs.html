@@ -450,11 +450,11 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">clap::Parser</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FollowChainCmd</span> {
 	<span class="doccomment">/// The url to connect to.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span>, <span class="ident">long</span>, <span class="ident">parse</span>(<span class="ident">try_from_str</span> <span class="op">=</span> <span class="ident">parse::url</span>))]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">short</span>, <span class="ident">long</span>, <span class="ident">value_parser</span> <span class="op">=</span> <span class="ident">parse::url</span>)]</span>
 	<span class="ident">uri</span>: <span class="ident">String</span>,
 
 	<span class="doccomment">/// If set, then the state root check is enabled.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">state_root_check</span>: <span class="ident">bool</span>,
 
 	<span class="doccomment">/// Which try-state targets to execute when running this command.</span>
@@ -466,11 +466,11 @@
 	<span class="doccomment">///   `Staking, System`).</span>
 	<span class="doccomment">/// - `rr-[x]` where `[x]` is a number. Then, the given number of pallets are checked in a</span>
 	<span class="doccomment">///   round-robin fashion.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>)]</span>
 	<span class="ident">try_state</span>: <span class="ident">frame_try_runtime::TryStateSelect</span>,
 
 	<span class="doccomment">/// If present, a single connection to a node will be kept and reused for fetching blocks.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">keep_connection</span>: <span class="ident">bool</span>,
 }
 

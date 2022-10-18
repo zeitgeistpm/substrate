@@ -190,6 +190,16 @@
 <span id="184">184</span>
 <span id="185">185</span>
 <span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -219,7 +229,7 @@
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::arg_enums</span>::{<span class="ident">CryptoScheme</span>, <span class="ident">OutputType</span>};
 <span class="kw">use</span> <span class="ident">clap::Args</span>;
-<span class="kw">use</span> <span class="ident">sp_core::crypto::Ss58AddressFormat</span>;
+<span class="kw">use</span> <span class="ident">sp_core::crypto</span>::{<span class="ident">Ss58AddressFormat</span>, <span class="ident">Ss58AddressFormatRegistry</span>};
 <span class="kw">use</span> <span class="ident">sp_runtime</span>::{
 	<span class="ident">generic::BlockId</span>,
 	<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">NumberFor</span>},
@@ -231,6 +241,17 @@
 	<span class="ident">node_key_params</span>::<span class="kw-2">*</span>, <span class="ident">offchain_worker_params</span>::<span class="kw-2">*</span>, <span class="ident">pruning_params</span>::<span class="kw-2">*</span>, <span class="ident">shared_params</span>::<span class="kw-2">*</span>,
 	<span class="ident">transaction_pool_params</span>::<span class="kw-2">*</span>,
 };
+
+<span class="doccomment">/// Parse Ss58AddressFormat</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_ss58_address_format</span>(<span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Ss58AddressFormat</span>, <span class="ident">String</span><span class="op">&gt;</span> {
+	<span class="kw">match</span> <span class="ident">Ss58AddressFormatRegistry::try_from</span>(<span class="ident">x</span>) {
+		<span class="prelude-val">Ok</span>(<span class="ident">format_registry</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">format_registry</span>.<span class="ident">into</span>()),
+		<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="macro">format!</span>(
+			<span class="string">&quot;Unable to parse variant. Known variants: {:?}&quot;</span>,
+			<span class="ident">Ss58AddressFormat::all_names</span>()
+		)),
+	}
+}
 
 <span class="doccomment">/// Wrapper type of `String` that holds an unsigned integer of arbitrary size, formatted as a</span>
 <span class="doccomment">/// decimal.</span>
@@ -310,7 +331,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Args</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CryptoSchemeFlag</span> {
 	<span class="doccomment">/// cryptography scheme</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;SCHEME&quot;</span>, <span class="ident">arg_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;sr25519&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;SCHEME&quot;</span>, <span class="ident">value_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="ident">CryptoScheme::Sr25519</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">scheme</span>: <span class="ident">CryptoScheme</span>,
 }
 
@@ -318,7 +339,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Args</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OutputTypeFlag</span> {
 	<span class="doccomment">/// output format</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;FORMAT&quot;</span>, <span class="ident">arg_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;text&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;FORMAT&quot;</span>, <span class="ident">value_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="ident">OutputType::Text</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">output_type</span>: <span class="ident">OutputType</span>,
 }
 
@@ -326,14 +347,13 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Args</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NetworkSchemeFlag</span> {
 	<span class="doccomment">/// network address format</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;n&#39;</span>,
 		<span class="ident">long</span>,
 		<span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;NETWORK&quot;</span>,
-		<span class="ident">possible_values</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">Ss58AddressFormat::all_names</span>()[..]</span>,
 		<span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>,
-		<span class="ident">parse</span>(<span class="ident">try_from_str</span> <span class="op">=</span> <span class="ident">Ss58AddressFormat::try_from</span>),
-	)]
+		<span class="ident">value_parser</span> <span class="op">=</span> <span class="ident">parse_ss58_address_format</span>,
+	)]</span>
 	<span class="kw">pub</span> <span class="ident">network</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Ss58AddressFormat</span><span class="op">&gt;</span>,
 }
 

@@ -205,16 +205,16 @@
 
 <span class="doccomment">/// The `insert` command</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Parser</span>)]</span>
-<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;insert&quot;</span>, <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Insert a key to the keystore of a node.&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">command</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;insert&quot;</span>, <span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Insert a key to the keystore of a node.&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InsertKeyCmd</span> {
 	<span class="doccomment">/// The secret key URI.</span>
 	<span class="doccomment">/// If the value is a file, the file content is used as URI.</span>
 	<span class="doccomment">/// If not given, you will be prompted for the URI.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">suri</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// Key type, examples: &quot;gran&quot;, or &quot;imon&quot;</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">key_type</span>: <span class="ident">String</span>,
 
 	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
@@ -226,7 +226,7 @@
 	<span class="kw">pub</span> <span class="ident">keystore_params</span>: <span class="ident">KeystoreParams</span>,
 
 	<span class="doccomment">/// The cryptography scheme that should be used to generate the key out of the given URI.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;SCHEME&quot;</span>, <span class="ident">arg_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;SCHEME&quot;</span>, <span class="ident">value_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">scheme</span>: <span class="ident">CryptoScheme</span>,
 }
 

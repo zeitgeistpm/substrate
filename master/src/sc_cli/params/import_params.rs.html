@@ -243,12 +243,12 @@
 	<span class="kw">pub</span> <span class="ident">database_params</span>: <span class="ident">DatabaseParams</span>,
 
 	<span class="doccomment">/// Method for executing Wasm runtime code.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;wasm-execution&quot;</span>,
 		<span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;METHOD&quot;</span>,
-		<span class="ident">possible_values</span> <span class="op">=</span> <span class="ident">WasmExecutionMethod::variants</span>(),
+		<span class="ident">value_enum</span>,
 		<span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>,
-		<span class="ident">default_value</span> <span class="op">=</span> <span class="ident">DEFAULT_WASM_EXECUTION_METHOD</span>,
+		<span class="ident">default_value_t</span> <span class="op">=</span> <span class="ident">DEFAULT_WASM_EXECUTION_METHOD</span>,
 	)]</span>
 	<span class="kw">pub</span> <span class="ident">wasm_method</span>: <span class="ident">WasmExecutionMethod</span>,
 
@@ -265,18 +265,18 @@
 	<span class="doccomment">/// The `legacy-instance-reuse` strategy is deprecated and will</span>
 	<span class="doccomment">/// be removed in the future. It should only be used in case of</span>
 	<span class="doccomment">/// issues with the default instantiation strategy.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">long</span>,
 		<span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>,
 		<span class="ident">default_value_t</span> <span class="op">=</span> <span class="ident">DEFAULT_WASMTIME_INSTANTIATION_STRATEGY</span>,
-		<span class="ident">arg_enum</span>,
+		<span class="ident">value_enum</span>,
 	)]</span>
 	<span class="kw">pub</span> <span class="ident">wasmtime_instantiation_strategy</span>: <span class="ident">WasmtimeInstantiationStrategy</span>,
 
 	<span class="doccomment">/// Specify the path where local WASM runtimes are stored.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// These runtimes will override on-chain runtimes when the version matches.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PATH&quot;</span>, <span class="ident">parse</span>(<span class="ident">from_os_str</span>))]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;PATH&quot;</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">wasm_runtime_overrides</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
 
 	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
@@ -286,13 +286,13 @@
 	<span class="doccomment">/// Specify the state cache size.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// Providing `0` will disable the cache.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;Bytes&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;67108864&quot;</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;Bytes&quot;</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="number">67108864</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">trie_cache_size</span>: <span class="ident">usize</span>,
 
 	<span class="doccomment">/// DEPRECATED</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// Switch to `--trie-cache-size`.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="ident">state_cache_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
 }
 
@@ -357,39 +357,39 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ExecutionStrategiesParams</span> {
 	<span class="doccomment">/// The means of execution used when calling into the runtime for importing blocks as</span>
 	<span class="doccomment">/// part of an initial sync.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">arg_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">value_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">execution_syncing</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExecutionStrategy</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// The means of execution used when calling into the runtime for general block import</span>
 	<span class="doccomment">/// (including locally authored blocks).</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">arg_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">value_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">execution_import_block</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExecutionStrategy</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// The means of execution used when calling into the runtime while constructing blocks.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">arg_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">value_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">execution_block_construction</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExecutionStrategy</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// The means of execution used when calling into the runtime while using an off-chain worker.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">arg_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">value_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">execution_offchain_worker</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExecutionStrategy</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// The means of execution used when calling into the runtime while not syncing, importing or</span>
 	<span class="doccomment">/// constructing blocks.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">arg_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>, <span class="ident">value_enum</span>, <span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">execution_other</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExecutionStrategy</span><span class="op">&gt;</span>,
 
 	<span class="doccomment">/// The execution strategy that should be used by all execution contexts.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">arg</span>(
 		<span class="ident">long</span>,
 		<span class="ident">value_name</span> <span class="op">=</span> <span class="string">&quot;STRATEGY&quot;</span>,
-		<span class="ident">arg_enum</span>,
+		<span class="ident">value_enum</span>,
 		<span class="ident">ignore_case</span> <span class="op">=</span> <span class="bool-val">true</span>,
 		<span class="ident">conflicts_with_all</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[
-			<span class="string">&quot;execution-other&quot;</span>,
-			<span class="string">&quot;execution-offchain-worker&quot;</span>,
-			<span class="string">&quot;execution-block-construction&quot;</span>,
-			<span class="string">&quot;execution-import-block&quot;</span>,
-			<span class="string">&quot;execution-syncing&quot;</span>,
+			<span class="string">&quot;execution_other&quot;</span>,
+			<span class="string">&quot;execution_offchain_worker&quot;</span>,
+			<span class="string">&quot;execution_block_construction&quot;</span>,
+			<span class="string">&quot;execution_import_block&quot;</span>,
+			<span class="string">&quot;execution_syncing&quot;</span>,
 		]</span>
 	)]
 	<span class="kw">pub</span> <span class="ident">execution</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ExecutionStrategy</span><span class="op">&gt;</span>,

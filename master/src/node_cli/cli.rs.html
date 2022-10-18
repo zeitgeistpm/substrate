@@ -126,7 +126,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">clap::Parser</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Cli</span> {
 	<span class="doccomment">/// Possible subcommand with parameters.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">subcommand</span>)]</span>
+	<span class="attribute">#[<span class="ident">command</span>(<span class="ident">subcommand</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">subcommand</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Subcommand</span><span class="op">&gt;</span>,
 
 	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
@@ -140,7 +140,7 @@
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// The results are then printed out in the logs, and also sent as part of</span>
 	<span class="doccomment">/// telemetry, if telemetry is enabled.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
+	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
 	<span class="kw">pub</span> <span class="ident">no_hardware_benchmarks</span>: <span class="ident">bool</span>,
 }
 
@@ -148,7 +148,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">clap::Subcommand</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Subcommand</span> {
 	<span class="doccomment">/// The custom inspect subcommmand for decoding blocks and extrinsics.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(
+	<span class="attribute">#[<span class="ident">command</span>(
 		<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;inspect&quot;</span>,
 		<span class="ident">about</span> <span class="op">=</span> <span class="string">&quot;Decode given block or extrinsic using current native runtime.&quot;</span>
 	)]</span>
@@ -156,7 +156,7 @@
 
 	<span class="doccomment">/// Sub-commands concerned with benchmarking.</span>
 	<span class="doccomment">/// The pallet benchmarking moved to the `pallet` sub-command.</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">subcommand</span>)]</span>
+	<span class="attribute">#[<span class="ident">command</span>(<span class="ident">subcommand</span>)]</span>
 	<span class="ident">Benchmark</span>(<span class="ident">frame_benchmarking_cli::BenchmarkCmd</span>),
 
 	<span class="doccomment">/// Try some command against runtime state.</span>
@@ -168,7 +168,7 @@
 	<span class="ident">TryRuntime</span>,
 
 	<span class="doccomment">/// Key management cli utilities</span>
-	<span class="attribute">#[<span class="ident">clap</span>(<span class="ident">subcommand</span>)]</span>
+	<span class="attribute">#[<span class="ident">command</span>(<span class="ident">subcommand</span>)]</span>
 	<span class="ident">Key</span>(<span class="ident">sc_cli::KeySubcommand</span>),
 
 	<span class="doccomment">/// Verify a signature for a message, provided on STDIN, with a given (public or secret) key.</span>
