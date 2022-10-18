@@ -3499,7 +3499,6 @@
 <span id="3493">3493</span>
 <span id="3494">3494</span>
 <span id="3495">3495</span>
-<span id="3496">3496</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
@@ -4946,8 +4945,7 @@
 		<span class="kw">if</span> <span class="kw">let</span> <span class="ident">SyncMode::LightState</span> { <span class="ident">skip_proofs</span>, .. } <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mode</span> {
 			<span class="kw">if</span> <span class="self">self</span>.<span class="ident">state_sync</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">peers</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">queue_blocks</span>.<span class="ident">is_empty</span>() {
 				<span class="comment">// Finalized a recent block.</span>
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">heads</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span>
-					<span class="self">self</span>.<span class="ident">peers</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">peer</span>)<span class="op">|</span> <span class="ident">peer</span>.<span class="ident">best_number</span>).<span class="ident">collect</span>();
+				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">heads</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">peers</span>.<span class="ident">values</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">peer</span><span class="op">|</span> <span class="ident">peer</span>.<span class="ident">best_number</span>).<span class="ident">collect</span>();
 				<span class="ident">heads</span>.<span class="ident">sort</span>();
 				<span class="kw">let</span> <span class="ident">median</span> <span class="op">=</span> <span class="ident">heads</span>[<span class="ident">heads</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="number">2</span>];
 				<span class="kw">if</span> <span class="ident">number</span> <span class="op">+</span> <span class="ident">STATE_SYNC_FINALITY_THRESHOLD</span>.<span class="ident">saturated_into</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">median</span> {

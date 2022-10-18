@@ -399,7 +399,7 @@
 	<span class="doccomment">/// Returns the [`StorageProof`].</span>
 	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_storage_proof</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">StorageProof</span> {
 		<span class="kw">let</span> <span class="ident">recorder</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>();
-		<span class="ident">StorageProof::new</span>(<span class="ident">recorder</span>.<span class="ident">accessed_nodes</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">v</span>.<span class="ident">clone</span>()))
+		<span class="ident">StorageProof::new</span>(<span class="ident">recorder</span>.<span class="ident">accessed_nodes</span>.<span class="ident">values</span>().<span class="ident">cloned</span>())
 	}
 
 	<span class="doccomment">/// Returns the estimated encoded size of the proof.</span>

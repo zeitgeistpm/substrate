@@ -598,7 +598,6 @@
 <span id="592">592</span>
 <span id="593">593</span>
 <span id="594">594</span>
-<span id="595">595</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
@@ -869,9 +868,8 @@ not created by a node that was compiled with the flag&quot;</span>;
 
 					<span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">steps</span> {
 						<span class="comment">// This is the value we will be testing for component `name`</span>
-						<span class="kw">let</span> <span class="ident">component_value</span> <span class="op">=</span> ((<span class="ident">lowest</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">+</span> <span class="ident">step_size</span> <span class="op">*</span> <span class="ident">s</span> <span class="kw">as</span> <span class="ident">f32</span>) <span class="kw">as</span> <span class="ident">u32</span>)
-							.<span class="ident">min</span>(<span class="ident">highest</span>)
-							.<span class="ident">max</span>(<span class="ident">lowest</span>);
+						<span class="kw">let</span> <span class="ident">component_value</span> <span class="op">=</span>
+							((<span class="ident">lowest</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">+</span> <span class="ident">step_size</span> <span class="op">*</span> <span class="ident">s</span> <span class="kw">as</span> <span class="ident">f32</span>) <span class="kw">as</span> <span class="ident">u32</span>).<span class="ident">clamp</span>(<span class="ident">lowest</span>, <span class="ident">highest</span>);
 
 						<span class="comment">// Select the max value for all the other components.</span>
 						<span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">BenchmarkParameter</span>, <span class="ident">u32</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">components</span>

@@ -2039,11 +2039,11 @@
 
 		<span class="kw">if</span> <span class="ident">positive</span> {
 			<span class="kw">let</span> <span class="ident">excess</span> <span class="op">=</span> <span class="ident">first_term</span>.<span class="ident">saturating_add</span>(<span class="ident">second_term</span>).<span class="ident">saturating_mul</span>(<span class="ident">previous</span>);
-			<span class="ident">previous</span>.<span class="ident">saturating_add</span>(<span class="ident">excess</span>).<span class="ident">max</span>(<span class="ident">min_multiplier</span>).<span class="ident">min</span>(<span class="ident">max_multiplier</span>)
+			<span class="ident">previous</span>.<span class="ident">saturating_add</span>(<span class="ident">excess</span>).<span class="ident">clamp</span>(<span class="ident">min_multiplier</span>, <span class="ident">max_multiplier</span>)
 		} <span class="kw">else</span> {
 			<span class="comment">// Defensive-only: first_term &gt; second_term. Safe subtraction.</span>
 			<span class="kw">let</span> <span class="ident">negative</span> <span class="op">=</span> <span class="ident">first_term</span>.<span class="ident">saturating_sub</span>(<span class="ident">second_term</span>).<span class="ident">saturating_mul</span>(<span class="ident">previous</span>);
-			<span class="ident">previous</span>.<span class="ident">saturating_sub</span>(<span class="ident">negative</span>).<span class="ident">max</span>(<span class="ident">min_multiplier</span>).<span class="ident">min</span>(<span class="ident">max_multiplier</span>)
+			<span class="ident">previous</span>.<span class="ident">saturating_sub</span>(<span class="ident">negative</span>).<span class="ident">clamp</span>(<span class="ident">min_multiplier</span>, <span class="ident">max_multiplier</span>)
 		}
 	}
 }
@@ -2524,8 +2524,8 @@
 		<span class="kw">let</span> <span class="ident">max_block_weight</span> <span class="op">=</span> <span class="ident">max_block_weight</span>.<span class="ident">ref_time</span>();
 		<span class="kw">let</span> <span class="ident">info_weight</span> <span class="op">=</span> <span class="ident">info</span>.<span class="ident">weight</span>.<span class="ident">ref_time</span>();
 
-		<span class="kw">let</span> <span class="ident">bounded_weight</span> <span class="op">=</span> <span class="ident">info_weight</span>.<span class="ident">max</span>(<span class="number">1</span>).<span class="ident">min</span>(<span class="ident">max_block_weight</span>);
-		<span class="kw">let</span> <span class="ident">bounded_length</span> <span class="op">=</span> (<span class="ident">len</span> <span class="kw">as</span> <span class="ident">u64</span>).<span class="ident">max</span>(<span class="number">1</span>).<span class="ident">min</span>(<span class="ident">max_block_length</span>);
+		<span class="kw">let</span> <span class="ident">bounded_weight</span> <span class="op">=</span> <span class="ident">info_weight</span>.<span class="ident">clamp</span>(<span class="number">1</span>, <span class="ident">max_block_weight</span>);
+		<span class="kw">let</span> <span class="ident">bounded_length</span> <span class="op">=</span> (<span class="ident">len</span> <span class="kw">as</span> <span class="ident">u64</span>).<span class="ident">clamp</span>(<span class="number">1</span>, <span class="ident">max_block_length</span>);
 
 		<span class="kw">let</span> <span class="ident">max_tx_per_block_weight</span> <span class="op">=</span> <span class="ident">max_block_weight</span> <span class="op">/</span> <span class="ident">bounded_weight</span>;
 		<span class="kw">let</span> <span class="ident">max_tx_per_block_length</span> <span class="op">=</span> <span class="ident">max_block_length</span> <span class="op">/</span> <span class="ident">bounded_length</span>;
