@@ -1775,7 +1775,6 @@
 <span id="1769">1769</span>
 <span id="1770">1770</span>
 <span id="1771">1771</span>
-<span id="1772">1772</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
@@ -3418,13 +3417,12 @@
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// This will print some very useful statistics, make sure [`crate::LOG_TARGET`] is enabled.</span>
 	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run_with_limits</span><span class="op">&lt;</span>
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run_with_limits</span><span class="op">&lt;</span><span class="ident">Runtime</span>, <span class="ident">Block</span><span class="op">&gt;</span>(<span class="ident">limits</span>: <span class="ident">MigrationLimits</span>, <span class="ident">mode</span>: <span class="ident">Mode</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>)
+	<span class="kw">where</span>
 		<span class="ident">Runtime</span>: <span class="ident"><span class="kw">crate</span>::Config</span><span class="op">&lt;</span><span class="ident">Hash</span> <span class="op">=</span> <span class="ident">H256</span><span class="op">&gt;</span>,
-		<span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&lt;</span><span class="ident">Hash</span> <span class="op">=</span> <span class="ident">H256</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">serde::de::DeserializeOwned</span>,
-	<span class="op">&gt;</span>(
-		<span class="ident">limits</span>: <span class="ident">MigrationLimits</span>,
-		<span class="ident">mode</span>: <span class="ident">Mode</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	) {
+		<span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&lt;</span><span class="ident">Hash</span> <span class="op">=</span> <span class="ident">H256</span><span class="op">&gt;</span>,
+		<span class="ident">Block::Header</span>: <span class="ident">serde::de::DeserializeOwned</span>,
+	{
 		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident">remote_externalities::Builder</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="ident">::new</span>()
 			.<span class="ident">mode</span>(<span class="ident">mode</span>)
 			.<span class="ident">state_version</span>(<span class="ident">sp_core::storage::StateVersion::V0</span>)

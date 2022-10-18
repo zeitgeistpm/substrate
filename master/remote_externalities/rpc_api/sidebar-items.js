@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["RpcService","Simple RPC service that is capable of keeping the connection."]]};
