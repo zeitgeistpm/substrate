@@ -2461,6 +2461,12 @@
 <span id="2455">2455</span>
 <span id="2456">2456</span>
 <span id="2457">2457</span>
+<span id="2458">2458</span>
+<span id="2459">2459</span>
+<span id="2460">2460</span>
+<span id="2461">2461</span>
+<span id="2462">2462</span>
+<span id="2463">2463</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
 
 <span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
@@ -2730,6 +2736,7 @@
 
 <span class="kw">const</span> <span class="ident">LOG_TARGET</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;runtime::election-provider&quot;</span>;
 
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">migrations</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">signed</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">unsigned</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">weights</span>;
@@ -3728,8 +3735,8 @@
 	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
 	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">SignedSubmissionNextIndex</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
 
-	<span class="doccomment">/// A sorted, bounded set of `(score, index)`, where each `index` points to a value in</span>
-	<span class="doccomment">/// `SignedSubmissions`.</span>
+	<span class="doccomment">/// A sorted, bounded vector of `(score, block_number, index)`, where each `index` points to a</span>
+	<span class="doccomment">/// value in `SignedSubmissions`.</span>
 	<span class="doccomment">///</span>
 	<span class="doccomment">/// We never need to process more than a single signed submission at a time. Signed submissions</span>
 	<span class="doccomment">/// can be quite large, so we&#39;re willing to pay the cost of multiple database accesses to access</span>
@@ -3759,9 +3766,14 @@
 	<span class="attribute">#[<span class="ident">pallet::getter</span>(<span class="kw">fn</span> <span class="ident">minimum_untrusted_score</span>)]</span>
 	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">MinimumUntrustedScore</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">ElectionScore</span><span class="op">&gt;</span>;
 
+	<span class="doccomment">/// The current storage version.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// v1: https://github.com/paritytech/substrate/pull/12237/</span>
+	<span class="kw">const</span> <span class="ident">STORAGE_VERSION</span>: <span class="ident">StorageVersion</span> <span class="op">=</span> <span class="ident">StorageVersion::new</span>(<span class="number">1</span>);
+
 	<span class="attribute">#[<span class="ident">pallet::pallet</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::generate_store</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait</span> <span class="ident">Store</span>)]</span>
 	<span class="attribute">#[<span class="ident">pallet::without_storage_info</span>]</span>
+	<span class="attribute">#[<span class="ident">pallet::storage_version</span>(<span class="ident">STORAGE_VERSION</span>)]</span>
 	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
 }
 
