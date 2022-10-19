@@ -322,7 +322,7 @@
 	<span class="ident">config::ProtocolId</span>,
 	<span class="ident">request_responses</span>::{<span class="ident">IncomingRequest</span>, <span class="ident">OutgoingResponse</span>, <span class="ident">ProtocolConfig</span>},
 };
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">generic::BlockId</span>, <span class="ident">traits::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>};
+<span class="kw">use</span> <span class="ident">sp_runtime::traits::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
 	<span class="ident">hash</span>::{<span class="ident">Hash</span>, <span class="ident">Hasher</span>},
 	<span class="ident">sync::Arc</span>,
@@ -495,14 +495,14 @@
 
 			<span class="kw">if</span> <span class="op">!</span><span class="ident">request</span>.<span class="ident">no_proof</span> {
 				<span class="kw">let</span> (<span class="ident">proof</span>, <span class="ident">_count</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">read_proof_collection</span>(
-					<span class="kw-2">&amp;</span><span class="ident">BlockId::hash</span>(<span class="ident">block</span>),
+					<span class="kw-2">&amp;</span><span class="ident">block</span>,
 					<span class="ident">request</span>.<span class="ident">start</span>.<span class="ident">as_slice</span>(),
 					<span class="ident">MAX_RESPONSE_BYTES</span>,
 				)<span class="question-mark">?</span>;
 				<span class="ident">response</span>.<span class="ident">proof</span> <span class="op">=</span> <span class="ident">proof</span>.<span class="ident">encode</span>();
 			} <span class="kw">else</span> {
 				<span class="kw">let</span> <span class="ident">entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">storage_collection</span>(
-					<span class="kw-2">&amp;</span><span class="ident">BlockId::hash</span>(<span class="ident">block</span>),
+					<span class="kw-2">&amp;</span><span class="ident">block</span>,
 					<span class="ident">request</span>.<span class="ident">start</span>.<span class="ident">as_slice</span>(),
 					<span class="ident">MAX_RESPONSE_BYTES</span>,
 				)<span class="question-mark">?</span>;
