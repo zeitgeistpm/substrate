@@ -715,6 +715,40 @@
 <span id="715">715</span>
 <span id="716">716</span>
 <span id="717">717</span>
+<span id="718">718</span>
+<span id="719">719</span>
+<span id="720">720</span>
+<span id="721">721</span>
+<span id="722">722</span>
+<span id="723">723</span>
+<span id="724">724</span>
+<span id="725">725</span>
+<span id="726">726</span>
+<span id="727">727</span>
+<span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
+<span id="739">739</span>
+<span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -743,6 +777,7 @@
 	<span class="kw">pub </span>names: Vec&lt;String&gt;,
 	<span class="kw">pub </span>value_dists: <span class="prelude-ty">Option</span>&lt;Vec&lt;(Vec&lt;u32&gt;, u128, u128)&gt;&gt;,
 	<span class="kw">pub </span>errors: <span class="prelude-ty">Option</span>&lt;Vec&lt;u128&gt;&gt;,
+	<span class="kw">pub </span>minimum: u128,
 	selector: BenchmarkSelector,
 }
 
@@ -766,7 +801,10 @@
 <span class="kw">impl </span>BenchmarkSelector {
 	<span class="kw">fn </span>scale_and_cast_weight(<span class="self">self</span>, value: f64, round_up: bool) -&gt; u128 {
 		<span class="kw">if let </span>BenchmarkSelector::ExtrinsicTime = <span class="self">self </span>{
-			mul_1000_into_u128(value)
+			<span class="comment">// We add a very slight bias here to counteract the numerical imprecision of the linear
+			// regression where due to rounding issues it can emit a number like `2999999.999999998`
+			// which we most certainly always want to round up instead of truncating.
+			</span>mul_1000_into_u128(value + <span class="number">0.000_000_005</span>)
 		} <span class="kw">else </span>{
 			<span class="kw">if </span>round_up {
 				(value + <span class="number">0.5</span>) <span class="kw">as </span>u128
@@ -790,6 +828,24 @@
 		</span>} <span class="kw">else </span>{
 			value
 		}
+	}
+
+	<span class="kw">fn </span>get_value(<span class="self">self</span>, result: <span class="kw-2">&amp;</span>BenchmarkResult) -&gt; u128 {
+		<span class="kw">match </span><span class="self">self </span>{
+			BenchmarkSelector::ExtrinsicTime =&gt; result.extrinsic_time,
+			BenchmarkSelector::StorageRootTime =&gt; result.storage_root_time,
+			BenchmarkSelector::Reads =&gt; result.reads.into(),
+			BenchmarkSelector::Writes =&gt; result.writes.into(),
+			BenchmarkSelector::ProofSize =&gt; result.proof_size.into(),
+		}
+	}
+
+	<span class="kw">fn </span>get_minimum(<span class="self">self</span>, results: <span class="kw-2">&amp;</span>[BenchmarkResult]) -&gt; u128 {
+		results
+			.iter()
+			.map(|result| <span class="self">self</span>.get_value(result))
+			.min()
+			.expect(<span class="string">&quot;results cannot be empty&quot;</span>)
 	}
 }
 
@@ -826,8 +882,8 @@
 }
 
 <span class="kw">fn </span>raw_linear_regression(
-	xs: Vec&lt;f64&gt;,
-	ys: Vec&lt;f64&gt;,
+	xs: <span class="kw-2">&amp;</span>[f64],
+	ys: <span class="kw-2">&amp;</span>[f64],
 	x_vars: usize,
 	with_intercept: bool,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;(f64, Vec&lt;f64&gt;, Vec&lt;f64&gt;)&gt; {
@@ -864,7 +920,15 @@
 	<span class="kw-2">mut </span>ys: Vec&lt;f64&gt;,
 	x_vars: usize,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;(f64, Vec&lt;f64&gt;, Vec&lt;f64&gt;)&gt; {
-	<span class="kw">let </span><span class="kw-2">mut </span>min = ys[<span class="number">0</span>];
+	<span class="kw">let </span>(intercept, params, errors) = raw_linear_regression(<span class="kw-2">&amp;</span>xs, <span class="kw-2">&amp;</span>ys, x_vars, <span class="bool-val">true</span>)<span class="question-mark">?</span>;
+	<span class="kw">if </span>intercept &gt; <span class="number">0.0 </span>{
+		<span class="kw">return </span><span class="prelude-val">Some</span>((intercept, params, errors[<span class="number">1</span>..].to_vec()))
+	}
+
+	<span class="comment">// The intercept is negative.
+	// The weights must be always positive, so we can&#39;t have that.
+
+	</span><span class="kw">let </span><span class="kw-2">mut </span>min = ys[<span class="number">0</span>];
 	<span class="kw">for </span><span class="kw-2">&amp;</span>value <span class="kw">in </span><span class="kw-2">&amp;</span>ys {
 		<span class="kw">if </span>value &lt; min {
 			min = value;
@@ -875,8 +939,9 @@
 		<span class="kw-2">*</span>value -= min;
 	}
 
-	<span class="kw">let </span>(intercept, params, errors) = raw_linear_regression(xs, ys, x_vars, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
-	<span class="prelude-val">Some</span>((intercept + min, params, errors[<span class="number">1</span>..].to_vec()))
+	<span class="kw">let </span>(intercept, params, errors) = raw_linear_regression(<span class="kw-2">&amp;</span>xs, <span class="kw-2">&amp;</span>ys, x_vars, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
+	<span class="macro">assert!</span>(intercept.abs() &lt;= <span class="number">0.0001</span>);
+	<span class="prelude-val">Some</span>((min, params, errors[<span class="number">1</span>..].to_vec()))
 }
 
 <span class="kw">impl </span>Analysis {
@@ -907,6 +972,7 @@
 			names: Vec::new(),
 			value_dists: <span class="prelude-val">None</span>,
 			errors: <span class="prelude-val">None</span>,
+			minimum: selector.get_minimum(<span class="kw-2">&amp;</span>r),
 			selector,
 		})
 	}
@@ -1006,6 +1072,7 @@
 			names: results.into_iter().map(|x| x.<span class="number">0</span>).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
 			value_dists: <span class="prelude-val">None</span>,
 			errors: <span class="prelude-val">None</span>,
+			minimum: selector.get_minimum(<span class="kw-2">&amp;</span>r),
 			selector,
 		})
 	}
@@ -1078,6 +1145,7 @@
 					.map(|value| selector.scale_and_cast_weight(value, <span class="bool-val">false</span>))
 					.collect(),
 			),
+			minimum: selector.get_minimum(<span class="kw-2">&amp;</span>r),
 			selector,
 		})
 	}
@@ -1109,8 +1177,9 @@
 		<span class="kw">let </span>names = median_slopes.names;
 		<span class="kw">let </span>value_dists = min_squares.value_dists;
 		<span class="kw">let </span>errors = min_squares.errors;
+		<span class="kw">let </span>minimum = selector.get_minimum(<span class="kw-2">&amp;</span>r);
 
-		<span class="prelude-val">Some</span>(<span class="self">Self </span>{ base, slopes, names, value_dists, errors, selector })
+		<span class="prelude-val">Some</span>(<span class="self">Self </span>{ base, slopes, names, value_dists, errors, selector, minimum })
 	}
 }
 
@@ -1250,8 +1319,7 @@
 			<span class="number">16.0</span>, <span class="number">17.0</span>, <span class="number">18.0</span>, <span class="number">19.0</span>, <span class="number">20.0</span>,
 		];
 
-		<span class="kw">let </span>(intercept, params, errors) =
-			raw_linear_regression(xs.clone(), ys.clone(), <span class="number">1</span>, <span class="bool-val">true</span>).unwrap();
+		<span class="kw">let </span>(intercept, params, errors) = raw_linear_regression(<span class="kw-2">&amp;</span>xs, <span class="kw-2">&amp;</span>ys, <span class="number">1</span>, <span class="bool-val">true</span>).unwrap();
 		<span class="macro">assert_eq!</span>(intercept <span class="kw">as </span>i64, -<span class="number">2712997</span>);
 		<span class="macro">assert_eq!</span>(params.len(), <span class="number">1</span>);
 		<span class="macro">assert_eq!</span>(params[<span class="number">0</span>] <span class="kw">as </span>i64, <span class="number">34444926</span>);
@@ -1405,15 +1473,15 @@
 
 		<span class="kw">let </span>extrinsic_time =
 			Analysis::min_squares_iqr(<span class="kw-2">&amp;</span>data, BenchmarkSelector::ExtrinsicTime).unwrap();
-		<span class="macro">assert_eq!</span>(extrinsic_time.base, <span class="number">11_500_000_000</span>);
-		<span class="macro">assert_eq!</span>(extrinsic_time.slopes, <span class="macro">vec!</span>[<span class="number">630635838</span>, <span class="number">23699421</span>]);
+		<span class="macro">assert_eq!</span>(extrinsic_time.base, <span class="number">10_000_000_000</span>);
+		<span class="macro">assert_eq!</span>(extrinsic_time.slopes, <span class="macro">vec!</span>[<span class="number">1000000000</span>, <span class="number">100000000</span>]);
 
 		<span class="kw">let </span>reads = Analysis::min_squares_iqr(<span class="kw-2">&amp;</span>data, BenchmarkSelector::Reads).unwrap();
-		<span class="macro">assert_eq!</span>(reads.base, <span class="number">3</span>);
+		<span class="macro">assert_eq!</span>(reads.base, <span class="number">2</span>);
 		<span class="macro">assert_eq!</span>(reads.slopes, <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">0</span>]);
 
 		<span class="kw">let </span>writes = Analysis::min_squares_iqr(<span class="kw-2">&amp;</span>data, BenchmarkSelector::Writes).unwrap();
-		<span class="macro">assert_eq!</span>(writes.base, <span class="number">2</span>);
+		<span class="macro">assert_eq!</span>(writes.base, <span class="number">0</span>);
 		<span class="macro">assert_eq!</span>(writes.slopes, <span class="macro">vec!</span>[<span class="number">0</span>, <span class="number">2</span>]);
 	}
 
@@ -1428,8 +1496,8 @@
 
 		<span class="kw">let </span>extrinsic_time =
 			Analysis::min_squares_iqr(<span class="kw-2">&amp;</span>data, BenchmarkSelector::ExtrinsicTime).unwrap();
-		<span class="macro">assert_eq!</span>(extrinsic_time.base, <span class="number">2_000_000_000</span>);
-		<span class="macro">assert_eq!</span>(extrinsic_time.slopes, <span class="macro">vec!</span>[<span class="number">4_000_000_000</span>]);
+		<span class="macro">assert_eq!</span>(extrinsic_time.base, <span class="number">3_000_000_000</span>);
+		<span class="macro">assert_eq!</span>(extrinsic_time.slopes, <span class="macro">vec!</span>[<span class="number">3_000_000_000</span>]);
 	}
 }
 </code></pre></div>

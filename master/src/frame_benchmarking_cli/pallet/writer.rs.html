@@ -575,6 +575,9 @@
 <span id="575">575</span>
 <span id="576">576</span>
 <span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -646,6 +649,8 @@
 	component_writes: Vec&lt;ComponentSlope&gt;,
 	component_ranges: Vec&lt;ComponentRange&gt;,
 	comments: Vec&lt;String&gt;,
+	<span class="attribute">#[serde(serialize_with = <span class="string">&quot;string_serialize&quot;</span>)]
+	</span>min_execution_time: u128,
 }
 
 <span class="comment">// This forwards some specific metadata from the `PalletCmd`
@@ -834,6 +839,7 @@
 		component_writes: used_writes,
 		component_ranges,
 		comments,
+		min_execution_time: extrinsic_time.minimum,
 	}
 }
 
