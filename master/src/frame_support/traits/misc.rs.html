@@ -1021,6 +1021,95 @@
 <span id="1021">1021</span>
 <span id="1022">1022</span>
 <span id="1023">1023</span>
+<span id="1024">1024</span>
+<span id="1025">1025</span>
+<span id="1026">1026</span>
+<span id="1027">1027</span>
+<span id="1028">1028</span>
+<span id="1029">1029</span>
+<span id="1030">1030</span>
+<span id="1031">1031</span>
+<span id="1032">1032</span>
+<span id="1033">1033</span>
+<span id="1034">1034</span>
+<span id="1035">1035</span>
+<span id="1036">1036</span>
+<span id="1037">1037</span>
+<span id="1038">1038</span>
+<span id="1039">1039</span>
+<span id="1040">1040</span>
+<span id="1041">1041</span>
+<span id="1042">1042</span>
+<span id="1043">1043</span>
+<span id="1044">1044</span>
+<span id="1045">1045</span>
+<span id="1046">1046</span>
+<span id="1047">1047</span>
+<span id="1048">1048</span>
+<span id="1049">1049</span>
+<span id="1050">1050</span>
+<span id="1051">1051</span>
+<span id="1052">1052</span>
+<span id="1053">1053</span>
+<span id="1054">1054</span>
+<span id="1055">1055</span>
+<span id="1056">1056</span>
+<span id="1057">1057</span>
+<span id="1058">1058</span>
+<span id="1059">1059</span>
+<span id="1060">1060</span>
+<span id="1061">1061</span>
+<span id="1062">1062</span>
+<span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
+<span id="1067">1067</span>
+<span id="1068">1068</span>
+<span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
+<span id="1102">1102</span>
+<span id="1103">1103</span>
+<span id="1104">1104</span>
+<span id="1105">1105</span>
+<span id="1106">1106</span>
+<span id="1107">1107</span>
+<span id="1108">1108</span>
+<span id="1109">1109</span>
+<span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -1045,6 +1134,7 @@
 <span class="kw">use </span>impl_trait_for_tuples::impl_for_tuples;
 <span class="kw">use </span>scale_info::{build::Fields, meta_type, Path, Type, TypeInfo, TypeParameter};
 <span class="kw">use </span>sp_arithmetic::traits::{CheckedAdd, CheckedMul, CheckedSub, Saturating};
+<span class="kw">use </span>sp_core::bounded::bounded_vec::TruncateFrom;
 <span class="attribute">#[doc(hidden)]
 </span><span class="kw">pub use </span>sp_runtime::traits::{
 	ConstBool, ConstI128, ConstI16, ConstI32, ConstI64, ConstI8, ConstU128, ConstU16, ConstU32,
@@ -1389,6 +1479,43 @@
 	}
 	<span class="kw">fn </span>defensive_saturating_mul(<span class="self">self</span>, other: <span class="self">Self</span>) -&gt; <span class="self">Self </span>{
 		<span class="self">self</span>.checked_mul(<span class="kw-2">&amp;</span>other).defensive_unwrap_or_else(|| <span class="self">self</span>.saturating_mul(other))
+	}
+}
+
+<span class="doccomment">/// Construct an object by defensively truncating an input if the `TryFrom` conversion fails.
+</span><span class="kw">pub trait </span>DefensiveTruncateFrom&lt;T&gt; {
+	<span class="doccomment">/// Use `TryFrom` first and defensively fall back to truncating otherwise.
+	///
+	/// # Example
+	///
+	/// ```
+	/// use frame_support::{BoundedVec, traits::DefensiveTruncateFrom};
+	/// use sp_runtime::traits::ConstU32;
+	///
+	/// let unbound = vec![1, 2];
+	/// let bound = BoundedVec::&lt;u8, ConstU32&lt;2&gt;&gt;::defensive_truncate_from(unbound);
+	///
+	/// assert_eq!(bound, vec![1, 2]);
+	/// ```
+	</span><span class="kw">fn </span>defensive_truncate_from(unbound: T) -&gt; <span class="self">Self</span>;
+}
+
+<span class="kw">impl</span>&lt;T, U&gt; DefensiveTruncateFrom&lt;U&gt; <span class="kw">for </span>T
+<span class="kw">where
+	</span><span class="comment">// NOTE: We use the fact that `BoundedVec` and
+	// `BoundedSlice` use `Self` as error type. We could also
+	// require a `Clone` bound and use `unbound.clone()` in the
+	// error case.
+	</span>T: TruncateFrom&lt;U&gt; + TryFrom&lt;U, Error = U&gt;,
+{
+	<span class="kw">fn </span>defensive_truncate_from(unbound: U) -&gt; <span class="self">Self </span>{
+		unbound.try_into().map_or_else(
+			|err| {
+				<span class="macro">defensive!</span>(<span class="string">&quot;DefensiveTruncateFrom truncating&quot;</span>);
+				T::truncate_from(err)
+			},
+			|bound| bound,
+		)
 	}
 }
 
@@ -1973,7 +2100,58 @@
 <span class="attribute">#[cfg(test)]
 </span><span class="kw">mod </span>test {
 	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>sp_core::bounded::{BoundedSlice, BoundedVec};
 	<span class="kw">use </span>sp_std::marker::PhantomData;
+
+	<span class="attribute">#[test]
+	#[cfg(not(debug_assertions))]
+	</span><span class="kw">fn </span>defensive_truncating_from_vec_defensive_works() {
+		<span class="kw">let </span>unbound = <span class="macro">vec!</span>[<span class="number">1u32</span>, <span class="number">2</span>];
+		<span class="kw">let </span>bound = BoundedVec::&lt;u32, ConstU32&lt;<span class="number">1</span>&gt;&gt;::defensive_truncate_from(unbound);
+		<span class="macro">assert_eq!</span>(bound, <span class="macro">vec!</span>[<span class="number">1u32</span>]);
+	}
+
+	<span class="attribute">#[test]
+	#[cfg(not(debug_assertions))]
+	</span><span class="kw">fn </span>defensive_truncating_from_slice_defensive_works() {
+		<span class="kw">let </span>unbound = <span class="kw-2">&amp;</span>[<span class="number">1u32</span>, <span class="number">2</span>];
+		<span class="kw">let </span>bound = BoundedSlice::&lt;u32, ConstU32&lt;<span class="number">1</span>&gt;&gt;::defensive_truncate_from(unbound);
+		<span class="macro">assert_eq!</span>(bound, <span class="kw-2">&amp;</span>[<span class="number">1u32</span>][..]);
+	}
+
+	<span class="attribute">#[test]
+	#[cfg(debug_assertions)]
+	#[should_panic(
+		expected = <span class="string">&quot;Defensive failure has been triggered!: \&quot;DefensiveTruncateFrom truncating\&quot;&quot;
+	</span>)]
+	</span><span class="kw">fn </span>defensive_truncating_from_vec_defensive_panics() {
+		<span class="kw">let </span>unbound = <span class="macro">vec!</span>[<span class="number">1u32</span>, <span class="number">2</span>];
+		<span class="kw">let _ </span>= BoundedVec::&lt;u32, ConstU32&lt;<span class="number">1</span>&gt;&gt;::defensive_truncate_from(unbound);
+	}
+
+	<span class="attribute">#[test]
+	#[cfg(debug_assertions)]
+	#[should_panic(
+		expected = <span class="string">&quot;Defensive failure has been triggered!: \&quot;DefensiveTruncateFrom truncating\&quot;&quot;
+	</span>)]
+	</span><span class="kw">fn </span>defensive_truncating_from_slice_defensive_panics() {
+		<span class="kw">let </span>unbound = <span class="kw-2">&amp;</span>[<span class="number">1u32</span>, <span class="number">2</span>];
+		<span class="kw">let _ </span>= BoundedSlice::&lt;u32, ConstU32&lt;<span class="number">1</span>&gt;&gt;::defensive_truncate_from(unbound);
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>defensive_truncate_from_vec_works() {
+		<span class="kw">let </span>unbound = <span class="macro">vec!</span>[<span class="number">1u32</span>, <span class="number">2</span>, <span class="number">3</span>];
+		<span class="kw">let </span>bound = BoundedVec::&lt;u32, ConstU32&lt;<span class="number">3</span>&gt;&gt;::defensive_truncate_from(unbound.clone());
+		<span class="macro">assert_eq!</span>(bound, unbound);
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>defensive_truncate_from_slice_works() {
+		<span class="kw">let </span>unbound = [<span class="number">1u32</span>, <span class="number">2</span>, <span class="number">3</span>];
+		<span class="kw">let </span>bound = BoundedSlice::&lt;u32, ConstU32&lt;<span class="number">3</span>&gt;&gt;::defensive_truncate_from(<span class="kw-2">&amp;</span>unbound);
+		<span class="macro">assert_eq!</span>(bound, <span class="kw-2">&amp;</span>unbound[..]);
+	}
 
 	<span class="attribute">#[derive(Encode, Decode)]
 	</span><span class="kw">enum </span>NestedType {

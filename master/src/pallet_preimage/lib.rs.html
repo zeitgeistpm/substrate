@@ -453,6 +453,7 @@
 <span id="453">453</span>
 <span id="454">454</span>
 <span id="455">455</span>
+<span id="456">456</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -797,6 +798,7 @@
 
 	<span class="kw">fn </span>insert(hash: <span class="kw-2">&amp;</span>T::Hash, preimage: Cow&lt;[u8]&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
 		BoundedSlice::&lt;u8, ConstU32&lt;MAX_SIZE&gt;&gt;::try_from(preimage.as_ref())
+			.map_err(|<span class="kw">_</span>| ())
 			.map(|s| PreimageFor::&lt;T&gt;::insert((hash, s.len() <span class="kw">as </span>u32), s))
 	}
 
