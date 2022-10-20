@@ -443,9 +443,6 @@
 <span id="443">443</span>
 <span id="444">444</span>
 <span id="445">445</span>
-<span id="446">446</span>
-<span id="447">447</span>
-<span id="448">448</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2021 Parity Technologies (UK) Ltd.
 // This file is part of Substrate.
 
@@ -775,7 +772,7 @@
 	<span class="kw">use </span>sp_consensus::BlockOrigin;
 	<span class="kw">use </span>sp_finality_grandpa::GRANDPA_ENGINE_ID;
 	<span class="kw">use </span>sp_keyring::Ed25519Keyring;
-	<span class="kw">use </span>sp_runtime::{generic::BlockId, traits::Header <span class="kw">as _</span>};
+	<span class="kw">use </span>sp_runtime::traits::Header <span class="kw">as _</span>;
 	<span class="kw">use </span>std::sync::Arc;
 	<span class="kw">use </span>substrate_test_runtime_client::{
 		ClientBlockImportExt, ClientExt, DefaultTestClientBuilderExt, TestClientBuilder,
@@ -860,10 +857,7 @@
 				<span class="kw">let </span>justification = GrandpaJustification::from_commit(<span class="kw-2">&amp;</span>client, <span class="number">42</span>, commit).unwrap();
 
 				client
-					.finalize_block(
-						BlockId::Hash(target_hash),
-						<span class="prelude-val">Some</span>((GRANDPA_ENGINE_ID, justification.encode())),
-					)
+					.finalize_block(<span class="kw-2">&amp;</span>target_hash, <span class="prelude-val">Some</span>((GRANDPA_ENGINE_ID, justification.encode())))
 					.unwrap();
 
 				authority_set_changes.push((current_set_id, n));

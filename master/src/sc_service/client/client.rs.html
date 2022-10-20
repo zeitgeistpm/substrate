@@ -2084,13 +2084,6 @@
 <span id="2084">2084</span>
 <span id="2085">2085</span>
 <span id="2086">2086</span>
-<span id="2087">2087</span>
-<span id="2088">2088</span>
-<span id="2089">2089</span>
-<span id="2090">2090</span>
-<span id="2091">2091</span>
-<span id="2092">2092</span>
-<span id="2093">2093</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -3938,29 +3931,22 @@
 	<span class="kw">fn </span>apply_finality(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		operation: <span class="kw-2">&amp;mut </span>ClientImportOperation&lt;Block, B&gt;,
-		id: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="kw">let </span>last_best = <span class="self">self</span>.backend.blockchain().info().best_hash;
-		<span class="kw">let </span>to_finalize_hash = <span class="self">self</span>.backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>id)<span class="question-mark">?</span>;
-		<span class="self">self</span>.apply_finality_with_block_hash(
-			operation,
-			to_finalize_hash,
-			justification,
-			last_best,
-			notify,
-		)
+		<span class="self">self</span>.apply_finality_with_block_hash(operation, <span class="kw-2">*</span>hash, justification, last_best, notify)
 	}
 
 	<span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		id: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="self">self</span>.lock_import_and_run(|operation| {
-			<span class="self">self</span>.apply_finality(operation, id, justification, notify)
+			<span class="self">self</span>.apply_finality(operation, hash, justification, notify)
 		})
 	}
 }
@@ -3974,20 +3960,20 @@
 	<span class="kw">fn </span>apply_finality(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		operation: <span class="kw-2">&amp;mut </span>ClientImportOperation&lt;Block, B&gt;,
-		id: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
-		(<span class="kw-2">**</span><span class="self">self</span>).apply_finality(operation, id, justification, notify)
+		(<span class="kw-2">**</span><span class="self">self</span>).apply_finality(operation, hash, justification, notify)
 	}
 
 	<span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		id: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
-		(<span class="kw-2">**</span><span class="self">self</span>).finalize_block(id, justification, notify)
+		(<span class="kw-2">**</span><span class="self">self</span>).finalize_block(hash, justification, notify)
 	}
 }
 

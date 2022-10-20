@@ -1348,11 +1348,11 @@
 
 	<span class="kw">pub fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		id: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; ClientResult&lt;()&gt; {
-		<span class="self">self</span>.client.finalize_block(id, justification, notify)
+		<span class="self">self</span>.client.finalize_block(hash, justification, notify)
 	}
 }
 
@@ -2271,7 +2271,7 @@
 		justification: Justification,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="self">Self</span>::Error&gt; {
 		<span class="self">self</span>.<span class="number">0
-			</span>.finalize_block(BlockId::Hash(hash), <span class="prelude-val">Some</span>(justification), <span class="bool-val">true</span>)
+			</span>.finalize_block(<span class="kw-2">&amp;</span>hash, <span class="prelude-val">Some</span>(justification), <span class="bool-val">true</span>)
 			.map_err(|<span class="kw">_</span>| ConsensusError::InvalidJustification)
 	}
 }
