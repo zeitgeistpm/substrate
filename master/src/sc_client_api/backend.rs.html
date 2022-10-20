@@ -778,13 +778,13 @@
 	<span class="doccomment">/// Mark a block as finalized.
 	</span><span class="kw">fn </span>mark_finalized(
 		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
-		id: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
 
 	<span class="doccomment">/// Mark a block as new head. If both block import and set head are specified, set head
 	/// overrides block import&#39;s best block rule.
-	</span><span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, id: BlockId&lt;Block&gt;) -&gt; sp_blockchain::Result&lt;()&gt;;
+	</span><span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt;;
 
 	<span class="doccomment">/// Add a transaction index operation.
 	</span><span class="kw">fn </span>update_transaction_index(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: Vec&lt;IndexOperation&gt;)
@@ -1038,12 +1038,12 @@
 		transaction: <span class="self">Self</span>::BlockImportOperation,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
 
-	<span class="doccomment">/// Finalize block with given Id.
+	<span class="doccomment">/// Finalize block with given `hash`.
 	///
 	/// This should only be called if the parent of the given block has been finalized.
 	</span><span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
 

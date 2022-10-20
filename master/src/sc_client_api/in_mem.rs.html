@@ -890,11 +890,6 @@
 <span id="890">890</span>
 <span id="891">891</span>
 <span id="892">892</span>
-<span id="893">893</span>
-<span id="894">894</span>
-<span id="895">895</span>
-<span id="896">896</span>
-<span id="897">897</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1120,10 +1115,10 @@
 	}
 
 	<span class="doccomment">/// Set an existing block as head.
-	</span><span class="kw">pub fn </span>set_head(<span class="kw-2">&amp;</span><span class="self">self</span>, id: BlockId&lt;Block&gt;) -&gt; sp_blockchain::Result&lt;()&gt; {
+	</span><span class="kw">pub fn </span>set_head(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="kw">let </span>header = <span class="self">self
-			</span>.header(id)<span class="question-mark">?
-			</span>.ok_or_else(|| sp_blockchain::Error::UnknownBlock(<span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, id)))<span class="question-mark">?</span>;
+			</span>.header(BlockId::Hash(hash))<span class="question-mark">?
+			</span>.ok_or_else(|| sp_blockchain::Error::UnknownBlock(<span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, hash)))<span class="question-mark">?</span>;
 
 		<span class="self">self</span>.apply_head(<span class="kw-2">&amp;</span>header)
 	}
@@ -1168,21 +1163,16 @@
 
 	<span class="kw">fn </span>finalize_header(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		id: BlockId&lt;Block&gt;,
+		block: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
-		<span class="kw">let </span>hash = <span class="kw">match </span><span class="self">self</span>.header(id)<span class="question-mark">? </span>{
-			<span class="prelude-val">Some</span>(h) =&gt; h.hash(),
-			<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(sp_blockchain::Error::UnknownBlock(<span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, id))),
-		};
-
 		<span class="kw">let </span><span class="kw-2">mut </span>storage = <span class="self">self</span>.storage.write();
-		storage.finalized_hash = hash;
+		storage.finalized_hash = <span class="kw-2">*</span>block;
 
 		<span class="kw">if </span>justification.is_some() {
 			<span class="kw">let </span>block = storage
 				.blocks
-				.get_mut(<span class="kw-2">&amp;</span>hash)
+				.get_mut(block)
 				.expect(<span class="string">&quot;hash was fetched from a block in the db; qed&quot;</span>);
 
 			<span class="kw">let </span>block_justifications = <span class="kw">match </span>block {
@@ -1397,8 +1387,8 @@
 	new_state:
 		<span class="prelude-ty">Option</span>&lt;&lt;InMemoryBackend&lt;HashFor&lt;Block&gt;&gt; <span class="kw">as </span>StateBackend&lt;HashFor&lt;Block&gt;&gt;&gt;::Transaction&gt;,
 	aux: Vec&lt;(Vec&lt;u8&gt;, <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;)&gt;,
-	finalized_blocks: Vec&lt;(BlockId&lt;Block&gt;, <span class="prelude-ty">Option</span>&lt;Justification&gt;)&gt;,
-	set_head: <span class="prelude-ty">Option</span>&lt;BlockId&lt;Block&gt;&gt;,
+	finalized_blocks: Vec&lt;(Block::Hash, <span class="prelude-ty">Option</span>&lt;Justification&gt;)&gt;,
+	set_head: <span class="prelude-ty">Option</span>&lt;Block::Hash&gt;,
 }
 
 <span class="kw">impl</span>&lt;Block: BlockT&gt; BlockImportOperation&lt;Block&gt;
@@ -1502,16 +1492,16 @@
 
 	<span class="kw">fn </span>mark_finalized(
 		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
-		block: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
-		<span class="self">self</span>.finalized_blocks.push((block, justification));
+		<span class="self">self</span>.finalized_blocks.push((<span class="kw-2">*</span>hash, justification));
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: BlockId&lt;Block&gt;) -&gt; sp_blockchain::Result&lt;()&gt; {
+	<span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="macro">assert!</span>(<span class="self">self</span>.pending_block.is_none(), <span class="string">&quot;Only one set block per operation is allowed&quot;</span>);
-		<span class="self">self</span>.set_head = <span class="prelude-val">Some</span>(block);
+		<span class="self">self</span>.set_head = <span class="prelude-val">Some</span>(<span class="kw-2">*</span>hash);
 		<span class="prelude-val">Ok</span>(())
 	}
 
@@ -1607,7 +1597,7 @@
 	<span class="kw">fn </span>commit_operation(<span class="kw-2">&amp;</span><span class="self">self</span>, operation: <span class="self">Self</span>::BlockImportOperation) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="kw">if </span>!operation.finalized_blocks.is_empty() {
 			<span class="kw">for </span>(block, justification) <span class="kw">in </span>operation.finalized_blocks {
-				<span class="self">self</span>.blockchain.finalize_header(block, justification)<span class="question-mark">?</span>;
+				<span class="self">self</span>.blockchain.finalize_header(<span class="kw-2">&amp;</span>block, justification)<span class="question-mark">?</span>;
 			}
 		}
 
@@ -1640,10 +1630,10 @@
 
 	<span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
-		<span class="self">self</span>.blockchain.finalize_header(block, justification)
+		<span class="self">self</span>.blockchain.finalize_header(hash, justification)
 	}
 
 	<span class="kw">fn </span>append_justification(

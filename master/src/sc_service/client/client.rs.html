@@ -2964,17 +2964,17 @@
 			// plugable we cannot make a better choice here. usages that need
 			// an accurate &quot;best&quot; block need to go through `SelectChain`
 			// instead.
-			</span>operation.op.mark_head(BlockId::Hash(block))<span class="question-mark">?</span>;
+			</span>operation.op.mark_head(<span class="kw-2">&amp;</span>block)<span class="question-mark">?</span>;
 		}
 
 		<span class="kw">let </span>enacted = route_from_finalized.enacted();
 		<span class="macro">assert!</span>(enacted.len() &gt; <span class="number">0</span>);
 		<span class="kw">for </span>finalize_new <span class="kw">in </span><span class="kw-2">&amp;</span>enacted[..enacted.len() - <span class="number">1</span>] {
-			operation.op.mark_finalized(BlockId::Hash(finalize_new.hash), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+			operation.op.mark_finalized(<span class="kw-2">&amp;</span>finalize_new.hash, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 		}
 
 		<span class="macro">assert_eq!</span>(enacted.last().map(|e| e.hash), <span class="prelude-val">Some</span>(block));
-		operation.op.mark_finalized(BlockId::Hash(block), justification)<span class="question-mark">?</span>;
+		operation.op.mark_finalized(<span class="kw-2">&amp;</span>block, justification)<span class="question-mark">?</span>;
 
 		<span class="kw">if </span>notify {
 			<span class="kw">let </span>finalized =

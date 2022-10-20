@@ -1599,6 +1599,8 @@
 <span id="1599">1599</span>
 <span id="1600">1600</span>
 <span id="1601">1601</span>
+<span id="1602">1602</span>
+<span id="1603">1603</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
@@ -2972,8 +2974,10 @@
 		<span class="kw">let </span><span class="kw-2">mut </span>best_block_stream = best_block_streams.drain(..).next().unwrap();
 		net.peer(<span class="number">0</span>).push_blocks(<span class="number">2</span>, <span class="bool-val">false</span>);
 		<span class="comment">// finalize 1 and 2 without justifications
-		</span>backend.finalize_block(BlockId::number(<span class="number">1</span>), <span class="prelude-val">None</span>).unwrap();
-		backend.finalize_block(BlockId::number(<span class="number">2</span>), <span class="prelude-val">None</span>).unwrap();
+		</span><span class="kw">let </span>hashof1 = backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">1</span>)).unwrap();
+		<span class="kw">let </span>hashof2 = backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">2</span>)).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>hashof1, <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>hashof2, <span class="prelude-val">None</span>).unwrap();
 
 		<span class="kw">let </span>justif = create_finality_proof(<span class="number">2</span>);
 		<span class="comment">// create new session at block #2

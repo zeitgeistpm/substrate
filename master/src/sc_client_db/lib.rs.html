@@ -3792,6 +3792,7 @@
 <span id="3792">3792</span>
 <span id="3793">3793</span>
 <span id="3794">3794</span>
+<span id="3795">3795</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -4550,8 +4551,8 @@
 	offchain_storage_updates: OffchainChangesCollection,
 	pending_block: <span class="prelude-ty">Option</span>&lt;PendingBlock&lt;Block&gt;&gt;,
 	aux_ops: Vec&lt;(Vec&lt;u8&gt;, <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;)&gt;,
-	finalized_blocks: Vec&lt;(BlockId&lt;Block&gt;, <span class="prelude-ty">Option</span>&lt;Justification&gt;)&gt;,
-	set_head: <span class="prelude-ty">Option</span>&lt;BlockId&lt;Block&gt;&gt;,
+	finalized_blocks: Vec&lt;(Block::Hash, <span class="prelude-ty">Option</span>&lt;Justification&gt;)&gt;,
+	set_head: <span class="prelude-ty">Option</span>&lt;Block::Hash&gt;,
 	commit_state: bool,
 	index_ops: Vec&lt;IndexOperation&gt;,
 }
@@ -4691,16 +4692,16 @@
 
 	<span class="kw">fn </span>mark_finalized(
 		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
-		block: BlockId&lt;Block&gt;,
+		block: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; ClientResult&lt;()&gt; {
-		<span class="self">self</span>.finalized_blocks.push((block, justification));
+		<span class="self">self</span>.finalized_blocks.push((<span class="kw-2">*</span>block, justification));
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: BlockId&lt;Block&gt;) -&gt; ClientResult&lt;()&gt; {
+	<span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; ClientResult&lt;()&gt; {
 		<span class="macro">assert!</span>(<span class="self">self</span>.set_head.is_none(), <span class="string">&quot;Only one set head per operation is allowed&quot;</span>);
-		<span class="self">self</span>.set_head = <span class="prelude-val">Some</span>(block);
+		<span class="self">self</span>.set_head = <span class="prelude-val">Some</span>(<span class="kw-2">*</span>hash);
 		<span class="prelude-val">Ok</span>(())
 	}
 
@@ -5145,8 +5146,7 @@
 			(meta.best_number, meta.finalized_hash, meta.finalized_number, meta.block_gap)
 		};
 
-		<span class="kw">for </span>(block, justification) <span class="kw">in </span>operation.finalized_blocks {
-			<span class="kw">let </span>block_hash = <span class="self">self</span>.blockchain.expect_block_hash_from_id(<span class="kw-2">&amp;</span>block)<span class="question-mark">?</span>;
+		<span class="kw">for </span>(block_hash, justification) <span class="kw">in </span>operation.finalized_blocks {
 			<span class="kw">let </span>block_header = <span class="self">self</span>.blockchain.expect_header(BlockId::Hash(block_hash))<span class="question-mark">?</span>;
 			meta_updates.push(<span class="self">self</span>.finalize_block_with_transaction(
 				<span class="kw-2">&amp;mut </span>transaction,
@@ -5418,9 +5418,10 @@
 		</span>};
 
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(set_head) = operation.set_head {
-			<span class="kw">if let </span><span class="prelude-val">Some</span>(header) =
-				sc_client_api::blockchain::HeaderBackend::header(<span class="kw-2">&amp;</span><span class="self">self</span>.blockchain, set_head)<span class="question-mark">?
-			</span>{
+			<span class="kw">if let </span><span class="prelude-val">Some</span>(header) = sc_client_api::blockchain::HeaderBackend::header(
+				<span class="kw-2">&amp;</span><span class="self">self</span>.blockchain,
+				BlockId::Hash(set_head),
+			)<span class="question-mark">? </span>{
 				<span class="kw">let </span>number = header.number();
 				<span class="kw">let </span>hash = header.hash();
 
@@ -5786,17 +5787,16 @@
 
 	<span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; ClientResult&lt;()&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>transaction = Transaction::new();
-		<span class="kw">let </span>hash = <span class="self">self</span>.blockchain.expect_block_hash_from_id(<span class="kw-2">&amp;</span>block)<span class="question-mark">?</span>;
-		<span class="kw">let </span>header = <span class="self">self</span>.blockchain.expect_header(block)<span class="question-mark">?</span>;
+		<span class="kw">let </span>header = <span class="self">self</span>.blockchain.expect_header(BlockId::Hash(<span class="kw-2">*</span>hash))<span class="question-mark">?</span>;
 		<span class="kw">let </span><span class="kw-2">mut </span>displaced = <span class="prelude-val">None</span>;
 
 		<span class="kw">let </span>m = <span class="self">self</span>.finalize_block_with_transaction(
 			<span class="kw-2">&amp;mut </span>transaction,
-			<span class="kw-2">&amp;</span>hash,
+			hash,
 			<span class="kw-2">&amp;</span>header,
 			<span class="prelude-val">None</span>,
 			justification,
@@ -6399,13 +6399,12 @@
 			header.state_root = root.into();
 
 			op.update_storage(storage, Vec::new()).unwrap();
-			op.set_block_data(header, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[]), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, NewBlockState::Best)
+			op.set_block_data(header.clone(), <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[]), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, NewBlockState::Best)
 				.unwrap();
 
 			db.commit_operation(op).unwrap();
 
-			<span class="kw">let </span>hash = db.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">1</span>)).unwrap();
-			<span class="kw">let </span>state = db.state_at(<span class="kw-2">&amp;</span>hash).unwrap();
+			<span class="kw">let </span>state = db.state_at(<span class="kw-2">&amp;</span>header.hash()).unwrap();
 
 			<span class="macro">assert_eq!</span>(state.storage(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>]).unwrap(), <span class="prelude-val">None</span>);
 			<span class="macro">assert_eq!</span>(state.storage(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]).unwrap(), <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">9</span>, <span class="number">9</span>, <span class="number">9</span>]));
@@ -6459,7 +6458,7 @@
 			hash
 		};
 
-		<span class="kw">let </span>hash = {
+		<span class="kw">let </span>hashof1 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Number(<span class="number">0</span>)).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
@@ -6496,12 +6495,12 @@
 			hash
 		};
 
-		<span class="kw">let </span>hash = {
+		<span class="kw">let </span>hashof2 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Number(<span class="number">1</span>)).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
 				number: <span class="number">2</span>,
-				parent_hash: hash,
+				parent_hash: hashof1,
 				state_root: Default::default(),
 				digest: Default::default(),
 				extrinsics_root: Default::default(),
@@ -6530,12 +6529,12 @@
 			hash
 		};
 
-		{
+		<span class="kw">let </span>hashof3 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Number(<span class="number">2</span>)).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
 				number: <span class="number">3</span>,
-				parent_hash: hash,
+				parent_hash: hashof2,
 				state_root: Default::default(),
 				digest: Default::default(),
 				extrinsics_root: Default::default(),
@@ -6548,6 +6547,7 @@
 				.storage_root(storage.iter().cloned().map(|(x, y)| (x, <span class="prelude-val">Some</span>(y))), state_version)
 				.<span class="number">0
 				</span>.into();
+			<span class="kw">let </span>hash = header.hash();
 
 			op.set_block_data(header, <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[]), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, NewBlockState::Best)
 				.unwrap();
@@ -6558,11 +6558,12 @@
 				.db
 				.get(columns::STATE, <span class="kw-2">&amp;</span>sp_trie::prefixed_key::&lt;BlakeTwo256&gt;(<span class="kw-2">&amp;</span>key, EMPTY_PREFIX))
 				.is_none());
-		}
+			hash
+		};
 
-		backend.finalize_block(BlockId::Number(<span class="number">1</span>), <span class="prelude-val">None</span>).unwrap();
-		backend.finalize_block(BlockId::Number(<span class="number">2</span>), <span class="prelude-val">None</span>).unwrap();
-		backend.finalize_block(BlockId::Number(<span class="number">3</span>), <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>hashof1, <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>hashof2, <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>hashof3, <span class="prelude-val">None</span>).unwrap();
 		<span class="macro">assert!</span>(backend
 			.storage
 			.db
@@ -6785,8 +6786,8 @@
 			<span class="macro">vec!</span>[block2_a, block2_b, block2_c, block1_c]
 		);
 
-		backend.finalize_block(BlockId::hash(block1_a), <span class="prelude-val">None</span>).unwrap();
-		backend.finalize_block(BlockId::hash(block2_a), <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>block1_a, <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>block2_a, <span class="prelude-val">None</span>).unwrap();
 
 		<span class="comment">// leaves at same height stay. Leaves at lower heights pruned.
 		</span><span class="macro">assert_eq!</span>(backend.blockchain().leaves().unwrap(), <span class="macro">vec!</span>[block2_a, block2_b, block2_c]);
@@ -6810,10 +6811,10 @@
 		<span class="kw">let </span>backend = Backend::&lt;Block&gt;::new_test(<span class="number">10</span>, <span class="number">10</span>);
 
 		<span class="kw">let </span>block0 = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">0</span>, Default::default(), <span class="prelude-val">None</span>, Default::default());
-		<span class="kw">let _ </span>= insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">1</span>, block0, <span class="prelude-val">None</span>, Default::default());
+		<span class="kw">let </span>block1 = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">1</span>, block0, <span class="prelude-val">None</span>, Default::default());
 
 		<span class="kw">let </span>justification = <span class="prelude-val">Some</span>((CONS0_ENGINE_ID, <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]));
-		backend.finalize_block(BlockId::Number(<span class="number">1</span>), justification.clone()).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>block1, justification.clone()).unwrap();
 
 		<span class="macro">assert_eq!</span>(
 			backend.blockchain().justifications(BlockId::Number(<span class="number">1</span>)).unwrap(),
@@ -6828,10 +6829,10 @@
 		<span class="kw">let </span>backend = Backend::&lt;Block&gt;::new_test(<span class="number">10</span>, <span class="number">10</span>);
 
 		<span class="kw">let </span>block0 = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">0</span>, Default::default(), <span class="prelude-val">None</span>, Default::default());
-		<span class="kw">let _ </span>= insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">1</span>, block0, <span class="prelude-val">None</span>, Default::default());
+		<span class="kw">let </span>block1 = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">1</span>, block0, <span class="prelude-val">None</span>, Default::default());
 
 		<span class="kw">let </span>just0 = (CONS0_ENGINE_ID, <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
-		backend.finalize_block(BlockId::Number(<span class="number">1</span>), <span class="prelude-val">Some</span>(just0.clone().into())).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>block1, <span class="prelude-val">Some</span>(just0.clone().into())).unwrap();
 
 		<span class="kw">let </span>just1 = (CONS1_ENGINE_ID, <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">5</span>]);
 		backend.append_justification(BlockId::Number(<span class="number">1</span>), just1.clone()).unwrap();
@@ -6865,15 +6866,15 @@
 		{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(block0)).unwrap();
-			op.mark_finalized(BlockId::Hash(block1), <span class="prelude-val">None</span>).unwrap();
-			op.mark_finalized(BlockId::Hash(block2), <span class="prelude-val">None</span>).unwrap();
+			op.mark_finalized(<span class="kw-2">&amp;</span>block1, <span class="prelude-val">None</span>).unwrap();
+			op.mark_finalized(<span class="kw-2">&amp;</span>block2, <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
 		}
 		{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(block2)).unwrap();
-			op.mark_finalized(BlockId::Hash(block3), <span class="prelude-val">None</span>).unwrap();
-			op.mark_finalized(BlockId::Hash(block4), <span class="prelude-val">None</span>).unwrap();
+			op.mark_finalized(<span class="kw-2">&amp;</span>block3, <span class="prelude-val">None</span>).unwrap();
+			op.mark_finalized(<span class="kw-2">&amp;</span>block4, <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
 		}
 	}
@@ -6975,7 +6976,7 @@
 		{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(block0)).unwrap();
-			op.mark_finalized(BlockId::Hash(block2), <span class="prelude-val">None</span>).unwrap();
+			op.mark_finalized(<span class="kw-2">&amp;</span>block2, <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap_err();
 		}
 	}
@@ -7004,7 +7005,7 @@
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
 			<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">5 </span>{
-				op.mark_finalized(BlockId::Hash(blocks[i]), <span class="prelude-val">None</span>).unwrap();
+				op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 			}
 			backend.commit_operation(op).unwrap();
 		}
@@ -7039,7 +7040,7 @@
 		<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">3 </span>{
-			op.mark_finalized(BlockId::Hash(blocks[i]), <span class="prelude-val">None</span>).unwrap();
+			op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 		}
 		backend.commit_operation(op).unwrap();
 
@@ -7095,7 +7096,7 @@
 
 		<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
-		op.mark_head(BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
+		op.mark_head(<span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 		backend.commit_operation(op).unwrap();
 
 		<span class="kw">let </span>bc = backend.blockchain();
@@ -7104,7 +7105,7 @@
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">5 </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[i])).unwrap();
-			op.mark_finalized(BlockId::Hash(blocks[i]), <span class="prelude-val">None</span>).unwrap();
+			op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
 		}
 
@@ -7164,13 +7165,13 @@
 		.unwrap();
 		<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
-		op.mark_head(BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
+		op.mark_head(<span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 		backend.commit_operation(op).unwrap();
 
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">5 </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
-			op.mark_finalized(BlockId::Hash(blocks[i]), <span class="prelude-val">None</span>).unwrap();
+			op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
 		}
 
@@ -7217,8 +7218,9 @@
 		<span class="macro">assert_eq!</span>(bc.indexed_transaction(<span class="kw-2">&amp;</span>x1_hash).unwrap().unwrap(), <span class="kw-2">&amp;</span>x1[<span class="number">1</span>..]);
 
 		<span class="comment">// Push one more blocks and make sure block is pruned and transaction index is cleared.
-		</span>insert_block(<span class="kw-2">&amp;</span>backend, <span class="number">1</span>, hash, <span class="prelude-val">None</span>, Default::default(), <span class="macro">vec!</span>[], <span class="prelude-val">None</span>).unwrap();
-		backend.finalize_block(BlockId::Number(<span class="number">1</span>), <span class="prelude-val">None</span>).unwrap();
+		</span><span class="kw">let </span>block1 =
+			insert_block(<span class="kw-2">&amp;</span>backend, <span class="number">1</span>, hash, <span class="prelude-val">None</span>, Default::default(), <span class="macro">vec!</span>[], <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>block1, <span class="prelude-val">None</span>).unwrap();
 		<span class="macro">assert_eq!</span>(bc.body(BlockId::Number(<span class="number">0</span>)).unwrap(), <span class="prelude-val">None</span>);
 		<span class="macro">assert_eq!</span>(bc.indexed_transaction(<span class="kw-2">&amp;</span>x0_hash).unwrap(), <span class="prelude-val">None</span>);
 		<span class="macro">assert_eq!</span>(bc.indexed_transaction(<span class="kw-2">&amp;</span>x1_hash).unwrap(), <span class="prelude-val">None</span>);
@@ -7295,7 +7297,7 @@
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">10 </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
 			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
-			op.mark_finalized(BlockId::Hash(blocks[i]), <span class="prelude-val">None</span>).unwrap();
+			op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
 			<span class="kw">let </span>bc = backend.blockchain();
 			<span class="kw">if </span>i &lt; <span class="number">6 </span>{
@@ -7470,7 +7472,7 @@
 
 		<span class="kw">let </span>block1_a = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">1</span>, block0, <span class="prelude-val">None</span>, Default::default());
 		<span class="kw">let </span>block2_a = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">2</span>, block1_a, <span class="prelude-val">None</span>, Default::default());
-		backend.finalize_block(BlockId::hash(block1_a), <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(<span class="kw-2">&amp;</span>block1_a, <span class="prelude-val">None</span>).unwrap();
 		<span class="macro">assert_eq!</span>(backend.blockchain().leaves().unwrap(), <span class="macro">vec!</span>[block2_a]);
 
 		<span class="comment">// Insert a fork prior to finalization point. Leave should not be created.
