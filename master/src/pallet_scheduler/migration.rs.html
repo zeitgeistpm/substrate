@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/scheduler/src/migration.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migration.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_scheduler/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_scheduler/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_scheduler/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/scheduler/src/migration.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migration.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_scheduler/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_scheduler/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -406,199 +400,199 @@
 <span id="400">400</span>
 <span id="401">401</span>
 <span id="402">402</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Migrations for the scheduler pallet.</span>
+</span><span class="doccomment">//! Migrations for the scheduler pallet.
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">frame_support::traits::OnRuntimeUpgrade</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span>frame_support::traits::OnRuntimeUpgrade;
 
-<span class="doccomment">/// The log target.</span>
-<span class="kw">const</span> <span class="ident">TARGET</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;runtime::scheduler::migration&quot;</span>;
+<span class="doccomment">/// The log target.
+</span><span class="kw">const </span>TARGET: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;runtime::scheduler::migration&quot;</span>;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v1</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::pallet_prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">pub mod </span>v1 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">frame_support::storage_alias</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Agenda</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span>
-		<span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockNumber</span>,
-		<span class="ident">Vec</span><span class="op">&lt;</span>
-			<span class="prelude-ty">Option</span><span class="op">&lt;</span>
-				<span class="ident">ScheduledV1</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span>, <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockNumber</span><span class="op">&gt;</span>,
-			<span class="op">&gt;</span>,
-		<span class="op">&gt;</span>,
-		<span class="ident">ValueQuery</span>,
-	<span class="op">&gt;</span>;
+	<span class="attribute">#[frame_support::storage_alias]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Agenda&lt;T: Config&gt; = StorageMap&lt;
+		Pallet&lt;T&gt;,
+		Twox64Concat,
+		&lt;T <span class="kw">as </span>frame_system::Config&gt;::BlockNumber,
+		Vec&lt;
+			<span class="prelude-ty">Option</span>&lt;
+				ScheduledV1&lt;&lt;T <span class="kw">as </span>Config&gt;::RuntimeCall, &lt;T <span class="kw">as </span>frame_system::Config&gt;::BlockNumber&gt;,
+			&gt;,
+		&gt;,
+		ValueQuery,
+	&gt;;
 
-	<span class="attribute">#[<span class="ident">frame_support::storage_alias</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Lookup</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span>
-		<span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">TaskAddress</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockNumber</span><span class="op">&gt;</span>,
-	<span class="op">&gt;</span>;
+	<span class="attribute">#[frame_support::storage_alias]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Lookup&lt;T: Config&gt; = StorageMap&lt;
+		Pallet&lt;T&gt;,
+		Twox64Concat,
+		Vec&lt;u8&gt;,
+		TaskAddress&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::BlockNumber&gt;,
+	&gt;;
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v2</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::pallet_prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">pub mod </span>v2 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">frame_support::storage_alias</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Agenda</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span>
-		<span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockNumber</span>,
-		<span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ScheduledV2Of</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-		<span class="ident">ValueQuery</span>,
-	<span class="op">&gt;</span>;
+	<span class="attribute">#[frame_support::storage_alias]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Agenda&lt;T: Config&gt; = StorageMap&lt;
+		Pallet&lt;T&gt;,
+		Twox64Concat,
+		&lt;T <span class="kw">as </span>frame_system::Config&gt;::BlockNumber,
+		Vec&lt;<span class="prelude-ty">Option</span>&lt;ScheduledV2Of&lt;T&gt;&gt;&gt;,
+		ValueQuery,
+	&gt;;
 
-	<span class="attribute">#[<span class="ident">frame_support::storage_alias</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Lookup</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span>
-		<span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">TaskAddress</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockNumber</span><span class="op">&gt;</span>,
-	<span class="op">&gt;</span>;
+	<span class="attribute">#[frame_support::storage_alias]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Lookup&lt;T: Config&gt; = StorageMap&lt;
+		Pallet&lt;T&gt;,
+		Twox64Concat,
+		Vec&lt;u8&gt;,
+		TaskAddress&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::BlockNumber&gt;,
+	&gt;;
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v3</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::pallet_prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">pub mod </span>v3 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">frame_support::storage_alias</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Agenda</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span>
-		<span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockNumber</span>,
-		<span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ScheduledV3Of</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-		<span class="ident">ValueQuery</span>,
-	<span class="op">&gt;</span>;
+	<span class="attribute">#[frame_support::storage_alias]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Agenda&lt;T: Config&gt; = StorageMap&lt;
+		Pallet&lt;T&gt;,
+		Twox64Concat,
+		&lt;T <span class="kw">as </span>frame_system::Config&gt;::BlockNumber,
+		Vec&lt;<span class="prelude-ty">Option</span>&lt;ScheduledV3Of&lt;T&gt;&gt;&gt;,
+		ValueQuery,
+	&gt;;
 
-	<span class="attribute">#[<span class="ident">frame_support::storage_alias</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Lookup</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span>
-		<span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">TaskAddress</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockNumber</span><span class="op">&gt;</span>,
-	<span class="op">&gt;</span>;
+	<span class="attribute">#[frame_support::storage_alias]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Lookup&lt;T: Config&gt; = StorageMap&lt;
+		Pallet&lt;T&gt;,
+		Twox64Concat,
+		Vec&lt;u8&gt;,
+		TaskAddress&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::BlockNumber&gt;,
+	&gt;;
 
-	<span class="doccomment">/// Migrate the scheduler pallet from V3 to V4.</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MigrateToV4</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
+	<span class="doccomment">/// Migrate the scheduler pallet from V3 to V4.
+	</span><span class="kw">pub struct </span>MigrateToV4&lt;T&gt;(sp_std::marker::PhantomData&lt;T&gt;);
 
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">Hash</span> <span class="op">=</span> <span class="ident">PreimageHash</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">MigrateToV4</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">StorageVersion::get</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="number">3</span>, <span class="string">&quot;Can only upgrade from version 3&quot;</span>);
+	<span class="kw">impl</span>&lt;T: Config&lt;Hash = PreimageHash&gt;&gt; OnRuntimeUpgrade <span class="kw">for </span>MigrateToV4&lt;T&gt; {
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+			<span class="macro">assert_eq!</span>(StorageVersion::get::&lt;Pallet&lt;T&gt;&gt;(), <span class="number">3</span>, <span class="string">&quot;Can only upgrade from version 3&quot;</span>);
 
-			<span class="kw">let</span> <span class="ident">agendas</span> <span class="op">=</span> <span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter_keys</span>().<span class="ident">count</span>() <span class="kw">as</span> <span class="ident">u32</span>;
-			<span class="kw">let</span> <span class="ident">decodable_agendas</span> <span class="op">=</span> <span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter_values</span>().<span class="ident">count</span>() <span class="kw">as</span> <span class="ident">u32</span>;
-			<span class="kw">if</span> <span class="ident">agendas</span> <span class="op">!</span><span class="op">=</span> <span class="ident">decodable_agendas</span> {
-				<span class="comment">// This is not necessarily an error, but can happen when there are Calls</span>
-				<span class="comment">// in an Agenda that are not valid anymore with the new runtime.</span>
-				<span class="macro">log::error!</span>(
-					<span class="ident">target</span>: <span class="ident">TARGET</span>,
+			<span class="kw">let </span>agendas = Agenda::&lt;T&gt;::iter_keys().count() <span class="kw">as </span>u32;
+			<span class="kw">let </span>decodable_agendas = Agenda::&lt;T&gt;::iter_values().count() <span class="kw">as </span>u32;
+			<span class="kw">if </span>agendas != decodable_agendas {
+				<span class="comment">// This is not necessarily an error, but can happen when there are Calls
+				// in an Agenda that are not valid anymore with the new runtime.
+				</span><span class="macro">log::error!</span>(
+					target: TARGET,
 					<span class="string">&quot;Can only decode {} of {} agendas - others will be dropped&quot;</span>,
-					<span class="ident">decodable_agendas</span>,
-					<span class="ident">agendas</span>
+					decodable_agendas,
+					agendas
 				);
 			}
-			<span class="macro">log::info!</span>(<span class="ident">target</span>: <span class="ident">TARGET</span>, <span class="string">&quot;Trying to migrate {} agendas...&quot;</span>, <span class="ident">decodable_agendas</span>);
+			<span class="macro">log::info!</span>(target: TARGET, <span class="string">&quot;Trying to migrate {} agendas...&quot;</span>, decodable_agendas);
 
-			<span class="comment">// Check that no agenda overflows `MaxScheduledPerBlock`.</span>
-			<span class="kw">let</span> <span class="ident">max_scheduled_per_block</span> <span class="op">=</span> <span class="ident">T::MaxScheduledPerBlock::get</span>() <span class="kw">as</span> <span class="ident">usize</span>;
-			<span class="kw">for</span> (<span class="ident">block_number</span>, <span class="ident">agenda</span>) <span class="kw">in</span> <span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>() {
-				<span class="kw">if</span> <span class="ident">agenda</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>).<span class="ident">count</span>() <span class="op">&gt;</span> <span class="ident">max_scheduled_per_block</span> {
+			<span class="comment">// Check that no agenda overflows `MaxScheduledPerBlock`.
+			</span><span class="kw">let </span>max_scheduled_per_block = T::MaxScheduledPerBlock::get() <span class="kw">as </span>usize;
+			<span class="kw">for </span>(block_number, agenda) <span class="kw">in </span>Agenda::&lt;T&gt;::iter() {
+				<span class="kw">if </span>agenda.iter().cloned().filter_map(|s| s).count() &gt; max_scheduled_per_block {
 					<span class="macro">log::error!</span>(
-						<span class="ident">target</span>: <span class="ident">TARGET</span>,
+						target: TARGET,
 						<span class="string">&quot;Would truncate agenda of block {:?} from {} items to {} items.&quot;</span>,
-						<span class="ident">block_number</span>,
-						<span class="ident">agenda</span>.<span class="ident">len</span>(),
-						<span class="ident">max_scheduled_per_block</span>,
+						block_number,
+						agenda.len(),
+						max_scheduled_per_block,
 					);
-					<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Agenda would overflow `MaxScheduledPerBlock`.&quot;</span>)
+					<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Agenda would overflow `MaxScheduledPerBlock`.&quot;</span>)
 				}
 			}
-			<span class="comment">// Check that bounding the calls will not overflow `MAX_LENGTH`.</span>
-			<span class="kw">let</span> <span class="ident">max_length</span> <span class="op">=</span> <span class="ident">T::Preimages::MAX_LENGTH</span> <span class="kw">as</span> <span class="ident">usize</span>;
-			<span class="kw">for</span> (<span class="ident">block_number</span>, <span class="ident">agenda</span>) <span class="kw">in</span> <span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>() {
-				<span class="kw">for</span> <span class="ident">schedule</span> <span class="kw">in</span> <span class="ident">agenda</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>) {
-					<span class="kw">match</span> <span class="ident">schedule</span>.<span class="ident">call</span> {
-						<span class="ident">frame_support::traits::schedule::MaybeHashed::Value</span>(<span class="ident">call</span>) =&gt; {
-							<span class="kw">let</span> <span class="ident">l</span> <span class="op">=</span> <span class="ident">call</span>.<span class="ident">using_encoded</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">len</span>());
-							<span class="kw">if</span> <span class="ident">l</span> <span class="op">&gt;</span> <span class="ident">max_length</span> {
+			<span class="comment">// Check that bounding the calls will not overflow `MAX_LENGTH`.
+			</span><span class="kw">let </span>max_length = T::Preimages::MAX_LENGTH <span class="kw">as </span>usize;
+			<span class="kw">for </span>(block_number, agenda) <span class="kw">in </span>Agenda::&lt;T&gt;::iter() {
+				<span class="kw">for </span>schedule <span class="kw">in </span>agenda.iter().cloned().filter_map(|s| s) {
+					<span class="kw">match </span>schedule.call {
+						frame_support::traits::schedule::MaybeHashed::Value(call) =&gt; {
+							<span class="kw">let </span>l = call.using_encoded(|c| c.len());
+							<span class="kw">if </span>l &gt; max_length {
 								<span class="macro">log::error!</span>(
-									<span class="ident">target</span>: <span class="ident">TARGET</span>,
+									target: TARGET,
 									<span class="string">&quot;Call in agenda of block {:?} is too large: {} byte&quot;</span>,
-									<span class="ident">block_number</span>,
-									<span class="ident">l</span>,
+									block_number,
+									l,
 								);
-								<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Call is too large.&quot;</span>)
+								<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Call is too large.&quot;</span>)
 							}
 						},
-						<span class="kw">_</span> =&gt; (),
+						<span class="kw">_ </span>=&gt; (),
 					}
 				}
 			}
 
-			<span class="prelude-val">Ok</span>((<span class="ident">decodable_agendas</span> <span class="kw">as</span> <span class="ident">u32</span>).<span class="ident">encode</span>())
+			<span class="prelude-val">Ok</span>((decodable_agendas <span class="kw">as </span>u32).encode())
 		}
 
-		<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-			<span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">StorageVersion::get</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-			<span class="kw">if</span> <span class="ident">version</span> <span class="op">!</span><span class="op">=</span> <span class="number">3</span> {
+		<span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+			<span class="kw">let </span>version = StorageVersion::get::&lt;Pallet&lt;T&gt;&gt;();
+			<span class="kw">if </span>version != <span class="number">3 </span>{
 				<span class="macro">log::warn!</span>(
-					<span class="ident">target</span>: <span class="ident">TARGET</span>,
+					target: TARGET,
 					<span class="string">&quot;skipping v3 to v4 migration: executed on wrong storage version.\
 				Expected version 3, found {:?}&quot;</span>,
-					<span class="ident">version</span>,
+					version,
 				);
-				<span class="kw">return</span> <span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+				<span class="kw">return </span>T::DbWeight::get().reads(<span class="number">1</span>)
 			}
 
-			<span class="ident"><span class="kw">crate</span>::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::migrate_v3_to_v4</span>()
+			<span class="kw">crate</span>::Pallet::&lt;T&gt;::migrate_v3_to_v4()
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">StorageVersion::get</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(), <span class="number">4</span>, <span class="string">&quot;Must upgrade&quot;</span>);
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>post_upgrade(state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+			<span class="macro">assert_eq!</span>(StorageVersion::get::&lt;Pallet&lt;T&gt;&gt;(), <span class="number">4</span>, <span class="string">&quot;Must upgrade&quot;</span>);
 
-			<span class="comment">// Check that everything decoded fine.</span>
-			<span class="kw">for</span> <span class="ident">k</span> <span class="kw">in</span> <span class="ident"><span class="kw">crate</span>::Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter_keys</span>() {
-				<span class="macro">assert!</span>(<span class="ident"><span class="kw">crate</span>::Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::try_get</span>(<span class="ident">k</span>).<span class="ident">is_ok</span>(), <span class="string">&quot;Cannot decode V4 Agenda&quot;</span>);
+			<span class="comment">// Check that everything decoded fine.
+			</span><span class="kw">for </span>k <span class="kw">in </span><span class="kw">crate</span>::Agenda::&lt;T&gt;::iter_keys() {
+				<span class="macro">assert!</span>(<span class="kw">crate</span>::Agenda::&lt;T&gt;::try_get(k).is_ok(), <span class="string">&quot;Cannot decode V4 Agenda&quot;</span>);
 			}
 
-			<span class="kw">let</span> <span class="ident">old_agendas</span>: <span class="ident">u32</span> <span class="op">=</span>
-				<span class="ident">Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="ident">state</span>[..]).<span class="ident">expect</span>(<span class="string">&quot;pre_upgrade provides a valid state; qed&quot;</span>);
-			<span class="kw">let</span> <span class="ident">new_agendas</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::Agenda</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter_keys</span>().<span class="ident">count</span>() <span class="kw">as</span> <span class="ident">u32</span>;
-			<span class="kw">if</span> <span class="ident">old_agendas</span> <span class="op">!</span><span class="op">=</span> <span class="ident">new_agendas</span> {
-				<span class="comment">// This is not necessarily an error, but can happen when there are Calls</span>
-				<span class="comment">// in an Agenda that are not valid anymore in the new runtime.</span>
-				<span class="macro">log::error!</span>(
-					<span class="ident">target</span>: <span class="ident">TARGET</span>,
+			<span class="kw">let </span>old_agendas: u32 =
+				Decode::decode(<span class="kw-2">&amp;mut &amp;</span>state[..]).expect(<span class="string">&quot;pre_upgrade provides a valid state; qed&quot;</span>);
+			<span class="kw">let </span>new_agendas = <span class="kw">crate</span>::Agenda::&lt;T&gt;::iter_keys().count() <span class="kw">as </span>u32;
+			<span class="kw">if </span>old_agendas != new_agendas {
+				<span class="comment">// This is not necessarily an error, but can happen when there are Calls
+				// in an Agenda that are not valid anymore in the new runtime.
+				</span><span class="macro">log::error!</span>(
+					target: TARGET,
 					<span class="string">&quot;Did not migrate all Agendas. Previous {}, Now {}&quot;</span>,
-					<span class="ident">old_agendas</span>,
-					<span class="ident">new_agendas</span>,
+					old_agendas,
+					new_agendas,
 				);
-			} <span class="kw">else</span> {
-				<span class="macro">log::info!</span>(<span class="ident">target</span>: <span class="ident">TARGET</span>, <span class="string">&quot;Migrated {} agendas.&quot;</span>, <span class="ident">new_agendas</span>);
+			} <span class="kw">else </span>{
+				<span class="macro">log::info!</span>(target: TARGET, <span class="string">&quot;Migrated {} agendas.&quot;</span>, new_agendas);
 			}
 
 			<span class="prelude-val">Ok</span>(())
@@ -606,117 +600,117 @@
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::mock</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::Hashable</span>;
-	<span class="kw">use</span> <span class="ident">sp_std::borrow::Cow</span>;
-	<span class="kw">use</span> <span class="ident">substrate_test_utils::assert_eq_uvec</span>;
+<span class="attribute">#[cfg(test)]
+#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+</span><span class="kw">mod </span>test {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span><span class="kw">crate</span>::mock::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::Hashable;
+	<span class="kw">use </span>sp_std::borrow::Cow;
+	<span class="kw">use </span>substrate_test_utils::assert_eq_uvec;
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">migration_v3_to_v4_works</span>() {
-		<span class="ident">new_test_ext</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="comment">// Assume that we are at V3.</span>
-			<span class="ident">StorageVersion::new</span>(<span class="number">3</span>).<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Scheduler</span><span class="op">&gt;</span>();
+	<span class="attribute">#[test]
+	#[allow(deprecated)]
+	</span><span class="kw">fn </span>migration_v3_to_v4_works() {
+		new_test_ext().execute_with(|| {
+			<span class="comment">// Assume that we are at V3.
+			</span>StorageVersion::new(<span class="number">3</span>).put::&lt;Scheduler&gt;();
 
-			<span class="comment">// Call that will be bounded to a `Lookup`.</span>
-			<span class="kw">let</span> <span class="ident">large_call</span> <span class="op">=</span>
-				<span class="ident">RuntimeCall::System</span>(<span class="ident">frame_system::Call::remark</span> { <span class="ident">remark</span>: <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">1024</span>] });
-			<span class="comment">// Call that can be inlined.</span>
-			<span class="kw">let</span> <span class="ident">small_call</span> <span class="op">=</span>
-				<span class="ident">RuntimeCall::System</span>(<span class="ident">frame_system::Call::remark</span> { <span class="ident">remark</span>: <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">10</span>] });
-			<span class="comment">// Call that is already hashed and can will be converted to `Legacy`.</span>
-			<span class="kw">let</span> <span class="ident">hashed_call</span> <span class="op">=</span>
-				<span class="ident">RuntimeCall::System</span>(<span class="ident">frame_system::Call::remark</span> { <span class="ident">remark</span>: <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">2048</span>] });
-			<span class="kw">let</span> <span class="ident">bound_hashed_call</span> <span class="op">=</span> <span class="ident">Preimage::bound</span>(<span class="ident">hashed_call</span>.<span class="ident">clone</span>()).<span class="ident">unwrap</span>();
-			<span class="macro">assert!</span>(<span class="ident">bound_hashed_call</span>.<span class="ident">lookup_needed</span>());
-			<span class="comment">// A Call by hash that will fail to decode becomes `None`.</span>
-			<span class="kw">let</span> <span class="ident">trash_data</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">255u8</span>; <span class="number">1024</span>];
-			<span class="kw">let</span> <span class="ident">undecodable_hash</span> <span class="op">=</span> <span class="ident">Preimage::note</span>(<span class="ident">Cow::Borrowed</span>(<span class="kw-2">&amp;</span><span class="ident">trash_data</span>)).<span class="ident">unwrap</span>();
+			<span class="comment">// Call that will be bounded to a `Lookup`.
+			</span><span class="kw">let </span>large_call =
+				RuntimeCall::System(frame_system::Call::remark { remark: <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">1024</span>] });
+			<span class="comment">// Call that can be inlined.
+			</span><span class="kw">let </span>small_call =
+				RuntimeCall::System(frame_system::Call::remark { remark: <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">10</span>] });
+			<span class="comment">// Call that is already hashed and can will be converted to `Legacy`.
+			</span><span class="kw">let </span>hashed_call =
+				RuntimeCall::System(frame_system::Call::remark { remark: <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">2048</span>] });
+			<span class="kw">let </span>bound_hashed_call = Preimage::bound(hashed_call.clone()).unwrap();
+			<span class="macro">assert!</span>(bound_hashed_call.lookup_needed());
+			<span class="comment">// A Call by hash that will fail to decode becomes `None`.
+			</span><span class="kw">let </span>trash_data = <span class="macro">vec!</span>[<span class="number">255u8</span>; <span class="number">1024</span>];
+			<span class="kw">let </span>undecodable_hash = Preimage::note(Cow::Borrowed(<span class="kw-2">&amp;</span>trash_data)).unwrap();
 
-			<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">2u64</span> {
-				<span class="kw">let</span> <span class="ident">k</span> <span class="op">=</span> <span class="ident">i</span>.<span class="ident">twox_64_concat</span>();
-				<span class="kw">let</span> <span class="ident">old</span> <span class="op">=</span> <span class="macro">vec!</span>[
-					<span class="prelude-val">Some</span>(<span class="ident">ScheduledV3Of</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-						<span class="ident">maybe_id</span>: <span class="prelude-val">None</span>,
-						<span class="ident">priority</span>: <span class="ident">i</span> <span class="kw">as</span> <span class="ident">u8</span> <span class="op">+</span> <span class="number">10</span>,
-						<span class="ident">call</span>: <span class="ident">small_call</span>.<span class="ident">clone</span>().<span class="ident">into</span>(),
-						<span class="ident">maybe_periodic</span>: <span class="prelude-val">None</span>, <span class="comment">// 1</span>
-						<span class="ident">origin</span>: <span class="ident">root</span>(),
-						<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+			<span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">2u64 </span>{
+				<span class="kw">let </span>k = i.twox_64_concat();
+				<span class="kw">let </span>old = <span class="macro">vec!</span>[
+					<span class="prelude-val">Some</span>(ScheduledV3Of::&lt;Test&gt; {
+						maybe_id: <span class="prelude-val">None</span>,
+						priority: i <span class="kw">as </span>u8 + <span class="number">10</span>,
+						call: small_call.clone().into(),
+						maybe_periodic: <span class="prelude-val">None</span>, <span class="comment">// 1
+						</span>origin: root(),
+						_phantom: PhantomData::&lt;u64&gt;::default(),
 					}),
 					<span class="prelude-val">None</span>,
-					<span class="prelude-val">Some</span>(<span class="ident">ScheduledV3Of</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-						<span class="ident">maybe_id</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">i</span> <span class="kw">as</span> <span class="ident">u8</span>; <span class="number">32</span>]),
-						<span class="ident">priority</span>: <span class="number">123</span>,
-						<span class="ident">call</span>: <span class="ident">large_call</span>.<span class="ident">clone</span>().<span class="ident">into</span>(),
-						<span class="ident">maybe_periodic</span>: <span class="prelude-val">Some</span>((<span class="number">4u64</span>, <span class="number">20</span>)),
-						<span class="ident">origin</span>: <span class="ident">signed</span>(<span class="ident">i</span>),
-						<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+					<span class="prelude-val">Some</span>(ScheduledV3Of::&lt;Test&gt; {
+						maybe_id: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[i <span class="kw">as </span>u8; <span class="number">32</span>]),
+						priority: <span class="number">123</span>,
+						call: large_call.clone().into(),
+						maybe_periodic: <span class="prelude-val">Some</span>((<span class="number">4u64</span>, <span class="number">20</span>)),
+						origin: signed(i),
+						_phantom: PhantomData::&lt;u64&gt;::default(),
 					}),
-					<span class="prelude-val">Some</span>(<span class="ident">ScheduledV3Of</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-						<span class="ident">maybe_id</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">255</span> <span class="op">-</span> <span class="ident">i</span> <span class="kw">as</span> <span class="ident">u8</span>; <span class="number">320</span>]),
-						<span class="ident">priority</span>: <span class="number">123</span>,
-						<span class="ident">call</span>: <span class="ident">MaybeHashed::Hash</span>(<span class="ident">bound_hashed_call</span>.<span class="ident">hash</span>()),
-						<span class="ident">maybe_periodic</span>: <span class="prelude-val">Some</span>((<span class="number">8u64</span>, <span class="number">10</span>)),
-						<span class="ident">origin</span>: <span class="ident">signed</span>(<span class="ident">i</span>),
-						<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+					<span class="prelude-val">Some</span>(ScheduledV3Of::&lt;Test&gt; {
+						maybe_id: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">255 </span>- i <span class="kw">as </span>u8; <span class="number">320</span>]),
+						priority: <span class="number">123</span>,
+						call: MaybeHashed::Hash(bound_hashed_call.hash()),
+						maybe_periodic: <span class="prelude-val">Some</span>((<span class="number">8u64</span>, <span class="number">10</span>)),
+						origin: signed(i),
+						_phantom: PhantomData::&lt;u64&gt;::default(),
 					}),
-					<span class="prelude-val">Some</span>(<span class="ident">ScheduledV3Of</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-						<span class="ident">maybe_id</span>: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="ident">i</span> <span class="kw">as</span> <span class="ident">u8</span>; <span class="number">320</span>]),
-						<span class="ident">priority</span>: <span class="number">123</span>,
-						<span class="ident">call</span>: <span class="ident">MaybeHashed::Hash</span>(<span class="ident">undecodable_hash</span>.<span class="ident">clone</span>()),
-						<span class="ident">maybe_periodic</span>: <span class="prelude-val">Some</span>((<span class="number">4u64</span>, <span class="number">20</span>)),
-						<span class="ident">origin</span>: <span class="ident">root</span>(),
-						<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+					<span class="prelude-val">Some</span>(ScheduledV3Of::&lt;Test&gt; {
+						maybe_id: <span class="prelude-val">Some</span>(<span class="macro">vec!</span>[i <span class="kw">as </span>u8; <span class="number">320</span>]),
+						priority: <span class="number">123</span>,
+						call: MaybeHashed::Hash(undecodable_hash.clone()),
+						maybe_periodic: <span class="prelude-val">Some</span>((<span class="number">4u64</span>, <span class="number">20</span>)),
+						origin: root(),
+						_phantom: PhantomData::&lt;u64&gt;::default(),
 					}),
 				];
-				<span class="ident">frame_support::migration::put_storage_value</span>(<span class="string">b&quot;Scheduler&quot;</span>, <span class="string">b&quot;Agenda&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">k</span>, <span class="ident">old</span>);
+				frame_support::migration::put_storage_value(<span class="string">b&quot;Scheduler&quot;</span>, <span class="string">b&quot;Agenda&quot;</span>, <span class="kw-2">&amp;</span>k, old);
 			}
 
-			<span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">v3::MigrateToV4</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::pre_upgrade</span>().<span class="ident">unwrap</span>();
-			<span class="kw">let</span> <span class="ident">_w</span> <span class="op">=</span> <span class="ident">v3::MigrateToV4</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::on_runtime_upgrade</span>();
-			<span class="ident">v3::MigrateToV4</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::post_upgrade</span>(<span class="ident">state</span>).<span class="ident">unwrap</span>();
+			<span class="kw">let </span>state = v3::MigrateToV4::&lt;Test&gt;::pre_upgrade().unwrap();
+			<span class="kw">let </span>_w = v3::MigrateToV4::&lt;Test&gt;::on_runtime_upgrade();
+			v3::MigrateToV4::&lt;Test&gt;::post_upgrade(state).unwrap();
 
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> (<span class="ident">x</span>.<span class="number">0</span>, <span class="ident">x</span>.<span class="number">1</span>.<span class="ident">into_inner</span>())).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-			<span class="ident">x</span>.<span class="ident">sort_by_key</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="number">0</span>);
+			<span class="kw">let </span><span class="kw-2">mut </span>x = Agenda::&lt;Test&gt;::iter().map(|x| (x.<span class="number">0</span>, x.<span class="number">1</span>.into_inner())).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+			x.sort_by_key(|x| x.<span class="number">0</span>);
 
-			<span class="kw">let</span> <span class="ident">bound_large_call</span> <span class="op">=</span> <span class="ident">Preimage::bound</span>(<span class="ident">large_call</span>).<span class="ident">unwrap</span>();
-			<span class="macro">assert!</span>(<span class="ident">bound_large_call</span>.<span class="ident">lookup_needed</span>());
-			<span class="kw">let</span> <span class="ident">bound_small_call</span> <span class="op">=</span> <span class="ident">Preimage::bound</span>(<span class="ident">small_call</span>).<span class="ident">unwrap</span>();
-			<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">bound_small_call</span>.<span class="ident">lookup_needed</span>());
+			<span class="kw">let </span>bound_large_call = Preimage::bound(large_call).unwrap();
+			<span class="macro">assert!</span>(bound_large_call.lookup_needed());
+			<span class="kw">let </span>bound_small_call = Preimage::bound(small_call).unwrap();
+			<span class="macro">assert!</span>(!bound_small_call.lookup_needed());
 
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">vec!</span>[
+			<span class="kw">let </span>expected = <span class="macro">vec!</span>[
 				(
 					<span class="number">0</span>,
 					<span class="macro">vec!</span>[
-						<span class="prelude-val">Some</span>(<span class="ident">ScheduledOf</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-							<span class="ident">maybe_id</span>: <span class="prelude-val">None</span>,
-							<span class="ident">priority</span>: <span class="number">10</span>,
-							<span class="ident">call</span>: <span class="ident">bound_small_call</span>.<span class="ident">clone</span>(),
-							<span class="ident">maybe_periodic</span>: <span class="prelude-val">None</span>,
-							<span class="ident">origin</span>: <span class="ident">root</span>(),
-							<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+						<span class="prelude-val">Some</span>(ScheduledOf::&lt;Test&gt; {
+							maybe_id: <span class="prelude-val">None</span>,
+							priority: <span class="number">10</span>,
+							call: bound_small_call.clone(),
+							maybe_periodic: <span class="prelude-val">None</span>,
+							origin: root(),
+							_phantom: PhantomData::&lt;u64&gt;::default(),
 						}),
 						<span class="prelude-val">None</span>,
-						<span class="prelude-val">Some</span>(<span class="ident">ScheduledOf</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-							<span class="ident">maybe_id</span>: <span class="prelude-val">Some</span>(<span class="ident">blake2_256</span>(<span class="kw-2">&amp;</span>[<span class="number">0u8</span>; <span class="number">32</span>])),
-							<span class="ident">priority</span>: <span class="number">123</span>,
-							<span class="ident">call</span>: <span class="ident">bound_large_call</span>.<span class="ident">clone</span>(),
-							<span class="ident">maybe_periodic</span>: <span class="prelude-val">Some</span>((<span class="number">4u64</span>, <span class="number">20</span>)),
-							<span class="ident">origin</span>: <span class="ident">signed</span>(<span class="number">0</span>),
-							<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+						<span class="prelude-val">Some</span>(ScheduledOf::&lt;Test&gt; {
+							maybe_id: <span class="prelude-val">Some</span>(blake2_256(<span class="kw-2">&amp;</span>[<span class="number">0u8</span>; <span class="number">32</span>])),
+							priority: <span class="number">123</span>,
+							call: bound_large_call.clone(),
+							maybe_periodic: <span class="prelude-val">Some</span>((<span class="number">4u64</span>, <span class="number">20</span>)),
+							origin: signed(<span class="number">0</span>),
+							_phantom: PhantomData::&lt;u64&gt;::default(),
 						}),
-						<span class="prelude-val">Some</span>(<span class="ident">ScheduledOf</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-							<span class="ident">maybe_id</span>: <span class="prelude-val">Some</span>(<span class="ident">blake2_256</span>(<span class="kw-2">&amp;</span>[<span class="number">255u8</span>; <span class="number">320</span>])),
-							<span class="ident">priority</span>: <span class="number">123</span>,
-							<span class="ident">call</span>: <span class="ident">Bounded::from_legacy_hash</span>(<span class="ident">bound_hashed_call</span>.<span class="ident">hash</span>()),
-							<span class="ident">maybe_periodic</span>: <span class="prelude-val">Some</span>((<span class="number">8u64</span>, <span class="number">10</span>)),
-							<span class="ident">origin</span>: <span class="ident">signed</span>(<span class="number">0</span>),
-							<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+						<span class="prelude-val">Some</span>(ScheduledOf::&lt;Test&gt; {
+							maybe_id: <span class="prelude-val">Some</span>(blake2_256(<span class="kw-2">&amp;</span>[<span class="number">255u8</span>; <span class="number">320</span>])),
+							priority: <span class="number">123</span>,
+							call: Bounded::from_legacy_hash(bound_hashed_call.hash()),
+							maybe_periodic: <span class="prelude-val">Some</span>((<span class="number">8u64</span>, <span class="number">10</span>)),
+							origin: signed(<span class="number">0</span>),
+							_phantom: PhantomData::&lt;u64&gt;::default(),
 						}),
 						<span class="prelude-val">None</span>,
 					],
@@ -724,90 +718,89 @@
 				(
 					<span class="number">1</span>,
 					<span class="macro">vec!</span>[
-						<span class="prelude-val">Some</span>(<span class="ident">ScheduledOf</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-							<span class="ident">maybe_id</span>: <span class="prelude-val">None</span>,
-							<span class="ident">priority</span>: <span class="number">11</span>,
-							<span class="ident">call</span>: <span class="ident">bound_small_call</span>.<span class="ident">clone</span>(),
-							<span class="ident">maybe_periodic</span>: <span class="prelude-val">None</span>,
-							<span class="ident">origin</span>: <span class="ident">root</span>(),
-							<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+						<span class="prelude-val">Some</span>(ScheduledOf::&lt;Test&gt; {
+							maybe_id: <span class="prelude-val">None</span>,
+							priority: <span class="number">11</span>,
+							call: bound_small_call.clone(),
+							maybe_periodic: <span class="prelude-val">None</span>,
+							origin: root(),
+							_phantom: PhantomData::&lt;u64&gt;::default(),
 						}),
 						<span class="prelude-val">None</span>,
-						<span class="prelude-val">Some</span>(<span class="ident">ScheduledOf</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-							<span class="ident">maybe_id</span>: <span class="prelude-val">Some</span>(<span class="ident">blake2_256</span>(<span class="kw-2">&amp;</span>[<span class="number">1u8</span>; <span class="number">32</span>])),
-							<span class="ident">priority</span>: <span class="number">123</span>,
-							<span class="ident">call</span>: <span class="ident">bound_large_call</span>.<span class="ident">clone</span>(),
-							<span class="ident">maybe_periodic</span>: <span class="prelude-val">Some</span>((<span class="number">4u64</span>, <span class="number">20</span>)),
-							<span class="ident">origin</span>: <span class="ident">signed</span>(<span class="number">1</span>),
-							<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+						<span class="prelude-val">Some</span>(ScheduledOf::&lt;Test&gt; {
+							maybe_id: <span class="prelude-val">Some</span>(blake2_256(<span class="kw-2">&amp;</span>[<span class="number">1u8</span>; <span class="number">32</span>])),
+							priority: <span class="number">123</span>,
+							call: bound_large_call.clone(),
+							maybe_periodic: <span class="prelude-val">Some</span>((<span class="number">4u64</span>, <span class="number">20</span>)),
+							origin: signed(<span class="number">1</span>),
+							_phantom: PhantomData::&lt;u64&gt;::default(),
 						}),
-						<span class="prelude-val">Some</span>(<span class="ident">ScheduledOf</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-							<span class="ident">maybe_id</span>: <span class="prelude-val">Some</span>(<span class="ident">blake2_256</span>(<span class="kw-2">&amp;</span>[<span class="number">254u8</span>; <span class="number">320</span>])),
-							<span class="ident">priority</span>: <span class="number">123</span>,
-							<span class="ident">call</span>: <span class="ident">Bounded::from_legacy_hash</span>(<span class="ident">bound_hashed_call</span>.<span class="ident">hash</span>()),
-							<span class="ident">maybe_periodic</span>: <span class="prelude-val">Some</span>((<span class="number">8u64</span>, <span class="number">10</span>)),
-							<span class="ident">origin</span>: <span class="ident">signed</span>(<span class="number">1</span>),
-							<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+						<span class="prelude-val">Some</span>(ScheduledOf::&lt;Test&gt; {
+							maybe_id: <span class="prelude-val">Some</span>(blake2_256(<span class="kw-2">&amp;</span>[<span class="number">254u8</span>; <span class="number">320</span>])),
+							priority: <span class="number">123</span>,
+							call: Bounded::from_legacy_hash(bound_hashed_call.hash()),
+							maybe_periodic: <span class="prelude-val">Some</span>((<span class="number">8u64</span>, <span class="number">10</span>)),
+							origin: signed(<span class="number">1</span>),
+							_phantom: PhantomData::&lt;u64&gt;::default(),
 						}),
 						<span class="prelude-val">None</span>,
 					],
 				),
 			];
-			<span class="kw">for</span> (<span class="ident">outer</span>, (<span class="ident">i</span>, <span class="ident">j</span>)) <span class="kw">in</span> <span class="ident">x</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">expected</span>.<span class="ident">iter</span>()).<span class="ident">enumerate</span>() {
-				<span class="macro">assert_eq!</span>(<span class="ident">i</span>.<span class="number">0</span>, <span class="ident">j</span>.<span class="number">0</span>);
-				<span class="kw">for</span> (<span class="ident">inner</span>, (<span class="ident">x</span>, <span class="ident">y</span>)) <span class="kw">in</span> <span class="ident">i</span>.<span class="number">1</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">j</span>.<span class="number">1</span>.<span class="ident">iter</span>()).<span class="ident">enumerate</span>() {
-					<span class="macro">assert_eq!</span>(<span class="ident">x</span>, <span class="ident">y</span>, <span class="string">&quot;at index: outer {} inner {}&quot;</span>, <span class="ident">outer</span>, <span class="ident">inner</span>);
+			<span class="kw">for </span>(outer, (i, j)) <span class="kw">in </span>x.iter().zip(expected.iter()).enumerate() {
+				<span class="macro">assert_eq!</span>(i.<span class="number">0</span>, j.<span class="number">0</span>);
+				<span class="kw">for </span>(inner, (x, y)) <span class="kw">in </span>i.<span class="number">1</span>.iter().zip(j.<span class="number">1</span>.iter()).enumerate() {
+					<span class="macro">assert_eq!</span>(x, y, <span class="string">&quot;at index: outer {} inner {}&quot;</span>, outer, inner);
 				}
 			}
-			<span class="macro">assert_eq_uvec!</span>(<span class="ident">x</span>, <span class="ident">expected</span>);
+			<span class="macro">assert_eq_uvec!</span>(x, expected);
 
-			<span class="macro">assert_eq!</span>(<span class="ident">StorageVersion::get</span>::<span class="op">&lt;</span><span class="ident">Scheduler</span><span class="op">&gt;</span>(), <span class="number">4</span>);
+			<span class="macro">assert_eq!</span>(StorageVersion::get::&lt;Scheduler&gt;(), <span class="number">4</span>);
 		});
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">migration_v3_to_v4_too_large_calls_are_ignored</span>() {
-		<span class="ident">new_test_ext</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="comment">// Assume that we are at V3.</span>
-			<span class="ident">StorageVersion::new</span>(<span class="number">3</span>).<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Scheduler</span><span class="op">&gt;</span>();
+	<span class="attribute">#[test]
+	#[allow(deprecated)]
+	</span><span class="kw">fn </span>migration_v3_to_v4_too_large_calls_are_ignored() {
+		new_test_ext().execute_with(|| {
+			<span class="comment">// Assume that we are at V3.
+			</span>StorageVersion::new(<span class="number">3</span>).put::&lt;Scheduler&gt;();
 
-			<span class="kw">let</span> <span class="ident">too_large_call</span> <span class="op">=</span> <span class="ident">RuntimeCall::System</span>(<span class="ident">frame_system::Call::remark</span> {
-				<span class="ident">remark</span>: <span class="macro">vec!</span>[<span class="number">0</span>; <span class="op">&lt;</span><span class="ident">Test</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::Preimages::MAX_LENGTH</span> <span class="op">+</span> <span class="number">1</span>],
+			<span class="kw">let </span>too_large_call = RuntimeCall::System(frame_system::Call::remark {
+				remark: <span class="macro">vec!</span>[<span class="number">0</span>; &lt;Test <span class="kw">as </span>Config&gt;::Preimages::MAX_LENGTH + <span class="number">1</span>],
 			});
 
-			<span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0u64</span>;
-			<span class="kw">let</span> <span class="ident">k</span> <span class="op">=</span> <span class="ident">i</span>.<span class="ident">twox_64_concat</span>();
-			<span class="kw">let</span> <span class="ident">old</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="ident">ScheduledV3Of</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-				<span class="ident">maybe_id</span>: <span class="prelude-val">None</span>,
-				<span class="ident">priority</span>: <span class="number">1</span>,
-				<span class="ident">call</span>: <span class="ident">too_large_call</span>.<span class="ident">clone</span>().<span class="ident">into</span>(),
-				<span class="ident">maybe_periodic</span>: <span class="prelude-val">None</span>,
-				<span class="ident">origin</span>: <span class="ident">root</span>(),
-				<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="ident">::default</span>(),
+			<span class="kw">let </span>i = <span class="number">0u64</span>;
+			<span class="kw">let </span>k = i.twox_64_concat();
+			<span class="kw">let </span>old = <span class="macro">vec!</span>[<span class="prelude-val">Some</span>(ScheduledV3Of::&lt;Test&gt; {
+				maybe_id: <span class="prelude-val">None</span>,
+				priority: <span class="number">1</span>,
+				call: too_large_call.clone().into(),
+				maybe_periodic: <span class="prelude-val">None</span>,
+				origin: root(),
+				_phantom: PhantomData::&lt;u64&gt;::default(),
 			})];
-			<span class="ident">frame_support::migration::put_storage_value</span>(<span class="string">b&quot;Scheduler&quot;</span>, <span class="string">b&quot;Agenda&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">k</span>, <span class="ident">old</span>);
+			frame_support::migration::put_storage_value(<span class="string">b&quot;Scheduler&quot;</span>, <span class="string">b&quot;Agenda&quot;</span>, <span class="kw-2">&amp;</span>k, old);
 
-			<span class="comment">// The pre_upgrade hook fails:</span>
-			<span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">v3::MigrateToV4</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::pre_upgrade</span>().<span class="ident">unwrap_err</span>();
-			<span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">contains</span>(<span class="string">&quot;Call is too large&quot;</span>));
-			<span class="comment">// But the migration itself works:</span>
-			<span class="kw">let</span> <span class="ident">_w</span> <span class="op">=</span> <span class="ident">v3::MigrateToV4</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::on_runtime_upgrade</span>();
+			<span class="comment">// The pre_upgrade hook fails:
+			</span><span class="kw">let </span>err = v3::MigrateToV4::&lt;Test&gt;::pre_upgrade().unwrap_err();
+			<span class="macro">assert!</span>(err.contains(<span class="string">&quot;Call is too large&quot;</span>));
+			<span class="comment">// But the migration itself works:
+			</span><span class="kw">let </span>_w = v3::MigrateToV4::&lt;Test&gt;::on_runtime_upgrade();
 
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">Agenda</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> (<span class="ident">x</span>.<span class="number">0</span>, <span class="ident">x</span>.<span class="number">1</span>.<span class="ident">into_inner</span>())).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-			<span class="ident">x</span>.<span class="ident">sort_by_key</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="number">0</span>);
-			<span class="comment">// The call becomes `None`.</span>
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="number">0</span>, <span class="macro">vec!</span>[<span class="prelude-val">None</span>])];
-			<span class="macro">assert_eq_uvec!</span>(<span class="ident">x</span>, <span class="ident">expected</span>);
+			<span class="kw">let </span><span class="kw-2">mut </span>x = Agenda::&lt;Test&gt;::iter().map(|x| (x.<span class="number">0</span>, x.<span class="number">1</span>.into_inner())).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+			x.sort_by_key(|x| x.<span class="number">0</span>);
+			<span class="comment">// The call becomes `None`.
+			</span><span class="kw">let </span>expected = <span class="macro">vec!</span>[(<span class="number">0</span>, <span class="macro">vec!</span>[<span class="prelude-val">None</span>])];
+			<span class="macro">assert_eq_uvec!</span>(x, expected);
 
-			<span class="macro">assert_eq!</span>(<span class="ident">StorageVersion::get</span>::<span class="op">&lt;</span><span class="ident">Scheduler</span><span class="op">&gt;</span>(), <span class="number">4</span>);
+			<span class="macro">assert_eq!</span>(StorageVersion::get::&lt;Scheduler&gt;(), <span class="number">4</span>);
 		});
 	}
 
-	<span class="kw">fn</span> <span class="ident">signed</span>(<span class="ident">i</span>: <span class="ident">u64</span>) -&gt; <span class="ident">OriginCaller</span> {
-		<span class="ident">system::RawOrigin::Signed</span>(<span class="ident">i</span>).<span class="ident">into</span>()
+	<span class="kw">fn </span>signed(i: u64) -&gt; OriginCaller {
+		system::RawOrigin::Signed(i).into()
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_scheduler" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_scheduler" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

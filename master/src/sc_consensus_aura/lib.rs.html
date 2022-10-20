@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/aura/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sc_consensus_aura/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sc_consensus_aura/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_consensus_aura/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/aura/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sc_consensus_aura/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_consensus_aura/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -890,892 +884,891 @@
 <span id="884">884</span>
 <span id="885">885</span>
 <span id="886">886</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Aura (Authority-round) consensus in substrate.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Aura works by having a list of authorities A who are expected to roughly</span>
-<span class="doccomment">//! agree on the current time. Time is divided up into discrete slots of t</span>
-<span class="doccomment">//! seconds each. For each slot s, the author of that slot is A[s % |A|].</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The author is allowed to issue one block but not more during that slot,</span>
-<span class="doccomment">//! and it will be built upon the longest valid chain that has been seen.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Blocks from future steps will be either deferred or rejected depending on how</span>
-<span class="doccomment">//! far in the future they are.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! NOTE: Aura itself is designed to be generic over the crypto used.</span>
-<span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">missing_docs</span>, <span class="ident">unsafe_code</span>)]</span>
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">pin::Pin</span>, <span class="ident">sync::Arc</span>};
+</span><span class="doccomment">//! Aura (Authority-round) consensus in substrate.
+//!
+//! Aura works by having a list of authorities A who are expected to roughly
+//! agree on the current time. Time is divided up into discrete slots of t
+//! seconds each. For each slot s, the author of that slot is A[s % |A|].
+//!
+//! The author is allowed to issue one block but not more during that slot,
+//! and it will be built upon the longest valid chain that has been seen.
+//!
+//! Blocks from future steps will be either deferred or rejected depending on how
+//! far in the future they are.
+//!
+//! NOTE: Aura itself is designed to be generic over the crypto used.
+</span><span class="attribute">#![forbid(missing_docs, unsafe_code)]
+</span><span class="kw">use </span>std::{fmt::Debug, hash::Hash, marker::PhantomData, pin::Pin, sync::Arc};
 
-<span class="kw">use</span> <span class="ident">futures::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">debug</span>, <span class="ident">trace</span>};
+<span class="kw">use </span>futures::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>log::{debug, trace};
 
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Codec</span>, <span class="ident">Decode</span>, <span class="ident">Encode</span>};
+<span class="kw">use </span>codec::{Codec, Decode, Encode};
 
-<span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">backend::AuxStore</span>, <span class="ident">BlockOf</span>, <span class="ident">UsageProvider</span>};
-<span class="kw">use</span> <span class="ident">sc_consensus</span>::{<span class="ident">BlockImport</span>, <span class="ident">BlockImportParams</span>, <span class="ident">ForkChoiceStrategy</span>, <span class="ident">StateAction</span>};
-<span class="kw">use</span> <span class="ident">sc_consensus_slots</span>::{
-	<span class="ident">BackoffAuthoringBlocksStrategy</span>, <span class="ident">InherentDataProviderExt</span>, <span class="ident">SimpleSlotWorkerToSlotWorker</span>,
-	<span class="ident">SlotInfo</span>, <span class="ident">StorageChanges</span>,
+<span class="kw">use </span>sc_client_api::{backend::AuxStore, BlockOf, UsageProvider};
+<span class="kw">use </span>sc_consensus::{BlockImport, BlockImportParams, ForkChoiceStrategy, StateAction};
+<span class="kw">use </span>sc_consensus_slots::{
+	BackoffAuthoringBlocksStrategy, InherentDataProviderExt, SimpleSlotWorkerToSlotWorker,
+	SlotInfo, StorageChanges,
 };
-<span class="kw">use</span> <span class="ident">sc_telemetry::TelemetryHandle</span>;
-<span class="kw">use</span> <span class="ident">sp_api::ProvideRuntimeApi</span>;
-<span class="kw">use</span> <span class="ident">sp_application_crypto</span>::{<span class="ident">AppKey</span>, <span class="ident">AppPublic</span>};
-<span class="kw">use</span> <span class="ident">sp_blockchain</span>::{<span class="ident">HeaderBackend</span>, <span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">CResult</span>};
-<span class="kw">use</span> <span class="ident">sp_consensus</span>::{<span class="ident">BlockOrigin</span>, <span class="ident">Environment</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">ConsensusError</span>, <span class="ident">Proposer</span>, <span class="ident">SelectChain</span>};
-<span class="kw">use</span> <span class="ident">sp_consensus_slots::Slot</span>;
-<span class="kw">use</span> <span class="ident">sp_core::crypto</span>::{<span class="ident">ByteArray</span>, <span class="ident">Pair</span>, <span class="ident">Public</span>};
-<span class="kw">use</span> <span class="ident">sp_inherents::CreateInherentDataProviders</span>;
-<span class="kw">use</span> <span class="ident">sp_keystore</span>::{<span class="ident">SyncCryptoStore</span>, <span class="ident">SyncCryptoStorePtr</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">generic::BlockId</span>,
-	<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">Header</span>, <span class="ident">Member</span>, <span class="ident">NumberFor</span>, <span class="ident">Zero</span>},
-	<span class="ident">DigestItem</span>,
-};
-
-<span class="kw">mod</span> <span class="ident">import_queue</span>;
-
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">import_queue</span>::{
-	<span class="ident">build_verifier</span>, <span class="ident">import_queue</span>, <span class="ident">AuraVerifier</span>, <span class="ident">BuildVerifierParams</span>, <span class="ident">CheckForEquivocation</span>,
-	<span class="ident">ImportQueueParams</span>,
-};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sc_consensus_slots::SlotProportion</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sp_consensus::SyncOracle</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sp_consensus_aura</span>::{
-	<span class="ident">digests::CompatibleDigestItem</span>,
-	<span class="ident">inherents</span>::{<span class="ident">InherentDataProvider</span>, <span class="ident">InherentType</span> <span class="kw">as</span> <span class="ident">AuraInherent</span>, <span class="ident">INHERENT_IDENTIFIER</span>},
-	<span class="ident">AuraApi</span>, <span class="ident">ConsensusLog</span>, <span class="ident">SlotDuration</span>, <span class="ident">AURA_ENGINE_ID</span>,
+<span class="kw">use </span>sc_telemetry::TelemetryHandle;
+<span class="kw">use </span>sp_api::ProvideRuntimeApi;
+<span class="kw">use </span>sp_application_crypto::{AppKey, AppPublic};
+<span class="kw">use </span>sp_blockchain::{HeaderBackend, <span class="prelude-ty">Result </span><span class="kw">as </span>CResult};
+<span class="kw">use </span>sp_consensus::{BlockOrigin, Environment, Error <span class="kw">as </span>ConsensusError, Proposer, SelectChain};
+<span class="kw">use </span>sp_consensus_slots::Slot;
+<span class="kw">use </span>sp_core::crypto::{ByteArray, Pair, Public};
+<span class="kw">use </span>sp_inherents::CreateInherentDataProviders;
+<span class="kw">use </span>sp_keystore::{SyncCryptoStore, SyncCryptoStorePtr};
+<span class="kw">use </span>sp_runtime::{
+	generic::BlockId,
+	traits::{Block <span class="kw">as </span>BlockT, Header, Member, NumberFor, Zero},
+	DigestItem,
 };
 
-<span class="kw">type</span> <span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">Pair</span><span class="op">&gt;</span><span class="ident">::Public</span>;
+<span class="kw">mod </span>import_queue;
 
-<span class="doccomment">/// Get the slot duration for Aura.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">slot_duration</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span><span class="op">&gt;</span>(<span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">CResult</span><span class="op">&lt;</span><span class="ident">SlotDuration</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">A</span>: <span class="ident">Codec</span>,
-	<span class="ident">B</span>: <span class="ident">BlockT</span>,
-	<span class="ident">C</span>: <span class="ident">AuxStore</span> <span class="op">+</span> <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="ident">C::Api</span>: <span class="ident">AuraApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">A</span><span class="op">&gt;</span>,
+<span class="kw">pub use </span>import_queue::{
+	build_verifier, import_queue, AuraVerifier, BuildVerifierParams, CheckForEquivocation,
+	ImportQueueParams,
+};
+<span class="kw">pub use </span>sc_consensus_slots::SlotProportion;
+<span class="kw">pub use </span>sp_consensus::SyncOracle;
+<span class="kw">pub use </span>sp_consensus_aura::{
+	digests::CompatibleDigestItem,
+	inherents::{InherentDataProvider, InherentType <span class="kw">as </span>AuraInherent, INHERENT_IDENTIFIER},
+	AuraApi, ConsensusLog, SlotDuration, AURA_ENGINE_ID,
+};
+
+<span class="kw">type </span>AuthorityId&lt;P&gt; = &lt;P <span class="kw">as </span>Pair&gt;::Public;
+
+<span class="doccomment">/// Get the slot duration for Aura.
+</span><span class="kw">pub fn </span>slot_duration&lt;A, B, C&gt;(client: <span class="kw-2">&amp;</span>C) -&gt; CResult&lt;SlotDuration&gt;
+<span class="kw">where
+	</span>A: Codec,
+	B: BlockT,
+	C: AuxStore + ProvideRuntimeApi&lt;B&gt; + UsageProvider&lt;B&gt;,
+	C::Api: AuraApi&lt;B, A&gt;,
 {
-	<span class="kw">let</span> <span class="ident">best_block_id</span> <span class="op">=</span> <span class="ident">BlockId::Hash</span>(<span class="ident">client</span>.<span class="ident">usage_info</span>().<span class="ident">chain</span>.<span class="ident">best_hash</span>);
-	<span class="ident">client</span>.<span class="ident">runtime_api</span>().<span class="ident">slot_duration</span>(<span class="kw-2">&amp;</span><span class="ident">best_block_id</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">err</span>.<span class="ident">into</span>())
+	<span class="kw">let </span>best_block_id = BlockId::Hash(client.usage_info().chain.best_hash);
+	client.runtime_api().slot_duration(<span class="kw-2">&amp;</span>best_block_id).map_err(|err| err.into())
 }
 
-<span class="doccomment">/// Get slot author for given block along with authorities.</span>
-<span class="kw">fn</span> <span class="ident">slot_author</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">Pair</span><span class="op">&gt;</span>(<span class="ident">slot</span>: <span class="ident">Slot</span>, <span class="ident">authorities</span>: <span class="kw-2">&amp;</span>[<span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-	<span class="kw">if</span> <span class="ident">authorities</span>.<span class="ident">is_empty</span>() {
-		<span class="kw">return</span> <span class="prelude-val">None</span>
-	}
+<span class="doccomment">/// Get slot author for given block along with authorities.
+</span><span class="kw">fn </span>slot_author&lt;P: Pair&gt;(slot: Slot, authorities: <span class="kw-2">&amp;</span>[AuthorityId&lt;P&gt;]) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>AuthorityId&lt;P&gt;&gt; {
+	<span class="kw">if </span>authorities.is_empty() {
+		<span class="kw">return </span><span class="prelude-val">None
+	</span>}
 
-	<span class="kw">let</span> <span class="ident">idx</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">slot</span> <span class="op">%</span> (<span class="ident">authorities</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>);
+	<span class="kw">let </span>idx = <span class="kw-2">*</span>slot % (authorities.len() <span class="kw">as </span>u64);
 	<span class="macro">assert!</span>(
-		<span class="ident">idx</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">usize::MAX</span> <span class="kw">as</span> <span class="ident">u64</span>,
+		idx &lt;= usize::MAX <span class="kw">as </span>u64,
 		<span class="string">&quot;It is impossible to have a vector with length beyond the address space; qed&quot;</span>,
 	);
 
-	<span class="kw">let</span> <span class="ident">current_author</span> <span class="op">=</span> <span class="ident">authorities</span>.<span class="ident">get</span>(<span class="ident">idx</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">expect</span>(
+	<span class="kw">let </span>current_author = authorities.get(idx <span class="kw">as </span>usize).expect(
 		<span class="string">&quot;authorities not empty; index constrained to list length;this is a valid index; qed&quot;</span>,
 	);
 
-	<span class="prelude-val">Some</span>(<span class="ident">current_author</span>)
+	<span class="prelude-val">Some</span>(current_author)
 }
 
-<span class="doccomment">/// Parameters of [`start_aura`].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StartAuraParams</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">SC</span>, <span class="ident">I</span>, <span class="ident">PF</span>, <span class="ident">SO</span>, <span class="ident">L</span>, <span class="ident">CIDP</span>, <span class="ident">BS</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The duration of a slot.</span>
-	<span class="kw">pub</span> <span class="ident">slot_duration</span>: <span class="ident">SlotDuration</span>,
-	<span class="doccomment">/// The client to interact with the chain.</span>
-	<span class="kw">pub</span> <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// A select chain implementation to select the best block.</span>
-	<span class="kw">pub</span> <span class="ident">select_chain</span>: <span class="ident">SC</span>,
-	<span class="doccomment">/// The block import.</span>
-	<span class="kw">pub</span> <span class="ident">block_import</span>: <span class="ident">I</span>,
-	<span class="doccomment">/// The proposer factory to build proposer instances.</span>
-	<span class="kw">pub</span> <span class="ident">proposer_factory</span>: <span class="ident">PF</span>,
-	<span class="doccomment">/// The sync oracle that can give us the current sync status.</span>
-	<span class="kw">pub</span> <span class="ident">sync_oracle</span>: <span class="ident">SO</span>,
-	<span class="doccomment">/// Hook into the sync module to control the justification sync process.</span>
-	<span class="kw">pub</span> <span class="ident">justification_sync_link</span>: <span class="ident">L</span>,
-	<span class="doccomment">/// Something that can create the inherent data providers.</span>
-	<span class="kw">pub</span> <span class="ident">create_inherent_data_providers</span>: <span class="ident">CIDP</span>,
-	<span class="doccomment">/// Should we force the authoring of blocks?</span>
-	<span class="kw">pub</span> <span class="ident">force_authoring</span>: <span class="ident">bool</span>,
-	<span class="doccomment">/// The backoff strategy when we miss slots.</span>
-	<span class="kw">pub</span> <span class="ident">backoff_authoring_blocks</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BS</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// The keystore used by the node.</span>
-	<span class="kw">pub</span> <span class="ident">keystore</span>: <span class="ident">SyncCryptoStorePtr</span>,
-	<span class="doccomment">/// The proportion of the slot dedicated to proposing.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The block proposing will be limited to this proportion of the slot from the starting of the</span>
-	<span class="doccomment">/// slot. However, the proposing can still take longer when there is some lenience factor</span>
-	<span class="doccomment">/// applied, because there were no blocks produced for some slots.</span>
-	<span class="kw">pub</span> <span class="ident">block_proposal_slot_portion</span>: <span class="ident">SlotProportion</span>,
-	<span class="doccomment">/// The maximum proportion of the slot dedicated to proposing with any lenience factor applied</span>
-	<span class="doccomment">/// due to no blocks being produced.</span>
-	<span class="kw">pub</span> <span class="ident">max_block_proposal_slot_portion</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SlotProportion</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.</span>
-	<span class="kw">pub</span> <span class="ident">telemetry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TelemetryHandle</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Parameters of [`start_aura`].
+</span><span class="kw">pub struct </span>StartAuraParams&lt;C, SC, I, PF, SO, L, CIDP, BS&gt; {
+	<span class="doccomment">/// The duration of a slot.
+	</span><span class="kw">pub </span>slot_duration: SlotDuration,
+	<span class="doccomment">/// The client to interact with the chain.
+	</span><span class="kw">pub </span>client: Arc&lt;C&gt;,
+	<span class="doccomment">/// A select chain implementation to select the best block.
+	</span><span class="kw">pub </span>select_chain: SC,
+	<span class="doccomment">/// The block import.
+	</span><span class="kw">pub </span>block_import: I,
+	<span class="doccomment">/// The proposer factory to build proposer instances.
+	</span><span class="kw">pub </span>proposer_factory: PF,
+	<span class="doccomment">/// The sync oracle that can give us the current sync status.
+	</span><span class="kw">pub </span>sync_oracle: SO,
+	<span class="doccomment">/// Hook into the sync module to control the justification sync process.
+	</span><span class="kw">pub </span>justification_sync_link: L,
+	<span class="doccomment">/// Something that can create the inherent data providers.
+	</span><span class="kw">pub </span>create_inherent_data_providers: CIDP,
+	<span class="doccomment">/// Should we force the authoring of blocks?
+	</span><span class="kw">pub </span>force_authoring: bool,
+	<span class="doccomment">/// The backoff strategy when we miss slots.
+	</span><span class="kw">pub </span>backoff_authoring_blocks: <span class="prelude-ty">Option</span>&lt;BS&gt;,
+	<span class="doccomment">/// The keystore used by the node.
+	</span><span class="kw">pub </span>keystore: SyncCryptoStorePtr,
+	<span class="doccomment">/// The proportion of the slot dedicated to proposing.
+	///
+	/// The block proposing will be limited to this proportion of the slot from the starting of the
+	/// slot. However, the proposing can still take longer when there is some lenience factor
+	/// applied, because there were no blocks produced for some slots.
+	</span><span class="kw">pub </span>block_proposal_slot_portion: SlotProportion,
+	<span class="doccomment">/// The maximum proportion of the slot dedicated to proposing with any lenience factor applied
+	/// due to no blocks being produced.
+	</span><span class="kw">pub </span>max_block_proposal_slot_portion: <span class="prelude-ty">Option</span>&lt;SlotProportion&gt;,
+	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.
+	</span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
 }
 
-<span class="doccomment">/// Start the aura worker. The returned future should be run in a futures executor.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start_aura</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">SC</span>, <span class="ident">I</span>, <span class="ident">PF</span>, <span class="ident">SO</span>, <span class="ident">L</span>, <span class="ident">CIDP</span>, <span class="ident">BS</span>, <span class="ident">Error</span><span class="op">&gt;</span>(
-	<span class="ident">StartAuraParams</span> {
-		<span class="ident">slot_duration</span>,
-		<span class="ident">client</span>,
-		<span class="ident">select_chain</span>,
-		<span class="ident">block_import</span>,
-		<span class="ident">proposer_factory</span>,
-		<span class="ident">sync_oracle</span>,
-		<span class="ident">justification_sync_link</span>,
-		<span class="ident">create_inherent_data_providers</span>,
-		<span class="ident">force_authoring</span>,
-		<span class="ident">backoff_authoring_blocks</span>,
-		<span class="ident">keystore</span>,
-		<span class="ident">block_proposal_slot_portion</span>,
-		<span class="ident">max_block_proposal_slot_portion</span>,
-		<span class="ident">telemetry</span>,
-	}: <span class="ident">StartAuraParams</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">SC</span>, <span class="ident">I</span>, <span class="ident">PF</span>, <span class="ident">SO</span>, <span class="ident">L</span>, <span class="ident">CIDP</span>, <span class="ident">BS</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> ()<span class="op">&gt;</span>, <span class="ident">sp_consensus::Error</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">P</span>: <span class="ident">Pair</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
-	<span class="ident">P::Public</span>: <span class="ident">AppPublic</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Member</span> <span class="op">+</span> <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span>,
-	<span class="ident">P::Signature</span>: <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Member</span> <span class="op">+</span> <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span>,
-	<span class="ident">B</span>: <span class="ident">BlockT</span>,
-	<span class="ident">C</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">BlockOf</span> <span class="op">+</span> <span class="ident">AuxStore</span> <span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
-	<span class="ident">C::Api</span>: <span class="ident">AuraApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">SC</span>: <span class="ident">SelectChain</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="ident">BlockImport</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">PF</span>: <span class="ident">Environment</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">PF::Proposer</span>: <span class="ident">Proposer</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>, <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">SO</span>: <span class="ident">SyncOracle</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Clone</span>,
-	<span class="ident">L</span>: <span class="ident">sc_consensus::JustificationSyncLink</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="ident">CIDP</span>: <span class="ident">CreateInherentDataProviders</span><span class="op">&lt;</span><span class="ident">B</span>, ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span>,
-	<span class="ident">CIDP::InherentDataProviders</span>: <span class="ident">InherentDataProviderExt</span> <span class="op">+</span> <span class="ident">Send</span>,
-	<span class="ident">BS</span>: <span class="ident">BackoffAuthoringBlocksStrategy</span><span class="op">&lt;</span><span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">Error</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">sp_consensus::Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="doccomment">/// Start the aura worker. The returned future should be run in a futures executor.
+</span><span class="kw">pub fn </span>start_aura&lt;P, B, C, SC, I, PF, SO, L, CIDP, BS, Error&gt;(
+	StartAuraParams {
+		slot_duration,
+		client,
+		select_chain,
+		block_import,
+		proposer_factory,
+		sync_oracle,
+		justification_sync_link,
+		create_inherent_data_providers,
+		force_authoring,
+		backoff_authoring_blocks,
+		keystore,
+		block_proposal_slot_portion,
+		max_block_proposal_slot_portion,
+		telemetry,
+	}: StartAuraParams&lt;C, SC, I, PF, SO, L, CIDP, BS&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw">impl </span>Future&lt;Output = ()&gt;, sp_consensus::Error&gt;
+<span class="kw">where
+	</span>P: Pair + Send + Sync,
+	P::Public: AppPublic + Hash + Member + Encode + Decode,
+	P::Signature: TryFrom&lt;Vec&lt;u8&gt;&gt; + Hash + Member + Encode + Decode,
+	B: BlockT,
+	C: ProvideRuntimeApi&lt;B&gt; + BlockOf + AuxStore + HeaderBackend&lt;B&gt; + Send + Sync,
+	C::Api: AuraApi&lt;B, AuthorityId&lt;P&gt;&gt;,
+	SC: SelectChain&lt;B&gt;,
+	I: BlockImport&lt;B, Transaction = sp_api::TransactionFor&lt;C, B&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+	PF: Environment&lt;B, Error = Error&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+	PF::Proposer: Proposer&lt;B, Error = Error, Transaction = sp_api::TransactionFor&lt;C, B&gt;&gt;,
+	SO: SyncOracle + Send + Sync + Clone,
+	L: sc_consensus::JustificationSyncLink&lt;B&gt;,
+	CIDP: CreateInherentDataProviders&lt;B, ()&gt; + Send,
+	CIDP::InherentDataProviders: InherentDataProviderExt + Send,
+	BS: BackoffAuthoringBlocksStrategy&lt;NumberFor&lt;B&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+	Error: std::error::Error + Send + From&lt;sp_consensus::Error&gt; + <span class="lifetime">&#39;static</span>,
 {
-	<span class="kw">let</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">build_aura_worker</span>::<span class="op">&lt;</span><span class="ident">P</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">BuildAuraWorkerParams</span> {
-		<span class="ident">client</span>,
-		<span class="ident">block_import</span>,
-		<span class="ident">proposer_factory</span>,
-		<span class="ident">keystore</span>,
-		<span class="ident">sync_oracle</span>: <span class="ident">sync_oracle</span>.<span class="ident">clone</span>(),
-		<span class="ident">justification_sync_link</span>,
-		<span class="ident">force_authoring</span>,
-		<span class="ident">backoff_authoring_blocks</span>,
-		<span class="ident">telemetry</span>,
-		<span class="ident">block_proposal_slot_portion</span>,
-		<span class="ident">max_block_proposal_slot_portion</span>,
+	<span class="kw">let </span>worker = build_aura_worker::&lt;P, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(BuildAuraWorkerParams {
+		client,
+		block_import,
+		proposer_factory,
+		keystore,
+		sync_oracle: sync_oracle.clone(),
+		justification_sync_link,
+		force_authoring,
+		backoff_authoring_blocks,
+		telemetry,
+		block_proposal_slot_portion,
+		max_block_proposal_slot_portion,
 	});
 
-	<span class="prelude-val">Ok</span>(<span class="ident">sc_consensus_slots::start_slot_worker</span>(
-		<span class="ident">slot_duration</span>,
-		<span class="ident">select_chain</span>,
-		<span class="ident">SimpleSlotWorkerToSlotWorker</span>(<span class="ident">worker</span>),
-		<span class="ident">sync_oracle</span>,
-		<span class="ident">create_inherent_data_providers</span>,
+	<span class="prelude-val">Ok</span>(sc_consensus_slots::start_slot_worker(
+		slot_duration,
+		select_chain,
+		SimpleSlotWorkerToSlotWorker(worker),
+		sync_oracle,
+		create_inherent_data_providers,
 	))
 }
 
-<span class="doccomment">/// Parameters of [`build_aura_worker`].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BuildAuraWorkerParams</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">I</span>, <span class="ident">PF</span>, <span class="ident">SO</span>, <span class="ident">L</span>, <span class="ident">BS</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The client to interact with the chain.</span>
-	<span class="kw">pub</span> <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// The block import.</span>
-	<span class="kw">pub</span> <span class="ident">block_import</span>: <span class="ident">I</span>,
-	<span class="doccomment">/// The proposer factory to build proposer instances.</span>
-	<span class="kw">pub</span> <span class="ident">proposer_factory</span>: <span class="ident">PF</span>,
-	<span class="doccomment">/// The sync oracle that can give us the current sync status.</span>
-	<span class="kw">pub</span> <span class="ident">sync_oracle</span>: <span class="ident">SO</span>,
-	<span class="doccomment">/// Hook into the sync module to control the justification sync process.</span>
-	<span class="kw">pub</span> <span class="ident">justification_sync_link</span>: <span class="ident">L</span>,
-	<span class="doccomment">/// Should we force the authoring of blocks?</span>
-	<span class="kw">pub</span> <span class="ident">force_authoring</span>: <span class="ident">bool</span>,
-	<span class="doccomment">/// The backoff strategy when we miss slots.</span>
-	<span class="kw">pub</span> <span class="ident">backoff_authoring_blocks</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BS</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// The keystore used by the node.</span>
-	<span class="kw">pub</span> <span class="ident">keystore</span>: <span class="ident">SyncCryptoStorePtr</span>,
-	<span class="doccomment">/// The proportion of the slot dedicated to proposing.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The block proposing will be limited to this proportion of the slot from the starting of the</span>
-	<span class="doccomment">/// slot. However, the proposing can still take longer when there is some lenience factor</span>
-	<span class="doccomment">/// applied, because there were no blocks produced for some slots.</span>
-	<span class="kw">pub</span> <span class="ident">block_proposal_slot_portion</span>: <span class="ident">SlotProportion</span>,
-	<span class="doccomment">/// The maximum proportion of the slot dedicated to proposing with any lenience factor applied</span>
-	<span class="doccomment">/// due to no blocks being produced.</span>
-	<span class="kw">pub</span> <span class="ident">max_block_proposal_slot_portion</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SlotProportion</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.</span>
-	<span class="kw">pub</span> <span class="ident">telemetry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TelemetryHandle</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Parameters of [`build_aura_worker`].
+</span><span class="kw">pub struct </span>BuildAuraWorkerParams&lt;C, I, PF, SO, L, BS&gt; {
+	<span class="doccomment">/// The client to interact with the chain.
+	</span><span class="kw">pub </span>client: Arc&lt;C&gt;,
+	<span class="doccomment">/// The block import.
+	</span><span class="kw">pub </span>block_import: I,
+	<span class="doccomment">/// The proposer factory to build proposer instances.
+	</span><span class="kw">pub </span>proposer_factory: PF,
+	<span class="doccomment">/// The sync oracle that can give us the current sync status.
+	</span><span class="kw">pub </span>sync_oracle: SO,
+	<span class="doccomment">/// Hook into the sync module to control the justification sync process.
+	</span><span class="kw">pub </span>justification_sync_link: L,
+	<span class="doccomment">/// Should we force the authoring of blocks?
+	</span><span class="kw">pub </span>force_authoring: bool,
+	<span class="doccomment">/// The backoff strategy when we miss slots.
+	</span><span class="kw">pub </span>backoff_authoring_blocks: <span class="prelude-ty">Option</span>&lt;BS&gt;,
+	<span class="doccomment">/// The keystore used by the node.
+	</span><span class="kw">pub </span>keystore: SyncCryptoStorePtr,
+	<span class="doccomment">/// The proportion of the slot dedicated to proposing.
+	///
+	/// The block proposing will be limited to this proportion of the slot from the starting of the
+	/// slot. However, the proposing can still take longer when there is some lenience factor
+	/// applied, because there were no blocks produced for some slots.
+	</span><span class="kw">pub </span>block_proposal_slot_portion: SlotProportion,
+	<span class="doccomment">/// The maximum proportion of the slot dedicated to proposing with any lenience factor applied
+	/// due to no blocks being produced.
+	</span><span class="kw">pub </span>max_block_proposal_slot_portion: <span class="prelude-ty">Option</span>&lt;SlotProportion&gt;,
+	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.
+	</span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
 }
 
-<span class="doccomment">/// Build the aura worker.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The caller is responsible for running this worker, otherwise it will do nothing.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build_aura_worker</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">PF</span>, <span class="ident">I</span>, <span class="ident">SO</span>, <span class="ident">L</span>, <span class="ident">BS</span>, <span class="ident">Error</span><span class="op">&gt;</span>(
-	<span class="ident">BuildAuraWorkerParams</span> {
-		<span class="ident">client</span>,
-		<span class="ident">block_import</span>,
-		<span class="ident">proposer_factory</span>,
-		<span class="ident">sync_oracle</span>,
-		<span class="ident">justification_sync_link</span>,
-		<span class="ident">backoff_authoring_blocks</span>,
-		<span class="ident">keystore</span>,
-		<span class="ident">block_proposal_slot_portion</span>,
-		<span class="ident">max_block_proposal_slot_portion</span>,
-		<span class="ident">telemetry</span>,
-		<span class="ident">force_authoring</span>,
-	}: <span class="ident">BuildAuraWorkerParams</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">I</span>, <span class="ident">PF</span>, <span class="ident">SO</span>, <span class="ident">L</span>, <span class="ident">BS</span><span class="op">&gt;</span>,
-) -&gt; <span class="kw">impl</span> <span class="ident">sc_consensus_slots::SimpleSlotWorker</span><span class="op">&lt;</span>
-	<span class="ident">B</span>,
-	<span class="ident">Proposer</span> <span class="op">=</span> <span class="ident">PF::Proposer</span>,
-	<span class="ident">BlockImport</span> <span class="op">=</span> <span class="ident">I</span>,
-	<span class="ident">SyncOracle</span> <span class="op">=</span> <span class="ident">SO</span>,
-	<span class="ident">JustificationSyncLink</span> <span class="op">=</span> <span class="ident">L</span>,
-	<span class="ident">Claim</span> <span class="op">=</span> <span class="ident">P::Public</span>,
-	<span class="ident">AuxData</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-<span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">B</span>: <span class="ident">BlockT</span>,
-	<span class="ident">C</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">BlockOf</span> <span class="op">+</span> <span class="ident">AuxStore</span> <span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
-	<span class="ident">C::Api</span>: <span class="ident">AuraApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">PF</span>: <span class="ident">Environment</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">PF::Proposer</span>: <span class="ident">Proposer</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>, <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">P</span>: <span class="ident">Pair</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
-	<span class="ident">P::Public</span>: <span class="ident">AppPublic</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Member</span> <span class="op">+</span> <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span>,
-	<span class="ident">P::Signature</span>: <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Member</span> <span class="op">+</span> <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span>,
-	<span class="ident">I</span>: <span class="ident">BlockImport</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">Error</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">sp_consensus::Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">SO</span>: <span class="ident">SyncOracle</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Clone</span>,
-	<span class="ident">L</span>: <span class="ident">sc_consensus::JustificationSyncLink</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="ident">BS</span>: <span class="ident">BackoffAuthoringBlocksStrategy</span><span class="op">&lt;</span><span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="doccomment">/// Build the aura worker.
+///
+/// The caller is responsible for running this worker, otherwise it will do nothing.
+</span><span class="kw">pub fn </span>build_aura_worker&lt;P, B, C, PF, I, SO, L, BS, Error&gt;(
+	BuildAuraWorkerParams {
+		client,
+		block_import,
+		proposer_factory,
+		sync_oracle,
+		justification_sync_link,
+		backoff_authoring_blocks,
+		keystore,
+		block_proposal_slot_portion,
+		max_block_proposal_slot_portion,
+		telemetry,
+		force_authoring,
+	}: BuildAuraWorkerParams&lt;C, I, PF, SO, L, BS&gt;,
+) -&gt; <span class="kw">impl </span>sc_consensus_slots::SimpleSlotWorker&lt;
+	B,
+	Proposer = PF::Proposer,
+	BlockImport = I,
+	SyncOracle = SO,
+	JustificationSyncLink = L,
+	Claim = P::Public,
+	AuxData = Vec&lt;AuthorityId&lt;P&gt;&gt;,
+&gt;
+<span class="kw">where
+	</span>B: BlockT,
+	C: ProvideRuntimeApi&lt;B&gt; + BlockOf + AuxStore + HeaderBackend&lt;B&gt; + Send + Sync,
+	C::Api: AuraApi&lt;B, AuthorityId&lt;P&gt;&gt;,
+	PF: Environment&lt;B, Error = Error&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+	PF::Proposer: Proposer&lt;B, Error = Error, Transaction = sp_api::TransactionFor&lt;C, B&gt;&gt;,
+	P: Pair + Send + Sync,
+	P::Public: AppPublic + Hash + Member + Encode + Decode,
+	P::Signature: TryFrom&lt;Vec&lt;u8&gt;&gt; + Hash + Member + Encode + Decode,
+	I: BlockImport&lt;B, Transaction = sp_api::TransactionFor&lt;C, B&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+	Error: std::error::Error + Send + From&lt;sp_consensus::Error&gt; + <span class="lifetime">&#39;static</span>,
+	SO: SyncOracle + Send + Sync + Clone,
+	L: sc_consensus::JustificationSyncLink&lt;B&gt;,
+	BS: BackoffAuthoringBlocksStrategy&lt;NumberFor&lt;B&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
 {
-	<span class="ident">AuraWorker</span> {
-		<span class="ident">client</span>,
-		<span class="ident">block_import</span>,
-		<span class="ident">env</span>: <span class="ident">proposer_factory</span>,
-		<span class="ident">keystore</span>,
-		<span class="ident">sync_oracle</span>,
-		<span class="ident">justification_sync_link</span>,
-		<span class="ident">force_authoring</span>,
-		<span class="ident">backoff_authoring_blocks</span>,
-		<span class="ident">telemetry</span>,
-		<span class="ident">block_proposal_slot_portion</span>,
-		<span class="ident">max_block_proposal_slot_portion</span>,
-		<span class="ident">_key_type</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>,
+	AuraWorker {
+		client,
+		block_import,
+		env: proposer_factory,
+		keystore,
+		sync_oracle,
+		justification_sync_link,
+		force_authoring,
+		backoff_authoring_blocks,
+		telemetry,
+		block_proposal_slot_portion,
+		max_block_proposal_slot_portion,
+		_key_type: PhantomData::&lt;P&gt;,
 	}
 }
 
-<span class="kw">struct</span> <span class="ident">AuraWorker</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">E</span>, <span class="ident">I</span>, <span class="ident">P</span>, <span class="ident">SO</span>, <span class="ident">L</span>, <span class="ident">BS</span><span class="op">&gt;</span> {
-	<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-	<span class="ident">block_import</span>: <span class="ident">I</span>,
-	<span class="ident">env</span>: <span class="ident">E</span>,
-	<span class="ident">keystore</span>: <span class="ident">SyncCryptoStorePtr</span>,
-	<span class="ident">sync_oracle</span>: <span class="ident">SO</span>,
-	<span class="ident">justification_sync_link</span>: <span class="ident">L</span>,
-	<span class="ident">force_authoring</span>: <span class="ident">bool</span>,
-	<span class="ident">backoff_authoring_blocks</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BS</span><span class="op">&gt;</span>,
-	<span class="ident">block_proposal_slot_portion</span>: <span class="ident">SlotProportion</span>,
-	<span class="ident">max_block_proposal_slot_portion</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SlotProportion</span><span class="op">&gt;</span>,
-	<span class="ident">telemetry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TelemetryHandle</span><span class="op">&gt;</span>,
-	<span class="ident">_key_type</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>AuraWorker&lt;C, E, I, P, SO, L, BS&gt; {
+	client: Arc&lt;C&gt;,
+	block_import: I,
+	env: E,
+	keystore: SyncCryptoStorePtr,
+	sync_oracle: SO,
+	justification_sync_link: L,
+	force_authoring: bool,
+	backoff_authoring_blocks: <span class="prelude-ty">Option</span>&lt;BS&gt;,
+	block_proposal_slot_portion: SlotProportion,
+	max_block_proposal_slot_portion: <span class="prelude-ty">Option</span>&lt;SlotProportion&gt;,
+	telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+	_key_type: PhantomData&lt;P&gt;,
 }
 
-<span class="attribute">#[<span class="ident">async_trait::async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">E</span>, <span class="ident">I</span>, <span class="ident">P</span>, <span class="ident">Error</span>, <span class="ident">SO</span>, <span class="ident">L</span>, <span class="ident">BS</span><span class="op">&gt;</span> <span class="ident">sc_consensus_slots::SimpleSlotWorker</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>
-	<span class="kw">for</span> <span class="ident">AuraWorker</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">E</span>, <span class="ident">I</span>, <span class="ident">P</span>, <span class="ident">SO</span>, <span class="ident">L</span>, <span class="ident">BS</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">B</span>: <span class="ident">BlockT</span>,
-	<span class="ident">C</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">BlockOf</span> <span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sync</span>,
-	<span class="ident">C::Api</span>: <span class="ident">AuraApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">E</span>: <span class="ident">Environment</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
-	<span class="ident">E::Proposer</span>: <span class="ident">Proposer</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>, <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="ident">BlockImport</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">P</span>: <span class="ident">Pair</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
-	<span class="ident">P::Public</span>: <span class="ident">AppPublic</span> <span class="op">+</span> <span class="ident">Public</span> <span class="op">+</span> <span class="ident">Member</span> <span class="op">+</span> <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span> <span class="op">+</span> <span class="ident">Hash</span>,
-	<span class="ident">P::Signature</span>: <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Member</span> <span class="op">+</span> <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Debug</span>,
-	<span class="ident">SO</span>: <span class="ident">SyncOracle</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Sync</span>,
-	<span class="ident">L</span>: <span class="ident">sc_consensus::JustificationSyncLink</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="ident">BS</span>: <span class="ident">BackoffAuthoringBlocksStrategy</span><span class="op">&lt;</span><span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">Error</span>: <span class="ident">std::error::Error</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">sp_consensus::Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="attribute">#[async_trait::async_trait]
+</span><span class="kw">impl</span>&lt;B, C, E, I, P, Error, SO, L, BS&gt; sc_consensus_slots::SimpleSlotWorker&lt;B&gt;
+	<span class="kw">for </span>AuraWorker&lt;C, E, I, P, SO, L, BS&gt;
+<span class="kw">where
+	</span>B: BlockT,
+	C: ProvideRuntimeApi&lt;B&gt; + BlockOf + HeaderBackend&lt;B&gt; + Sync,
+	C::Api: AuraApi&lt;B, AuthorityId&lt;P&gt;&gt;,
+	E: Environment&lt;B, Error = Error&gt; + Send + Sync,
+	E::Proposer: Proposer&lt;B, Error = Error, Transaction = sp_api::TransactionFor&lt;C, B&gt;&gt;,
+	I: BlockImport&lt;B, Transaction = sp_api::TransactionFor&lt;C, B&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+	P: Pair + Send + Sync,
+	P::Public: AppPublic + Public + Member + Encode + Decode + Hash,
+	P::Signature: TryFrom&lt;Vec&lt;u8&gt;&gt; + Member + Encode + Decode + Hash + Debug,
+	SO: SyncOracle + Send + Clone + Sync,
+	L: sc_consensus::JustificationSyncLink&lt;B&gt;,
+	BS: BackoffAuthoringBlocksStrategy&lt;NumberFor&lt;B&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+	Error: std::error::Error + Send + From&lt;sp_consensus::Error&gt; + <span class="lifetime">&#39;static</span>,
 {
-	<span class="kw">type</span> <span class="ident">BlockImport</span> <span class="op">=</span> <span class="ident">I</span>;
-	<span class="kw">type</span> <span class="ident">SyncOracle</span> <span class="op">=</span> <span class="ident">SO</span>;
-	<span class="kw">type</span> <span class="ident">JustificationSyncLink</span> <span class="op">=</span> <span class="ident">L</span>;
-	<span class="kw">type</span> <span class="ident">CreateProposer</span> <span class="op">=</span>
-		<span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">E::Proposer</span>, <span class="ident">sp_consensus::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">Proposer</span> <span class="op">=</span> <span class="ident">E::Proposer</span>;
-	<span class="kw">type</span> <span class="ident">Claim</span> <span class="op">=</span> <span class="ident">P::Public</span>;
-	<span class="kw">type</span> <span class="ident">AuxData</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="kw">type </span>BlockImport = I;
+	<span class="kw">type </span>SyncOracle = SO;
+	<span class="kw">type </span>JustificationSyncLink = L;
+	<span class="kw">type </span>CreateProposer =
+		Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;E::Proposer, sp_consensus::Error&gt;&gt; + Send + <span class="lifetime">&#39;static</span>&gt;&gt;;
+	<span class="kw">type </span>Proposer = E::Proposer;
+	<span class="kw">type </span>Claim = P::Public;
+	<span class="kw">type </span>AuxData = Vec&lt;AuthorityId&lt;P&gt;&gt;;
 
-	<span class="kw">fn</span> <span class="ident">logging_target</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-		<span class="string">&quot;aura&quot;</span>
+	<span class="kw">fn </span>logging_target(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+		<span class="string">&quot;aura&quot;
+	</span>}
+
+	<span class="kw">fn </span>block_import(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::BlockImport {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.block_import
 	}
 
-	<span class="kw">fn</span> <span class="ident">block_import</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::BlockImport</span> {
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">block_import</span>
-	}
-
-	<span class="kw">fn</span> <span class="ident">aux_data</span>(
+	<span class="kw">fn </span>aux_data(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">header</span>: <span class="kw-2">&amp;</span><span class="ident">B::Header</span>,
-		<span class="ident">_slot</span>: <span class="ident">Slot</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AuxData</span>, <span class="ident">sp_consensus::Error</span><span class="op">&gt;</span> {
-		<span class="ident">authorities</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">as_ref</span>(), <span class="kw-2">&amp;</span><span class="ident">BlockId::Hash</span>(<span class="ident">header</span>.<span class="ident">hash</span>()))
+		header: <span class="kw-2">&amp;</span>B::Header,
+		_slot: Slot,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::AuxData, sp_consensus::Error&gt; {
+		authorities(<span class="self">self</span>.client.as_ref(), <span class="kw-2">&amp;</span>BlockId::Hash(header.hash()))
 	}
 
-	<span class="kw">fn</span> <span class="ident">authorities_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">epoch_data</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::AuxData</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Some</span>(<span class="ident">epoch_data</span>.<span class="ident">len</span>())
+	<span class="kw">fn </span>authorities_len(<span class="kw-2">&amp;</span><span class="self">self</span>, epoch_data: <span class="kw-2">&amp;</span><span class="self">Self</span>::AuxData) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
+		<span class="prelude-val">Some</span>(epoch_data.len())
 	}
 
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">claim_slot</span>(
+	<span class="kw">async fn </span>claim_slot(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">_header</span>: <span class="kw-2">&amp;</span><span class="ident">B::Header</span>,
-		<span class="ident">slot</span>: <span class="ident">Slot</span>,
-		<span class="ident">epoch_data</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::AuxData</span>,
-	) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Claim</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">expected_author</span> <span class="op">=</span> <span class="ident">slot_author</span>::<span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>(<span class="ident">slot</span>, <span class="ident">epoch_data</span>);
-		<span class="ident">expected_author</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
-			<span class="kw">if</span> <span class="ident">SyncCryptoStore::has_keys</span>(
-				<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">keystore</span>,
-				<span class="kw-2">&amp;</span>[(<span class="ident">p</span>.<span class="ident">to_raw_vec</span>(), <span class="ident">sp_application_crypto::key_types::AURA</span>)],
+		_header: <span class="kw-2">&amp;</span>B::Header,
+		slot: Slot,
+		epoch_data: <span class="kw-2">&amp;</span><span class="self">Self</span>::AuxData,
+	) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Claim&gt; {
+		<span class="kw">let </span>expected_author = slot_author::&lt;P&gt;(slot, epoch_data);
+		expected_author.and_then(|p| {
+			<span class="kw">if </span>SyncCryptoStore::has_keys(
+				<span class="kw-2">&amp;*</span><span class="self">self</span>.keystore,
+				<span class="kw-2">&amp;</span>[(p.to_raw_vec(), sp_application_crypto::key_types::AURA)],
 			) {
-				<span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">clone</span>())
-			} <span class="kw">else</span> {
-				<span class="prelude-val">None</span>
-			}
+				<span class="prelude-val">Some</span>(p.clone())
+			} <span class="kw">else </span>{
+				<span class="prelude-val">None
+			</span>}
 		})
 	}
 
-	<span class="kw">fn</span> <span class="ident">pre_digest_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">slot</span>: <span class="ident">Slot</span>, <span class="ident">_claim</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Claim</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">sp_runtime::DigestItem</span><span class="op">&gt;</span> {
-		<span class="macro">vec!</span>[<span class="op">&lt;</span><span class="ident">DigestItem</span> <span class="kw">as</span> <span class="ident">CompatibleDigestItem</span><span class="op">&lt;</span><span class="ident">P::Signature</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::aura_pre_digest</span>(<span class="ident">slot</span>)]
+	<span class="kw">fn </span>pre_digest_data(<span class="kw-2">&amp;</span><span class="self">self</span>, slot: Slot, _claim: <span class="kw-2">&amp;</span><span class="self">Self</span>::Claim) -&gt; Vec&lt;sp_runtime::DigestItem&gt; {
+		<span class="macro">vec!</span>[&lt;DigestItem <span class="kw">as </span>CompatibleDigestItem&lt;P::Signature&gt;&gt;::aura_pre_digest(slot)]
 	}
 
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">block_import_params</span>(
+	<span class="kw">async fn </span>block_import_params(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">header</span>: <span class="ident">B::Header</span>,
-		<span class="ident">header_hash</span>: <span class="kw-2">&amp;</span><span class="ident">B::Hash</span>,
-		<span class="ident">body</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">B::Extrinsic</span><span class="op">&gt;</span>,
-		<span class="ident">storage_changes</span>: <span class="ident">StorageChanges</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::BlockImport</span> <span class="kw">as</span> <span class="ident">BlockImport</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Transaction</span>, <span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">public</span>: <span class="ident"><span class="self">Self</span>::Claim</span>,
-		<span class="ident">_epoch</span>: <span class="ident"><span class="self">Self</span>::AuxData</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>
-		<span class="ident">sc_consensus::BlockImportParams</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::BlockImport</span> <span class="kw">as</span> <span class="ident">BlockImport</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Transaction</span><span class="op">&gt;</span>,
-		<span class="ident">sp_consensus::Error</span>,
-	<span class="op">&gt;</span> {
-		<span class="comment">// sign the pre-sealed hash of the block and then</span>
-		<span class="comment">// add it to a digest item.</span>
-		<span class="kw">let</span> <span class="ident">public_type_pair</span> <span class="op">=</span> <span class="ident">public</span>.<span class="ident">to_public_crypto_pair</span>();
-		<span class="kw">let</span> <span class="ident">public</span> <span class="op">=</span> <span class="ident">public</span>.<span class="ident">to_raw_vec</span>();
-		<span class="kw">let</span> <span class="ident">signature</span> <span class="op">=</span> <span class="ident">SyncCryptoStore::sign_with</span>(
-			<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">keystore</span>,
-			<span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">AppKey</span><span class="op">&gt;</span><span class="ident">::ID</span>,
-			<span class="kw-2">&amp;</span><span class="ident">public_type_pair</span>,
-			<span class="ident">header_hash</span>.<span class="ident">as_ref</span>(),
+		header: B::Header,
+		header_hash: <span class="kw-2">&amp;</span>B::Hash,
+		body: Vec&lt;B::Extrinsic&gt;,
+		storage_changes: StorageChanges&lt;&lt;<span class="self">Self</span>::BlockImport <span class="kw">as </span>BlockImport&lt;B&gt;&gt;::Transaction, B&gt;,
+		public: <span class="self">Self</span>::Claim,
+		_epoch: <span class="self">Self</span>::AuxData,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;
+		sc_consensus::BlockImportParams&lt;B, &lt;<span class="self">Self</span>::BlockImport <span class="kw">as </span>BlockImport&lt;B&gt;&gt;::Transaction&gt;,
+		sp_consensus::Error,
+	&gt; {
+		<span class="comment">// sign the pre-sealed hash of the block and then
+		// add it to a digest item.
+		</span><span class="kw">let </span>public_type_pair = public.to_public_crypto_pair();
+		<span class="kw">let </span>public = public.to_raw_vec();
+		<span class="kw">let </span>signature = SyncCryptoStore::sign_with(
+			<span class="kw-2">&amp;*</span><span class="self">self</span>.keystore,
+			&lt;AuthorityId&lt;P&gt; <span class="kw">as </span>AppKey&gt;::ID,
+			<span class="kw-2">&amp;</span>public_type_pair,
+			header_hash.as_ref(),
 		)
-		.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">sp_consensus::Error::CannotSign</span>(<span class="ident">public</span>.<span class="ident">clone</span>(), <span class="ident">e</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>
-		.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="ident">sp_consensus::Error::CannotSign</span>(
-				<span class="ident">public</span>.<span class="ident">clone</span>(),
-				<span class="string">&quot;Could not find key in keystore.&quot;</span>.<span class="ident">into</span>(),
+		.map_err(|e| sp_consensus::Error::CannotSign(public.clone(), e.to_string()))<span class="question-mark">?
+		</span>.ok_or_else(|| {
+			sp_consensus::Error::CannotSign(
+				public.clone(),
+				<span class="string">&quot;Could not find key in keystore.&quot;</span>.into(),
 			)
 		})<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">signature</span> <span class="op">=</span> <span class="ident">signature</span>
-			.<span class="ident">clone</span>()
-			.<span class="ident">try_into</span>()
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">sp_consensus::Error::InvalidSignature</span>(<span class="ident">signature</span>, <span class="ident">public</span>))<span class="question-mark">?</span>;
+		<span class="kw">let </span>signature = signature
+			.clone()
+			.try_into()
+			.map_err(|<span class="kw">_</span>| sp_consensus::Error::InvalidSignature(signature, public))<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="ident">signature_digest_item</span> <span class="op">=</span>
-			<span class="op">&lt;</span><span class="ident">DigestItem</span> <span class="kw">as</span> <span class="ident">CompatibleDigestItem</span><span class="op">&lt;</span><span class="ident">P::Signature</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::aura_seal</span>(<span class="ident">signature</span>);
+		<span class="kw">let </span>signature_digest_item =
+			&lt;DigestItem <span class="kw">as </span>CompatibleDigestItem&lt;P::Signature&gt;&gt;::aura_seal(signature);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">import_block</span> <span class="op">=</span> <span class="ident">BlockImportParams::new</span>(<span class="ident">BlockOrigin::Own</span>, <span class="ident">header</span>);
-		<span class="ident">import_block</span>.<span class="ident">post_digests</span>.<span class="ident">push</span>(<span class="ident">signature_digest_item</span>);
-		<span class="ident">import_block</span>.<span class="ident">body</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">body</span>);
-		<span class="ident">import_block</span>.<span class="ident">state_action</span> <span class="op">=</span>
-			<span class="ident">StateAction::ApplyChanges</span>(<span class="ident">sc_consensus::StorageChanges::Changes</span>(<span class="ident">storage_changes</span>));
-		<span class="ident">import_block</span>.<span class="ident">fork_choice</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ForkChoiceStrategy::LongestChain</span>);
+		<span class="kw">let </span><span class="kw-2">mut </span>import_block = BlockImportParams::new(BlockOrigin::Own, header);
+		import_block.post_digests.push(signature_digest_item);
+		import_block.body = <span class="prelude-val">Some</span>(body);
+		import_block.state_action =
+			StateAction::ApplyChanges(sc_consensus::StorageChanges::Changes(storage_changes));
+		import_block.fork_choice = <span class="prelude-val">Some</span>(ForkChoiceStrategy::LongestChain);
 
-		<span class="prelude-val">Ok</span>(<span class="ident">import_block</span>)
+		<span class="prelude-val">Ok</span>(import_block)
 	}
 
-	<span class="kw">fn</span> <span class="ident">force_authoring</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-		<span class="self">self</span>.<span class="ident">force_authoring</span>
+	<span class="kw">fn </span>force_authoring(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+		<span class="self">self</span>.force_authoring
 	}
 
-	<span class="kw">fn</span> <span class="ident">should_backoff</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">slot</span>: <span class="ident">Slot</span>, <span class="ident">chain_head</span>: <span class="kw-2">&amp;</span><span class="ident">B::Header</span>) -&gt; <span class="ident">bool</span> {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">strategy</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">backoff_authoring_blocks</span> {
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">chain_head_slot</span>) <span class="op">=</span> <span class="ident">find_pre_digest</span>::<span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">P::Signature</span><span class="op">&gt;</span>(<span class="ident">chain_head</span>) {
-				<span class="kw">return</span> <span class="ident">strategy</span>.<span class="ident">should_backoff</span>(
-					<span class="kw-2">*</span><span class="ident">chain_head</span>.<span class="ident">number</span>(),
-					<span class="ident">chain_head_slot</span>,
-					<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">info</span>().<span class="ident">finalized_number</span>,
-					<span class="ident">slot</span>,
-					<span class="self">self</span>.<span class="ident">logging_target</span>(),
+	<span class="kw">fn </span>should_backoff(<span class="kw-2">&amp;</span><span class="self">self</span>, slot: Slot, chain_head: <span class="kw-2">&amp;</span>B::Header) -&gt; bool {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref </span>strategy) = <span class="self">self</span>.backoff_authoring_blocks {
+			<span class="kw">if let </span><span class="prelude-val">Ok</span>(chain_head_slot) = find_pre_digest::&lt;B, P::Signature&gt;(chain_head) {
+				<span class="kw">return </span>strategy.should_backoff(
+					<span class="kw-2">*</span>chain_head.number(),
+					chain_head_slot,
+					<span class="self">self</span>.client.info().finalized_number,
+					slot,
+					<span class="self">self</span>.logging_target(),
 				)
 			}
 		}
-		<span class="bool-val">false</span>
+		<span class="bool-val">false
+	</span>}
+
+	<span class="kw">fn </span>sync_oracle(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::SyncOracle {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.sync_oracle
 	}
 
-	<span class="kw">fn</span> <span class="ident">sync_oracle</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::SyncOracle</span> {
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">sync_oracle</span>
+	<span class="kw">fn </span>justification_sync_link(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::JustificationSyncLink {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.justification_sync_link
 	}
 
-	<span class="kw">fn</span> <span class="ident">justification_sync_link</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::JustificationSyncLink</span> {
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">justification_sync_link</span>
+	<span class="kw">fn </span>proposer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: <span class="kw-2">&amp;</span>B::Header) -&gt; <span class="self">Self</span>::CreateProposer {
+		<span class="self">self</span>.env
+			.init(block)
+			.map_err(|e| sp_consensus::Error::ClientImport(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, e)))
+			.boxed()
 	}
 
-	<span class="kw">fn</span> <span class="ident">proposer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">block</span>: <span class="kw-2">&amp;</span><span class="ident">B::Header</span>) -&gt; <span class="ident"><span class="self">Self</span>::CreateProposer</span> {
-		<span class="self">self</span>.<span class="ident">env</span>
-			.<span class="ident">init</span>(<span class="ident">block</span>)
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">sp_consensus::Error::ClientImport</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>)))
-			.<span class="ident">boxed</span>()
+	<span class="kw">fn </span>telemetry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt; {
+		<span class="self">self</span>.telemetry.clone()
 	}
 
-	<span class="kw">fn</span> <span class="ident">telemetry</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TelemetryHandle</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">telemetry</span>.<span class="ident">clone</span>()
-	}
+	<span class="kw">fn </span>proposing_remaining_duration(<span class="kw-2">&amp;</span><span class="self">self</span>, slot_info: <span class="kw-2">&amp;</span>SlotInfo&lt;B&gt;) -&gt; std::time::Duration {
+		<span class="kw">let </span>parent_slot = find_pre_digest::&lt;B, P::Signature&gt;(<span class="kw-2">&amp;</span>slot_info.chain_head).ok();
 
-	<span class="kw">fn</span> <span class="ident">proposing_remaining_duration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">slot_info</span>: <span class="kw-2">&amp;</span><span class="ident">SlotInfo</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::time::Duration</span> {
-		<span class="kw">let</span> <span class="ident">parent_slot</span> <span class="op">=</span> <span class="ident">find_pre_digest</span>::<span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">P::Signature</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">slot_info</span>.<span class="ident">chain_head</span>).<span class="ident">ok</span>();
-
-		<span class="ident">sc_consensus_slots::proposing_remaining_duration</span>(
-			<span class="ident">parent_slot</span>,
-			<span class="ident">slot_info</span>,
-			<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">block_proposal_slot_portion</span>,
-			<span class="self">self</span>.<span class="ident">max_block_proposal_slot_portion</span>.<span class="ident">as_ref</span>(),
-			<span class="ident">sc_consensus_slots::SlotLenienceType::Exponential</span>,
-			<span class="self">self</span>.<span class="ident">logging_target</span>(),
+		sc_consensus_slots::proposing_remaining_duration(
+			parent_slot,
+			slot_info,
+			<span class="kw-2">&amp;</span><span class="self">self</span>.block_proposal_slot_portion,
+			<span class="self">self</span>.max_block_proposal_slot_portion.as_ref(),
+			sc_consensus_slots::SlotLenienceType::Exponential,
+			<span class="self">self</span>.logging_target(),
 		)
 	}
 }
 
-<span class="kw">fn</span> <span class="ident">aura_err</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span>(<span class="ident">error</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) -&gt; <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="macro">debug!</span>(<span class="ident">target</span>: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">error</span>);
-	<span class="ident">error</span>
+<span class="kw">fn </span>aura_err&lt;B: BlockT&gt;(error: Error&lt;B&gt;) -&gt; Error&lt;B&gt; {
+	<span class="macro">debug!</span>(target: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;{}&quot;</span>, error);
+	error
 }
 
-<span class="doccomment">/// Aura Errors</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">thiserror::Error</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Multiple Aura pre-runtime headers</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Multiple Aura pre-runtime headers&quot;</span>)]</span>
-	<span class="ident">MultipleHeaders</span>,
-	<span class="doccomment">/// No Aura pre-runtime digest found</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;No Aura pre-runtime digest found&quot;</span>)]</span>
-	<span class="ident">NoDigestFound</span>,
-	<span class="doccomment">/// Header is unsealed</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Header {0:?} is unsealed&quot;</span>)]</span>
-	<span class="ident">HeaderUnsealed</span>(<span class="ident">B::Hash</span>),
-	<span class="doccomment">/// Header has a bad seal</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Header {0:?} has a bad seal&quot;</span>)]</span>
-	<span class="ident">HeaderBadSeal</span>(<span class="ident">B::Hash</span>),
-	<span class="doccomment">/// Slot Author not found</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Slot Author not found&quot;</span>)]</span>
-	<span class="ident">SlotAuthorNotFound</span>,
-	<span class="doccomment">/// Bad signature</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Bad signature on {0:?}&quot;</span>)]</span>
-	<span class="ident">BadSignature</span>(<span class="ident">B::Hash</span>),
-	<span class="doccomment">/// Client Error</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="ident">transparent</span>)]</span>
-	<span class="ident">Client</span>(<span class="ident">sp_blockchain::Error</span>),
-	<span class="doccomment">/// Unknown inherent error for identifier</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Unknown inherent error for identifier: {}&quot;</span>, <span class="ident">String::from_utf8_lossy</span>(.<span class="number">0</span>))]</span>
-	<span class="ident">UnknownInherentError</span>(<span class="ident">sp_inherents::InherentIdentifier</span>),
-	<span class="doccomment">/// Inherents Error</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Inherent error: {0}&quot;</span>)]</span>
-	<span class="ident">Inherent</span>(<span class="ident">sp_inherents::Error</span>),
+<span class="doccomment">/// Aura Errors
+</span><span class="attribute">#[derive(Debug, thiserror::Error)]
+</span><span class="kw">pub enum </span>Error&lt;B: BlockT&gt; {
+	<span class="doccomment">/// Multiple Aura pre-runtime headers
+	</span><span class="attribute">#[error(<span class="string">&quot;Multiple Aura pre-runtime headers&quot;</span>)]
+	</span>MultipleHeaders,
+	<span class="doccomment">/// No Aura pre-runtime digest found
+	</span><span class="attribute">#[error(<span class="string">&quot;No Aura pre-runtime digest found&quot;</span>)]
+	</span>NoDigestFound,
+	<span class="doccomment">/// Header is unsealed
+	</span><span class="attribute">#[error(<span class="string">&quot;Header {0:?} is unsealed&quot;</span>)]
+	</span>HeaderUnsealed(B::Hash),
+	<span class="doccomment">/// Header has a bad seal
+	</span><span class="attribute">#[error(<span class="string">&quot;Header {0:?} has a bad seal&quot;</span>)]
+	</span>HeaderBadSeal(B::Hash),
+	<span class="doccomment">/// Slot Author not found
+	</span><span class="attribute">#[error(<span class="string">&quot;Slot Author not found&quot;</span>)]
+	</span>SlotAuthorNotFound,
+	<span class="doccomment">/// Bad signature
+	</span><span class="attribute">#[error(<span class="string">&quot;Bad signature on {0:?}&quot;</span>)]
+	</span>BadSignature(B::Hash),
+	<span class="doccomment">/// Client Error
+	</span><span class="attribute">#[error(transparent)]
+	</span>Client(sp_blockchain::Error),
+	<span class="doccomment">/// Unknown inherent error for identifier
+	</span><span class="attribute">#[error(<span class="string">&quot;Unknown inherent error for identifier: {}&quot;</span>, String::from_utf8_lossy(.<span class="number">0</span>))]
+	</span>UnknownInherentError(sp_inherents::InherentIdentifier),
+	<span class="doccomment">/// Inherents Error
+	</span><span class="attribute">#[error(<span class="string">&quot;Inherent error: {0}&quot;</span>)]
+	</span>Inherent(sp_inherents::Error),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">error</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) -&gt; <span class="ident">String</span> {
-		<span class="ident">error</span>.<span class="ident">to_string</span>()
+<span class="kw">impl</span>&lt;B: BlockT&gt; From&lt;Error&lt;B&gt;&gt; <span class="kw">for </span>String {
+	<span class="kw">fn </span>from(error: Error&lt;B&gt;) -&gt; String {
+		error.to_string()
 	}
 }
 
-<span class="doccomment">/// Get pre-digests from the header</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_pre_digest</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span>, <span class="ident">Signature</span>: <span class="ident">Codec</span><span class="op">&gt;</span>(<span class="ident">header</span>: <span class="kw-2">&amp;</span><span class="ident">B::Header</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Slot</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-	<span class="kw">if</span> <span class="ident">header</span>.<span class="ident">number</span>().<span class="ident">is_zero</span>() {
-		<span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="number">0</span>.<span class="ident">into</span>())
+<span class="doccomment">/// Get pre-digests from the header
+</span><span class="kw">pub fn </span>find_pre_digest&lt;B: BlockT, Signature: Codec&gt;(header: <span class="kw-2">&amp;</span>B::Header) -&gt; <span class="prelude-ty">Result</span>&lt;Slot, Error&lt;B&gt;&gt; {
+	<span class="kw">if </span>header.number().is_zero() {
+		<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="number">0</span>.into())
 	}
 
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pre_digest</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Slot</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-	<span class="kw">for</span> <span class="ident">log</span> <span class="kw">in</span> <span class="ident">header</span>.<span class="ident">digest</span>().<span class="ident">logs</span>() {
-		<span class="macro">trace!</span>(<span class="ident">target</span>: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;Checking log {:?}&quot;</span>, <span class="ident">log</span>);
-		<span class="kw">match</span> (<span class="ident">CompatibleDigestItem</span>::<span class="op">&lt;</span><span class="ident">Signature</span><span class="op">&gt;</span><span class="ident">::as_aura_pre_digest</span>(<span class="ident">log</span>), <span class="ident">pre_digest</span>.<span class="ident">is_some</span>()) {
-			(<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="bool-val">true</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">aura_err</span>(<span class="ident">Error::MultipleHeaders</span>)),
-			(<span class="prelude-val">None</span>, <span class="kw">_</span>) =&gt; <span class="macro">trace!</span>(<span class="ident">target</span>: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;Ignoring digest not meant for us&quot;</span>),
-			(<span class="ident">s</span>, <span class="bool-val">false</span>) =&gt; <span class="ident">pre_digest</span> <span class="op">=</span> <span class="ident">s</span>,
+	<span class="kw">let </span><span class="kw-2">mut </span>pre_digest: <span class="prelude-ty">Option</span>&lt;Slot&gt; = <span class="prelude-val">None</span>;
+	<span class="kw">for </span>log <span class="kw">in </span>header.digest().logs() {
+		<span class="macro">trace!</span>(target: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;Checking log {:?}&quot;</span>, log);
+		<span class="kw">match </span>(CompatibleDigestItem::&lt;Signature&gt;::as_aura_pre_digest(log), pre_digest.is_some()) {
+			(<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="bool-val">true</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(aura_err(Error::MultipleHeaders)),
+			(<span class="prelude-val">None</span>, <span class="kw">_</span>) =&gt; <span class="macro">trace!</span>(target: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;Ignoring digest not meant for us&quot;</span>),
+			(s, <span class="bool-val">false</span>) =&gt; pre_digest = s,
 		}
 	}
-	<span class="ident">pre_digest</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">aura_err</span>(<span class="ident">Error::NoDigestFound</span>))
+	pre_digest.ok_or_else(|| aura_err(Error::NoDigestFound))
 }
 
-<span class="kw">fn</span> <span class="ident">authorities</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span><span class="op">&gt;</span>(<span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>, <span class="ident">at</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">ConsensusError</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">A</span>: <span class="ident">Codec</span> <span class="op">+</span> <span class="ident">Debug</span>,
-	<span class="ident">B</span>: <span class="ident">BlockT</span>,
-	<span class="ident">C</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">BlockOf</span>,
-	<span class="ident">C::Api</span>: <span class="ident">AuraApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">A</span><span class="op">&gt;</span>,
+<span class="kw">fn </span>authorities&lt;A, B, C&gt;(client: <span class="kw-2">&amp;</span>C, at: <span class="kw-2">&amp;</span>BlockId&lt;B&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;A&gt;, ConsensusError&gt;
+<span class="kw">where
+	</span>A: Codec + Debug,
+	B: BlockT,
+	C: ProvideRuntimeApi&lt;B&gt; + BlockOf,
+	C::Api: AuraApi&lt;B, A&gt;,
 {
-	<span class="ident">client</span>
-		.<span class="ident">runtime_api</span>()
-		.<span class="ident">authorities</span>(<span class="ident">at</span>)
-		.<span class="ident">ok</span>()
-		.<span class="ident">ok_or</span>(<span class="ident">sp_consensus::Error::InvalidAuthoritiesSet</span>)
+	client
+		.runtime_api()
+		.authorities(at)
+		.ok()
+		.ok_or(sp_consensus::Error::InvalidAuthoritiesSet)
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">futures::executor</span>;
-	<span class="kw">use</span> <span class="ident">parking_lot::Mutex</span>;
-	<span class="kw">use</span> <span class="ident">sc_block_builder::BlockBuilderProvider</span>;
-	<span class="kw">use</span> <span class="ident">sc_client_api::BlockchainEvents</span>;
-	<span class="kw">use</span> <span class="ident">sc_consensus::BoxJustificationImport</span>;
-	<span class="kw">use</span> <span class="ident">sc_consensus_slots</span>::{<span class="ident">BackoffAuthoringOnFinalizedHeadLagging</span>, <span class="ident">SimpleSlotWorker</span>};
-	<span class="kw">use</span> <span class="ident">sc_keystore::LocalKeystore</span>;
-	<span class="kw">use</span> <span class="ident">sc_network_test</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">TestBlock</span>, <span class="kw-2">*</span>};
-	<span class="kw">use</span> <span class="ident">sp_application_crypto::key_types::AURA</span>;
-	<span class="kw">use</span> <span class="ident">sp_consensus</span>::{<span class="ident">DisableProofRecording</span>, <span class="ident">NoNetwork</span> <span class="kw">as</span> <span class="ident">DummyOracle</span>, <span class="ident">Proposal</span>};
-	<span class="kw">use</span> <span class="ident">sp_consensus_aura::sr25519::AuthorityPair</span>;
-	<span class="kw">use</span> <span class="ident">sp_inherents::InherentData</span>;
-	<span class="kw">use</span> <span class="ident">sp_keyring::sr25519::Keyring</span>;
-	<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-		<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">Header</span> <span class="kw">as</span> <span class="kw">_</span>},
-		<span class="ident">Digest</span>,
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>futures::executor;
+	<span class="kw">use </span>parking_lot::Mutex;
+	<span class="kw">use </span>sc_block_builder::BlockBuilderProvider;
+	<span class="kw">use </span>sc_client_api::BlockchainEvents;
+	<span class="kw">use </span>sc_consensus::BoxJustificationImport;
+	<span class="kw">use </span>sc_consensus_slots::{BackoffAuthoringOnFinalizedHeadLagging, SimpleSlotWorker};
+	<span class="kw">use </span>sc_keystore::LocalKeystore;
+	<span class="kw">use </span>sc_network_test::{Block <span class="kw">as </span>TestBlock, <span class="kw-2">*</span>};
+	<span class="kw">use </span>sp_application_crypto::key_types::AURA;
+	<span class="kw">use </span>sp_consensus::{DisableProofRecording, NoNetwork <span class="kw">as </span>DummyOracle, Proposal};
+	<span class="kw">use </span>sp_consensus_aura::sr25519::AuthorityPair;
+	<span class="kw">use </span>sp_inherents::InherentData;
+	<span class="kw">use </span>sp_keyring::sr25519::Keyring;
+	<span class="kw">use </span>sp_runtime::{
+		traits::{Block <span class="kw">as </span>BlockT, Header <span class="kw">as _</span>},
+		Digest,
 	};
-	<span class="kw">use</span> <span class="ident">sp_timestamp::Timestamp</span>;
-	<span class="kw">use</span> <span class="ident">std</span>::{
-		<span class="ident">task::Poll</span>,
-		<span class="ident">time</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>},
+	<span class="kw">use </span>sp_timestamp::Timestamp;
+	<span class="kw">use </span>std::{
+		task::Poll,
+		time::{Duration, Instant},
 	};
-	<span class="kw">use</span> <span class="ident">substrate_test_runtime_client</span>::{
-		<span class="ident">runtime</span>::{<span class="ident">Header</span>, <span class="ident">H256</span>},
-		<span class="ident">TestClient</span>,
+	<span class="kw">use </span>substrate_test_runtime_client::{
+		runtime::{Header, H256},
+		TestClient,
 	};
 
-	<span class="kw">const</span> <span class="ident">SLOT_DURATION_MS</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">1000</span>;
+	<span class="kw">const </span>SLOT_DURATION_MS: u64 = <span class="number">1000</span>;
 
-	<span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">sp_blockchain::Error</span>;
+	<span class="kw">type </span>Error = sp_blockchain::Error;
 
-	<span class="kw">struct</span> <span class="ident">DummyFactory</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">TestClient</span><span class="op">&gt;</span>);
-	<span class="kw">struct</span> <span class="ident">DummyProposer</span>(<span class="ident">u64</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">TestClient</span><span class="op">&gt;</span>);
+	<span class="kw">struct </span>DummyFactory(Arc&lt;TestClient&gt;);
+	<span class="kw">struct </span>DummyProposer(u64, Arc&lt;TestClient&gt;);
 
-	<span class="kw">impl</span> <span class="ident">Environment</span><span class="op">&lt;</span><span class="ident">TestBlock</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DummyFactory</span> {
-		<span class="kw">type</span> <span class="ident">Proposer</span> <span class="op">=</span> <span class="ident">DummyProposer</span>;
-		<span class="kw">type</span> <span class="ident">CreateProposer</span> <span class="op">=</span> <span class="ident">futures::future::Ready</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DummyProposer</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>;
-		<span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
+	<span class="kw">impl </span>Environment&lt;TestBlock&gt; <span class="kw">for </span>DummyFactory {
+		<span class="kw">type </span>Proposer = DummyProposer;
+		<span class="kw">type </span>CreateProposer = futures::future::Ready&lt;<span class="prelude-ty">Result</span>&lt;DummyProposer, Error&gt;&gt;;
+		<span class="kw">type </span>Error = Error;
 
-		<span class="kw">fn</span> <span class="ident">init</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">parent_header</span>: <span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">TestBlock</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Header</span>) -&gt; <span class="ident"><span class="self">Self</span>::CreateProposer</span> {
-			<span class="ident">futures::future::ready</span>(<span class="prelude-val">Ok</span>(<span class="ident">DummyProposer</span>(<span class="ident">parent_header</span>.<span class="ident">number</span> <span class="op">+</span> <span class="number">1</span>, <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>())))
+		<span class="kw">fn </span>init(<span class="kw-2">&amp;mut </span><span class="self">self</span>, parent_header: <span class="kw-2">&amp;</span>&lt;TestBlock <span class="kw">as </span>BlockT&gt;::Header) -&gt; <span class="self">Self</span>::CreateProposer {
+			futures::future::ready(<span class="prelude-val">Ok</span>(DummyProposer(parent_header.number + <span class="number">1</span>, <span class="self">self</span>.<span class="number">0</span>.clone())))
 		}
 	}
 
-	<span class="kw">impl</span> <span class="ident">Proposer</span><span class="op">&lt;</span><span class="ident">TestBlock</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DummyProposer</span> {
-		<span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
-		<span class="kw">type</span> <span class="ident">Transaction</span> <span class="op">=</span>
-			<span class="ident">sc_client_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">substrate_test_runtime_client::Backend</span>, <span class="ident">TestBlock</span><span class="op">&gt;</span>;
-		<span class="kw">type</span> <span class="ident">Proposal</span> <span class="op">=</span> <span class="ident">future::Ready</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Proposal</span><span class="op">&lt;</span><span class="ident">TestBlock</span>, <span class="ident"><span class="self">Self</span>::Transaction</span>, ()<span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>;
-		<span class="kw">type</span> <span class="ident">ProofRecording</span> <span class="op">=</span> <span class="ident">DisableProofRecording</span>;
-		<span class="kw">type</span> <span class="ident">Proof</span> <span class="op">=</span> ();
+	<span class="kw">impl </span>Proposer&lt;TestBlock&gt; <span class="kw">for </span>DummyProposer {
+		<span class="kw">type </span>Error = Error;
+		<span class="kw">type </span>Transaction =
+			sc_client_api::TransactionFor&lt;substrate_test_runtime_client::Backend, TestBlock&gt;;
+		<span class="kw">type </span>Proposal = future::Ready&lt;<span class="prelude-ty">Result</span>&lt;Proposal&lt;TestBlock, <span class="self">Self</span>::Transaction, ()&gt;, Error&gt;&gt;;
+		<span class="kw">type </span>ProofRecording = DisableProofRecording;
+		<span class="kw">type </span>Proof = ();
 
-		<span class="kw">fn</span> <span class="ident">propose</span>(
+		<span class="kw">fn </span>propose(
 			<span class="self">self</span>,
-			<span class="kw">_</span>: <span class="ident">InherentData</span>,
-			<span class="ident">digests</span>: <span class="ident">Digest</span>,
-			<span class="kw">_</span>: <span class="ident">Duration</span>,
-			<span class="kw">_</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-		) -&gt; <span class="ident"><span class="self">Self</span>::Proposal</span> {
-			<span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">new_block</span>(<span class="ident">digests</span>).<span class="ident">unwrap</span>().<span class="ident">build</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into</span>());
+			<span class="kw">_</span>: InherentData,
+			digests: Digest,
+			<span class="kw">_</span>: Duration,
+			<span class="kw">_</span>: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+		) -&gt; <span class="self">Self</span>::Proposal {
+			<span class="kw">let </span>r = <span class="self">self</span>.<span class="number">1</span>.new_block(digests).unwrap().build().map_err(|e| e.into());
 
-			<span class="ident">future::ready</span>(<span class="ident">r</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">Proposal</span> {
-				<span class="ident">block</span>: <span class="ident">b</span>.<span class="ident">block</span>,
-				<span class="ident">proof</span>: (),
-				<span class="ident">storage_changes</span>: <span class="ident">b</span>.<span class="ident">storage_changes</span>,
+			future::ready(r.map(|b| Proposal {
+				block: b.block,
+				proof: (),
+				storage_changes: b.storage_changes,
 			}))
 		}
 	}
 
-	<span class="kw">type</span> <span class="ident">AuraVerifier</span> <span class="op">=</span> <span class="ident">import_queue::AuraVerifier</span><span class="op">&lt;</span>
-		<span class="ident">PeersFullClient</span>,
-		<span class="ident">AuthorityPair</span>,
-		<span class="ident">Box</span><span class="op">&lt;</span>
-			<span class="kw">dyn</span> <span class="ident">CreateInherentDataProviders</span><span class="op">&lt;</span>
-				<span class="ident">TestBlock</span>,
+	<span class="kw">type </span>AuraVerifier = import_queue::AuraVerifier&lt;
+		PeersFullClient,
+		AuthorityPair,
+		Box&lt;
+			<span class="kw">dyn </span>CreateInherentDataProviders&lt;
+				TestBlock,
 				(),
-				<span class="ident">InherentDataProviders</span> <span class="op">=</span> (<span class="ident">InherentDataProvider</span>,),
-			<span class="op">&gt;</span>,
-		<span class="op">&gt;</span>,
-	<span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">AuraPeer</span> <span class="op">=</span> <span class="ident">Peer</span><span class="op">&lt;</span>(), <span class="ident">PeersClient</span><span class="op">&gt;</span>;
+				InherentDataProviders = (InherentDataProvider,),
+			&gt;,
+		&gt;,
+	&gt;;
+	<span class="kw">type </span>AuraPeer = Peer&lt;(), PeersClient&gt;;
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AuraTestNet</span> {
-		<span class="ident">peers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuraPeer</span><span class="op">&gt;</span>,
+	<span class="attribute">#[derive(Default)]
+	</span><span class="kw">pub struct </span>AuraTestNet {
+		peers: Vec&lt;AuraPeer&gt;,
 	}
 
-	<span class="kw">impl</span> <span class="ident">TestNetFactory</span> <span class="kw">for</span> <span class="ident">AuraTestNet</span> {
-		<span class="kw">type</span> <span class="ident">Verifier</span> <span class="op">=</span> <span class="ident">AuraVerifier</span>;
-		<span class="kw">type</span> <span class="ident">PeerData</span> <span class="op">=</span> ();
-		<span class="kw">type</span> <span class="ident">BlockImport</span> <span class="op">=</span> <span class="ident">PeersClient</span>;
+	<span class="kw">impl </span>TestNetFactory <span class="kw">for </span>AuraTestNet {
+		<span class="kw">type </span>Verifier = AuraVerifier;
+		<span class="kw">type </span>PeerData = ();
+		<span class="kw">type </span>BlockImport = PeersClient;
 
-		<span class="kw">fn</span> <span class="ident">make_verifier</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">client</span>: <span class="ident">PeersClient</span>, <span class="ident">_peer_data</span>: <span class="kw-2">&amp;</span>()) -&gt; <span class="ident"><span class="self">Self</span>::Verifier</span> {
-			<span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">as_client</span>();
-			<span class="kw">let</span> <span class="ident">slot_duration</span> <span class="op">=</span> <span class="ident">slot_duration</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">client</span>).<span class="ident">expect</span>(<span class="string">&quot;slot duration available&quot;</span>);
+		<span class="kw">fn </span>make_verifier(<span class="kw-2">&amp;</span><span class="self">self</span>, client: PeersClient, _peer_data: <span class="kw-2">&amp;</span>()) -&gt; <span class="self">Self</span>::Verifier {
+			<span class="kw">let </span>client = client.as_client();
+			<span class="kw">let </span>slot_duration = slot_duration(<span class="kw-2">&amp;*</span>client).expect(<span class="string">&quot;slot duration available&quot;</span>);
 
-			<span class="macro">assert_eq!</span>(<span class="ident">slot_duration</span>.<span class="ident">as_millis</span>() <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">SLOT_DURATION_MS</span>);
-			<span class="ident">import_queue::AuraVerifier::new</span>(
-				<span class="ident">client</span>,
-				<span class="ident">Box::new</span>(<span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">async</span> {
-					<span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="ident">InherentDataProvider::from_timestamp_and_slot_duration</span>(
-						<span class="ident">Timestamp::current</span>(),
-						<span class="ident">SlotDuration::from_millis</span>(<span class="ident">SLOT_DURATION_MS</span>),
+			<span class="macro">assert_eq!</span>(slot_duration.as_millis() <span class="kw">as </span>u64, SLOT_DURATION_MS);
+			import_queue::AuraVerifier::new(
+				client,
+				Box::new(|<span class="kw">_</span>, <span class="kw">_</span>| <span class="kw">async </span>{
+					<span class="kw">let </span>slot = InherentDataProvider::from_timestamp_and_slot_duration(
+						Timestamp::current(),
+						SlotDuration::from_millis(SLOT_DURATION_MS),
 					);
-					<span class="prelude-val">Ok</span>((<span class="ident">slot</span>,))
+					<span class="prelude-val">Ok</span>((slot,))
 				}),
-				<span class="ident">CheckForEquivocation::Yes</span>,
+				CheckForEquivocation::Yes,
 				<span class="prelude-val">None</span>,
 			)
 		}
 
-		<span class="kw">fn</span> <span class="ident">make_block_import</span>(
+		<span class="kw">fn </span>make_block_import(
 			<span class="kw-2">&amp;</span><span class="self">self</span>,
-			<span class="ident">client</span>: <span class="ident">PeersClient</span>,
+			client: PeersClient,
 		) -&gt; (
-			<span class="ident">BlockImportAdapter</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::BlockImport</span><span class="op">&gt;</span>,
-			<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BoxJustificationImport</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-			<span class="ident"><span class="self">Self</span>::PeerData</span>,
+			BlockImportAdapter&lt;<span class="self">Self</span>::BlockImport&gt;,
+			<span class="prelude-ty">Option</span>&lt;BoxJustificationImport&lt;Block&gt;&gt;,
+			<span class="self">Self</span>::PeerData,
 		) {
-			(<span class="ident">client</span>.<span class="ident">as_block_import</span>(), <span class="prelude-val">None</span>, ())
+			(client.as_block_import(), <span class="prelude-val">None</span>, ())
 		}
 
-		<span class="kw">fn</span> <span class="ident">peer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">i</span>: <span class="ident">usize</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">AuraPeer</span> {
-			<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">peers</span>[<span class="ident">i</span>]
+		<span class="kw">fn </span>peer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, i: usize) -&gt; <span class="kw-2">&amp;mut </span>AuraPeer {
+			<span class="kw-2">&amp;mut </span><span class="self">self</span>.peers[i]
 		}
 
-		<span class="kw">fn</span> <span class="ident">peers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuraPeer</span><span class="op">&gt;</span> {
-			<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">peers</span>
+		<span class="kw">fn </span>peers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Vec&lt;AuraPeer&gt; {
+			<span class="kw-2">&amp;</span><span class="self">self</span>.peers
 		}
-		<span class="kw">fn</span> <span class="ident">mut_peers</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuraPeer</span><span class="op">&gt;</span>)<span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">closure</span>: <span class="ident">F</span>) {
-			<span class="ident">closure</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">peers</span>);
+		<span class="kw">fn </span>mut_peers&lt;F: FnOnce(<span class="kw-2">&amp;mut </span>Vec&lt;AuraPeer&gt;)&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, closure: F) {
+			closure(<span class="kw-2">&amp;mut </span><span class="self">self</span>.peers);
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">authoring_blocks</span>() {
-		<span class="ident">sp_tracing::try_init_simple</span>();
-		<span class="kw">let</span> <span class="ident">net</span> <span class="op">=</span> <span class="ident">AuraTestNet::new</span>(<span class="number">3</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>authoring_blocks() {
+		sp_tracing::try_init_simple();
+		<span class="kw">let </span>net = AuraTestNet::new(<span class="number">3</span>);
 
-		<span class="kw">let</span> <span class="ident">peers</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[(<span class="number">0</span>, <span class="ident">Keyring::Alice</span>), (<span class="number">1</span>, <span class="ident">Keyring::Bob</span>), (<span class="number">2</span>, <span class="ident">Keyring::Charlie</span>)];
+		<span class="kw">let </span>peers = <span class="kw-2">&amp;</span>[(<span class="number">0</span>, Keyring::Alice), (<span class="number">1</span>, Keyring::Bob), (<span class="number">2</span>, Keyring::Charlie)];
 
-		<span class="kw">let</span> <span class="ident">net</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">net</span>));
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">import_notifications</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">aura_futures</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+		<span class="kw">let </span>net = Arc::new(Mutex::new(net));
+		<span class="kw">let </span><span class="kw-2">mut </span>import_notifications = Vec::new();
+		<span class="kw">let </span><span class="kw-2">mut </span>aura_futures = Vec::new();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">keystore_paths</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-		<span class="kw">for</span> (<span class="ident">peer_id</span>, <span class="ident">key</span>) <span class="kw">in</span> <span class="ident">peers</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">net</span> <span class="op">=</span> <span class="ident">net</span>.<span class="ident">lock</span>();
-			<span class="kw">let</span> <span class="ident">peer</span> <span class="op">=</span> <span class="ident">net</span>.<span class="ident">peer</span>(<span class="kw-2">*</span><span class="ident">peer_id</span>);
-			<span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">peer</span>.<span class="ident">client</span>().<span class="ident">as_client</span>();
-			<span class="kw">let</span> <span class="ident">select_chain</span> <span class="op">=</span> <span class="ident">peer</span>.<span class="ident">select_chain</span>().<span class="ident">expect</span>(<span class="string">&quot;full client has a select chain&quot;</span>);
-			<span class="kw">let</span> <span class="ident">keystore_path</span> <span class="op">=</span> <span class="ident">tempfile::tempdir</span>().<span class="ident">expect</span>(<span class="string">&quot;Creates keystore path&quot;</span>);
-			<span class="kw">let</span> <span class="ident">keystore</span> <span class="op">=</span> <span class="ident">Arc::new</span>(
-				<span class="ident">LocalKeystore::open</span>(<span class="ident">keystore_path</span>.<span class="ident">path</span>(), <span class="prelude-val">None</span>).<span class="ident">expect</span>(<span class="string">&quot;Creates keystore.&quot;</span>),
+		<span class="kw">let </span><span class="kw-2">mut </span>keystore_paths = Vec::new();
+		<span class="kw">for </span>(peer_id, key) <span class="kw">in </span>peers {
+			<span class="kw">let </span><span class="kw-2">mut </span>net = net.lock();
+			<span class="kw">let </span>peer = net.peer(<span class="kw-2">*</span>peer_id);
+			<span class="kw">let </span>client = peer.client().as_client();
+			<span class="kw">let </span>select_chain = peer.select_chain().expect(<span class="string">&quot;full client has a select chain&quot;</span>);
+			<span class="kw">let </span>keystore_path = tempfile::tempdir().expect(<span class="string">&quot;Creates keystore path&quot;</span>);
+			<span class="kw">let </span>keystore = Arc::new(
+				LocalKeystore::open(keystore_path.path(), <span class="prelude-val">None</span>).expect(<span class="string">&quot;Creates keystore.&quot;</span>),
 			);
 
-			<span class="ident">SyncCryptoStore::sr25519_generate_new</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">keystore</span>, <span class="ident">AURA</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>.<span class="ident">to_seed</span>()))
-				.<span class="ident">expect</span>(<span class="string">&quot;Creates authority key&quot;</span>);
-			<span class="ident">keystore_paths</span>.<span class="ident">push</span>(<span class="ident">keystore_path</span>);
+			SyncCryptoStore::sr25519_generate_new(<span class="kw-2">&amp;*</span>keystore, AURA, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>key.to_seed()))
+				.expect(<span class="string">&quot;Creates authority key&quot;</span>);
+			keystore_paths.push(keystore_path);
 
-			<span class="kw">let</span> <span class="ident">environ</span> <span class="op">=</span> <span class="ident">DummyFactory</span>(<span class="ident">client</span>.<span class="ident">clone</span>());
-			<span class="ident">import_notifications</span>.<span class="ident">push</span>(
-				<span class="ident">client</span>
-					.<span class="ident">import_notification_stream</span>()
-					.<span class="ident">take_while</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> {
-						<span class="ident">future::ready</span>(<span class="op">!</span>(<span class="ident">n</span>.<span class="ident">origin</span> <span class="op">!</span><span class="op">=</span> <span class="ident">BlockOrigin::Own</span> <span class="op">&amp;&amp;</span> <span class="ident">n</span>.<span class="ident">header</span>.<span class="ident">number</span>() <span class="op">&lt;</span> <span class="kw-2">&amp;</span><span class="number">5</span>))
+			<span class="kw">let </span>environ = DummyFactory(client.clone());
+			import_notifications.push(
+				client
+					.import_notification_stream()
+					.take_while(|n| {
+						future::ready(!(n.origin != BlockOrigin::Own &amp;&amp; n.header.number() &lt; <span class="kw-2">&amp;</span><span class="number">5</span>))
 					})
-					.<span class="ident">for_each</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">future::ready</span>(())),
+					.for_each(<span class="kw">move </span>|<span class="kw">_</span>| future::ready(())),
 			);
 
-			<span class="kw">let</span> <span class="ident">slot_duration</span> <span class="op">=</span> <span class="ident">slot_duration</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">client</span>).<span class="ident">expect</span>(<span class="string">&quot;slot duration available&quot;</span>);
+			<span class="kw">let </span>slot_duration = slot_duration(<span class="kw-2">&amp;*</span>client).expect(<span class="string">&quot;slot duration available&quot;</span>);
 
-			<span class="ident">aura_futures</span>.<span class="ident">push</span>(
-				<span class="ident">start_aura</span>::<span class="op">&lt;</span><span class="ident">AuthorityPair</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">StartAuraParams</span> {
-					<span class="ident">slot_duration</span>,
-					<span class="ident">block_import</span>: <span class="ident">client</span>.<span class="ident">clone</span>(),
-					<span class="ident">select_chain</span>,
-					<span class="ident">client</span>,
-					<span class="ident">proposer_factory</span>: <span class="ident">environ</span>,
-					<span class="ident">sync_oracle</span>: <span class="ident">DummyOracle</span>,
-					<span class="ident">justification_sync_link</span>: (),
-					<span class="ident">create_inherent_data_providers</span>: <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="kw">async</span> {
-						<span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="ident">InherentDataProvider::from_timestamp_and_slot_duration</span>(
-							<span class="ident">Timestamp::current</span>(),
-							<span class="ident">SlotDuration::from_millis</span>(<span class="ident">SLOT_DURATION_MS</span>),
+			aura_futures.push(
+				start_aura::&lt;AuthorityPair, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(StartAuraParams {
+					slot_duration,
+					block_import: client.clone(),
+					select_chain,
+					client,
+					proposer_factory: environ,
+					sync_oracle: DummyOracle,
+					justification_sync_link: (),
+					create_inherent_data_providers: |<span class="kw">_</span>, <span class="kw">_</span>| <span class="kw">async </span>{
+						<span class="kw">let </span>slot = InherentDataProvider::from_timestamp_and_slot_duration(
+							Timestamp::current(),
+							SlotDuration::from_millis(SLOT_DURATION_MS),
 						);
 
-						<span class="prelude-val">Ok</span>((<span class="ident">slot</span>,))
+						<span class="prelude-val">Ok</span>((slot,))
 					},
-					<span class="ident">force_authoring</span>: <span class="bool-val">false</span>,
-					<span class="ident">backoff_authoring_blocks</span>: <span class="prelude-val">Some</span>(
-						<span class="ident">BackoffAuthoringOnFinalizedHeadLagging::default</span>(),
+					force_authoring: <span class="bool-val">false</span>,
+					backoff_authoring_blocks: <span class="prelude-val">Some</span>(
+						BackoffAuthoringOnFinalizedHeadLagging::default(),
 					),
-					<span class="ident">keystore</span>,
-					<span class="ident">block_proposal_slot_portion</span>: <span class="ident">SlotProportion::new</span>(<span class="number">0.5</span>),
-					<span class="ident">max_block_proposal_slot_portion</span>: <span class="prelude-val">None</span>,
-					<span class="ident">telemetry</span>: <span class="prelude-val">None</span>,
+					keystore,
+					block_proposal_slot_portion: SlotProportion::new(<span class="number">0.5</span>),
+					max_block_proposal_slot_portion: <span class="prelude-val">None</span>,
+					telemetry: <span class="prelude-val">None</span>,
 				})
-				.<span class="ident">expect</span>(<span class="string">&quot;Starts aura&quot;</span>),
+				.expect(<span class="string">&quot;Starts aura&quot;</span>),
 			);
 		}
 
-		<span class="ident">executor::block_on</span>(<span class="ident">future::select</span>(
-			<span class="ident">future::poll_fn</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">cx</span><span class="op">|</span> {
-				<span class="ident">net</span>.<span class="ident">lock</span>().<span class="ident">poll</span>(<span class="ident">cx</span>);
-				<span class="ident">Poll</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span><span class="ident">::Pending</span>
+		executor::block_on(future::select(
+			future::poll_fn(<span class="kw">move </span>|cx| {
+				net.lock().poll(cx);
+				Poll::&lt;()&gt;::Pending
 			}),
-			<span class="ident">future::select</span>(<span class="ident">future::join_all</span>(<span class="ident">aura_futures</span>), <span class="ident">future::join_all</span>(<span class="ident">import_notifications</span>)),
+			future::select(future::join_all(aura_futures), future::join_all(import_notifications)),
 		));
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">authorities_call_works</span>() {
-		<span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">substrate_test_runtime_client::new</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>authorities_call_works() {
+		<span class="kw">let </span>client = substrate_test_runtime_client::new();
 
-		<span class="macro">assert_eq!</span>(<span class="ident">client</span>.<span class="ident">chain_info</span>().<span class="ident">best_number</span>, <span class="number">0</span>);
+		<span class="macro">assert_eq!</span>(client.chain_info().best_number, <span class="number">0</span>);
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">authorities</span>(<span class="kw-2">&amp;</span><span class="ident">client</span>, <span class="kw-2">&amp;</span><span class="ident">BlockId::Hash</span>(<span class="ident">client</span>.<span class="ident">chain_info</span>().<span class="ident">best_hash</span>)).<span class="ident">unwrap</span>(),
+			authorities(<span class="kw-2">&amp;</span>client, <span class="kw-2">&amp;</span>BlockId::Hash(client.chain_info().best_hash)).unwrap(),
 			<span class="macro">vec!</span>[
-				<span class="ident">Keyring::Alice</span>.<span class="ident">public</span>().<span class="ident">into</span>(),
-				<span class="ident">Keyring::Bob</span>.<span class="ident">public</span>().<span class="ident">into</span>(),
-				<span class="ident">Keyring::Charlie</span>.<span class="ident">public</span>().<span class="ident">into</span>()
+				Keyring::Alice.public().into(),
+				Keyring::Bob.public().into(),
+				Keyring::Charlie.public().into()
 			]
 		);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">current_node_authority_should_claim_slot</span>() {
-		<span class="kw">let</span> <span class="ident">net</span> <span class="op">=</span> <span class="ident">AuraTestNet::new</span>(<span class="number">4</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>current_node_authority_should_claim_slot() {
+		<span class="kw">let </span>net = AuraTestNet::new(<span class="number">4</span>);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">authorities</span> <span class="op">=</span> <span class="macro">vec!</span>[
-			<span class="ident">Keyring::Alice</span>.<span class="ident">public</span>().<span class="ident">into</span>(),
-			<span class="ident">Keyring::Bob</span>.<span class="ident">public</span>().<span class="ident">into</span>(),
-			<span class="ident">Keyring::Charlie</span>.<span class="ident">public</span>().<span class="ident">into</span>(),
+		<span class="kw">let </span><span class="kw-2">mut </span>authorities = <span class="macro">vec!</span>[
+			Keyring::Alice.public().into(),
+			Keyring::Bob.public().into(),
+			Keyring::Charlie.public().into(),
 		];
 
-		<span class="kw">let</span> <span class="ident">keystore_path</span> <span class="op">=</span> <span class="ident">tempfile::tempdir</span>().<span class="ident">expect</span>(<span class="string">&quot;Creates keystore path&quot;</span>);
-		<span class="kw">let</span> <span class="ident">keystore</span> <span class="op">=</span> <span class="ident">LocalKeystore::open</span>(<span class="ident">keystore_path</span>.<span class="ident">path</span>(), <span class="prelude-val">None</span>).<span class="ident">expect</span>(<span class="string">&quot;Creates keystore.&quot;</span>);
-		<span class="kw">let</span> <span class="ident">public</span> <span class="op">=</span> <span class="ident">SyncCryptoStore::sr25519_generate_new</span>(<span class="kw-2">&amp;</span><span class="ident">keystore</span>, <span class="ident">AuthorityPair::ID</span>, <span class="prelude-val">None</span>)
-			.<span class="ident">expect</span>(<span class="string">&quot;Key should be created&quot;</span>);
-		<span class="ident">authorities</span>.<span class="ident">push</span>(<span class="ident">public</span>.<span class="ident">into</span>());
+		<span class="kw">let </span>keystore_path = tempfile::tempdir().expect(<span class="string">&quot;Creates keystore path&quot;</span>);
+		<span class="kw">let </span>keystore = LocalKeystore::open(keystore_path.path(), <span class="prelude-val">None</span>).expect(<span class="string">&quot;Creates keystore.&quot;</span>);
+		<span class="kw">let </span>public = SyncCryptoStore::sr25519_generate_new(<span class="kw-2">&amp;</span>keystore, AuthorityPair::ID, <span class="prelude-val">None</span>)
+			.expect(<span class="string">&quot;Key should be created&quot;</span>);
+		authorities.push(public.into());
 
-		<span class="kw">let</span> <span class="ident">net</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">net</span>));
+		<span class="kw">let </span>net = Arc::new(Mutex::new(net));
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">net</span> <span class="op">=</span> <span class="ident">net</span>.<span class="ident">lock</span>();
-		<span class="kw">let</span> <span class="ident">peer</span> <span class="op">=</span> <span class="ident">net</span>.<span class="ident">peer</span>(<span class="number">3</span>);
-		<span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">peer</span>.<span class="ident">client</span>().<span class="ident">as_client</span>();
-		<span class="kw">let</span> <span class="ident">environ</span> <span class="op">=</span> <span class="ident">DummyFactory</span>(<span class="ident">client</span>.<span class="ident">clone</span>());
+		<span class="kw">let </span><span class="kw-2">mut </span>net = net.lock();
+		<span class="kw">let </span>peer = net.peer(<span class="number">3</span>);
+		<span class="kw">let </span>client = peer.client().as_client();
+		<span class="kw">let </span>environ = DummyFactory(client.clone());
 
-		<span class="kw">let</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">AuraWorker</span> {
-			<span class="ident">client</span>: <span class="ident">client</span>.<span class="ident">clone</span>(),
-			<span class="ident">block_import</span>: <span class="ident">client</span>,
-			<span class="ident">env</span>: <span class="ident">environ</span>,
-			<span class="ident">keystore</span>: <span class="ident">keystore</span>.<span class="ident">into</span>(),
-			<span class="ident">sync_oracle</span>: <span class="ident">DummyOracle</span>,
-			<span class="ident">justification_sync_link</span>: (),
-			<span class="ident">force_authoring</span>: <span class="bool-val">false</span>,
-			<span class="ident">backoff_authoring_blocks</span>: <span class="prelude-val">Some</span>(<span class="ident">BackoffAuthoringOnFinalizedHeadLagging::default</span>()),
-			<span class="ident">telemetry</span>: <span class="prelude-val">None</span>,
-			<span class="ident">_key_type</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">AuthorityPair</span><span class="op">&gt;</span>,
-			<span class="ident">block_proposal_slot_portion</span>: <span class="ident">SlotProportion::new</span>(<span class="number">0.5</span>),
-			<span class="ident">max_block_proposal_slot_portion</span>: <span class="prelude-val">None</span>,
+		<span class="kw">let </span>worker = AuraWorker {
+			client: client.clone(),
+			block_import: client,
+			env: environ,
+			keystore: keystore.into(),
+			sync_oracle: DummyOracle,
+			justification_sync_link: (),
+			force_authoring: <span class="bool-val">false</span>,
+			backoff_authoring_blocks: <span class="prelude-val">Some</span>(BackoffAuthoringOnFinalizedHeadLagging::default()),
+			telemetry: <span class="prelude-val">None</span>,
+			_key_type: PhantomData::&lt;AuthorityPair&gt;,
+			block_proposal_slot_portion: SlotProportion::new(<span class="number">0.5</span>),
+			max_block_proposal_slot_portion: <span class="prelude-val">None</span>,
 		};
 
-		<span class="kw">let</span> <span class="ident">head</span> <span class="op">=</span> <span class="ident">Header::new</span>(
+		<span class="kw">let </span>head = Header::new(
 			<span class="number">1</span>,
-			<span class="ident">H256::from_low_u64_be</span>(<span class="number">0</span>),
-			<span class="ident">H256::from_low_u64_be</span>(<span class="number">0</span>),
-			<span class="ident">Default::default</span>(),
-			<span class="ident">Default::default</span>(),
+			H256::from_low_u64_be(<span class="number">0</span>),
+			H256::from_low_u64_be(<span class="number">0</span>),
+			Default::default(),
+			Default::default(),
 		);
-		<span class="macro">assert!</span>(<span class="ident">executor::block_on</span>(<span class="ident">worker</span>.<span class="ident">claim_slot</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="number">0</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">authorities</span>)).<span class="ident">is_none</span>());
-		<span class="macro">assert!</span>(<span class="ident">executor::block_on</span>(<span class="ident">worker</span>.<span class="ident">claim_slot</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="number">1</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">authorities</span>)).<span class="ident">is_none</span>());
-		<span class="macro">assert!</span>(<span class="ident">executor::block_on</span>(<span class="ident">worker</span>.<span class="ident">claim_slot</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="number">2</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">authorities</span>)).<span class="ident">is_none</span>());
-		<span class="macro">assert!</span>(<span class="ident">executor::block_on</span>(<span class="ident">worker</span>.<span class="ident">claim_slot</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="number">3</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">authorities</span>)).<span class="ident">is_some</span>());
-		<span class="macro">assert!</span>(<span class="ident">executor::block_on</span>(<span class="ident">worker</span>.<span class="ident">claim_slot</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="number">4</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">authorities</span>)).<span class="ident">is_none</span>());
-		<span class="macro">assert!</span>(<span class="ident">executor::block_on</span>(<span class="ident">worker</span>.<span class="ident">claim_slot</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="number">5</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">authorities</span>)).<span class="ident">is_none</span>());
-		<span class="macro">assert!</span>(<span class="ident">executor::block_on</span>(<span class="ident">worker</span>.<span class="ident">claim_slot</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="number">6</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">authorities</span>)).<span class="ident">is_none</span>());
-		<span class="macro">assert!</span>(<span class="ident">executor::block_on</span>(<span class="ident">worker</span>.<span class="ident">claim_slot</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="number">7</span>.<span class="ident">into</span>(), <span class="kw-2">&amp;</span><span class="ident">authorities</span>)).<span class="ident">is_some</span>());
+		<span class="macro">assert!</span>(executor::block_on(worker.claim_slot(<span class="kw-2">&amp;</span>head, <span class="number">0</span>.into(), <span class="kw-2">&amp;</span>authorities)).is_none());
+		<span class="macro">assert!</span>(executor::block_on(worker.claim_slot(<span class="kw-2">&amp;</span>head, <span class="number">1</span>.into(), <span class="kw-2">&amp;</span>authorities)).is_none());
+		<span class="macro">assert!</span>(executor::block_on(worker.claim_slot(<span class="kw-2">&amp;</span>head, <span class="number">2</span>.into(), <span class="kw-2">&amp;</span>authorities)).is_none());
+		<span class="macro">assert!</span>(executor::block_on(worker.claim_slot(<span class="kw-2">&amp;</span>head, <span class="number">3</span>.into(), <span class="kw-2">&amp;</span>authorities)).is_some());
+		<span class="macro">assert!</span>(executor::block_on(worker.claim_slot(<span class="kw-2">&amp;</span>head, <span class="number">4</span>.into(), <span class="kw-2">&amp;</span>authorities)).is_none());
+		<span class="macro">assert!</span>(executor::block_on(worker.claim_slot(<span class="kw-2">&amp;</span>head, <span class="number">5</span>.into(), <span class="kw-2">&amp;</span>authorities)).is_none());
+		<span class="macro">assert!</span>(executor::block_on(worker.claim_slot(<span class="kw-2">&amp;</span>head, <span class="number">6</span>.into(), <span class="kw-2">&amp;</span>authorities)).is_none());
+		<span class="macro">assert!</span>(executor::block_on(worker.claim_slot(<span class="kw-2">&amp;</span>head, <span class="number">7</span>.into(), <span class="kw-2">&amp;</span>authorities)).is_some());
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">on_slot_returns_correct_block</span>() {
-		<span class="kw">let</span> <span class="ident">net</span> <span class="op">=</span> <span class="ident">AuraTestNet::new</span>(<span class="number">4</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>on_slot_returns_correct_block() {
+		<span class="kw">let </span>net = AuraTestNet::new(<span class="number">4</span>);
 
-		<span class="kw">let</span> <span class="ident">keystore_path</span> <span class="op">=</span> <span class="ident">tempfile::tempdir</span>().<span class="ident">expect</span>(<span class="string">&quot;Creates keystore path&quot;</span>);
-		<span class="kw">let</span> <span class="ident">keystore</span> <span class="op">=</span> <span class="ident">LocalKeystore::open</span>(<span class="ident">keystore_path</span>.<span class="ident">path</span>(), <span class="prelude-val">None</span>).<span class="ident">expect</span>(<span class="string">&quot;Creates keystore.&quot;</span>);
-		<span class="ident">SyncCryptoStore::sr25519_generate_new</span>(
-			<span class="kw-2">&amp;</span><span class="ident">keystore</span>,
-			<span class="ident">AuthorityPair::ID</span>,
-			<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">Keyring::Alice</span>.<span class="ident">to_seed</span>()),
+		<span class="kw">let </span>keystore_path = tempfile::tempdir().expect(<span class="string">&quot;Creates keystore path&quot;</span>);
+		<span class="kw">let </span>keystore = LocalKeystore::open(keystore_path.path(), <span class="prelude-val">None</span>).expect(<span class="string">&quot;Creates keystore.&quot;</span>);
+		SyncCryptoStore::sr25519_generate_new(
+			<span class="kw-2">&amp;</span>keystore,
+			AuthorityPair::ID,
+			<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>Keyring::Alice.to_seed()),
 		)
-		.<span class="ident">expect</span>(<span class="string">&quot;Key should be created&quot;</span>);
+		.expect(<span class="string">&quot;Key should be created&quot;</span>);
 
-		<span class="kw">let</span> <span class="ident">net</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">net</span>));
+		<span class="kw">let </span>net = Arc::new(Mutex::new(net));
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">net</span> <span class="op">=</span> <span class="ident">net</span>.<span class="ident">lock</span>();
-		<span class="kw">let</span> <span class="ident">peer</span> <span class="op">=</span> <span class="ident">net</span>.<span class="ident">peer</span>(<span class="number">3</span>);
-		<span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">peer</span>.<span class="ident">client</span>().<span class="ident">as_client</span>();
-		<span class="kw">let</span> <span class="ident">environ</span> <span class="op">=</span> <span class="ident">DummyFactory</span>(<span class="ident">client</span>.<span class="ident">clone</span>());
+		<span class="kw">let </span><span class="kw-2">mut </span>net = net.lock();
+		<span class="kw">let </span>peer = net.peer(<span class="number">3</span>);
+		<span class="kw">let </span>client = peer.client().as_client();
+		<span class="kw">let </span>environ = DummyFactory(client.clone());
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">AuraWorker</span> {
-			<span class="ident">client</span>: <span class="ident">client</span>.<span class="ident">clone</span>(),
-			<span class="ident">block_import</span>: <span class="ident">client</span>.<span class="ident">clone</span>(),
-			<span class="ident">env</span>: <span class="ident">environ</span>,
-			<span class="ident">keystore</span>: <span class="ident">keystore</span>.<span class="ident">into</span>(),
-			<span class="ident">sync_oracle</span>: <span class="ident">DummyOracle</span>,
-			<span class="ident">justification_sync_link</span>: (),
-			<span class="ident">force_authoring</span>: <span class="bool-val">false</span>,
-			<span class="ident">backoff_authoring_blocks</span>: <span class="prelude-ty">Option</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span><span class="ident">::None</span>,
-			<span class="ident">telemetry</span>: <span class="prelude-val">None</span>,
-			<span class="ident">_key_type</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">AuthorityPair</span><span class="op">&gt;</span>,
-			<span class="ident">block_proposal_slot_portion</span>: <span class="ident">SlotProportion::new</span>(<span class="number">0.5</span>),
-			<span class="ident">max_block_proposal_slot_portion</span>: <span class="prelude-val">None</span>,
+		<span class="kw">let </span><span class="kw-2">mut </span>worker = AuraWorker {
+			client: client.clone(),
+			block_import: client.clone(),
+			env: environ,
+			keystore: keystore.into(),
+			sync_oracle: DummyOracle,
+			justification_sync_link: (),
+			force_authoring: <span class="bool-val">false</span>,
+			backoff_authoring_blocks: <span class="prelude-ty">Option</span>::&lt;()&gt;::None,
+			telemetry: <span class="prelude-val">None</span>,
+			_key_type: PhantomData::&lt;AuthorityPair&gt;,
+			block_proposal_slot_portion: SlotProportion::new(<span class="number">0.5</span>),
+			max_block_proposal_slot_portion: <span class="prelude-val">None</span>,
 		};
 
-		<span class="kw">let</span> <span class="ident">head</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">header</span>(<span class="kw-2">&amp;</span><span class="ident">BlockId::Number</span>(<span class="number">0</span>)).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
+		<span class="kw">let </span>head = client.header(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">0</span>)).unwrap().unwrap();
 
-		<span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">executor::block_on</span>(<span class="ident">worker</span>.<span class="ident">on_slot</span>(<span class="ident">SlotInfo</span> {
-			<span class="ident">slot</span>: <span class="number">0</span>.<span class="ident">into</span>(),
-			<span class="ident">ends_at</span>: <span class="ident">Instant::now</span>() <span class="op">+</span> <span class="ident">Duration::from_secs</span>(<span class="number">100</span>),
-			<span class="ident">inherent_data</span>: <span class="ident">InherentData::new</span>(),
-			<span class="ident">duration</span>: <span class="ident">Duration::from_millis</span>(<span class="number">1000</span>),
-			<span class="ident">chain_head</span>: <span class="ident">head</span>,
-			<span class="ident">block_size_limit</span>: <span class="prelude-val">None</span>,
+		<span class="kw">let </span>res = executor::block_on(worker.on_slot(SlotInfo {
+			slot: <span class="number">0</span>.into(),
+			ends_at: Instant::now() + Duration::from_secs(<span class="number">100</span>),
+			inherent_data: InherentData::new(),
+			duration: Duration::from_millis(<span class="number">1000</span>),
+			chain_head: head,
+			block_size_limit: <span class="prelude-val">None</span>,
 		}))
-		.<span class="ident">unwrap</span>();
+		.unwrap();
 
-		<span class="comment">// The returned block should be imported and we should be able to get its header by now.</span>
-		<span class="macro">assert!</span>(<span class="ident">client</span>.<span class="ident">header</span>(<span class="kw-2">&amp;</span><span class="ident">BlockId::Hash</span>(<span class="ident">res</span>.<span class="ident">block</span>.<span class="ident">hash</span>())).<span class="ident">unwrap</span>().<span class="ident">is_some</span>());
+		<span class="comment">// The returned block should be imported and we should be able to get its header by now.
+		</span><span class="macro">assert!</span>(client.header(<span class="kw-2">&amp;</span>BlockId::Hash(res.block.hash())).unwrap().is_some());
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_consensus_aura" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_consensus_aura" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

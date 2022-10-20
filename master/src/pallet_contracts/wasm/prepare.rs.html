@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/wasm/prepare.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>prepare.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../pallet_contracts/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/wasm/prepare.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>prepare.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../pallet_contracts/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -1111,163 +1105,163 @@
 <span id="1105">1105</span>
 <span id="1106">1106</span>
 <span id="1107">1107</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! This module takes care of loading, checking and preprocessing of a</span>
-<span class="doccomment">//! wasm module before execution. It also extracts some essential information</span>
-<span class="doccomment">//! from a module.</span>
+</span><span class="doccomment">//! This module takes care of loading, checking and preprocessing of a
+//! wasm module before execution. It also extracts some essential information
+//! from a module.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">chain_extension::ChainExtension</span>,
-	<span class="ident">storage::meter::Diff</span>,
-	<span class="ident">wasm</span>::{<span class="ident">env_def::ImportSatisfyCheck</span>, <span class="ident">OwnerInfo</span>, <span class="ident">PrefabWasmModule</span>},
-	<span class="ident">AccountIdOf</span>, <span class="ident">CodeVec</span>, <span class="ident">Config</span>, <span class="ident">Error</span>, <span class="ident">Schedule</span>,
+</span><span class="kw">use crate</span>::{
+	chain_extension::ChainExtension,
+	storage::meter::Diff,
+	wasm::{env_def::ImportSatisfyCheck, OwnerInfo, PrefabWasmModule},
+	AccountIdOf, CodeVec, Config, Error, Schedule,
 };
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Encode</span>, <span class="ident">MaxEncodedLen</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">traits::Hash</span>, <span class="ident">DispatchError</span>};
-<span class="kw">use</span> <span class="ident">sp_std::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">wasm_instrument::parity_wasm::elements</span>::{
-	<span class="self">self</span>, <span class="ident">External</span>, <span class="ident">Internal</span>, <span class="ident">MemoryType</span>, <span class="ident">Type</span>, <span class="ident">ValueType</span>,
+<span class="kw">use </span>codec::{Encode, MaxEncodedLen};
+<span class="kw">use </span>sp_runtime::{traits::Hash, DispatchError};
+<span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>wasm_instrument::parity_wasm::elements::{
+	<span class="self">self</span>, External, Internal, MemoryType, Type, ValueType,
 };
 
-<span class="doccomment">/// Imported memory must be located inside this module. The reason for hardcoding is that current</span>
-<span class="doccomment">/// compiler toolchains might not support specifying other modules than &quot;env&quot; for memory imports.</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">IMPORT_MODULE_MEMORY</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;env&quot;</span>;
+<span class="doccomment">/// Imported memory must be located inside this module. The reason for hardcoding is that current
+/// compiler toolchains might not support specifying other modules than &quot;env&quot; for memory imports.
+</span><span class="kw">pub const </span>IMPORT_MODULE_MEMORY: <span class="kw-2">&amp;</span>str = <span class="string">&quot;env&quot;</span>;
 
-<span class="kw">struct</span> <span class="ident">ContractModule</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// A deserialized module. The module is valid (this is Guaranteed by `new` method).</span>
-	<span class="ident">module</span>: <span class="ident">elements::Module</span>,
-	<span class="ident">schedule</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>ContractModule&lt;<span class="lifetime">&#39;a</span>, T: Config&gt; {
+	<span class="doccomment">/// A deserialized module. The module is valid (this is Guaranteed by `new` method).
+	</span>module: elements::Module,
+	schedule: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schedule&lt;T&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">ContractModule</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Creates a new instance of `ContractModule`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns `Err` if the `original_code` couldn&#39;t be decoded or</span>
-	<span class="doccomment">/// if it contains an invalid module.</span>
-	<span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">original_code</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">schedule</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">use</span> <span class="ident">wasmi_validation</span>::{<span class="ident">validate_module</span>, <span class="ident">PlainValidator</span>};
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: Config&gt; ContractModule&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+	<span class="doccomment">/// Creates a new instance of `ContractModule`.
+	///
+	/// Returns `Err` if the `original_code` couldn&#39;t be decoded or
+	/// if it contains an invalid module.
+	</span><span class="kw">fn </span>new(original_code: <span class="kw-2">&amp;</span>[u8], schedule: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schedule&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">use </span>wasmi_validation::{validate_module, PlainValidator};
 
-		<span class="kw">let</span> <span class="ident">module</span> <span class="op">=</span>
-			<span class="ident">elements::deserialize_buffer</span>(<span class="ident">original_code</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">&quot;Can&#39;t decode wasm code&quot;</span>)<span class="question-mark">?</span>;
+		<span class="kw">let </span>module =
+			elements::deserialize_buffer(original_code).map_err(|<span class="kw">_</span>| <span class="string">&quot;Can&#39;t decode wasm code&quot;</span>)<span class="question-mark">?</span>;
 
-		<span class="comment">// Make sure that the module is valid.</span>
-		<span class="ident">validate_module</span>::<span class="op">&lt;</span><span class="ident">PlainValidator</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">module</span>, ()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">&quot;Module is not valid&quot;</span>)<span class="question-mark">?</span>;
+		<span class="comment">// Make sure that the module is valid.
+		</span>validate_module::&lt;PlainValidator&gt;(<span class="kw-2">&amp;</span>module, ()).map_err(|<span class="kw">_</span>| <span class="string">&quot;Module is not valid&quot;</span>)<span class="question-mark">?</span>;
 
-		<span class="comment">// Return a `ContractModule` instance with</span>
-		<span class="comment">// __valid__ module.</span>
-		<span class="prelude-val">Ok</span>(<span class="ident">ContractModule</span> { <span class="ident">module</span>, <span class="ident">schedule</span> })
+		<span class="comment">// Return a `ContractModule` instance with
+		// __valid__ module.
+		</span><span class="prelude-val">Ok</span>(ContractModule { module, schedule })
 	}
 
-	<span class="doccomment">/// Ensures that module doesn&#39;t declare internal memories.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// In this runtime we only allow wasm module to import memory from the environment.</span>
-	<span class="doccomment">/// Memory section contains declarations of internal linear memories, so if we find one</span>
-	<span class="doccomment">/// we reject such a module.</span>
-	<span class="kw">fn</span> <span class="ident">ensure_no_internal_memory</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">module</span>.<span class="ident">memory_section</span>().<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">ms</span><span class="op">|</span> <span class="ident">ms</span>.<span class="ident">entries</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span>) {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;module declares internal memory&quot;</span>)
+	<span class="doccomment">/// Ensures that module doesn&#39;t declare internal memories.
+	///
+	/// In this runtime we only allow wasm module to import memory from the environment.
+	/// Memory section contains declarations of internal linear memories, so if we find one
+	/// we reject such a module.
+	</span><span class="kw">fn </span>ensure_no_internal_memory(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">if </span><span class="self">self</span>.module.memory_section().map_or(<span class="bool-val">false</span>, |ms| ms.entries().len() &gt; <span class="number">0</span>) {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;module declares internal memory&quot;</span>)
 		}
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Ensures that tables declared in the module are not too big.</span>
-	<span class="kw">fn</span> <span class="ident">ensure_table_size_limit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">limit</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">table_section</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">module</span>.<span class="ident">table_section</span>() {
-			<span class="comment">// In Wasm MVP spec, there may be at most one table declared. Double check this</span>
-			<span class="comment">// explicitly just in case the Wasm version changes.</span>
-			<span class="kw">if</span> <span class="ident">table_section</span>.<span class="ident">entries</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> {
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;multiple tables declared&quot;</span>)
+	<span class="doccomment">/// Ensures that tables declared in the module are not too big.
+	</span><span class="kw">fn </span>ensure_table_size_limit(<span class="kw-2">&amp;</span><span class="self">self</span>, limit: u32) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(table_section) = <span class="self">self</span>.module.table_section() {
+			<span class="comment">// In Wasm MVP spec, there may be at most one table declared. Double check this
+			// explicitly just in case the Wasm version changes.
+			</span><span class="kw">if </span>table_section.entries().len() &gt; <span class="number">1 </span>{
+				<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;multiple tables declared&quot;</span>)
 			}
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">table_type</span>) <span class="op">=</span> <span class="ident">table_section</span>.<span class="ident">entries</span>().<span class="ident">first</span>() {
-				<span class="comment">// Check the table&#39;s initial size as there is no instruction or environment function</span>
-				<span class="comment">// capable of growing the table.</span>
-				<span class="kw">if</span> <span class="ident">table_type</span>.<span class="ident">limits</span>().<span class="ident">initial</span>() <span class="op">&gt;</span> <span class="ident">limit</span> {
-					<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;table exceeds maximum size allowed&quot;</span>)
+			<span class="kw">if let </span><span class="prelude-val">Some</span>(table_type) = table_section.entries().first() {
+				<span class="comment">// Check the table&#39;s initial size as there is no instruction or environment function
+				// capable of growing the table.
+				</span><span class="kw">if </span>table_type.limits().initial() &gt; limit {
+					<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;table exceeds maximum size allowed&quot;</span>)
 				}
 			}
 		}
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Ensure that any `br_table` instruction adheres to its immediate value limit.</span>
-	<span class="kw">fn</span> <span class="ident">ensure_br_table_size_limit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">limit</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">code_section</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">type_section</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">module</span>.<span class="ident">code_section</span>() {
-			<span class="ident">type_section</span>
-		} <span class="kw">else</span> {
-			<span class="kw">return</span> <span class="prelude-val">Ok</span>(())
+	<span class="doccomment">/// Ensure that any `br_table` instruction adheres to its immediate value limit.
+	</span><span class="kw">fn </span>ensure_br_table_size_limit(<span class="kw-2">&amp;</span><span class="self">self</span>, limit: u32) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span>code_section = <span class="kw">if let </span><span class="prelude-val">Some</span>(type_section) = <span class="self">self</span>.module.code_section() {
+			type_section
+		} <span class="kw">else </span>{
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(())
 		};
-		<span class="kw">for</span> <span class="ident">instr</span> <span class="kw">in</span> <span class="ident">code_section</span>.<span class="ident">bodies</span>().<span class="ident">iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">body</span><span class="op">|</span> <span class="ident">body</span>.<span class="ident">code</span>().<span class="ident">elements</span>()) {
-			<span class="kw">use</span> <span class="ident"><span class="self">self</span>::elements::Instruction::BrTable</span>;
-			<span class="kw">if</span> <span class="kw">let</span> <span class="ident">BrTable</span>(<span class="ident">table</span>) <span class="op">=</span> <span class="ident">instr</span> {
-				<span class="kw">if</span> <span class="ident">table</span>.<span class="ident">table</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">limit</span> <span class="kw">as</span> <span class="ident">usize</span> {
-					<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;BrTable&#39;s immediate value is too big.&quot;</span>)
+		<span class="kw">for </span>instr <span class="kw">in </span>code_section.bodies().iter().flat_map(|body| body.code().elements()) {
+			<span class="kw">use </span><span class="self">self</span>::elements::Instruction::BrTable;
+			<span class="kw">if let </span>BrTable(table) = instr {
+				<span class="kw">if </span>table.table.len() &gt; limit <span class="kw">as </span>usize {
+					<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;BrTable&#39;s immediate value is too big.&quot;</span>)
 				}
 			}
 		}
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="kw">fn</span> <span class="ident">ensure_global_variable_limit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">limit</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">global_section</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">module</span>.<span class="ident">global_section</span>() {
-			<span class="kw">if</span> <span class="ident">global_section</span>.<span class="ident">entries</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">limit</span> <span class="kw">as</span> <span class="ident">usize</span> {
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;module declares too many globals&quot;</span>)
+	<span class="kw">fn </span>ensure_global_variable_limit(<span class="kw-2">&amp;</span><span class="self">self</span>, limit: u32) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(global_section) = <span class="self">self</span>.module.global_section() {
+			<span class="kw">if </span>global_section.entries().len() &gt; limit <span class="kw">as </span>usize {
+				<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;module declares too many globals&quot;</span>)
 			}
 		}
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Ensures that no floating point types are in use.</span>
-	<span class="kw">fn</span> <span class="ident">ensure_no_floating_types</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">global_section</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">module</span>.<span class="ident">global_section</span>() {
-			<span class="kw">for</span> <span class="ident">global</span> <span class="kw">in</span> <span class="ident">global_section</span>.<span class="ident">entries</span>() {
-				<span class="kw">match</span> <span class="ident">global</span>.<span class="ident">global_type</span>().<span class="ident">content_type</span>() {
-					<span class="ident">ValueType::F32</span> <span class="op">|</span> <span class="ident">ValueType::F64</span> =&gt;
-						<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;use of floating point type in globals is forbidden&quot;</span>),
-					<span class="kw">_</span> =&gt; {},
+	<span class="doccomment">/// Ensures that no floating point types are in use.
+	</span><span class="kw">fn </span>ensure_no_floating_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(global_section) = <span class="self">self</span>.module.global_section() {
+			<span class="kw">for </span>global <span class="kw">in </span>global_section.entries() {
+				<span class="kw">match </span>global.global_type().content_type() {
+					ValueType::F32 | ValueType::F64 =&gt;
+						<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;use of floating point type in globals is forbidden&quot;</span>),
+					<span class="kw">_ </span>=&gt; {},
 				}
 			}
 		}
 
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">code_section</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">module</span>.<span class="ident">code_section</span>() {
-			<span class="kw">for</span> <span class="ident">func_body</span> <span class="kw">in</span> <span class="ident">code_section</span>.<span class="ident">bodies</span>() {
-				<span class="kw">for</span> <span class="ident">local</span> <span class="kw">in</span> <span class="ident">func_body</span>.<span class="ident">locals</span>() {
-					<span class="kw">match</span> <span class="ident">local</span>.<span class="ident">value_type</span>() {
-						<span class="ident">ValueType::F32</span> <span class="op">|</span> <span class="ident">ValueType::F64</span> =&gt;
-							<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;use of floating point type in locals is forbidden&quot;</span>),
-						<span class="kw">_</span> =&gt; {},
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(code_section) = <span class="self">self</span>.module.code_section() {
+			<span class="kw">for </span>func_body <span class="kw">in </span>code_section.bodies() {
+				<span class="kw">for </span>local <span class="kw">in </span>func_body.locals() {
+					<span class="kw">match </span>local.value_type() {
+						ValueType::F32 | ValueType::F64 =&gt;
+							<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;use of floating point type in locals is forbidden&quot;</span>),
+						<span class="kw">_ </span>=&gt; {},
 					}
 				}
 			}
 		}
 
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">type_section</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">module</span>.<span class="ident">type_section</span>() {
-			<span class="kw">for</span> <span class="ident">wasm_type</span> <span class="kw">in</span> <span class="ident">type_section</span>.<span class="ident">types</span>() {
-				<span class="kw">match</span> <span class="ident">wasm_type</span> {
-					<span class="ident">Type::Function</span>(<span class="ident">func_type</span>) =&gt; {
-						<span class="kw">let</span> <span class="ident">return_type</span> <span class="op">=</span> <span class="ident">func_type</span>.<span class="ident">results</span>().<span class="ident">get</span>(<span class="number">0</span>);
-						<span class="kw">for</span> <span class="ident">value_type</span> <span class="kw">in</span> <span class="ident">func_type</span>.<span class="ident">params</span>().<span class="ident">iter</span>().<span class="ident">chain</span>(<span class="ident">return_type</span>) {
-							<span class="kw">match</span> <span class="ident">value_type</span> {
-								<span class="ident">ValueType::F32</span> <span class="op">|</span> <span class="ident">ValueType::F64</span> =&gt;
-									<span class="kw">return</span> <span class="prelude-val">Err</span>(
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(type_section) = <span class="self">self</span>.module.type_section() {
+			<span class="kw">for </span>wasm_type <span class="kw">in </span>type_section.types() {
+				<span class="kw">match </span>wasm_type {
+					Type::Function(func_type) =&gt; {
+						<span class="kw">let </span>return_type = func_type.results().get(<span class="number">0</span>);
+						<span class="kw">for </span>value_type <span class="kw">in </span>func_type.params().iter().chain(return_type) {
+							<span class="kw">match </span>value_type {
+								ValueType::F32 | ValueType::F64 =&gt;
+									<span class="kw">return </span><span class="prelude-val">Err</span>(
 										<span class="string">&quot;use of floating point type in function types is forbidden&quot;</span>,
 									),
-								<span class="kw">_</span> =&gt; {},
+								<span class="kw">_ </span>=&gt; {},
 							}
 						}
 					},
@@ -1278,421 +1272,421 @@
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Ensure that no function exists that has more parameters than allowed.</span>
-	<span class="kw">fn</span> <span class="ident">ensure_parameter_limit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">limit</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">type_section</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">type_section</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">module</span>.<span class="ident">type_section</span>() {
-			<span class="ident">type_section</span>
-		} <span class="kw">else</span> {
-			<span class="kw">return</span> <span class="prelude-val">Ok</span>(())
+	<span class="doccomment">/// Ensure that no function exists that has more parameters than allowed.
+	</span><span class="kw">fn </span>ensure_parameter_limit(<span class="kw-2">&amp;</span><span class="self">self</span>, limit: u32) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span>type_section = <span class="kw">if let </span><span class="prelude-val">Some</span>(type_section) = <span class="self">self</span>.module.type_section() {
+			type_section
+		} <span class="kw">else </span>{
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(())
 		};
 
-		<span class="kw">for</span> <span class="ident">Type::Function</span>(<span class="ident">func</span>) <span class="kw">in</span> <span class="ident">type_section</span>.<span class="ident">types</span>() {
-			<span class="kw">if</span> <span class="ident">func</span>.<span class="ident">params</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">limit</span> <span class="kw">as</span> <span class="ident">usize</span> {
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Use of a function type with too many parameters.&quot;</span>)
+		<span class="kw">for </span>Type::Function(func) <span class="kw">in </span>type_section.types() {
+			<span class="kw">if </span>func.params().len() &gt; limit <span class="kw">as </span>usize {
+				<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Use of a function type with too many parameters.&quot;</span>)
 			}
 		}
 
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="kw">fn</span> <span class="ident">inject_gas_metering</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">gas_rules</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">schedule</span>.<span class="ident">rules</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">module</span>);
-		<span class="kw">let</span> <span class="ident">contract_module</span> <span class="op">=</span>
-			<span class="ident">wasm_instrument::gas_metering::inject</span>(<span class="self">self</span>.<span class="ident">module</span>, <span class="kw-2">&amp;</span><span class="ident">gas_rules</span>, <span class="string">&quot;seal0&quot;</span>)
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">&quot;gas instrumentation failed&quot;</span>)<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(<span class="ident">ContractModule</span> { <span class="ident">module</span>: <span class="ident">contract_module</span>, <span class="ident">schedule</span>: <span class="self">self</span>.<span class="ident">schedule</span> })
+	<span class="kw">fn </span>inject_gas_metering(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span>gas_rules = <span class="self">self</span>.schedule.rules(<span class="kw-2">&amp;</span><span class="self">self</span>.module);
+		<span class="kw">let </span>contract_module =
+			wasm_instrument::gas_metering::inject(<span class="self">self</span>.module, <span class="kw-2">&amp;</span>gas_rules, <span class="string">&quot;seal0&quot;</span>)
+				.map_err(|<span class="kw">_</span>| <span class="string">&quot;gas instrumentation failed&quot;</span>)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(ContractModule { module: contract_module, schedule: <span class="self">self</span>.schedule })
 	}
 
-	<span class="kw">fn</span> <span class="ident">inject_stack_height_metering</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">limit</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">schedule</span>.<span class="ident">limits</span>.<span class="ident">stack_height</span> {
-			<span class="kw">let</span> <span class="ident">contract_module</span> <span class="op">=</span> <span class="ident">wasm_instrument::inject_stack_limiter</span>(<span class="self">self</span>.<span class="ident">module</span>, <span class="ident">limit</span>)
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">&quot;stack height instrumentation failed&quot;</span>)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(<span class="ident">ContractModule</span> { <span class="ident">module</span>: <span class="ident">contract_module</span>, <span class="ident">schedule</span>: <span class="self">self</span>.<span class="ident">schedule</span> })
-		} <span class="kw">else</span> {
-			<span class="prelude-val">Ok</span>(<span class="ident">ContractModule</span> { <span class="ident">module</span>: <span class="self">self</span>.<span class="ident">module</span>, <span class="ident">schedule</span>: <span class="self">self</span>.<span class="ident">schedule</span> })
+	<span class="kw">fn </span>inject_stack_height_metering(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(limit) = <span class="self">self</span>.schedule.limits.stack_height {
+			<span class="kw">let </span>contract_module = wasm_instrument::inject_stack_limiter(<span class="self">self</span>.module, limit)
+				.map_err(|<span class="kw">_</span>| <span class="string">&quot;stack height instrumentation failed&quot;</span>)<span class="question-mark">?</span>;
+			<span class="prelude-val">Ok</span>(ContractModule { module: contract_module, schedule: <span class="self">self</span>.schedule })
+		} <span class="kw">else </span>{
+			<span class="prelude-val">Ok</span>(ContractModule { module: <span class="self">self</span>.module, schedule: <span class="self">self</span>.schedule })
 		}
 	}
 
-	<span class="doccomment">/// Check that the module has required exported functions. For now</span>
-	<span class="doccomment">/// these are just entrypoints:</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// - &#39;call&#39;</span>
-	<span class="doccomment">/// - &#39;deploy&#39;</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Any other exports are not allowed.</span>
-	<span class="kw">fn</span> <span class="ident">scan_exports</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">deploy_found</span> <span class="op">=</span> <span class="bool-val">false</span>;
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">call_found</span> <span class="op">=</span> <span class="bool-val">false</span>;
+	<span class="doccomment">/// Check that the module has required exported functions. For now
+	/// these are just entrypoints:
+	///
+	/// - &#39;call&#39;
+	/// - &#39;deploy&#39;
+	///
+	/// Any other exports are not allowed.
+	</span><span class="kw">fn </span>scan_exports(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>deploy_found = <span class="bool-val">false</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>call_found = <span class="bool-val">false</span>;
 
-		<span class="kw">let</span> <span class="ident">module</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">module</span>;
+		<span class="kw">let </span>module = <span class="kw-2">&amp;</span><span class="self">self</span>.module;
 
-		<span class="kw">let</span> <span class="ident">types</span> <span class="op">=</span> <span class="ident">module</span>.<span class="ident">type_section</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">ts</span><span class="op">|</span> <span class="ident">ts</span>.<span class="ident">types</span>()).<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span>[]);
-		<span class="kw">let</span> <span class="ident">export_entries</span> <span class="op">=</span> <span class="ident">module</span>.<span class="ident">export_section</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">is</span><span class="op">|</span> <span class="ident">is</span>.<span class="ident">entries</span>()).<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span>[]);
-		<span class="kw">let</span> <span class="ident">func_entries</span> <span class="op">=</span> <span class="ident">module</span>.<span class="ident">function_section</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">fs</span><span class="op">|</span> <span class="ident">fs</span>.<span class="ident">entries</span>()).<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span>[]);
+		<span class="kw">let </span>types = module.type_section().map(|ts| ts.types()).unwrap_or(<span class="kw-2">&amp;</span>[]);
+		<span class="kw">let </span>export_entries = module.export_section().map(|is| is.entries()).unwrap_or(<span class="kw-2">&amp;</span>[]);
+		<span class="kw">let </span>func_entries = module.function_section().map(|fs| fs.entries()).unwrap_or(<span class="kw-2">&amp;</span>[]);
 
-		<span class="comment">// Function index space consists of imported function following by</span>
-		<span class="comment">// declared functions. Calculate the total number of imported functions so</span>
-		<span class="comment">// we can use it to convert indexes from function space to declared function space.</span>
-		<span class="kw">let</span> <span class="ident">fn_space_offset</span> <span class="op">=</span> <span class="ident">module</span>
-			.<span class="ident">import_section</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">is</span><span class="op">|</span> <span class="ident">is</span>.<span class="ident">entries</span>())
-			.<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span>[])
-			.<span class="ident">iter</span>()
-			.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">entry</span><span class="op">|</span> <span class="macro">matches!</span>(<span class="kw-2">*</span><span class="ident">entry</span>.<span class="ident">external</span>(), <span class="ident">External::Function</span>(<span class="kw">_</span>)))
-			.<span class="ident">count</span>();
+		<span class="comment">// Function index space consists of imported function following by
+		// declared functions. Calculate the total number of imported functions so
+		// we can use it to convert indexes from function space to declared function space.
+		</span><span class="kw">let </span>fn_space_offset = module
+			.import_section()
+			.map(|is| is.entries())
+			.unwrap_or(<span class="kw-2">&amp;</span>[])
+			.iter()
+			.filter(|entry| <span class="macro">matches!</span>(<span class="kw-2">*</span>entry.external(), External::Function(<span class="kw">_</span>)))
+			.count();
 
-		<span class="kw">for</span> <span class="ident">export</span> <span class="kw">in</span> <span class="ident">export_entries</span> {
-			<span class="kw">match</span> <span class="ident">export</span>.<span class="ident">field</span>() {
-				<span class="string">&quot;call&quot;</span> =&gt; <span class="ident">call_found</span> <span class="op">=</span> <span class="bool-val">true</span>,
-				<span class="string">&quot;deploy&quot;</span> =&gt; <span class="ident">deploy_found</span> <span class="op">=</span> <span class="bool-val">true</span>,
-				<span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;unknown export: expecting only deploy and call functions&quot;</span>),
+		<span class="kw">for </span>export <span class="kw">in </span>export_entries {
+			<span class="kw">match </span>export.field() {
+				<span class="string">&quot;call&quot; </span>=&gt; call_found = <span class="bool-val">true</span>,
+				<span class="string">&quot;deploy&quot; </span>=&gt; deploy_found = <span class="bool-val">true</span>,
+				<span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;unknown export: expecting only deploy and call functions&quot;</span>),
 			}
 
-			<span class="comment">// Then check the export kind. &quot;call&quot; and &quot;deploy&quot; are</span>
-			<span class="comment">// functions.</span>
-			<span class="kw">let</span> <span class="ident">fn_idx</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">export</span>.<span class="ident">internal</span>() {
-				<span class="ident">Internal::Function</span>(<span class="kw-2">ref</span> <span class="ident">fn_idx</span>) =&gt; <span class="kw-2">*</span><span class="ident">fn_idx</span>,
-				<span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;expected a function&quot;</span>),
+			<span class="comment">// Then check the export kind. &quot;call&quot; and &quot;deploy&quot; are
+			// functions.
+			</span><span class="kw">let </span>fn_idx = <span class="kw">match </span>export.internal() {
+				Internal::Function(<span class="kw-2">ref </span>fn_idx) =&gt; <span class="kw-2">*</span>fn_idx,
+				<span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;expected a function&quot;</span>),
 			};
 
-			<span class="comment">// convert index from function index space to declared index space.</span>
-			<span class="kw">let</span> <span class="ident">fn_idx</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">fn_idx</span>.<span class="ident">checked_sub</span>(<span class="ident">fn_space_offset</span> <span class="kw">as</span> <span class="ident">u32</span>) {
-				<span class="prelude-val">Some</span>(<span class="ident">fn_idx</span>) =&gt; <span class="ident">fn_idx</span>,
-				<span class="prelude-val">None</span> =&gt; {
-					<span class="comment">// Underflow here means fn_idx points to imported function which we don&#39;t allow!</span>
-					<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;entry point points to an imported function&quot;</span>)
+			<span class="comment">// convert index from function index space to declared index space.
+			</span><span class="kw">let </span>fn_idx = <span class="kw">match </span>fn_idx.checked_sub(fn_space_offset <span class="kw">as </span>u32) {
+				<span class="prelude-val">Some</span>(fn_idx) =&gt; fn_idx,
+				<span class="prelude-val">None </span>=&gt; {
+					<span class="comment">// Underflow here means fn_idx points to imported function which we don&#39;t allow!
+					</span><span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;entry point points to an imported function&quot;</span>)
 				},
 			};
 
-			<span class="comment">// Then check the signature.</span>
-			<span class="comment">// Both &quot;call&quot; and &quot;deploy&quot; has a () -&gt; () function type.</span>
-			<span class="comment">// We still support () -&gt; (i32) for backwards compatibility.</span>
-			<span class="kw">let</span> <span class="ident">func_ty_idx</span> <span class="op">=</span> <span class="ident">func_entries</span>
-				.<span class="ident">get</span>(<span class="ident">fn_idx</span> <span class="kw">as</span> <span class="ident">usize</span>)
-				.<span class="ident">ok_or</span>(<span class="string">&quot;export refers to non-existent function&quot;</span>)<span class="question-mark">?</span>
-				.<span class="ident">type_ref</span>();
-			<span class="kw">let</span> <span class="ident">Type::Function</span>(<span class="kw-2">ref</span> <span class="ident">func_ty</span>) <span class="op">=</span>
-				<span class="ident">types</span>.<span class="ident">get</span>(<span class="ident">func_ty_idx</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">ok_or</span>(<span class="string">&quot;function has a non-existent type&quot;</span>)<span class="question-mark">?</span>;
-			<span class="kw">if</span> <span class="op">!</span>(<span class="ident">func_ty</span>.<span class="ident">params</span>().<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span>
-				(<span class="ident">func_ty</span>.<span class="ident">results</span>().<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">func_ty</span>.<span class="ident">results</span>() <span class="op">==</span> [<span class="ident">ValueType::I32</span>]))
+			<span class="comment">// Then check the signature.
+			// Both &quot;call&quot; and &quot;deploy&quot; has a () -&gt; () function type.
+			// We still support () -&gt; (i32) for backwards compatibility.
+			</span><span class="kw">let </span>func_ty_idx = func_entries
+				.get(fn_idx <span class="kw">as </span>usize)
+				.ok_or(<span class="string">&quot;export refers to non-existent function&quot;</span>)<span class="question-mark">?
+				</span>.type_ref();
+			<span class="kw">let </span>Type::Function(<span class="kw-2">ref </span>func_ty) =
+				types.get(func_ty_idx <span class="kw">as </span>usize).ok_or(<span class="string">&quot;function has a non-existent type&quot;</span>)<span class="question-mark">?</span>;
+			<span class="kw">if </span>!(func_ty.params().is_empty() &amp;&amp;
+				(func_ty.results().is_empty() || func_ty.results() == [ValueType::I32]))
 			{
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;entry point has wrong signature&quot;</span>)
+				<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;entry point has wrong signature&quot;</span>)
 			}
 		}
 
-		<span class="kw">if</span> <span class="op">!</span><span class="ident">deploy_found</span> {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;deploy function isn&#39;t exported&quot;</span>)
+		<span class="kw">if </span>!deploy_found {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;deploy function isn&#39;t exported&quot;</span>)
 		}
-		<span class="kw">if</span> <span class="op">!</span><span class="ident">call_found</span> {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;call function isn&#39;t exported&quot;</span>)
+		<span class="kw">if </span>!call_found {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;call function isn&#39;t exported&quot;</span>)
 		}
 
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Scan an import section if any.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This accomplishes two tasks:</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// - checks any imported function against defined host functions set, incl. their signatures.</span>
-	<span class="doccomment">/// - if there is a memory import, returns it&#39;s descriptor</span>
-	<span class="doccomment">/// `import_fn_banlist`: list of function names that are disallowed to be imported</span>
-	<span class="kw">fn</span> <span class="ident">scan_imports</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">ImportSatisfyCheck</span><span class="op">&gt;</span>(
+	<span class="doccomment">/// Scan an import section if any.
+	///
+	/// This accomplishes two tasks:
+	///
+	/// - checks any imported function against defined host functions set, incl. their signatures.
+	/// - if there is a memory import, returns it&#39;s descriptor
+	/// `import_fn_banlist`: list of function names that are disallowed to be imported
+	</span><span class="kw">fn </span>scan_imports&lt;C: ImportSatisfyCheck&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">import_fn_banlist</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]],
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">MemoryType</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">module</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">module</span>;
+		import_fn_banlist: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[u8]],
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>MemoryType&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span>module = <span class="kw-2">&amp;</span><span class="self">self</span>.module;
 
-		<span class="kw">let</span> <span class="ident">types</span> <span class="op">=</span> <span class="ident">module</span>.<span class="ident">type_section</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">ts</span><span class="op">|</span> <span class="ident">ts</span>.<span class="ident">types</span>()).<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span>[]);
-		<span class="kw">let</span> <span class="ident">import_entries</span> <span class="op">=</span> <span class="ident">module</span>.<span class="ident">import_section</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">is</span><span class="op">|</span> <span class="ident">is</span>.<span class="ident">entries</span>()).<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span>[]);
+		<span class="kw">let </span>types = module.type_section().map(|ts| ts.types()).unwrap_or(<span class="kw-2">&amp;</span>[]);
+		<span class="kw">let </span>import_entries = module.import_section().map(|is| is.entries()).unwrap_or(<span class="kw-2">&amp;</span>[]);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">imported_mem_type</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>imported_mem_type = <span class="prelude-val">None</span>;
 
-		<span class="kw">for</span> <span class="ident">import</span> <span class="kw">in</span> <span class="ident">import_entries</span> {
-			<span class="kw">let</span> <span class="ident">type_idx</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">import</span>.<span class="ident">external</span>() {
-				<span class="ident">External::Table</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Cannot import tables&quot;</span>),
-				<span class="ident">External::Global</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Cannot import globals&quot;</span>),
-				<span class="ident">External::Function</span>(<span class="kw-2">ref</span> <span class="ident">type_idx</span>) =&gt; <span class="ident">type_idx</span>,
-				<span class="ident">External::Memory</span>(<span class="kw-2">ref</span> <span class="ident">memory_type</span>) =&gt; {
-					<span class="kw">if</span> <span class="ident">import</span>.<span class="ident">module</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">IMPORT_MODULE_MEMORY</span> {
-						<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Invalid module for imported memory&quot;</span>)
+		<span class="kw">for </span>import <span class="kw">in </span>import_entries {
+			<span class="kw">let </span>type_idx = <span class="kw">match </span><span class="kw-2">*</span>import.external() {
+				External::Table(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Cannot import tables&quot;</span>),
+				External::Global(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Cannot import globals&quot;</span>),
+				External::Function(<span class="kw-2">ref </span>type_idx) =&gt; type_idx,
+				External::Memory(<span class="kw-2">ref </span>memory_type) =&gt; {
+					<span class="kw">if </span>import.module() != IMPORT_MODULE_MEMORY {
+						<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Invalid module for imported memory&quot;</span>)
 					}
-					<span class="kw">if</span> <span class="ident">import</span>.<span class="ident">field</span>() <span class="op">!</span><span class="op">=</span> <span class="string">&quot;memory&quot;</span> {
-						<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Memory import must have the field name &#39;memory&#39;&quot;</span>)
+					<span class="kw">if </span>import.field() != <span class="string">&quot;memory&quot; </span>{
+						<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Memory import must have the field name &#39;memory&#39;&quot;</span>)
 					}
-					<span class="kw">if</span> <span class="ident">imported_mem_type</span>.<span class="ident">is_some</span>() {
-						<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Multiple memory imports defined&quot;</span>)
+					<span class="kw">if </span>imported_mem_type.is_some() {
+						<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Multiple memory imports defined&quot;</span>)
 					}
-					<span class="ident">imported_mem_type</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">memory_type</span>);
-					<span class="kw">continue</span>
-				},
+					imported_mem_type = <span class="prelude-val">Some</span>(memory_type);
+					<span class="kw">continue
+				</span>},
 			};
 
-			<span class="kw">let</span> <span class="ident">Type::Function</span>(<span class="kw-2">ref</span> <span class="ident">func_ty</span>) <span class="op">=</span> <span class="ident">types</span>
-				.<span class="ident">get</span>(<span class="kw-2">*</span><span class="ident">type_idx</span> <span class="kw">as</span> <span class="ident">usize</span>)
-				.<span class="ident">ok_or</span>(<span class="string">&quot;validation: import entry points to a non-existent type&quot;</span>)<span class="question-mark">?</span>;
+			<span class="kw">let </span>Type::Function(<span class="kw-2">ref </span>func_ty) = types
+				.get(<span class="kw-2">*</span>type_idx <span class="kw">as </span>usize)
+				.ok_or(<span class="string">&quot;validation: import entry points to a non-existent type&quot;</span>)<span class="question-mark">?</span>;
 
-			<span class="kw">if</span> <span class="op">!</span><span class="ident">T::ChainExtension::enabled</span>() <span class="op">&amp;&amp;</span>
-				<span class="ident">import</span>.<span class="ident">field</span>().<span class="ident">as_bytes</span>() <span class="op">==</span> <span class="string">b&quot;seal_call_chain_extension&quot;</span>
-			{
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;module uses chain extensions but chain extensions are disabled&quot;</span>)
+			<span class="kw">if </span>!T::ChainExtension::enabled() &amp;&amp;
+				import.field().as_bytes() == <span class="string">b&quot;seal_call_chain_extension&quot;
+			</span>{
+				<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;module uses chain extensions but chain extensions are disabled&quot;</span>)
 			}
 
-			<span class="kw">if</span> <span class="ident">import_fn_banlist</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">f</span><span class="op">|</span> <span class="ident">import</span>.<span class="ident">field</span>().<span class="ident">as_bytes</span>() <span class="op">==</span> <span class="kw-2">*</span><span class="ident">f</span>) <span class="op">|</span><span class="op">|</span>
-				<span class="op">!</span><span class="ident">C::can_satisfy</span>(<span class="ident">import</span>.<span class="ident">module</span>().<span class="ident">as_bytes</span>(), <span class="ident">import</span>.<span class="ident">field</span>().<span class="ident">as_bytes</span>(), <span class="ident">func_ty</span>)
+			<span class="kw">if </span>import_fn_banlist.iter().any(|f| import.field().as_bytes() == <span class="kw-2">*</span>f) ||
+				!C::can_satisfy(import.module().as_bytes(), import.field().as_bytes(), func_ty)
 			{
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;module imports a non-existent function&quot;</span>)
+				<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;module imports a non-existent function&quot;</span>)
 			}
 		}
-		<span class="prelude-val">Ok</span>(<span class="ident">imported_mem_type</span>)
+		<span class="prelude-val">Ok</span>(imported_mem_type)
 	}
 
-	<span class="kw">fn</span> <span class="ident">into_wasm_code</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="ident">elements::serialize</span>(<span class="self">self</span>.<span class="ident">module</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">&quot;error serializing instrumented module&quot;</span>)
+	<span class="kw">fn </span>into_wasm_code(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		elements::serialize(<span class="self">self</span>.module).map_err(|<span class="kw">_</span>| <span class="string">&quot;error serializing instrumented module&quot;</span>)
 	}
 }
 
-<span class="kw">fn</span> <span class="ident">get_memory_limits</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(
-	<span class="ident">module</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">MemoryType</span><span class="op">&gt;</span>,
-	<span class="ident">schedule</span>: <span class="kw-2">&amp;</span><span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">u32</span>), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-	<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">memory_type</span>) <span class="op">=</span> <span class="ident">module</span> {
-		<span class="comment">// Inspect the module to extract the initial and maximum page count.</span>
-		<span class="kw">let</span> <span class="ident">limits</span> <span class="op">=</span> <span class="ident">memory_type</span>.<span class="ident">limits</span>();
-		<span class="kw">match</span> (<span class="ident">limits</span>.<span class="ident">initial</span>(), <span class="ident">limits</span>.<span class="ident">maximum</span>()) {
-			(<span class="ident">initial</span>, <span class="prelude-val">Some</span>(<span class="ident">maximum</span>)) <span class="kw">if</span> <span class="ident">initial</span> <span class="op">&gt;</span> <span class="ident">maximum</span> =&gt;
+<span class="kw">fn </span>get_memory_limits&lt;T: Config&gt;(
+	module: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>MemoryType&gt;,
+	schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(u32, u32), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+	<span class="kw">if let </span><span class="prelude-val">Some</span>(memory_type) = module {
+		<span class="comment">// Inspect the module to extract the initial and maximum page count.
+		</span><span class="kw">let </span>limits = memory_type.limits();
+		<span class="kw">match </span>(limits.initial(), limits.maximum()) {
+			(initial, <span class="prelude-val">Some</span>(maximum)) <span class="kw">if </span>initial &gt; maximum =&gt;
 				<span class="prelude-val">Err</span>(<span class="string">&quot;Requested initial number of pages should not exceed the requested maximum&quot;</span>),
-			(<span class="kw">_</span>, <span class="prelude-val">Some</span>(<span class="ident">maximum</span>)) <span class="kw">if</span> <span class="ident">maximum</span> <span class="op">&gt;</span> <span class="ident">schedule</span>.<span class="ident">limits</span>.<span class="ident">memory_pages</span> =&gt;
+			(<span class="kw">_</span>, <span class="prelude-val">Some</span>(maximum)) <span class="kw">if </span>maximum &gt; schedule.limits.memory_pages =&gt;
 				<span class="prelude-val">Err</span>(<span class="string">&quot;Maximum number of pages should not exceed the configured maximum.&quot;</span>),
-			(<span class="ident">initial</span>, <span class="prelude-val">Some</span>(<span class="ident">maximum</span>)) =&gt; <span class="prelude-val">Ok</span>((<span class="ident">initial</span>, <span class="ident">maximum</span>)),
+			(initial, <span class="prelude-val">Some</span>(maximum)) =&gt; <span class="prelude-val">Ok</span>((initial, maximum)),
 			(<span class="kw">_</span>, <span class="prelude-val">None</span>) =&gt; {
-				<span class="comment">// Maximum number of pages should be always declared.</span>
-				<span class="comment">// This isn&#39;t a hard requirement and can be treated as a maximum set</span>
-				<span class="comment">// to configured maximum.</span>
-				<span class="prelude-val">Err</span>(<span class="string">&quot;Maximum number of pages should be always declared.&quot;</span>)
+				<span class="comment">// Maximum number of pages should be always declared.
+				// This isn&#39;t a hard requirement and can be treated as a maximum set
+				// to configured maximum.
+				</span><span class="prelude-val">Err</span>(<span class="string">&quot;Maximum number of pages should be always declared.&quot;</span>)
 			},
 		}
-	} <span class="kw">else</span> {
-		<span class="comment">// If none memory imported then just crate an empty placeholder.</span>
-		<span class="comment">// Any access to it will lead to out of bounds trap.</span>
-		<span class="prelude-val">Ok</span>((<span class="number">0</span>, <span class="number">0</span>))
+	} <span class="kw">else </span>{
+		<span class="comment">// If none memory imported then just crate an empty placeholder.
+		// Any access to it will lead to out of bounds trap.
+		</span><span class="prelude-val">Ok</span>((<span class="number">0</span>, <span class="number">0</span>))
 	}
 }
 
-<span class="kw">fn</span> <span class="ident">check_and_instrument</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">ImportSatisfyCheck</span>, <span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(
-	<span class="ident">original_code</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-	<span class="ident">schedule</span>: <span class="kw-2">&amp;</span><span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, (<span class="ident">u32</span>, <span class="ident">u32</span>)), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-	<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> (<span class="op">|</span><span class="op">|</span> {
-		<span class="kw">let</span> <span class="ident">contract_module</span> <span class="op">=</span> <span class="ident">ContractModule::new</span>(<span class="ident">original_code</span>, <span class="ident">schedule</span>)<span class="question-mark">?</span>;
-		<span class="ident">contract_module</span>.<span class="ident">scan_exports</span>()<span class="question-mark">?</span>;
-		<span class="ident">contract_module</span>.<span class="ident">ensure_no_internal_memory</span>()<span class="question-mark">?</span>;
-		<span class="ident">contract_module</span>.<span class="ident">ensure_table_size_limit</span>(<span class="ident">schedule</span>.<span class="ident">limits</span>.<span class="ident">table_size</span>)<span class="question-mark">?</span>;
-		<span class="ident">contract_module</span>.<span class="ident">ensure_global_variable_limit</span>(<span class="ident">schedule</span>.<span class="ident">limits</span>.<span class="ident">globals</span>)<span class="question-mark">?</span>;
-		<span class="ident">contract_module</span>.<span class="ident">ensure_no_floating_types</span>()<span class="question-mark">?</span>;
-		<span class="ident">contract_module</span>.<span class="ident">ensure_parameter_limit</span>(<span class="ident">schedule</span>.<span class="ident">limits</span>.<span class="ident">parameters</span>)<span class="question-mark">?</span>;
-		<span class="ident">contract_module</span>.<span class="ident">ensure_br_table_size_limit</span>(<span class="ident">schedule</span>.<span class="ident">limits</span>.<span class="ident">br_table_size</span>)<span class="question-mark">?</span>;
+<span class="kw">fn </span>check_and_instrument&lt;C: ImportSatisfyCheck, T: Config&gt;(
+	original_code: <span class="kw-2">&amp;</span>[u8],
+	schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;u8&gt;, (u32, u32)), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+	<span class="kw">let </span>result = (|| {
+		<span class="kw">let </span>contract_module = ContractModule::new(original_code, schedule)<span class="question-mark">?</span>;
+		contract_module.scan_exports()<span class="question-mark">?</span>;
+		contract_module.ensure_no_internal_memory()<span class="question-mark">?</span>;
+		contract_module.ensure_table_size_limit(schedule.limits.table_size)<span class="question-mark">?</span>;
+		contract_module.ensure_global_variable_limit(schedule.limits.globals)<span class="question-mark">?</span>;
+		contract_module.ensure_no_floating_types()<span class="question-mark">?</span>;
+		contract_module.ensure_parameter_limit(schedule.limits.parameters)<span class="question-mark">?</span>;
+		contract_module.ensure_br_table_size_limit(schedule.limits.br_table_size)<span class="question-mark">?</span>;
 
-		<span class="comment">// We disallow importing `gas` function here since it is treated as implementation detail.</span>
-		<span class="kw">let</span> <span class="ident">disallowed_imports</span> <span class="op">=</span> [<span class="string">b&quot;gas&quot;</span>.<span class="ident">as_ref</span>()];
-		<span class="kw">let</span> <span class="ident">memory_limits</span> <span class="op">=</span>
-			<span class="ident">get_memory_limits</span>(<span class="ident">contract_module</span>.<span class="ident">scan_imports</span>::<span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">disallowed_imports</span>)<span class="question-mark">?</span>, <span class="ident">schedule</span>)<span class="question-mark">?</span>;
+		<span class="comment">// We disallow importing `gas` function here since it is treated as implementation detail.
+		</span><span class="kw">let </span>disallowed_imports = [<span class="string">b&quot;gas&quot;</span>.as_ref()];
+		<span class="kw">let </span>memory_limits =
+			get_memory_limits(contract_module.scan_imports::&lt;C&gt;(<span class="kw-2">&amp;</span>disallowed_imports)<span class="question-mark">?</span>, schedule)<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="ident">contract_module</span>
-			.<span class="ident">inject_gas_metering</span>()<span class="question-mark">?</span>
-			.<span class="ident">inject_stack_height_metering</span>()<span class="question-mark">?</span>
-			.<span class="ident">into_wasm_code</span>()<span class="question-mark">?</span>;
+		<span class="kw">let </span>code = contract_module
+			.inject_gas_metering()<span class="question-mark">?
+			</span>.inject_stack_height_metering()<span class="question-mark">?
+			</span>.into_wasm_code()<span class="question-mark">?</span>;
 
-		<span class="prelude-val">Ok</span>((<span class="ident">code</span>, <span class="ident">memory_limits</span>))
+		<span class="prelude-val">Ok</span>((code, memory_limits))
 	})();
 
-	<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">result</span> {
-		<span class="macro">log::debug!</span>(<span class="ident">target</span>: <span class="string">&quot;runtime::contracts&quot;</span>, <span class="string">&quot;CodeRejected: {}&quot;</span>, <span class="ident">msg</span>);
+	<span class="kw">if let </span><span class="prelude-val">Err</span>(msg) = <span class="kw-2">&amp;</span>result {
+		<span class="macro">log::debug!</span>(target: <span class="string">&quot;runtime::contracts&quot;</span>, <span class="string">&quot;CodeRejected: {}&quot;</span>, msg);
 	}
 
-	<span class="ident">result</span>
+	result
 }
 
-<span class="kw">fn</span> <span class="ident">do_preparation</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">ImportSatisfyCheck</span>, <span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(
-	<span class="ident">original_code</span>: <span class="ident">CodeVec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="ident">schedule</span>: <span class="kw-2">&amp;</span><span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="ident">owner</span>: <span class="ident">AccountIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PrefabWasmModule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, (<span class="ident">DispatchError</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>)<span class="op">&gt;</span> {
-	<span class="kw">let</span> (<span class="ident">code</span>, (<span class="ident">initial</span>, <span class="ident">maximum</span>)) <span class="op">=</span> <span class="ident">check_and_instrument</span>::<span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">original_code</span>.<span class="ident">as_ref</span>(), <span class="ident">schedule</span>)
-		.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">msg</span><span class="op">|</span> (<span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::CodeRejected</span>.<span class="ident">into</span>(), <span class="ident">msg</span>))<span class="question-mark">?</span>;
-	<span class="kw">let</span> <span class="ident">original_code_len</span> <span class="op">=</span> <span class="ident">original_code</span>.<span class="ident">len</span>();
+<span class="kw">fn </span>do_preparation&lt;C: ImportSatisfyCheck, T: Config&gt;(
+	original_code: CodeVec&lt;T&gt;,
+	schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
+	owner: AccountIdOf&lt;T&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;PrefabWasmModule&lt;T&gt;, (DispatchError, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str)&gt; {
+	<span class="kw">let </span>(code, (initial, maximum)) = check_and_instrument::&lt;C, T&gt;(original_code.as_ref(), schedule)
+		.map_err(|msg| (&lt;Error&lt;T&gt;&gt;::CodeRejected.into(), msg))<span class="question-mark">?</span>;
+	<span class="kw">let </span>original_code_len = original_code.len();
 
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">module</span> <span class="op">=</span> <span class="ident">PrefabWasmModule</span> {
-		<span class="ident">instruction_weights_version</span>: <span class="ident">schedule</span>.<span class="ident">instruction_weights</span>.<span class="ident">version</span>,
-		<span class="ident">initial</span>,
-		<span class="ident">maximum</span>,
-		<span class="ident">code</span>: <span class="ident">code</span>.<span class="ident">try_into</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> (<span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::CodeTooLarge</span>.<span class="ident">into</span>(), <span class="string">&quot;&quot;</span>))<span class="question-mark">?</span>,
-		<span class="ident">code_hash</span>: <span class="ident">T::Hashing::hash</span>(<span class="kw-2">&amp;</span><span class="ident">original_code</span>),
-		<span class="ident">original_code</span>: <span class="prelude-val">Some</span>(<span class="ident">original_code</span>),
-		<span class="ident">owner_info</span>: <span class="prelude-val">None</span>,
+	<span class="kw">let </span><span class="kw-2">mut </span>module = PrefabWasmModule {
+		instruction_weights_version: schedule.instruction_weights.version,
+		initial,
+		maximum,
+		code: code.try_into().map_err(|<span class="kw">_</span>| (&lt;Error&lt;T&gt;&gt;::CodeTooLarge.into(), <span class="string">&quot;&quot;</span>))<span class="question-mark">?</span>,
+		code_hash: T::Hashing::hash(<span class="kw-2">&amp;</span>original_code),
+		original_code: <span class="prelude-val">Some</span>(original_code),
+		owner_info: <span class="prelude-val">None</span>,
 	};
 
-	<span class="comment">// We need to add the sizes of the `#[codec(skip)]` fields which are stored in different</span>
-	<span class="comment">// storage items. This is also why we have `3` items added and not only one.</span>
-	<span class="kw">let</span> <span class="ident">bytes_added</span> <span class="op">=</span> <span class="ident">module</span>
-		.<span class="ident">encoded_size</span>()
-		.<span class="ident">saturating_add</span>(<span class="ident">original_code_len</span>)
-		.<span class="ident">saturating_add</span>(<span class="op">&lt;</span><span class="ident">OwnerInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::max_encoded_len</span>()) <span class="kw">as</span> <span class="ident">u32</span>;
-	<span class="kw">let</span> <span class="ident">deposit</span> <span class="op">=</span> <span class="ident">Diff</span> { <span class="ident">bytes_added</span>, <span class="ident">items_added</span>: <span class="number">3</span>, ..<span class="ident">Default::default</span>() }
-		.<span class="ident">update_contract</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="prelude-val">None</span>)
-		.<span class="ident">charge_or_zero</span>();
+	<span class="comment">// We need to add the sizes of the `#[codec(skip)]` fields which are stored in different
+	// storage items. This is also why we have `3` items added and not only one.
+	</span><span class="kw">let </span>bytes_added = module
+		.encoded_size()
+		.saturating_add(original_code_len)
+		.saturating_add(&lt;OwnerInfo&lt;T&gt;&gt;::max_encoded_len()) <span class="kw">as </span>u32;
+	<span class="kw">let </span>deposit = Diff { bytes_added, items_added: <span class="number">3</span>, ..Default::default() }
+		.update_contract::&lt;T&gt;(<span class="prelude-val">None</span>)
+		.charge_or_zero();
 
-	<span class="ident">module</span>.<span class="ident">owner_info</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">OwnerInfo</span> { <span class="ident">owner</span>, <span class="ident">deposit</span>, <span class="ident">refcount</span>: <span class="number">0</span> });
+	module.owner_info = <span class="prelude-val">Some</span>(OwnerInfo { owner, deposit, refcount: <span class="number">0 </span>});
 
-	<span class="prelude-val">Ok</span>(<span class="ident">module</span>)
+	<span class="prelude-val">Ok</span>(module)
 }
 
-<span class="doccomment">/// Loads the given module given in `original_code`, performs some checks on it and</span>
-<span class="doccomment">/// does some preprocessing.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The checks are:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - provided code is a valid wasm module.</span>
-<span class="doccomment">/// - the module doesn&#39;t define an internal memory instance,</span>
-<span class="doccomment">/// - imported memory (if any) doesn&#39;t reserve more memory than permitted by the `schedule`,</span>
-<span class="doccomment">/// - all imported functions from the external environment matches defined by `env` module,</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The preprocessing includes injecting code for gas metering and metering the height of stack.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prepare_contract</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(
-	<span class="ident">original_code</span>: <span class="ident">CodeVec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="ident">schedule</span>: <span class="kw-2">&amp;</span><span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="ident">owner</span>: <span class="ident">AccountIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PrefabWasmModule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, (<span class="ident">DispatchError</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>)<span class="op">&gt;</span> {
-	<span class="ident">do_preparation</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">super</span>::runtime::Env</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">original_code</span>, <span class="ident">schedule</span>, <span class="ident">owner</span>)
+<span class="doccomment">/// Loads the given module given in `original_code`, performs some checks on it and
+/// does some preprocessing.
+///
+/// The checks are:
+///
+/// - provided code is a valid wasm module.
+/// - the module doesn&#39;t define an internal memory instance,
+/// - imported memory (if any) doesn&#39;t reserve more memory than permitted by the `schedule`,
+/// - all imported functions from the external environment matches defined by `env` module,
+///
+/// The preprocessing includes injecting code for gas metering and metering the height of stack.
+</span><span class="kw">pub fn </span>prepare_contract&lt;T: Config&gt;(
+	original_code: CodeVec&lt;T&gt;,
+	schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
+	owner: AccountIdOf&lt;T&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;PrefabWasmModule&lt;T&gt;, (DispatchError, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str)&gt; {
+	do_preparation::&lt;<span class="kw">super</span>::runtime::Env, T&gt;(original_code, schedule, owner)
 }
 
-<span class="doccomment">/// The same as [`prepare_contract`] but without constructing a new [`PrefabWasmModule`]</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Note</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Use this when an existing contract should be re-instrumented with a newer schedule version.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reinstrument_contract</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(
-	<span class="ident">original_code</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-	<span class="ident">schedule</span>: <span class="kw-2">&amp;</span><span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-	<span class="prelude-val">Ok</span>(<span class="ident">check_and_instrument</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">super</span>::runtime::Env</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">original_code</span>, <span class="ident">schedule</span>)<span class="question-mark">?</span>.<span class="number">0</span>)
+<span class="doccomment">/// The same as [`prepare_contract`] but without constructing a new [`PrefabWasmModule`]
+///
+/// # Note
+///
+/// Use this when an existing contract should be re-instrumented with a newer schedule version.
+</span><span class="kw">pub fn </span>reinstrument_contract&lt;T: Config&gt;(
+	original_code: <span class="kw-2">&amp;</span>[u8],
+	schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+	<span class="prelude-val">Ok</span>(check_and_instrument::&lt;<span class="kw">super</span>::runtime::Env, T&gt;(original_code, schedule)<span class="question-mark">?</span>.<span class="number">0</span>)
 }
 
-<span class="doccomment">/// Alternate (possibly unsafe) preparation functions used only for benchmarking.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// For benchmarking we need to construct special contracts that might not pass our</span>
-<span class="doccomment">/// sanity checks or need to skip instrumentation for correct results. We hide functions</span>
-<span class="doccomment">/// allowing this behind a feature that is only set during benchmarking to prevent usage</span>
-<span class="doccomment">/// in production code.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime-benchmarks&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">benchmarking</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">elements::FunctionType</span>, <span class="kw-2">*</span>};
+<span class="doccomment">/// Alternate (possibly unsafe) preparation functions used only for benchmarking.
+///
+/// For benchmarking we need to construct special contracts that might not pass our
+/// sanity checks or need to skip instrumentation for correct results. We hide functions
+/// allowing this behind a feature that is only set during benchmarking to prevent usage
+/// in production code.
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+</span><span class="kw">pub mod </span>benchmarking {
+	<span class="kw">use super</span>::{elements::FunctionType, <span class="kw-2">*</span>};
 
-	<span class="kw">impl</span> <span class="ident">ImportSatisfyCheck</span> <span class="kw">for</span> () {
-		<span class="kw">fn</span> <span class="ident">can_satisfy</span>(<span class="ident">_module</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">_name</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">_func_type</span>: <span class="kw-2">&amp;</span><span class="ident">FunctionType</span>) -&gt; <span class="ident">bool</span> {
-			<span class="bool-val">true</span>
-		}
+	<span class="kw">impl </span>ImportSatisfyCheck <span class="kw">for </span>() {
+		<span class="kw">fn </span>can_satisfy(_module: <span class="kw-2">&amp;</span>[u8], _name: <span class="kw-2">&amp;</span>[u8], _func_type: <span class="kw-2">&amp;</span>FunctionType) -&gt; bool {
+			<span class="bool-val">true
+		</span>}
 	}
 
-	<span class="doccomment">/// Prepare function that neither checks nor instruments the passed in code.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prepare_contract</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(
-		<span class="ident">original_code</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">schedule</span>: <span class="kw-2">&amp;</span><span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">owner</span>: <span class="ident">AccountIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PrefabWasmModule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">contract_module</span> <span class="op">=</span> <span class="ident">ContractModule::new</span>(<span class="kw-2">&amp;</span><span class="ident">original_code</span>, <span class="ident">schedule</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">memory_limits</span> <span class="op">=</span> <span class="ident">get_memory_limits</span>(<span class="ident">contract_module</span>.<span class="ident">scan_imports</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span>(<span class="kw-2">&amp;</span>[])<span class="question-mark">?</span>, <span class="ident">schedule</span>)<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(<span class="ident">PrefabWasmModule</span> {
-			<span class="ident">instruction_weights_version</span>: <span class="ident">schedule</span>.<span class="ident">instruction_weights</span>.<span class="ident">version</span>,
-			<span class="ident">initial</span>: <span class="ident">memory_limits</span>.<span class="number">0</span>,
-			<span class="ident">maximum</span>: <span class="ident">memory_limits</span>.<span class="number">1</span>,
-			<span class="ident">code_hash</span>: <span class="ident">T::Hashing::hash</span>(<span class="kw-2">&amp;</span><span class="ident">original_code</span>),
-			<span class="ident">original_code</span>: <span class="prelude-val">Some</span>(<span class="ident">original_code</span>.<span class="ident">try_into</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">&quot;Original code too large&quot;</span>)<span class="question-mark">?</span>),
-			<span class="ident">code</span>: <span class="ident">contract_module</span>
-				.<span class="ident">into_wasm_code</span>()<span class="question-mark">?</span>
-				.<span class="ident">try_into</span>()
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">&quot;Instrumented code too large&quot;</span>)<span class="question-mark">?</span>,
-			<span class="ident">owner_info</span>: <span class="prelude-val">Some</span>(<span class="ident">OwnerInfo</span> {
-				<span class="ident">owner</span>,
-				<span class="comment">// this is a helper function for benchmarking which skips deposit collection</span>
-				<span class="ident">deposit</span>: <span class="ident">Default::default</span>(),
-				<span class="ident">refcount</span>: <span class="number">0</span>,
+	<span class="doccomment">/// Prepare function that neither checks nor instruments the passed in code.
+	</span><span class="kw">pub fn </span>prepare_contract&lt;T: Config&gt;(
+		original_code: Vec&lt;u8&gt;,
+		schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
+		owner: AccountIdOf&lt;T&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;PrefabWasmModule&lt;T&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span>contract_module = ContractModule::new(<span class="kw-2">&amp;</span>original_code, schedule)<span class="question-mark">?</span>;
+		<span class="kw">let </span>memory_limits = get_memory_limits(contract_module.scan_imports::&lt;()&gt;(<span class="kw-2">&amp;</span>[])<span class="question-mark">?</span>, schedule)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(PrefabWasmModule {
+			instruction_weights_version: schedule.instruction_weights.version,
+			initial: memory_limits.<span class="number">0</span>,
+			maximum: memory_limits.<span class="number">1</span>,
+			code_hash: T::Hashing::hash(<span class="kw-2">&amp;</span>original_code),
+			original_code: <span class="prelude-val">Some</span>(original_code.try_into().map_err(|<span class="kw">_</span>| <span class="string">&quot;Original code too large&quot;</span>)<span class="question-mark">?</span>),
+			code: contract_module
+				.into_wasm_code()<span class="question-mark">?
+				</span>.try_into()
+				.map_err(|<span class="kw">_</span>| <span class="string">&quot;Instrumented code too large&quot;</span>)<span class="question-mark">?</span>,
+			owner_info: <span class="prelude-val">Some</span>(OwnerInfo {
+				owner,
+				<span class="comment">// this is a helper function for benchmarking which skips deposit collection
+				</span>deposit: Default::default(),
+				refcount: <span class="number">0</span>,
 			}),
 		})
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="kw">crate</span>::{
-		<span class="ident">exec::Ext</span>,
-		<span class="ident">schedule::Limits</span>,
-		<span class="ident">tests</span>::{<span class="ident">Test</span>, <span class="ident">ALICE</span>},
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use crate</span>::{
+		exec::Ext,
+		schedule::Limits,
+		tests::{Test, ALICE},
 	};
-	<span class="kw">use</span> <span class="ident">pallet_contracts_proc_macro::define_env</span>;
-	<span class="kw">use</span> <span class="ident">std::fmt</span>;
+	<span class="kw">use </span>pallet_contracts_proc_macro::define_env;
+	<span class="kw">use </span>std::fmt;
 
-	<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">PrefabWasmModule</span><span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
-			<span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;PreparedContract {{ .. }}&quot;</span>)
+	<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>PrefabWasmModule&lt;Test&gt; {
+		<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+			<span class="macro">write!</span>(f, <span class="string">&quot;PreparedContract {{ .. }}&quot;</span>)
 		}
 	}
 
-	<span class="doccomment">/// Using unreachable statements triggers unreachable warnings in the generated code</span>
-	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unreachable_code</span>)]</span>
-	<span class="kw">mod</span> <span class="ident">env</span> {
-		<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+	<span class="doccomment">/// Using unreachable statements triggers unreachable warnings in the generated code
+	</span><span class="attribute">#[allow(unreachable_code)]
+	</span><span class="kw">mod </span>env {
+		<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-		<span class="comment">// Define test environment for tests. We need ImportSatisfyCheck</span>
-		<span class="comment">// implementation from it. So actual implementations doesn&#39;t matter.</span>
-		<span class="attribute">#[<span class="ident">define_env</span>]</span>
-		<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">test_env</span> {
-			<span class="kw">fn</span> <span class="ident">panic</span>(<span class="ident">_ctx</span>: <span class="ident"><span class="kw">crate</span>::wasm::Runtime</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TrapReason</span><span class="op">&gt;</span> {
+		<span class="comment">// Define test environment for tests. We need ImportSatisfyCheck
+		// implementation from it. So actual implementations doesn&#39;t matter.
+		</span><span class="attribute">#[define_env]
+		</span><span class="kw">pub mod </span>test_env {
+			<span class="kw">fn </span>panic(_ctx: <span class="kw">crate</span>::wasm::Runtime&lt;E&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), TrapReason&gt; {
 				<span class="prelude-val">Ok</span>(())
 			}
 
-			<span class="comment">// gas is an implementation defined function and a contract can&#39;t import it.</span>
-			<span class="kw">fn</span> <span class="ident">gas</span>(<span class="ident">_ctx</span>: <span class="ident"><span class="kw">crate</span>::wasm::Runtime</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>, <span class="ident">_amount</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TrapReason</span><span class="op">&gt;</span> {
+			<span class="comment">// gas is an implementation defined function and a contract can&#39;t import it.
+			</span><span class="kw">fn </span>gas(_ctx: <span class="kw">crate</span>::wasm::Runtime&lt;E&gt;, _amount: u32) -&gt; <span class="prelude-ty">Result</span>&lt;(), TrapReason&gt; {
 				<span class="prelude-val">Ok</span>(())
 			}
 
-			<span class="kw">fn</span> <span class="ident">nop</span>(<span class="ident">_ctx</span>: <span class="ident"><span class="kw">crate</span>::wasm::Runtime</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>, <span class="ident">_unused</span>: <span class="ident">u64</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TrapReason</span><span class="op">&gt;</span> {
+			<span class="kw">fn </span>nop(_ctx: <span class="kw">crate</span>::wasm::Runtime&lt;E&gt;, _unused: u64) -&gt; <span class="prelude-ty">Result</span>&lt;(), TrapReason&gt; {
 				<span class="prelude-val">Ok</span>(())
 			}
 
-			<span class="comment">// new version of nop with other data type for argumebt</span>
-			<span class="attribute">#[<span class="ident">version</span>(<span class="number">1</span>)]</span>
-			<span class="kw">fn</span> <span class="ident">nop</span>(<span class="ident">_ctx</span>: <span class="ident"><span class="kw">crate</span>::wasm::Runtime</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>, <span class="ident">_unused</span>: <span class="ident">i32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TrapReason</span><span class="op">&gt;</span> {
+			<span class="comment">// new version of nop with other data type for argumebt
+			</span><span class="attribute">#[version(<span class="number">1</span>)]
+			</span><span class="kw">fn </span>nop(_ctx: <span class="kw">crate</span>::wasm::Runtime&lt;E&gt;, _unused: i32) -&gt; <span class="prelude-ty">Result</span>&lt;(), TrapReason&gt; {
 				<span class="prelude-val">Ok</span>(())
 			}
 		}
 	}
 
-	<span class="macro">macro_rules!</span> <span class="ident">prepare_test</span> {
-		(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">wat</span>:<span class="ident">expr</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">expected</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) =&gt; {
-			<span class="attribute">#[<span class="ident">test</span>]</span>
-			<span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>() {
-				<span class="kw">let</span> <span class="ident">wasm</span> <span class="op">=</span> <span class="ident">wat::parse_str</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">wat</span>).<span class="ident">unwrap</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>();
-				<span class="kw">let</span> <span class="ident">schedule</span> <span class="op">=</span> <span class="ident">Schedule</span> {
-					<span class="ident">limits</span>: <span class="ident">Limits</span> {
-						<span class="ident">globals</span>: <span class="number">3</span>,
-						<span class="ident">parameters</span>: <span class="number">3</span>,
-						<span class="ident">memory_pages</span>: <span class="number">16</span>,
-						<span class="ident">table_size</span>: <span class="number">3</span>,
-						<span class="ident">br_table_size</span>: <span class="number">3</span>,
-						.. <span class="ident">Default::default</span>()
+	<span class="macro">macro_rules! </span>prepare_test {
+		(<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$wat</span>:expr, $(<span class="macro-nonterminal">$expected</span>:tt)<span class="kw-2">*</span>) =&gt; {
+			<span class="attribute">#[test]
+			</span><span class="kw">fn </span><span class="macro-nonterminal">$name</span>() {
+				<span class="kw">let </span>wasm = wat::parse_str(<span class="macro-nonterminal">$wat</span>).unwrap().try_into().unwrap();
+				<span class="kw">let </span>schedule = Schedule {
+					limits: Limits {
+						globals: <span class="number">3</span>,
+						parameters: <span class="number">3</span>,
+						memory_pages: <span class="number">16</span>,
+						table_size: <span class="number">3</span>,
+						br_table_size: <span class="number">3</span>,
+						.. Default::default()
 					},
-					.. <span class="ident">Default::default</span>()
+					.. Default::default()
 				};
-				<span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">do_preparation</span>::<span class="op">&lt;</span><span class="ident">env::Env</span>, <span class="ident">Test</span><span class="op">&gt;</span>(<span class="ident">wasm</span>, <span class="kw-2">&amp;</span><span class="ident">schedule</span>, <span class="ident">ALICE</span>);
-				<span class="macro">assert_matches::assert_matches!</span>(<span class="ident">r</span>.<span class="ident">map_err</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">msg</span>)<span class="op">|</span> <span class="ident">msg</span>), $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">expected</span>)<span class="kw-2">*</span>);
+				<span class="kw">let </span>r = do_preparation::&lt;env::Env, Test&gt;(wasm, <span class="kw-2">&amp;</span>schedule, ALICE);
+				<span class="macro">assert_matches::assert_matches!</span>(r.map_err(|(<span class="kw">_</span>, msg)| msg), $(<span class="macro-nonterminal">$expected</span>)<span class="kw-2">*</span>);
 			}
 		};
 	}
 
 	<span class="macro">prepare_test!</span>(
-		<span class="ident">no_floats</span>,
+		no_floats,
 		<span class="string">r#&quot;
 		(module
 			(func (export &quot;call&quot;)
@@ -1708,11 +1702,11 @@
 		<span class="prelude-val">Err</span>(<span class="string">&quot;gas instrumentation failed&quot;</span>)
 	);
 
-	<span class="kw">mod</span> <span class="ident">functions</span> {
-		<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+	<span class="kw">mod </span>functions {
+		<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">param_number_valid</span>,
+			param_number_valid,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;call&quot;))
@@ -1724,7 +1718,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">param_number_invalid</span>,
+			param_number_invalid,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;call&quot;))
@@ -1737,11 +1731,11 @@
 		);
 	}
 
-	<span class="kw">mod</span> <span class="ident">globals</span> {
-		<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+	<span class="kw">mod </span>globals {
+		<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">global_number_valid</span>,
+			global_number_valid,
 			<span class="string">r#&quot;
 			(module
 				(global i64 (i64.const 0))
@@ -1755,7 +1749,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">global_number_too_high</span>,
+			global_number_too_high,
 			<span class="string">r#&quot;
 			(module
 				(global i64 (i64.const 0))
@@ -1770,11 +1764,11 @@
 		);
 	}
 
-	<span class="kw">mod</span> <span class="ident">memories</span> {
-		<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+	<span class="kw">mod </span>memories {
+		<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">memory_with_one_page</span>,
+			memory_with_one_page,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;env&quot; &quot;memory&quot; (memory 1 1))
@@ -1787,7 +1781,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">internal_memory_declaration</span>,
+			internal_memory_declaration,
 			<span class="string">r#&quot;
 			(module
 				(memory 1 1)
@@ -1800,7 +1794,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">no_memory_import</span>,
+			no_memory_import,
 			<span class="string">r#&quot;
 			(module
 				;; no memory imported
@@ -1812,7 +1806,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">initial_exceeds_maximum</span>,
+			initial_exceeds_maximum,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;env&quot; &quot;memory&quot; (memory 16 1))
@@ -1825,7 +1819,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">no_maximum</span>,
+			no_maximum,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;env&quot; &quot;memory&quot; (memory 1))
@@ -1838,7 +1832,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">requested_maximum_valid</span>,
+			requested_maximum_valid,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;env&quot; &quot;memory&quot; (memory 1 16))
@@ -1851,7 +1845,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">requested_maximum_exceeds_configured_maximum</span>,
+			requested_maximum_exceeds_configured_maximum,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;env&quot; &quot;memory&quot; (memory 1 17))
@@ -1864,7 +1858,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">field_name_not_memory</span>,
+			field_name_not_memory,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;env&quot; &quot;forgetit&quot; (memory 1 1))
@@ -1877,7 +1871,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">multiple_memory_imports</span>,
+			multiple_memory_imports,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;env&quot; &quot;memory&quot; (memory 1 1))
@@ -1891,7 +1885,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">table_import</span>,
+			table_import,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;seal0&quot; &quot;table&quot; (table 1 anyfunc))
@@ -1904,7 +1898,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">global_import</span>,
+			global_import,
 			<span class="string">r#&quot;
 			(module
 				(global $g (import &quot;seal0&quot; &quot;global&quot;) i32)
@@ -1916,11 +1910,11 @@
 		);
 	}
 
-	<span class="kw">mod</span> <span class="ident">tables</span> {
-		<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+	<span class="kw">mod </span>tables {
+		<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">no_tables</span>,
+			no_tables,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;call&quot;))
@@ -1931,7 +1925,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">table_valid_size</span>,
+			table_valid_size,
 			<span class="string">r#&quot;
 			(module
 				(table 3 funcref)
@@ -1944,7 +1938,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">table_too_big</span>,
+			table_too_big,
 			<span class="string">r#&quot;
 			(module
 				(table 4 funcref)
@@ -1956,7 +1950,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">br_table_valid_size</span>,
+			br_table_valid_size,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;call&quot;))
@@ -1971,7 +1965,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">br_table_too_big</span>,
+			br_table_too_big,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;call&quot;))
@@ -1985,11 +1979,11 @@
 		);
 	}
 
-	<span class="kw">mod</span> <span class="ident">imports</span> {
-		<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+	<span class="kw">mod </span>imports {
+		<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">can_import_legit_function</span>,
+			can_import_legit_function,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;seal0&quot; &quot;nop&quot; (func (param i64)))
@@ -2001,10 +1995,10 @@
 			<span class="prelude-val">Ok</span>(<span class="kw">_</span>)
 		);
 
-		<span class="comment">// even though gas is defined the contract can&#39;t import it since</span>
-		<span class="comment">// it is an implementation defined.</span>
-		<span class="macro">prepare_test!</span>(
-			<span class="ident">can_not_import_gas_function</span>,
+		<span class="comment">// even though gas is defined the contract can&#39;t import it since
+		// it is an implementation defined.
+		</span><span class="macro">prepare_test!</span>(
+			can_not_import_gas_function,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;seal0&quot; &quot;gas&quot; (func (param i32)))
@@ -2016,9 +2010,9 @@
 			<span class="prelude-val">Err</span>(<span class="string">&quot;module imports a non-existent function&quot;</span>)
 		);
 
-		<span class="comment">// memory is in &quot;env&quot; and not in &quot;seal0&quot;</span>
-		<span class="macro">prepare_test!</span>(
-			<span class="ident">memory_not_in_seal0</span>,
+		<span class="comment">// memory is in &quot;env&quot; and not in &quot;seal0&quot;
+		</span><span class="macro">prepare_test!</span>(
+			memory_not_in_seal0,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;seal0&quot; &quot;memory&quot; (memory 1 1))
@@ -2030,9 +2024,9 @@
 			<span class="prelude-val">Err</span>(<span class="string">&quot;Invalid module for imported memory&quot;</span>)
 		);
 
-		<span class="comment">// memory is in &quot;env&quot; and not in some arbitrary module</span>
-		<span class="macro">prepare_test!</span>(
-			<span class="ident">memory_not_in_arbitrary_module</span>,
+		<span class="comment">// memory is in &quot;env&quot; and not in some arbitrary module
+		</span><span class="macro">prepare_test!</span>(
+			memory_not_in_arbitrary_module,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;any_module&quot; &quot;memory&quot; (memory 1 1))
@@ -2045,7 +2039,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">function_in_other_module_works</span>,
+			function_in_other_module_works,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;seal1&quot; &quot;nop&quot; (func (param i32)))
@@ -2057,9 +2051,9 @@
 			<span class="prelude-val">Ok</span>(<span class="kw">_</span>)
 		);
 
-		<span class="comment">// wrong signature</span>
-		<span class="macro">prepare_test!</span>(
-			<span class="ident">wrong_signature</span>,
+		<span class="comment">// wrong signature
+		</span><span class="macro">prepare_test!</span>(
+			wrong_signature,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;seal0&quot; &quot;gas&quot; (func (param i64)))
@@ -2072,7 +2066,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">unknown_func_name</span>,
+			unknown_func_name,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;seal0&quot; &quot;unknown_func&quot; (func))
@@ -2085,11 +2079,11 @@
 		);
 	}
 
-	<span class="kw">mod</span> <span class="ident">entrypoints</span> {
-		<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+	<span class="kw">mod </span>entrypoints {
+		<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">it_works</span>,
+			it_works,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;call&quot;))
@@ -2100,7 +2094,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">omit_deploy</span>,
+			omit_deploy,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;call&quot;))
@@ -2110,7 +2104,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">omit_call</span>,
+			omit_call,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;deploy&quot;))
@@ -2119,9 +2113,9 @@
 			<span class="prelude-val">Err</span>(<span class="string">&quot;call function isn&#39;t exported&quot;</span>)
 		);
 
-		<span class="comment">// Try to use imported function as an entry point.</span>
-		<span class="macro">prepare_test!</span>(
-			<span class="ident">try_sneak_export_as_entrypoint</span>,
+		<span class="comment">// Try to use imported function as an entry point.
+		</span><span class="macro">prepare_test!</span>(
+			try_sneak_export_as_entrypoint,
 			<span class="string">r#&quot;
 			(module
 				(import &quot;seal0&quot; &quot;panic&quot; (func))
@@ -2134,9 +2128,9 @@
 			<span class="prelude-val">Err</span>(<span class="string">&quot;entry point points to an imported function&quot;</span>)
 		);
 
-		<span class="comment">// Try to use imported function as an entry point.</span>
-		<span class="macro">prepare_test!</span>(
-			<span class="ident">try_sneak_export_as_global</span>,
+		<span class="comment">// Try to use imported function as an entry point.
+		</span><span class="macro">prepare_test!</span>(
+			try_sneak_export_as_global,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;deploy&quot;))
@@ -2147,7 +2141,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">wrong_signature</span>,
+			wrong_signature,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;deploy&quot;))
@@ -2158,7 +2152,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">unknown_exports</span>,
+			unknown_exports,
 			<span class="string">r#&quot;
 			(module
 				(func (export &quot;call&quot;))
@@ -2170,7 +2164,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">global_float</span>,
+			global_float,
 			<span class="string">r#&quot;
 			(module
 				(global $x f32 (f32.const 0))
@@ -2182,7 +2176,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">local_float</span>,
+			local_float,
 			<span class="string">r#&quot;
 			(module
 				(func $foo (local f32))
@@ -2194,7 +2188,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">param_float</span>,
+			param_float,
 			<span class="string">r#&quot;
 			(module
 				(func $foo (param f32))
@@ -2206,7 +2200,7 @@
 		);
 
 		<span class="macro">prepare_test!</span>(
-			<span class="ident">result_float</span>,
+			result_float,
 			<span class="string">r#&quot;
 			(module
 				(func $foo (result f32) (f32.const 0))
@@ -2219,5 +2213,4 @@
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

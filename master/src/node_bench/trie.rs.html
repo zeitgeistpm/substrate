@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `bin/node/bench/src/trie.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>trie.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../node_bench/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../node_bench/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../node_bench/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `bin/node/bench/src/trie.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>trie.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../node_bench/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../node_bench/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -374,376 +368,375 @@
 <span id="368">368</span>
 <span id="369">369</span>
 <span id="370">370</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Trie benchmark (integrated).</span>
+</span><span class="doccomment">//! Trie benchmark (integrated).
 
-<span class="kw">use</span> <span class="ident">hash_db::Prefix</span>;
-<span class="kw">use</span> <span class="ident">kvdb::KeyValueDB</span>;
-<span class="kw">use</span> <span class="ident">lazy_static::lazy_static</span>;
-<span class="kw">use</span> <span class="ident">rand::Rng</span>;
-<span class="kw">use</span> <span class="ident">sp_state_machine::Backend</span> <span class="kw">as</span> <span class="kw">_</span>;
-<span class="kw">use</span> <span class="ident">sp_trie</span>::{<span class="ident">trie_types::TrieDBMutBuilderV1</span>, <span class="ident">TrieMut</span> <span class="kw">as</span> <span class="kw">_</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">sync::Arc</span>};
+</span><span class="kw">use </span>hash_db::Prefix;
+<span class="kw">use </span>kvdb::KeyValueDB;
+<span class="kw">use </span>lazy_static::lazy_static;
+<span class="kw">use </span>rand::Rng;
+<span class="kw">use </span>sp_state_machine::Backend <span class="kw">as _</span>;
+<span class="kw">use </span>sp_trie::{trie_types::TrieDBMutBuilderV1, TrieMut <span class="kw">as _</span>};
+<span class="kw">use </span>std::{borrow::Cow, collections::HashMap, sync::Arc};
 
-<span class="kw">use</span> <span class="ident">node_primitives::Hash</span>;
+<span class="kw">use </span>node_primitives::Hash;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">core</span>::{<span class="self">self</span>, <span class="ident">Mode</span>, <span class="ident">Path</span>},
-	<span class="ident">generator::generate_trie</span>,
-	<span class="ident">simple_trie::SimpleTrie</span>,
-	<span class="ident">tempdb</span>::{<span class="ident">DatabaseType</span>, <span class="ident">TempDatabase</span>},
+<span class="kw">use crate</span>::{
+	core::{<span class="self">self</span>, Mode, Path},
+	generator::generate_trie,
+	simple_trie::SimpleTrie,
+	tempdb::{DatabaseType, TempDatabase},
 };
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">SAMPLE_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">100</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">TEST_WRITE_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">128</span>;
+<span class="kw">pub const </span>SAMPLE_SIZE: usize = <span class="number">100</span>;
+<span class="kw">pub const </span>TEST_WRITE_SIZE: usize = <span class="number">128</span>;
 
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">KeyValue</span> <span class="op">=</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>);
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">KeyValues</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">KeyValue</span><span class="op">&gt;</span>;
+<span class="kw">pub type </span>KeyValue = (Vec&lt;u8&gt;, Vec&lt;u8&gt;);
+<span class="kw">pub type </span>KeyValues = Vec&lt;KeyValue&gt;;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">derive_more::Display</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DatabaseSize</span> {
-	<span class="attribute">#[<span class="ident">display</span>(<span class="ident">fmt</span> <span class="op">=</span> <span class="string">&quot;empty&quot;</span>)]</span>
-	<span class="ident">Empty</span>,
-	<span class="attribute">#[<span class="ident">display</span>(<span class="ident">fmt</span> <span class="op">=</span> <span class="string">&quot;smallest&quot;</span>)]</span>
-	<span class="ident">Smallest</span>,
-	<span class="attribute">#[<span class="ident">display</span>(<span class="ident">fmt</span> <span class="op">=</span> <span class="string">&quot;small&quot;</span>)]</span>
-	<span class="ident">Small</span>,
-	<span class="attribute">#[<span class="ident">display</span>(<span class="ident">fmt</span> <span class="op">=</span> <span class="string">&quot;medium&quot;</span>)]</span>
-	<span class="ident">Medium</span>,
-	<span class="attribute">#[<span class="ident">display</span>(<span class="ident">fmt</span> <span class="op">=</span> <span class="string">&quot;large&quot;</span>)]</span>
-	<span class="ident">Large</span>,
-	<span class="attribute">#[<span class="ident">display</span>(<span class="ident">fmt</span> <span class="op">=</span> <span class="string">&quot;huge&quot;</span>)]</span>
-	<span class="ident">Huge</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug, derive_more::Display)]
+</span><span class="kw">pub enum </span>DatabaseSize {
+	<span class="attribute">#[display(fmt = <span class="string">&quot;empty&quot;</span>)]
+	</span>Empty,
+	<span class="attribute">#[display(fmt = <span class="string">&quot;smallest&quot;</span>)]
+	</span>Smallest,
+	<span class="attribute">#[display(fmt = <span class="string">&quot;small&quot;</span>)]
+	</span>Small,
+	<span class="attribute">#[display(fmt = <span class="string">&quot;medium&quot;</span>)]
+	</span>Medium,
+	<span class="attribute">#[display(fmt = <span class="string">&quot;large&quot;</span>)]
+	</span>Large,
+	<span class="attribute">#[display(fmt = <span class="string">&quot;huge&quot;</span>)]
+	</span>Huge,
 }
 
-<span class="macro">lazy_static!</span> {
-	<span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">KUSAMA_STATE_DISTRIBUTION</span>: <span class="ident">SizePool</span> <span class="op">=</span>
-		<span class="ident">SizePool::from_histogram</span>(<span class="ident"><span class="kw">crate</span>::state_sizes::KUSAMA_STATE_DISTRIBUTION</span>);
+<span class="macro">lazy_static! </span>{
+	<span class="kw">static </span><span class="kw-2">ref </span>KUSAMA_STATE_DISTRIBUTION: SizePool =
+		SizePool::from_histogram(<span class="kw">crate</span>::state_sizes::KUSAMA_STATE_DISTRIBUTION);
 }
 
-<span class="kw">impl</span> <span class="ident">DatabaseSize</span> {
-	<span class="doccomment">/// Should be multiple of SAMPLE_SIZE!</span>
-	<span class="kw">fn</span> <span class="ident">keys</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-		<span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::Empty</span> =&gt; <span class="number">200</span>, <span class="comment">// still need some keys to query</span>
-			<span class="ident"><span class="self">Self</span>::Smallest</span> =&gt; <span class="number">1_000</span>,
-			<span class="ident"><span class="self">Self</span>::Small</span> =&gt; <span class="number">10_000</span>,
-			<span class="ident"><span class="self">Self</span>::Medium</span> =&gt; <span class="number">100_000</span>,
-			<span class="ident"><span class="self">Self</span>::Large</span> =&gt; <span class="number">200_000</span>,
-			<span class="ident"><span class="self">Self</span>::Huge</span> =&gt; <span class="number">1_000_000</span>,
+<span class="kw">impl </span>DatabaseSize {
+	<span class="doccomment">/// Should be multiple of SAMPLE_SIZE!
+	</span><span class="kw">fn </span>keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+		<span class="kw">let </span>val = <span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+			<span class="self">Self</span>::Empty =&gt; <span class="number">200</span>, <span class="comment">// still need some keys to query
+			</span><span class="self">Self</span>::Smallest =&gt; <span class="number">1_000</span>,
+			<span class="self">Self</span>::Small =&gt; <span class="number">10_000</span>,
+			<span class="self">Self</span>::Medium =&gt; <span class="number">100_000</span>,
+			<span class="self">Self</span>::Large =&gt; <span class="number">200_000</span>,
+			<span class="self">Self</span>::Huge =&gt; <span class="number">1_000_000</span>,
 		};
 
-		<span class="macro">assert_eq!</span>(<span class="ident">val</span> <span class="op">%</span> <span class="ident">SAMPLE_SIZE</span>, <span class="number">0</span>);
+		<span class="macro">assert_eq!</span>(val % SAMPLE_SIZE, <span class="number">0</span>);
 
-		<span class="ident">val</span>
+		val
 	}
 }
 
-<span class="kw">fn</span> <span class="ident">pretty_print</span>(<span class="ident">v</span>: <span class="ident">usize</span>) -&gt; <span class="ident">String</span> {
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">print</span> <span class="op">=</span> <span class="ident">String::new</span>();
-	<span class="kw">for</span> (<span class="ident">idx</span>, <span class="ident">val</span>) <span class="kw">in</span> <span class="ident">v</span>.<span class="ident">to_string</span>().<span class="ident">chars</span>().<span class="ident">rev</span>().<span class="ident">enumerate</span>() {
-		<span class="kw">if</span> <span class="ident">idx</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">idx</span> <span class="op">%</span> <span class="number">3</span> <span class="op">==</span> <span class="number">0</span> {
-			<span class="ident">print</span>.<span class="ident">insert</span>(<span class="number">0</span>, <span class="string">&#39;,&#39;</span>);
+<span class="kw">fn </span>pretty_print(v: usize) -&gt; String {
+	<span class="kw">let </span><span class="kw-2">mut </span>print = String::new();
+	<span class="kw">for </span>(idx, val) <span class="kw">in </span>v.to_string().chars().rev().enumerate() {
+		<span class="kw">if </span>idx != <span class="number">0 </span>&amp;&amp; idx % <span class="number">3 </span>== <span class="number">0 </span>{
+			print.insert(<span class="number">0</span>, <span class="string">&#39;,&#39;</span>);
 		}
-		<span class="ident">print</span>.<span class="ident">insert</span>(<span class="number">0</span>, <span class="ident">val</span>);
+		print.insert(<span class="number">0</span>, val);
 	}
-	<span class="ident">print</span>
+	print
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TrieReadBenchmarkDescription</span> {
-	<span class="kw">pub</span> <span class="ident">database_size</span>: <span class="ident">DatabaseSize</span>,
-	<span class="kw">pub</span> <span class="ident">database_type</span>: <span class="ident">DatabaseType</span>,
+<span class="kw">pub struct </span>TrieReadBenchmarkDescription {
+	<span class="kw">pub </span>database_size: DatabaseSize,
+	<span class="kw">pub </span>database_type: DatabaseType,
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TrieReadBenchmark</span> {
-	<span class="ident">database</span>: <span class="ident">TempDatabase</span>,
-	<span class="ident">root</span>: <span class="ident">Hash</span>,
-	<span class="ident">warmup_keys</span>: <span class="ident">KeyValues</span>,
-	<span class="ident">query_keys</span>: <span class="ident">KeyValues</span>,
-	<span class="ident">database_type</span>: <span class="ident">DatabaseType</span>,
+<span class="kw">pub struct </span>TrieReadBenchmark {
+	database: TempDatabase,
+	root: Hash,
+	warmup_keys: KeyValues,
+	query_keys: KeyValues,
+	database_type: DatabaseType,
 }
 
-<span class="kw">impl</span> <span class="ident">core::BenchmarkDescription</span> <span class="kw">for</span> <span class="ident">TrieReadBenchmarkDescription</span> {
-	<span class="kw">fn</span> <span class="ident">path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Path</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;trie&quot;</span>, <span class="string">&quot;read&quot;</span>]);
-		<span class="ident">path</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">database_size</span>));
-		<span class="ident">path</span>
+<span class="kw">impl </span>core::BenchmarkDescription <span class="kw">for </span>TrieReadBenchmarkDescription {
+	<span class="kw">fn </span>path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Path {
+		<span class="kw">let </span><span class="kw-2">mut </span>path = Path::new(<span class="kw-2">&amp;</span>[<span class="string">&quot;trie&quot;</span>, <span class="string">&quot;read&quot;</span>]);
+		path.push(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.database_size));
+		path
 	}
 
-	<span class="kw">fn</span> <span class="ident">setup</span>(<span class="self">self</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">core::Benchmark</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">database</span> <span class="op">=</span> <span class="ident">TempDatabase::new</span>();
+	<span class="kw">fn </span>setup(<span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;) -&gt; Box&lt;<span class="kw">dyn </span>core::Benchmark&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>database = TempDatabase::new();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::thread_rng</span>();
-		<span class="kw">let</span> <span class="ident">warmup_prefix</span> <span class="op">=</span> <span class="ident">KUSAMA_STATE_DISTRIBUTION</span>.<span class="ident">key</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>);
+		<span class="kw">let </span><span class="kw-2">mut </span>rng = rand::thread_rng();
+		<span class="kw">let </span>warmup_prefix = KUSAMA_STATE_DISTRIBUTION.key(<span class="kw-2">&amp;mut </span>rng);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">key_values</span> <span class="op">=</span> <span class="ident">KeyValues::new</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">warmup_keys</span> <span class="op">=</span> <span class="ident">KeyValues::new</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">query_keys</span> <span class="op">=</span> <span class="ident">KeyValues::new</span>();
-		<span class="kw">let</span> <span class="ident">every_x_key</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database_size</span>.<span class="ident">keys</span>() <span class="op">/</span> <span class="ident">SAMPLE_SIZE</span>;
-		<span class="kw">for</span> <span class="ident">idx</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">database_size</span>.<span class="ident">keys</span>() {
-			<span class="kw">let</span> <span class="ident">kv</span> <span class="op">=</span> (
-				<span class="ident">KUSAMA_STATE_DISTRIBUTION</span>.<span class="ident">key</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>).<span class="ident">to_vec</span>(),
-				<span class="ident">KUSAMA_STATE_DISTRIBUTION</span>.<span class="ident">value</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>),
+		<span class="kw">let </span><span class="kw-2">mut </span>key_values = KeyValues::new();
+		<span class="kw">let </span><span class="kw-2">mut </span>warmup_keys = KeyValues::new();
+		<span class="kw">let </span><span class="kw-2">mut </span>query_keys = KeyValues::new();
+		<span class="kw">let </span>every_x_key = <span class="self">self</span>.database_size.keys() / SAMPLE_SIZE;
+		<span class="kw">for </span>idx <span class="kw">in </span><span class="number">0</span>..<span class="self">self</span>.database_size.keys() {
+			<span class="kw">let </span>kv = (
+				KUSAMA_STATE_DISTRIBUTION.key(<span class="kw-2">&amp;mut </span>rng).to_vec(),
+				KUSAMA_STATE_DISTRIBUTION.value(<span class="kw-2">&amp;mut </span>rng),
 			);
-			<span class="kw">if</span> <span class="ident">idx</span> <span class="op">%</span> <span class="ident">every_x_key</span> <span class="op">==</span> <span class="number">0</span> {
-				<span class="comment">// warmup keys go to separate tree with high prob</span>
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actual_warmup_key</span> <span class="op">=</span> <span class="ident">warmup_prefix</span>.<span class="ident">clone</span>();
-				<span class="ident">actual_warmup_key</span>[<span class="number">16</span>..].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">kv</span>.<span class="number">0</span>[<span class="number">16</span>..]);
-				<span class="ident">warmup_keys</span>.<span class="ident">push</span>((<span class="ident">actual_warmup_key</span>.<span class="ident">clone</span>(), <span class="ident">kv</span>.<span class="number">1</span>.<span class="ident">clone</span>()));
-				<span class="ident">key_values</span>.<span class="ident">push</span>((<span class="ident">actual_warmup_key</span>.<span class="ident">clone</span>(), <span class="ident">kv</span>.<span class="number">1</span>.<span class="ident">clone</span>()));
-			} <span class="kw">else</span> <span class="kw">if</span> <span class="ident">idx</span> <span class="op">%</span> <span class="ident">every_x_key</span> <span class="op">==</span> <span class="number">1</span> {
-				<span class="ident">query_keys</span>.<span class="ident">push</span>(<span class="ident">kv</span>.<span class="ident">clone</span>());
+			<span class="kw">if </span>idx % every_x_key == <span class="number">0 </span>{
+				<span class="comment">// warmup keys go to separate tree with high prob
+				</span><span class="kw">let </span><span class="kw-2">mut </span>actual_warmup_key = warmup_prefix.clone();
+				actual_warmup_key[<span class="number">16</span>..].copy_from_slice(<span class="kw-2">&amp;</span>kv.<span class="number">0</span>[<span class="number">16</span>..]);
+				warmup_keys.push((actual_warmup_key.clone(), kv.<span class="number">1</span>.clone()));
+				key_values.push((actual_warmup_key.clone(), kv.<span class="number">1</span>.clone()));
+			} <span class="kw">else if </span>idx % every_x_key == <span class="number">1 </span>{
+				query_keys.push(kv.clone());
 			}
 
-			<span class="ident">key_values</span>.<span class="ident">push</span>(<span class="ident">kv</span>)
+			key_values.push(kv)
 		}
 
-		<span class="macro">assert_eq!</span>(<span class="ident">warmup_keys</span>.<span class="ident">len</span>(), <span class="ident">SAMPLE_SIZE</span>);
-		<span class="macro">assert_eq!</span>(<span class="ident">query_keys</span>.<span class="ident">len</span>(), <span class="ident">SAMPLE_SIZE</span>);
+		<span class="macro">assert_eq!</span>(warmup_keys.len(), SAMPLE_SIZE);
+		<span class="macro">assert_eq!</span>(query_keys.len(), SAMPLE_SIZE);
 
-		<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">generate_trie</span>(<span class="ident">database</span>.<span class="ident">open</span>(<span class="self">self</span>.<span class="ident">database_type</span>), <span class="ident">key_values</span>);
+		<span class="kw">let </span>root = generate_trie(database.open(<span class="self">self</span>.database_type), key_values);
 
-		<span class="ident">Box::new</span>(<span class="ident">TrieReadBenchmark</span> {
-			<span class="ident">database</span>,
-			<span class="ident">root</span>,
-			<span class="ident">warmup_keys</span>,
-			<span class="ident">query_keys</span>,
-			<span class="ident">database_type</span>: <span class="self">self</span>.<span class="ident">database_type</span>,
+		Box::new(TrieReadBenchmark {
+			database,
+			root,
+			warmup_keys,
+			query_keys,
+			database_type: <span class="self">self</span>.database_type,
 		})
 	}
 
-	<span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Cow&lt;<span class="lifetime">&#39;static</span>, str&gt; {
 		<span class="macro">format!</span>(
 			<span class="string">&quot;Trie read benchmark({:?} database ({} keys), db_type: {:?})&quot;</span>,
-			<span class="self">self</span>.<span class="ident">database_size</span>,
-			<span class="ident">pretty_print</span>(<span class="self">self</span>.<span class="ident">database_size</span>.<span class="ident">keys</span>()),
-			<span class="self">self</span>.<span class="ident">database_type</span>,
+			<span class="self">self</span>.database_size,
+			pretty_print(<span class="self">self</span>.database_size.keys()),
+			<span class="self">self</span>.database_type,
 		)
-		.<span class="ident">into</span>()
+		.into()
 	}
 }
 
-<span class="kw">struct</span> <span class="ident">Storage</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">KeyValueDB</span><span class="op">&gt;</span>);
+<span class="kw">struct </span>Storage(Arc&lt;<span class="kw">dyn </span>KeyValueDB&gt;);
 
-<span class="kw">impl</span> <span class="ident">sp_state_machine::Storage</span><span class="op">&lt;</span><span class="ident">sp_core::Blake2Hasher</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Storage</span> {
-	<span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Hash</span>, <span class="ident">prefix</span>: <span class="ident">Prefix</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">sp_trie::prefixed_key</span>::<span class="op">&lt;</span><span class="ident">sp_core::Blake2Hasher</span><span class="op">&gt;</span>(<span class="ident">key</span>, <span class="ident">prefix</span>);
-		<span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>(<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Database backend error: {:?}&quot;</span>, <span class="ident">e</span>))
+<span class="kw">impl </span>sp_state_machine::Storage&lt;sp_core::Blake2Hasher&gt; <span class="kw">for </span>Storage {
+	<span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>Hash, prefix: Prefix) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;, String&gt; {
+		<span class="kw">let </span>key = sp_trie::prefixed_key::&lt;sp_core::Blake2Hasher&gt;(key, prefix);
+		<span class="self">self</span>.<span class="number">0</span>.get(<span class="number">0</span>, <span class="kw-2">&amp;</span>key).map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Database backend error: {:?}&quot;</span>, e))
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">core::Benchmark</span> <span class="kw">for</span> <span class="ident">TrieReadBenchmark</span> {
-	<span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) -&gt; <span class="ident">std::time::Duration</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">clone</span>();
+<span class="kw">impl </span>core::Benchmark <span class="kw">for </span>TrieReadBenchmark {
+	<span class="kw">fn </span>run(<span class="kw-2">&amp;mut </span><span class="self">self</span>, mode: Mode) -&gt; std::time::Duration {
+		<span class="kw">let </span><span class="kw-2">mut </span>db = <span class="self">self</span>.database.clone();
 
-		<span class="kw">let</span> <span class="ident">storage</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">sp_state_machine::Storage</span><span class="op">&lt;</span><span class="ident">sp_core::Blake2Hasher</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span>
-			<span class="ident">Arc::new</span>(<span class="ident">Storage</span>(<span class="ident">db</span>.<span class="ident">open</span>(<span class="self">self</span>.<span class="ident">database_type</span>)));
+		<span class="kw">let </span>storage: Arc&lt;<span class="kw">dyn </span>sp_state_machine::Storage&lt;sp_core::Blake2Hasher&gt;&gt; =
+			Arc::new(Storage(db.open(<span class="self">self</span>.database_type)));
 
-		<span class="kw">let</span> <span class="ident">trie_backend</span> <span class="op">=</span> <span class="ident">sp_state_machine::TrieBackendBuilder::new</span>(<span class="ident">storage</span>, <span class="self">self</span>.<span class="ident">root</span>).<span class="ident">build</span>();
-		<span class="kw">for</span> (<span class="ident">warmup_key</span>, <span class="ident">warmup_value</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">warmup_keys</span>.<span class="ident">iter</span>() {
-			<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">trie_backend</span>
-				.<span class="ident">storage</span>(<span class="kw-2">&amp;</span><span class="ident">warmup_key</span>[..])
-				.<span class="ident">expect</span>(<span class="string">&quot;Failed to get key: db error&quot;</span>)
-				.<span class="ident">expect</span>(<span class="string">&quot;Warmup key should exist&quot;</span>);
+		<span class="kw">let </span>trie_backend = sp_state_machine::TrieBackendBuilder::new(storage, <span class="self">self</span>.root).build();
+		<span class="kw">for </span>(warmup_key, warmup_value) <span class="kw">in </span><span class="self">self</span>.warmup_keys.iter() {
+			<span class="kw">let </span>value = trie_backend
+				.storage(<span class="kw-2">&amp;</span>warmup_key[..])
+				.expect(<span class="string">&quot;Failed to get key: db error&quot;</span>)
+				.expect(<span class="string">&quot;Warmup key should exist&quot;</span>);
 
-			<span class="comment">// sanity for warmup keys</span>
-			<span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>, <span class="ident">warmup_value</span>);
+			<span class="comment">// sanity for warmup keys
+			</span><span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>value, warmup_value);
 		}
 
-		<span class="kw">if</span> <span class="ident">mode</span> <span class="op">==</span> <span class="ident">Mode::Profile</span> {
-			<span class="ident">std::thread::park_timeout</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="number">3</span>));
+		<span class="kw">if </span>mode == Mode::Profile {
+			std::thread::park_timeout(std::time::Duration::from_secs(<span class="number">3</span>));
 		}
 
-		<span class="kw">let</span> <span class="ident">started</span> <span class="op">=</span> <span class="ident">std::time::Instant::now</span>();
-		<span class="kw">for</span> (<span class="ident">key</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">query_keys</span>.<span class="ident">iter</span>() {
-			<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">trie_backend</span>.<span class="ident">storage</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..]);
+		<span class="kw">let </span>started = std::time::Instant::now();
+		<span class="kw">for </span>(key, <span class="kw">_</span>) <span class="kw">in </span><span class="self">self</span>.query_keys.iter() {
+			<span class="kw">let _ </span>= trie_backend.storage(<span class="kw-2">&amp;</span>key[..]);
 		}
-		<span class="kw">let</span> <span class="ident">elapsed</span> <span class="op">=</span> <span class="ident">started</span>.<span class="ident">elapsed</span>();
+		<span class="kw">let </span>elapsed = started.elapsed();
 
-		<span class="kw">if</span> <span class="ident">mode</span> <span class="op">==</span> <span class="ident">Mode::Profile</span> {
-			<span class="ident">std::thread::park_timeout</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="number">1</span>));
+		<span class="kw">if </span>mode == Mode::Profile {
+			std::thread::park_timeout(std::time::Duration::from_secs(<span class="number">1</span>));
 		}
 
-		<span class="ident">elapsed</span> <span class="op">/</span> (<span class="ident">SAMPLE_SIZE</span> <span class="kw">as</span> <span class="ident">u32</span>)
+		elapsed / (SAMPLE_SIZE <span class="kw">as </span>u32)
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TrieWriteBenchmarkDescription</span> {
-	<span class="kw">pub</span> <span class="ident">database_size</span>: <span class="ident">DatabaseSize</span>,
-	<span class="kw">pub</span> <span class="ident">database_type</span>: <span class="ident">DatabaseType</span>,
+<span class="kw">pub struct </span>TrieWriteBenchmarkDescription {
+	<span class="kw">pub </span>database_size: DatabaseSize,
+	<span class="kw">pub </span>database_type: DatabaseType,
 }
 
-<span class="kw">impl</span> <span class="ident">core::BenchmarkDescription</span> <span class="kw">for</span> <span class="ident">TrieWriteBenchmarkDescription</span> {
-	<span class="kw">fn</span> <span class="ident">path</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Path</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path::new</span>(<span class="kw-2">&amp;</span>[<span class="string">&quot;trie&quot;</span>, <span class="string">&quot;write&quot;</span>]);
-		<span class="ident">path</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.<span class="ident">database_size</span>));
-		<span class="ident">path</span>
+<span class="kw">impl </span>core::BenchmarkDescription <span class="kw">for </span>TrieWriteBenchmarkDescription {
+	<span class="kw">fn </span>path(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Path {
+		<span class="kw">let </span><span class="kw-2">mut </span>path = Path::new(<span class="kw-2">&amp;</span>[<span class="string">&quot;trie&quot;</span>, <span class="string">&quot;write&quot;</span>]);
+		path.push(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="self">self</span>.database_size));
+		path
 	}
 
-	<span class="kw">fn</span> <span class="ident">setup</span>(<span class="self">self</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">core::Benchmark</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">database</span> <span class="op">=</span> <span class="ident">TempDatabase::new</span>();
+	<span class="kw">fn </span>setup(<span class="self">self</span>: Box&lt;<span class="self">Self</span>&gt;) -&gt; Box&lt;<span class="kw">dyn </span>core::Benchmark&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>database = TempDatabase::new();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::thread_rng</span>();
-		<span class="kw">let</span> <span class="ident">warmup_prefix</span> <span class="op">=</span> <span class="ident">KUSAMA_STATE_DISTRIBUTION</span>.<span class="ident">key</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>);
+		<span class="kw">let </span><span class="kw-2">mut </span>rng = rand::thread_rng();
+		<span class="kw">let </span>warmup_prefix = KUSAMA_STATE_DISTRIBUTION.key(<span class="kw-2">&amp;mut </span>rng);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">key_values</span> <span class="op">=</span> <span class="ident">KeyValues::new</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">warmup_keys</span> <span class="op">=</span> <span class="ident">KeyValues::new</span>();
-		<span class="kw">let</span> <span class="ident">every_x_key</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database_size</span>.<span class="ident">keys</span>() <span class="op">/</span> <span class="ident">SAMPLE_SIZE</span>;
-		<span class="kw">for</span> <span class="ident">idx</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">database_size</span>.<span class="ident">keys</span>() {
-			<span class="kw">let</span> <span class="ident">kv</span> <span class="op">=</span> (
-				<span class="ident">KUSAMA_STATE_DISTRIBUTION</span>.<span class="ident">key</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>).<span class="ident">to_vec</span>(),
-				<span class="ident">KUSAMA_STATE_DISTRIBUTION</span>.<span class="ident">value</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>),
+		<span class="kw">let </span><span class="kw-2">mut </span>key_values = KeyValues::new();
+		<span class="kw">let </span><span class="kw-2">mut </span>warmup_keys = KeyValues::new();
+		<span class="kw">let </span>every_x_key = <span class="self">self</span>.database_size.keys() / SAMPLE_SIZE;
+		<span class="kw">for </span>idx <span class="kw">in </span><span class="number">0</span>..<span class="self">self</span>.database_size.keys() {
+			<span class="kw">let </span>kv = (
+				KUSAMA_STATE_DISTRIBUTION.key(<span class="kw-2">&amp;mut </span>rng).to_vec(),
+				KUSAMA_STATE_DISTRIBUTION.value(<span class="kw-2">&amp;mut </span>rng),
 			);
-			<span class="kw">if</span> <span class="ident">idx</span> <span class="op">%</span> <span class="ident">every_x_key</span> <span class="op">==</span> <span class="number">0</span> {
-				<span class="comment">// warmup keys go to separate tree with high prob</span>
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actual_warmup_key</span> <span class="op">=</span> <span class="ident">warmup_prefix</span>.<span class="ident">clone</span>();
-				<span class="ident">actual_warmup_key</span>[<span class="number">16</span>..].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">kv</span>.<span class="number">0</span>[<span class="number">16</span>..]);
-				<span class="ident">warmup_keys</span>.<span class="ident">push</span>((<span class="ident">actual_warmup_key</span>.<span class="ident">clone</span>(), <span class="ident">kv</span>.<span class="number">1</span>.<span class="ident">clone</span>()));
-				<span class="ident">key_values</span>.<span class="ident">push</span>((<span class="ident">actual_warmup_key</span>.<span class="ident">clone</span>(), <span class="ident">kv</span>.<span class="number">1</span>.<span class="ident">clone</span>()));
+			<span class="kw">if </span>idx % every_x_key == <span class="number">0 </span>{
+				<span class="comment">// warmup keys go to separate tree with high prob
+				</span><span class="kw">let </span><span class="kw-2">mut </span>actual_warmup_key = warmup_prefix.clone();
+				actual_warmup_key[<span class="number">16</span>..].copy_from_slice(<span class="kw-2">&amp;</span>kv.<span class="number">0</span>[<span class="number">16</span>..]);
+				warmup_keys.push((actual_warmup_key.clone(), kv.<span class="number">1</span>.clone()));
+				key_values.push((actual_warmup_key.clone(), kv.<span class="number">1</span>.clone()));
 			}
 
-			<span class="ident">key_values</span>.<span class="ident">push</span>(<span class="ident">kv</span>)
+			key_values.push(kv)
 		}
 
-		<span class="macro">assert_eq!</span>(<span class="ident">warmup_keys</span>.<span class="ident">len</span>(), <span class="ident">SAMPLE_SIZE</span>);
+		<span class="macro">assert_eq!</span>(warmup_keys.len(), SAMPLE_SIZE);
 
-		<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">generate_trie</span>(<span class="ident">database</span>.<span class="ident">open</span>(<span class="self">self</span>.<span class="ident">database_type</span>), <span class="ident">key_values</span>);
+		<span class="kw">let </span>root = generate_trie(database.open(<span class="self">self</span>.database_type), key_values);
 
-		<span class="ident">Box::new</span>(<span class="ident">TrieWriteBenchmark</span> {
-			<span class="ident">database</span>,
-			<span class="ident">root</span>,
-			<span class="ident">warmup_keys</span>,
-			<span class="ident">database_type</span>: <span class="self">self</span>.<span class="ident">database_type</span>,
+		Box::new(TrieWriteBenchmark {
+			database,
+			root,
+			warmup_keys,
+			database_type: <span class="self">self</span>.database_type,
 		})
 	}
 
-	<span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="kw">fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Cow&lt;<span class="lifetime">&#39;static</span>, str&gt; {
 		<span class="macro">format!</span>(
 			<span class="string">&quot;Trie write benchmark({:?} database ({} keys), db_type = {:?})&quot;</span>,
-			<span class="self">self</span>.<span class="ident">database_size</span>,
-			<span class="ident">pretty_print</span>(<span class="self">self</span>.<span class="ident">database_size</span>.<span class="ident">keys</span>()),
-			<span class="self">self</span>.<span class="ident">database_type</span>,
+			<span class="self">self</span>.database_size,
+			pretty_print(<span class="self">self</span>.database_size.keys()),
+			<span class="self">self</span>.database_type,
 		)
-		.<span class="ident">into</span>()
+		.into()
 	}
 }
 
-<span class="kw">struct</span> <span class="ident">TrieWriteBenchmark</span> {
-	<span class="ident">database</span>: <span class="ident">TempDatabase</span>,
-	<span class="ident">root</span>: <span class="ident">Hash</span>,
-	<span class="ident">warmup_keys</span>: <span class="ident">KeyValues</span>,
-	<span class="ident">database_type</span>: <span class="ident">DatabaseType</span>,
+<span class="kw">struct </span>TrieWriteBenchmark {
+	database: TempDatabase,
+	root: Hash,
+	warmup_keys: KeyValues,
+	database_type: DatabaseType,
 }
 
-<span class="kw">impl</span> <span class="ident">core::Benchmark</span> <span class="kw">for</span> <span class="ident">TrieWriteBenchmark</span> {
-	<span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) -&gt; <span class="ident">std::time::Duration</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::thread_rng</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">clone</span>();
-		<span class="kw">let</span> <span class="ident">kvdb</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">open</span>(<span class="self">self</span>.<span class="ident">database_type</span>);
+<span class="kw">impl </span>core::Benchmark <span class="kw">for </span>TrieWriteBenchmark {
+	<span class="kw">fn </span>run(<span class="kw-2">&amp;mut </span><span class="self">self</span>, mode: Mode) -&gt; std::time::Duration {
+		<span class="kw">let </span><span class="kw-2">mut </span>rng = rand::thread_rng();
+		<span class="kw">let </span><span class="kw-2">mut </span>db = <span class="self">self</span>.database.clone();
+		<span class="kw">let </span>kvdb = db.open(<span class="self">self</span>.database_type);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_root</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">root</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>new_root = <span class="self">self</span>.root;
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">overlay</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trie</span> <span class="op">=</span> <span class="ident">SimpleTrie</span> { <span class="ident">db</span>: <span class="ident">kvdb</span>.<span class="ident">clone</span>(), <span class="ident">overlay</span>: <span class="kw-2">&amp;mut</span> <span class="ident">overlay</span> };
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">trie_db_mut</span> <span class="op">=</span> <span class="ident">TrieDBMutBuilderV1::from_existing</span>(<span class="kw-2">&amp;mut</span> <span class="ident">trie</span>, <span class="kw-2">&amp;mut</span> <span class="ident">new_root</span>).<span class="ident">build</span>();
+		<span class="kw">let </span><span class="kw-2">mut </span>overlay = HashMap::new();
+		<span class="kw">let </span><span class="kw-2">mut </span>trie = SimpleTrie { db: kvdb.clone(), overlay: <span class="kw-2">&amp;mut </span>overlay };
+		<span class="kw">let </span><span class="kw-2">mut </span>trie_db_mut = TrieDBMutBuilderV1::from_existing(<span class="kw-2">&amp;mut </span>trie, <span class="kw-2">&amp;mut </span>new_root).build();
 
-		<span class="kw">for</span> (<span class="ident">warmup_key</span>, <span class="ident">warmup_value</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">warmup_keys</span>.<span class="ident">iter</span>() {
-			<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">trie_db_mut</span>
-				.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">warmup_key</span>[..])
-				.<span class="ident">expect</span>(<span class="string">&quot;Failed to get key: db error&quot;</span>)
-				.<span class="ident">expect</span>(<span class="string">&quot;Warmup key should exist&quot;</span>);
+		<span class="kw">for </span>(warmup_key, warmup_value) <span class="kw">in </span><span class="self">self</span>.warmup_keys.iter() {
+			<span class="kw">let </span>value = trie_db_mut
+				.get(<span class="kw-2">&amp;</span>warmup_key[..])
+				.expect(<span class="string">&quot;Failed to get key: db error&quot;</span>)
+				.expect(<span class="string">&quot;Warmup key should exist&quot;</span>);
 
-			<span class="comment">// sanity for warmup keys</span>
-			<span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>, <span class="ident">warmup_value</span>);
+			<span class="comment">// sanity for warmup keys
+			</span><span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>value, warmup_value);
 		}
 
-		<span class="kw">let</span> <span class="ident">test_key</span> <span class="op">=</span> <span class="ident">random_vec</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>, <span class="number">32</span>);
-		<span class="kw">let</span> <span class="ident">test_val</span> <span class="op">=</span> <span class="ident">random_vec</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>, <span class="ident">TEST_WRITE_SIZE</span>);
+		<span class="kw">let </span>test_key = random_vec(<span class="kw-2">&amp;mut </span>rng, <span class="number">32</span>);
+		<span class="kw">let </span>test_val = random_vec(<span class="kw-2">&amp;mut </span>rng, TEST_WRITE_SIZE);
 
-		<span class="kw">if</span> <span class="ident">mode</span> <span class="op">==</span> <span class="ident">Mode::Profile</span> {
-			<span class="ident">std::thread::park_timeout</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="number">3</span>));
+		<span class="kw">if </span>mode == Mode::Profile {
+			std::thread::park_timeout(std::time::Duration::from_secs(<span class="number">3</span>));
 		}
 
-		<span class="kw">let</span> <span class="ident">started</span> <span class="op">=</span> <span class="ident">std::time::Instant::now</span>();
+		<span class="kw">let </span>started = std::time::Instant::now();
 
-		<span class="ident">trie_db_mut</span>.<span class="ident">insert</span>(<span class="kw-2">&amp;</span><span class="ident">test_key</span>, <span class="kw-2">&amp;</span><span class="ident">test_val</span>).<span class="ident">expect</span>(<span class="string">&quot;Should be inserted ok&quot;</span>);
-		<span class="ident">trie_db_mut</span>.<span class="ident">commit</span>();
-		<span class="ident">drop</span>(<span class="ident">trie_db_mut</span>);
+		trie_db_mut.insert(<span class="kw-2">&amp;</span>test_key, <span class="kw-2">&amp;</span>test_val).expect(<span class="string">&quot;Should be inserted ok&quot;</span>);
+		trie_db_mut.commit();
+		drop(trie_db_mut);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">transaction</span> <span class="op">=</span> <span class="ident">kvdb</span>.<span class="ident">transaction</span>();
-		<span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">overlay</span>.<span class="ident">into_iter</span>() {
-			<span class="kw">match</span> <span class="ident">value</span> {
-				<span class="prelude-val">Some</span>(<span class="ident">value</span>) =&gt; <span class="ident">transaction</span>.<span class="ident">put</span>(<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>[..], <span class="kw-2">&amp;</span><span class="ident">value</span>[..]),
-				<span class="prelude-val">None</span> =&gt; <span class="ident">transaction</span>.<span class="ident">delete</span>(<span class="number">0</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>[..]),
+		<span class="kw">let </span><span class="kw-2">mut </span>transaction = kvdb.transaction();
+		<span class="kw">for </span>(key, value) <span class="kw">in </span>overlay.into_iter() {
+			<span class="kw">match </span>value {
+				<span class="prelude-val">Some</span>(value) =&gt; transaction.put(<span class="number">0</span>, <span class="kw-2">&amp;</span>key[..], <span class="kw-2">&amp;</span>value[..]),
+				<span class="prelude-val">None </span>=&gt; transaction.delete(<span class="number">0</span>, <span class="kw-2">&amp;</span>key[..]),
 			}
 		}
-		<span class="ident">kvdb</span>.<span class="ident">write</span>(<span class="ident">transaction</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to write transaction&quot;</span>);
+		kvdb.write(transaction).expect(<span class="string">&quot;Failed to write transaction&quot;</span>);
 
-		<span class="kw">let</span> <span class="ident">elapsed</span> <span class="op">=</span> <span class="ident">started</span>.<span class="ident">elapsed</span>();
+		<span class="kw">let </span>elapsed = started.elapsed();
 
-		<span class="comment">// sanity check</span>
-		<span class="macro">assert!</span>(<span class="ident">new_root</span> <span class="op">!</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">root</span>);
+		<span class="comment">// sanity check
+		</span><span class="macro">assert!</span>(new_root != <span class="self">self</span>.root);
 
-		<span class="kw">if</span> <span class="ident">mode</span> <span class="op">==</span> <span class="ident">Mode::Profile</span> {
-			<span class="ident">std::thread::park_timeout</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="number">1</span>));
+		<span class="kw">if </span>mode == Mode::Profile {
+			std::thread::park_timeout(std::time::Duration::from_secs(<span class="number">1</span>));
 		}
 
-		<span class="ident">elapsed</span>
+		elapsed
 	}
 }
 
-<span class="kw">fn</span> <span class="ident">random_vec</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Rng</span><span class="op">&gt;</span>(<span class="ident">rng</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>, <span class="ident">len</span>: <span class="ident">usize</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">val</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="ident">len</span>];
-	<span class="ident">rng</span>.<span class="ident">fill_bytes</span>(<span class="kw-2">&amp;mut</span> <span class="ident">val</span>[..]);
-	<span class="ident">val</span>
+<span class="kw">fn </span>random_vec&lt;R: Rng&gt;(rng: <span class="kw-2">&amp;mut </span>R, len: usize) -&gt; Vec&lt;u8&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>val = <span class="macro">vec!</span>[<span class="number">0u8</span>; len];
+	rng.fill_bytes(<span class="kw-2">&amp;mut </span>val[..]);
+	val
 }
 
-<span class="kw">struct</span> <span class="ident">SizePool</span> {
-	<span class="ident">distribution</span>: <span class="ident">std::collections::BTreeMap</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">u32</span><span class="op">&gt;</span>,
-	<span class="ident">total</span>: <span class="ident">u32</span>,
+<span class="kw">struct </span>SizePool {
+	distribution: std::collections::BTreeMap&lt;u32, u32&gt;,
+	total: u32,
 }
 
-<span class="kw">impl</span> <span class="ident">SizePool</span> {
-	<span class="kw">fn</span> <span class="ident">from_histogram</span>(<span class="ident">h</span>: <span class="kw-2">&amp;</span>[(<span class="ident">u32</span>, <span class="ident">u32</span>)]) -&gt; <span class="ident">SizePool</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">distribution</span> <span class="op">=</span> <span class="ident">std::collections::BTreeMap::default</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total</span> <span class="op">=</span> <span class="number">0</span>;
-		<span class="kw">for</span> (<span class="ident">size</span>, <span class="ident">count</span>) <span class="kw">in</span> <span class="ident">h</span> {
-			<span class="ident">total</span> <span class="op">+</span><span class="op">=</span> <span class="ident">count</span>;
-			<span class="ident">distribution</span>.<span class="ident">insert</span>(<span class="ident">total</span>, <span class="kw-2">*</span><span class="ident">size</span>);
+<span class="kw">impl </span>SizePool {
+	<span class="kw">fn </span>from_histogram(h: <span class="kw-2">&amp;</span>[(u32, u32)]) -&gt; SizePool {
+		<span class="kw">let </span><span class="kw-2">mut </span>distribution = std::collections::BTreeMap::default();
+		<span class="kw">let </span><span class="kw-2">mut </span>total = <span class="number">0</span>;
+		<span class="kw">for </span>(size, count) <span class="kw">in </span>h {
+			total += count;
+			distribution.insert(total, <span class="kw-2">*</span>size);
 		}
-		<span class="ident">SizePool</span> { <span class="ident">distribution</span>, <span class="ident">total</span> }
+		SizePool { distribution, total }
 	}
 
-	<span class="kw">fn</span> <span class="ident">value</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Rng</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">sr</span> <span class="op">=</span> (<span class="ident">rng</span>.<span class="ident">next_u64</span>() <span class="op">%</span> <span class="self">self</span>.<span class="ident">total</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="kw">as</span> <span class="ident">u32</span>;
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">range</span> <span class="op">=</span> <span class="self">self</span>
-			.<span class="ident">distribution</span>
-			.<span class="ident">range</span>((<span class="ident">std::ops::Bound::Included</span>(<span class="ident">sr</span>), <span class="ident">std::ops::Bound::Unbounded</span>));
-		<span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">range</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span>;
-		<span class="ident">random_vec</span>(<span class="ident">rng</span>, <span class="ident">size</span>)
+	<span class="kw">fn </span>value&lt;R: Rng&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, rng: <span class="kw-2">&amp;mut </span>R) -&gt; Vec&lt;u8&gt; {
+		<span class="kw">let </span>sr = (rng.next_u64() % <span class="self">self</span>.total <span class="kw">as </span>u64) <span class="kw">as </span>u32;
+		<span class="kw">let </span><span class="kw-2">mut </span>range = <span class="self">self
+			</span>.distribution
+			.range((std::ops::Bound::Included(sr), std::ops::Bound::Unbounded));
+		<span class="kw">let </span>size = <span class="kw-2">*</span>range.next().unwrap().<span class="number">1 </span><span class="kw">as </span>usize;
+		random_vec(rng, size)
 	}
 
-	<span class="kw">fn</span> <span class="ident">key</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Rng</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">rng</span>: <span class="kw-2">&amp;mut</span> <span class="ident">R</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-		<span class="ident">random_vec</span>(<span class="ident">rng</span>, <span class="number">32</span>)
+	<span class="kw">fn </span>key&lt;R: Rng&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, rng: <span class="kw-2">&amp;mut </span>R) -&gt; Vec&lt;u8&gt; {
+		random_vec(rng, <span class="number">32</span>)
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="node_bench" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="node_bench" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

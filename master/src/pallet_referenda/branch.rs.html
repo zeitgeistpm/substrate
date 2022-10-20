@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/referenda/src/branch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>branch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_referenda/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_referenda/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_referenda/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/referenda/src/branch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>branch.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_referenda/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_referenda/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -184,186 +178,185 @@
 <span id="178">178</span>
 <span id="179">179</span>
 <span id="180">180</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Helpers for managing the different weights in various algorithmic branches.</span>
+</span><span class="doccomment">//! Helpers for managing the different weights in various algorithmic branches.
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::Config</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::weights::WeightInfo</span>;
-<span class="kw">use</span> <span class="ident">frame_support::weights::Weight</span>;
+</span><span class="kw">use </span><span class="kw">super</span>::Config;
+<span class="kw">use </span><span class="kw">crate</span>::weights::WeightInfo;
+<span class="kw">use </span>frame_support::weights::Weight;
 
-<span class="doccomment">/// Branches within the `begin_deciding` function.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BeginDecidingBranch</span> {
-	<span class="ident">Passing</span>,
-	<span class="ident">Failing</span>,
+<span class="doccomment">/// Branches within the `begin_deciding` function.
+</span><span class="kw">pub enum </span>BeginDecidingBranch {
+	Passing,
+	Failing,
 }
 
-<span class="doccomment">/// Branches within the `service_referendum` function.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ServiceBranch</span> {
-	<span class="ident">Fail</span>,
-	<span class="ident">NoDeposit</span>,
-	<span class="ident">Preparing</span>,
-	<span class="ident">Queued</span>,
-	<span class="ident">NotQueued</span>,
-	<span class="ident">RequeuedInsertion</span>,
-	<span class="ident">RequeuedSlide</span>,
-	<span class="ident">BeginDecidingPassing</span>,
-	<span class="ident">BeginDecidingFailing</span>,
-	<span class="ident">BeginConfirming</span>,
-	<span class="ident">ContinueConfirming</span>,
-	<span class="ident">EndConfirming</span>,
-	<span class="ident">ContinueNotConfirming</span>,
-	<span class="ident">Approved</span>,
-	<span class="ident">Rejected</span>,
-	<span class="ident">TimedOut</span>,
+<span class="doccomment">/// Branches within the `service_referendum` function.
+</span><span class="kw">pub enum </span>ServiceBranch {
+	Fail,
+	NoDeposit,
+	Preparing,
+	Queued,
+	NotQueued,
+	RequeuedInsertion,
+	RequeuedSlide,
+	BeginDecidingPassing,
+	BeginDecidingFailing,
+	BeginConfirming,
+	ContinueConfirming,
+	EndConfirming,
+	ContinueNotConfirming,
+	Approved,
+	Rejected,
+	TimedOut,
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">BeginDecidingBranch</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ServiceBranch</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">x</span>: <span class="ident">BeginDecidingBranch</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">use</span> <span class="ident">BeginDecidingBranch</span>::<span class="kw-2">*</span>;
-		<span class="kw">use</span> <span class="ident">ServiceBranch</span>::<span class="kw-2">*</span>;
-		<span class="kw">match</span> <span class="ident">x</span> {
-			<span class="ident">Passing</span> =&gt; <span class="ident">BeginDecidingPassing</span>,
-			<span class="ident">Failing</span> =&gt; <span class="ident">BeginDecidingFailing</span>,
+<span class="kw">impl </span>From&lt;BeginDecidingBranch&gt; <span class="kw">for </span>ServiceBranch {
+	<span class="kw">fn </span>from(x: BeginDecidingBranch) -&gt; <span class="self">Self </span>{
+		<span class="kw">use </span>BeginDecidingBranch::<span class="kw-2">*</span>;
+		<span class="kw">use </span>ServiceBranch::<span class="kw-2">*</span>;
+		<span class="kw">match </span>x {
+			Passing =&gt; BeginDecidingPassing,
+			Failing =&gt; BeginDecidingFailing,
 		}
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">ServiceBranch</span> {
-	<span class="doccomment">/// Return the weight of the `nudge` function when it takes the branch denoted by `self`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">weight_of_nudge</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="ident">frame_support::weights::Weight</span> {
-		<span class="kw">use</span> <span class="ident">ServiceBranch</span>::<span class="kw-2">*</span>;
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident">NoDeposit</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_no_deposit</span>(),
-			<span class="ident">Preparing</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_preparing</span>(),
-			<span class="ident">Queued</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_queued</span>(),
-			<span class="ident">NotQueued</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_not_queued</span>(),
-			<span class="ident">RequeuedInsertion</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_requeued_insertion</span>(),
-			<span class="ident">RequeuedSlide</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_requeued_slide</span>(),
-			<span class="ident">BeginDecidingPassing</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_begin_deciding_passing</span>(),
-			<span class="ident">BeginDecidingFailing</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_begin_deciding_failing</span>(),
-			<span class="ident">BeginConfirming</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_begin_confirming</span>(),
-			<span class="ident">ContinueConfirming</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_continue_confirming</span>(),
-			<span class="ident">EndConfirming</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_end_confirming</span>(),
-			<span class="ident">ContinueNotConfirming</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_continue_not_confirming</span>(),
-			<span class="ident">Approved</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_approved</span>(),
-			<span class="ident">Rejected</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_rejected</span>(),
-			<span class="ident">TimedOut</span> <span class="op">|</span> <span class="ident">Fail</span> =&gt; <span class="ident">T::WeightInfo::nudge_referendum_timed_out</span>(),
+<span class="kw">impl </span>ServiceBranch {
+	<span class="doccomment">/// Return the weight of the `nudge` function when it takes the branch denoted by `self`.
+	</span><span class="kw">pub fn </span>weight_of_nudge&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;(<span class="self">self</span>) -&gt; frame_support::weights::Weight {
+		<span class="kw">use </span>ServiceBranch::<span class="kw-2">*</span>;
+		<span class="kw">match </span><span class="self">self </span>{
+			NoDeposit =&gt; T::WeightInfo::nudge_referendum_no_deposit(),
+			Preparing =&gt; T::WeightInfo::nudge_referendum_preparing(),
+			Queued =&gt; T::WeightInfo::nudge_referendum_queued(),
+			NotQueued =&gt; T::WeightInfo::nudge_referendum_not_queued(),
+			RequeuedInsertion =&gt; T::WeightInfo::nudge_referendum_requeued_insertion(),
+			RequeuedSlide =&gt; T::WeightInfo::nudge_referendum_requeued_slide(),
+			BeginDecidingPassing =&gt; T::WeightInfo::nudge_referendum_begin_deciding_passing(),
+			BeginDecidingFailing =&gt; T::WeightInfo::nudge_referendum_begin_deciding_failing(),
+			BeginConfirming =&gt; T::WeightInfo::nudge_referendum_begin_confirming(),
+			ContinueConfirming =&gt; T::WeightInfo::nudge_referendum_continue_confirming(),
+			EndConfirming =&gt; T::WeightInfo::nudge_referendum_end_confirming(),
+			ContinueNotConfirming =&gt; T::WeightInfo::nudge_referendum_continue_not_confirming(),
+			Approved =&gt; T::WeightInfo::nudge_referendum_approved(),
+			Rejected =&gt; T::WeightInfo::nudge_referendum_rejected(),
+			TimedOut | Fail =&gt; T::WeightInfo::nudge_referendum_timed_out(),
 		}
 	}
 
-	<span class="doccomment">/// Return the maximum possible weight of the `nudge` function.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_weight_of_nudge</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>() -&gt; <span class="ident">frame_support::weights::Weight</span> {
-		<span class="ident">Weight::zero</span>()
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_no_deposit</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_preparing</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_queued</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_not_queued</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_requeued_insertion</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_requeued_slide</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_begin_deciding_passing</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_begin_deciding_failing</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_begin_confirming</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_continue_confirming</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_end_confirming</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_continue_not_confirming</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_approved</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_rejected</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::nudge_referendum_timed_out</span>())
+	<span class="doccomment">/// Return the maximum possible weight of the `nudge` function.
+	</span><span class="kw">pub fn </span>max_weight_of_nudge&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;() -&gt; frame_support::weights::Weight {
+		Weight::zero()
+			.max(T::WeightInfo::nudge_referendum_no_deposit())
+			.max(T::WeightInfo::nudge_referendum_preparing())
+			.max(T::WeightInfo::nudge_referendum_queued())
+			.max(T::WeightInfo::nudge_referendum_not_queued())
+			.max(T::WeightInfo::nudge_referendum_requeued_insertion())
+			.max(T::WeightInfo::nudge_referendum_requeued_slide())
+			.max(T::WeightInfo::nudge_referendum_begin_deciding_passing())
+			.max(T::WeightInfo::nudge_referendum_begin_deciding_failing())
+			.max(T::WeightInfo::nudge_referendum_begin_confirming())
+			.max(T::WeightInfo::nudge_referendum_continue_confirming())
+			.max(T::WeightInfo::nudge_referendum_end_confirming())
+			.max(T::WeightInfo::nudge_referendum_continue_not_confirming())
+			.max(T::WeightInfo::nudge_referendum_approved())
+			.max(T::WeightInfo::nudge_referendum_rejected())
+			.max(T::WeightInfo::nudge_referendum_timed_out())
 	}
 
-	<span class="doccomment">/// Return the weight of the `place_decision_deposit` function when it takes the branch denoted</span>
-	<span class="doccomment">/// by `self`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">weight_of_deposit</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+	<span class="doccomment">/// Return the weight of the `place_decision_deposit` function when it takes the branch denoted
+	/// by `self`.
+	</span><span class="kw">pub fn </span>weight_of_deposit&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;(
 		<span class="self">self</span>,
-	) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">frame_support::weights::Weight</span><span class="op">&gt;</span> {
-		<span class="kw">use</span> <span class="ident">ServiceBranch</span>::<span class="kw-2">*</span>;
-		<span class="kw">let</span> <span class="ident">ref_time_weight</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident">Preparing</span> =&gt; <span class="ident">T::WeightInfo::place_decision_deposit_preparing</span>(),
-			<span class="ident">Queued</span> =&gt; <span class="ident">T::WeightInfo::place_decision_deposit_queued</span>(),
-			<span class="ident">NotQueued</span> =&gt; <span class="ident">T::WeightInfo::place_decision_deposit_not_queued</span>(),
-			<span class="ident">BeginDecidingPassing</span> =&gt; <span class="ident">T::WeightInfo::place_decision_deposit_passing</span>(),
-			<span class="ident">BeginDecidingFailing</span> =&gt; <span class="ident">T::WeightInfo::place_decision_deposit_failing</span>(),
-			<span class="ident">BeginConfirming</span> <span class="op">|</span>
-			<span class="ident">ContinueConfirming</span> <span class="op">|</span>
-			<span class="ident">EndConfirming</span> <span class="op">|</span>
-			<span class="ident">ContinueNotConfirming</span> <span class="op">|</span>
-			<span class="ident">Approved</span> <span class="op">|</span>
-			<span class="ident">Rejected</span> <span class="op">|</span>
-			<span class="ident">RequeuedInsertion</span> <span class="op">|</span>
-			<span class="ident">RequeuedSlide</span> <span class="op">|</span>
-			<span class="ident">TimedOut</span> <span class="op">|</span>
-			<span class="ident">Fail</span> <span class="op">|</span>
-			<span class="ident">NoDeposit</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+	) -&gt; <span class="prelude-ty">Option</span>&lt;frame_support::weights::Weight&gt; {
+		<span class="kw">use </span>ServiceBranch::<span class="kw-2">*</span>;
+		<span class="kw">let </span>ref_time_weight = <span class="kw">match </span><span class="self">self </span>{
+			Preparing =&gt; T::WeightInfo::place_decision_deposit_preparing(),
+			Queued =&gt; T::WeightInfo::place_decision_deposit_queued(),
+			NotQueued =&gt; T::WeightInfo::place_decision_deposit_not_queued(),
+			BeginDecidingPassing =&gt; T::WeightInfo::place_decision_deposit_passing(),
+			BeginDecidingFailing =&gt; T::WeightInfo::place_decision_deposit_failing(),
+			BeginConfirming |
+			ContinueConfirming |
+			EndConfirming |
+			ContinueNotConfirming |
+			Approved |
+			Rejected |
+			RequeuedInsertion |
+			RequeuedSlide |
+			TimedOut |
+			Fail |
+			NoDeposit =&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
 		};
 
-		<span class="prelude-val">Some</span>(<span class="ident">ref_time_weight</span>)
+		<span class="prelude-val">Some</span>(ref_time_weight)
 	}
 
-	<span class="doccomment">/// Return the maximum possible weight of the `place_decision_deposit` function.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_weight_of_deposit</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>() -&gt; <span class="ident">frame_support::weights::Weight</span> {
-		<span class="ident">Weight::zero</span>()
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::place_decision_deposit_preparing</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::place_decision_deposit_queued</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::place_decision_deposit_not_queued</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::place_decision_deposit_passing</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::place_decision_deposit_failing</span>())
+	<span class="doccomment">/// Return the maximum possible weight of the `place_decision_deposit` function.
+	</span><span class="kw">pub fn </span>max_weight_of_deposit&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;() -&gt; frame_support::weights::Weight {
+		Weight::zero()
+			.max(T::WeightInfo::place_decision_deposit_preparing())
+			.max(T::WeightInfo::place_decision_deposit_queued())
+			.max(T::WeightInfo::place_decision_deposit_not_queued())
+			.max(T::WeightInfo::place_decision_deposit_passing())
+			.max(T::WeightInfo::place_decision_deposit_failing())
 	}
 }
 
-<span class="doccomment">/// Branches that the `one_fewer_deciding` function may take.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">OneFewerDecidingBranch</span> {
-	<span class="ident">QueueEmpty</span>,
-	<span class="ident">BeginDecidingPassing</span>,
-	<span class="ident">BeginDecidingFailing</span>,
+<span class="doccomment">/// Branches that the `one_fewer_deciding` function may take.
+</span><span class="kw">pub enum </span>OneFewerDecidingBranch {
+	QueueEmpty,
+	BeginDecidingPassing,
+	BeginDecidingFailing,
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">BeginDecidingBranch</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">OneFewerDecidingBranch</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">x</span>: <span class="ident">BeginDecidingBranch</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">use</span> <span class="ident">BeginDecidingBranch</span>::<span class="kw-2">*</span>;
-		<span class="kw">use</span> <span class="ident">OneFewerDecidingBranch</span>::<span class="kw-2">*</span>;
-		<span class="kw">match</span> <span class="ident">x</span> {
-			<span class="ident">Passing</span> =&gt; <span class="ident">BeginDecidingPassing</span>,
-			<span class="ident">Failing</span> =&gt; <span class="ident">BeginDecidingFailing</span>,
+<span class="kw">impl </span>From&lt;BeginDecidingBranch&gt; <span class="kw">for </span>OneFewerDecidingBranch {
+	<span class="kw">fn </span>from(x: BeginDecidingBranch) -&gt; <span class="self">Self </span>{
+		<span class="kw">use </span>BeginDecidingBranch::<span class="kw-2">*</span>;
+		<span class="kw">use </span>OneFewerDecidingBranch::<span class="kw-2">*</span>;
+		<span class="kw">match </span>x {
+			Passing =&gt; BeginDecidingPassing,
+			Failing =&gt; BeginDecidingFailing,
 		}
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">OneFewerDecidingBranch</span> {
-	<span class="doccomment">/// Return the weight of the `one_fewer_deciding` function when it takes the branch denoted</span>
-	<span class="doccomment">/// by `self`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">weight</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="self">self</span>) -&gt; <span class="ident">frame_support::weights::Weight</span> {
-		<span class="kw">use</span> <span class="ident">OneFewerDecidingBranch</span>::<span class="kw-2">*</span>;
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident">QueueEmpty</span> =&gt; <span class="ident">T::WeightInfo::one_fewer_deciding_queue_empty</span>(),
-			<span class="ident">BeginDecidingPassing</span> =&gt; <span class="ident">T::WeightInfo::one_fewer_deciding_passing</span>(),
-			<span class="ident">BeginDecidingFailing</span> =&gt; <span class="ident">T::WeightInfo::one_fewer_deciding_failing</span>(),
+<span class="kw">impl </span>OneFewerDecidingBranch {
+	<span class="doccomment">/// Return the weight of the `one_fewer_deciding` function when it takes the branch denoted
+	/// by `self`.
+	</span><span class="kw">pub fn </span>weight&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;(<span class="self">self</span>) -&gt; frame_support::weights::Weight {
+		<span class="kw">use </span>OneFewerDecidingBranch::<span class="kw-2">*</span>;
+		<span class="kw">match </span><span class="self">self </span>{
+			QueueEmpty =&gt; T::WeightInfo::one_fewer_deciding_queue_empty(),
+			BeginDecidingPassing =&gt; T::WeightInfo::one_fewer_deciding_passing(),
+			BeginDecidingFailing =&gt; T::WeightInfo::one_fewer_deciding_failing(),
 		}
 	}
 
-	<span class="doccomment">/// Return the maximum possible weight of the `one_fewer_deciding` function.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_weight</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>() -&gt; <span class="ident">frame_support::weights::Weight</span> {
-		<span class="ident">Weight::zero</span>()
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::one_fewer_deciding_queue_empty</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::one_fewer_deciding_passing</span>())
-			.<span class="ident">max</span>(<span class="ident">T::WeightInfo::one_fewer_deciding_failing</span>())
+	<span class="doccomment">/// Return the maximum possible weight of the `one_fewer_deciding` function.
+	</span><span class="kw">pub fn </span>max_weight&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;() -&gt; frame_support::weights::Weight {
+		Weight::zero()
+			.max(T::WeightInfo::one_fewer_deciding_queue_empty())
+			.max(T::WeightInfo::one_fewer_deciding_passing())
+			.max(T::WeightInfo::one_fewer_deciding_failing())
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_referenda" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_referenda" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

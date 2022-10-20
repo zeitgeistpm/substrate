@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/support/src/traits/hooks.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>hooks.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../frame_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../frame_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_support/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/support/src/traits/hooks.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>hooks.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../frame_support/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_support/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -553,555 +547,554 @@
 <span id="547">547</span>
 <span id="548">548</span>
 <span id="549">549</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Traits for hooking tasks to events in a blockchain&#39;s lifecycle.</span>
+</span><span class="doccomment">//! Traits for hooking tasks to events in a blockchain&#39;s lifecycle.
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::weights::Weight</span>;
-<span class="kw">use</span> <span class="ident">impl_trait_for_tuples::impl_for_tuples</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::traits::AtLeast32BitUnsigned</span>;
-<span class="kw">use</span> <span class="ident">sp_std::prelude</span>::<span class="kw-2">*</span>;
+</span><span class="kw">use </span><span class="kw">crate</span>::weights::Weight;
+<span class="kw">use </span>impl_trait_for_tuples::impl_for_tuples;
+<span class="kw">use </span>sp_runtime::traits::AtLeast32BitUnsigned;
+<span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>, <span class="ident">test</span>))]</span>
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
+<span class="attribute">#[cfg(all(feature = <span class="string">&quot;try-runtime&quot;</span>, test))]
+</span><span class="kw">use </span>codec::{Decode, Encode};
 
-<span class="doccomment">/// The block initialization trait.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Implementing this lets you express what should happen for your pallet when the block is</span>
-<span class="doccomment">/// beginning (right before the first extrinsic is executed).</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OnInitialize</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The block is being initialized. Implement to have something happen.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Return the non-negotiable weight consumed in the block.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// NOTE: This function is called BEFORE ANY extrinsic in a block is applied,</span>
-	<span class="doccomment">/// including inherent extrinsics. Hence for instance, if you runtime includes</span>
-	<span class="doccomment">/// `pallet_timestamp`, the `timestamp` is not yet up to date at this point.</span>
-	<span class="kw">fn</span> <span class="ident">on_initialize</span>(<span class="ident">_n</span>: <span class="ident">BlockNumber</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="ident">Weight::zero</span>()
+<span class="doccomment">/// The block initialization trait.
+///
+/// Implementing this lets you express what should happen for your pallet when the block is
+/// beginning (right before the first extrinsic is executed).
+</span><span class="kw">pub trait </span>OnInitialize&lt;BlockNumber&gt; {
+	<span class="doccomment">/// The block is being initialized. Implement to have something happen.
+	///
+	/// Return the non-negotiable weight consumed in the block.
+	///
+	/// NOTE: This function is called BEFORE ANY extrinsic in a block is applied,
+	/// including inherent extrinsics. Hence for instance, if you runtime includes
+	/// `pallet_timestamp`, the `timestamp` is not yet up to date at this point.
+	</span><span class="kw">fn </span>on_initialize(_n: BlockNumber) -&gt; Weight {
+		Weight::zero()
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>), <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">64</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">96</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>, <span class="ident">impl_for_tuples</span>(<span class="number">128</span>))]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">BlockNumber</span>: <span class="ident">Clone</span><span class="op">&gt;</span> <span class="ident">OnInitialize</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Tuple</span> {
-	<span class="kw">fn</span> <span class="ident">on_initialize</span>(<span class="ident">n</span>: <span class="ident">BlockNumber</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">Weight::zero</span>();
-		<span class="macro">for_tuples!</span>( #( <span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">Tuple::on_initialize</span>(<span class="ident">n</span>.<span class="ident">clone</span>())); )<span class="op">*</span> );
-		<span class="ident">weight</span>
+<span class="attribute">#[cfg_attr(all(not(feature = <span class="string">&quot;tuples-96&quot;</span>), not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">64</span>))]
+#[cfg_attr(all(feature = <span class="string">&quot;tuples-96&quot;</span>, not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">96</span>))]
+#[cfg_attr(feature = <span class="string">&quot;tuples-128&quot;</span>, impl_for_tuples(<span class="number">128</span>))]
+</span><span class="kw">impl</span>&lt;BlockNumber: Clone&gt; OnInitialize&lt;BlockNumber&gt; <span class="kw">for </span>Tuple {
+	<span class="kw">fn </span>on_initialize(n: BlockNumber) -&gt; Weight {
+		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
+		<span class="macro">for_tuples!</span>( #( weight = weight.saturating_add(Tuple::on_initialize(n.clone())); )* );
+		weight
 	}
 }
 
-<span class="doccomment">/// The block finalization trait.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Implementing this lets you express what should happen for your pallet when the block is ending.</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>), <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">64</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">96</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>, <span class="ident">impl_for_tuples</span>(<span class="number">128</span>))]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OnFinalize</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The block is being finalized. Implement to have something happen.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// NOTE: This function is called AFTER ALL extrinsics in a block are applied,</span>
-	<span class="doccomment">/// including inherent extrinsics.</span>
-	<span class="kw">fn</span> <span class="ident">on_finalize</span>(<span class="ident">_n</span>: <span class="ident">BlockNumber</span>) {}
+<span class="doccomment">/// The block finalization trait.
+///
+/// Implementing this lets you express what should happen for your pallet when the block is ending.
+</span><span class="attribute">#[cfg_attr(all(not(feature = <span class="string">&quot;tuples-96&quot;</span>), not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">64</span>))]
+#[cfg_attr(all(feature = <span class="string">&quot;tuples-96&quot;</span>, not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">96</span>))]
+#[cfg_attr(feature = <span class="string">&quot;tuples-128&quot;</span>, impl_for_tuples(<span class="number">128</span>))]
+</span><span class="kw">pub trait </span>OnFinalize&lt;BlockNumber&gt; {
+	<span class="doccomment">/// The block is being finalized. Implement to have something happen.
+	///
+	/// NOTE: This function is called AFTER ALL extrinsics in a block are applied,
+	/// including inherent extrinsics.
+	</span><span class="kw">fn </span>on_finalize(_n: BlockNumber) {}
 }
 
-<span class="doccomment">/// The block&#39;s on idle trait.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Implementing this lets you express what should happen for your pallet before</span>
-<span class="doccomment">/// block finalization (see `on_finalize` hook) in case any remaining weight is left.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OnIdle</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The block is being finalized.</span>
-	<span class="doccomment">/// Implement to have something happen in case there is leftover weight.</span>
-	<span class="doccomment">/// Check the passed `remaining_weight` to make sure it is high enough to allow for</span>
-	<span class="doccomment">/// your pallet&#39;s extra computation.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// NOTE: This function is called AFTER ALL extrinsics - including inherent extrinsics -</span>
-	<span class="doccomment">/// in a block are applied but before `on_finalize` is executed.</span>
-	<span class="kw">fn</span> <span class="ident">on_idle</span>(<span class="ident">_n</span>: <span class="ident">BlockNumber</span>, <span class="ident">_remaining_weight</span>: <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="ident">Weight::zero</span>()
+<span class="doccomment">/// The block&#39;s on idle trait.
+///
+/// Implementing this lets you express what should happen for your pallet before
+/// block finalization (see `on_finalize` hook) in case any remaining weight is left.
+</span><span class="kw">pub trait </span>OnIdle&lt;BlockNumber&gt; {
+	<span class="doccomment">/// The block is being finalized.
+	/// Implement to have something happen in case there is leftover weight.
+	/// Check the passed `remaining_weight` to make sure it is high enough to allow for
+	/// your pallet&#39;s extra computation.
+	///
+	/// NOTE: This function is called AFTER ALL extrinsics - including inherent extrinsics -
+	/// in a block are applied but before `on_finalize` is executed.
+	</span><span class="kw">fn </span>on_idle(_n: BlockNumber, _remaining_weight: Weight) -&gt; Weight {
+		Weight::zero()
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>), <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">64</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">96</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>, <span class="ident">impl_for_tuples</span>(<span class="number">128</span>))]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">BlockNumber</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">AtLeast32BitUnsigned</span><span class="op">&gt;</span> <span class="ident">OnIdle</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Tuple</span> {
-	<span class="kw">fn</span> <span class="ident">on_idle</span>(<span class="ident">n</span>: <span class="ident">BlockNumber</span>, <span class="ident">remaining_weight</span>: <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="kw">let</span> <span class="ident">on_idle_functions</span>: <span class="kw-2">&amp;</span>[<span class="kw">fn</span>(<span class="ident">BlockNumber</span>, <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span>] <span class="op">=</span>
-			<span class="kw-2">&amp;</span>[<span class="macro">for_tuples!</span>( #( <span class="ident">Tuple::on_idle</span> ),<span class="op">*</span> )];
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">Weight::zero</span>();
-		<span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">on_idle_functions</span>.<span class="ident">len</span>();
-		<span class="kw">let</span> <span class="ident">start_index</span> <span class="op">=</span> <span class="ident">n</span> <span class="op">%</span> (<span class="ident">len</span> <span class="kw">as</span> <span class="ident">u32</span>).<span class="ident">into</span>();
-		<span class="kw">let</span> <span class="ident">start_index</span> <span class="op">=</span> <span class="ident">start_index</span>.<span class="ident">try_into</span>().<span class="ident">ok</span>().<span class="ident">expect</span>(
-			<span class="string">&quot;`start_index % len` always fits into `usize`, because `len` can be in maximum `usize::MAX`; qed&quot;</span>
-		);
-		<span class="kw">for</span> <span class="ident">on_idle_fn</span> <span class="kw">in</span> <span class="ident">on_idle_functions</span>.<span class="ident">iter</span>().<span class="ident">cycle</span>().<span class="ident">skip</span>(<span class="ident">start_index</span>).<span class="ident">take</span>(<span class="ident">len</span>) {
-			<span class="kw">let</span> <span class="ident">adjusted_remaining_weight</span> <span class="op">=</span> <span class="ident">remaining_weight</span>.<span class="ident">saturating_sub</span>(<span class="ident">weight</span>);
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">on_idle_fn</span>(<span class="ident">n</span>, <span class="ident">adjusted_remaining_weight</span>));
+<span class="attribute">#[cfg_attr(all(not(feature = <span class="string">&quot;tuples-96&quot;</span>), not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">64</span>))]
+#[cfg_attr(all(feature = <span class="string">&quot;tuples-96&quot;</span>, not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">96</span>))]
+#[cfg_attr(feature = <span class="string">&quot;tuples-128&quot;</span>, impl_for_tuples(<span class="number">128</span>))]
+</span><span class="kw">impl</span>&lt;BlockNumber: Copy + AtLeast32BitUnsigned&gt; OnIdle&lt;BlockNumber&gt; <span class="kw">for </span>Tuple {
+	<span class="kw">fn </span>on_idle(n: BlockNumber, remaining_weight: Weight) -&gt; Weight {
+		<span class="kw">let </span>on_idle_functions: <span class="kw-2">&amp;</span>[<span class="kw">fn</span>(BlockNumber, Weight) -&gt; Weight] =
+			<span class="kw-2">&amp;</span>[<span class="macro">for_tuples!</span>( #( Tuple::on_idle ),* )];
+		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
+		<span class="kw">let </span>len = on_idle_functions.len();
+		<span class="kw">let </span>start_index = n % (len <span class="kw">as </span>u32).into();
+		<span class="kw">let </span>start_index = start_index.try_into().ok().expect(
+			<span class="string">&quot;`start_index % len` always fits into `usize`, because `len` can be in maximum `usize::MAX`; qed&quot;
+		</span>);
+		<span class="kw">for </span>on_idle_fn <span class="kw">in </span>on_idle_functions.iter().cycle().skip(start_index).take(len) {
+			<span class="kw">let </span>adjusted_remaining_weight = remaining_weight.saturating_sub(weight);
+			weight = weight.saturating_add(on_idle_fn(n, adjusted_remaining_weight));
 		}
-		<span class="ident">weight</span>
+		weight
 	}
 }
 
-<span class="doccomment">/// A trait that will be called at genesis.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Implementing this trait for a pallet let&#39;s you express operations that should</span>
-<span class="doccomment">/// happen at genesis. It will be called in an externalities provided environment and</span>
-<span class="doccomment">/// will see the genesis state after all pallets have written their genesis state.</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>), <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">64</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">96</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>, <span class="ident">impl_for_tuples</span>(<span class="number">128</span>))]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OnGenesis</span> {
-	<span class="doccomment">/// Something that should happen at genesis.</span>
-	<span class="kw">fn</span> <span class="ident">on_genesis</span>() {}
+<span class="doccomment">/// A trait that will be called at genesis.
+///
+/// Implementing this trait for a pallet let&#39;s you express operations that should
+/// happen at genesis. It will be called in an externalities provided environment and
+/// will see the genesis state after all pallets have written their genesis state.
+</span><span class="attribute">#[cfg_attr(all(not(feature = <span class="string">&quot;tuples-96&quot;</span>), not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">64</span>))]
+#[cfg_attr(all(feature = <span class="string">&quot;tuples-96&quot;</span>, not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">96</span>))]
+#[cfg_attr(feature = <span class="string">&quot;tuples-128&quot;</span>, impl_for_tuples(<span class="number">128</span>))]
+</span><span class="kw">pub trait </span>OnGenesis {
+	<span class="doccomment">/// Something that should happen at genesis.
+	</span><span class="kw">fn </span>on_genesis() {}
 }
 
-<span class="doccomment">/// The runtime upgrade trait.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Implementing this lets you express what should happen when the runtime upgrades,</span>
-<span class="doccomment">/// and changes may need to occur to your module.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OnRuntimeUpgrade</span> {
-	<span class="doccomment">/// Perform a module upgrade.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Warning</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This function will be called before we initialized any runtime state, aka `on_initialize`</span>
-	<span class="doccomment">/// wasn&#39;t called yet. So, information like the block number and any other</span>
-	<span class="doccomment">/// block local data are not accessible.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Return the non-negotiable weight consumed for runtime upgrade.</span>
-	<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="ident">Weight::zero</span>()
+<span class="doccomment">/// The runtime upgrade trait.
+///
+/// Implementing this lets you express what should happen when the runtime upgrades,
+/// and changes may need to occur to your module.
+</span><span class="kw">pub trait </span>OnRuntimeUpgrade {
+	<span class="doccomment">/// Perform a module upgrade.
+	///
+	/// # Warning
+	///
+	/// This function will be called before we initialized any runtime state, aka `on_initialize`
+	/// wasn&#39;t called yet. So, information like the block number and any other
+	/// block local data are not accessible.
+	///
+	/// Return the non-negotiable weight consumed for runtime upgrade.
+	</span><span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+		Weight::zero()
 	}
 
-	<span class="doccomment">/// Execute some pre-checks prior to a runtime upgrade.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Return a `Vec&lt;u8&gt;` that can contain arbitrary encoded data (usually some pre-upgrade state),</span>
-	<span class="doccomment">/// which will be passed to `post_upgrade` after upgrading for post-check. An empty vector</span>
-	<span class="doccomment">/// should be returned if there is no such need.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This hook is never meant to be executed on-chain but is meant to be used by testing tools.</span>
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="ident">Vec::new</span>())
+	<span class="doccomment">/// Execute some pre-checks prior to a runtime upgrade.
+	///
+	/// Return a `Vec&lt;u8&gt;` that can contain arbitrary encoded data (usually some pre-upgrade state),
+	/// which will be passed to `post_upgrade` after upgrading for post-check. An empty vector
+	/// should be returned if there is no such need.
+	///
+	/// This hook is never meant to be executed on-chain but is meant to be used by testing tools.
+	</span><span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="prelude-val">Ok</span>(Vec::new())
 	}
 
-	<span class="doccomment">/// Execute some post-checks after a runtime upgrade.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The `state` parameter is the `Vec&lt;u8&gt;` returned by `pre_upgrade` before upgrading, which</span>
-	<span class="doccomment">/// can be used for post-check. NOTE: if `pre_upgrade` is not implemented an empty vector will</span>
-	<span class="doccomment">/// be passed in, in such case `post_upgrade` should ignore it.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This hook is never meant to be executed on-chain but is meant to be used by testing tools.</span>
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">_state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Execute some post-checks after a runtime upgrade.
+	///
+	/// The `state` parameter is the `Vec&lt;u8&gt;` returned by `pre_upgrade` before upgrading, which
+	/// can be used for post-check. NOTE: if `pre_upgrade` is not implemented an empty vector will
+	/// be passed in, in such case `post_upgrade` should ignore it.
+	///
+	/// This hook is never meant to be executed on-chain but is meant to be used by testing tools.
+	</span><span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">fn </span>post_upgrade(_state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 		<span class="prelude-val">Ok</span>(())
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>), <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">64</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">96</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>, <span class="ident">impl_for_tuples</span>(<span class="number">128</span>))]</span>
-<span class="kw">impl</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">Tuple</span> {
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>))]</span>
-	<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">Weight::zero</span>();
-		<span class="macro">for_tuples!</span>( #( <span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">Tuple::on_runtime_upgrade</span>()); )<span class="op">*</span> );
-		<span class="ident">weight</span>
+<span class="attribute">#[cfg_attr(all(not(feature = <span class="string">&quot;tuples-96&quot;</span>), not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">64</span>))]
+#[cfg_attr(all(feature = <span class="string">&quot;tuples-96&quot;</span>, not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">96</span>))]
+#[cfg_attr(feature = <span class="string">&quot;tuples-128&quot;</span>, impl_for_tuples(<span class="number">128</span>))]
+</span><span class="kw">impl </span>OnRuntimeUpgrade <span class="kw">for </span>Tuple {
+	<span class="attribute">#[cfg(not(feature = <span class="string">&quot;try-runtime&quot;</span>))]
+	</span><span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
+		<span class="macro">for_tuples!</span>( #( weight = weight.saturating_add(Tuple::on_runtime_upgrade()); )* );
+		weight
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="doccomment">/// We are executing pre- and post-checks sequentially in order to be able to test several</span>
-	<span class="doccomment">/// consecutive migrations for the same pallet without errors. Therefore pre and post upgrade</span>
-	<span class="doccomment">/// hooks for tuples are a noop.</span>
-	<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="kw">use</span> <span class="ident">scale_info::prelude::format</span>;
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="doccomment">/// We are executing pre- and post-checks sequentially in order to be able to test several
+	/// consecutive migrations for the same pallet without errors. Therefore pre and post upgrade
+	/// hooks for tuples are a noop.
+	</span><span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+		<span class="kw">use </span>scale_info::prelude::format;
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">Weight::zero</span>();
-		<span class="comment">// migration index in the tuple, start with 1 for better readability</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">1</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
+		<span class="comment">// migration index in the tuple, start with 1 for better readability
+		</span><span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">1</span>;
 		<span class="macro">for_tuples!</span>( #(
-			<span class="kw">let</span> <span class="ident">_guard</span> <span class="op">=</span> <span class="ident">frame_support::StorageNoopGuard::default</span>();
-			<span class="comment">// we want to panic if any checks fail right here right now.</span>
-			<span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">Tuple::pre_upgrade</span>().<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;PreUpgrade failed for migration #{}&quot;</span>, <span class="ident">i</span>));
-			<span class="ident">drop</span>(<span class="ident">_guard</span>);
+			<span class="kw">let </span>_guard = frame_support::StorageNoopGuard::default();
+			<span class="comment">// we want to panic if any checks fail right here right now.
+			</span><span class="kw">let </span>state = Tuple::pre_upgrade().expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;PreUpgrade failed for migration #{}&quot;</span>, i));
+			drop(_guard);
 
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">Tuple::on_runtime_upgrade</span>());
+			weight = weight.saturating_add(Tuple::on_runtime_upgrade());
 
-			<span class="kw">let</span> <span class="ident">_guard</span> <span class="op">=</span> <span class="ident">frame_support::StorageNoopGuard::default</span>();
-			<span class="comment">// we want to panic if any checks fail right here right now.</span>
-			<span class="ident">Tuple::post_upgrade</span>(<span class="ident">state</span>).<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;PostUpgrade failed for migration #{}&quot;</span>, <span class="ident">i</span>));
-			<span class="ident">drop</span>(<span class="ident">_guard</span>);
+			<span class="kw">let </span>_guard = frame_support::StorageNoopGuard::default();
+			<span class="comment">// we want to panic if any checks fail right here right now.
+			</span>Tuple::post_upgrade(state).expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;PostUpgrade failed for migration #{}&quot;</span>, i));
+			drop(_guard);
 
-			<span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-		)<span class="op">*</span> );
-		<span class="ident">weight</span>
+			i += <span class="number">1</span>;
+		)* );
+		weight
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="doccomment">/// noop</span>
-	<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="ident">Vec::new</span>())
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="doccomment">/// noop
+	</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="prelude-val">Ok</span>(Vec::new())
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="doccomment">/// noop</span>
-	<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">_state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="doccomment">/// noop
+	</span><span class="kw">fn </span>post_upgrade(_state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 		<span class="prelude-val">Ok</span>(())
 	}
 }
 
-<span class="doccomment">/// Type that provide some integrity tests.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This implemented for modules by `decl_module`.</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>), <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">64</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">96</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>, <span class="ident">impl_for_tuples</span>(<span class="number">128</span>))]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">IntegrityTest</span> {
-	<span class="doccomment">/// Run integrity test.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The test is not executed in a externalities provided environment.</span>
-	<span class="kw">fn</span> <span class="ident">integrity_test</span>() {}
+<span class="doccomment">/// Type that provide some integrity tests.
+///
+/// This implemented for modules by `decl_module`.
+</span><span class="attribute">#[cfg_attr(all(not(feature = <span class="string">&quot;tuples-96&quot;</span>), not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">64</span>))]
+#[cfg_attr(all(feature = <span class="string">&quot;tuples-96&quot;</span>, not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">96</span>))]
+#[cfg_attr(feature = <span class="string">&quot;tuples-128&quot;</span>, impl_for_tuples(<span class="number">128</span>))]
+</span><span class="kw">pub trait </span>IntegrityTest {
+	<span class="doccomment">/// Run integrity test.
+	///
+	/// The test is not executed in a externalities provided environment.
+	</span><span class="kw">fn </span>integrity_test() {}
 }
 
-<span class="doccomment">/// The pallet hooks trait. Implementing this lets you express some logic to execute.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Hooks</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The block is being finalized. Implement to have something happen.</span>
-	<span class="kw">fn</span> <span class="ident">on_finalize</span>(<span class="ident">_n</span>: <span class="ident">BlockNumber</span>) {}
+<span class="doccomment">/// The pallet hooks trait. Implementing this lets you express some logic to execute.
+</span><span class="kw">pub trait </span>Hooks&lt;BlockNumber&gt; {
+	<span class="doccomment">/// The block is being finalized. Implement to have something happen.
+	</span><span class="kw">fn </span>on_finalize(_n: BlockNumber) {}
 
-	<span class="doccomment">/// This will be run when the block is being finalized (before `on_finalize`).</span>
-	<span class="doccomment">/// Implement to have something happen using the remaining weight.</span>
-	<span class="doccomment">/// Will not fire if the remaining weight is 0.</span>
-	<span class="doccomment">/// Return the weight used, the hook will subtract it from current weight used</span>
-	<span class="doccomment">/// and pass the result to the next `on_idle` hook if it exists.</span>
-	<span class="kw">fn</span> <span class="ident">on_idle</span>(<span class="ident">_n</span>: <span class="ident">BlockNumber</span>, <span class="ident">_remaining_weight</span>: <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="ident">Weight::zero</span>()
+	<span class="doccomment">/// This will be run when the block is being finalized (before `on_finalize`).
+	/// Implement to have something happen using the remaining weight.
+	/// Will not fire if the remaining weight is 0.
+	/// Return the weight used, the hook will subtract it from current weight used
+	/// and pass the result to the next `on_idle` hook if it exists.
+	</span><span class="kw">fn </span>on_idle(_n: BlockNumber, _remaining_weight: Weight) -&gt; Weight {
+		Weight::zero()
 	}
 
-	<span class="doccomment">/// The block is being initialized. Implement to have something happen.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Return the non-negotiable weight consumed in the block.</span>
-	<span class="kw">fn</span> <span class="ident">on_initialize</span>(<span class="ident">_n</span>: <span class="ident">BlockNumber</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="ident">Weight::zero</span>()
+	<span class="doccomment">/// The block is being initialized. Implement to have something happen.
+	///
+	/// Return the non-negotiable weight consumed in the block.
+	</span><span class="kw">fn </span>on_initialize(_n: BlockNumber) -&gt; Weight {
+		Weight::zero()
 	}
 
-	<span class="doccomment">/// Perform a module upgrade.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// NOTE: this doesn&#39;t include all pallet logic triggered on runtime upgrade. For instance it</span>
-	<span class="doccomment">/// doesn&#39;t include the write of the pallet version in storage. The final complete logic</span>
-	<span class="doccomment">/// triggered on runtime upgrade is given by implementation of `OnRuntimeUpgrade` trait by</span>
-	<span class="doccomment">/// `Pallet`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Warning</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This function will be called before we initialized any runtime state, aka `on_initialize`</span>
-	<span class="doccomment">/// wasn&#39;t called yet. So, information like the block number and any other block local data are</span>
-	<span class="doccomment">/// not accessible.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Return the non-negotiable weight consumed for runtime upgrade.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// While this function can be freely implemented, using `on_runtime_upgrade` from inside the</span>
-	<span class="doccomment">/// pallet is discouraged and might get deprecated in the future. Alternatively, export the same</span>
-	<span class="doccomment">/// logic as a free-function from your pallet, and pass it to `type Executive` from the</span>
-	<span class="doccomment">/// top-level runtime.</span>
-	<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="ident">Weight::zero</span>()
+	<span class="doccomment">/// Perform a module upgrade.
+	///
+	/// NOTE: this doesn&#39;t include all pallet logic triggered on runtime upgrade. For instance it
+	/// doesn&#39;t include the write of the pallet version in storage. The final complete logic
+	/// triggered on runtime upgrade is given by implementation of `OnRuntimeUpgrade` trait by
+	/// `Pallet`.
+	///
+	/// # Warning
+	///
+	/// This function will be called before we initialized any runtime state, aka `on_initialize`
+	/// wasn&#39;t called yet. So, information like the block number and any other block local data are
+	/// not accessible.
+	///
+	/// Return the non-negotiable weight consumed for runtime upgrade.
+	///
+	/// While this function can be freely implemented, using `on_runtime_upgrade` from inside the
+	/// pallet is discouraged and might get deprecated in the future. Alternatively, export the same
+	/// logic as a free-function from your pallet, and pass it to `type Executive` from the
+	/// top-level runtime.
+	</span><span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+		Weight::zero()
 	}
 
-	<span class="doccomment">/// Execute the sanity checks of this pallet, per block.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// It should focus on certain checks to ensure that the state is sensible. This is never</span>
-	<span class="doccomment">/// executed in a consensus code-path, therefore it can consume as much weight as it needs.</span>
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">try_state</span>(<span class="ident">_n</span>: <span class="ident">BlockNumber</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Execute the sanity checks of this pallet, per block.
+	///
+	/// It should focus on certain checks to ensure that the state is sensible. This is never
+	/// executed in a consensus code-path, therefore it can consume as much weight as it needs.
+	</span><span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">fn </span>try_state(_n: BlockNumber) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Execute some pre-checks prior to a runtime upgrade.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Return a `Vec&lt;u8&gt;` that can contain arbitrary encoded data (usually some pre-upgrade state),</span>
-	<span class="doccomment">/// which will be passed to `post_upgrade` after upgrading for post-check. An empty vector</span>
-	<span class="doccomment">/// should be returned if there is no such need.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This hook is never meant to be executed on-chain but is meant to be used by testing tools.</span>
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="ident">Vec::new</span>())
+	<span class="doccomment">/// Execute some pre-checks prior to a runtime upgrade.
+	///
+	/// Return a `Vec&lt;u8&gt;` that can contain arbitrary encoded data (usually some pre-upgrade state),
+	/// which will be passed to `post_upgrade` after upgrading for post-check. An empty vector
+	/// should be returned if there is no such need.
+	///
+	/// This hook is never meant to be executed on-chain but is meant to be used by testing tools.
+	</span><span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="prelude-val">Ok</span>(Vec::new())
 	}
 
-	<span class="doccomment">/// Execute some post-checks after a runtime upgrade.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The `state` parameter is the `Vec&lt;u8&gt;` returned by `pre_upgrade` before upgrading, which</span>
-	<span class="doccomment">/// can be used for post-check. NOTE: if `pre_upgrade` is not implemented an empty vector will</span>
-	<span class="doccomment">/// be passed in, in such case `post_upgrade` should ignore it.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This hook is never meant to be executed on-chain but is meant to be used by testing tools.</span>
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">_state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Execute some post-checks after a runtime upgrade.
+	///
+	/// The `state` parameter is the `Vec&lt;u8&gt;` returned by `pre_upgrade` before upgrading, which
+	/// can be used for post-check. NOTE: if `pre_upgrade` is not implemented an empty vector will
+	/// be passed in, in such case `post_upgrade` should ignore it.
+	///
+	/// This hook is never meant to be executed on-chain but is meant to be used by testing tools.
+	</span><span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">fn </span>post_upgrade(_state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Implementing this function on a module allows you to perform long-running tasks</span>
-	<span class="doccomment">/// that make (by default) validators generate transactions that feed results</span>
-	<span class="doccomment">/// of those long-running computations back on chain.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// NOTE: This function runs off-chain, so it can access the block state,</span>
-	<span class="doccomment">/// but cannot preform any alterations. More specifically alterations are</span>
-	<span class="doccomment">/// not forbidden, but they are not persisted in any way after the worker</span>
-	<span class="doccomment">/// has finished.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This function is being called after every block import (when fully synced).</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Implement this and use any of the `Offchain` `sp_io` set of APIs</span>
-	<span class="doccomment">/// to perform off-chain computations, calls and submit transactions</span>
-	<span class="doccomment">/// with results to trigger any on-chain changes.</span>
-	<span class="doccomment">/// Any state alterations are lost and are not persisted.</span>
-	<span class="kw">fn</span> <span class="ident">offchain_worker</span>(<span class="ident">_n</span>: <span class="ident">BlockNumber</span>) {}
+	<span class="doccomment">/// Implementing this function on a module allows you to perform long-running tasks
+	/// that make (by default) validators generate transactions that feed results
+	/// of those long-running computations back on chain.
+	///
+	/// NOTE: This function runs off-chain, so it can access the block state,
+	/// but cannot preform any alterations. More specifically alterations are
+	/// not forbidden, but they are not persisted in any way after the worker
+	/// has finished.
+	///
+	/// This function is being called after every block import (when fully synced).
+	///
+	/// Implement this and use any of the `Offchain` `sp_io` set of APIs
+	/// to perform off-chain computations, calls and submit transactions
+	/// with results to trigger any on-chain changes.
+	/// Any state alterations are lost and are not persisted.
+	</span><span class="kw">fn </span>offchain_worker(_n: BlockNumber) {}
 
-	<span class="doccomment">/// Run integrity test.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The test is not executed in a externalities provided environment.</span>
-	<span class="kw">fn</span> <span class="ident">integrity_test</span>() {}
+	<span class="doccomment">/// Run integrity test.
+	///
+	/// The test is not executed in a externalities provided environment.
+	</span><span class="kw">fn </span>integrity_test() {}
 }
 
-<span class="doccomment">/// A trait to define the build function of a genesis config, T and I are placeholder for pallet</span>
-<span class="doccomment">/// trait and pallet instance.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">GenesisBuild</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span> <span class="op">=</span> ()<span class="op">&gt;</span>: <span class="ident">Default</span> <span class="op">+</span> <span class="ident">sp_runtime::traits::MaybeSerializeDeserialize</span> {
-	<span class="doccomment">/// The build function is called within an externalities allowing storage APIs.</span>
-	<span class="doccomment">/// Thus one can write to storage using regular pallet storages.</span>
-	<span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="self">self</span>);
+<span class="doccomment">/// A trait to define the build function of a genesis config, T and I are placeholder for pallet
+/// trait and pallet instance.
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">pub trait </span>GenesisBuild&lt;T, I = ()&gt;: Default + sp_runtime::traits::MaybeSerializeDeserialize {
+	<span class="doccomment">/// The build function is called within an externalities allowing storage APIs.
+	/// Thus one can write to storage using regular pallet storages.
+	</span><span class="kw">fn </span>build(<span class="kw-2">&amp;</span><span class="self">self</span>);
 
-	<span class="doccomment">/// Build the storage using `build` inside default storage.</span>
-	<span class="kw">fn</span> <span class="ident">build_storage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">sp_runtime::Storage</span>, <span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">Default::default</span>();
-		<span class="self">self</span>.<span class="ident">assimilate_storage</span>(<span class="kw-2">&amp;mut</span> <span class="ident">storage</span>)<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(<span class="ident">storage</span>)
+	<span class="doccomment">/// Build the storage using `build` inside default storage.
+	</span><span class="kw">fn </span>build_storage(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;sp_runtime::Storage, String&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>storage = Default::default();
+		<span class="self">self</span>.assimilate_storage(<span class="kw-2">&amp;mut </span>storage)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(storage)
 	}
 
-	<span class="doccomment">/// Assimilate the storage for this module into pre-existing overlays.</span>
-	<span class="kw">fn</span> <span class="ident">assimilate_storage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">storage</span>: <span class="kw-2">&amp;mut</span> <span class="ident">sp_runtime::Storage</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="ident">sp_state_machine::BasicExternalities::execute_with_storage</span>(<span class="ident">storage</span>, <span class="op">|</span><span class="op">|</span> {
-			<span class="self">self</span>.<span class="ident">build</span>();
+	<span class="doccomment">/// Assimilate the storage for this module into pre-existing overlays.
+	</span><span class="kw">fn </span>assimilate_storage(<span class="kw-2">&amp;</span><span class="self">self</span>, storage: <span class="kw-2">&amp;mut </span>sp_runtime::Storage) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
+		sp_state_machine::BasicExternalities::execute_with_storage(storage, || {
+			<span class="self">self</span>.build();
 			<span class="prelude-val">Ok</span>(())
 		})
 	}
 }
 
-<span class="doccomment">/// A trait which is called when the timestamp is set in the runtime.</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>), <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">64</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-96&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>)), <span class="ident">impl_for_tuples</span>(<span class="number">96</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tuples-128&quot;</span>, <span class="ident">impl_for_tuples</span>(<span class="number">128</span>))]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OnTimestampSet</span><span class="op">&lt;</span><span class="ident">Moment</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Called when the timestamp is set.</span>
-	<span class="kw">fn</span> <span class="ident">on_timestamp_set</span>(<span class="ident">moment</span>: <span class="ident">Moment</span>);
+<span class="doccomment">/// A trait which is called when the timestamp is set in the runtime.
+</span><span class="attribute">#[cfg_attr(all(not(feature = <span class="string">&quot;tuples-96&quot;</span>), not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">64</span>))]
+#[cfg_attr(all(feature = <span class="string">&quot;tuples-96&quot;</span>, not(feature = <span class="string">&quot;tuples-128&quot;</span>)), impl_for_tuples(<span class="number">96</span>))]
+#[cfg_attr(feature = <span class="string">&quot;tuples-128&quot;</span>, impl_for_tuples(<span class="number">128</span>))]
+</span><span class="kw">pub trait </span>OnTimestampSet&lt;Moment&gt; {
+	<span class="doccomment">/// Called when the timestamp is set.
+	</span><span class="kw">fn </span>on_timestamp_set(moment: Moment);
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">on_initialize_and_on_runtime_upgrade_weight_merge_works</span>() {
-		<span class="kw">use</span> <span class="ident">sp_io::TestExternalities</span>;
-		<span class="kw">struct</span> <span class="ident">Test</span>;
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>on_initialize_and_on_runtime_upgrade_weight_merge_works() {
+		<span class="kw">use </span>sp_io::TestExternalities;
+		<span class="kw">struct </span>Test;
 
-		<span class="kw">impl</span> <span class="ident">OnInitialize</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Test</span> {
-			<span class="kw">fn</span> <span class="ident">on_initialize</span>(<span class="ident">_n</span>: <span class="ident">u8</span>) -&gt; <span class="ident">Weight</span> {
-				<span class="ident">Weight::from_ref_time</span>(<span class="number">10</span>)
+		<span class="kw">impl </span>OnInitialize&lt;u8&gt; <span class="kw">for </span>Test {
+			<span class="kw">fn </span>on_initialize(_n: u8) -&gt; Weight {
+				Weight::from_ref_time(<span class="number">10</span>)
 			}
 		}
-		<span class="kw">impl</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">Test</span> {
-			<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-				<span class="ident">Weight::from_ref_time</span>(<span class="number">20</span>)
+		<span class="kw">impl </span>OnRuntimeUpgrade <span class="kw">for </span>Test {
+			<span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+				Weight::from_ref_time(<span class="number">20</span>)
 			}
 		}
 
-		<span class="ident">TestExternalities::default</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="macro">assert_eq!</span>(<span class="op">&lt;</span>(<span class="ident">Test</span>, <span class="ident">Test</span>)<span class="op">&gt;</span><span class="ident">::on_initialize</span>(<span class="number">0</span>), <span class="ident">Weight::from_ref_time</span>(<span class="number">20</span>));
-			<span class="macro">assert_eq!</span>(<span class="op">&lt;</span>(<span class="ident">Test</span>, <span class="ident">Test</span>)<span class="op">&gt;</span><span class="ident">::on_runtime_upgrade</span>(), <span class="ident">Weight::from_ref_time</span>(<span class="number">40</span>));
+		TestExternalities::default().execute_with(|| {
+			<span class="macro">assert_eq!</span>(&lt;(Test, Test)&gt;::on_initialize(<span class="number">0</span>), Weight::from_ref_time(<span class="number">20</span>));
+			<span class="macro">assert_eq!</span>(&lt;(Test, Test)&gt;::on_runtime_upgrade(), Weight::from_ref_time(<span class="number">40</span>));
 		});
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">on_idle_round_robin_works</span>() {
-		<span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">ON_IDLE_INVOCATION_ORDER</span>: <span class="ident">sp_std::vec::Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">sp_std::vec::Vec::new</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>on_idle_round_robin_works() {
+		<span class="kw">static </span><span class="kw-2">mut </span>ON_IDLE_INVOCATION_ORDER: sp_std::vec::Vec&lt;<span class="kw-2">&amp;</span>str&gt; = sp_std::vec::Vec::new();
 
-		<span class="kw">struct</span> <span class="ident">Test1</span>;
-		<span class="kw">struct</span> <span class="ident">Test2</span>;
-		<span class="kw">struct</span> <span class="ident">Test3</span>;
-		<span class="kw">type</span> <span class="ident">TestTuple</span> <span class="op">=</span> (<span class="ident">Test1</span>, <span class="ident">Test2</span>, <span class="ident">Test3</span>);
-		<span class="kw">impl</span> <span class="ident">OnIdle</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Test1</span> {
-			<span class="kw">fn</span> <span class="ident">on_idle</span>(<span class="ident">_n</span>: <span class="ident">u32</span>, <span class="ident">_weight</span>: <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span> {
-				<span class="kw">unsafe</span> {
-					<span class="ident">ON_IDLE_INVOCATION_ORDER</span>.<span class="ident">push</span>(<span class="string">&quot;Test1&quot;</span>);
+		<span class="kw">struct </span>Test1;
+		<span class="kw">struct </span>Test2;
+		<span class="kw">struct </span>Test3;
+		<span class="kw">type </span>TestTuple = (Test1, Test2, Test3);
+		<span class="kw">impl </span>OnIdle&lt;u32&gt; <span class="kw">for </span>Test1 {
+			<span class="kw">fn </span>on_idle(_n: u32, _weight: Weight) -&gt; Weight {
+				<span class="kw">unsafe </span>{
+					ON_IDLE_INVOCATION_ORDER.push(<span class="string">&quot;Test1&quot;</span>);
 				}
-				<span class="ident">Weight::zero</span>()
+				Weight::zero()
 			}
 		}
-		<span class="kw">impl</span> <span class="ident">OnIdle</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Test2</span> {
-			<span class="kw">fn</span> <span class="ident">on_idle</span>(<span class="ident">_n</span>: <span class="ident">u32</span>, <span class="ident">_weight</span>: <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span> {
-				<span class="kw">unsafe</span> {
-					<span class="ident">ON_IDLE_INVOCATION_ORDER</span>.<span class="ident">push</span>(<span class="string">&quot;Test2&quot;</span>);
+		<span class="kw">impl </span>OnIdle&lt;u32&gt; <span class="kw">for </span>Test2 {
+			<span class="kw">fn </span>on_idle(_n: u32, _weight: Weight) -&gt; Weight {
+				<span class="kw">unsafe </span>{
+					ON_IDLE_INVOCATION_ORDER.push(<span class="string">&quot;Test2&quot;</span>);
 				}
-				<span class="ident">Weight::zero</span>()
+				Weight::zero()
 			}
 		}
-		<span class="kw">impl</span> <span class="ident">OnIdle</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Test3</span> {
-			<span class="kw">fn</span> <span class="ident">on_idle</span>(<span class="ident">_n</span>: <span class="ident">u32</span>, <span class="ident">_weight</span>: <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span> {
-				<span class="kw">unsafe</span> {
-					<span class="ident">ON_IDLE_INVOCATION_ORDER</span>.<span class="ident">push</span>(<span class="string">&quot;Test3&quot;</span>);
+		<span class="kw">impl </span>OnIdle&lt;u32&gt; <span class="kw">for </span>Test3 {
+			<span class="kw">fn </span>on_idle(_n: u32, _weight: Weight) -&gt; Weight {
+				<span class="kw">unsafe </span>{
+					ON_IDLE_INVOCATION_ORDER.push(<span class="string">&quot;Test3&quot;</span>);
 				}
-				<span class="ident">Weight::zero</span>()
+				Weight::zero()
 			}
 		}
 
-		<span class="kw">unsafe</span> {
-			<span class="ident">TestTuple::on_idle</span>(<span class="number">0</span>, <span class="ident">Weight::zero</span>());
-			<span class="macro">assert_eq!</span>(<span class="ident">ON_IDLE_INVOCATION_ORDER</span>, [<span class="string">&quot;Test1&quot;</span>, <span class="string">&quot;Test2&quot;</span>, <span class="string">&quot;Test3&quot;</span>].<span class="ident">to_vec</span>());
-			<span class="ident">ON_IDLE_INVOCATION_ORDER</span>.<span class="ident">clear</span>();
+		<span class="kw">unsafe </span>{
+			TestTuple::on_idle(<span class="number">0</span>, Weight::zero());
+			<span class="macro">assert_eq!</span>(ON_IDLE_INVOCATION_ORDER, [<span class="string">&quot;Test1&quot;</span>, <span class="string">&quot;Test2&quot;</span>, <span class="string">&quot;Test3&quot;</span>].to_vec());
+			ON_IDLE_INVOCATION_ORDER.clear();
 
-			<span class="ident">TestTuple::on_idle</span>(<span class="number">1</span>, <span class="ident">Weight::zero</span>());
-			<span class="macro">assert_eq!</span>(<span class="ident">ON_IDLE_INVOCATION_ORDER</span>, [<span class="string">&quot;Test2&quot;</span>, <span class="string">&quot;Test3&quot;</span>, <span class="string">&quot;Test1&quot;</span>].<span class="ident">to_vec</span>());
-			<span class="ident">ON_IDLE_INVOCATION_ORDER</span>.<span class="ident">clear</span>();
+			TestTuple::on_idle(<span class="number">1</span>, Weight::zero());
+			<span class="macro">assert_eq!</span>(ON_IDLE_INVOCATION_ORDER, [<span class="string">&quot;Test2&quot;</span>, <span class="string">&quot;Test3&quot;</span>, <span class="string">&quot;Test1&quot;</span>].to_vec());
+			ON_IDLE_INVOCATION_ORDER.clear();
 
-			<span class="ident">TestTuple::on_idle</span>(<span class="number">2</span>, <span class="ident">Weight::zero</span>());
-			<span class="macro">assert_eq!</span>(<span class="ident">ON_IDLE_INVOCATION_ORDER</span>, [<span class="string">&quot;Test3&quot;</span>, <span class="string">&quot;Test1&quot;</span>, <span class="string">&quot;Test2&quot;</span>].<span class="ident">to_vec</span>());
-			<span class="ident">ON_IDLE_INVOCATION_ORDER</span>.<span class="ident">clear</span>();
+			TestTuple::on_idle(<span class="number">2</span>, Weight::zero());
+			<span class="macro">assert_eq!</span>(ON_IDLE_INVOCATION_ORDER, [<span class="string">&quot;Test3&quot;</span>, <span class="string">&quot;Test1&quot;</span>, <span class="string">&quot;Test2&quot;</span>].to_vec());
+			ON_IDLE_INVOCATION_ORDER.clear();
 
-			<span class="ident">TestTuple::on_idle</span>(<span class="number">3</span>, <span class="ident">Weight::zero</span>());
-			<span class="macro">assert_eq!</span>(<span class="ident">ON_IDLE_INVOCATION_ORDER</span>, [<span class="string">&quot;Test1&quot;</span>, <span class="string">&quot;Test2&quot;</span>, <span class="string">&quot;Test3&quot;</span>].<span class="ident">to_vec</span>());
-			<span class="ident">ON_IDLE_INVOCATION_ORDER</span>.<span class="ident">clear</span>();
+			TestTuple::on_idle(<span class="number">3</span>, Weight::zero());
+			<span class="macro">assert_eq!</span>(ON_IDLE_INVOCATION_ORDER, [<span class="string">&quot;Test1&quot;</span>, <span class="string">&quot;Test2&quot;</span>, <span class="string">&quot;Test3&quot;</span>].to_vec());
+			ON_IDLE_INVOCATION_ORDER.clear();
 
-			<span class="ident">TestTuple::on_idle</span>(<span class="number">4</span>, <span class="ident">Weight::zero</span>());
-			<span class="macro">assert_eq!</span>(<span class="ident">ON_IDLE_INVOCATION_ORDER</span>, [<span class="string">&quot;Test2&quot;</span>, <span class="string">&quot;Test3&quot;</span>, <span class="string">&quot;Test1&quot;</span>].<span class="ident">to_vec</span>());
-			<span class="ident">ON_IDLE_INVOCATION_ORDER</span>.<span class="ident">clear</span>();
+			TestTuple::on_idle(<span class="number">4</span>, Weight::zero());
+			<span class="macro">assert_eq!</span>(ON_IDLE_INVOCATION_ORDER, [<span class="string">&quot;Test2&quot;</span>, <span class="string">&quot;Test3&quot;</span>, <span class="string">&quot;Test1&quot;</span>].to_vec());
+			ON_IDLE_INVOCATION_ORDER.clear();
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">on_runtime_upgrade_tuple</span>() {
-		<span class="kw">use</span> <span class="ident">frame_support::parameter_types</span>;
-		<span class="kw">use</span> <span class="ident">sp_io::TestExternalities</span>;
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	#[test]
+	#[allow(dead_code)]
+	</span><span class="kw">fn </span>on_runtime_upgrade_tuple() {
+		<span class="kw">use </span>frame_support::parameter_types;
+		<span class="kw">use </span>sp_io::TestExternalities;
 
-		<span class="kw">struct</span> <span class="ident">Test1</span>;
-		<span class="kw">struct</span> <span class="ident">Test2</span>;
-		<span class="kw">struct</span> <span class="ident">Test3</span>;
+		<span class="kw">struct </span>Test1;
+		<span class="kw">struct </span>Test2;
+		<span class="kw">struct </span>Test3;
 
-		<span class="macro">parameter_types!</span> {
-			<span class="kw">static</span> <span class="ident">Test1Assertions</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0</span>;
-			<span class="kw">static</span> <span class="ident">Test2Assertions</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0</span>;
-			<span class="kw">static</span> <span class="ident">Test3Assertions</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0</span>;
-			<span class="kw">static</span> <span class="ident">EnableSequentialTest</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="bool-val">false</span>;
-			<span class="kw">static</span> <span class="ident">SequentialAssertions</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">0</span>;
+		<span class="macro">parameter_types! </span>{
+			<span class="kw">static </span>Test1Assertions: u8 = <span class="number">0</span>;
+			<span class="kw">static </span>Test2Assertions: u8 = <span class="number">0</span>;
+			<span class="kw">static </span>Test3Assertions: u8 = <span class="number">0</span>;
+			<span class="kw">static </span>EnableSequentialTest: bool = <span class="bool-val">false</span>;
+			<span class="kw">static </span>SequentialAssertions: u8 = <span class="number">0</span>;
 		}
 
-		<span class="kw">impl</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">Test1</span> {
-			<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-				<span class="prelude-val">Ok</span>(<span class="string">&quot;Test1&quot;</span>.<span class="ident">encode</span>())
+		<span class="kw">impl </span>OnRuntimeUpgrade <span class="kw">for </span>Test1 {
+			<span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+				<span class="prelude-val">Ok</span>(<span class="string">&quot;Test1&quot;</span>.encode())
 			}
-			<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-				<span class="kw">let</span> <span class="ident">s</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">as_slice</span>()).<span class="ident">unwrap</span>();
-				<span class="ident">Test1Assertions::mutate</span>(<span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">val</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>);
-				<span class="kw">if</span> <span class="ident">EnableSequentialTest::get</span>() {
-					<span class="ident">SequentialAssertions::mutate</span>(<span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">val</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>);
+			<span class="kw">fn </span>post_upgrade(state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+				<span class="kw">let </span>s: String = Decode::decode(<span class="kw-2">&amp;mut </span>state.as_slice()).unwrap();
+				Test1Assertions::mutate(|val| <span class="kw-2">*</span>val += <span class="number">1</span>);
+				<span class="kw">if </span>EnableSequentialTest::get() {
+					SequentialAssertions::mutate(|val| <span class="kw-2">*</span>val += <span class="number">1</span>);
 				}
-				<span class="macro">assert_eq!</span>(<span class="ident">s</span>, <span class="string">&quot;Test1&quot;</span>);
+				<span class="macro">assert_eq!</span>(s, <span class="string">&quot;Test1&quot;</span>);
 				<span class="prelude-val">Ok</span>(())
 			}
 		}
 
-		<span class="kw">impl</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">Test2</span> {
-			<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-				<span class="prelude-val">Ok</span>(<span class="number">100u32</span>.<span class="ident">encode</span>())
+		<span class="kw">impl </span>OnRuntimeUpgrade <span class="kw">for </span>Test2 {
+			<span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+				<span class="prelude-val">Ok</span>(<span class="number">100u32</span>.encode())
 			}
-			<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-				<span class="kw">let</span> <span class="ident">s</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">as_slice</span>()).<span class="ident">unwrap</span>();
-				<span class="ident">Test2Assertions::mutate</span>(<span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">val</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>);
-				<span class="kw">if</span> <span class="ident">EnableSequentialTest::get</span>() {
-					<span class="macro">assert_eq!</span>(<span class="ident">SequentialAssertions::get</span>(), <span class="number">1</span>);
-					<span class="ident">SequentialAssertions::mutate</span>(<span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">val</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>);
+			<span class="kw">fn </span>post_upgrade(state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+				<span class="kw">let </span>s: u32 = Decode::decode(<span class="kw-2">&amp;mut </span>state.as_slice()).unwrap();
+				Test2Assertions::mutate(|val| <span class="kw-2">*</span>val += <span class="number">1</span>);
+				<span class="kw">if </span>EnableSequentialTest::get() {
+					<span class="macro">assert_eq!</span>(SequentialAssertions::get(), <span class="number">1</span>);
+					SequentialAssertions::mutate(|val| <span class="kw-2">*</span>val += <span class="number">1</span>);
 				}
-				<span class="macro">assert_eq!</span>(<span class="ident">s</span>, <span class="number">100</span>);
+				<span class="macro">assert_eq!</span>(s, <span class="number">100</span>);
 				<span class="prelude-val">Ok</span>(())
 			}
 		}
 
-		<span class="kw">impl</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">Test3</span> {
-			<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-				<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>.<span class="ident">encode</span>())
+		<span class="kw">impl </span>OnRuntimeUpgrade <span class="kw">for </span>Test3 {
+			<span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+				<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>.encode())
 			}
-			<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-				<span class="kw">let</span> <span class="ident">s</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="ident">Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">state</span>.<span class="ident">as_slice</span>()).<span class="ident">unwrap</span>();
-				<span class="ident">Test3Assertions::mutate</span>(<span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">val</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>);
-				<span class="kw">if</span> <span class="ident">EnableSequentialTest::get</span>() {
-					<span class="macro">assert_eq!</span>(<span class="ident">SequentialAssertions::get</span>(), <span class="number">2</span>);
-					<span class="ident">SequentialAssertions::mutate</span>(<span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">val</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>);
+			<span class="kw">fn </span>post_upgrade(state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+				<span class="kw">let </span>s: bool = Decode::decode(<span class="kw-2">&amp;mut </span>state.as_slice()).unwrap();
+				Test3Assertions::mutate(|val| <span class="kw-2">*</span>val += <span class="number">1</span>);
+				<span class="kw">if </span>EnableSequentialTest::get() {
+					<span class="macro">assert_eq!</span>(SequentialAssertions::get(), <span class="number">2</span>);
+					SequentialAssertions::mutate(|val| <span class="kw-2">*</span>val += <span class="number">1</span>);
 				}
-				<span class="macro">assert_eq!</span>(<span class="ident">s</span>, <span class="bool-val">true</span>);
+				<span class="macro">assert_eq!</span>(s, <span class="bool-val">true</span>);
 				<span class="prelude-val">Ok</span>(())
 			}
 		}
 
-		<span class="ident">TestExternalities::default</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="kw">type</span> <span class="ident">TestEmpty</span> <span class="op">=</span> ();
-			<span class="kw">let</span> <span class="ident">origin_state</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">TestEmpty</span> <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::pre_upgrade</span>().<span class="ident">unwrap</span>();
-			<span class="macro">assert!</span>(<span class="ident">origin_state</span>.<span class="ident">is_empty</span>());
-			<span class="op">&lt;</span><span class="ident">TestEmpty</span> <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::post_upgrade</span>(<span class="ident">origin_state</span>).<span class="ident">unwrap</span>();
+		TestExternalities::default().execute_with(|| {
+			<span class="kw">type </span>TestEmpty = ();
+			<span class="kw">let </span>origin_state = &lt;TestEmpty <span class="kw">as </span>OnRuntimeUpgrade&gt;::pre_upgrade().unwrap();
+			<span class="macro">assert!</span>(origin_state.is_empty());
+			&lt;TestEmpty <span class="kw">as </span>OnRuntimeUpgrade&gt;::post_upgrade(origin_state).unwrap();
 
-			<span class="kw">type</span> <span class="ident">Test1Tuple</span> <span class="op">=</span> (<span class="ident">Test1</span>,);
-			<span class="kw">let</span> <span class="ident">origin_state</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Test1Tuple</span> <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::pre_upgrade</span>().<span class="ident">unwrap</span>();
-			<span class="macro">assert!</span>(<span class="ident">origin_state</span>.<span class="ident">is_empty</span>());
-			<span class="op">&lt;</span><span class="ident">Test1Tuple</span> <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::post_upgrade</span>(<span class="ident">origin_state</span>).<span class="ident">unwrap</span>();
-			<span class="macro">assert_eq!</span>(<span class="ident">Test1Assertions::get</span>(), <span class="number">0</span>);
-			<span class="op">&lt;</span><span class="ident">Test1Tuple</span> <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::on_runtime_upgrade</span>();
-			<span class="macro">assert_eq!</span>(<span class="ident">Test1Assertions::take</span>(), <span class="number">1</span>);
+			<span class="kw">type </span>Test1Tuple = (Test1,);
+			<span class="kw">let </span>origin_state = &lt;Test1Tuple <span class="kw">as </span>OnRuntimeUpgrade&gt;::pre_upgrade().unwrap();
+			<span class="macro">assert!</span>(origin_state.is_empty());
+			&lt;Test1Tuple <span class="kw">as </span>OnRuntimeUpgrade&gt;::post_upgrade(origin_state).unwrap();
+			<span class="macro">assert_eq!</span>(Test1Assertions::get(), <span class="number">0</span>);
+			&lt;Test1Tuple <span class="kw">as </span>OnRuntimeUpgrade&gt;::on_runtime_upgrade();
+			<span class="macro">assert_eq!</span>(Test1Assertions::take(), <span class="number">1</span>);
 
-			<span class="kw">type</span> <span class="ident">Test321</span> <span class="op">=</span> (<span class="ident">Test3</span>, <span class="ident">Test2</span>, <span class="ident">Test1</span>);
-			<span class="op">&lt;</span><span class="ident">Test321</span> <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::on_runtime_upgrade</span>();
-			<span class="macro">assert_eq!</span>(<span class="ident">Test1Assertions::take</span>(), <span class="number">1</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">Test2Assertions::take</span>(), <span class="number">1</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">Test3Assertions::take</span>(), <span class="number">1</span>);
+			<span class="kw">type </span>Test321 = (Test3, Test2, Test1);
+			&lt;Test321 <span class="kw">as </span>OnRuntimeUpgrade&gt;::on_runtime_upgrade();
+			<span class="macro">assert_eq!</span>(Test1Assertions::take(), <span class="number">1</span>);
+			<span class="macro">assert_eq!</span>(Test2Assertions::take(), <span class="number">1</span>);
+			<span class="macro">assert_eq!</span>(Test3Assertions::take(), <span class="number">1</span>);
 
-			<span class="comment">// enable sequential tests</span>
-			<span class="ident">EnableSequentialTest::mutate</span>(<span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">val</span> <span class="op">=</span> <span class="bool-val">true</span>);
+			<span class="comment">// enable sequential tests
+			</span>EnableSequentialTest::mutate(|val| <span class="kw-2">*</span>val = <span class="bool-val">true</span>);
 
-			<span class="kw">type</span> <span class="ident">Test123</span> <span class="op">=</span> (<span class="ident">Test1</span>, <span class="ident">Test2</span>, <span class="ident">Test3</span>);
-			<span class="op">&lt;</span><span class="ident">Test123</span> <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::on_runtime_upgrade</span>();
-			<span class="macro">assert_eq!</span>(<span class="ident">Test1Assertions::take</span>(), <span class="number">1</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">Test2Assertions::take</span>(), <span class="number">1</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">Test3Assertions::take</span>(), <span class="number">1</span>);
+			<span class="kw">type </span>Test123 = (Test1, Test2, Test3);
+			&lt;Test123 <span class="kw">as </span>OnRuntimeUpgrade&gt;::on_runtime_upgrade();
+			<span class="macro">assert_eq!</span>(Test1Assertions::take(), <span class="number">1</span>);
+			<span class="macro">assert_eq!</span>(Test2Assertions::take(), <span class="number">1</span>);
+			<span class="macro">assert_eq!</span>(Test3Assertions::take(), <span class="number">1</span>);
 
-			<span class="comment">// reset assertions</span>
-			<span class="ident">SequentialAssertions::take</span>();
+			<span class="comment">// reset assertions
+			</span>SequentialAssertions::take();
 
-			<span class="kw">type</span> <span class="ident">TestNested123</span> <span class="op">=</span> (<span class="ident">Test1</span>, (<span class="ident">Test2</span>, <span class="ident">Test3</span>));
-			<span class="op">&lt;</span><span class="ident">TestNested123</span> <span class="kw">as</span> <span class="ident">OnRuntimeUpgrade</span><span class="op">&gt;</span><span class="ident">::on_runtime_upgrade</span>();
-			<span class="macro">assert_eq!</span>(<span class="ident">Test1Assertions::take</span>(), <span class="number">1</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">Test2Assertions::take</span>(), <span class="number">1</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">Test3Assertions::take</span>(), <span class="number">1</span>);
+			<span class="kw">type </span>TestNested123 = (Test1, (Test2, Test3));
+			&lt;TestNested123 <span class="kw">as </span>OnRuntimeUpgrade&gt;::on_runtime_upgrade();
+			<span class="macro">assert_eq!</span>(Test1Assertions::take(), <span class="number">1</span>);
+			<span class="macro">assert_eq!</span>(Test2Assertions::take(), <span class="number">1</span>);
+			<span class="macro">assert_eq!</span>(Test3Assertions::take(), <span class="number">1</span>);
 		});
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

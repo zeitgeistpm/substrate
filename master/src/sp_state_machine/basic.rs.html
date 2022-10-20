@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/state-machine/src/basic.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>basic.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sp_state_machine/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sp_state_machine/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sp_state_machine/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/state-machine/src/basic.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>basic.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sp_state_machine/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sp_state_machine/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -446,448 +440,447 @@
 <span id="440">440</span>
 <span id="441">441</span>
 <span id="442">442</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Basic implementation for Externalities.</span>
+</span><span class="doccomment">//! Basic implementation for Externalities.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Backend</span>, <span class="ident">OverlayedChanges</span>, <span class="ident">StorageKey</span>, <span class="ident">StorageValue</span>};
-<span class="kw">use</span> <span class="ident">codec::Encode</span>;
-<span class="kw">use</span> <span class="ident">hash_db::Hasher</span>;
-<span class="kw">use</span> <span class="ident">log::warn</span>;
-<span class="kw">use</span> <span class="ident">sp_core</span>::{
-	<span class="ident">storage</span>::{
-		<span class="ident">well_known_keys::is_child_storage_key</span>, <span class="ident">ChildInfo</span>, <span class="ident">StateVersion</span>, <span class="ident">Storage</span>, <span class="ident">TrackedStorageKey</span>,
+</span><span class="kw">use crate</span>::{Backend, OverlayedChanges, StorageKey, StorageValue};
+<span class="kw">use </span>codec::Encode;
+<span class="kw">use </span>hash_db::Hasher;
+<span class="kw">use </span>log::warn;
+<span class="kw">use </span>sp_core::{
+	storage::{
+		well_known_keys::is_child_storage_key, ChildInfo, StateVersion, Storage, TrackedStorageKey,
 	},
-	<span class="ident">traits::Externalities</span>,
-	<span class="ident">Blake2Hasher</span>,
+	traits::Externalities,
+	Blake2Hasher,
 };
-<span class="kw">use</span> <span class="ident">sp_externalities</span>::{<span class="ident">Extension</span>, <span class="ident">Extensions</span>, <span class="ident">MultiRemovalResults</span>};
-<span class="kw">use</span> <span class="ident">sp_trie</span>::{<span class="ident">empty_child_trie_root</span>, <span class="ident">HashKey</span>, <span class="ident">LayoutV0</span>, <span class="ident">LayoutV1</span>, <span class="ident">TrieConfiguration</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-	<span class="ident">any</span>::{<span class="ident">Any</span>, <span class="ident">TypeId</span>},
-	<span class="ident">collections::BTreeMap</span>,
-	<span class="ident">iter::FromIterator</span>,
+<span class="kw">use </span>sp_externalities::{Extension, Extensions, MultiRemovalResults};
+<span class="kw">use </span>sp_trie::{empty_child_trie_root, HashKey, LayoutV0, LayoutV1, TrieConfiguration};
+<span class="kw">use </span>std::{
+	any::{Any, TypeId},
+	collections::BTreeMap,
+	iter::FromIterator,
 };
 
-<span class="doccomment">/// Simple Map-based Externalities impl.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicExternalities</span> {
-	<span class="ident">overlay</span>: <span class="ident">OverlayedChanges</span>,
-	<span class="ident">extensions</span>: <span class="ident">Extensions</span>,
+<span class="doccomment">/// Simple Map-based Externalities impl.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>BasicExternalities {
+	overlay: OverlayedChanges,
+	extensions: Extensions,
 }
 
-<span class="kw">impl</span> <span class="ident">BasicExternalities</span> {
-	<span class="doccomment">/// Create a new instance of `BasicExternalities`</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="ident">Storage</span>) -&gt; <span class="self">Self</span> {
-		<span class="ident">BasicExternalities</span> { <span class="ident">overlay</span>: <span class="ident">inner</span>.<span class="ident">into</span>(), <span class="ident">extensions</span>: <span class="ident">Default::default</span>() }
+<span class="kw">impl </span>BasicExternalities {
+	<span class="doccomment">/// Create a new instance of `BasicExternalities`
+	</span><span class="kw">pub fn </span>new(inner: Storage) -&gt; <span class="self">Self </span>{
+		BasicExternalities { overlay: inner.into(), extensions: Default::default() }
 	}
 
-	<span class="doccomment">/// New basic externalities with empty storage.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_empty</span>() -&gt; <span class="self">Self</span> {
-		<span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">Storage::default</span>())
+	<span class="doccomment">/// New basic externalities with empty storage.
+	</span><span class="kw">pub fn </span>new_empty() -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>::new(Storage::default())
 	}
 
-	<span class="doccomment">/// Insert key/value</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">k</span>: <span class="ident">StorageKey</span>, <span class="ident">v</span>: <span class="ident">StorageValue</span>) {
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">set_storage</span>(<span class="ident">k</span>, <span class="prelude-val">Some</span>(<span class="ident">v</span>));
+	<span class="doccomment">/// Insert key/value
+	</span><span class="kw">pub fn </span>insert(<span class="kw-2">&amp;mut </span><span class="self">self</span>, k: StorageKey, v: StorageValue) {
+		<span class="self">self</span>.overlay.set_storage(k, <span class="prelude-val">Some</span>(v));
 	}
 
-	<span class="doccomment">/// Consume self and returns inner storages</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_storages</span>(<span class="self">self</span>) -&gt; <span class="ident">Storage</span> {
-		<span class="ident">Storage</span> {
-			<span class="ident">top</span>: <span class="self">self</span>
-				.<span class="ident">overlay</span>
-				.<span class="ident">changes</span>()
-				.<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">v</span>.<span class="ident">value</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> (<span class="ident">k</span>.<span class="ident">to_vec</span>(), <span class="ident">v</span>.<span class="ident">to_vec</span>())))
-				.<span class="ident">collect</span>(),
-			<span class="ident">children_default</span>: <span class="self">self</span>
-				.<span class="ident">overlay</span>
-				.<span class="ident">children</span>()
-				.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">iter</span>, <span class="ident">i</span>)<span class="op">|</span> {
+	<span class="doccomment">/// Consume self and returns inner storages
+	</span><span class="kw">pub fn </span>into_storages(<span class="self">self</span>) -&gt; Storage {
+		Storage {
+			top: <span class="self">self
+				</span>.overlay
+				.changes()
+				.filter_map(|(k, v)| v.value().map(|v| (k.to_vec(), v.to_vec())))
+				.collect(),
+			children_default: <span class="self">self
+				</span>.overlay
+				.children()
+				.map(|(iter, i)| {
 					(
-						<span class="ident">i</span>.<span class="ident">storage_key</span>().<span class="ident">to_vec</span>(),
-						<span class="ident">sp_core::storage::StorageChild</span> {
-							<span class="ident">data</span>: <span class="ident">iter</span>
-								.<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">v</span>.<span class="ident">value</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> (<span class="ident">k</span>.<span class="ident">to_vec</span>(), <span class="ident">v</span>.<span class="ident">to_vec</span>())))
-								.<span class="ident">collect</span>(),
-							<span class="ident">child_info</span>: <span class="ident">i</span>.<span class="ident">clone</span>(),
+						i.storage_key().to_vec(),
+						sp_core::storage::StorageChild {
+							data: iter
+								.filter_map(|(k, v)| v.value().map(|v| (k.to_vec(), v.to_vec())))
+								.collect(),
+							child_info: i.clone(),
 						},
 					)
 				})
-				.<span class="ident">collect</span>(),
+				.collect(),
 		}
 	}
 
-	<span class="doccomment">/// Execute the given closure `f` with the externalities set and initialized with `storage`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns the result of the closure and updates `storage` with all changes.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">execute_with_storage</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
-		<span class="ident">storage</span>: <span class="kw-2">&amp;mut</span> <span class="ident">sp_core::storage::Storage</span>,
-		<span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>() -&gt; <span class="ident">R</span>,
-	) -&gt; <span class="ident">R</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">std::mem::take</span>(<span class="ident">storage</span>));
+	<span class="doccomment">/// Execute the given closure `f` with the externalities set and initialized with `storage`.
+	///
+	/// Returns the result of the closure and updates `storage` with all changes.
+	</span><span class="kw">pub fn </span>execute_with_storage&lt;R&gt;(
+		storage: <span class="kw-2">&amp;mut </span>sp_core::storage::Storage,
+		f: <span class="kw">impl </span>FnOnce() -&gt; R,
+	) -&gt; R {
+		<span class="kw">let </span><span class="kw-2">mut </span>ext = <span class="self">Self</span>::new(std::mem::take(storage));
 
-		<span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">ext</span>.<span class="ident">execute_with</span>(<span class="ident">f</span>);
+		<span class="kw">let </span>r = ext.execute_with(f);
 
-		<span class="kw-2">*</span><span class="ident">storage</span> <span class="op">=</span> <span class="ident">ext</span>.<span class="ident">into_storages</span>();
+		<span class="kw-2">*</span>storage = ext.into_storages();
 
-		<span class="ident">r</span>
+		r
 	}
 
-	<span class="doccomment">/// Execute the given closure while `self` is set as externalities.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns the result of the given closure.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">execute_with</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">f</span>: <span class="kw">impl</span> <span class="ident">FnOnce</span>() -&gt; <span class="ident">R</span>) -&gt; <span class="ident">R</span> {
-		<span class="ident">sp_externalities::set_and_run_with_externalities</span>(<span class="self">self</span>, <span class="ident">f</span>)
+	<span class="doccomment">/// Execute the given closure while `self` is set as externalities.
+	///
+	/// Returns the result of the given closure.
+	</span><span class="kw">pub fn </span>execute_with&lt;R&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, f: <span class="kw">impl </span>FnOnce() -&gt; R) -&gt; R {
+		sp_externalities::set_and_run_with_externalities(<span class="self">self</span>, f)
 	}
 
-	<span class="doccomment">/// List of active extensions.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extensions</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Extensions</span> {
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">extensions</span>
+	<span class="doccomment">/// List of active extensions.
+	</span><span class="kw">pub fn </span>extensions(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Extensions {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.extensions
 	}
 
-	<span class="doccomment">/// Register an extension.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">register_extension</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">ext</span>: <span class="kw">impl</span> <span class="ident">Extension</span>) {
-		<span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">register</span>(<span class="ident">ext</span>);
+	<span class="doccomment">/// Register an extension.
+	</span><span class="kw">pub fn </span>register_extension(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ext: <span class="kw">impl </span>Extension) {
+		<span class="self">self</span>.extensions.register(ext);
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">BasicExternalities</span> {
-	<span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">BasicExternalities</span>) -&gt; <span class="ident">bool</span> {
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">changes</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>, <span class="ident">v</span>.<span class="ident">value</span>())).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>() <span class="op">==</span>
-			<span class="ident">other</span>.<span class="ident">overlay</span>.<span class="ident">changes</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>, <span class="ident">v</span>.<span class="ident">value</span>())).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>() <span class="op">&amp;&amp;</span>
-			<span class="self">self</span>.<span class="ident">overlay</span>
-				.<span class="ident">children</span>()
-				.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">iter</span>, <span class="ident">i</span>)<span class="op">|</span> (<span class="ident">i</span>, <span class="ident">iter</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>, <span class="ident">v</span>.<span class="ident">value</span>())).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()))
-				.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>() <span class="op">==</span>
-				<span class="ident">other</span>
-					.<span class="ident">overlay</span>
-					.<span class="ident">children</span>()
-					.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">iter</span>, <span class="ident">i</span>)<span class="op">|</span> {
-						(<span class="ident">i</span>, <span class="ident">iter</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>, <span class="ident">v</span>.<span class="ident">value</span>())).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>())
+<span class="kw">impl </span>PartialEq <span class="kw">for </span>BasicExternalities {
+	<span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>BasicExternalities) -&gt; bool {
+		<span class="self">self</span>.overlay.changes().map(|(k, v)| (k, v.value())).collect::&lt;BTreeMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;&gt;() ==
+			other.overlay.changes().map(|(k, v)| (k, v.value())).collect::&lt;BTreeMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;&gt;() &amp;&amp;
+			<span class="self">self</span>.overlay
+				.children()
+				.map(|(iter, i)| (i, iter.map(|(k, v)| (k, v.value())).collect::&lt;BTreeMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;&gt;()))
+				.collect::&lt;BTreeMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;&gt;() ==
+				other
+					.overlay
+					.children()
+					.map(|(iter, i)| {
+						(i, iter.map(|(k, v)| (k, v.value())).collect::&lt;BTreeMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;&gt;())
 					})
-					.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+					.collect::&lt;BTreeMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;&gt;()
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">FromIterator</span><span class="op">&lt;</span>(<span class="ident">StorageKey</span>, <span class="ident">StorageValue</span>)<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BasicExternalities</span> {
-	<span class="kw">fn</span> <span class="ident">from_iter</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">StorageKey</span>, <span class="ident">StorageValue</span>)<span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::default</span>();
-		<span class="ident">iter</span>.<span class="ident">into_iter</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">t</span>.<span class="ident">insert</span>(<span class="ident">k</span>, <span class="ident">v</span>));
-		<span class="ident">t</span>
+<span class="kw">impl </span>FromIterator&lt;(StorageKey, StorageValue)&gt; <span class="kw">for </span>BasicExternalities {
+	<span class="kw">fn </span>from_iter&lt;I: IntoIterator&lt;Item = (StorageKey, StorageValue)&gt;&gt;(iter: I) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span><span class="kw-2">mut </span>t = <span class="self">Self</span>::default();
+		iter.into_iter().for_each(|(k, v)| t.insert(k, v));
+		t
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">BasicExternalities</span> {
-	<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-		<span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">Default::default</span>())
+<span class="kw">impl </span>Default <span class="kw">for </span>BasicExternalities {
+	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>::new(Default::default())
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">StorageKey</span>, <span class="ident">StorageValue</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BasicExternalities</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">map</span>: <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">StorageKey</span>, <span class="ident">StorageValue</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-		<span class="ident"><span class="self">Self</span>::from_iter</span>(<span class="ident">map</span>.<span class="ident">into_iter</span>())
+<span class="kw">impl </span>From&lt;BTreeMap&lt;StorageKey, StorageValue&gt;&gt; <span class="kw">for </span>BasicExternalities {
+	<span class="kw">fn </span>from(map: BTreeMap&lt;StorageKey, StorageValue&gt;) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>::from_iter(map.into_iter())
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">Externalities</span> <span class="kw">for</span> <span class="ident">BasicExternalities</span> {
-	<span class="kw">fn</span> <span class="ident">set_offchain_storage</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>) {}
+<span class="kw">impl </span>Externalities <span class="kw">for </span>BasicExternalities {
+	<span class="kw">fn </span>set_offchain_storage(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _key: <span class="kw-2">&amp;</span>[u8], _value: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;) {}
 
-	<span class="kw">fn</span> <span class="ident">storage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StorageValue</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">storage</span>(<span class="ident">key</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">to_vec</span>()))
+	<span class="kw">fn </span>storage(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;StorageValue&gt; {
+		<span class="self">self</span>.overlay.storage(key).and_then(|v| v.map(|v| v.to_vec()))
 	}
 
-	<span class="kw">fn</span> <span class="ident">storage_hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">storage</span>(<span class="ident">key</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">Blake2Hasher::hash</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>).<span class="ident">encode</span>())
+	<span class="kw">fn </span>storage_hash(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
+		<span class="self">self</span>.storage(key).map(|v| Blake2Hasher::hash(<span class="kw-2">&amp;</span>v).encode())
 	}
 
-	<span class="kw">fn</span> <span class="ident">child_storage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StorageValue</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">child_storage</span>(<span class="ident">child_info</span>, <span class="ident">key</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">to_vec</span>()))
+	<span class="kw">fn </span>child_storage(<span class="kw-2">&amp;</span><span class="self">self</span>, child_info: <span class="kw-2">&amp;</span>ChildInfo, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;StorageValue&gt; {
+		<span class="self">self</span>.overlay.child_storage(child_info, key).and_then(|v| v.map(|v| v.to_vec()))
 	}
 
-	<span class="kw">fn</span> <span class="ident">child_storage_hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">child_storage</span>(<span class="ident">child_info</span>, <span class="ident">key</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">Blake2Hasher::hash</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>).<span class="ident">encode</span>())
+	<span class="kw">fn </span>child_storage_hash(<span class="kw-2">&amp;</span><span class="self">self</span>, child_info: <span class="kw-2">&amp;</span>ChildInfo, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
+		<span class="self">self</span>.child_storage(child_info, key).map(|v| Blake2Hasher::hash(<span class="kw-2">&amp;</span>v).encode())
 	}
 
-	<span class="kw">fn</span> <span class="ident">next_storage_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StorageKey</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">iter_after</span>(<span class="ident">key</span>).<span class="ident">find_map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">v</span>.<span class="ident">value</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">k</span>.<span class="ident">to_vec</span>()))
+	<span class="kw">fn </span>next_storage_key(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;StorageKey&gt; {
+		<span class="self">self</span>.overlay.iter_after(key).find_map(|(k, v)| v.value().map(|<span class="kw">_</span>| k.to_vec()))
 	}
 
-	<span class="kw">fn</span> <span class="ident">next_child_storage_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StorageKey</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">overlay</span>
-			.<span class="ident">child_iter_after</span>(<span class="ident">child_info</span>.<span class="ident">storage_key</span>(), <span class="ident">key</span>)
-			.<span class="ident">find_map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">v</span>.<span class="ident">value</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">k</span>.<span class="ident">to_vec</span>()))
+	<span class="kw">fn </span>next_child_storage_key(<span class="kw-2">&amp;</span><span class="self">self</span>, child_info: <span class="kw-2">&amp;</span>ChildInfo, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;StorageKey&gt; {
+		<span class="self">self</span>.overlay
+			.child_iter_after(child_info.storage_key(), key)
+			.find_map(|(k, v)| v.value().map(|<span class="kw">_</span>| k.to_vec()))
 	}
 
-	<span class="kw">fn</span> <span class="ident">place_storage</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">StorageKey</span>, <span class="ident">maybe_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StorageValue</span><span class="op">&gt;</span>) {
-		<span class="kw">if</span> <span class="ident">is_child_storage_key</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>) {
-			<span class="macro">warn!</span>(<span class="ident">target</span>: <span class="string">&quot;trie&quot;</span>, <span class="string">&quot;Refuse to set child storage key via main storage&quot;</span>);
-			<span class="kw">return</span>
-		}
+	<span class="kw">fn </span>place_storage(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: StorageKey, maybe_value: <span class="prelude-ty">Option</span>&lt;StorageValue&gt;) {
+		<span class="kw">if </span>is_child_storage_key(<span class="kw-2">&amp;</span>key) {
+			<span class="macro">warn!</span>(target: <span class="string">&quot;trie&quot;</span>, <span class="string">&quot;Refuse to set child storage key via main storage&quot;</span>);
+			<span class="kw">return
+		</span>}
 
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">set_storage</span>(<span class="ident">key</span>, <span class="ident">maybe_value</span>)
+		<span class="self">self</span>.overlay.set_storage(key, maybe_value)
 	}
 
-	<span class="kw">fn</span> <span class="ident">place_child_storage</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">key</span>: <span class="ident">StorageKey</span>,
-		<span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StorageValue</span><span class="op">&gt;</span>,
+	<span class="kw">fn </span>place_child_storage(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		key: StorageKey,
+		value: <span class="prelude-ty">Option</span>&lt;StorageValue&gt;,
 	) {
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">set_child_storage</span>(<span class="ident">child_info</span>, <span class="ident">key</span>, <span class="ident">value</span>);
+		<span class="self">self</span>.overlay.set_child_storage(child_info, key, value);
 	}
 
-	<span class="kw">fn</span> <span class="ident">kill_child_storage</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">_maybe_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
-		<span class="ident">_maybe_cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-	) -&gt; <span class="ident">MultiRemovalResults</span> {
-		<span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">clear_child_storage</span>(<span class="ident">child_info</span>);
-		<span class="ident">MultiRemovalResults</span> { <span class="ident">maybe_cursor</span>: <span class="prelude-val">None</span>, <span class="ident">backend</span>: <span class="ident">count</span>, <span class="ident">unique</span>: <span class="ident">count</span>, <span class="ident">loops</span>: <span class="ident">count</span> }
+	<span class="kw">fn </span>kill_child_storage(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		_maybe_limit: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+		_maybe_cursor: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;,
+	) -&gt; MultiRemovalResults {
+		<span class="kw">let </span>count = <span class="self">self</span>.overlay.clear_child_storage(child_info);
+		MultiRemovalResults { maybe_cursor: <span class="prelude-val">None</span>, backend: count, unique: count, loops: count }
 	}
 
-	<span class="kw">fn</span> <span class="ident">clear_prefix</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">prefix</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-		<span class="ident">_maybe_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
-		<span class="ident">_maybe_cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-	) -&gt; <span class="ident">MultiRemovalResults</span> {
-		<span class="kw">if</span> <span class="ident">is_child_storage_key</span>(<span class="ident">prefix</span>) {
+	<span class="kw">fn </span>clear_prefix(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		prefix: <span class="kw-2">&amp;</span>[u8],
+		_maybe_limit: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+		_maybe_cursor: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;,
+	) -&gt; MultiRemovalResults {
+		<span class="kw">if </span>is_child_storage_key(prefix) {
 			<span class="macro">warn!</span>(
-				<span class="ident">target</span>: <span class="string">&quot;trie&quot;</span>,
-				<span class="string">&quot;Refuse to clear prefix that is part of child storage key via main storage&quot;</span>
-			);
-			<span class="kw">let</span> <span class="ident">maybe_cursor</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">prefix</span>.<span class="ident">to_vec</span>());
-			<span class="kw">return</span> <span class="ident">MultiRemovalResults</span> { <span class="ident">maybe_cursor</span>, <span class="ident">backend</span>: <span class="number">0</span>, <span class="ident">unique</span>: <span class="number">0</span>, <span class="ident">loops</span>: <span class="number">0</span> }
+				target: <span class="string">&quot;trie&quot;</span>,
+				<span class="string">&quot;Refuse to clear prefix that is part of child storage key via main storage&quot;
+			</span>);
+			<span class="kw">let </span>maybe_cursor = <span class="prelude-val">Some</span>(prefix.to_vec());
+			<span class="kw">return </span>MultiRemovalResults { maybe_cursor, backend: <span class="number">0</span>, unique: <span class="number">0</span>, loops: <span class="number">0 </span>}
 		}
 
-		<span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">clear_prefix</span>(<span class="ident">prefix</span>);
-		<span class="ident">MultiRemovalResults</span> { <span class="ident">maybe_cursor</span>: <span class="prelude-val">None</span>, <span class="ident">backend</span>: <span class="ident">count</span>, <span class="ident">unique</span>: <span class="ident">count</span>, <span class="ident">loops</span>: <span class="ident">count</span> }
+		<span class="kw">let </span>count = <span class="self">self</span>.overlay.clear_prefix(prefix);
+		MultiRemovalResults { maybe_cursor: <span class="prelude-val">None</span>, backend: count, unique: count, loops: count }
 	}
 
-	<span class="kw">fn</span> <span class="ident">clear_child_prefix</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">prefix</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-		<span class="ident">_maybe_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
-		<span class="ident">_maybe_cursor</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-	) -&gt; <span class="ident">MultiRemovalResults</span> {
-		<span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">clear_child_prefix</span>(<span class="ident">child_info</span>, <span class="ident">prefix</span>);
-		<span class="ident">MultiRemovalResults</span> { <span class="ident">maybe_cursor</span>: <span class="prelude-val">None</span>, <span class="ident">backend</span>: <span class="ident">count</span>, <span class="ident">unique</span>: <span class="ident">count</span>, <span class="ident">loops</span>: <span class="ident">count</span> }
+	<span class="kw">fn </span>clear_child_prefix(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		prefix: <span class="kw-2">&amp;</span>[u8],
+		_maybe_limit: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+		_maybe_cursor: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;,
+	) -&gt; MultiRemovalResults {
+		<span class="kw">let </span>count = <span class="self">self</span>.overlay.clear_child_prefix(child_info, prefix);
+		MultiRemovalResults { maybe_cursor: <span class="prelude-val">None</span>, backend: count, unique: count, loops: count }
 	}
 
-	<span class="kw">fn</span> <span class="ident">storage_append</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
-		<span class="kw">let</span> <span class="ident">current_value</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">value_mut_or_insert_with</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="op">|</span><span class="op">|</span> <span class="ident">Default::default</span>());
-		<span class="ident"><span class="kw">crate</span>::ext::StorageAppend::new</span>(<span class="ident">current_value</span>).<span class="ident">append</span>(<span class="ident">value</span>);
+	<span class="kw">fn </span>storage_append(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: Vec&lt;u8&gt;, value: Vec&lt;u8&gt;) {
+		<span class="kw">let </span>current_value = <span class="self">self</span>.overlay.value_mut_or_insert_with(<span class="kw-2">&amp;</span>key, || Default::default());
+		<span class="kw">crate</span>::ext::StorageAppend::new(current_value).append(value);
 	}
 
-	<span class="kw">fn</span> <span class="ident">storage_root</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">state_version</span>: <span class="ident">StateVersion</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">top</span> <span class="op">=</span> <span class="self">self</span>
-			.<span class="ident">overlay</span>
-			.<span class="ident">changes</span>()
-			.<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">v</span>.<span class="ident">value</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> (<span class="ident">k</span>.<span class="ident">clone</span>(), <span class="ident">v</span>.<span class="ident">clone</span>())))
-			.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-		<span class="comment">// Single child trie implementation currently allows using the same child</span>
-		<span class="comment">// empty root for all child trie. Using null storage key until multiple</span>
-		<span class="comment">// type of child trie support.</span>
-		<span class="kw">let</span> <span class="ident">empty_hash</span> <span class="op">=</span> <span class="ident">empty_child_trie_root</span>::<span class="op">&lt;</span><span class="ident">LayoutV1</span><span class="op">&lt;</span><span class="ident">Blake2Hasher</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-		<span class="kw">for</span> <span class="ident">child_info</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">children</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="number">1</span>.<span class="ident">clone</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>() {
-			<span class="kw">let</span> <span class="ident">child_root</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">child_storage_root</span>(<span class="kw-2">&amp;</span><span class="ident">child_info</span>, <span class="ident">state_version</span>);
-			<span class="kw">if</span> <span class="ident">empty_hash</span>[..] <span class="op">==</span> <span class="ident">child_root</span>[..] {
-				<span class="ident">top</span>.<span class="ident">remove</span>(<span class="ident">child_info</span>.<span class="ident">prefixed_storage_key</span>().<span class="ident">as_slice</span>());
-			} <span class="kw">else</span> {
-				<span class="ident">top</span>.<span class="ident">insert</span>(<span class="ident">child_info</span>.<span class="ident">prefixed_storage_key</span>().<span class="ident">into_inner</span>(), <span class="ident">child_root</span>);
+	<span class="kw">fn </span>storage_root(<span class="kw-2">&amp;mut </span><span class="self">self</span>, state_version: StateVersion) -&gt; Vec&lt;u8&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>top = <span class="self">self
+			</span>.overlay
+			.changes()
+			.filter_map(|(k, v)| v.value().map(|v| (k.clone(), v.clone())))
+			.collect::&lt;BTreeMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;&gt;();
+		<span class="comment">// Single child trie implementation currently allows using the same child
+		// empty root for all child trie. Using null storage key until multiple
+		// type of child trie support.
+		</span><span class="kw">let </span>empty_hash = empty_child_trie_root::&lt;LayoutV1&lt;Blake2Hasher&gt;&gt;();
+		<span class="kw">for </span>child_info <span class="kw">in </span><span class="self">self</span>.overlay.children().map(|d| d.<span class="number">1</span>.clone()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;() {
+			<span class="kw">let </span>child_root = <span class="self">self</span>.child_storage_root(<span class="kw-2">&amp;</span>child_info, state_version);
+			<span class="kw">if </span>empty_hash[..] == child_root[..] {
+				top.remove(child_info.prefixed_storage_key().as_slice());
+			} <span class="kw">else </span>{
+				top.insert(child_info.prefixed_storage_key().into_inner(), child_root);
 			}
 		}
 
-		<span class="kw">match</span> <span class="ident">state_version</span> {
-			<span class="ident">StateVersion::V0</span> =&gt; <span class="ident">LayoutV0</span>::<span class="op">&lt;</span><span class="ident">Blake2Hasher</span><span class="op">&gt;</span><span class="ident">::trie_root</span>(<span class="ident">top</span>).<span class="ident">as_ref</span>().<span class="ident">into</span>(),
-			<span class="ident">StateVersion::V1</span> =&gt; <span class="ident">LayoutV1</span>::<span class="op">&lt;</span><span class="ident">Blake2Hasher</span><span class="op">&gt;</span><span class="ident">::trie_root</span>(<span class="ident">top</span>).<span class="ident">as_ref</span>().<span class="ident">into</span>(),
+		<span class="kw">match </span>state_version {
+			StateVersion::V0 =&gt; LayoutV0::&lt;Blake2Hasher&gt;::trie_root(top).as_ref().into(),
+			StateVersion::V1 =&gt; LayoutV1::&lt;Blake2Hasher&gt;::trie_root(top).as_ref().into(),
 		}
 	}
 
-	<span class="kw">fn</span> <span class="ident">child_storage_root</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">state_version</span>: <span class="ident">StateVersion</span>,
-	) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">data</span>, <span class="ident">child_info</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">child_changes</span>(<span class="ident">child_info</span>.<span class="ident">storage_key</span>()) {
-			<span class="kw">let</span> <span class="ident">delta</span> <span class="op">=</span>
-				<span class="ident">data</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>.<span class="ident">as_ref</span>(), <span class="ident">v</span>.<span class="ident">value</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">as_slice</span>())));
-			<span class="ident"><span class="kw">crate</span>::in_memory_backend::new_in_mem</span>::<span class="op">&lt;</span><span class="ident">Blake2Hasher</span>, <span class="ident">HashKey</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-				.<span class="ident">child_storage_root</span>(<span class="kw-2">&amp;</span><span class="ident">child_info</span>, <span class="ident">delta</span>, <span class="ident">state_version</span>)
-				.<span class="number">0</span>
-		} <span class="kw">else</span> {
-			<span class="ident">empty_child_trie_root</span>::<span class="op">&lt;</span><span class="ident">LayoutV1</span><span class="op">&lt;</span><span class="ident">Blake2Hasher</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+	<span class="kw">fn </span>child_storage_root(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		state_version: StateVersion,
+	) -&gt; Vec&lt;u8&gt; {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>((data, child_info)) = <span class="self">self</span>.overlay.child_changes(child_info.storage_key()) {
+			<span class="kw">let </span>delta =
+				data.into_iter().map(|(k, v)| (k.as_ref(), v.value().map(|v| v.as_slice())));
+			<span class="kw">crate</span>::in_memory_backend::new_in_mem::&lt;Blake2Hasher, HashKey&lt;<span class="kw">_</span>&gt;&gt;()
+				.child_storage_root(<span class="kw-2">&amp;</span>child_info, delta, state_version)
+				.<span class="number">0
+		</span>} <span class="kw">else </span>{
+			empty_child_trie_root::&lt;LayoutV1&lt;Blake2Hasher&gt;&gt;()
 		}
-		.<span class="ident">encode</span>()
+		.encode()
 	}
 
-	<span class="kw">fn</span> <span class="ident">storage_start_transaction</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">start_transaction</span>()
+	<span class="kw">fn </span>storage_start_transaction(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+		<span class="self">self</span>.overlay.start_transaction()
 	}
 
-	<span class="kw">fn</span> <span class="ident">storage_rollback_transaction</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">rollback_transaction</span>().<span class="ident">map_err</span>(<span class="ident">drop</span>)
+	<span class="kw">fn </span>storage_rollback_transaction(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
+		<span class="self">self</span>.overlay.rollback_transaction().map_err(drop)
 	}
 
-	<span class="kw">fn</span> <span class="ident">storage_commit_transaction</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">overlay</span>.<span class="ident">commit_transaction</span>().<span class="ident">map_err</span>(<span class="ident">drop</span>)
+	<span class="kw">fn </span>storage_commit_transaction(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), ()&gt; {
+		<span class="self">self</span>.overlay.commit_transaction().map_err(drop)
 	}
 
-	<span class="kw">fn</span> <span class="ident">wipe</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {}
+	<span class="kw">fn </span>wipe(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {}
 
-	<span class="kw">fn</span> <span class="ident">commit</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {}
+	<span class="kw">fn </span>commit(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {}
 
-	<span class="kw">fn</span> <span class="ident">read_write_count</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>) {
+	<span class="kw">fn </span>read_write_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32, u32, u32) {
 		<span class="macro">unimplemented!</span>(<span class="string">&quot;read_write_count is not supported in Basic&quot;</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">reset_read_write_count</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
+	<span class="kw">fn </span>reset_read_write_count(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
 		<span class="macro">unimplemented!</span>(<span class="string">&quot;reset_read_write_count is not supported in Basic&quot;</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">get_whitelist</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TrackedStorageKey</span><span class="op">&gt;</span> {
+	<span class="kw">fn </span>get_whitelist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;TrackedStorageKey&gt; {
 		<span class="macro">unimplemented!</span>(<span class="string">&quot;get_whitelist is not supported in Basic&quot;</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">set_whitelist</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TrackedStorageKey</span><span class="op">&gt;</span>) {
+	<span class="kw">fn </span>set_whitelist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: Vec&lt;TrackedStorageKey&gt;) {
 		<span class="macro">unimplemented!</span>(<span class="string">&quot;set_whitelist is not supported in Basic&quot;</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">get_read_and_written_keys</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+	<span class="kw">fn </span>get_read_and_written_keys(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;(Vec&lt;u8&gt;, u32, u32, bool)&gt; {
 		<span class="macro">unimplemented!</span>(<span class="string">&quot;get_read_and_written_keys is not supported in Basic&quot;</span>)
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">sp_externalities::ExtensionStore</span> <span class="kw">for</span> <span class="ident">BasicExternalities</span> {
-	<span class="kw">fn</span> <span class="ident">extension_by_type_id</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">type_id</span>: <span class="ident">TypeId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">Any</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">get_mut</span>(<span class="ident">type_id</span>)
+<span class="kw">impl </span>sp_externalities::ExtensionStore <span class="kw">for </span>BasicExternalities {
+	<span class="kw">fn </span>extension_by_type_id(<span class="kw-2">&amp;mut </span><span class="self">self</span>, type_id: TypeId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Any&gt; {
+		<span class="self">self</span>.extensions.get_mut(type_id)
 	}
 
-	<span class="kw">fn</span> <span class="ident">register_extension_with_type_id</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">type_id</span>: <span class="ident">TypeId</span>,
-		<span class="ident">extension</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">sp_externalities::Extension</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">sp_externalities::Error</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">register_with_type_id</span>(<span class="ident">type_id</span>, <span class="ident">extension</span>)
+	<span class="kw">fn </span>register_extension_with_type_id(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		type_id: TypeId,
+		extension: Box&lt;<span class="kw">dyn </span>sp_externalities::Extension&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), sp_externalities::Error&gt; {
+		<span class="self">self</span>.extensions.register_with_type_id(type_id, extension)
 	}
 
-	<span class="kw">fn</span> <span class="ident">deregister_extension_by_type_id</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">type_id</span>: <span class="ident">TypeId</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">sp_externalities::Error</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">extensions</span>.<span class="ident">deregister</span>(<span class="ident">type_id</span>) {
+	<span class="kw">fn </span>deregister_extension_by_type_id(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		type_id: TypeId,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), sp_externalities::Error&gt; {
+		<span class="kw">if </span><span class="self">self</span>.extensions.deregister(type_id) {
 			<span class="prelude-val">Ok</span>(())
-		} <span class="kw">else</span> {
-			<span class="prelude-val">Err</span>(<span class="ident">sp_externalities::Error::ExtensionIsNotRegistered</span>(<span class="ident">type_id</span>))
+		} <span class="kw">else </span>{
+			<span class="prelude-val">Err</span>(sp_externalities::Error::ExtensionIsNotRegistered(type_id))
 		}
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">sp_core</span>::{
-		<span class="ident">map</span>,
-		<span class="ident">storage</span>::{<span class="ident">well_known_keys::CODE</span>, <span class="ident">Storage</span>, <span class="ident">StorageChild</span>},
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>sp_core::{
+		map,
+		storage::{well_known_keys::CODE, Storage, StorageChild},
 	};
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">commit_should_work</span>() {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident">BasicExternalities::default</span>();
-		<span class="ident">ext</span>.<span class="ident">set_storage</span>(<span class="string">b&quot;doe&quot;</span>.<span class="ident">to_vec</span>(), <span class="string">b&quot;reindeer&quot;</span>.<span class="ident">to_vec</span>());
-		<span class="ident">ext</span>.<span class="ident">set_storage</span>(<span class="string">b&quot;dog&quot;</span>.<span class="ident">to_vec</span>(), <span class="string">b&quot;puppy&quot;</span>.<span class="ident">to_vec</span>());
-		<span class="ident">ext</span>.<span class="ident">set_storage</span>(<span class="string">b&quot;dogglesworth&quot;</span>.<span class="ident">to_vec</span>(), <span class="string">b&quot;cat&quot;</span>.<span class="ident">to_vec</span>());
-		<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">array_bytes::hex2bytes_unchecked</span>(
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>commit_should_work() {
+		<span class="kw">let </span><span class="kw-2">mut </span>ext = BasicExternalities::default();
+		ext.set_storage(<span class="string">b&quot;doe&quot;</span>.to_vec(), <span class="string">b&quot;reindeer&quot;</span>.to_vec());
+		ext.set_storage(<span class="string">b&quot;dog&quot;</span>.to_vec(), <span class="string">b&quot;puppy&quot;</span>.to_vec());
+		ext.set_storage(<span class="string">b&quot;dogglesworth&quot;</span>.to_vec(), <span class="string">b&quot;cat&quot;</span>.to_vec());
+		<span class="kw">let </span>root = array_bytes::hex2bytes_unchecked(
 			<span class="string">&quot;39245109cef3758c2eed2ccba8d9b370a917850af3824bc8348d505df2c298fa&quot;</span>,
 		);
 
-		<span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">ext</span>.<span class="ident">storage_root</span>(<span class="ident">StateVersion::default</span>())[..], <span class="kw-2">&amp;</span><span class="ident">root</span>);
+		<span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>ext.storage_root(StateVersion::default())[..], <span class="kw-2">&amp;</span>root);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">set_and_retrieve_code</span>() {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident">BasicExternalities::default</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>set_and_retrieve_code() {
+		<span class="kw">let </span><span class="kw-2">mut </span>ext = BasicExternalities::default();
 
-		<span class="kw">let</span> <span class="ident">code</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];
-		<span class="ident">ext</span>.<span class="ident">set_storage</span>(<span class="ident">CODE</span>.<span class="ident">to_vec</span>(), <span class="ident">code</span>.<span class="ident">clone</span>());
+		<span class="kw">let </span>code = <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];
+		ext.set_storage(CODE.to_vec(), code.clone());
 
-		<span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span><span class="ident">ext</span>.<span class="ident">storage</span>(<span class="ident">CODE</span>).<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="ident">code</span>);
+		<span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>ext.storage(CODE).unwrap(), <span class="kw-2">&amp;</span>code);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">children_works</span>() {
-		<span class="kw">let</span> <span class="ident">child_info</span> <span class="op">=</span> <span class="ident">ChildInfo::new_default</span>(<span class="string">b&quot;storage_key&quot;</span>);
-		<span class="kw">let</span> <span class="ident">child_info</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">child_info</span>;
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident">BasicExternalities::new</span>(<span class="ident">Storage</span> {
-			<span class="ident">top</span>: <span class="ident">Default::default</span>(),
-			<span class="ident">children_default</span>: <span class="macro">map!</span>[
-				<span class="ident">child_info</span>.<span class="ident">storage_key</span>().<span class="ident">to_vec</span>() =&gt; <span class="ident">StorageChild</span> {
-					<span class="ident">data</span>: <span class="macro">map!</span>[	<span class="string">b&quot;doe&quot;</span>.<span class="ident">to_vec</span>() =&gt; <span class="string">b&quot;reindeer&quot;</span>.<span class="ident">to_vec</span>()	],
-					<span class="ident">child_info</span>: <span class="ident">child_info</span>.<span class="ident">to_owned</span>(),
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>children_works() {
+		<span class="kw">let </span>child_info = ChildInfo::new_default(<span class="string">b&quot;storage_key&quot;</span>);
+		<span class="kw">let </span>child_info = <span class="kw-2">&amp;</span>child_info;
+		<span class="kw">let </span><span class="kw-2">mut </span>ext = BasicExternalities::new(Storage {
+			top: Default::default(),
+			children_default: <span class="macro">map!</span>[
+				child_info.storage_key().to_vec() =&gt; StorageChild {
+					data: <span class="macro">map!</span>[	<span class="string">b&quot;doe&quot;</span>.to_vec() =&gt; <span class="string">b&quot;reindeer&quot;</span>.to_vec()	],
+					child_info: child_info.to_owned(),
 				}
 			],
 		});
 
-		<span class="macro">assert_eq!</span>(<span class="ident">ext</span>.<span class="ident">child_storage</span>(<span class="ident">child_info</span>, <span class="string">b&quot;doe&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">b&quot;reindeer&quot;</span>.<span class="ident">to_vec</span>()));
+		<span class="macro">assert_eq!</span>(ext.child_storage(child_info, <span class="string">b&quot;doe&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">b&quot;reindeer&quot;</span>.to_vec()));
 
-		<span class="ident">ext</span>.<span class="ident">set_child_storage</span>(<span class="ident">child_info</span>, <span class="string">b&quot;dog&quot;</span>.<span class="ident">to_vec</span>(), <span class="string">b&quot;puppy&quot;</span>.<span class="ident">to_vec</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">ext</span>.<span class="ident">child_storage</span>(<span class="ident">child_info</span>, <span class="string">b&quot;dog&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">b&quot;puppy&quot;</span>.<span class="ident">to_vec</span>()));
+		ext.set_child_storage(child_info, <span class="string">b&quot;dog&quot;</span>.to_vec(), <span class="string">b&quot;puppy&quot;</span>.to_vec());
+		<span class="macro">assert_eq!</span>(ext.child_storage(child_info, <span class="string">b&quot;dog&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">b&quot;puppy&quot;</span>.to_vec()));
 
-		<span class="ident">ext</span>.<span class="ident">clear_child_storage</span>(<span class="ident">child_info</span>, <span class="string">b&quot;dog&quot;</span>);
-		<span class="macro">assert_eq!</span>(<span class="ident">ext</span>.<span class="ident">child_storage</span>(<span class="ident">child_info</span>, <span class="string">b&quot;dog&quot;</span>), <span class="prelude-val">None</span>);
+		ext.clear_child_storage(child_info, <span class="string">b&quot;dog&quot;</span>);
+		<span class="macro">assert_eq!</span>(ext.child_storage(child_info, <span class="string">b&quot;dog&quot;</span>), <span class="prelude-val">None</span>);
 
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">ext</span>.<span class="ident">kill_child_storage</span>(<span class="ident">child_info</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
-		<span class="macro">assert_eq!</span>(<span class="ident">ext</span>.<span class="ident">child_storage</span>(<span class="ident">child_info</span>, <span class="string">b&quot;doe&quot;</span>), <span class="prelude-val">None</span>);
+		<span class="kw">let _ </span>= ext.kill_child_storage(child_info, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
+		<span class="macro">assert_eq!</span>(ext.child_storage(child_info, <span class="string">b&quot;doe&quot;</span>), <span class="prelude-val">None</span>);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">kill_child_storage_returns_num_elements_removed</span>() {
-		<span class="kw">let</span> <span class="ident">child_info</span> <span class="op">=</span> <span class="ident">ChildInfo::new_default</span>(<span class="string">b&quot;storage_key&quot;</span>);
-		<span class="kw">let</span> <span class="ident">child_info</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">child_info</span>;
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident">BasicExternalities::new</span>(<span class="ident">Storage</span> {
-			<span class="ident">top</span>: <span class="ident">Default::default</span>(),
-			<span class="ident">children_default</span>: <span class="macro">map!</span>[
-				<span class="ident">child_info</span>.<span class="ident">storage_key</span>().<span class="ident">to_vec</span>() =&gt; <span class="ident">StorageChild</span> {
-					<span class="ident">data</span>: <span class="macro">map!</span>[
-						<span class="string">b&quot;doe&quot;</span>.<span class="ident">to_vec</span>() =&gt; <span class="string">b&quot;reindeer&quot;</span>.<span class="ident">to_vec</span>(),
-						<span class="string">b&quot;dog&quot;</span>.<span class="ident">to_vec</span>() =&gt; <span class="string">b&quot;puppy&quot;</span>.<span class="ident">to_vec</span>(),
-						<span class="string">b&quot;hello&quot;</span>.<span class="ident">to_vec</span>() =&gt; <span class="string">b&quot;world&quot;</span>.<span class="ident">to_vec</span>(),
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>kill_child_storage_returns_num_elements_removed() {
+		<span class="kw">let </span>child_info = ChildInfo::new_default(<span class="string">b&quot;storage_key&quot;</span>);
+		<span class="kw">let </span>child_info = <span class="kw-2">&amp;</span>child_info;
+		<span class="kw">let </span><span class="kw-2">mut </span>ext = BasicExternalities::new(Storage {
+			top: Default::default(),
+			children_default: <span class="macro">map!</span>[
+				child_info.storage_key().to_vec() =&gt; StorageChild {
+					data: <span class="macro">map!</span>[
+						<span class="string">b&quot;doe&quot;</span>.to_vec() =&gt; <span class="string">b&quot;reindeer&quot;</span>.to_vec(),
+						<span class="string">b&quot;dog&quot;</span>.to_vec() =&gt; <span class="string">b&quot;puppy&quot;</span>.to_vec(),
+						<span class="string">b&quot;hello&quot;</span>.to_vec() =&gt; <span class="string">b&quot;world&quot;</span>.to_vec(),
 					],
-					<span class="ident">child_info</span>: <span class="ident">child_info</span>.<span class="ident">to_owned</span>(),
+					child_info: child_info.to_owned(),
 				}
 			],
 		});
 
-		<span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">ext</span>.<span class="ident">kill_child_storage</span>(<span class="ident">child_info</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
-		<span class="macro">assert_eq!</span>(<span class="ident">res</span>.<span class="ident">deconstruct</span>(), (<span class="prelude-val">None</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>));
+		<span class="kw">let </span>res = ext.kill_child_storage(child_info, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
+		<span class="macro">assert_eq!</span>(res.deconstruct(), (<span class="prelude-val">None</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>));
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">basic_externalities_is_empty</span>() {
-		<span class="comment">// Make sure no values are set by default in `BasicExternalities`.</span>
-		<span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">BasicExternalities::new_empty</span>().<span class="ident">into_storages</span>();
-		<span class="macro">assert!</span>(<span class="ident">storage</span>.<span class="ident">top</span>.<span class="ident">is_empty</span>());
-		<span class="macro">assert!</span>(<span class="ident">storage</span>.<span class="ident">children_default</span>.<span class="ident">is_empty</span>());
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>basic_externalities_is_empty() {
+		<span class="comment">// Make sure no values are set by default in `BasicExternalities`.
+		</span><span class="kw">let </span>storage = BasicExternalities::new_empty().into_storages();
+		<span class="macro">assert!</span>(storage.top.is_empty());
+		<span class="macro">assert!</span>(storage.children_default.is_empty());
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sp_state_machine" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sp_state_machine" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

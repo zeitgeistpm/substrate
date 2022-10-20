@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/npos-elections/fuzzer/src/phragmen_pjr.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>phragmen_pjr.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../phragmen_pjr/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../phragmen_pjr/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../phragmen_pjr/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/npos-elections/fuzzer/src/phragmen_pjr.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>phragmen_pjr.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../phragmen_pjr/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../phragmen_pjr/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -122,124 +116,123 @@
 <span id="116">116</span>
 <span id="117">117</span>
 <span id="118">118</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Fuzzing which ensures that running unbalanced sequential phragmen always produces a result</span>
-<span class="doccomment">//! which satisfies our PJR checker.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Running a single iteration</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Honggfuzz shuts down each individual loop iteration after a configurable time limit.</span>
-<span class="doccomment">//! It can be helpful to run a single iteration on your hardware to help benchmark how long that</span>
-<span class="doccomment">//! time limit should reasonably be. Simply run the program without the `fuzzing` configuration to</span>
-<span class="doccomment">//! run a single iteration: `cargo run --bin phragmen_pjr`.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Running</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Run with `HFUZZ_RUN_ARGS=&quot;-t 10&quot; cargo hfuzz run phragmen_pjr`.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Note the environment variable: by default, `cargo hfuzz` shuts down each iteration after 1</span>
-<span class="doccomment">//! second of runtime. We significantly increase that to ensure that the fuzzing gets a chance to</span>
-<span class="doccomment">//! complete. Running a single iteration can help determine an appropriate value for this parameter.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Debugging a panic</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Once a panic is found, it can be debugged with</span>
-<span class="doccomment">//! `HFUZZ_RUN_ARGS=&quot;-t 10&quot; cargo hfuzz run-debug phragmen_pjr hfuzz_workspace/phragmen_pjr/*.fuzz`.</span>
+</span><span class="doccomment">//! Fuzzing which ensures that running unbalanced sequential phragmen always produces a result
+//! which satisfies our PJR checker.
+//!
+//! ## Running a single iteration
+//!
+//! Honggfuzz shuts down each individual loop iteration after a configurable time limit.
+//! It can be helpful to run a single iteration on your hardware to help benchmark how long that
+//! time limit should reasonably be. Simply run the program without the `fuzzing` configuration to
+//! run a single iteration: `cargo run --bin phragmen_pjr`.
+//!
+//! ## Running
+//!
+//! Run with `HFUZZ_RUN_ARGS=&quot;-t 10&quot; cargo hfuzz run phragmen_pjr`.
+//!
+//! Note the environment variable: by default, `cargo hfuzz` shuts down each iteration after 1
+//! second of runtime. We significantly increase that to ensure that the fuzzing gets a chance to
+//! complete. Running a single iteration can help determine an appropriate value for this parameter.
+//!
+//! ## Debugging a panic
+//!
+//! Once a panic is found, it can be debugged with
+//! `HFUZZ_RUN_ARGS=&quot;-t 10&quot; cargo hfuzz run-debug phragmen_pjr hfuzz_workspace/phragmen_pjr/*.fuzz`.
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">fuzzing</span>)]</span>
-<span class="kw">use</span> <span class="ident">honggfuzz::fuzz</span>;
+</span><span class="attribute">#[cfg(fuzzing)]
+</span><span class="kw">use </span>honggfuzz::fuzz;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">fuzzing</span>))]</span>
-<span class="kw">use</span> <span class="ident">clap::Parser</span>;
+<span class="attribute">#[cfg(not(fuzzing))]
+</span><span class="kw">use </span>clap::Parser;
 
-<span class="kw">mod</span> <span class="ident">common</span>;
-<span class="kw">use</span> <span class="ident">common</span>::{<span class="ident">generate_random_npos_inputs</span>, <span class="ident">to_range</span>};
-<span class="kw">use</span> <span class="ident">rand</span>::{<span class="self">self</span>, <span class="ident">SeedableRng</span>};
-<span class="kw">use</span> <span class="ident">sp_npos_elections</span>::{<span class="ident">pjr_check_core</span>, <span class="ident">seq_phragmen_core</span>, <span class="ident">setup_inputs</span>, <span class="ident">standard_threshold</span>};
+<span class="kw">mod </span>common;
+<span class="kw">use </span>common::{generate_random_npos_inputs, to_range};
+<span class="kw">use </span>rand::{<span class="self">self</span>, SeedableRng};
+<span class="kw">use </span>sp_npos_elections::{pjr_check_core, seq_phragmen_core, setup_inputs, standard_threshold};
 
-<span class="kw">type</span> <span class="ident">AccountId</span> <span class="op">=</span> <span class="ident">u64</span>;
+<span class="kw">type </span>AccountId = u64;
 
-<span class="kw">const</span> <span class="ident">MIN_CANDIDATES</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">250</span>;
-<span class="kw">const</span> <span class="ident">MAX_CANDIDATES</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1000</span>;
-<span class="kw">const</span> <span class="ident">MIN_VOTERS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">500</span>;
-<span class="kw">const</span> <span class="ident">MAX_VOTERS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">2500</span>;
+<span class="kw">const </span>MIN_CANDIDATES: usize = <span class="number">250</span>;
+<span class="kw">const </span>MAX_CANDIDATES: usize = <span class="number">1000</span>;
+<span class="kw">const </span>MIN_VOTERS: usize = <span class="number">500</span>;
+<span class="kw">const </span>MAX_VOTERS: usize = <span class="number">2500</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">fuzzing</span>)]</span>
-<span class="kw">fn</span> <span class="ident">main</span>() {
-	<span class="kw">loop</span> {
-		<span class="macro">fuzz!</span>(<span class="op">|</span><span class="ident">data</span>: (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">u64</span>)<span class="op">|</span> {
-			<span class="kw">let</span> (<span class="ident">candidate_count</span>, <span class="ident">voter_count</span>, <span class="ident">seed</span>) <span class="op">=</span> <span class="ident">data</span>;
-			<span class="ident">iteration</span>(<span class="ident">candidate_count</span>, <span class="ident">voter_count</span>, <span class="ident">seed</span>);
+<span class="attribute">#[cfg(fuzzing)]
+</span><span class="kw">fn </span>main() {
+	<span class="kw">loop </span>{
+		<span class="macro">fuzz!</span>(|data: (usize, usize, u64)| {
+			<span class="kw">let </span>(candidate_count, voter_count, seed) = data;
+			iteration(candidate_count, voter_count, seed);
 		});
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">fuzzing</span>))]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Parser</span>)]</span>
-<span class="attribute">#[<span class="ident">command</span>(<span class="ident">author</span>, <span class="ident">version</span>, <span class="ident">about</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Opt</span> {
-	<span class="doccomment">/// How many candidates participate in this election</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">short</span>, <span class="ident">long</span>)]</span>
-	<span class="ident">candidates</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+<span class="attribute">#[cfg(not(fuzzing))]
+#[derive(Debug, Parser)]
+#[command(author, version, about)]
+</span><span class="kw">struct </span>Opt {
+	<span class="doccomment">/// How many candidates participate in this election
+	</span><span class="attribute">#[arg(short, long)]
+	</span>candidates: <span class="prelude-ty">Option</span>&lt;usize&gt;,
 
-	<span class="doccomment">/// How many voters participate in this election</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">short</span>, <span class="ident">long</span>)]</span>
-	<span class="ident">voters</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// How many voters participate in this election
+	</span><span class="attribute">#[arg(short, long)]
+	</span>voters: <span class="prelude-ty">Option</span>&lt;usize&gt;,
 
-	<span class="doccomment">/// Random seed to use in this election</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
-	<span class="ident">seed</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Random seed to use in this election
+	</span><span class="attribute">#[arg(long)]
+	</span>seed: <span class="prelude-ty">Option</span>&lt;u64&gt;,
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">fuzzing</span>))]</span>
-<span class="kw">fn</span> <span class="ident">main</span>() {
-	<span class="kw">let</span> <span class="ident">opt</span> <span class="op">=</span> <span class="ident">Opt::parse</span>();
-	<span class="comment">// candidates and voters by default use the maxima, which turn out to be one less than</span>
-	<span class="comment">// the constant.</span>
-	<span class="ident">iteration</span>(
-		<span class="ident">opt</span>.<span class="ident">candidates</span>.<span class="ident">unwrap_or</span>(<span class="ident">MAX_CANDIDATES</span> <span class="op">-</span> <span class="number">1</span>),
-		<span class="ident">opt</span>.<span class="ident">voters</span>.<span class="ident">unwrap_or</span>(<span class="ident">MAX_VOTERS</span> <span class="op">-</span> <span class="number">1</span>),
-		<span class="ident">opt</span>.<span class="ident">seed</span>.<span class="ident">unwrap_or_default</span>(),
+<span class="attribute">#[cfg(not(fuzzing))]
+</span><span class="kw">fn </span>main() {
+	<span class="kw">let </span>opt = Opt::parse();
+	<span class="comment">// candidates and voters by default use the maxima, which turn out to be one less than
+	// the constant.
+	</span>iteration(
+		opt.candidates.unwrap_or(MAX_CANDIDATES - <span class="number">1</span>),
+		opt.voters.unwrap_or(MAX_VOTERS - <span class="number">1</span>),
+		opt.seed.unwrap_or_default(),
 	);
 }
 
-<span class="kw">fn</span> <span class="ident">iteration</span>(<span class="kw-2">mut</span> <span class="ident">candidate_count</span>: <span class="ident">usize</span>, <span class="kw-2">mut</span> <span class="ident">voter_count</span>: <span class="ident">usize</span>, <span class="ident">seed</span>: <span class="ident">u64</span>) {
-	<span class="kw">let</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand::rngs::SmallRng::seed_from_u64</span>(<span class="ident">seed</span>);
-	<span class="ident">candidate_count</span> <span class="op">=</span> <span class="ident">to_range</span>(<span class="ident">candidate_count</span>, <span class="ident">MIN_CANDIDATES</span>, <span class="ident">MAX_CANDIDATES</span>);
-	<span class="ident">voter_count</span> <span class="op">=</span> <span class="ident">to_range</span>(<span class="ident">voter_count</span>, <span class="ident">MIN_VOTERS</span>, <span class="ident">MAX_VOTERS</span>);
+<span class="kw">fn </span>iteration(<span class="kw-2">mut </span>candidate_count: usize, <span class="kw-2">mut </span>voter_count: usize, seed: u64) {
+	<span class="kw">let </span>rng = rand::rngs::SmallRng::seed_from_u64(seed);
+	candidate_count = to_range(candidate_count, MIN_CANDIDATES, MAX_CANDIDATES);
+	voter_count = to_range(voter_count, MIN_VOTERS, MAX_VOTERS);
 
-	<span class="kw">let</span> (<span class="ident">rounds</span>, <span class="ident">candidates</span>, <span class="ident">voters</span>) <span class="op">=</span>
-		<span class="ident">generate_random_npos_inputs</span>(<span class="ident">candidate_count</span>, <span class="ident">voter_count</span>, <span class="ident">rng</span>);
+	<span class="kw">let </span>(rounds, candidates, voters) =
+		generate_random_npos_inputs(candidate_count, voter_count, rng);
 
-	<span class="kw">let</span> (<span class="ident">candidates</span>, <span class="ident">voters</span>) <span class="op">=</span> <span class="ident">setup_inputs</span>(<span class="ident">candidates</span>, <span class="ident">voters</span>);
+	<span class="kw">let </span>(candidates, voters) = setup_inputs(candidates, voters);
 
-	<span class="comment">// Run seq-phragmen</span>
-	<span class="kw">let</span> (<span class="ident">candidates</span>, <span class="ident">voters</span>) <span class="op">=</span> <span class="ident">seq_phragmen_core</span>::<span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>(<span class="ident">rounds</span>, <span class="ident">candidates</span>, <span class="ident">voters</span>)
-		.<span class="ident">expect</span>(<span class="string">&quot;seq_phragmen must succeed&quot;</span>);
+	<span class="comment">// Run seq-phragmen
+	</span><span class="kw">let </span>(candidates, voters) = seq_phragmen_core::&lt;AccountId&gt;(rounds, candidates, voters)
+		.expect(<span class="string">&quot;seq_phragmen must succeed&quot;</span>);
 
-	<span class="kw">let</span> <span class="ident">threshold</span> <span class="op">=</span> <span class="ident">standard_threshold</span>(<span class="ident">rounds</span>, <span class="ident">voters</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">voter</span><span class="op">|</span> <span class="ident">voter</span>.<span class="ident">budget</span>()));
+	<span class="kw">let </span>threshold = standard_threshold(rounds, voters.iter().map(|voter| voter.budget()));
 
 	<span class="macro">assert!</span>(
-		<span class="ident">pjr_check_core</span>(<span class="kw-2">&amp;</span><span class="ident">candidates</span>, <span class="kw-2">&amp;</span><span class="ident">voters</span>, <span class="ident">threshold</span>).<span class="ident">is_ok</span>(),
+		pjr_check_core(<span class="kw-2">&amp;</span>candidates, <span class="kw-2">&amp;</span>voters, threshold).is_ok(),
 		<span class="string">&quot;unbalanced sequential phragmen must satisfy PJR&quot;</span>,
 	);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="phragmen_pjr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="phragmen_pjr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

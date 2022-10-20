@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/network/common/src/protocol/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../sc_network_common/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../sc_network_common/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../sc_network_common/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/network/common/src/protocol/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../sc_network_common/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../sc_network_common/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -104,106 +98,105 @@
 <span id="98">98</span>
 <span id="99">99</span>
 <span id="100">100</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Network event types. These are are not the part of the protocol, but rather</span>
-<span class="doccomment">//! events that happen on the network like DHT get/put results received.</span>
+</span><span class="doccomment">//! Network event types. These are are not the part of the protocol, but rather
+//! events that happen on the network like DHT get/put results received.
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::ProtocolName</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::protocol::role::ObservedRole</span>;
-<span class="kw">use</span> <span class="ident">bytes::Bytes</span>;
-<span class="kw">use</span> <span class="ident">libp2p</span>::{<span class="ident">core::PeerId</span>, <span class="ident">kad::record::Key</span>};
+</span><span class="kw">use </span><span class="kw">super</span>::ProtocolName;
+<span class="kw">use </span><span class="kw">crate</span>::protocol::role::ObservedRole;
+<span class="kw">use </span>bytes::Bytes;
+<span class="kw">use </span>libp2p::{core::PeerId, kad::record::Key};
 
-<span class="doccomment">/// Events generated by DHT as a response to get_value and put_value requests.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DhtEvent</span> {
-	<span class="doccomment">/// The value was found.</span>
-	<span class="ident">ValueFound</span>(<span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Key</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;</span>),
+<span class="doccomment">/// Events generated by DHT as a response to get_value and put_value requests.
+</span><span class="attribute">#[derive(Debug, Clone)]
+#[must_use]
+</span><span class="kw">pub enum </span>DhtEvent {
+	<span class="doccomment">/// The value was found.
+	</span>ValueFound(Vec&lt;(Key, Vec&lt;u8&gt;)&gt;),
 
-	<span class="doccomment">/// The requested record has not been found in the DHT.</span>
-	<span class="ident">ValueNotFound</span>(<span class="ident">Key</span>),
+	<span class="doccomment">/// The requested record has not been found in the DHT.
+	</span>ValueNotFound(Key),
 
-	<span class="doccomment">/// The record has been successfully inserted into the DHT.</span>
-	<span class="ident">ValuePut</span>(<span class="ident">Key</span>),
+	<span class="doccomment">/// The record has been successfully inserted into the DHT.
+	</span>ValuePut(Key),
 
-	<span class="doccomment">/// An error has occurred while putting a record into the DHT.</span>
-	<span class="ident">ValuePutFailed</span>(<span class="ident">Key</span>),
+	<span class="doccomment">/// An error has occurred while putting a record into the DHT.
+	</span>ValuePutFailed(Key),
 }
 
-<span class="doccomment">/// Type for events generated by networking layer.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span> {
-	<span class="doccomment">/// Event generated by a DHT.</span>
-	<span class="ident">Dht</span>(<span class="ident">DhtEvent</span>),
+<span class="doccomment">/// Type for events generated by networking layer.
+</span><span class="attribute">#[derive(Debug, Clone)]
+#[must_use]
+</span><span class="kw">pub enum </span>Event {
+	<span class="doccomment">/// Event generated by a DHT.
+	</span>Dht(DhtEvent),
 
-	<span class="doccomment">/// Now connected to a new peer for syncing purposes.</span>
-	<span class="ident">SyncConnected</span> {
-		<span class="doccomment">/// Node we are now syncing from.</span>
-		<span class="ident">remote</span>: <span class="ident">PeerId</span>,
+	<span class="doccomment">/// Now connected to a new peer for syncing purposes.
+	</span>SyncConnected {
+		<span class="doccomment">/// Node we are now syncing from.
+		</span>remote: PeerId,
 	},
 
-	<span class="doccomment">/// Now disconnected from a peer for syncing purposes.</span>
-	<span class="ident">SyncDisconnected</span> {
-		<span class="doccomment">/// Node we are no longer syncing from.</span>
-		<span class="ident">remote</span>: <span class="ident">PeerId</span>,
+	<span class="doccomment">/// Now disconnected from a peer for syncing purposes.
+	</span>SyncDisconnected {
+		<span class="doccomment">/// Node we are no longer syncing from.
+		</span>remote: PeerId,
 	},
 
-	<span class="doccomment">/// Opened a substream with the given node with the given notifications protocol.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The protocol is always one of the notification protocols that have been registered.</span>
-	<span class="ident">NotificationStreamOpened</span> {
-		<span class="doccomment">/// Node we opened the substream with.</span>
-		<span class="ident">remote</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.</span>
-		<span class="doccomment">/// This is always equal to the value of</span>
-		<span class="doccomment">/// `sc_network::config::NonDefaultSetConfig::notifications_protocol` of one of the</span>
-		<span class="doccomment">/// configured sets.</span>
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="doccomment">/// If the negotiation didn&#39;t use the main name of the protocol (the one in</span>
-		<span class="doccomment">/// `notifications_protocol`), then this field contains which name has actually been</span>
-		<span class="doccomment">/// used.</span>
-		<span class="doccomment">/// Always contains a value equal to the value in</span>
-		<span class="doccomment">/// `sc_network::config::NonDefaultSetConfig::fallback_names`.</span>
-		<span class="ident">negotiated_fallback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ProtocolName</span><span class="op">&gt;</span>,
-		<span class="doccomment">/// Role of the remote.</span>
-		<span class="ident">role</span>: <span class="ident">ObservedRole</span>,
+	<span class="doccomment">/// Opened a substream with the given node with the given notifications protocol.
+	///
+	/// The protocol is always one of the notification protocols that have been registered.
+	</span>NotificationStreamOpened {
+		<span class="doccomment">/// Node we opened the substream with.
+		</span>remote: PeerId,
+		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.
+		/// This is always equal to the value of
+		/// `sc_network::config::NonDefaultSetConfig::notifications_protocol` of one of the
+		/// configured sets.
+		</span>protocol: ProtocolName,
+		<span class="doccomment">/// If the negotiation didn&#39;t use the main name of the protocol (the one in
+		/// `notifications_protocol`), then this field contains which name has actually been
+		/// used.
+		/// Always contains a value equal to the value in
+		/// `sc_network::config::NonDefaultSetConfig::fallback_names`.
+		</span>negotiated_fallback: <span class="prelude-ty">Option</span>&lt;ProtocolName&gt;,
+		<span class="doccomment">/// Role of the remote.
+		</span>role: ObservedRole,
 	},
 
-	<span class="doccomment">/// Closed a substream with the given node. Always matches a corresponding previous</span>
-	<span class="doccomment">/// `NotificationStreamOpened` message.</span>
-	<span class="ident">NotificationStreamClosed</span> {
-		<span class="doccomment">/// Node we closed the substream with.</span>
-		<span class="ident">remote</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.</span>
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
+	<span class="doccomment">/// Closed a substream with the given node. Always matches a corresponding previous
+	/// `NotificationStreamOpened` message.
+	</span>NotificationStreamClosed {
+		<span class="doccomment">/// Node we closed the substream with.
+		</span>remote: PeerId,
+		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.
+		</span>protocol: ProtocolName,
 	},
 
-	<span class="doccomment">/// Received one or more messages from the given node using the given protocol.</span>
-	<span class="ident">NotificationsReceived</span> {
-		<span class="doccomment">/// Node we received the message from.</span>
-		<span class="ident">remote</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Concerned protocol and associated message.</span>
-		<span class="ident">messages</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">ProtocolName</span>, <span class="ident">Bytes</span>)<span class="op">&gt;</span>,
+	<span class="doccomment">/// Received one or more messages from the given node using the given protocol.
+	</span>NotificationsReceived {
+		<span class="doccomment">/// Node we received the message from.
+		</span>remote: PeerId,
+		<span class="doccomment">/// Concerned protocol and associated message.
+		</span>messages: Vec&lt;(ProtocolName, Bytes)&gt;,
 	},
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="sc_network_common" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="sc_network_common" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

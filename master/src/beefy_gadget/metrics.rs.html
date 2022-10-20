@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/beefy/src/metrics.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>metrics.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../beefy_gadget/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/beefy/src/metrics.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>metrics.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../beefy_gadget/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -111,113 +105,112 @@
 <span id="105">105</span>
 <span id="106">106</span>
 <span id="107">107</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! BEEFY Prometheus metrics definition</span>
+</span><span class="doccomment">//! BEEFY Prometheus metrics definition
 
-<span class="kw">use</span> <span class="ident">prometheus</span>::{<span class="ident">register</span>, <span class="ident">Counter</span>, <span class="ident">Gauge</span>, <span class="ident">PrometheusError</span>, <span class="ident">Registry</span>, <span class="ident">U64</span>};
+</span><span class="kw">use </span>prometheus::{register, Counter, Gauge, PrometheusError, Registry, U64};
 
-<span class="doccomment">/// BEEFY metrics exposed through Prometheus</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Metrics</span> {
-	<span class="doccomment">/// Current active validator set id</span>
-	<span class="kw">pub</span> <span class="ident">beefy_validator_set_id</span>: <span class="ident">Gauge</span><span class="op">&lt;</span><span class="ident">U64</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Total number of votes sent by this node</span>
-	<span class="kw">pub</span> <span class="ident">beefy_votes_sent</span>: <span class="ident">Counter</span><span class="op">&lt;</span><span class="ident">U64</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Most recent concluded voting round</span>
-	<span class="kw">pub</span> <span class="ident">beefy_round_concluded</span>: <span class="ident">Gauge</span><span class="op">&lt;</span><span class="ident">U64</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Best block finalized by BEEFY</span>
-	<span class="kw">pub</span> <span class="ident">beefy_best_block</span>: <span class="ident">Gauge</span><span class="op">&lt;</span><span class="ident">U64</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Next block BEEFY should vote on</span>
-	<span class="kw">pub</span> <span class="ident">beefy_should_vote_on</span>: <span class="ident">Gauge</span><span class="op">&lt;</span><span class="ident">U64</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Number of sessions with lagging signed commitment on mandatory block</span>
-	<span class="kw">pub</span> <span class="ident">beefy_lagging_sessions</span>: <span class="ident">Counter</span><span class="op">&lt;</span><span class="ident">U64</span><span class="op">&gt;</span>,
+<span class="doccomment">/// BEEFY metrics exposed through Prometheus
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Metrics {
+	<span class="doccomment">/// Current active validator set id
+	</span><span class="kw">pub </span>beefy_validator_set_id: Gauge&lt;U64&gt;,
+	<span class="doccomment">/// Total number of votes sent by this node
+	</span><span class="kw">pub </span>beefy_votes_sent: Counter&lt;U64&gt;,
+	<span class="doccomment">/// Most recent concluded voting round
+	</span><span class="kw">pub </span>beefy_round_concluded: Gauge&lt;U64&gt;,
+	<span class="doccomment">/// Best block finalized by BEEFY
+	</span><span class="kw">pub </span>beefy_best_block: Gauge&lt;U64&gt;,
+	<span class="doccomment">/// Next block BEEFY should vote on
+	</span><span class="kw">pub </span>beefy_should_vote_on: Gauge&lt;U64&gt;,
+	<span class="doccomment">/// Number of sessions with lagging signed commitment on mandatory block
+	</span><span class="kw">pub </span>beefy_lagging_sessions: Counter&lt;U64&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">Metrics</span> {
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">register</span>(<span class="ident">registry</span>: <span class="kw-2">&amp;</span><span class="ident">Registry</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">PrometheusError</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-			<span class="ident">beefy_validator_set_id</span>: <span class="ident">register</span>(
-				<span class="ident">Gauge::new</span>(
+<span class="kw">impl </span>Metrics {
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>register(registry: <span class="kw-2">&amp;</span>Registry) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, PrometheusError&gt; {
+		<span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+			beefy_validator_set_id: register(
+				Gauge::new(
 					<span class="string">&quot;substrate_beefy_validator_set_id&quot;</span>,
 					<span class="string">&quot;Current BEEFY active validator set id.&quot;</span>,
 				)<span class="question-mark">?</span>,
-				<span class="ident">registry</span>,
+				registry,
 			)<span class="question-mark">?</span>,
-			<span class="ident">beefy_votes_sent</span>: <span class="ident">register</span>(
-				<span class="ident">Counter::new</span>(<span class="string">&quot;substrate_beefy_votes_sent&quot;</span>, <span class="string">&quot;Number of votes sent by this node&quot;</span>)<span class="question-mark">?</span>,
-				<span class="ident">registry</span>,
+			beefy_votes_sent: register(
+				Counter::new(<span class="string">&quot;substrate_beefy_votes_sent&quot;</span>, <span class="string">&quot;Number of votes sent by this node&quot;</span>)<span class="question-mark">?</span>,
+				registry,
 			)<span class="question-mark">?</span>,
-			<span class="ident">beefy_round_concluded</span>: <span class="ident">register</span>(
-				<span class="ident">Gauge::new</span>(
+			beefy_round_concluded: register(
+				Gauge::new(
 					<span class="string">&quot;substrate_beefy_round_concluded&quot;</span>,
 					<span class="string">&quot;Voting round, that has been concluded&quot;</span>,
 				)<span class="question-mark">?</span>,
-				<span class="ident">registry</span>,
+				registry,
 			)<span class="question-mark">?</span>,
-			<span class="ident">beefy_best_block</span>: <span class="ident">register</span>(
-				<span class="ident">Gauge::new</span>(<span class="string">&quot;substrate_beefy_best_block&quot;</span>, <span class="string">&quot;Best block finalized by BEEFY&quot;</span>)<span class="question-mark">?</span>,
-				<span class="ident">registry</span>,
+			beefy_best_block: register(
+				Gauge::new(<span class="string">&quot;substrate_beefy_best_block&quot;</span>, <span class="string">&quot;Best block finalized by BEEFY&quot;</span>)<span class="question-mark">?</span>,
+				registry,
 			)<span class="question-mark">?</span>,
-			<span class="ident">beefy_should_vote_on</span>: <span class="ident">register</span>(
-				<span class="ident">Gauge::new</span>(<span class="string">&quot;substrate_beefy_should_vote_on&quot;</span>, <span class="string">&quot;Next block, BEEFY should vote on&quot;</span>)<span class="question-mark">?</span>,
-				<span class="ident">registry</span>,
+			beefy_should_vote_on: register(
+				Gauge::new(<span class="string">&quot;substrate_beefy_should_vote_on&quot;</span>, <span class="string">&quot;Next block, BEEFY should vote on&quot;</span>)<span class="question-mark">?</span>,
+				registry,
 			)<span class="question-mark">?</span>,
-			<span class="ident">beefy_lagging_sessions</span>: <span class="ident">register</span>(
-				<span class="ident">Counter::new</span>(
+			beefy_lagging_sessions: register(
+				Counter::new(
 					<span class="string">&quot;substrate_beefy_lagging_sessions&quot;</span>,
 					<span class="string">&quot;Number of sessions with lagging signed commitment on mandatory block&quot;</span>,
 				)<span class="question-mark">?</span>,
-				<span class="ident">registry</span>,
+				registry,
 			)<span class="question-mark">?</span>,
 		})
 	}
 }
 
-<span class="comment">// Note: we use the `format` macro to convert an expr into a `u64`. This will fail,</span>
-<span class="comment">// if expr does not derive `Display`.</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">metric_set</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">self</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">expr</span>) =&gt; {{
-		<span class="kw">let</span> <span class="ident">val</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>).<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+<span class="comment">// Note: we use the `format` macro to convert an expr into a `u64`. This will fail,
+// if expr does not derive `Display`.
+</span><span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>metric_set {
+	(<span class="macro-nonterminal">$self</span>:ident, <span class="macro-nonterminal">$m</span>:ident, <span class="macro-nonterminal">$v</span>:expr) =&gt; {{
+		<span class="kw">let </span>val: u64 = <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="macro-nonterminal">$v</span>).parse().unwrap();
 
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">metrics</span>) <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">self</span>.<span class="ident">metrics</span>.<span class="ident">as_ref</span>() {
-			<span class="ident">metrics</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>.<span class="ident">set</span>(<span class="ident">val</span>);
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(metrics) = <span class="macro-nonterminal">$self</span>.metrics.as_ref() {
+			metrics.<span class="macro-nonterminal">$m</span>.set(val);
 		}
 	}};
 }
 
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">metric_inc</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">self</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>:<span class="ident">ident</span>) =&gt; {{
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">metrics</span>) <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">self</span>.<span class="ident">metrics</span>.<span class="ident">as_ref</span>() {
-			<span class="ident">metrics</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>.<span class="ident">inc</span>();
+<span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>metric_inc {
+	(<span class="macro-nonterminal">$self</span>:ident, <span class="macro-nonterminal">$m</span>:ident) =&gt; {{
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(metrics) = <span class="macro-nonterminal">$self</span>.metrics.as_ref() {
+			metrics.<span class="macro-nonterminal">$m</span>.inc();
 		}
 	}};
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">metric_get</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">self</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>:<span class="ident">ident</span>) =&gt; {{
-		<span class="macro-nonterminal">$</span><span class="macro-nonterminal">self</span>.<span class="ident">metrics</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">metrics</span><span class="op">|</span> <span class="ident">metrics</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">m</span>.<span class="ident">clone</span>())
+<span class="attribute">#[cfg(test)]
+#[macro_export]
+</span><span class="macro">macro_rules! </span>metric_get {
+	(<span class="macro-nonterminal">$self</span>:ident, <span class="macro-nonterminal">$m</span>:ident) =&gt; {{
+		<span class="macro-nonterminal">$self</span>.metrics.as_ref().map(|metrics| metrics.<span class="macro-nonterminal">$m</span>.clone())
 	}};
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beefy_gadget" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beefy_gadget" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

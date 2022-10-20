@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/storage/write.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>write.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/storage/write.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>write.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -251,253 +245,252 @@
 <span id="245">245</span>
 <span id="246">246</span>
 <span id="247">247</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="kw">use</span> <span class="ident">sc_cli::Result</span>;
-<span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">Backend</span> <span class="kw">as</span> <span class="ident">ClientBackend</span>, <span class="ident">StorageProvider</span>, <span class="ident">UsageProvider</span>};
-<span class="kw">use</span> <span class="ident">sc_client_db</span>::{<span class="ident">DbHash</span>, <span class="ident">DbState</span>, <span class="ident">DbStateBuilder</span>};
-<span class="kw">use</span> <span class="ident">sp_api::StateBackend</span>;
-<span class="kw">use</span> <span class="ident">sp_blockchain::HeaderBackend</span>;
-<span class="kw">use</span> <span class="ident">sp_database</span>::{<span class="ident">ColumnId</span>, <span class="ident">Transaction</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">generic::BlockId</span>,
-	<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">HashFor</span>, <span class="ident">Header</span> <span class="kw">as</span> <span class="ident">HeaderT</span>},
+</span><span class="kw">use </span>sc_cli::Result;
+<span class="kw">use </span>sc_client_api::{Backend <span class="kw">as </span>ClientBackend, StorageProvider, UsageProvider};
+<span class="kw">use </span>sc_client_db::{DbHash, DbState, DbStateBuilder};
+<span class="kw">use </span>sp_api::StateBackend;
+<span class="kw">use </span>sp_blockchain::HeaderBackend;
+<span class="kw">use </span>sp_database::{ColumnId, Transaction};
+<span class="kw">use </span>sp_runtime::{
+	generic::BlockId,
+	traits::{Block <span class="kw">as </span>BlockT, HashFor, Header <span class="kw">as </span>HeaderT},
 };
-<span class="kw">use</span> <span class="ident">sp_trie::PrefixedMemoryDB</span>;
+<span class="kw">use </span>sp_trie::PrefixedMemoryDB;
 
-<span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">info</span>, <span class="ident">trace</span>};
-<span class="kw">use</span> <span class="ident">rand::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">sp_storage</span>::{<span class="ident">ChildInfo</span>, <span class="ident">StateVersion</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-	<span class="ident">fmt::Debug</span>,
-	<span class="ident">sync::Arc</span>,
-	<span class="ident">time</span>::{<span class="ident">Duration</span>, <span class="ident">Instant</span>},
+<span class="kw">use </span>log::{info, trace};
+<span class="kw">use </span>rand::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>sp_storage::{ChildInfo, StateVersion};
+<span class="kw">use </span>std::{
+	fmt::Debug,
+	sync::Arc,
+	time::{Duration, Instant},
 };
 
-<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::cmd::StorageCmd</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::shared</span>::{<span class="ident">new_rng</span>, <span class="ident">BenchRecord</span>};
+<span class="kw">use </span><span class="kw">super</span>::cmd::StorageCmd;
+<span class="kw">use </span><span class="kw">crate</span>::shared::{new_rng, BenchRecord};
 
-<span class="kw">impl</span> <span class="ident">StorageCmd</span> {
-	<span class="doccomment">/// Benchmarks the time it takes to write a single Storage item.</span>
-	<span class="doccomment">/// Uses the latest state that is available for the given client.</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">bench_write</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">BA</span>, <span class="ident">H</span>, <span class="ident">C</span><span class="op">&gt;</span>(
+<span class="kw">impl </span>StorageCmd {
+	<span class="doccomment">/// Benchmarks the time it takes to write a single Storage item.
+	/// Uses the latest state that is available for the given client.
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>bench_write&lt;Block, BA, H, C&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-		(<span class="ident">db</span>, <span class="ident">state_col</span>): (<span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">sp_database::Database</span><span class="op">&lt;</span><span class="ident">DbHash</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">ColumnId</span>),
-		<span class="ident">storage</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">sp_state_machine::Storage</span><span class="op">&lt;</span><span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BenchRecord</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&lt;</span><span class="ident">Header</span> <span class="op">=</span> <span class="ident">H</span>, <span class="ident">Hash</span> <span class="op">=</span> <span class="ident">DbHash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Debug</span>,
-		<span class="ident">H</span>: <span class="ident">HeaderT</span><span class="op">&lt;</span><span class="ident">Hash</span> <span class="op">=</span> <span class="ident">DbHash</span><span class="op">&gt;</span>,
-		<span class="ident">BA</span>: <span class="ident">ClientBackend</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">C</span>: <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">StorageProvider</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">BA</span><span class="op">&gt;</span>,
+		client: Arc&lt;C&gt;,
+		(db, state_col): (Arc&lt;<span class="kw">dyn </span>sp_database::Database&lt;DbHash&gt;&gt;, ColumnId),
+		storage: Arc&lt;<span class="kw">dyn </span>sp_state_machine::Storage&lt;HashFor&lt;Block&gt;&gt;&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;BenchRecord&gt;
+	<span class="kw">where
+		</span>Block: BlockT&lt;Header = H, Hash = DbHash&gt; + Debug,
+		H: HeaderT&lt;Hash = DbHash&gt;,
+		BA: ClientBackend&lt;Block&gt;,
+		C: UsageProvider&lt;Block&gt; + HeaderBackend&lt;Block&gt; + StorageProvider&lt;Block, BA&gt;,
 	{
-		<span class="comment">// Store the time that it took to write each value.</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">record</span> <span class="op">=</span> <span class="ident">BenchRecord::default</span>();
+		<span class="comment">// Store the time that it took to write each value.
+		</span><span class="kw">let </span><span class="kw-2">mut </span>record = BenchRecord::default();
 
-		<span class="kw">let</span> <span class="ident">best_hash</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">usage_info</span>().<span class="ident">chain</span>.<span class="ident">best_hash</span>;
-		<span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">header</span>(<span class="ident">BlockId::Hash</span>(<span class="ident">best_hash</span>))<span class="question-mark">?</span>.<span class="ident">ok_or</span>(<span class="string">&quot;Header not found&quot;</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">original_root</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">header</span>.<span class="ident">state_root</span>();
-		<span class="kw">let</span> <span class="ident">trie</span> <span class="op">=</span> <span class="ident">DbStateBuilder</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">storage</span>.<span class="ident">clone</span>(), <span class="ident">original_root</span>).<span class="ident">build</span>();
+		<span class="kw">let </span>best_hash = client.usage_info().chain.best_hash;
+		<span class="kw">let </span>header = client.header(BlockId::Hash(best_hash))<span class="question-mark">?</span>.ok_or(<span class="string">&quot;Header not found&quot;</span>)<span class="question-mark">?</span>;
+		<span class="kw">let </span>original_root = <span class="kw-2">*</span>header.state_root();
+		<span class="kw">let </span>trie = DbStateBuilder::&lt;Block&gt;::new(storage.clone(), original_root).build();
 
-		<span class="macro">info!</span>(<span class="string">&quot;Preparing keys from block {}&quot;</span>, <span class="ident">best_hash</span>);
-		<span class="comment">// Load all KV pairs and randomly shuffle them.</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">kvs</span> <span class="op">=</span> <span class="ident">trie</span>.<span class="ident">pairs</span>();
-		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">rng</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">new_rng</span>(<span class="prelude-val">None</span>);
-		<span class="ident">kvs</span>.<span class="ident">shuffle</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>);
-		<span class="macro">info!</span>(<span class="string">&quot;Writing {} keys&quot;</span>, <span class="ident">kvs</span>.<span class="ident">len</span>());
+		<span class="macro">info!</span>(<span class="string">&quot;Preparing keys from block {}&quot;</span>, best_hash);
+		<span class="comment">// Load all KV pairs and randomly shuffle them.
+		</span><span class="kw">let </span><span class="kw-2">mut </span>kvs = trie.pairs();
+		<span class="kw">let </span>(<span class="kw-2">mut </span>rng, <span class="kw">_</span>) = new_rng(<span class="prelude-val">None</span>);
+		kvs.shuffle(<span class="kw-2">&amp;mut </span>rng);
+		<span class="macro">info!</span>(<span class="string">&quot;Writing {} keys&quot;</span>, kvs.len());
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">child_nodes</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+		<span class="kw">let </span><span class="kw-2">mut </span>child_nodes = Vec::new();
 
-		<span class="comment">// Generate all random values first; Make sure there are no collisions with existing</span>
-		<span class="comment">// db entries, so we can rollback all additions without corrupting existing entries.</span>
-		<span class="kw">for</span> (<span class="ident">k</span>, <span class="ident">original_v</span>) <span class="kw">in</span> <span class="ident">kvs</span> {
-			<span class="kw">match</span> (<span class="self">self</span>.<span class="ident">params</span>.<span class="ident">include_child_trees</span>, <span class="self">self</span>.<span class="ident">is_child_key</span>(<span class="ident">k</span>.<span class="ident">to_vec</span>())) {
-				(<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(<span class="ident">info</span>)) =&gt; {
-					<span class="kw">let</span> <span class="ident">child_keys</span> <span class="op">=</span>
-						<span class="ident">client</span>.<span class="ident">child_storage_keys_iter</span>(<span class="kw-2">&amp;</span><span class="ident">best_hash</span>, <span class="ident">info</span>.<span class="ident">clone</span>(), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
-					<span class="kw">for</span> <span class="ident">ck</span> <span class="kw">in</span> <span class="ident">child_keys</span> {
-						<span class="ident">child_nodes</span>.<span class="ident">push</span>((<span class="ident">ck</span>.<span class="ident">clone</span>(), <span class="ident">info</span>.<span class="ident">clone</span>()));
+		<span class="comment">// Generate all random values first; Make sure there are no collisions with existing
+		// db entries, so we can rollback all additions without corrupting existing entries.
+		</span><span class="kw">for </span>(k, original_v) <span class="kw">in </span>kvs {
+			<span class="kw">match </span>(<span class="self">self</span>.params.include_child_trees, <span class="self">self</span>.is_child_key(k.to_vec())) {
+				(<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(info)) =&gt; {
+					<span class="kw">let </span>child_keys =
+						client.child_storage_keys_iter(<span class="kw-2">&amp;</span>best_hash, info.clone(), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+					<span class="kw">for </span>ck <span class="kw">in </span>child_keys {
+						child_nodes.push((ck.clone(), info.clone()));
 					}
 				},
-				<span class="kw">_</span> =&gt; {
-					<span class="comment">// regular key</span>
-					<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">original_v</span>.<span class="ident">len</span>()];
-					<span class="kw">loop</span> {
-						<span class="comment">// Create a random value to overwrite with.</span>
-						<span class="comment">// NOTE: We use a possibly higher entropy than the original value,</span>
-						<span class="comment">// could be improved but acts as an over-estimation which is fine for now.</span>
-						<span class="ident">rng</span>.<span class="ident">fill_bytes</span>(<span class="kw-2">&amp;mut</span> <span class="ident">new_v</span>[..]);
-						<span class="kw">if</span> <span class="ident">check_new_value</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>(
-							<span class="ident">db</span>.<span class="ident">clone</span>(),
-							<span class="kw-2">&amp;</span><span class="ident">trie</span>,
-							<span class="kw-2">&amp;</span><span class="ident">k</span>.<span class="ident">to_vec</span>(),
-							<span class="kw-2">&amp;</span><span class="ident">new_v</span>,
-							<span class="self">self</span>.<span class="ident">state_version</span>(),
-							<span class="ident">state_col</span>,
+				<span class="kw">_ </span>=&gt; {
+					<span class="comment">// regular key
+					</span><span class="kw">let </span><span class="kw-2">mut </span>new_v = <span class="macro">vec!</span>[<span class="number">0</span>; original_v.len()];
+					<span class="kw">loop </span>{
+						<span class="comment">// Create a random value to overwrite with.
+						// NOTE: We use a possibly higher entropy than the original value,
+						// could be improved but acts as an over-estimation which is fine for now.
+						</span>rng.fill_bytes(<span class="kw-2">&amp;mut </span>new_v[..]);
+						<span class="kw">if </span>check_new_value::&lt;Block&gt;(
+							db.clone(),
+							<span class="kw-2">&amp;</span>trie,
+							<span class="kw-2">&amp;</span>k.to_vec(),
+							<span class="kw-2">&amp;</span>new_v,
+							<span class="self">self</span>.state_version(),
+							state_col,
 							<span class="prelude-val">None</span>,
 						) {
-							<span class="kw">break</span>
-						}
+							<span class="kw">break
+						</span>}
 					}
 
-					<span class="comment">// Write each value in one commit.</span>
-					<span class="kw">let</span> (<span class="ident">size</span>, <span class="ident">duration</span>) <span class="op">=</span> <span class="ident">measure_write</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>(
-						<span class="ident">db</span>.<span class="ident">clone</span>(),
-						<span class="kw-2">&amp;</span><span class="ident">trie</span>,
-						<span class="ident">k</span>.<span class="ident">to_vec</span>(),
-						<span class="ident">new_v</span>.<span class="ident">to_vec</span>(),
-						<span class="self">self</span>.<span class="ident">state_version</span>(),
-						<span class="ident">state_col</span>,
+					<span class="comment">// Write each value in one commit.
+					</span><span class="kw">let </span>(size, duration) = measure_write::&lt;Block&gt;(
+						db.clone(),
+						<span class="kw-2">&amp;</span>trie,
+						k.to_vec(),
+						new_v.to_vec(),
+						<span class="self">self</span>.state_version(),
+						state_col,
 						<span class="prelude-val">None</span>,
 					)<span class="question-mark">?</span>;
-					<span class="ident">record</span>.<span class="ident">append</span>(<span class="ident">size</span>, <span class="ident">duration</span>)<span class="question-mark">?</span>;
+					record.append(size, duration)<span class="question-mark">?</span>;
 				},
 			}
 		}
 
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">params</span>.<span class="ident">include_child_trees</span> {
-			<span class="ident">child_nodes</span>.<span class="ident">shuffle</span>(<span class="kw-2">&amp;mut</span> <span class="ident">rng</span>);
-			<span class="macro">info!</span>(<span class="string">&quot;Writing {} child keys&quot;</span>, <span class="ident">child_nodes</span>.<span class="ident">len</span>());
+		<span class="kw">if </span><span class="self">self</span>.params.include_child_trees {
+			child_nodes.shuffle(<span class="kw-2">&amp;mut </span>rng);
+			<span class="macro">info!</span>(<span class="string">&quot;Writing {} child keys&quot;</span>, child_nodes.len());
 
-			<span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">info</span>) <span class="kw">in</span> <span class="ident">child_nodes</span> {
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">original_v</span>) <span class="op">=</span> <span class="ident">client</span>
-					.<span class="ident">child_storage</span>(<span class="kw-2">&amp;</span><span class="ident">best_hash</span>, <span class="kw-2">&amp;</span><span class="ident">info</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="ident">key</span>)
-					.<span class="ident">expect</span>(<span class="string">&quot;Checked above to exist&quot;</span>)
+			<span class="kw">for </span>(key, info) <span class="kw">in </span>child_nodes {
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(original_v) = client
+					.child_storage(<span class="kw-2">&amp;</span>best_hash, <span class="kw-2">&amp;</span>info.clone(), <span class="kw-2">&amp;</span>key)
+					.expect(<span class="string">&quot;Checked above to exist&quot;</span>)
 				{
-					<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="ident">original_v</span>.<span class="number">0</span>.<span class="ident">len</span>()];
-					<span class="kw">loop</span> {
-						<span class="ident">rng</span>.<span class="ident">fill_bytes</span>(<span class="kw-2">&amp;mut</span> <span class="ident">new_v</span>[..]);
-						<span class="kw">if</span> <span class="ident">check_new_value</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>(
-							<span class="ident">db</span>.<span class="ident">clone</span>(),
-							<span class="kw-2">&amp;</span><span class="ident">trie</span>,
-							<span class="kw-2">&amp;</span><span class="ident">key</span>.<span class="number">0</span>,
-							<span class="kw-2">&amp;</span><span class="ident">new_v</span>,
-							<span class="self">self</span>.<span class="ident">state_version</span>(),
-							<span class="ident">state_col</span>,
-							<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">info</span>),
+					<span class="kw">let </span><span class="kw-2">mut </span>new_v = <span class="macro">vec!</span>[<span class="number">0</span>; original_v.<span class="number">0</span>.len()];
+					<span class="kw">loop </span>{
+						rng.fill_bytes(<span class="kw-2">&amp;mut </span>new_v[..]);
+						<span class="kw">if </span>check_new_value::&lt;Block&gt;(
+							db.clone(),
+							<span class="kw-2">&amp;</span>trie,
+							<span class="kw-2">&amp;</span>key.<span class="number">0</span>,
+							<span class="kw-2">&amp;</span>new_v,
+							<span class="self">self</span>.state_version(),
+							state_col,
+							<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>info),
 						) {
-							<span class="kw">break</span>
-						}
+							<span class="kw">break
+						</span>}
 					}
 
-					<span class="kw">let</span> (<span class="ident">size</span>, <span class="ident">duration</span>) <span class="op">=</span> <span class="ident">measure_write</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>(
-						<span class="ident">db</span>.<span class="ident">clone</span>(),
-						<span class="kw-2">&amp;</span><span class="ident">trie</span>,
-						<span class="ident">key</span>.<span class="number">0</span>,
-						<span class="ident">new_v</span>.<span class="ident">to_vec</span>(),
-						<span class="self">self</span>.<span class="ident">state_version</span>(),
-						<span class="ident">state_col</span>,
-						<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">info</span>),
+					<span class="kw">let </span>(size, duration) = measure_write::&lt;Block&gt;(
+						db.clone(),
+						<span class="kw-2">&amp;</span>trie,
+						key.<span class="number">0</span>,
+						new_v.to_vec(),
+						<span class="self">self</span>.state_version(),
+						state_col,
+						<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>info),
 					)<span class="question-mark">?</span>;
-					<span class="ident">record</span>.<span class="ident">append</span>(<span class="ident">size</span>, <span class="ident">duration</span>)<span class="question-mark">?</span>;
+					record.append(size, duration)<span class="question-mark">?</span>;
 				}
 			}
 		}
 
-		<span class="prelude-val">Ok</span>(<span class="ident">record</span>)
+		<span class="prelude-val">Ok</span>(record)
 	}
 }
 
-<span class="doccomment">/// Converts a Trie transaction into a DB transaction.</span>
-<span class="doccomment">/// Removals are ignored and will not be included in the final tx.</span>
-<span class="doccomment">/// `invert_inserts` replaces all inserts with removals.</span>
-<span class="kw">fn</span> <span class="ident">convert_tx</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span>(
-	<span class="ident">db</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">sp_database::Database</span><span class="op">&lt;</span><span class="ident">DbHash</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="kw-2">mut</span> <span class="ident">tx</span>: <span class="ident">PrefixedMemoryDB</span><span class="op">&lt;</span><span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">invert_inserts</span>: <span class="ident">bool</span>,
-	<span class="ident">col</span>: <span class="ident">ColumnId</span>,
-) -&gt; <span class="ident">Transaction</span><span class="op">&lt;</span><span class="ident">DbHash</span><span class="op">&gt;</span> {
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">Transaction</span>::<span class="op">&lt;</span><span class="ident">DbHash</span><span class="op">&gt;</span><span class="ident">::default</span>();
+<span class="doccomment">/// Converts a Trie transaction into a DB transaction.
+/// Removals are ignored and will not be included in the final tx.
+/// `invert_inserts` replaces all inserts with removals.
+</span><span class="kw">fn </span>convert_tx&lt;B: BlockT&gt;(
+	db: Arc&lt;<span class="kw">dyn </span>sp_database::Database&lt;DbHash&gt;&gt;,
+	<span class="kw-2">mut </span>tx: PrefixedMemoryDB&lt;HashFor&lt;B&gt;&gt;,
+	invert_inserts: bool,
+	col: ColumnId,
+) -&gt; Transaction&lt;DbHash&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>ret = Transaction::&lt;DbHash&gt;::default();
 
-	<span class="kw">for</span> (<span class="kw-2">mut</span> <span class="ident">k</span>, (<span class="ident">v</span>, <span class="ident">rc</span>)) <span class="kw">in</span> <span class="ident">tx</span>.<span class="ident">drain</span>().<span class="ident">into_iter</span>() {
-		<span class="kw">if</span> <span class="ident">rc</span> <span class="op">&gt;</span> <span class="number">0</span> {
-			<span class="ident">db</span>.<span class="ident">sanitize_key</span>(<span class="kw-2">&amp;mut</span> <span class="ident">k</span>);
-			<span class="kw">if</span> <span class="ident">invert_inserts</span> {
-				<span class="ident">ret</span>.<span class="ident">remove</span>(<span class="ident">col</span>, <span class="kw-2">&amp;</span><span class="ident">k</span>);
-			} <span class="kw">else</span> {
-				<span class="ident">ret</span>.<span class="ident">set</span>(<span class="ident">col</span>, <span class="kw-2">&amp;</span><span class="ident">k</span>, <span class="kw-2">&amp;</span><span class="ident">v</span>);
+	<span class="kw">for </span>(<span class="kw-2">mut </span>k, (v, rc)) <span class="kw">in </span>tx.drain().into_iter() {
+		<span class="kw">if </span>rc &gt; <span class="number">0 </span>{
+			db.sanitize_key(<span class="kw-2">&amp;mut </span>k);
+			<span class="kw">if </span>invert_inserts {
+				ret.remove(col, <span class="kw-2">&amp;</span>k);
+			} <span class="kw">else </span>{
+				ret.set(col, <span class="kw-2">&amp;</span>k, <span class="kw-2">&amp;</span>v);
 			}
 		}
-		<span class="comment">// &lt; 0 means removal - ignored.</span>
-		<span class="comment">// 0 means no modification.</span>
-	}
-	<span class="ident">ret</span>
+		<span class="comment">// &lt; 0 means removal - ignored.
+		// 0 means no modification.
+	</span>}
+	ret
 }
 
-<span class="doccomment">/// Measures write benchmark</span>
-<span class="doccomment">/// if `child_info` exist then it means this is a child tree key</span>
-<span class="kw">fn</span> <span class="ident">measure_write</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span>(
-	<span class="ident">db</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">sp_database::Database</span><span class="op">&lt;</span><span class="ident">DbHash</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">trie</span>: <span class="kw-2">&amp;</span><span class="ident">DbState</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">key</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-	<span class="ident">new_v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-	<span class="ident">version</span>: <span class="ident">StateVersion</span>,
-	<span class="ident">col</span>: <span class="ident">ColumnId</span>,
-	<span class="ident">child_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ChildInfo</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">Duration</span>)<span class="op">&gt;</span> {
-	<span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">Instant::now</span>();
-	<span class="comment">// Create a TX that will modify the Trie in the DB and</span>
-	<span class="comment">// calculate the root hash of the Trie after the modification.</span>
-	<span class="kw">let</span> <span class="ident">replace</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="ident">key</span>.<span class="ident">as_ref</span>(), <span class="prelude-val">Some</span>(<span class="ident">new_v</span>.<span class="ident">as_ref</span>()))];
-	<span class="kw">let</span> <span class="ident">stx</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">child_info</span> {
-		<span class="prelude-val">Some</span>(<span class="ident">info</span>) =&gt; <span class="ident">trie</span>.<span class="ident">child_storage_root</span>(<span class="ident">info</span>, <span class="ident">replace</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>(), <span class="ident">version</span>).<span class="number">2</span>,
-		<span class="prelude-val">None</span> =&gt; <span class="ident">trie</span>.<span class="ident">storage_root</span>(<span class="ident">replace</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>(), <span class="ident">version</span>).<span class="number">1</span>,
+<span class="doccomment">/// Measures write benchmark
+/// if `child_info` exist then it means this is a child tree key
+</span><span class="kw">fn </span>measure_write&lt;Block: BlockT&gt;(
+	db: Arc&lt;<span class="kw">dyn </span>sp_database::Database&lt;DbHash&gt;&gt;,
+	trie: <span class="kw-2">&amp;</span>DbState&lt;Block&gt;,
+	key: Vec&lt;u8&gt;,
+	new_v: Vec&lt;u8&gt;,
+	version: StateVersion,
+	col: ColumnId,
+	child_info: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>ChildInfo&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(usize, Duration)&gt; {
+	<span class="kw">let </span>start = Instant::now();
+	<span class="comment">// Create a TX that will modify the Trie in the DB and
+	// calculate the root hash of the Trie after the modification.
+	</span><span class="kw">let </span>replace = <span class="macro">vec!</span>[(key.as_ref(), <span class="prelude-val">Some</span>(new_v.as_ref()))];
+	<span class="kw">let </span>stx = <span class="kw">match </span>child_info {
+		<span class="prelude-val">Some</span>(info) =&gt; trie.child_storage_root(info, replace.iter().cloned(), version).<span class="number">2</span>,
+		<span class="prelude-val">None </span>=&gt; trie.storage_root(replace.iter().cloned(), version).<span class="number">1</span>,
 	};
-	<span class="comment">// Only the keep the insertions, since we do not want to benchmark pruning.</span>
-	<span class="kw">let</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">convert_tx</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>(<span class="ident">db</span>.<span class="ident">clone</span>(), <span class="ident">stx</span>.<span class="ident">clone</span>(), <span class="bool-val">false</span>, <span class="ident">col</span>);
-	<span class="ident">db</span>.<span class="ident">commit</span>(<span class="ident">tx</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Writing to the Database: {}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
-	<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> (<span class="ident">new_v</span>.<span class="ident">len</span>(), <span class="ident">start</span>.<span class="ident">elapsed</span>());
+	<span class="comment">// Only the keep the insertions, since we do not want to benchmark pruning.
+	</span><span class="kw">let </span>tx = convert_tx::&lt;Block&gt;(db.clone(), stx.clone(), <span class="bool-val">false</span>, col);
+	db.commit(tx).map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Writing to the Database: {}&quot;</span>, e))<span class="question-mark">?</span>;
+	<span class="kw">let </span>result = (new_v.len(), start.elapsed());
 
-	<span class="comment">// Now undo the changes by removing what was added.</span>
-	<span class="kw">let</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">convert_tx</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>(<span class="ident">db</span>.<span class="ident">clone</span>(), <span class="ident">stx</span>.<span class="ident">clone</span>(), <span class="bool-val">true</span>, <span class="ident">col</span>);
-	<span class="ident">db</span>.<span class="ident">commit</span>(<span class="ident">tx</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Writing to the Database: {}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
-	<span class="prelude-val">Ok</span>(<span class="ident">result</span>)
+	<span class="comment">// Now undo the changes by removing what was added.
+	</span><span class="kw">let </span>tx = convert_tx::&lt;Block&gt;(db.clone(), stx.clone(), <span class="bool-val">true</span>, col);
+	db.commit(tx).map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Writing to the Database: {}&quot;</span>, e))<span class="question-mark">?</span>;
+	<span class="prelude-val">Ok</span>(result)
 }
 
-<span class="doccomment">/// Checks if a new value causes any collision in tree updates</span>
-<span class="doccomment">/// returns true if there is no collision</span>
-<span class="doccomment">/// if `child_info` exist then it means this is a child tree key</span>
-<span class="kw">fn</span> <span class="ident">check_new_value</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span>(
-	<span class="ident">db</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">sp_database::Database</span><span class="op">&lt;</span><span class="ident">DbHash</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">trie</span>: <span class="kw-2">&amp;</span><span class="ident">DbState</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-	<span class="ident">new_v</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-	<span class="ident">version</span>: <span class="ident">StateVersion</span>,
-	<span class="ident">col</span>: <span class="ident">ColumnId</span>,
-	<span class="ident">child_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ChildInfo</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">bool</span> {
-	<span class="kw">let</span> <span class="ident">new_kv</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="ident">key</span>.<span class="ident">as_ref</span>(), <span class="prelude-val">Some</span>(<span class="ident">new_v</span>.<span class="ident">as_ref</span>()))];
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stx</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">child_info</span> {
-		<span class="prelude-val">Some</span>(<span class="ident">info</span>) =&gt; <span class="ident">trie</span>.<span class="ident">child_storage_root</span>(<span class="ident">info</span>, <span class="ident">new_kv</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>(), <span class="ident">version</span>).<span class="number">2</span>,
-		<span class="prelude-val">None</span> =&gt; <span class="ident">trie</span>.<span class="ident">storage_root</span>(<span class="ident">new_kv</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>(), <span class="ident">version</span>).<span class="number">1</span>,
+<span class="doccomment">/// Checks if a new value causes any collision in tree updates
+/// returns true if there is no collision
+/// if `child_info` exist then it means this is a child tree key
+</span><span class="kw">fn </span>check_new_value&lt;Block: BlockT&gt;(
+	db: Arc&lt;<span class="kw">dyn </span>sp_database::Database&lt;DbHash&gt;&gt;,
+	trie: <span class="kw-2">&amp;</span>DbState&lt;Block&gt;,
+	key: <span class="kw-2">&amp;</span>Vec&lt;u8&gt;,
+	new_v: <span class="kw-2">&amp;</span>Vec&lt;u8&gt;,
+	version: StateVersion,
+	col: ColumnId,
+	child_info: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>ChildInfo&gt;,
+) -&gt; bool {
+	<span class="kw">let </span>new_kv = <span class="macro">vec!</span>[(key.as_ref(), <span class="prelude-val">Some</span>(new_v.as_ref()))];
+	<span class="kw">let </span><span class="kw-2">mut </span>stx = <span class="kw">match </span>child_info {
+		<span class="prelude-val">Some</span>(info) =&gt; trie.child_storage_root(info, new_kv.iter().cloned(), version).<span class="number">2</span>,
+		<span class="prelude-val">None </span>=&gt; trie.storage_root(new_kv.iter().cloned(), version).<span class="number">1</span>,
 	};
-	<span class="kw">for</span> (<span class="kw-2">mut</span> <span class="ident">k</span>, (<span class="kw">_</span>, <span class="ident">rc</span>)) <span class="kw">in</span> <span class="ident">stx</span>.<span class="ident">drain</span>().<span class="ident">into_iter</span>() {
-		<span class="kw">if</span> <span class="ident">rc</span> <span class="op">&gt;</span> <span class="number">0</span> {
-			<span class="ident">db</span>.<span class="ident">sanitize_key</span>(<span class="kw-2">&amp;mut</span> <span class="ident">k</span>);
-			<span class="kw">if</span> <span class="ident">db</span>.<span class="ident">get</span>(<span class="ident">col</span>, <span class="kw-2">&amp;</span><span class="ident">k</span>).<span class="ident">is_some</span>() {
+	<span class="kw">for </span>(<span class="kw-2">mut </span>k, (<span class="kw">_</span>, rc)) <span class="kw">in </span>stx.drain().into_iter() {
+		<span class="kw">if </span>rc &gt; <span class="number">0 </span>{
+			db.sanitize_key(<span class="kw-2">&amp;mut </span>k);
+			<span class="kw">if </span>db.get(col, <span class="kw-2">&amp;</span>k).is_some() {
 				<span class="macro">trace!</span>(<span class="string">&quot;Benchmark-store key creation: Key collision detected, retry&quot;</span>);
-				<span class="kw">return</span> <span class="bool-val">false</span>
-			}
+				<span class="kw">return </span><span class="bool-val">false
+			</span>}
 		}
 	}
-	<span class="bool-val">true</span>
-}
+	<span class="bool-val">true
+</span>}
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

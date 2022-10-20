@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/transaction-pool/src/enactment_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>enactment_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sc_transaction_pool/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sc_transaction_pool/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_transaction_pool/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/transaction-pool/src/enactment_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>enactment_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sc_transaction_pool/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_transaction_pool/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -583,585 +577,584 @@
 <span id="577">577</span>
 <span id="578">578</span>
 <span id="579">579</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Substrate transaction pool implementation.</span>
+</span><span class="doccomment">//! Substrate transaction pool implementation.
 
-<span class="kw">use</span> <span class="ident">sc_transaction_pool_api::ChainEvent</span>;
-<span class="kw">use</span> <span class="ident">sp_blockchain::TreeRoute</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::traits::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>;
+</span><span class="kw">use </span>sc_transaction_pool_api::ChainEvent;
+<span class="kw">use </span>sp_blockchain::TreeRoute;
+<span class="kw">use </span>sp_runtime::traits::Block <span class="kw">as </span>BlockT;
 
-<span class="doccomment">/// Helper struct for keeping track of the current state of processed new best</span>
-<span class="doccomment">/// block and finalized events. The main purpose of keeping track of this state</span>
-<span class="doccomment">/// is to figure out if a transaction pool enactment is needed or not.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Given the following chain:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">///   B1-C1-D1-E1</span>
-<span class="doccomment">///  /</span>
-<span class="doccomment">/// A</span>
-<span class="doccomment">///  \</span>
-<span class="doccomment">///   B2-C2-D2-E2</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Some scenarios and expected behavior for sequence of `NewBestBlock` (`nbb`) and `Finalized`</span>
-<span class="doccomment">/// (`f`) events:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - `nbb(C1)`, `f(C1)` -&gt; false (enactment was already performed in `nbb(C1))`</span>
-<span class="doccomment">/// - `f(C1)`, `nbb(C1)` -&gt; false (enactment was already performed in `f(C1))`</span>
-<span class="doccomment">/// - `f(C1)`, `nbb(D2)` -&gt; false (enactment was already performed in `f(C1)`,</span>
-<span class="doccomment">/// we should not retract finalized block)</span>
-<span class="doccomment">/// - `f(C1)`, `f(C2)`, `nbb(C1)` -&gt; false</span>
-<span class="doccomment">/// - `nbb(C1)`, `nbb(C2)` -&gt; true (switching fork is OK)</span>
-<span class="doccomment">/// - `nbb(B1)`, `nbb(B2)` -&gt; true</span>
-<span class="doccomment">/// - `nbb(B1)`, `nbb(C1)`, `f(C1)` -&gt; false (enactment was already performed in `nbb(B1)`)</span>
-<span class="doccomment">/// - `nbb(C1)`, `f(B1)` -&gt; false (enactment was already performed in `nbb(B2)`)</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EnactmentState</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Block</span>: <span class="ident">BlockT</span>,
+<span class="doccomment">/// Helper struct for keeping track of the current state of processed new best
+/// block and finalized events. The main purpose of keeping track of this state
+/// is to figure out if a transaction pool enactment is needed or not.
+///
+/// Given the following chain:
+///
+///   B1-C1-D1-E1
+///  /
+/// A
+///  \
+///   B2-C2-D2-E2
+///
+/// Some scenarios and expected behavior for sequence of `NewBestBlock` (`nbb`) and `Finalized`
+/// (`f`) events:
+///
+/// - `nbb(C1)`, `f(C1)` -&gt; false (enactment was already performed in `nbb(C1))`
+/// - `f(C1)`, `nbb(C1)` -&gt; false (enactment was already performed in `f(C1))`
+/// - `f(C1)`, `nbb(D2)` -&gt; false (enactment was already performed in `f(C1)`,
+/// we should not retract finalized block)
+/// - `f(C1)`, `f(C2)`, `nbb(C1)` -&gt; false
+/// - `nbb(C1)`, `nbb(C2)` -&gt; true (switching fork is OK)
+/// - `nbb(B1)`, `nbb(B2)` -&gt; true
+/// - `nbb(B1)`, `nbb(C1)`, `f(C1)` -&gt; false (enactment was already performed in `nbb(B1)`)
+/// - `nbb(C1)`, `f(B1)` -&gt; false (enactment was already performed in `nbb(B2)`)
+</span><span class="kw">pub struct </span>EnactmentState&lt;Block&gt;
+<span class="kw">where
+	</span>Block: BlockT,
 {
-	<span class="ident">recent_best_block</span>: <span class="ident">Block::Hash</span>,
-	<span class="ident">recent_finalized_block</span>: <span class="ident">Block::Hash</span>,
+	recent_best_block: Block::Hash,
+	recent_finalized_block: Block::Hash,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="ident">EnactmentState</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Block</span>: <span class="ident">BlockT</span>,
+<span class="kw">impl</span>&lt;Block&gt; EnactmentState&lt;Block&gt;
+<span class="kw">where
+	</span>Block: BlockT,
 {
-	<span class="doccomment">/// Returns a new `EnactmentState` initialized with the given parameters.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">recent_best_block</span>: <span class="ident">Block::Hash</span>, <span class="ident">recent_finalized_block</span>: <span class="ident">Block::Hash</span>) -&gt; <span class="self">Self</span> {
-		<span class="ident">EnactmentState</span> { <span class="ident">recent_best_block</span>, <span class="ident">recent_finalized_block</span> }
+	<span class="doccomment">/// Returns a new `EnactmentState` initialized with the given parameters.
+	</span><span class="kw">pub fn </span>new(recent_best_block: Block::Hash, recent_finalized_block: Block::Hash) -&gt; <span class="self">Self </span>{
+		EnactmentState { recent_best_block, recent_finalized_block }
 	}
 
-	<span class="doccomment">/// Returns the recently finalized block.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recent_finalized_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Block::Hash</span> {
-		<span class="self">self</span>.<span class="ident">recent_finalized_block</span>
+	<span class="doccomment">/// Returns the recently finalized block.
+	</span><span class="kw">pub fn </span>recent_finalized_block(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Block::Hash {
+		<span class="self">self</span>.recent_finalized_block
 	}
 
-	<span class="doccomment">/// Updates the state according to the given `ChainEvent`, returning</span>
-	<span class="doccomment">/// `Some(tree_route)` with a tree route including the blocks that need to</span>
-	<span class="doccomment">/// be enacted/retracted. If no enactment is needed then `None` is returned.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">event</span>: <span class="kw-2">&amp;</span><span class="ident">ChainEvent</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">tree_route</span>: <span class="kw-2">&amp;</span><span class="ident">F</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TreeRoute</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">Block::Hash</span>, <span class="ident">Block::Hash</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TreeRoute</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Updates the state according to the given `ChainEvent`, returning
+	/// `Some(tree_route)` with a tree route including the blocks that need to
+	/// be enacted/retracted. If no enactment is needed then `None` is returned.
+	</span><span class="kw">pub fn </span>update&lt;F&gt;(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		event: <span class="kw-2">&amp;</span>ChainEvent&lt;Block&gt;,
+		tree_route: <span class="kw-2">&amp;</span>F,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;TreeRoute&lt;Block&gt;&gt;, String&gt;
+	<span class="kw">where
+		</span>F: Fn(Block::Hash, Block::Hash) -&gt; <span class="prelude-ty">Result</span>&lt;TreeRoute&lt;Block&gt;, String&gt;,
 	{
-		<span class="kw">let</span> (<span class="ident">new_hash</span>, <span class="ident">finalized</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">event</span> {
-			<span class="ident">ChainEvent::NewBestBlock</span> { <span class="ident">hash</span>, .. } =&gt; (<span class="kw-2">*</span><span class="ident">hash</span>, <span class="bool-val">false</span>),
-			<span class="ident">ChainEvent::Finalized</span> { <span class="ident">hash</span>, .. } =&gt; (<span class="kw-2">*</span><span class="ident">hash</span>, <span class="bool-val">true</span>),
+		<span class="kw">let </span>(new_hash, finalized) = <span class="kw">match </span>event {
+			ChainEvent::NewBestBlock { hash, .. } =&gt; (<span class="kw-2">*</span>hash, <span class="bool-val">false</span>),
+			ChainEvent::Finalized { hash, .. } =&gt; (<span class="kw-2">*</span>hash, <span class="bool-val">true</span>),
 		};
 
-		<span class="comment">// block was already finalized</span>
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">recent_finalized_block</span> <span class="op">==</span> <span class="ident">new_hash</span> {
-			<span class="macro">log::debug!</span>(<span class="ident">target</span>: <span class="string">&quot;txpool&quot;</span>, <span class="string">&quot;handle_enactment: block already finalized&quot;</span>);
-			<span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+		<span class="comment">// block was already finalized
+		</span><span class="kw">if </span><span class="self">self</span>.recent_finalized_block == new_hash {
+			<span class="macro">log::debug!</span>(target: <span class="string">&quot;txpool&quot;</span>, <span class="string">&quot;handle_enactment: block already finalized&quot;</span>);
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
 		}
 
-		<span class="comment">// compute actual tree route from best_block to notified block, and use</span>
-		<span class="comment">// it instead of tree_route provided with event</span>
-		<span class="kw">let</span> <span class="ident">tree_route</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="self">self</span>.<span class="ident">recent_best_block</span>, <span class="ident">new_hash</span>)<span class="question-mark">?</span>;
+		<span class="comment">// compute actual tree route from best_block to notified block, and use
+		// it instead of tree_route provided with event
+		</span><span class="kw">let </span>tree_route = tree_route(<span class="self">self</span>.recent_best_block, new_hash)<span class="question-mark">?</span>;
 
 		<span class="macro">log::debug!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;txpool&quot;</span>,
+			target: <span class="string">&quot;txpool&quot;</span>,
 			<span class="string">&quot;resolve hash:{:?} finalized:{:?} tree_route:{:?} best_block:{:?} finalized_block:{:?}&quot;</span>,
-			<span class="ident">new_hash</span>, <span class="ident">finalized</span>, <span class="ident">tree_route</span>, <span class="self">self</span>.<span class="ident">recent_best_block</span>, <span class="self">self</span>.<span class="ident">recent_finalized_block</span>
+			new_hash, finalized, tree_route, <span class="self">self</span>.recent_best_block, <span class="self">self</span>.recent_finalized_block
 		);
 
-		<span class="comment">// check if recently finalized block is on retracted path. this could be</span>
-		<span class="comment">// happening if we first received a finalization event and then a new</span>
-		<span class="comment">// best event for some old stale best head.</span>
-		<span class="kw">if</span> <span class="ident">tree_route</span>.<span class="ident">retracted</span>().<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">hash</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">recent_finalized_block</span>) {
+		<span class="comment">// check if recently finalized block is on retracted path. this could be
+		// happening if we first received a finalization event and then a new
+		// best event for some old stale best head.
+		</span><span class="kw">if </span>tree_route.retracted().iter().any(|x| x.hash == <span class="self">self</span>.recent_finalized_block) {
 			<span class="macro">log::debug!</span>(
-				<span class="ident">target</span>: <span class="string">&quot;txpool&quot;</span>,
+				target: <span class="string">&quot;txpool&quot;</span>,
 				<span class="string">&quot;Recently finalized block {} would be retracted by ChainEvent {}, skipping&quot;</span>,
-				<span class="self">self</span>.<span class="ident">recent_finalized_block</span>, <span class="ident">new_hash</span>
+				<span class="self">self</span>.recent_finalized_block, new_hash
 			);
-			<span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
 		}
 
-		<span class="kw">if</span> <span class="ident">finalized</span> {
-			<span class="self">self</span>.<span class="ident">recent_finalized_block</span> <span class="op">=</span> <span class="ident">new_hash</span>;
+		<span class="kw">if </span>finalized {
+			<span class="self">self</span>.recent_finalized_block = new_hash;
 
-			<span class="comment">// if there are no enacted blocks in best_block -&gt; hash tree_route,</span>
-			<span class="comment">// it means that block being finalized was already enacted (this</span>
-			<span class="comment">// case also covers best_block == new_hash), recent_best_block</span>
-			<span class="comment">// remains valid.</span>
-			<span class="kw">if</span> <span class="ident">tree_route</span>.<span class="ident">enacted</span>().<span class="ident">is_empty</span>() {
+			<span class="comment">// if there are no enacted blocks in best_block -&gt; hash tree_route,
+			// it means that block being finalized was already enacted (this
+			// case also covers best_block == new_hash), recent_best_block
+			// remains valid.
+			</span><span class="kw">if </span>tree_route.enacted().is_empty() {
 				<span class="macro">log::trace!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;txpool&quot;</span>,
-					<span class="string">&quot;handle_enactment: no newly enacted blocks since recent best block&quot;</span>
-				);
-				<span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+					target: <span class="string">&quot;txpool&quot;</span>,
+					<span class="string">&quot;handle_enactment: no newly enacted blocks since recent best block&quot;
+				</span>);
+				<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
 			}
 
-			<span class="comment">// otherwise enacted finalized block becomes best block...</span>
-		}
+			<span class="comment">// otherwise enacted finalized block becomes best block...
+		</span>}
 
-		<span class="self">self</span>.<span class="ident">recent_best_block</span> <span class="op">=</span> <span class="ident">new_hash</span>;
+		<span class="self">self</span>.recent_best_block = new_hash;
 
-		<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">tree_route</span>))
+		<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(tree_route))
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">enactment_state_tests</span> {
-	<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::EnactmentState</span>;
-	<span class="kw">use</span> <span class="ident">sc_transaction_pool_api::ChainEvent</span>;
-	<span class="kw">use</span> <span class="ident">sp_blockchain</span>::{<span class="ident">HashAndNumber</span>, <span class="ident">TreeRoute</span>};
-	<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
-	<span class="kw">use</span> <span class="ident">substrate_test_runtime_client::runtime</span>::{<span class="ident">Block</span>, <span class="ident">Hash</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>enactment_state_tests {
+	<span class="kw">use </span><span class="kw">super</span>::EnactmentState;
+	<span class="kw">use </span>sc_transaction_pool_api::ChainEvent;
+	<span class="kw">use </span>sp_blockchain::{HashAndNumber, TreeRoute};
+	<span class="kw">use </span>std::sync::Arc;
+	<span class="kw">use </span>substrate_test_runtime_client::runtime::{Block, Hash};
 
-	<span class="comment">// some helpers for convenient blocks&#39; hash naming</span>
-	<span class="kw">fn</span> <span class="ident">a</span>() -&gt; <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-		<span class="ident">HashAndNumber</span> { <span class="ident">number</span>: <span class="number">1</span>, <span class="ident">hash</span>: <span class="ident">Hash::from</span>([<span class="number">0xAA</span>; <span class="number">32</span>]) }
+	<span class="comment">// some helpers for convenient blocks&#39; hash naming
+	</span><span class="kw">fn </span>a() -&gt; HashAndNumber&lt;Block&gt; {
+		HashAndNumber { number: <span class="number">1</span>, hash: Hash::from([<span class="number">0xAA</span>; <span class="number">32</span>]) }
 	}
-	<span class="kw">fn</span> <span class="ident">b1</span>() -&gt; <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-		<span class="ident">HashAndNumber</span> { <span class="ident">number</span>: <span class="number">2</span>, <span class="ident">hash</span>: <span class="ident">Hash::from</span>([<span class="number">0xB1</span>; <span class="number">32</span>]) }
+	<span class="kw">fn </span>b1() -&gt; HashAndNumber&lt;Block&gt; {
+		HashAndNumber { number: <span class="number">2</span>, hash: Hash::from([<span class="number">0xB1</span>; <span class="number">32</span>]) }
 	}
-	<span class="kw">fn</span> <span class="ident">c1</span>() -&gt; <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-		<span class="ident">HashAndNumber</span> { <span class="ident">number</span>: <span class="number">3</span>, <span class="ident">hash</span>: <span class="ident">Hash::from</span>([<span class="number">0xC1</span>; <span class="number">32</span>]) }
+	<span class="kw">fn </span>c1() -&gt; HashAndNumber&lt;Block&gt; {
+		HashAndNumber { number: <span class="number">3</span>, hash: Hash::from([<span class="number">0xC1</span>; <span class="number">32</span>]) }
 	}
-	<span class="kw">fn</span> <span class="ident">d1</span>() -&gt; <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-		<span class="ident">HashAndNumber</span> { <span class="ident">number</span>: <span class="number">4</span>, <span class="ident">hash</span>: <span class="ident">Hash::from</span>([<span class="number">0xD1</span>; <span class="number">32</span>]) }
+	<span class="kw">fn </span>d1() -&gt; HashAndNumber&lt;Block&gt; {
+		HashAndNumber { number: <span class="number">4</span>, hash: Hash::from([<span class="number">0xD1</span>; <span class="number">32</span>]) }
 	}
-	<span class="kw">fn</span> <span class="ident">e1</span>() -&gt; <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-		<span class="ident">HashAndNumber</span> { <span class="ident">number</span>: <span class="number">5</span>, <span class="ident">hash</span>: <span class="ident">Hash::from</span>([<span class="number">0xE1</span>; <span class="number">32</span>]) }
+	<span class="kw">fn </span>e1() -&gt; HashAndNumber&lt;Block&gt; {
+		HashAndNumber { number: <span class="number">5</span>, hash: Hash::from([<span class="number">0xE1</span>; <span class="number">32</span>]) }
 	}
-	<span class="kw">fn</span> <span class="ident">b2</span>() -&gt; <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-		<span class="ident">HashAndNumber</span> { <span class="ident">number</span>: <span class="number">2</span>, <span class="ident">hash</span>: <span class="ident">Hash::from</span>([<span class="number">0xB2</span>; <span class="number">32</span>]) }
+	<span class="kw">fn </span>b2() -&gt; HashAndNumber&lt;Block&gt; {
+		HashAndNumber { number: <span class="number">2</span>, hash: Hash::from([<span class="number">0xB2</span>; <span class="number">32</span>]) }
 	}
-	<span class="kw">fn</span> <span class="ident">c2</span>() -&gt; <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-		<span class="ident">HashAndNumber</span> { <span class="ident">number</span>: <span class="number">3</span>, <span class="ident">hash</span>: <span class="ident">Hash::from</span>([<span class="number">0xC2</span>; <span class="number">32</span>]) }
+	<span class="kw">fn </span>c2() -&gt; HashAndNumber&lt;Block&gt; {
+		HashAndNumber { number: <span class="number">3</span>, hash: Hash::from([<span class="number">0xC2</span>; <span class="number">32</span>]) }
 	}
-	<span class="kw">fn</span> <span class="ident">d2</span>() -&gt; <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-		<span class="ident">HashAndNumber</span> { <span class="ident">number</span>: <span class="number">4</span>, <span class="ident">hash</span>: <span class="ident">Hash::from</span>([<span class="number">0xD2</span>; <span class="number">32</span>]) }
+	<span class="kw">fn </span>d2() -&gt; HashAndNumber&lt;Block&gt; {
+		HashAndNumber { number: <span class="number">4</span>, hash: Hash::from([<span class="number">0xD2</span>; <span class="number">32</span>]) }
 	}
-	<span class="kw">fn</span> <span class="ident">e2</span>() -&gt; <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-		<span class="ident">HashAndNumber</span> { <span class="ident">number</span>: <span class="number">5</span>, <span class="ident">hash</span>: <span class="ident">Hash::from</span>([<span class="number">0xE2</span>; <span class="number">32</span>]) }
+	<span class="kw">fn </span>e2() -&gt; HashAndNumber&lt;Block&gt; {
+		HashAndNumber { number: <span class="number">5</span>, hash: Hash::from([<span class="number">0xE2</span>; <span class="number">32</span>]) }
 	}
 
-	<span class="doccomment">/// mock tree_route computing function for simple two-forks chain</span>
-	<span class="kw">fn</span> <span class="ident">tree_route</span>(<span class="ident">from</span>: <span class="ident">Hash</span>, <span class="ident">to</span>: <span class="ident">Hash</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TreeRoute</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">chain</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">e1</span>(), <span class="ident">d1</span>(), <span class="ident">c1</span>(), <span class="ident">b1</span>(), <span class="ident">a</span>(), <span class="ident">b2</span>(), <span class="ident">c2</span>(), <span class="ident">d2</span>(), <span class="ident">e2</span>()];
-		<span class="kw">let</span> <span class="ident">pivot</span> <span class="op">=</span> <span class="number">4_usize</span>;
+	<span class="doccomment">/// mock tree_route computing function for simple two-forks chain
+	</span><span class="kw">fn </span>tree_route(from: Hash, to: Hash) -&gt; <span class="prelude-ty">Result</span>&lt;TreeRoute&lt;Block&gt;, String&gt; {
+		<span class="kw">let </span>chain = <span class="macro">vec!</span>[e1(), d1(), c1(), b1(), a(), b2(), c2(), d2(), e2()];
+		<span class="kw">let </span>pivot = <span class="number">4_usize</span>;
 
-		<span class="kw">let</span> <span class="ident">from</span> <span class="op">=</span> <span class="ident">chain</span>
-			.<span class="ident">iter</span>()
-			.<span class="ident">position</span>(<span class="op">|</span><span class="ident">bn</span><span class="op">|</span> <span class="ident">bn</span>.<span class="ident">hash</span> <span class="op">==</span> <span class="ident">from</span>)
-			.<span class="ident">ok_or</span>(<span class="string">&quot;existing block should be given&quot;</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">to</span> <span class="op">=</span> <span class="ident">chain</span>
-			.<span class="ident">iter</span>()
-			.<span class="ident">position</span>(<span class="op">|</span><span class="ident">bn</span><span class="op">|</span> <span class="ident">bn</span>.<span class="ident">hash</span> <span class="op">==</span> <span class="ident">to</span>)
-			.<span class="ident">ok_or</span>(<span class="string">&quot;existing block should be given&quot;</span>)<span class="question-mark">?</span>;
+		<span class="kw">let </span>from = chain
+			.iter()
+			.position(|bn| bn.hash == from)
+			.ok_or(<span class="string">&quot;existing block should be given&quot;</span>)<span class="question-mark">?</span>;
+		<span class="kw">let </span>to = chain
+			.iter()
+			.position(|bn| bn.hash == to)
+			.ok_or(<span class="string">&quot;existing block should be given&quot;</span>)<span class="question-mark">?</span>;
 
-		<span class="comment">//    B1-C1-D1-E1</span>
-		<span class="comment">//   /</span>
-		<span class="comment">//  A</span>
-		<span class="comment">//   \</span>
-		<span class="comment">//    B2-C2-D2-E2</span>
-		<span class="comment">//</span>
-		<span class="comment">//  [E1 D1 C1 B1 A B2 C2 D2 E2]</span>
+		<span class="comment">//    B1-C1-D1-E1
+		//   /
+		//  A
+		//   \
+		//    B2-C2-D2-E2
+		//
+		//  [E1 D1 C1 B1 A B2 C2 D2 E2]
 
-		<span class="kw">let</span> <span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">from</span> <span class="op">&lt;</span> <span class="ident">to</span> {
-			<span class="ident">chain</span>.<span class="ident">into_iter</span>().<span class="ident">skip</span>(<span class="ident">from</span>).<span class="ident">take</span>(<span class="ident">to</span> <span class="op">-</span> <span class="ident">from</span> <span class="op">+</span> <span class="number">1</span>).<span class="ident">collect</span>()
-		} <span class="kw">else</span> {
-			<span class="ident">chain</span>.<span class="ident">into_iter</span>().<span class="ident">skip</span>(<span class="ident">to</span>).<span class="ident">take</span>(<span class="ident">from</span> <span class="op">-</span> <span class="ident">to</span> <span class="op">+</span> <span class="number">1</span>).<span class="ident">rev</span>().<span class="ident">collect</span>()
+		</span><span class="kw">let </span>vec: Vec&lt;HashAndNumber&lt;Block&gt;&gt; = <span class="kw">if </span>from &lt; to {
+			chain.into_iter().skip(from).take(to - from + <span class="number">1</span>).collect()
+		} <span class="kw">else </span>{
+			chain.into_iter().skip(to).take(from - to + <span class="number">1</span>).rev().collect()
 		};
 
-		<span class="kw">let</span> <span class="ident">pivot</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">from</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">pivot</span> <span class="op">&amp;&amp;</span> <span class="ident">to</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">pivot</span> {
-			<span class="kw">if</span> <span class="ident">from</span> <span class="op">&lt;</span> <span class="ident">to</span> {
-				<span class="ident">to</span> <span class="op">-</span> <span class="ident">from</span>
-			} <span class="kw">else</span> {
-				<span class="number">0</span>
+		<span class="kw">let </span>pivot = <span class="kw">if </span>from &lt;= pivot &amp;&amp; to &lt;= pivot {
+			<span class="kw">if </span>from &lt; to {
+				to - from
+			} <span class="kw">else </span>{
+				<span class="number">0
+			</span>}
+		} <span class="kw">else if </span>from &gt;= pivot &amp;&amp; to &gt;= pivot {
+			<span class="kw">if </span>from &lt; to {
+				<span class="number">0
+			</span>} <span class="kw">else </span>{
+				from - to
 			}
-		} <span class="kw">else</span> <span class="kw">if</span> <span class="ident">from</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">pivot</span> <span class="op">&amp;&amp;</span> <span class="ident">to</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">pivot</span> {
-			<span class="kw">if</span> <span class="ident">from</span> <span class="op">&lt;</span> <span class="ident">to</span> {
-				<span class="number">0</span>
-			} <span class="kw">else</span> {
-				<span class="ident">from</span> <span class="op">-</span> <span class="ident">to</span>
-			}
-		} <span class="kw">else</span> {
-			<span class="kw">if</span> <span class="ident">from</span> <span class="op">&lt;</span> <span class="ident">to</span> {
-				<span class="ident">pivot</span> <span class="op">-</span> <span class="ident">from</span>
-			} <span class="kw">else</span> {
-				<span class="ident">from</span> <span class="op">-</span> <span class="ident">pivot</span>
+		} <span class="kw">else </span>{
+			<span class="kw">if </span>from &lt; to {
+				pivot - from
+			} <span class="kw">else </span>{
+				from - pivot
 			}
 		};
 
-		<span class="prelude-val">Ok</span>(<span class="ident">TreeRoute::new</span>(<span class="ident">vec</span>, <span class="ident">pivot</span>))
+		<span class="prelude-val">Ok</span>(TreeRoute::new(vec, pivot))
 	}
 
-	<span class="kw">mod</span> <span class="ident">mock_tree_route_tests</span> {
-		<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+	<span class="kw">mod </span>mock_tree_route_tests {
+		<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-		<span class="doccomment">/// asserts that tree routes are equal</span>
-		<span class="kw">fn</span> <span class="ident">assert_treeroute_eq</span>(<span class="ident">expected</span>: <span class="ident">TreeRoute</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">result</span>: <span class="ident">TreeRoute</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>) {
-			<span class="macro">assert_eq!</span>(<span class="ident">result</span>.<span class="ident">common_block</span>().<span class="ident">hash</span>, <span class="ident">expected</span>.<span class="ident">common_block</span>().<span class="ident">hash</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">result</span>.<span class="ident">enacted</span>().<span class="ident">len</span>(), <span class="ident">expected</span>.<span class="ident">enacted</span>().<span class="ident">len</span>());
-			<span class="macro">assert_eq!</span>(<span class="ident">result</span>.<span class="ident">retracted</span>().<span class="ident">len</span>(), <span class="ident">expected</span>.<span class="ident">retracted</span>().<span class="ident">len</span>());
-			<span class="macro">assert!</span>(<span class="ident">result</span>
-				.<span class="ident">enacted</span>()
-				.<span class="ident">iter</span>()
-				.<span class="ident">zip</span>(<span class="ident">expected</span>.<span class="ident">enacted</span>().<span class="ident">iter</span>())
-				.<span class="ident">all</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> <span class="ident">a</span>.<span class="ident">hash</span> <span class="op">==</span> <span class="ident">b</span>.<span class="ident">hash</span>));
-			<span class="macro">assert!</span>(<span class="ident">result</span>
-				.<span class="ident">retracted</span>()
-				.<span class="ident">iter</span>()
-				.<span class="ident">zip</span>(<span class="ident">expected</span>.<span class="ident">retracted</span>().<span class="ident">iter</span>())
-				.<span class="ident">all</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> <span class="ident">a</span>.<span class="ident">hash</span> <span class="op">==</span> <span class="ident">b</span>.<span class="ident">hash</span>));
+		<span class="doccomment">/// asserts that tree routes are equal
+		</span><span class="kw">fn </span>assert_treeroute_eq(expected: TreeRoute&lt;Block&gt;, result: TreeRoute&lt;Block&gt;) {
+			<span class="macro">assert_eq!</span>(result.common_block().hash, expected.common_block().hash);
+			<span class="macro">assert_eq!</span>(result.enacted().len(), expected.enacted().len());
+			<span class="macro">assert_eq!</span>(result.retracted().len(), expected.retracted().len());
+			<span class="macro">assert!</span>(result
+				.enacted()
+				.iter()
+				.zip(expected.enacted().iter())
+				.all(|(a, b)| a.hash == b.hash));
+			<span class="macro">assert!</span>(result
+				.retracted()
+				.iter()
+				.zip(expected.retracted().iter())
+				.all(|(a, b)| a.hash == b.hash));
 		}
 
-		<span class="comment">// some tests for mock tree_route function</span>
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_01</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">b1</span>().<span class="ident">hash</span>, <span class="ident">a</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">b1</span>(), <span class="ident">a</span>()], <span class="number">1</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="comment">// some tests for mock tree_route function
+		</span><span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_01() {
+			<span class="kw">let </span>result = tree_route(b1().hash, a().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b1(), a()], <span class="number">1</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_02</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">a</span>().<span class="ident">hash</span>, <span class="ident">b1</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">a</span>(), <span class="ident">b1</span>()], <span class="number">0</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_02() {
+			<span class="kw">let </span>result = tree_route(a().hash, b1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[a(), b1()], <span class="number">0</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_03</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">a</span>().<span class="ident">hash</span>, <span class="ident">c2</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">a</span>(), <span class="ident">b2</span>(), <span class="ident">c2</span>()], <span class="number">0</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_03() {
+			<span class="kw">let </span>result = tree_route(a().hash, c2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[a(), b2(), c2()], <span class="number">0</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_04</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">e2</span>().<span class="ident">hash</span>, <span class="ident">a</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">e2</span>(), <span class="ident">d2</span>(), <span class="ident">c2</span>(), <span class="ident">b2</span>(), <span class="ident">a</span>()], <span class="number">4</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_04() {
+			<span class="kw">let </span>result = tree_route(e2().hash, a().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[e2(), d2(), c2(), b2(), a()], <span class="number">4</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_05</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">d1</span>().<span class="ident">hash</span>, <span class="ident">b1</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">d1</span>(), <span class="ident">c1</span>(), <span class="ident">b1</span>()], <span class="number">2</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_05() {
+			<span class="kw">let </span>result = tree_route(d1().hash, b1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[d1(), c1(), b1()], <span class="number">2</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_06</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">d2</span>().<span class="ident">hash</span>, <span class="ident">b2</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">d2</span>(), <span class="ident">c2</span>(), <span class="ident">b2</span>()], <span class="number">2</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_06() {
+			<span class="kw">let </span>result = tree_route(d2().hash, b2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[d2(), c2(), b2()], <span class="number">2</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_07</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">b1</span>().<span class="ident">hash</span>, <span class="ident">d1</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">b1</span>(), <span class="ident">c1</span>(), <span class="ident">d1</span>()], <span class="number">0</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_07() {
+			<span class="kw">let </span>result = tree_route(b1().hash, d1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b1(), c1(), d1()], <span class="number">0</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_08</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">b2</span>().<span class="ident">hash</span>, <span class="ident">d2</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">b2</span>(), <span class="ident">c2</span>(), <span class="ident">d2</span>()], <span class="number">0</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_08() {
+			<span class="kw">let </span>result = tree_route(b2().hash, d2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b2(), c2(), d2()], <span class="number">0</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_09</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">e2</span>().<span class="ident">hash</span>, <span class="ident">e1</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span>
-				<span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">e2</span>(), <span class="ident">d2</span>(), <span class="ident">c2</span>(), <span class="ident">b2</span>(), <span class="ident">a</span>(), <span class="ident">b1</span>(), <span class="ident">c1</span>(), <span class="ident">d1</span>(), <span class="ident">e1</span>()], <span class="number">4</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_09() {
+			<span class="kw">let </span>result = tree_route(e2().hash, e1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected =
+				TreeRoute::new(<span class="macro">vec!</span>[e2(), d2(), c2(), b2(), a(), b1(), c1(), d1(), e1()], <span class="number">4</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_10</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">e1</span>().<span class="ident">hash</span>, <span class="ident">e2</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span>
-				<span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">e1</span>(), <span class="ident">d1</span>(), <span class="ident">c1</span>(), <span class="ident">b1</span>(), <span class="ident">a</span>(), <span class="ident">b2</span>(), <span class="ident">c2</span>(), <span class="ident">d2</span>(), <span class="ident">e2</span>()], <span class="number">4</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_10() {
+			<span class="kw">let </span>result = tree_route(e1().hash, e2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected =
+				TreeRoute::new(<span class="macro">vec!</span>[e1(), d1(), c1(), b1(), a(), b2(), c2(), d2(), e2()], <span class="number">4</span>);
+			assert_treeroute_eq(result, expected);
 		}
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_11</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">b1</span>().<span class="ident">hash</span>, <span class="ident">c2</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">b1</span>(), <span class="ident">a</span>(), <span class="ident">b2</span>(), <span class="ident">c2</span>()], <span class="number">1</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
-		}
-
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_12</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">d2</span>().<span class="ident">hash</span>, <span class="ident">b1</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">d2</span>(), <span class="ident">c2</span>(), <span class="ident">b2</span>(), <span class="ident">a</span>(), <span class="ident">b1</span>()], <span class="number">3</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_11() {
+			<span class="kw">let </span>result = tree_route(b1().hash, c2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b1(), a(), b2(), c2()], <span class="number">1</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_13</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">c2</span>().<span class="ident">hash</span>, <span class="ident">e1</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">c2</span>(), <span class="ident">b2</span>(), <span class="ident">a</span>(), <span class="ident">b1</span>(), <span class="ident">c1</span>(), <span class="ident">d1</span>(), <span class="ident">e1</span>()], <span class="number">2</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_12() {
+			<span class="kw">let </span>result = tree_route(d2().hash, b1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[d2(), c2(), b2(), a(), b1()], <span class="number">3</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_14</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">b1</span>().<span class="ident">hash</span>, <span class="ident">b1</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">b1</span>()], <span class="number">0</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_13() {
+			<span class="kw">let </span>result = tree_route(c2().hash, e1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[c2(), b2(), a(), b1(), c1(), d1(), e1()], <span class="number">2</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_15</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">b2</span>().<span class="ident">hash</span>, <span class="ident">b2</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">b2</span>()], <span class="number">0</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_14() {
+			<span class="kw">let </span>result = tree_route(b1().hash, b1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b1()], <span class="number">0</span>);
+			assert_treeroute_eq(result, expected);
 		}
 
-		<span class="attribute">#[<span class="ident">test</span>]</span>
-		<span class="kw">fn</span> <span class="ident">tree_route_mock_test_16</span>() {
-			<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">a</span>().<span class="ident">hash</span>, <span class="ident">a</span>().<span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;tree route exists&quot;</span>);
-			<span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">TreeRoute::new</span>(<span class="macro">vec!</span>[<span class="ident">a</span>()], <span class="number">0</span>);
-			<span class="ident">assert_treeroute_eq</span>(<span class="ident">result</span>, <span class="ident">expected</span>);
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_15() {
+			<span class="kw">let </span>result = tree_route(b2().hash, b2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b2()], <span class="number">0</span>);
+			assert_treeroute_eq(result, expected);
+		}
+
+		<span class="attribute">#[test]
+		</span><span class="kw">fn </span>tree_route_mock_test_16() {
+			<span class="kw">let </span>result = tree_route(a().hash, a().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[a()], <span class="number">0</span>);
+			assert_treeroute_eq(result, expected);
 		}
 	}
 
-	<span class="kw">fn</span> <span class="ident">trigger_new_best_block</span>(
-		<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EnactmentState</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">from</span>: <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">acted_on</span>: <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	) -&gt; <span class="ident">bool</span> {
-		<span class="kw">let</span> (<span class="ident">from</span>, <span class="ident">acted_on</span>) <span class="op">=</span> (<span class="ident">from</span>.<span class="ident">hash</span>, <span class="ident">acted_on</span>.<span class="ident">hash</span>);
+	<span class="kw">fn </span>trigger_new_best_block(
+		state: <span class="kw-2">&amp;mut </span>EnactmentState&lt;Block&gt;,
+		from: HashAndNumber&lt;Block&gt;,
+		acted_on: HashAndNumber&lt;Block&gt;,
+	) -&gt; bool {
+		<span class="kw">let </span>(from, acted_on) = (from.hash, acted_on.hash);
 
-		<span class="kw">let</span> <span class="ident">event_tree_route</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">from</span>, <span class="ident">acted_on</span>).<span class="ident">expect</span>(<span class="string">&quot;Tree route exists&quot;</span>);
+		<span class="kw">let </span>event_tree_route = tree_route(from, acted_on).expect(<span class="string">&quot;Tree route exists&quot;</span>);
 
-		<span class="ident">state</span>
-			.<span class="ident">update</span>(
-				<span class="kw-2">&amp;</span><span class="ident">ChainEvent::NewBestBlock</span> {
-					<span class="ident">hash</span>: <span class="ident">acted_on</span>,
-					<span class="ident">tree_route</span>: <span class="prelude-val">Some</span>(<span class="ident">Arc::new</span>(<span class="ident">event_tree_route</span>)),
+		state
+			.update(
+				<span class="kw-2">&amp;</span>ChainEvent::NewBestBlock {
+					hash: acted_on,
+					tree_route: <span class="prelude-val">Some</span>(Arc::new(event_tree_route)),
 				},
-				<span class="kw-2">&amp;</span><span class="ident">tree_route</span>,
+				<span class="kw-2">&amp;</span>tree_route,
 			)
-			.<span class="ident">unwrap</span>()
-			.<span class="ident">is_some</span>()
+			.unwrap()
+			.is_some()
 	}
 
-	<span class="kw">fn</span> <span class="ident">trigger_finalized</span>(
-		<span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">EnactmentState</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">from</span>: <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">acted_on</span>: <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	) -&gt; <span class="ident">bool</span> {
-		<span class="kw">let</span> (<span class="ident">from</span>, <span class="ident">acted_on</span>) <span class="op">=</span> (<span class="ident">from</span>.<span class="ident">hash</span>, <span class="ident">acted_on</span>.<span class="ident">hash</span>);
+	<span class="kw">fn </span>trigger_finalized(
+		state: <span class="kw-2">&amp;mut </span>EnactmentState&lt;Block&gt;,
+		from: HashAndNumber&lt;Block&gt;,
+		acted_on: HashAndNumber&lt;Block&gt;,
+	) -&gt; bool {
+		<span class="kw">let </span>(from, acted_on) = (from.hash, acted_on.hash);
 
-		<span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">tree_route</span>(<span class="ident">from</span>, <span class="ident">acted_on</span>)
-			.<span class="ident">expect</span>(<span class="string">&quot;Tree route exists&quot;</span>)
-			.<span class="ident">enacted</span>()
-			.<span class="ident">iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="ident">h</span>.<span class="ident">hash</span>)
-			.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">let </span>v = tree_route(from, acted_on)
+			.expect(<span class="string">&quot;Tree route exists&quot;</span>)
+			.enacted()
+			.iter()
+			.map(|h| h.hash)
+			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="ident">state</span>
-			.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">ChainEvent::Finalized</span> { <span class="ident">hash</span>: <span class="ident">acted_on</span>, <span class="ident">tree_route</span>: <span class="ident">v</span>.<span class="ident">into</span>() }, <span class="kw-2">&amp;</span><span class="ident">tree_route</span>)
-			.<span class="ident">unwrap</span>()
-			.<span class="ident">is_some</span>()
+		state
+			.update(<span class="kw-2">&amp;</span>ChainEvent::Finalized { hash: acted_on, tree_route: v.into() }, <span class="kw-2">&amp;</span>tree_route)
+			.unwrap()
+			.is_some()
 	}
 
-	<span class="kw">fn</span> <span class="ident">assert_es_eq</span>(
-		<span class="ident">es</span>: <span class="kw-2">&amp;</span><span class="ident">EnactmentState</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">expected_best_block</span>: <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">expected_finalized_block</span>: <span class="ident">HashAndNumber</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+	<span class="kw">fn </span>assert_es_eq(
+		es: <span class="kw-2">&amp;</span>EnactmentState&lt;Block&gt;,
+		expected_best_block: HashAndNumber&lt;Block&gt;,
+		expected_finalized_block: HashAndNumber&lt;Block&gt;,
 	) {
-		<span class="macro">assert_eq!</span>(<span class="ident">es</span>.<span class="ident">recent_best_block</span>, <span class="ident">expected_best_block</span>.<span class="ident">hash</span>);
-		<span class="macro">assert_eq!</span>(<span class="ident">es</span>.<span class="ident">recent_finalized_block</span>, <span class="ident">expected_finalized_block</span>.<span class="ident">hash</span>);
+		<span class="macro">assert_eq!</span>(es.recent_best_block, expected_best_block.hash);
+		<span class="macro">assert_eq!</span>(es.recent_finalized_block, expected_finalized_block.hash);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">test_enactment_helper</span>() {
-		<span class="ident">sp_tracing::try_init_simple</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">es</span> <span class="op">=</span> <span class="ident">EnactmentState::new</span>(<span class="ident">a</span>().<span class="ident">hash</span>, <span class="ident">a</span>().<span class="ident">hash</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>test_enactment_helper() {
+		sp_tracing::try_init_simple();
+		<span class="kw">let </span><span class="kw-2">mut </span>es = EnactmentState::new(a().hash, a().hash);
 
-		<span class="comment">//   B1-C1-D1-E1</span>
-		<span class="comment">//  /</span>
-		<span class="comment">// A</span>
-		<span class="comment">//  \</span>
-		<span class="comment">//   B2-C2-D2-E2</span>
+		<span class="comment">//   B1-C1-D1-E1
+		//  /
+		// A
+		//  \
+		//   B2-C2-D2-E2
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">d1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d1</span>(), <span class="ident">a</span>());
+		</span><span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), d1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d1(), a());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">d1</span>(), <span class="ident">e1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">a</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, d1(), e1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), a());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">d2</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">d2</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, a(), d2());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d2(), d2());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">e1</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">d2</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, d2(), e1());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d2(), d2());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">b2</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">d2</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, a(), b2());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d2(), d2());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">b1</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">d2</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, a(), b1());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d2(), d2());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">d2</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">d2</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), d2());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d2(), d2());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">d2</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">d2</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, a(), d2());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d2(), d2());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">c2</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">d2</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), c2());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d2(), d2());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">c1</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">d2</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), c1());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d2(), d2());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">e2</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e2</span>(), <span class="ident">d2</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, d2(), e2());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e2(), d2());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">d2</span>(), <span class="ident">e2</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e2</span>(), <span class="ident">e2</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, d2(), e2());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e2(), e2());
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">test_enactment_helper_2</span>() {
-		<span class="ident">sp_tracing::try_init_simple</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">es</span> <span class="op">=</span> <span class="ident">EnactmentState::new</span>(<span class="ident">a</span>().<span class="ident">hash</span>, <span class="ident">a</span>().<span class="ident">hash</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>test_enactment_helper_2() {
+		sp_tracing::try_init_simple();
+		<span class="kw">let </span><span class="kw-2">mut </span>es = EnactmentState::new(a().hash, a().hash);
 
-		<span class="comment">// A-B1-C1-D1-E1</span>
+		<span class="comment">// A-B1-C1-D1-E1
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">b1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">b1</span>(), <span class="ident">a</span>());
+		</span><span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), b1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, b1(), a());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">b1</span>(), <span class="ident">c1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">c1</span>(), <span class="ident">a</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, b1(), c1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, c1(), a());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">c1</span>(), <span class="ident">d1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d1</span>(), <span class="ident">a</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, c1(), d1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d1(), a());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">d1</span>(), <span class="ident">e1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">a</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, d1(), e1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), a());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">c1</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">c1</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, a(), c1());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), c1());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">c1</span>(), <span class="ident">e1</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">e1</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, c1(), e1());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), e1());
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">test_enactment_helper_3</span>() {
-		<span class="ident">sp_tracing::try_init_simple</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">es</span> <span class="op">=</span> <span class="ident">EnactmentState::new</span>(<span class="ident">a</span>().<span class="ident">hash</span>, <span class="ident">a</span>().<span class="ident">hash</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>test_enactment_helper_3() {
+		sp_tracing::try_init_simple();
+		<span class="kw">let </span><span class="kw-2">mut </span>es = EnactmentState::new(a().hash, a().hash);
 
-		<span class="comment">// A-B1-C1-D1-E1</span>
+		<span class="comment">// A-B1-C1-D1-E1
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">e1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">a</span>());
+		</span><span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), e1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), a());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">b1</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">b1</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, a(), b1());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), b1());
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">test_enactment_helper_4</span>() {
-		<span class="ident">sp_tracing::try_init_simple</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">es</span> <span class="op">=</span> <span class="ident">EnactmentState::new</span>(<span class="ident">a</span>().<span class="ident">hash</span>, <span class="ident">a</span>().<span class="ident">hash</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>test_enactment_helper_4() {
+		sp_tracing::try_init_simple();
+		<span class="kw">let </span><span class="kw-2">mut </span>es = EnactmentState::new(a().hash, a().hash);
 
-		<span class="comment">// A-B1-C1-D1-E1</span>
+		<span class="comment">// A-B1-C1-D1-E1
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">e1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">e1</span>());
+		</span><span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, a(), e1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), e1());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">b1</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">e1</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, e1(), b1());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), e1());
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">test_enactment_helper_5</span>() {
-		<span class="ident">sp_tracing::try_init_simple</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">es</span> <span class="op">=</span> <span class="ident">EnactmentState::new</span>(<span class="ident">a</span>().<span class="ident">hash</span>, <span class="ident">a</span>().<span class="ident">hash</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>test_enactment_helper_5() {
+		sp_tracing::try_init_simple();
+		<span class="kw">let </span><span class="kw-2">mut </span>es = EnactmentState::new(a().hash, a().hash);
 
-		<span class="comment">//   B1-C1-D1-E1</span>
-		<span class="comment">//  /</span>
-		<span class="comment">// A</span>
-		<span class="comment">//  \</span>
-		<span class="comment">//   B2-C2-D2-E2</span>
+		<span class="comment">//   B1-C1-D1-E1
+		//  /
+		// A
+		//  \
+		//   B2-C2-D2-E2
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">e1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">e1</span>());
+		</span><span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, a(), e1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), e1());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">e2</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">e1</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, e1(), e2());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), e1());
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">test_enactment_helper_6</span>() {
-		<span class="ident">sp_tracing::try_init_simple</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">es</span> <span class="op">=</span> <span class="ident">EnactmentState::new</span>(<span class="ident">a</span>().<span class="ident">hash</span>, <span class="ident">a</span>().<span class="ident">hash</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>test_enactment_helper_6() {
+		sp_tracing::try_init_simple();
+		<span class="kw">let </span><span class="kw-2">mut </span>es = EnactmentState::new(a().hash, a().hash);
 
-		<span class="comment">// A-B1-C1-D1-E1</span>
+		<span class="comment">// A-B1-C1-D1-E1
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">b1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">b1</span>(), <span class="ident">a</span>());
+		</span><span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), b1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, b1(), a());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">d1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">d1</span>(), <span class="ident">d1</span>());
+		<span class="kw">let </span>result = trigger_finalized(<span class="kw-2">&amp;mut </span>es, a(), d1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, d1(), d1());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">e1</span>());
-		<span class="macro">assert!</span>(<span class="ident">result</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">d1</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), e1());
+		<span class="macro">assert!</span>(result);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), d1());
 
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">trigger_new_best_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">es</span>, <span class="ident">a</span>(), <span class="ident">c1</span>());
-		<span class="macro">assert_eq!</span>(<span class="ident">result</span>, <span class="bool-val">false</span>);
-		<span class="ident">assert_es_eq</span>(<span class="kw-2">&amp;</span><span class="ident">es</span>, <span class="ident">e1</span>(), <span class="ident">d1</span>());
+		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), c1());
+		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
+		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), d1());
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_transaction_pool" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_transaction_pool" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

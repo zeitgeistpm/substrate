@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/consensus/aura/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sp_consensus_aura/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sp_consensus_aura/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sp_consensus_aura/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/consensus/aura/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sp_consensus_aura/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sp_consensus_aura/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -99,101 +93,100 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Primitives for Aura.</span>
+</span><span class="doccomment">//! Primitives for Aura.
 
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Codec</span>, <span class="ident">Decode</span>, <span class="ident">Encode</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime::ConsensusEngineId</span>;
-<span class="kw">use</span> <span class="ident">sp_std::vec::Vec</span>;
+</span><span class="kw">use </span>codec::{Codec, Decode, Encode};
+<span class="kw">use </span>sp_runtime::ConsensusEngineId;
+<span class="kw">use </span>sp_std::vec::Vec;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">digests</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">inherents</span>;
+<span class="kw">pub mod </span>digests;
+<span class="kw">pub mod </span>inherents;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">sr25519</span> {
-	<span class="kw">mod</span> <span class="ident">app_sr25519</span> {
-		<span class="kw">use</span> <span class="ident">sp_application_crypto</span>::{<span class="ident">app_crypto</span>, <span class="ident">key_types::AURA</span>, <span class="ident">sr25519</span>};
-		<span class="macro">app_crypto!</span>(<span class="ident">sr25519</span>, <span class="ident">AURA</span>);
+<span class="kw">pub mod </span>sr25519 {
+	<span class="kw">mod </span>app_sr25519 {
+		<span class="kw">use </span>sp_application_crypto::{app_crypto, key_types::AURA, sr25519};
+		<span class="macro">app_crypto!</span>(sr25519, AURA);
 	}
 
-	<span class="macro">sp_application_crypto::with_pair!</span> {
-		<span class="doccomment">/// An Aura authority keypair using S/R 25519 as its crypto.</span>
-		<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AuthorityPair</span> <span class="op">=</span> <span class="ident">app_sr25519::Pair</span>;
+	<span class="macro">sp_application_crypto::with_pair! </span>{
+		<span class="doccomment">/// An Aura authority keypair using S/R 25519 as its crypto.
+		</span><span class="kw">pub type </span>AuthorityPair = app_sr25519::Pair;
 	}
 
-	<span class="doccomment">/// An Aura authority signature using S/R 25519 as its crypto.</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AuthoritySignature</span> <span class="op">=</span> <span class="ident">app_sr25519::Signature</span>;
+	<span class="doccomment">/// An Aura authority signature using S/R 25519 as its crypto.
+	</span><span class="kw">pub type </span>AuthoritySignature = app_sr25519::Signature;
 
-	<span class="doccomment">/// An Aura authority identifier using S/R 25519 as its crypto.</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AuthorityId</span> <span class="op">=</span> <span class="ident">app_sr25519::Public</span>;
+	<span class="doccomment">/// An Aura authority identifier using S/R 25519 as its crypto.
+	</span><span class="kw">pub type </span>AuthorityId = app_sr25519::Public;
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ed25519</span> {
-	<span class="kw">mod</span> <span class="ident">app_ed25519</span> {
-		<span class="kw">use</span> <span class="ident">sp_application_crypto</span>::{<span class="ident">app_crypto</span>, <span class="ident">ed25519</span>, <span class="ident">key_types::AURA</span>};
-		<span class="macro">app_crypto!</span>(<span class="ident">ed25519</span>, <span class="ident">AURA</span>);
+<span class="kw">pub mod </span>ed25519 {
+	<span class="kw">mod </span>app_ed25519 {
+		<span class="kw">use </span>sp_application_crypto::{app_crypto, ed25519, key_types::AURA};
+		<span class="macro">app_crypto!</span>(ed25519, AURA);
 	}
 
-	<span class="macro">sp_application_crypto::with_pair!</span> {
-		<span class="doccomment">/// An Aura authority keypair using Ed25519 as its crypto.</span>
-		<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AuthorityPair</span> <span class="op">=</span> <span class="ident">app_ed25519::Pair</span>;
+	<span class="macro">sp_application_crypto::with_pair! </span>{
+		<span class="doccomment">/// An Aura authority keypair using Ed25519 as its crypto.
+		</span><span class="kw">pub type </span>AuthorityPair = app_ed25519::Pair;
 	}
 
-	<span class="doccomment">/// An Aura authority signature using Ed25519 as its crypto.</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AuthoritySignature</span> <span class="op">=</span> <span class="ident">app_ed25519::Signature</span>;
+	<span class="doccomment">/// An Aura authority signature using Ed25519 as its crypto.
+	</span><span class="kw">pub type </span>AuthoritySignature = app_ed25519::Signature;
 
-	<span class="doccomment">/// An Aura authority identifier using Ed25519 as its crypto.</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AuthorityId</span> <span class="op">=</span> <span class="ident">app_ed25519::Public</span>;
+	<span class="doccomment">/// An Aura authority identifier using Ed25519 as its crypto.
+	</span><span class="kw">pub type </span>AuthorityId = app_ed25519::Public;
 }
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sp_consensus_slots</span>::{<span class="ident">Slot</span>, <span class="ident">SlotDuration</span>};
+<span class="kw">pub use </span>sp_consensus_slots::{Slot, SlotDuration};
 
-<span class="doccomment">/// The `ConsensusEngineId` of AuRa.</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">AURA_ENGINE_ID</span>: <span class="ident">ConsensusEngineId</span> <span class="op">=</span> [<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;a&#39;</span>];
+<span class="doccomment">/// The `ConsensusEngineId` of AuRa.
+</span><span class="kw">pub const </span>AURA_ENGINE_ID: ConsensusEngineId = [<span class="string">b&#39;a&#39;</span>, <span class="string">b&#39;u&#39;</span>, <span class="string">b&#39;r&#39;</span>, <span class="string">b&#39;a&#39;</span>];
 
-<span class="doccomment">/// The index of an authority.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AuthorityIndex</span> <span class="op">=</span> <span class="ident">u32</span>;
+<span class="doccomment">/// The index of an authority.
+</span><span class="kw">pub type </span>AuthorityIndex = u32;
 
-<span class="doccomment">/// An consensus log item for Aura.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>, <span class="ident">Encode</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ConsensusLog</span><span class="op">&lt;</span><span class="ident">AuthorityId</span>: <span class="ident">Codec</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The authorities have changed.</span>
-	<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">index</span> <span class="op">=</span> <span class="number">1</span>)]</span>
-	<span class="ident">AuthoritiesChange</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&gt;</span>),
-	<span class="doccomment">/// Disable the authority with given index.</span>
-	<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">index</span> <span class="op">=</span> <span class="number">2</span>)]</span>
-	<span class="ident">OnDisabled</span>(<span class="ident">AuthorityIndex</span>),
+<span class="doccomment">/// An consensus log item for Aura.
+</span><span class="attribute">#[derive(Decode, Encode)]
+</span><span class="kw">pub enum </span>ConsensusLog&lt;AuthorityId: Codec&gt; {
+	<span class="doccomment">/// The authorities have changed.
+	</span><span class="attribute">#[codec(index = <span class="number">1</span>)]
+	</span>AuthoritiesChange(Vec&lt;AuthorityId&gt;),
+	<span class="doccomment">/// Disable the authority with given index.
+	</span><span class="attribute">#[codec(index = <span class="number">2</span>)]
+	</span>OnDisabled(AuthorityIndex),
 }
 
-<span class="macro">sp_api::decl_runtime_apis!</span> {
-	<span class="doccomment">/// API necessary for block authorship with aura.</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AuraApi</span><span class="op">&lt;</span><span class="ident">AuthorityId</span>: <span class="ident">Codec</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Returns the slot duration for Aura.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Currently, only the value provided by this type at genesis will be used.</span>
-		<span class="kw">fn</span> <span class="ident">slot_duration</span>() -&gt; <span class="ident">SlotDuration</span>;
+<span class="macro">sp_api::decl_runtime_apis! </span>{
+	<span class="doccomment">/// API necessary for block authorship with aura.
+	</span><span class="kw">pub trait </span>AuraApi&lt;AuthorityId: Codec&gt; {
+		<span class="doccomment">/// Returns the slot duration for Aura.
+		///
+		/// Currently, only the value provided by this type at genesis will be used.
+		</span><span class="kw">fn </span>slot_duration() -&gt; SlotDuration;
 
-		<span class="comment">// Return the current set of authorities.</span>
-		<span class="kw">fn</span> <span class="ident">authorities</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&gt;</span>;
+		<span class="comment">// Return the current set of authorities.
+		</span><span class="kw">fn </span>authorities() -&gt; Vec&lt;AuthorityId&gt;;
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sp_consensus_aura" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sp_consensus_aura" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

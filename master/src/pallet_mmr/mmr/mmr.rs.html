@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/merkle-mountain-range/src/mmr/mmr.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mmr.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../pallet_mmr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../pallet_mmr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../pallet_mmr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/merkle-mountain-range/src/mmr/mmr.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mmr.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../pallet_mmr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../pallet_mmr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -198,200 +192,199 @@
 <span id="192">192</span>
 <span id="193">193</span>
 <span id="194">194</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">mmr</span>::{
-		<span class="ident">storage</span>::{<span class="ident">OffchainStorage</span>, <span class="ident">RuntimeStorage</span>, <span class="ident">Storage</span>},
-		<span class="ident">utils::NodesUtils</span>,
-		<span class="ident">Hasher</span>, <span class="ident">Node</span>, <span class="ident">NodeOf</span>,
+</span><span class="kw">use crate</span>::{
+	mmr::{
+		storage::{OffchainStorage, RuntimeStorage, Storage},
+		utils::NodesUtils,
+		Hasher, Node, NodeOf,
 	},
-	<span class="ident">primitives</span>::{<span class="self">self</span>, <span class="ident">Error</span>, <span class="ident">NodeIndex</span>},
-	<span class="ident">Config</span>, <span class="ident">HashingOf</span>,
+	primitives::{<span class="self">self</span>, Error, NodeIndex},
+	Config, HashingOf,
 };
-<span class="kw">use</span> <span class="ident">sp_std::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// Stateless verification of the proof for a batch of leaves.</span>
-<span class="doccomment">/// Note, the leaves should be sorted such that corresponding leaves and leaf indices have the</span>
-<span class="doccomment">/// same position in both the `leaves` vector and the `leaf_indices` vector contained in the</span>
-<span class="doccomment">/// [primitives::BatchProof]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">verify_leaves_proof</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span>(
-	<span class="ident">root</span>: <span class="ident">H::Output</span>,
-	<span class="ident">leaves</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">proof</span>: <span class="ident">primitives::BatchProof</span><span class="op">&lt;</span><span class="ident">H::Output</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">Error</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">H</span>: <span class="ident">sp_runtime::traits::Hash</span>,
-	<span class="ident">L</span>: <span class="ident">primitives::FullLeaf</span>,
+<span class="doccomment">/// Stateless verification of the proof for a batch of leaves.
+/// Note, the leaves should be sorted such that corresponding leaves and leaf indices have the
+/// same position in both the `leaves` vector and the `leaf_indices` vector contained in the
+/// [primitives::BatchProof]
+</span><span class="kw">pub fn </span>verify_leaves_proof&lt;H, L&gt;(
+	root: H::Output,
+	leaves: Vec&lt;Node&lt;H, L&gt;&gt;,
+	proof: primitives::BatchProof&lt;H::Output&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;bool, Error&gt;
+<span class="kw">where
+	</span>H: sp_runtime::traits::Hash,
+	L: primitives::FullLeaf,
 {
-	<span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">NodesUtils::new</span>(<span class="ident">proof</span>.<span class="ident">leaf_count</span>).<span class="ident">size</span>();
+	<span class="kw">let </span>size = NodesUtils::new(proof.leaf_count).size();
 
-	<span class="kw">if</span> <span class="ident">leaves</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">proof</span>.<span class="ident">leaf_indices</span>.<span class="ident">len</span>() {
-		<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Verify</span>.<span class="ident">log_debug</span>(<span class="string">&quot;Proof leaf_indices not same length with leaves&quot;</span>))
+	<span class="kw">if </span>leaves.len() != proof.leaf_indices.len() {
+		<span class="kw">return </span><span class="prelude-val">Err</span>(Error::Verify.log_debug(<span class="string">&quot;Proof leaf_indices not same length with leaves&quot;</span>))
 	}
 
-	<span class="kw">let</span> <span class="ident">leaves_and_position_data</span> <span class="op">=</span> <span class="ident">proof</span>
-		.<span class="ident">leaf_indices</span>
-		.<span class="ident">into_iter</span>()
-		.<span class="ident">map</span>(<span class="op">|</span><span class="ident">index</span><span class="op">|</span> <span class="ident">mmr_lib::leaf_index_to_pos</span>(<span class="ident">index</span>))
-		.<span class="ident">zip</span>(<span class="ident">leaves</span>.<span class="ident">into_iter</span>())
-		.<span class="ident">collect</span>();
+	<span class="kw">let </span>leaves_and_position_data = proof
+		.leaf_indices
+		.into_iter()
+		.map(|index| mmr_lib::leaf_index_to_pos(index))
+		.zip(leaves.into_iter())
+		.collect();
 
-	<span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">mmr_lib::MerkleProof</span>::<span class="op">&lt;</span><span class="ident">Node</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">Hasher</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::new</span>(
-		<span class="ident">size</span>,
-		<span class="ident">proof</span>.<span class="ident">items</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Node::Hash</span>).<span class="ident">collect</span>(),
+	<span class="kw">let </span>p = mmr_lib::MerkleProof::&lt;Node&lt;H, L&gt;, Hasher&lt;H, L&gt;&gt;::new(
+		size,
+		proof.items.into_iter().map(Node::Hash).collect(),
 	);
-	<span class="ident">p</span>.<span class="ident">verify</span>(<span class="ident">Node::Hash</span>(<span class="ident">root</span>), <span class="ident">leaves_and_position_data</span>)
-		.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Verify</span>.<span class="ident">log_debug</span>(<span class="ident">e</span>))
+	p.verify(Node::Hash(root), leaves_and_position_data)
+		.map_err(|e| Error::Verify.log_debug(e))
 }
 
-<span class="doccomment">/// A wrapper around a MMR library to expose limited functionality.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Available functions depend on the storage kind ([Runtime](crate::mmr::storage::RuntimeStorage)</span>
-<span class="doccomment">/// vs [Off-chain](crate::mmr::storage::OffchainStorage)).</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Mmr</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="lifetime">&#39;static</span>,
-	<span class="ident">L</span>: <span class="ident">primitives::FullLeaf</span>,
-	<span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>: <span class="ident">mmr_lib::MMRStore</span><span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A wrapper around a MMR library to expose limited functionality.
+///
+/// Available functions depend on the storage kind ([Runtime](crate::mmr::storage::RuntimeStorage)
+/// vs [Off-chain](crate::mmr::storage::OffchainStorage)).
+</span><span class="kw">pub struct </span>Mmr&lt;StorageType, T, I, L&gt;
+<span class="kw">where
+	</span>T: Config&lt;I&gt;,
+	I: <span class="lifetime">&#39;static</span>,
+	L: primitives::FullLeaf,
+	Storage&lt;StorageType, T, I, L&gt;: mmr_lib::MMRStore&lt;NodeOf&lt;T, I, L&gt;&gt;,
 {
-	<span class="ident">mmr</span>: <span class="ident">mmr_lib::MMR</span><span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">Hasher</span><span class="op">&lt;</span><span class="ident">HashingOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">leaves</span>: <span class="ident">NodeIndex</span>,
+	mmr: mmr_lib::MMR&lt;NodeOf&lt;T, I, L&gt;, Hasher&lt;HashingOf&lt;T, I&gt;, L&gt;, Storage&lt;StorageType, T, I, L&gt;&gt;,
+	leaves: NodeIndex,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Mmr</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="lifetime">&#39;static</span>,
-	<span class="ident">L</span>: <span class="ident">primitives::FullLeaf</span>,
-	<span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>: <span class="ident">mmr_lib::MMRStore</span><span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;StorageType, T, I, L&gt; Mmr&lt;StorageType, T, I, L&gt;
+<span class="kw">where
+	</span>T: Config&lt;I&gt;,
+	I: <span class="lifetime">&#39;static</span>,
+	L: primitives::FullLeaf,
+	Storage&lt;StorageType, T, I, L&gt;: mmr_lib::MMRStore&lt;NodeOf&lt;T, I, L&gt;&gt;,
 {
-	<span class="doccomment">/// Create a pointer to an existing MMR with given number of leaves.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">leaves</span>: <span class="ident">NodeIndex</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">NodesUtils::new</span>(<span class="ident">leaves</span>).<span class="ident">size</span>();
-		<span class="self">Self</span> { <span class="ident">mmr</span>: <span class="ident">mmr_lib::MMR::new</span>(<span class="ident">size</span>, <span class="ident">Default::default</span>()), <span class="ident">leaves</span> }
+	<span class="doccomment">/// Create a pointer to an existing MMR with given number of leaves.
+	</span><span class="kw">pub fn </span>new(leaves: NodeIndex) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>size = NodesUtils::new(leaves).size();
+		<span class="self">Self </span>{ mmr: mmr_lib::MMR::new(size, Default::default()), leaves }
 	}
 
-	<span class="doccomment">/// Verify proof for a set of leaves.</span>
-	<span class="doccomment">/// Note, the leaves should be sorted such that corresponding leaves and leaf indices have</span>
-	<span class="doccomment">/// the same position in both the `leaves` vector and the `leaf_indices` vector contained in the</span>
-	<span class="doccomment">/// [primitives::BatchProof]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">verify_leaves_proof</span>(
+	<span class="doccomment">/// Verify proof for a set of leaves.
+	/// Note, the leaves should be sorted such that corresponding leaves and leaf indices have
+	/// the same position in both the `leaves` vector and the `leaf_indices` vector contained in the
+	/// [primitives::BatchProof]
+	</span><span class="kw">pub fn </span>verify_leaves_proof(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">leaves</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-		<span class="ident">proof</span>: <span class="ident">primitives::BatchProof</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">mmr_lib::MerkleProof</span>::<span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">Hasher</span><span class="op">&lt;</span><span class="ident">HashingOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::new</span>(
-			<span class="self">self</span>.<span class="ident">mmr</span>.<span class="ident">mmr_size</span>(),
-			<span class="ident">proof</span>.<span class="ident">items</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="ident">Node::Hash</span>).<span class="ident">collect</span>(),
+		leaves: Vec&lt;L&gt;,
+		proof: primitives::BatchProof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;bool, Error&gt; {
+		<span class="kw">let </span>p = mmr_lib::MerkleProof::&lt;NodeOf&lt;T, I, L&gt;, Hasher&lt;HashingOf&lt;T, I&gt;, L&gt;&gt;::new(
+			<span class="self">self</span>.mmr.mmr_size(),
+			proof.items.into_iter().map(Node::Hash).collect(),
 		);
 
-		<span class="kw">if</span> <span class="ident">leaves</span>.<span class="ident">len</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">proof</span>.<span class="ident">leaf_indices</span>.<span class="ident">len</span>() {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Verify</span>.<span class="ident">log_debug</span>(<span class="string">&quot;Proof leaf_indices not same length with leaves&quot;</span>))
+		<span class="kw">if </span>leaves.len() != proof.leaf_indices.len() {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(Error::Verify.log_debug(<span class="string">&quot;Proof leaf_indices not same length with leaves&quot;</span>))
 		}
 
-		<span class="kw">let</span> <span class="ident">leaves_positions_and_data</span> <span class="op">=</span> <span class="ident">proof</span>
-			.<span class="ident">leaf_indices</span>
-			.<span class="ident">into_iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">index</span><span class="op">|</span> <span class="ident">mmr_lib::leaf_index_to_pos</span>(<span class="ident">index</span>))
-			.<span class="ident">zip</span>(<span class="ident">leaves</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">leaf</span><span class="op">|</span> <span class="ident">Node::Data</span>(<span class="ident">leaf</span>)))
-			.<span class="ident">collect</span>();
-		<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mmr</span>.<span class="ident">get_root</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::GetRoot</span>.<span class="ident">log_error</span>(<span class="ident">e</span>))<span class="question-mark">?</span>;
-		<span class="ident">p</span>.<span class="ident">verify</span>(<span class="ident">root</span>, <span class="ident">leaves_positions_and_data</span>)
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Verify</span>.<span class="ident">log_debug</span>(<span class="ident">e</span>))
+		<span class="kw">let </span>leaves_positions_and_data = proof
+			.leaf_indices
+			.into_iter()
+			.map(|index| mmr_lib::leaf_index_to_pos(index))
+			.zip(leaves.into_iter().map(|leaf| Node::Data(leaf)))
+			.collect();
+		<span class="kw">let </span>root = <span class="self">self</span>.mmr.get_root().map_err(|e| Error::GetRoot.log_error(e))<span class="question-mark">?</span>;
+		p.verify(root, leaves_positions_and_data)
+			.map_err(|e| Error::Verify.log_debug(e))
 	}
 
-	<span class="doccomment">/// Return the internal size of the MMR (number of nodes).</span>
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">NodeIndex</span> {
-		<span class="self">self</span>.<span class="ident">mmr</span>.<span class="ident">mmr_size</span>()
-	}
-}
-
-<span class="doccomment">/// Runtime specific MMR functions.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Mmr</span><span class="op">&lt;</span><span class="ident">RuntimeStorage</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="lifetime">&#39;static</span>,
-	<span class="ident">L</span>: <span class="ident">primitives::FullLeaf</span>,
-{
-	<span class="doccomment">/// Push another item to the MMR.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns element position (index) in the MMR.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">leaf</span>: <span class="ident">L</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeIndex</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span>
-			<span class="self">self</span>.<span class="ident">mmr</span>.<span class="ident">push</span>(<span class="ident">Node::Data</span>(<span class="ident">leaf</span>)).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Push</span>.<span class="ident">log_error</span>(<span class="ident">e</span>)).<span class="ident">ok</span>()<span class="question-mark">?</span>;
-
-		<span class="self">self</span>.<span class="ident">leaves</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-
-		<span class="prelude-val">Some</span>(<span class="ident">position</span>)
-	}
-
-	<span class="doccomment">/// Commit the changes to underlying storage, return current number of leaves and</span>
-	<span class="doccomment">/// calculate the new MMR&#39;s root hash.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finalize</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">NodeIndex</span>, <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Hash</span>), <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mmr</span>.<span class="ident">get_root</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::GetRoot</span>.<span class="ident">log_error</span>(<span class="ident">e</span>))<span class="question-mark">?</span>;
-		<span class="self">self</span>.<span class="ident">mmr</span>.<span class="ident">commit</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Commit</span>.<span class="ident">log_error</span>(<span class="ident">e</span>))<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>((<span class="self">self</span>.<span class="ident">leaves</span>, <span class="ident">root</span>.<span class="ident">hash</span>()))
+	<span class="doccomment">/// Return the internal size of the MMR (number of nodes).
+	</span><span class="attribute">#[cfg(test)]
+	</span><span class="kw">pub fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; NodeIndex {
+		<span class="self">self</span>.mmr.mmr_size()
 	}
 }
 
-<span class="doccomment">/// Off-chain specific MMR functions.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Mmr</span><span class="op">&lt;</span><span class="ident">OffchainStorage</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="lifetime">&#39;static</span>,
-	<span class="ident">L</span>: <span class="ident">primitives::FullLeaf</span> <span class="op">+</span> <span class="ident">codec::Decode</span>,
+<span class="doccomment">/// Runtime specific MMR functions.
+</span><span class="kw">impl</span>&lt;T, I, L&gt; Mmr&lt;RuntimeStorage, T, I, L&gt;
+<span class="kw">where
+	</span>T: Config&lt;I&gt;,
+	I: <span class="lifetime">&#39;static</span>,
+	L: primitives::FullLeaf,
 {
-	<span class="doccomment">/// Generate a proof for given leaf indices.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Proof generation requires all the nodes (or their hashes) to be available in the storage.</span>
-	<span class="doccomment">/// (i.e. you can&#39;t run the function in the pruned storage).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_batch_proof</span>(
+	<span class="doccomment">/// Push another item to the MMR.
+	///
+	/// Returns element position (index) in the MMR.
+	</span><span class="kw">pub fn </span>push(<span class="kw-2">&amp;mut </span><span class="self">self</span>, leaf: L) -&gt; <span class="prelude-ty">Option</span>&lt;NodeIndex&gt; {
+		<span class="kw">let </span>position =
+			<span class="self">self</span>.mmr.push(Node::Data(leaf)).map_err(|e| Error::Push.log_error(e)).ok()<span class="question-mark">?</span>;
+
+		<span class="self">self</span>.leaves += <span class="number">1</span>;
+
+		<span class="prelude-val">Some</span>(position)
+	}
+
+	<span class="doccomment">/// Commit the changes to underlying storage, return current number of leaves and
+	/// calculate the new MMR&#39;s root hash.
+	</span><span class="kw">pub fn </span>finalize(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(NodeIndex, &lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash), Error&gt; {
+		<span class="kw">let </span>root = <span class="self">self</span>.mmr.get_root().map_err(|e| Error::GetRoot.log_error(e))<span class="question-mark">?</span>;
+		<span class="self">self</span>.mmr.commit().map_err(|e| Error::Commit.log_error(e))<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>((<span class="self">self</span>.leaves, root.hash()))
+	}
+}
+
+<span class="doccomment">/// Off-chain specific MMR functions.
+</span><span class="kw">impl</span>&lt;T, I, L&gt; Mmr&lt;OffchainStorage, T, I, L&gt;
+<span class="kw">where
+	</span>T: Config&lt;I&gt;,
+	I: <span class="lifetime">&#39;static</span>,
+	L: primitives::FullLeaf + codec::Decode,
+{
+	<span class="doccomment">/// Generate a proof for given leaf indices.
+	///
+	/// Proof generation requires all the nodes (or their hashes) to be available in the storage.
+	/// (i.e. you can&#39;t run the function in the pruned storage).
+	</span><span class="kw">pub fn </span>generate_batch_proof(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">NodeIndex</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>, <span class="ident">primitives::BatchProof</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">positions</span> <span class="op">=</span> <span class="ident">leaf_indices</span>
-			.<span class="ident">iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">index</span><span class="op">|</span> <span class="ident">mmr_lib::leaf_index_to_pos</span>(<span class="kw-2">*</span><span class="ident">index</span>))
-			.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-		<span class="kw">let</span> <span class="ident">store</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">OffchainStorage</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::default</span>();
-		<span class="kw">let</span> <span class="ident">leaves</span> <span class="op">=</span> <span class="ident">positions</span>
-			.<span class="ident">iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">pos</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">mmr_lib::MMRStore::get_elem</span>(<span class="kw-2">&amp;</span><span class="ident">store</span>, <span class="kw-2">*</span><span class="ident">pos</span>) {
-				<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Node::Data</span>(<span class="ident">leaf</span>))) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">leaf</span>),
-				<span class="ident">e</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">Error::LeafNotFound</span>.<span class="ident">log_debug</span>(<span class="ident">e</span>)),
+		leaf_indices: Vec&lt;NodeIndex&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;L&gt;, primitives::BatchProof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;), Error&gt; {
+		<span class="kw">let </span>positions = leaf_indices
+			.iter()
+			.map(|index| mmr_lib::leaf_index_to_pos(<span class="kw-2">*</span>index))
+			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+		<span class="kw">let </span>store = &lt;Storage&lt;OffchainStorage, T, I, L&gt;&gt;::default();
+		<span class="kw">let </span>leaves = positions
+			.iter()
+			.map(|pos| <span class="kw">match </span>mmr_lib::MMRStore::get_elem(<span class="kw-2">&amp;</span>store, <span class="kw-2">*</span>pos) {
+				<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(Node::Data(leaf))) =&gt; <span class="prelude-val">Ok</span>(leaf),
+				e =&gt; <span class="prelude-val">Err</span>(Error::LeafNotFound.log_debug(e)),
 			})
-			.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+			.collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, Error&gt;&gt;()<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="ident">leaf_count</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">leaves</span>;
-		<span class="self">self</span>.<span class="ident">mmr</span>
-			.<span class="ident">gen_proof</span>(<span class="ident">positions</span>)
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::GenerateProof</span>.<span class="ident">log_error</span>(<span class="ident">e</span>))
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">primitives::BatchProof</span> {
-				<span class="ident">leaf_indices</span>,
-				<span class="ident">leaf_count</span>,
-				<span class="ident">items</span>: <span class="ident">p</span>.<span class="ident">proof_items</span>().<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">hash</span>()).<span class="ident">collect</span>(),
+		<span class="kw">let </span>leaf_count = <span class="self">self</span>.leaves;
+		<span class="self">self</span>.mmr
+			.gen_proof(positions)
+			.map_err(|e| Error::GenerateProof.log_error(e))
+			.map(|p| primitives::BatchProof {
+				leaf_indices,
+				leaf_count,
+				items: p.proof_items().iter().map(|x| x.hash()).collect(),
 			})
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> (<span class="ident">leaves</span>, <span class="ident">p</span>))
+			.map(|p| (leaves, p))
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pallet_mmr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pallet_mmr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

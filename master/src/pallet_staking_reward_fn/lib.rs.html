@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/staking/reward-fn/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_staking_reward_fn/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_staking_reward_fn/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_staking_reward_fn/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/staking/reward-fn/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_staking_reward_fn/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_staking_reward_fn/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -228,230 +222,229 @@
 <span id="222">222</span>
 <span id="223">223</span>
 <span id="224">224</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-<span class="doccomment">//! Useful function for inflation for nominated proof of stake.</span>
+</span><span class="doccomment">//! Useful function for inflation for nominated proof of stake.
 
-<span class="kw">use</span> <span class="ident">sp_arithmetic</span>::{
-	<span class="ident">biguint::BigUint</span>,
-	<span class="ident">traits</span>::{<span class="ident">SaturatedConversion</span>, <span class="ident">Zero</span>},
-	<span class="ident">PerThing</span>, <span class="ident">Perquintill</span>,
+</span><span class="kw">use </span>sp_arithmetic::{
+	biguint::BigUint,
+	traits::{SaturatedConversion, Zero},
+	PerThing, Perquintill,
 };
 
-<span class="doccomment">/// Compute yearly inflation using function</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```ignore</span>
-<span class="doccomment">/// I(x) = for x between 0 and x_ideal: x / x_ideal,</span>
-<span class="doccomment">/// for x between x_ideal and 1: 2^((x_ideal - x) / d)</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// where:</span>
-<span class="doccomment">/// * x is the stake rate, i.e. fraction of total issued tokens that actively staked behind</span>
-<span class="doccomment">///   validators.</span>
-<span class="doccomment">/// * d is the falloff or `decay_rate`</span>
-<span class="doccomment">/// * x_ideal: the ideal stake rate.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The result is meant to be scaled with minimum inflation and maximum inflation.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// (as detailed</span>
-<span class="doccomment">/// [here](https://research.web3.foundation/en/latest/polkadot/economics/1-token-economics.html#inflation-model-with-parachains))</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Arguments are:</span>
-<span class="doccomment">/// * `stake`: The fraction of total issued tokens that actively staked behind validators. Known as</span>
-<span class="doccomment">///   `x` in the literature. Must be between 0 and 1.</span>
-<span class="doccomment">/// * `ideal_stake`: The fraction of total issued tokens that should be actively staked behind</span>
-<span class="doccomment">///   validators. Known as `x_ideal` in the literature. Must be between 0 and 1.</span>
-<span class="doccomment">/// * `falloff`: Known as `decay_rate` in the literature. A co-efficient dictating the strength of</span>
-<span class="doccomment">///   the global incentivization to get the `ideal_stake`. A higher number results in less typical</span>
-<span class="doccomment">///   inflation at the cost of greater volatility for validators. Must be more than 0.01.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">compute_inflation</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">PerThing</span><span class="op">&gt;</span>(<span class="ident">stake</span>: <span class="ident">P</span>, <span class="ident">ideal_stake</span>: <span class="ident">P</span>, <span class="ident">falloff</span>: <span class="ident">P</span>) -&gt; <span class="ident">P</span> {
-	<span class="kw">if</span> <span class="ident">stake</span> <span class="op">&lt;</span> <span class="ident">ideal_stake</span> {
-		<span class="comment">// ideal_stake is more than 0 because it is strictly more than stake</span>
-		<span class="kw">return</span> <span class="ident">stake</span> <span class="op">/</span> <span class="ident">ideal_stake</span>
+<span class="doccomment">/// Compute yearly inflation using function
+///
+/// ```ignore
+/// I(x) = for x between 0 and x_ideal: x / x_ideal,
+/// for x between x_ideal and 1: 2^((x_ideal - x) / d)
+/// ```
+///
+/// where:
+/// * x is the stake rate, i.e. fraction of total issued tokens that actively staked behind
+///   validators.
+/// * d is the falloff or `decay_rate`
+/// * x_ideal: the ideal stake rate.
+///
+/// The result is meant to be scaled with minimum inflation and maximum inflation.
+///
+/// (as detailed
+/// [here](https://research.web3.foundation/en/latest/polkadot/economics/1-token-economics.html#inflation-model-with-parachains))
+///
+/// Arguments are:
+/// * `stake`: The fraction of total issued tokens that actively staked behind validators. Known as
+///   `x` in the literature. Must be between 0 and 1.
+/// * `ideal_stake`: The fraction of total issued tokens that should be actively staked behind
+///   validators. Known as `x_ideal` in the literature. Must be between 0 and 1.
+/// * `falloff`: Known as `decay_rate` in the literature. A co-efficient dictating the strength of
+///   the global incentivization to get the `ideal_stake`. A higher number results in less typical
+///   inflation at the cost of greater volatility for validators. Must be more than 0.01.
+</span><span class="kw">pub fn </span>compute_inflation&lt;P: PerThing&gt;(stake: P, ideal_stake: P, falloff: P) -&gt; P {
+	<span class="kw">if </span>stake &lt; ideal_stake {
+		<span class="comment">// ideal_stake is more than 0 because it is strictly more than stake
+		</span><span class="kw">return </span>stake / ideal_stake
 	}
 
-	<span class="kw">if</span> <span class="ident">falloff</span> <span class="op">&lt;</span> <span class="ident">P::from_percent</span>(<span class="number">1</span>.<span class="ident">into</span>()) {
+	<span class="kw">if </span>falloff &lt; P::from_percent(<span class="number">1</span>.into()) {
 		<span class="macro">log::error!</span>(<span class="string">&quot;Invalid inflation computation: falloff less than 1% is not supported&quot;</span>);
-		<span class="kw">return</span> <span class="ident">PerThing::zero</span>()
+		<span class="kw">return </span>PerThing::zero()
 	}
 
-	<span class="kw">let</span> <span class="ident">accuracy</span> <span class="op">=</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">BigUint::from</span>(<span class="ident">Into</span>::<span class="op">&lt;</span><span class="ident">u128</span><span class="op">&gt;</span><span class="ident">::into</span>(<span class="ident">P::ACCURACY</span>));
-		<span class="ident">a</span>.<span class="ident">lstrip</span>();
-		<span class="ident">a</span>
+	<span class="kw">let </span>accuracy = {
+		<span class="kw">let </span><span class="kw-2">mut </span>a = BigUint::from(Into::&lt;u128&gt;::into(P::ACCURACY));
+		a.lstrip();
+		a
 	};
 
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">falloff</span> <span class="op">=</span> <span class="ident">BigUint::from</span>(<span class="ident">falloff</span>.<span class="ident">deconstruct</span>().<span class="ident">into</span>());
-	<span class="ident">falloff</span>.<span class="ident">lstrip</span>();
+	<span class="kw">let </span><span class="kw-2">mut </span>falloff = BigUint::from(falloff.deconstruct().into());
+	falloff.lstrip();
 
-	<span class="kw">let</span> <span class="ident">ln2</span> <span class="op">=</span> {
-		<span class="doccomment">/// `ln(2)` expressed in as perquintillionth.</span>
-		<span class="kw">const</span> <span class="ident">LN2</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">0_693_147_180_559_945_309</span>;
-		<span class="kw">let</span> <span class="ident">ln2</span> <span class="op">=</span> <span class="ident">P::from_rational</span>(<span class="ident">LN2</span>.<span class="ident">into</span>(), <span class="ident">Perquintill::ACCURACY</span>.<span class="ident">into</span>());
-		<span class="ident">BigUint::from</span>(<span class="ident">ln2</span>.<span class="ident">deconstruct</span>().<span class="ident">into</span>())
+	<span class="kw">let </span>ln2 = {
+		<span class="doccomment">/// `ln(2)` expressed in as perquintillionth.
+		</span><span class="kw">const </span>LN2: u64 = <span class="number">0_693_147_180_559_945_309</span>;
+		<span class="kw">let </span>ln2 = P::from_rational(LN2.into(), Perquintill::ACCURACY.into());
+		BigUint::from(ln2.deconstruct().into())
 	};
 
-	<span class="comment">// falloff is stripped above.</span>
-	<span class="kw">let</span> <span class="ident">ln2_div_d</span> <span class="op">=</span> <span class="ident">div_by_stripped</span>(<span class="ident">ln2</span>.<span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="ident">accuracy</span>), <span class="kw-2">&amp;</span><span class="ident">falloff</span>);
+	<span class="comment">// falloff is stripped above.
+	</span><span class="kw">let </span>ln2_div_d = div_by_stripped(ln2.mul(<span class="kw-2">&amp;</span>accuracy), <span class="kw-2">&amp;</span>falloff);
 
-	<span class="kw">let</span> <span class="ident">inpos_param</span> <span class="op">=</span> <span class="ident">INPoSParam</span> {
-		<span class="ident">x_ideal</span>: <span class="ident">BigUint::from</span>(<span class="ident">ideal_stake</span>.<span class="ident">deconstruct</span>().<span class="ident">into</span>()),
-		<span class="ident">x</span>: <span class="ident">BigUint::from</span>(<span class="ident">stake</span>.<span class="ident">deconstruct</span>().<span class="ident">into</span>()),
-		<span class="ident">accuracy</span>,
-		<span class="ident">ln2_div_d</span>,
+	<span class="kw">let </span>inpos_param = INPoSParam {
+		x_ideal: BigUint::from(ideal_stake.deconstruct().into()),
+		x: BigUint::from(stake.deconstruct().into()),
+		accuracy,
+		ln2_div_d,
 	};
 
-	<span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">compute_taylor_serie_part</span>(<span class="kw-2">&amp;</span><span class="ident">inpos_param</span>);
+	<span class="kw">let </span>res = compute_taylor_serie_part(<span class="kw-2">&amp;</span>inpos_param);
 
-	<span class="kw">match</span> <span class="ident">u128::try_from</span>(<span class="ident">res</span>.<span class="ident">clone</span>()) {
-		<span class="prelude-val">Ok</span>(<span class="ident">res</span>) <span class="kw">if</span> <span class="ident">res</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">Into</span>::<span class="op">&lt;</span><span class="ident">u128</span><span class="op">&gt;</span><span class="ident">::into</span>(<span class="ident">P::ACCURACY</span>) =&gt; <span class="ident">P::from_parts</span>(<span class="ident">res</span>.<span class="ident">saturated_into</span>()),
-		<span class="comment">// If result is beyond bounds there is nothing we can do</span>
-		<span class="kw">_</span> =&gt; {
-			<span class="macro">log::error!</span>(<span class="string">&quot;Invalid inflation computation: unexpected result {:?}&quot;</span>, <span class="ident">res</span>);
-			<span class="ident">P::zero</span>()
+	<span class="kw">match </span>u128::try_from(res.clone()) {
+		<span class="prelude-val">Ok</span>(res) <span class="kw">if </span>res &lt;= Into::&lt;u128&gt;::into(P::ACCURACY) =&gt; P::from_parts(res.saturated_into()),
+		<span class="comment">// If result is beyond bounds there is nothing we can do
+		</span><span class="kw">_ </span>=&gt; {
+			<span class="macro">log::error!</span>(<span class="string">&quot;Invalid inflation computation: unexpected result {:?}&quot;</span>, res);
+			P::zero()
 		},
 	}
 }
 
-<span class="doccomment">/// Internal struct holding parameter info alongside other cached value.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// All expressed in part from `accuracy`</span>
-<span class="kw">struct</span> <span class="ident">INPoSParam</span> {
-	<span class="ident">ln2_div_d</span>: <span class="ident">BigUint</span>,
-	<span class="ident">x_ideal</span>: <span class="ident">BigUint</span>,
-	<span class="ident">x</span>: <span class="ident">BigUint</span>,
-	<span class="doccomment">/// Must be stripped and have no leading zeros.</span>
-	<span class="ident">accuracy</span>: <span class="ident">BigUint</span>,
+<span class="doccomment">/// Internal struct holding parameter info alongside other cached value.
+///
+/// All expressed in part from `accuracy`
+</span><span class="kw">struct </span>INPoSParam {
+	ln2_div_d: BigUint,
+	x_ideal: BigUint,
+	x: BigUint,
+	<span class="doccomment">/// Must be stripped and have no leading zeros.
+	</span>accuracy: BigUint,
 }
 
-<span class="doccomment">/// Compute `2^((x_ideal - x) / d)` using taylor serie.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// x must be strictly more than x_ideal.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// result is expressed with accuracy `INPoSParam.accuracy`</span>
-<span class="kw">fn</span> <span class="ident">compute_taylor_serie_part</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">INPoSParam</span>) -&gt; <span class="ident">BigUint</span> {
-	<span class="comment">// The last computed taylor term.</span>
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_taylor_term</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">accuracy</span>.<span class="ident">clone</span>();
+<span class="doccomment">/// Compute `2^((x_ideal - x) / d)` using taylor serie.
+///
+/// x must be strictly more than x_ideal.
+///
+/// result is expressed with accuracy `INPoSParam.accuracy`
+</span><span class="kw">fn </span>compute_taylor_serie_part(p: <span class="kw-2">&amp;</span>INPoSParam) -&gt; BigUint {
+	<span class="comment">// The last computed taylor term.
+	</span><span class="kw">let </span><span class="kw-2">mut </span>last_taylor_term = p.accuracy.clone();
 
-	<span class="comment">// Whereas taylor sum is positive.</span>
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">taylor_sum_positive</span> <span class="op">=</span> <span class="bool-val">true</span>;
+	<span class="comment">// Whereas taylor sum is positive.
+	</span><span class="kw">let </span><span class="kw-2">mut </span>taylor_sum_positive = <span class="bool-val">true</span>;
 
-	<span class="comment">// The sum of all taylor term.</span>
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">taylor_sum</span> <span class="op">=</span> <span class="ident">last_taylor_term</span>.<span class="ident">clone</span>();
+	<span class="comment">// The sum of all taylor term.
+	</span><span class="kw">let </span><span class="kw-2">mut </span>taylor_sum = last_taylor_term.clone();
 
-	<span class="kw">for</span> <span class="ident">k</span> <span class="kw">in</span> <span class="number">1</span>..<span class="number">300</span> {
-		<span class="ident">last_taylor_term</span> <span class="op">=</span> <span class="ident">compute_taylor_term</span>(<span class="ident">k</span>, <span class="kw-2">&amp;</span><span class="ident">last_taylor_term</span>, <span class="ident">p</span>);
+	<span class="kw">for </span>k <span class="kw">in </span><span class="number">1</span>..<span class="number">300 </span>{
+		last_taylor_term = compute_taylor_term(k, <span class="kw-2">&amp;</span>last_taylor_term, p);
 
-		<span class="kw">if</span> <span class="ident">last_taylor_term</span>.<span class="ident">is_zero</span>() {
-			<span class="kw">break</span>
-		}
+		<span class="kw">if </span>last_taylor_term.is_zero() {
+			<span class="kw">break
+		</span>}
 
-		<span class="kw">let</span> <span class="ident">last_taylor_term_positive</span> <span class="op">=</span> <span class="ident">k</span> <span class="op">%</span> <span class="number">2</span> <span class="op">==</span> <span class="number">0</span>;
+		<span class="kw">let </span>last_taylor_term_positive = k % <span class="number">2 </span>== <span class="number">0</span>;
 
-		<span class="kw">if</span> <span class="ident">taylor_sum_positive</span> <span class="op">==</span> <span class="ident">last_taylor_term_positive</span> {
-			<span class="ident">taylor_sum</span> <span class="op">=</span> <span class="ident">taylor_sum</span>.<span class="ident">add</span>(<span class="kw-2">&amp;</span><span class="ident">last_taylor_term</span>);
-		} <span class="kw">else</span> <span class="kw">if</span> <span class="ident">taylor_sum</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">last_taylor_term</span> {
-			<span class="ident">taylor_sum</span> <span class="op">=</span> <span class="ident">taylor_sum</span>
-				.<span class="ident">sub</span>(<span class="kw-2">&amp;</span><span class="ident">last_taylor_term</span>)
-				<span class="comment">// NOTE: Should never happen as checked above</span>
-				.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>);
-		} <span class="kw">else</span> {
-			<span class="ident">taylor_sum_positive</span> <span class="op">=</span> <span class="op">!</span><span class="ident">taylor_sum_positive</span>;
-			<span class="ident">taylor_sum</span> <span class="op">=</span> <span class="ident">last_taylor_term</span>
-				.<span class="ident">clone</span>()
-				.<span class="ident">sub</span>(<span class="kw-2">&amp;</span><span class="ident">taylor_sum</span>)
-				<span class="comment">// NOTE: Should never happen as checked above</span>
-				.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>);
+		<span class="kw">if </span>taylor_sum_positive == last_taylor_term_positive {
+			taylor_sum = taylor_sum.add(<span class="kw-2">&amp;</span>last_taylor_term);
+		} <span class="kw">else if </span>taylor_sum &gt;= last_taylor_term {
+			taylor_sum = taylor_sum
+				.sub(<span class="kw-2">&amp;</span>last_taylor_term)
+				<span class="comment">// NOTE: Should never happen as checked above
+				</span>.unwrap_or_else(|e| e);
+		} <span class="kw">else </span>{
+			taylor_sum_positive = !taylor_sum_positive;
+			taylor_sum = last_taylor_term
+				.clone()
+				.sub(<span class="kw-2">&amp;</span>taylor_sum)
+				<span class="comment">// NOTE: Should never happen as checked above
+				</span>.unwrap_or_else(|e| e);
 		}
 	}
 
-	<span class="kw">if</span> <span class="op">!</span><span class="ident">taylor_sum_positive</span> {
-		<span class="kw">return</span> <span class="ident">BigUint::zero</span>()
+	<span class="kw">if </span>!taylor_sum_positive {
+		<span class="kw">return </span>BigUint::zero()
 	}
 
-	<span class="ident">taylor_sum</span>.<span class="ident">lstrip</span>();
-	<span class="ident">taylor_sum</span>
+	taylor_sum.lstrip();
+	taylor_sum
 }
 
-<span class="doccomment">/// Return the absolute value of k-th taylor term of `2^((x_ideal - x))/d` i.e.</span>
-<span class="doccomment">/// `((x - x_ideal) * ln(2) / d)^k / k!`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// x must be strictly more x_ideal.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// We compute the term from the last term using this formula:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `((x - x_ideal) * ln(2) / d)^k / k! == previous_term * (x - x_ideal) * ln(2) / d / k`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `previous_taylor_term` and result are expressed with accuracy `INPoSParam.accuracy`</span>
-<span class="kw">fn</span> <span class="ident">compute_taylor_term</span>(<span class="ident">k</span>: <span class="ident">u32</span>, <span class="ident">previous_taylor_term</span>: <span class="kw-2">&amp;</span><span class="ident">BigUint</span>, <span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">INPoSParam</span>) -&gt; <span class="ident">BigUint</span> {
-	<span class="kw">let</span> <span class="ident">x_minus_x_ideal</span> <span class="op">=</span>
-		<span class="ident">p</span>.<span class="ident">x</span>.<span class="ident">clone</span>()
-			.<span class="ident">sub</span>(<span class="kw-2">&amp;</span><span class="ident">p</span>.<span class="ident">x_ideal</span>)
-			<span class="comment">// NOTE: Should never happen, as x must be more than x_ideal</span>
-			.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">BigUint::zero</span>());
+<span class="doccomment">/// Return the absolute value of k-th taylor term of `2^((x_ideal - x))/d` i.e.
+/// `((x - x_ideal) * ln(2) / d)^k / k!`
+///
+/// x must be strictly more x_ideal.
+///
+/// We compute the term from the last term using this formula:
+///
+/// `((x - x_ideal) * ln(2) / d)^k / k! == previous_term * (x - x_ideal) * ln(2) / d / k`
+///
+/// `previous_taylor_term` and result are expressed with accuracy `INPoSParam.accuracy`
+</span><span class="kw">fn </span>compute_taylor_term(k: u32, previous_taylor_term: <span class="kw-2">&amp;</span>BigUint, p: <span class="kw-2">&amp;</span>INPoSParam) -&gt; BigUint {
+	<span class="kw">let </span>x_minus_x_ideal =
+		p.x.clone()
+			.sub(<span class="kw-2">&amp;</span>p.x_ideal)
+			<span class="comment">// NOTE: Should never happen, as x must be more than x_ideal
+			</span>.unwrap_or_else(|<span class="kw">_</span>| BigUint::zero());
 
-	<span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">previous_taylor_term</span>.<span class="ident">clone</span>().<span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="ident">x_minus_x_ideal</span>).<span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="ident">p</span>.<span class="ident">ln2_div_d</span>).<span class="ident">div_unit</span>(<span class="ident">k</span>);
+	<span class="kw">let </span>res = previous_taylor_term.clone().mul(<span class="kw-2">&amp;</span>x_minus_x_ideal).mul(<span class="kw-2">&amp;</span>p.ln2_div_d).div_unit(k);
 
-	<span class="comment">// p.accuracy is stripped by definition.</span>
-	<span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">div_by_stripped</span>(<span class="ident">res</span>, <span class="kw-2">&amp;</span><span class="ident">p</span>.<span class="ident">accuracy</span>);
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">div_by_stripped</span>(<span class="ident">res</span>, <span class="kw-2">&amp;</span><span class="ident">p</span>.<span class="ident">accuracy</span>);
+	<span class="comment">// p.accuracy is stripped by definition.
+	</span><span class="kw">let </span>res = div_by_stripped(res, <span class="kw-2">&amp;</span>p.accuracy);
+	<span class="kw">let </span><span class="kw-2">mut </span>res = div_by_stripped(res, <span class="kw-2">&amp;</span>p.accuracy);
 
-	<span class="ident">res</span>.<span class="ident">lstrip</span>();
-	<span class="ident">res</span>
+	res.lstrip();
+	res
 }
 
-<span class="doccomment">/// Compute a div b.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// requires `b` to be stripped and have no leading zeros.</span>
-<span class="kw">fn</span> <span class="ident">div_by_stripped</span>(<span class="kw-2">mut</span> <span class="ident">a</span>: <span class="ident">BigUint</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="ident">BigUint</span>) -&gt; <span class="ident">BigUint</span> {
-	<span class="ident">a</span>.<span class="ident">lstrip</span>();
+<span class="doccomment">/// Compute a div b.
+///
+/// requires `b` to be stripped and have no leading zeros.
+</span><span class="kw">fn </span>div_by_stripped(<span class="kw-2">mut </span>a: BigUint, b: <span class="kw-2">&amp;</span>BigUint) -&gt; BigUint {
+	a.lstrip();
 
-	<span class="kw">if</span> <span class="ident">b</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+	<span class="kw">if </span>b.len() == <span class="number">0 </span>{
 		<span class="macro">log::error!</span>(<span class="string">&quot;Computation error: Invalid division&quot;</span>);
-		<span class="kw">return</span> <span class="ident">BigUint::zero</span>()
+		<span class="kw">return </span>BigUint::zero()
 	}
 
-	<span class="kw">if</span> <span class="ident">b</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-		<span class="kw">return</span> <span class="ident">a</span>.<span class="ident">div_unit</span>(<span class="ident">b</span>.<span class="ident">checked_get</span>(<span class="number">0</span>).<span class="ident">unwrap_or</span>(<span class="number">1</span>))
+	<span class="kw">if </span>b.len() == <span class="number">1 </span>{
+		<span class="kw">return </span>a.div_unit(b.checked_get(<span class="number">0</span>).unwrap_or(<span class="number">1</span>))
 	}
 
-	<span class="kw">if</span> <span class="ident">b</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">a</span>.<span class="ident">len</span>() {
-		<span class="kw">return</span> <span class="ident">BigUint::zero</span>()
+	<span class="kw">if </span>b.len() &gt; a.len() {
+		<span class="kw">return </span>BigUint::zero()
 	}
 
-	<span class="kw">if</span> <span class="ident">b</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="ident">a</span>.<span class="ident">len</span>() {
-		<span class="comment">// 100_000^2 is more than 2^32-1, thus `new_a` has more limbs than `b`.</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_a</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">mul</span>(<span class="kw-2">&amp;</span><span class="ident">BigUint::from</span>(<span class="number">100_000u64</span>.<span class="ident">pow</span>(<span class="number">2</span>)));
-		<span class="ident">new_a</span>.<span class="ident">lstrip</span>();
+	<span class="kw">if </span>b.len() == a.len() {
+		<span class="comment">// 100_000^2 is more than 2^32-1, thus `new_a` has more limbs than `b`.
+		</span><span class="kw">let </span><span class="kw-2">mut </span>new_a = a.mul(<span class="kw-2">&amp;</span>BigUint::from(<span class="number">100_000u64</span>.pow(<span class="number">2</span>)));
+		new_a.lstrip();
 
-		<span class="macro">debug_assert!</span>(<span class="ident">new_a</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="ident">b</span>.<span class="ident">len</span>());
-		<span class="kw">return</span> <span class="ident">new_a</span>
-			.<span class="ident">div</span>(<span class="ident">b</span>, <span class="bool-val">false</span>)
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">res</span><span class="op">|</span> <span class="ident">res</span>.<span class="number">0</span>)
-			.<span class="ident">unwrap_or_else</span>(<span class="ident">BigUint::zero</span>)
-			.<span class="ident">div_unit</span>(<span class="number">100_000</span>)
-			.<span class="ident">div_unit</span>(<span class="number">100_000</span>)
+		<span class="macro">debug_assert!</span>(new_a.len() &gt; b.len());
+		<span class="kw">return </span>new_a
+			.div(b, <span class="bool-val">false</span>)
+			.map(|res| res.<span class="number">0</span>)
+			.unwrap_or_else(BigUint::zero)
+			.div_unit(<span class="number">100_000</span>)
+			.div_unit(<span class="number">100_000</span>)
 	}
 
-	<span class="ident">a</span>.<span class="ident">div</span>(<span class="ident">b</span>, <span class="bool-val">false</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">res</span><span class="op">|</span> <span class="ident">res</span>.<span class="number">0</span>).<span class="ident">unwrap_or_else</span>(<span class="ident">BigUint::zero</span>)
+	a.div(b, <span class="bool-val">false</span>).map(|res| res.<span class="number">0</span>).unwrap_or_else(BigUint::zero)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_staking_reward_fn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_staking_reward_fn" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

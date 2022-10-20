@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/staking/src/migrations.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migrations.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_staking/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_staking/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_staking/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/staking/src/migrations.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migrations.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_staking/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_staking/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -423,425 +417,424 @@
 <span id="417">417</span>
 <span id="418">418</span>
 <span id="419">419</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 
-<span class="doccomment">//! Storage migrations for the Staking pallet.</span>
+</span><span class="doccomment">//! Storage migrations for the Staking pallet.
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">frame_election_provider_support::SortedListProvider</span>;
-<span class="kw">use</span> <span class="ident">frame_support::traits::OnRuntimeUpgrade</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span>frame_election_provider_support::SortedListProvider;
+<span class="kw">use </span>frame_support::traits::OnRuntimeUpgrade;
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v12</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support</span>::{<span class="ident">pallet_prelude::ValueQuery</span>, <span class="ident">storage_alias</span>};
+<span class="kw">pub mod </span>v12 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::{pallet_prelude::ValueQuery, storage_alias};
 
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">HistoryDepth</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">u32</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>HistoryDepth&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, u32, ValueQuery&gt;;
 
-	<span class="doccomment">/// Clean up `HistoryDepth` from storage.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// We will be depending on the configurable value of `HistoryDepth` post</span>
-	<span class="doccomment">/// this release.</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MigrateToV12</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">MigrateToV12</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Clean up `HistoryDepth` from storage.
+	///
+	/// We will be depending on the configurable value of `HistoryDepth` post
+	/// this release.
+	</span><span class="kw">pub struct </span>MigrateToV12&lt;T&gt;(sp_std::marker::PhantomData&lt;T&gt;);
+	<span class="kw">impl</span>&lt;T: Config&gt; OnRuntimeUpgrade <span class="kw">for </span>MigrateToV12&lt;T&gt; {
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident">Releases::V11_0_0</span>,
-				<span class="string">&quot;Expected v11 before upgrading to v12&quot;</span>
-			);
+				StorageVersion::&lt;T&gt;::get() == Releases::V11_0_0,
+				<span class="string">&quot;Expected v11 before upgrading to v12&quot;
+			</span>);
 
-			<span class="kw">if</span> <span class="ident">HistoryDepth</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::exists</span>() {
+			<span class="kw">if </span>HistoryDepth::&lt;T&gt;::exists() {
 				<span class="macro">frame_support::ensure!</span>(
-					<span class="ident">T::HistoryDepth::get</span>() <span class="op">==</span> <span class="ident">HistoryDepth</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(),
-					<span class="string">&quot;Provided value of HistoryDepth should be same as the existing storage value&quot;</span>
-				);
-			} <span class="kw">else</span> {
+					T::HistoryDepth::get() == HistoryDepth::&lt;T&gt;::get(),
+					<span class="string">&quot;Provided value of HistoryDepth should be same as the existing storage value&quot;
+				</span>);
+			} <span class="kw">else </span>{
 				<span class="macro">log::info!</span>(<span class="string">&quot;No HistoryDepth in storage; nothing to remove&quot;</span>);
 			}
 
-			<span class="prelude-val">Ok</span>(<span class="ident">Default::default</span>())
+			<span class="prelude-val">Ok</span>(Default::default())
 		}
 
-		<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">frame_support::weights::Weight</span> {
-			<span class="kw">if</span> <span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident">Releases::V11_0_0</span> {
-				<span class="ident">HistoryDepth</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">Releases::V12_0_0</span>);
+		<span class="kw">fn </span>on_runtime_upgrade() -&gt; frame_support::weights::Weight {
+			<span class="kw">if </span>StorageVersion::&lt;T&gt;::get() == Releases::V11_0_0 {
+				HistoryDepth::&lt;T&gt;::kill();
+				StorageVersion::&lt;T&gt;::put(Releases::V12_0_0);
 
-				<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;v12 applied successfully&quot;</span>);
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">2</span>)
-			} <span class="kw">else</span> {
-				<span class="macro">log!</span>(<span class="ident">warn</span>, <span class="string">&quot;Skipping v12, should be removed&quot;</span>);
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+				<span class="macro">log!</span>(info, <span class="string">&quot;v12 applied successfully&quot;</span>);
+				T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">2</span>)
+			} <span class="kw">else </span>{
+				<span class="macro">log!</span>(warn, <span class="string">&quot;Skipping v12, should be removed&quot;</span>);
+				T::DbWeight::get().reads(<span class="number">1</span>)
 			}
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">_state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>post_upgrade(_state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident"><span class="kw">crate</span>::Releases::V12_0_0</span>,
-				<span class="string">&quot;v12 not applied&quot;</span>
-			);
+				StorageVersion::&lt;T&gt;::get() == <span class="kw">crate</span>::Releases::V12_0_0,
+				<span class="string">&quot;v12 not applied&quot;
+			</span>);
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v11</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support</span>::{
-		<span class="ident">storage::migration::move_pallet</span>,
-		<span class="ident">traits</span>::{<span class="ident">GetStorageVersion</span>, <span class="ident">PalletInfoAccess</span>},
+<span class="kw">pub mod </span>v11 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::{
+		storage::migration::move_pallet,
+		traits::{GetStorageVersion, PalletInfoAccess},
 	};
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">use</span> <span class="ident">sp_io::hashing::twox_128</span>;
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">use </span>sp_io::hashing::twox_128;
 
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MigrateToV11</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">P</span>, <span class="ident">N</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">P</span>, <span class="ident">N</span>)<span class="op">&gt;</span>);
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span>, <span class="ident">P</span>: <span class="ident">GetStorageVersion</span> <span class="op">+</span> <span class="ident">PalletInfoAccess</span>, <span class="ident">N</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">OnRuntimeUpgrade</span>
-		<span class="kw">for</span> <span class="ident">MigrateToV11</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">P</span>, <span class="ident">N</span><span class="op">&gt;</span>
+	<span class="kw">pub struct </span>MigrateToV11&lt;T, P, N&gt;(sp_std::marker::PhantomData&lt;(T, P, N)&gt;);
+	<span class="kw">impl</span>&lt;T: Config, P: GetStorageVersion + PalletInfoAccess, N: Get&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt;&gt; OnRuntimeUpgrade
+		<span class="kw">for </span>MigrateToV11&lt;T, P, N&gt;
 	{
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident"><span class="kw">crate</span>::Releases::V10_0_0</span>,
-				<span class="string">&quot;must upgrade linearly&quot;</span>
-			);
-			<span class="kw">let</span> <span class="ident">old_pallet_prefix</span> <span class="op">=</span> <span class="ident">twox_128</span>(<span class="ident">N::get</span>().<span class="ident">as_bytes</span>());
+				StorageVersion::&lt;T&gt;::get() == <span class="kw">crate</span>::Releases::V10_0_0,
+				<span class="string">&quot;must upgrade linearly&quot;
+			</span>);
+			<span class="kw">let </span>old_pallet_prefix = twox_128(N::get().as_bytes());
 
 			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">sp_io::storage::next_key</span>(<span class="kw-2">&amp;</span><span class="ident">old_pallet_prefix</span>).<span class="ident">is_some</span>(),
-				<span class="string">&quot;no data for the old pallet name has been detected&quot;</span>
-			);
+				sp_io::storage::next_key(<span class="kw-2">&amp;</span>old_pallet_prefix).is_some(),
+				<span class="string">&quot;no data for the old pallet name has been detected&quot;
+			</span>);
 
-			<span class="prelude-val">Ok</span>(<span class="ident">Default::default</span>())
+			<span class="prelude-val">Ok</span>(Default::default())
 		}
 
-		<span class="doccomment">/// Migrate the entire storage of this pallet to a new prefix.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This new prefix must be the same as the one set in construct_runtime. For safety, use</span>
-		<span class="doccomment">/// `PalletInfo` to get it, as:</span>
-		<span class="doccomment">/// `&lt;Runtime as frame_system::Config&gt;::PalletInfo::name::&lt;VoterBagsList&gt;`.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The migration will look into the storage version in order to avoid triggering a</span>
-		<span class="doccomment">/// migration on an up to date storage.</span>
-		<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-			<span class="kw">let</span> <span class="ident">old_pallet_name</span> <span class="op">=</span> <span class="ident">N::get</span>();
-			<span class="kw">let</span> <span class="ident">new_pallet_name</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">PalletInfoAccess</span><span class="op">&gt;</span><span class="ident">::name</span>();
+		<span class="doccomment">/// Migrate the entire storage of this pallet to a new prefix.
+		///
+		/// This new prefix must be the same as the one set in construct_runtime. For safety, use
+		/// `PalletInfo` to get it, as:
+		/// `&lt;Runtime as frame_system::Config&gt;::PalletInfo::name::&lt;VoterBagsList&gt;`.
+		///
+		/// The migration will look into the storage version in order to avoid triggering a
+		/// migration on an up to date storage.
+		</span><span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+			<span class="kw">let </span>old_pallet_name = N::get();
+			<span class="kw">let </span>new_pallet_name = &lt;P <span class="kw">as </span>PalletInfoAccess&gt;::name();
 
-			<span class="kw">if</span> <span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident">Releases::V10_0_0</span> {
-				<span class="comment">// bump version anyway, even if we don&#39;t need to move the prefix</span>
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">Releases::V11_0_0</span>);
-				<span class="kw">if</span> <span class="ident">new_pallet_name</span> <span class="op">==</span> <span class="ident">old_pallet_name</span> {
+			<span class="kw">if </span>StorageVersion::&lt;T&gt;::get() == Releases::V10_0_0 {
+				<span class="comment">// bump version anyway, even if we don&#39;t need to move the prefix
+				</span>StorageVersion::&lt;T&gt;::put(Releases::V11_0_0);
+				<span class="kw">if </span>new_pallet_name == old_pallet_name {
 					<span class="macro">log!</span>(
-						<span class="ident">warn</span>,
-						<span class="string">&quot;new bags-list name is equal to the old one, only bumping the version&quot;</span>
-					);
-					<span class="kw">return</span> <span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>).<span class="ident">saturating_add</span>(<span class="ident">T::DbWeight::get</span>().<span class="ident">writes</span>(<span class="number">1</span>))
+						warn,
+						<span class="string">&quot;new bags-list name is equal to the old one, only bumping the version&quot;
+					</span>);
+					<span class="kw">return </span>T::DbWeight::get().reads(<span class="number">1</span>).saturating_add(T::DbWeight::get().writes(<span class="number">1</span>))
 				}
 
-				<span class="ident">move_pallet</span>(<span class="ident">old_pallet_name</span>.<span class="ident">as_bytes</span>(), <span class="ident">new_pallet_name</span>.<span class="ident">as_bytes</span>());
-				<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockWeights::get</span>().<span class="ident">max_block</span>
-			} <span class="kw">else</span> {
-				<span class="macro">log!</span>(<span class="ident">warn</span>, <span class="string">&quot;v11::migrate should be removed.&quot;</span>);
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+				move_pallet(old_pallet_name.as_bytes(), new_pallet_name.as_bytes());
+				&lt;T <span class="kw">as </span>frame_system::Config&gt;::BlockWeights::get().max_block
+			} <span class="kw">else </span>{
+				<span class="macro">log!</span>(warn, <span class="string">&quot;v11::migrate should be removed.&quot;</span>);
+				T::DbWeight::get().reads(<span class="number">1</span>)
 			}
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">_state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>post_upgrade(_state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident"><span class="kw">crate</span>::Releases::V11_0_0</span>,
-				<span class="string">&quot;wrong version after the upgrade&quot;</span>
-			);
+				StorageVersion::&lt;T&gt;::get() == <span class="kw">crate</span>::Releases::V11_0_0,
+				<span class="string">&quot;wrong version after the upgrade&quot;
+			</span>);
 
-			<span class="kw">let</span> <span class="ident">old_pallet_name</span> <span class="op">=</span> <span class="ident">N::get</span>();
-			<span class="kw">let</span> <span class="ident">new_pallet_name</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">PalletInfoAccess</span><span class="op">&gt;</span><span class="ident">::name</span>();
+			<span class="kw">let </span>old_pallet_name = N::get();
+			<span class="kw">let </span>new_pallet_name = &lt;P <span class="kw">as </span>PalletInfoAccess&gt;::name();
 
-			<span class="comment">// skip storage prefix checks for the same pallet names</span>
-			<span class="kw">if</span> <span class="ident">new_pallet_name</span> <span class="op">==</span> <span class="ident">old_pallet_name</span> {
-				<span class="kw">return</span> <span class="prelude-val">Ok</span>(())
+			<span class="comment">// skip storage prefix checks for the same pallet names
+			</span><span class="kw">if </span>new_pallet_name == old_pallet_name {
+				<span class="kw">return </span><span class="prelude-val">Ok</span>(())
 			}
 
-			<span class="kw">let</span> <span class="ident">old_pallet_prefix</span> <span class="op">=</span> <span class="ident">twox_128</span>(<span class="ident">N::get</span>().<span class="ident">as_bytes</span>());
+			<span class="kw">let </span>old_pallet_prefix = twox_128(N::get().as_bytes());
 			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">sp_io::storage::next_key</span>(<span class="kw-2">&amp;</span><span class="ident">old_pallet_prefix</span>).<span class="ident">is_none</span>(),
-				<span class="string">&quot;old pallet data hasn&#39;t been removed&quot;</span>
-			);
+				sp_io::storage::next_key(<span class="kw-2">&amp;</span>old_pallet_prefix).is_none(),
+				<span class="string">&quot;old pallet data hasn&#39;t been removed&quot;
+			</span>);
 
-			<span class="kw">let</span> <span class="ident">new_pallet_name</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">P</span> <span class="kw">as</span> <span class="ident">PalletInfoAccess</span><span class="op">&gt;</span><span class="ident">::name</span>();
-			<span class="kw">let</span> <span class="ident">new_pallet_prefix</span> <span class="op">=</span> <span class="ident">twox_128</span>(<span class="ident">new_pallet_name</span>.<span class="ident">as_bytes</span>());
+			<span class="kw">let </span>new_pallet_name = &lt;P <span class="kw">as </span>PalletInfoAccess&gt;::name();
+			<span class="kw">let </span>new_pallet_prefix = twox_128(new_pallet_name.as_bytes());
 			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">sp_io::storage::next_key</span>(<span class="kw-2">&amp;</span><span class="ident">new_pallet_prefix</span>).<span class="ident">is_some</span>(),
-				<span class="string">&quot;new pallet data hasn&#39;t been created&quot;</span>
-			);
+				sp_io::storage::next_key(<span class="kw-2">&amp;</span>new_pallet_prefix).is_some(),
+				<span class="string">&quot;new pallet data hasn&#39;t been created&quot;
+			</span>);
 
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v10</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::storage_alias</span>;
+<span class="kw">pub mod </span>v10 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::storage_alias;
 
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">EarliestUnappliedSlash</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">EraIndex</span><span class="op">&gt;</span>;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>EarliestUnappliedSlash&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, EraIndex&gt;;
 
-	<span class="doccomment">/// Apply any pending slashes that where queued.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// That means we might slash someone a bit too early, but we will definitely</span>
-	<span class="doccomment">/// won&#39;t forget to slash them. The cap of 512 is somewhat randomly taken to</span>
-	<span class="doccomment">/// prevent us from iterating over an arbitrary large number of keys `on_runtime_upgrade`.</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MigrateToV10</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">MigrateToV10</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">frame_support::weights::Weight</span> {
-			<span class="kw">if</span> <span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident">Releases::V9_0_0</span> {
-				<span class="kw">let</span> <span class="ident">pending_slashes</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">Store</span><span class="op">&gt;</span><span class="ident">::UnappliedSlashes::iter</span>().<span class="ident">take</span>(<span class="number">512</span>);
-				<span class="kw">for</span> (<span class="ident">era</span>, <span class="ident">slashes</span>) <span class="kw">in</span> <span class="ident">pending_slashes</span> {
-					<span class="kw">for</span> <span class="ident">slash</span> <span class="kw">in</span> <span class="ident">slashes</span> {
-						<span class="comment">// in the old slashing scheme, the slash era was the key at which we read</span>
-						<span class="comment">// from `UnappliedSlashes`.</span>
-						<span class="macro">log!</span>(<span class="ident">warn</span>, <span class="string">&quot;prematurely applying a slash ({:?}) for era {:?}&quot;</span>, <span class="ident">slash</span>, <span class="ident">era</span>);
-						<span class="ident">slashing::apply_slash</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">slash</span>, <span class="ident">era</span>);
+	<span class="doccomment">/// Apply any pending slashes that where queued.
+	///
+	/// That means we might slash someone a bit too early, but we will definitely
+	/// won&#39;t forget to slash them. The cap of 512 is somewhat randomly taken to
+	/// prevent us from iterating over an arbitrary large number of keys `on_runtime_upgrade`.
+	</span><span class="kw">pub struct </span>MigrateToV10&lt;T&gt;(sp_std::marker::PhantomData&lt;T&gt;);
+	<span class="kw">impl</span>&lt;T: Config&gt; OnRuntimeUpgrade <span class="kw">for </span>MigrateToV10&lt;T&gt; {
+		<span class="kw">fn </span>on_runtime_upgrade() -&gt; frame_support::weights::Weight {
+			<span class="kw">if </span>StorageVersion::&lt;T&gt;::get() == Releases::V9_0_0 {
+				<span class="kw">let </span>pending_slashes = &lt;Pallet&lt;T&gt; <span class="kw">as </span>Store&gt;::UnappliedSlashes::iter().take(<span class="number">512</span>);
+				<span class="kw">for </span>(era, slashes) <span class="kw">in </span>pending_slashes {
+					<span class="kw">for </span>slash <span class="kw">in </span>slashes {
+						<span class="comment">// in the old slashing scheme, the slash era was the key at which we read
+						// from `UnappliedSlashes`.
+						</span><span class="macro">log!</span>(warn, <span class="string">&quot;prematurely applying a slash ({:?}) for era {:?}&quot;</span>, slash, era);
+						slashing::apply_slash::&lt;T&gt;(slash, era);
 					}
 				}
 
-				<span class="ident">EarliestUnappliedSlash</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">Releases::V10_0_0</span>);
+				EarliestUnappliedSlash::&lt;T&gt;::kill();
+				StorageVersion::&lt;T&gt;::put(Releases::V10_0_0);
 
-				<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;MigrateToV10 executed successfully&quot;</span>);
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">1</span>)
-			} <span class="kw">else</span> {
-				<span class="macro">log!</span>(<span class="ident">warn</span>, <span class="string">&quot;MigrateToV10 should be removed.&quot;</span>);
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+				<span class="macro">log!</span>(info, <span class="string">&quot;MigrateToV10 executed successfully&quot;</span>);
+				T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>)
+			} <span class="kw">else </span>{
+				<span class="macro">log!</span>(warn, <span class="string">&quot;MigrateToV10 should be removed.&quot;</span>);
+				T::DbWeight::get().reads(<span class="number">1</span>)
 			}
 		}
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v9</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">use</span> <span class="ident">frame_support::codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">use</span> <span class="ident">sp_std::vec::Vec</span>;
+<span class="kw">pub mod </span>v9 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">use </span>frame_support::codec::{Decode, Encode};
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">use </span>sp_std::vec::Vec;
 
-	<span class="doccomment">/// Migration implementation that injects all validators into sorted list.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This is only useful for chains that started their `VoterList` just based on nominators.</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InjectValidatorsIntoVoterList</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">InjectValidatorsIntoVoterList</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-			<span class="kw">if</span> <span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident">Releases::V8_0_0</span> {
-				<span class="kw">let</span> <span class="ident">prev_count</span> <span class="op">=</span> <span class="ident">T::VoterList::count</span>();
-				<span class="kw">let</span> <span class="ident">weight_of_cached</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::weight_of_fn</span>();
-				<span class="kw">for</span> (<span class="ident">v</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="ident">Validators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>() {
-					<span class="kw">let</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight_of_cached</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>);
-					<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">T::VoterList::on_insert</span>(<span class="ident">v</span>.<span class="ident">clone</span>(), <span class="ident">weight</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-						<span class="macro">log!</span>(<span class="ident">warn</span>, <span class="string">&quot;failed to insert {:?} into VoterList: {:?}&quot;</span>, <span class="ident">v</span>, <span class="ident">err</span>)
+	<span class="doccomment">/// Migration implementation that injects all validators into sorted list.
+	///
+	/// This is only useful for chains that started their `VoterList` just based on nominators.
+	</span><span class="kw">pub struct </span>InjectValidatorsIntoVoterList&lt;T&gt;(sp_std::marker::PhantomData&lt;T&gt;);
+	<span class="kw">impl</span>&lt;T: Config&gt; OnRuntimeUpgrade <span class="kw">for </span>InjectValidatorsIntoVoterList&lt;T&gt; {
+		<span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+			<span class="kw">if </span>StorageVersion::&lt;T&gt;::get() == Releases::V8_0_0 {
+				<span class="kw">let </span>prev_count = T::VoterList::count();
+				<span class="kw">let </span>weight_of_cached = Pallet::&lt;T&gt;::weight_of_fn();
+				<span class="kw">for </span>(v, <span class="kw">_</span>) <span class="kw">in </span>Validators::&lt;T&gt;::iter() {
+					<span class="kw">let </span>weight = weight_of_cached(<span class="kw-2">&amp;</span>v);
+					<span class="kw">let _ </span>= T::VoterList::on_insert(v.clone(), weight).map_err(|err| {
+						<span class="macro">log!</span>(warn, <span class="string">&quot;failed to insert {:?} into VoterList: {:?}&quot;</span>, v, err)
 					});
 				}
 
 				<span class="macro">log!</span>(
-					<span class="ident">info</span>,
+					info,
 					<span class="string">&quot;injected a total of {} new voters, prev count: {} next count: {}, updating to version 9&quot;</span>,
-					<span class="ident">Validators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>(),
-					<span class="ident">prev_count</span>,
-					<span class="ident">T::VoterList::count</span>(),
+					Validators::&lt;T&gt;::count(),
+					prev_count,
+					T::VoterList::count(),
 				);
 
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident"><span class="kw">crate</span>::Releases::V9_0_0</span>);
-				<span class="ident">T::BlockWeights::get</span>().<span class="ident">max_block</span>
-			} <span class="kw">else</span> {
+				StorageVersion::&lt;T&gt;::put(<span class="kw">crate</span>::Releases::V9_0_0);
+				T::BlockWeights::get().max_block
+			} <span class="kw">else </span>{
 				<span class="macro">log!</span>(
-					<span class="ident">warn</span>,
+					warn,
 					<span class="string">&quot;InjectValidatorsIntoVoterList being executed on the wrong storage \
-				version, expected Releases::V8_0_0&quot;</span>
-				);
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+				version, expected Releases::V8_0_0&quot;
+				</span>);
+				T::DbWeight::get().reads(<span class="number">1</span>)
 			}
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident"><span class="kw">crate</span>::Releases::V8_0_0</span>,
-				<span class="string">&quot;must upgrade linearly&quot;</span>
-			);
+				StorageVersion::&lt;T&gt;::get() == <span class="kw">crate</span>::Releases::V8_0_0,
+				<span class="string">&quot;must upgrade linearly&quot;
+			</span>);
 
-			<span class="kw">let</span> <span class="ident">prev_count</span> <span class="op">=</span> <span class="ident">T::VoterList::count</span>();
-			<span class="prelude-val">Ok</span>(<span class="ident">prev_count</span>.<span class="ident">encode</span>())
+			<span class="kw">let </span>prev_count = T::VoterList::count();
+			<span class="prelude-val">Ok</span>(prev_count.encode())
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">prev_count</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-			<span class="kw">let</span> <span class="ident">prev_count</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">prev_count</span>.<span class="ident">as_slice</span>()).<span class="ident">expect</span>(
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>post_upgrade(prev_count: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+			<span class="kw">let </span>prev_count: u32 = Decode::decode(<span class="kw-2">&amp;mut </span>prev_count.as_slice()).expect(
 				<span class="string">&quot;the state parameter should be something that was generated by pre_upgrade&quot;</span>,
 			);
-			<span class="kw">let</span> <span class="ident">post_count</span> <span class="op">=</span> <span class="ident">T::VoterList::count</span>();
-			<span class="kw">let</span> <span class="ident">validators</span> <span class="op">=</span> <span class="ident">Validators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>();
-			<span class="macro">assert!</span>(<span class="ident">post_count</span> <span class="op">==</span> <span class="ident">prev_count</span> <span class="op">+</span> <span class="ident">validators</span>);
+			<span class="kw">let </span>post_count = T::VoterList::count();
+			<span class="kw">let </span>validators = Validators::&lt;T&gt;::count();
+			<span class="macro">assert!</span>(post_count == prev_count + validators);
 
 			<span class="macro">frame_support::ensure!</span>(
-				<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident"><span class="kw">crate</span>::Releases::V9_0_0</span>,
-				<span class="string">&quot;must upgrade &quot;</span>
-			);
+				StorageVersion::&lt;T&gt;::get() == <span class="kw">crate</span>::Releases::V9_0_0,
+				<span class="string">&quot;must upgrade &quot;
+			</span>);
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v8</span> {
-	<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Config</span>, <span class="ident">Nominators</span>, <span class="ident">Pallet</span>, <span class="ident">StorageVersion</span>, <span class="ident">Weight</span>};
-	<span class="kw">use</span> <span class="ident">frame_election_provider_support::SortedListProvider</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::traits::Get</span>;
+<span class="kw">pub mod </span>v8 {
+	<span class="kw">use crate</span>::{Config, Nominators, Pallet, StorageVersion, Weight};
+	<span class="kw">use </span>frame_election_provider_support::SortedListProvider;
+	<span class="kw">use </span>frame_support::traits::Get;
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pre_migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">pub fn </span>pre_migrate&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 		<span class="macro">frame_support::ensure!</span>(
-			<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident"><span class="kw">crate</span>::Releases::V7_0_0</span>,
-			<span class="string">&quot;must upgrade linearly&quot;</span>
-		);
+			StorageVersion::&lt;T&gt;::get() == <span class="kw">crate</span>::Releases::V7_0_0,
+			<span class="string">&quot;must upgrade linearly&quot;
+		</span>);
 
-		<span class="macro">crate::log!</span>(<span class="ident">info</span>, <span class="string">&quot;👜 staking bags-list migration passes PRE migrate checks ✅&quot;</span>,);
+		<span class="macro">crate::log!</span>(info, <span class="string">&quot;👜 staking bags-list migration passes PRE migrate checks ✅&quot;</span>,);
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Migration to sorted `VoterList`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="kw">if</span> <span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident"><span class="kw">crate</span>::Releases::V7_0_0</span> {
-			<span class="macro">crate::log!</span>(<span class="ident">info</span>, <span class="string">&quot;migrating staking to Releases::V8_0_0&quot;</span>);
+	<span class="doccomment">/// Migration to sorted `VoterList`.
+	</span><span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+		<span class="kw">if </span>StorageVersion::&lt;T&gt;::get() == <span class="kw">crate</span>::Releases::V7_0_0 {
+			<span class="macro">crate::log!</span>(info, <span class="string">&quot;migrating staking to Releases::V8_0_0&quot;</span>);
 
-			<span class="kw">let</span> <span class="ident">migrated</span> <span class="op">=</span> <span class="ident">T::VoterList::unsafe_regenerate</span>(
-				<span class="ident">Nominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">id</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">id</span>),
-				<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::weight_of_fn</span>(),
+			<span class="kw">let </span>migrated = T::VoterList::unsafe_regenerate(
+				Nominators::&lt;T&gt;::iter().map(|(id, <span class="kw">_</span>)| id),
+				Pallet::&lt;T&gt;::weight_of_fn(),
 			);
-			<span class="macro">debug_assert_eq!</span>(<span class="ident">T::VoterList::try_state</span>(), <span class="prelude-val">Ok</span>(()));
+			<span class="macro">debug_assert_eq!</span>(T::VoterList::try_state(), <span class="prelude-val">Ok</span>(()));
 
-			<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident"><span class="kw">crate</span>::Releases::V8_0_0</span>);
+			StorageVersion::&lt;T&gt;::put(<span class="kw">crate</span>::Releases::V8_0_0);
 			<span class="macro">crate::log!</span>(
-				<span class="ident">info</span>,
+				info,
 				<span class="string">&quot;👜 completed staking migration to Releases::V8_0_0 with {} voters migrated&quot;</span>,
-				<span class="ident">migrated</span>,
+				migrated,
 			);
 
-			<span class="ident">T::BlockWeights::get</span>().<span class="ident">max_block</span>
-		} <span class="kw">else</span> {
-			<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+			T::BlockWeights::get().max_block
+		} <span class="kw">else </span>{
+			T::DbWeight::get().reads(<span class="number">1</span>)
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">post_migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="ident">T::VoterList::try_state</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="string">&quot;VoterList is not in a sane state.&quot;</span>)<span class="question-mark">?</span>;
-		<span class="macro">crate::log!</span>(<span class="ident">info</span>, <span class="string">&quot;👜 staking bags-list migration passes POST migrate checks ✅&quot;</span>,);
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">pub fn </span>post_migrate&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		T::VoterList::try_state().map_err(|<span class="kw">_</span>| <span class="string">&quot;VoterList is not in a sane state.&quot;</span>)<span class="question-mark">?</span>;
+		<span class="macro">crate::log!</span>(info, <span class="string">&quot;👜 staking bags-list migration passes POST migrate checks ✅&quot;</span>,);
 		<span class="prelude-val">Ok</span>(())
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v7</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::storage_alias</span>;
+<span class="kw">pub mod </span>v7 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::storage_alias;
 
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">CounterForValidators</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">u32</span><span class="op">&gt;</span>;
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">CounterForNominators</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">u32</span><span class="op">&gt;</span>;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>CounterForValidators&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, u32&gt;;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>CounterForNominators&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, u32&gt;;
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pre_migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+	<span class="kw">pub fn </span>pre_migrate&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 		<span class="macro">assert!</span>(
-			<span class="ident">CounterForValidators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>().<span class="ident">unwrap</span>().<span class="ident">is_zero</span>(),
-			<span class="string">&quot;CounterForValidators already set.&quot;</span>
-		);
+			CounterForValidators::&lt;T&gt;::get().unwrap().is_zero(),
+			<span class="string">&quot;CounterForValidators already set.&quot;
+		</span>);
 		<span class="macro">assert!</span>(
-			<span class="ident">CounterForNominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>().<span class="ident">unwrap</span>().<span class="ident">is_zero</span>(),
-			<span class="string">&quot;CounterForNominators already set.&quot;</span>
-		);
-		<span class="macro">assert!</span>(<span class="ident">Validators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>().<span class="ident">is_zero</span>(), <span class="string">&quot;Validators already set.&quot;</span>);
-		<span class="macro">assert!</span>(<span class="ident">Nominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>().<span class="ident">is_zero</span>(), <span class="string">&quot;Nominators already set.&quot;</span>);
-		<span class="macro">assert!</span>(<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident">Releases::V6_0_0</span>);
+			CounterForNominators::&lt;T&gt;::get().unwrap().is_zero(),
+			<span class="string">&quot;CounterForNominators already set.&quot;
+		</span>);
+		<span class="macro">assert!</span>(Validators::&lt;T&gt;::count().is_zero(), <span class="string">&quot;Validators already set.&quot;</span>);
+		<span class="macro">assert!</span>(Nominators::&lt;T&gt;::count().is_zero(), <span class="string">&quot;Nominators already set.&quot;</span>);
+		<span class="macro">assert!</span>(StorageVersion::&lt;T&gt;::get() == Releases::V6_0_0);
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;Migrating staking to Releases::V7_0_0&quot;</span>);
-		<span class="kw">let</span> <span class="ident">validator_count</span> <span class="op">=</span> <span class="ident">Validators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="kw">as</span> <span class="ident">u32</span>;
-		<span class="kw">let</span> <span class="ident">nominator_count</span> <span class="op">=</span> <span class="ident">Nominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+		<span class="macro">log!</span>(info, <span class="string">&quot;Migrating staking to Releases::V7_0_0&quot;</span>);
+		<span class="kw">let </span>validator_count = Validators::&lt;T&gt;::iter().count() <span class="kw">as </span>u32;
+		<span class="kw">let </span>nominator_count = Nominators::&lt;T&gt;::iter().count() <span class="kw">as </span>u32;
 
-		<span class="ident">CounterForValidators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">validator_count</span>);
-		<span class="ident">CounterForNominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">nominator_count</span>);
+		CounterForValidators::&lt;T&gt;::put(validator_count);
+		CounterForNominators::&lt;T&gt;::put(nominator_count);
 
-		<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">Releases::V7_0_0</span>);
-		<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;Completed staking migration to Releases::V7_0_0&quot;</span>);
+		StorageVersion::&lt;T&gt;::put(Releases::V7_0_0);
+		<span class="macro">log!</span>(info, <span class="string">&quot;Completed staking migration to Releases::V7_0_0&quot;</span>);
 
-		<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="ident">validator_count</span>.<span class="ident">saturating_add</span>(<span class="ident">nominator_count</span>).<span class="ident">into</span>(), <span class="number">2</span>)
+		T::DbWeight::get().reads_writes(validator_count.saturating_add(nominator_count).into(), <span class="number">2</span>)
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v6</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support</span>::{<span class="ident">storage_alias</span>, <span class="ident">traits::Get</span>, <span class="ident">weights::Weight</span>};
+<span class="kw">pub mod </span>v6 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::{storage_alias, traits::Get, weights::Weight};
 
-	<span class="comment">// NOTE: value type doesn&#39;t matter, we just set it to () here.</span>
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">SnapshotValidators</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span>;
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">SnapshotNominators</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span>;
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">QueuedElected</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span>;
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">QueuedScore</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span>;
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">EraElectionStatus</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span>;
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">IsCurrentSessionFinal</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span>;
+	<span class="comment">// NOTE: value type doesn&#39;t matter, we just set it to () here.
+	</span><span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>SnapshotValidators&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, ()&gt;;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>SnapshotNominators&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, ()&gt;;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>QueuedElected&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, ()&gt;;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>QueuedScore&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, ()&gt;;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>EraElectionStatus&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, ()&gt;;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>IsCurrentSessionFinal&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, ()&gt;;
 
-	<span class="doccomment">/// check to execute prior to migration.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pre_migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="comment">// these may or may not exist.</span>
-		<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;SnapshotValidators.exits()? {:?}&quot;</span>, <span class="ident">SnapshotValidators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::exists</span>());
-		<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;SnapshotNominators.exits()? {:?}&quot;</span>, <span class="ident">SnapshotNominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::exists</span>());
-		<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;QueuedElected.exits()? {:?}&quot;</span>, <span class="ident">QueuedElected</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::exists</span>());
-		<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;QueuedScore.exits()? {:?}&quot;</span>, <span class="ident">QueuedScore</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::exists</span>());
-		<span class="comment">// these must exist.</span>
-		<span class="macro">assert!</span>(
-			<span class="ident">IsCurrentSessionFinal</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::exists</span>(),
-			<span class="string">&quot;IsCurrentSessionFinal storage item not found!&quot;</span>
-		);
-		<span class="macro">assert!</span>(<span class="ident">EraElectionStatus</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::exists</span>(), <span class="string">&quot;EraElectionStatus storage item not found!&quot;</span>);
+	<span class="doccomment">/// check to execute prior to migration.
+	</span><span class="kw">pub fn </span>pre_migrate&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="comment">// these may or may not exist.
+		</span><span class="macro">log!</span>(info, <span class="string">&quot;SnapshotValidators.exits()? {:?}&quot;</span>, SnapshotValidators::&lt;T&gt;::exists());
+		<span class="macro">log!</span>(info, <span class="string">&quot;SnapshotNominators.exits()? {:?}&quot;</span>, SnapshotNominators::&lt;T&gt;::exists());
+		<span class="macro">log!</span>(info, <span class="string">&quot;QueuedElected.exits()? {:?}&quot;</span>, QueuedElected::&lt;T&gt;::exists());
+		<span class="macro">log!</span>(info, <span class="string">&quot;QueuedScore.exits()? {:?}&quot;</span>, QueuedScore::&lt;T&gt;::exists());
+		<span class="comment">// these must exist.
+		</span><span class="macro">assert!</span>(
+			IsCurrentSessionFinal::&lt;T&gt;::exists(),
+			<span class="string">&quot;IsCurrentSessionFinal storage item not found!&quot;
+		</span>);
+		<span class="macro">assert!</span>(EraElectionStatus::&lt;T&gt;::exists(), <span class="string">&quot;EraElectionStatus storage item not found!&quot;</span>);
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Migrate storage to v6.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;Migrating staking to Releases::V6_0_0&quot;</span>);
+	<span class="doccomment">/// Migrate storage to v6.
+	</span><span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+		<span class="macro">log!</span>(info, <span class="string">&quot;Migrating staking to Releases::V6_0_0&quot;</span>);
 
-		<span class="ident">SnapshotValidators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
-		<span class="ident">SnapshotNominators</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
-		<span class="ident">QueuedElected</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
-		<span class="ident">QueuedScore</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
-		<span class="ident">EraElectionStatus</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
-		<span class="ident">IsCurrentSessionFinal</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
+		SnapshotValidators::&lt;T&gt;::kill();
+		SnapshotNominators::&lt;T&gt;::kill();
+		QueuedElected::&lt;T&gt;::kill();
+		QueuedScore::&lt;T&gt;::kill();
+		EraElectionStatus::&lt;T&gt;::kill();
+		IsCurrentSessionFinal::&lt;T&gt;::kill();
 
-		<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">Releases::V6_0_0</span>);
-		<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;Done.&quot;</span>);
-		<span class="ident">T::DbWeight::get</span>().<span class="ident">writes</span>(<span class="number">6</span> <span class="op">+</span> <span class="number">1</span>)
+		StorageVersion::&lt;T&gt;::put(Releases::V6_0_0);
+		<span class="macro">log!</span>(info, <span class="string">&quot;Done.&quot;</span>);
+		T::DbWeight::get().writes(<span class="number">6 </span>+ <span class="number">1</span>)
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_staking" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_staking" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

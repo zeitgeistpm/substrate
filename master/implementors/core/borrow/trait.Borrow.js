@@ -1,4 +1,4 @@
-(function() {var implementors = {};
-implementors["sc_network_common"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/borrow/trait.Borrow.html\" title=\"trait core::borrow::Borrow\">Borrow</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.str.html\">str</a>&gt; for <a class=\"enum\" href=\"sc_network_common/protocol/enum.ProtocolName.html\" title=\"enum sc_network_common::protocol::ProtocolName\">ProtocolName</a>","synthetic":false,"types":["sc_network_common::protocol::ProtocolName"]}];
-implementors["sp_std"] = [];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
+(function() {var implementors = {
+"sc_network_common":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/borrow/trait.Borrow.html\" title=\"trait core::borrow::Borrow\">Borrow</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.str.html\">str</a>&gt; for <a class=\"enum\" href=\"sc_network_common/protocol/enum.ProtocolName.html\" title=\"enum sc_network_common::protocol::ProtocolName\">ProtocolName</a>"]],
+"sp_std":[]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

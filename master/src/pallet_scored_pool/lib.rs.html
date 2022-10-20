@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/scored-pool/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_scored_pool/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_scored_pool/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_scored_pool/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/scored-pool/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_scored_pool/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_scored_pool/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -518,520 +512,519 @@
 <span id="512">512</span>
 <span id="513">513</span>
 <span id="514">514</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! # Scored Pool Pallet</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The pallet maintains a scored membership pool. Each entity in the</span>
-<span class="doccomment">//! pool can be attributed a `Score`. From this pool a set `Members`</span>
-<span class="doccomment">//! is constructed. This set contains the `MemberCount` highest</span>
-<span class="doccomment">//! scoring entities. Unscored entities are never part of `Members`.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! If an entity wants to be part of the pool a deposit is required.</span>
-<span class="doccomment">//! The deposit is returned when the entity withdraws or when it</span>
-<span class="doccomment">//! is removed by an entity with the appropriate authority.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Every `Period` blocks the set of `Members` is refreshed from the</span>
-<span class="doccomment">//! highest scoring members in the pool and, no matter if changes</span>
-<span class="doccomment">//! occurred, `T::MembershipChanged::set_members_sorted` is invoked.</span>
-<span class="doccomment">//! On first load `T::MembershipInitialized::initialize_members` is</span>
-<span class="doccomment">//! invoked with the initial `Members` set.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! It is possible to withdraw candidacy/resign your membership at any</span>
-<span class="doccomment">//! time. If an entity is currently a member, this results in removal</span>
-<span class="doccomment">//! from the `Pool` and `Members`; the entity is immediately replaced</span>
-<span class="doccomment">//! by the next highest scoring candidate in the pool, if available.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! - [`Config`]</span>
-<span class="doccomment">//! - [`Call`]</span>
-<span class="doccomment">//! - [`Pallet`]</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Interface</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ### Public Functions</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! - `submit_candidacy` - Submit candidacy to become a member. Requires a deposit.</span>
-<span class="doccomment">//! - `withdraw_candidacy` - Withdraw candidacy. Deposit is returned.</span>
-<span class="doccomment">//! - `score` - Attribute a quantitative score to an entity.</span>
-<span class="doccomment">//! - `kick` - Remove an entity from the pool and members. Deposit is returned.</span>
-<span class="doccomment">//! - `change_member_count` - Changes the amount of candidates taken into `Members`.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Usage</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! use pallet_scored_pool::{self as scored_pool};</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! #[frame_support::pallet]</span>
-<span class="doccomment">//! pub mod pallet {</span>
-<span class="doccomment">//! 	use super::*;</span>
-<span class="doccomment">//! 	use frame_support::pallet_prelude::*;</span>
-<span class="doccomment">//! 	use frame_system::pallet_prelude::*;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! 	#[pallet::pallet]</span>
-<span class="doccomment">//! 	pub struct Pallet&lt;T&gt;(_);</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! 	#[pallet::config]</span>
-<span class="doccomment">//! 	pub trait Config: frame_system::Config + scored_pool::Config {}</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! 	#[pallet::call]</span>
-<span class="doccomment">//! 	impl&lt;T: Config&gt; Pallet&lt;T&gt; {</span>
-<span class="doccomment">//! 		#[pallet::weight(0)]</span>
-<span class="doccomment">//! 		pub fn candidate(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {</span>
-<span class="doccomment">//! 			let who = ensure_signed(origin)?;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! 			let _ = &lt;scored_pool::Pallet&lt;T&gt;&gt;::submit_candidacy(</span>
-<span class="doccomment">//! 				T::RuntimeOrigin::from(Some(who.clone()).into())</span>
-<span class="doccomment">//! 			);</span>
-<span class="doccomment">//! 			Ok(())</span>
-<span class="doccomment">//! 		}</span>
-<span class="doccomment">//! 	}</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # fn main() { }</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Dependencies</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This pallet depends on the [System pallet](../frame_system/index.html).</span>
+</span><span class="doccomment">//! # Scored Pool Pallet
+//!
+//! The pallet maintains a scored membership pool. Each entity in the
+//! pool can be attributed a `Score`. From this pool a set `Members`
+//! is constructed. This set contains the `MemberCount` highest
+//! scoring entities. Unscored entities are never part of `Members`.
+//!
+//! If an entity wants to be part of the pool a deposit is required.
+//! The deposit is returned when the entity withdraws or when it
+//! is removed by an entity with the appropriate authority.
+//!
+//! Every `Period` blocks the set of `Members` is refreshed from the
+//! highest scoring members in the pool and, no matter if changes
+//! occurred, `T::MembershipChanged::set_members_sorted` is invoked.
+//! On first load `T::MembershipInitialized::initialize_members` is
+//! invoked with the initial `Members` set.
+//!
+//! It is possible to withdraw candidacy/resign your membership at any
+//! time. If an entity is currently a member, this results in removal
+//! from the `Pool` and `Members`; the entity is immediately replaced
+//! by the next highest scoring candidate in the pool, if available.
+//!
+//! - [`Config`]
+//! - [`Call`]
+//! - [`Pallet`]
+//!
+//! ## Interface
+//!
+//! ### Public Functions
+//!
+//! - `submit_candidacy` - Submit candidacy to become a member. Requires a deposit.
+//! - `withdraw_candidacy` - Withdraw candidacy. Deposit is returned.
+//! - `score` - Attribute a quantitative score to an entity.
+//! - `kick` - Remove an entity from the pool and members. Deposit is returned.
+//! - `change_member_count` - Changes the amount of candidates taken into `Members`.
+//!
+//! ## Usage
+//!
+//! ```
+//! use pallet_scored_pool::{self as scored_pool};
+//!
+//! #[frame_support::pallet]
+//! pub mod pallet {
+//! 	use super::*;
+//! 	use frame_support::pallet_prelude::*;
+//! 	use frame_system::pallet_prelude::*;
+//!
+//! 	#[pallet::pallet]
+//! 	pub struct Pallet&lt;T&gt;(_);
+//!
+//! 	#[pallet::config]
+//! 	pub trait Config: frame_system::Config + scored_pool::Config {}
+//!
+//! 	#[pallet::call]
+//! 	impl&lt;T: Config&gt; Pallet&lt;T&gt; {
+//! 		#[pallet::weight(0)]
+//! 		pub fn candidate(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
+//! 			let who = ensure_signed(origin)?;
+//!
+//! 			let _ = &lt;scored_pool::Pallet&lt;T&gt;&gt;::submit_candidacy(
+//! 				T::RuntimeOrigin::from(Some(who.clone()).into())
+//! 			);
+//! 			Ok(())
+//! 		}
+//! 	}
+//! }
+//!
+//! # fn main() { }
+//! ```
+//!
+//! ## Dependencies
+//!
+//! This pallet depends on the [System pallet](../frame_system/index.html).
 
-<span class="comment">// Ensure we&#39;re `no_std` when compiling for Wasm.</span>
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
+</span><span class="comment">// Ensure we&#39;re `no_std` when compiling for Wasm.
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">mock</span>;
+#[cfg(test)]
+</span><span class="kw">mod </span>mock;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests;
 
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">FullCodec</span>, <span class="ident">MaxEncodedLen</span>};
-<span class="kw">use</span> <span class="ident">frame_support</span>::{
-	<span class="ident">ensure</span>,
-	<span class="ident">traits</span>::{<span class="ident">ChangeMembers</span>, <span class="ident">Currency</span>, <span class="ident">Get</span>, <span class="ident">InitializeMembers</span>, <span class="ident">ReservableCurrency</span>},
-	<span class="ident">BoundedVec</span>,
+<span class="kw">use </span>codec::{FullCodec, MaxEncodedLen};
+<span class="kw">use </span>frame_support::{
+	ensure,
+	traits::{ChangeMembers, Currency, Get, InitializeMembers, ReservableCurrency},
+	BoundedVec,
 };
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pallet</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">AtLeast32Bit</span>, <span class="ident">StaticLookup</span>, <span class="ident">Zero</span>};
-<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
+<span class="kw">pub use </span>pallet::<span class="kw-2">*</span>;
+<span class="kw">use </span>sp_runtime::traits::{AtLeast32Bit, StaticLookup, Zero};
+<span class="kw">use </span>sp_std::{fmt::Debug, prelude::<span class="kw-2">*</span>};
 
-<span class="kw">type</span> <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span>
-	<span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Currency</span> <span class="kw">as</span> <span class="ident">Currency</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Balance</span>;
-<span class="kw">type</span> <span class="ident">PoolT</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">BoundedVec</span><span class="op">&lt;</span>
-	(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Score</span><span class="op">&gt;</span>),
-	<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::MaximumMembers</span>,
-<span class="op">&gt;</span>;
-<span class="kw">type</span> <span class="ident">MembersT</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span>
-	<span class="ident">BoundedVec</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span>, <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::MaximumMembers</span><span class="op">&gt;</span>;
-<span class="kw">type</span> <span class="ident">AccountIdLookupOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Lookup</span> <span class="kw">as</span> <span class="ident">StaticLookup</span><span class="op">&gt;</span><span class="ident">::Source</span>;
+<span class="kw">type </span>BalanceOf&lt;T, I&gt; =
+	&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Currency <span class="kw">as </span>Currency&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId&gt;&gt;::Balance;
+<span class="kw">type </span>PoolT&lt;T, I&gt; = BoundedVec&lt;
+	(&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId, <span class="prelude-ty">Option</span>&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Score&gt;),
+	&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::MaximumMembers,
+&gt;;
+<span class="kw">type </span>MembersT&lt;T, I&gt; =
+	BoundedVec&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId, &lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::MaximumMembers&gt;;
+<span class="kw">type </span>AccountIdLookupOf&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::Lookup <span class="kw">as </span>StaticLookup&gt;::Source;
 
-<span class="doccomment">/// The enum is supplied when refreshing the members set.</span>
-<span class="doccomment">/// Depending on the enum variant the corresponding associated</span>
-<span class="doccomment">/// type function will be invoked.</span>
-<span class="kw">enum</span> <span class="ident">ChangeReceiver</span> {
-	<span class="doccomment">/// Should call `T::MembershipInitialized`.</span>
-	<span class="ident">MembershipInitialized</span>,
-	<span class="doccomment">/// Should call `T::MembershipChanged`.</span>
-	<span class="ident">MembershipChanged</span>,
+<span class="doccomment">/// The enum is supplied when refreshing the members set.
+/// Depending on the enum variant the corresponding associated
+/// type function will be invoked.
+</span><span class="kw">enum </span>ChangeReceiver {
+	<span class="doccomment">/// Should call `T::MembershipInitialized`.
+	</span>MembershipInitialized,
+	<span class="doccomment">/// Should call `T::MembershipChanged`.
+	</span>MembershipChanged,
 }
 
-<span class="attribute">#[<span class="ident">frame_support::pallet</span>]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pallet</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::pallet_prelude</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_system::pallet_prelude</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[frame_support::pallet]
+</span><span class="kw">pub mod </span>pallet {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">pallet::pallet</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::generate_store</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait</span> <span class="ident">Store</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span> <span class="op">=</span> ()<span class="op">&gt;</span>(<span class="kw">_</span>);
+	<span class="attribute">#[pallet::pallet]
+	#[pallet::generate_store(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait </span>Store)]
+	</span><span class="kw">pub struct </span>Pallet&lt;T, I = ()&gt;(<span class="kw">_</span>);
 
-	<span class="attribute">#[<span class="ident">pallet::config</span>]</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">=</span> ()<span class="op">&gt;</span>: <span class="ident">frame_system::Config</span> {
-		<span class="doccomment">/// The currency used for deposits.</span>
-		<span class="kw">type</span> <span class="ident">Currency</span>: <span class="ident">Currency</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span>;
+	<span class="attribute">#[pallet::config]
+	</span><span class="kw">pub trait </span>Config&lt;I: <span class="lifetime">&#39;static </span>= ()&gt;: frame_system::Config {
+		<span class="doccomment">/// The currency used for deposits.
+		</span><span class="kw">type </span>Currency: Currency&lt;<span class="self">Self</span>::AccountId&gt; + ReservableCurrency&lt;<span class="self">Self</span>::AccountId&gt;;
 
-		<span class="doccomment">/// Maximum members length allowed.</span>
-		<span class="attribute">#[<span class="ident">pallet::constant</span>]</span>
-		<span class="kw">type</span> <span class="ident">MaximumMembers</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// Maximum members length allowed.
+		</span><span class="attribute">#[pallet::constant]
+		</span><span class="kw">type </span>MaximumMembers: Get&lt;u32&gt;;
 
-		<span class="doccomment">/// The score attributed to a member or candidate.</span>
-		<span class="kw">type</span> <span class="ident">Score</span>: <span class="ident">AtLeast32Bit</span>
-			<span class="op">+</span> <span class="ident">Clone</span>
-			<span class="op">+</span> <span class="ident">Copy</span>
-			<span class="op">+</span> <span class="ident">Default</span>
-			<span class="op">+</span> <span class="ident">FullCodec</span>
-			<span class="op">+</span> <span class="ident">MaybeSerializeDeserialize</span>
-			<span class="op">+</span> <span class="ident">Debug</span>
-			<span class="op">+</span> <span class="ident">scale_info::TypeInfo</span>
-			<span class="op">+</span> <span class="ident">MaxEncodedLen</span>;
+		<span class="doccomment">/// The score attributed to a member or candidate.
+		</span><span class="kw">type </span>Score: AtLeast32Bit
+			+ Clone
+			+ Copy
+			+ Default
+			+ FullCodec
+			+ MaybeSerializeDeserialize
+			+ Debug
+			+ scale_info::TypeInfo
+			+ MaxEncodedLen;
 
-		<span class="doccomment">/// The overarching event type.</span>
-		<span class="kw">type</span> <span class="ident">RuntimeEvent</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>
-			<span class="op">+</span> <span class="ident">IsType</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::RuntimeEvent</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// The overarching event type.
+		</span><span class="kw">type </span>RuntimeEvent: From&lt;Event&lt;<span class="self">Self</span>, I&gt;&gt;
+			+ IsType&lt;&lt;<span class="self">Self </span><span class="kw">as </span>frame_system::Config&gt;::RuntimeEvent&gt;;
 
-		<span class="comment">// The deposit which is reserved from candidates if they want to</span>
-		<span class="comment">// start a candidacy. The deposit gets returned when the candidacy is</span>
-		<span class="comment">// withdrawn or when the candidate is kicked.</span>
-		<span class="attribute">#[<span class="ident">pallet::constant</span>]</span>
-		<span class="kw">type</span> <span class="ident">CandidateDeposit</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+		<span class="comment">// The deposit which is reserved from candidates if they want to
+		// start a candidacy. The deposit gets returned when the candidacy is
+		// withdrawn or when the candidate is kicked.
+		</span><span class="attribute">#[pallet::constant]
+		</span><span class="kw">type </span>CandidateDeposit: Get&lt;BalanceOf&lt;<span class="self">Self</span>, I&gt;&gt;;
 
-		<span class="doccomment">/// Every `Period` blocks the `Members` are filled with the highest scoring</span>
-		<span class="doccomment">/// members in the `Pool`.</span>
-		<span class="attribute">#[<span class="ident">pallet::constant</span>]</span>
-		<span class="kw">type</span> <span class="ident">Period</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::BlockNumber</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// Every `Period` blocks the `Members` are filled with the highest scoring
+		/// members in the `Pool`.
+		</span><span class="attribute">#[pallet::constant]
+		</span><span class="kw">type </span>Period: Get&lt;<span class="self">Self</span>::BlockNumber&gt;;
 
-		<span class="doccomment">/// The receiver of the signal for when the membership has been initialized.</span>
-		<span class="doccomment">/// This happens pre-genesis and will usually be the same as `MembershipChanged`.</span>
-		<span class="doccomment">/// If you need to do something different on initialization, then you can change</span>
-		<span class="doccomment">/// this accordingly.</span>
-		<span class="kw">type</span> <span class="ident">MembershipInitialized</span>: <span class="ident">InitializeMembers</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// The receiver of the signal for when the membership has been initialized.
+		/// This happens pre-genesis and will usually be the same as `MembershipChanged`.
+		/// If you need to do something different on initialization, then you can change
+		/// this accordingly.
+		</span><span class="kw">type </span>MembershipInitialized: InitializeMembers&lt;<span class="self">Self</span>::AccountId&gt;;
 
-		<span class="doccomment">/// The receiver of the signal for when the members have changed.</span>
-		<span class="kw">type</span> <span class="ident">MembershipChanged</span>: <span class="ident">ChangeMembers</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// The receiver of the signal for when the members have changed.
+		</span><span class="kw">type </span>MembershipChanged: ChangeMembers&lt;<span class="self">Self</span>::AccountId&gt;;
 
-		<span class="doccomment">/// Allows a configurable origin type to set a score to a candidate in the pool.</span>
-		<span class="kw">type</span> <span class="ident">ScoreOrigin</span>: <span class="ident">EnsureOrigin</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::RuntimeOrigin</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// Allows a configurable origin type to set a score to a candidate in the pool.
+		</span><span class="kw">type </span>ScoreOrigin: EnsureOrigin&lt;<span class="self">Self</span>::RuntimeOrigin&gt;;
 
-		<span class="doccomment">/// Required origin for removing a member (though can always be Root).</span>
-		<span class="doccomment">/// Configurable origin which enables removing an entity. If the entity</span>
-		<span class="doccomment">/// is part of the `Members` it is immediately replaced by the next</span>
-		<span class="doccomment">/// highest scoring candidate, if available.</span>
-		<span class="kw">type</span> <span class="ident">KickOrigin</span>: <span class="ident">EnsureOrigin</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::RuntimeOrigin</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// Required origin for removing a member (though can always be Root).
+		/// Configurable origin which enables removing an entity. If the entity
+		/// is part of the `Members` it is immediately replaced by the next
+		/// highest scoring candidate, if available.
+		</span><span class="kw">type </span>KickOrigin: EnsureOrigin&lt;<span class="self">Self</span>::RuntimeOrigin&gt;;
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::event</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::generate_deposit</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">deposit_event</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
-		<span class="doccomment">/// The given member was removed. See the transaction for who.</span>
-		<span class="ident">MemberRemoved</span>,
-		<span class="doccomment">/// An entity has issued a candidacy. See the transaction for who.</span>
-		<span class="ident">CandidateAdded</span>,
-		<span class="doccomment">/// An entity withdrew candidacy. See the transaction for who.</span>
-		<span class="ident">CandidateWithdrew</span>,
-		<span class="doccomment">/// The candidacy was forcefully removed for an entity.</span>
-		<span class="doccomment">/// See the transaction for who.</span>
-		<span class="ident">CandidateKicked</span>,
-		<span class="doccomment">/// A score was attributed to the candidate.</span>
-		<span class="doccomment">/// See the transaction for who.</span>
-		<span class="ident">CandidateScored</span>,
+	<span class="attribute">#[pallet::event]
+	#[pallet::generate_deposit(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>deposit_event)]
+	</span><span class="kw">pub enum </span>Event&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static </span>= ()&gt; {
+		<span class="doccomment">/// The given member was removed. See the transaction for who.
+		</span>MemberRemoved,
+		<span class="doccomment">/// An entity has issued a candidacy. See the transaction for who.
+		</span>CandidateAdded,
+		<span class="doccomment">/// An entity withdrew candidacy. See the transaction for who.
+		</span>CandidateWithdrew,
+		<span class="doccomment">/// The candidacy was forcefully removed for an entity.
+		/// See the transaction for who.
+		</span>CandidateKicked,
+		<span class="doccomment">/// A score was attributed to the candidate.
+		/// See the transaction for who.
+		</span>CandidateScored,
 	}
 
-	<span class="doccomment">/// Error for the scored-pool pallet.</span>
-	<span class="attribute">#[<span class="ident">pallet::error</span>]</span>
-	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
-		<span class="doccomment">/// Already a member.</span>
-		<span class="ident">AlreadyInPool</span>,
-		<span class="doccomment">/// Index out of bounds.</span>
-		<span class="ident">InvalidIndex</span>,
-		<span class="doccomment">/// Index does not match requested account.</span>
-		<span class="ident">WrongAccountIndex</span>,
-		<span class="doccomment">/// Number of members exceeds `MaximumMembers`.</span>
-		<span class="ident">TooManyMembers</span>,
+	<span class="doccomment">/// Error for the scored-pool pallet.
+	</span><span class="attribute">#[pallet::error]
+	</span><span class="kw">pub enum </span>Error&lt;T, I = ()&gt; {
+		<span class="doccomment">/// Already a member.
+		</span>AlreadyInPool,
+		<span class="doccomment">/// Index out of bounds.
+		</span>InvalidIndex,
+		<span class="doccomment">/// Index does not match requested account.
+		</span>WrongAccountIndex,
+		<span class="doccomment">/// Number of members exceeds `MaximumMembers`.
+		</span>TooManyMembers,
 	}
 
-	<span class="doccomment">/// The current pool of candidates, stored as an ordered Bounded Vec</span>
-	<span class="doccomment">/// (ordered descending by score, `None` last, highest first).</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::getter</span>(<span class="kw">fn</span> <span class="ident">pool</span>)]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">PoolT</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// The current pool of candidates, stored as an ordered Bounded Vec
+	/// (ordered descending by score, `None` last, highest first).
+	</span><span class="attribute">#[pallet::storage]
+	#[pallet::getter(<span class="kw">fn </span>pool)]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Pool&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static </span>= ()&gt; = StorageValue&lt;<span class="kw">_</span>, PoolT&lt;T, I&gt;, ValueQuery&gt;;
 
-	<span class="doccomment">/// A Map of the candidates. The information in this Map is redundant</span>
-	<span class="doccomment">/// to the information in the `Pool`. But the Map enables us to easily</span>
-	<span class="doccomment">/// check if a candidate is already in the pool, without having to</span>
-	<span class="doccomment">/// iterate over the entire pool (the `Pool` is not sorted by</span>
-	<span class="doccomment">/// `T::AccountId`, but by `T::Score` instead).</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::getter</span>(<span class="kw">fn</span> <span class="ident">candidate_exists</span>)]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">CandidateExists</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">=</span>
-		<span class="ident">StorageMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Twox64Concat</span>, <span class="ident">T::AccountId</span>, <span class="ident">bool</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// A Map of the candidates. The information in this Map is redundant
+	/// to the information in the `Pool`. But the Map enables us to easily
+	/// check if a candidate is already in the pool, without having to
+	/// iterate over the entire pool (the `Pool` is not sorted by
+	/// `T::AccountId`, but by `T::Score` instead).
+	</span><span class="attribute">#[pallet::storage]
+	#[pallet::getter(<span class="kw">fn </span>candidate_exists)]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>CandidateExists&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static </span>= ()&gt; =
+		StorageMap&lt;<span class="kw">_</span>, Twox64Concat, T::AccountId, bool, ValueQuery&gt;;
 
-	<span class="doccomment">/// The current membership, stored as an ordered Vec.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::getter</span>(<span class="kw">fn</span> <span class="ident">members</span>)]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Members</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">=</span>
-		<span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">MembersT</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// The current membership, stored as an ordered Vec.
+	</span><span class="attribute">#[pallet::storage]
+	#[pallet::getter(<span class="kw">fn </span>members)]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Members&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static </span>= ()&gt; =
+		StorageValue&lt;<span class="kw">_</span>, MembersT&lt;T, I&gt;, ValueQuery&gt;;
 
-	<span class="doccomment">/// Size of the `Members` set.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::getter</span>(<span class="kw">fn</span> <span class="ident">member_count</span>)]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">MemberCount</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Size of the `Members` set.
+	</span><span class="attribute">#[pallet::storage]
+	#[pallet::getter(<span class="kw">fn </span>member_count)]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>MemberCount&lt;T, I = ()&gt; = StorageValue&lt;<span class="kw">_</span>, u32, ValueQuery&gt;;
 
-	<span class="attribute">#[<span class="ident">pallet::genesis_config</span>]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GenesisConfig</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
-		<span class="kw">pub</span> <span class="ident">pool</span>: <span class="ident">PoolT</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>,
-		<span class="kw">pub</span> <span class="ident">member_count</span>: <span class="ident">u32</span>,
+	<span class="attribute">#[pallet::genesis_config]
+	</span><span class="kw">pub struct </span>GenesisConfig&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static </span>= ()&gt; {
+		<span class="kw">pub </span>pool: PoolT&lt;T, I&gt;,
+		<span class="kw">pub </span>member_count: u32,
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">GenesisConfig</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-			<span class="self">Self</span> { <span class="ident">pool</span>: <span class="ident">Default::default</span>(), <span class="ident">member_count</span>: <span class="ident">Default::default</span>() }
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+	</span><span class="kw">impl</span>&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt; Default <span class="kw">for </span>GenesisConfig&lt;T, I&gt; {
+		<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+			<span class="self">Self </span>{ pool: Default::default(), member_count: Default::default() }
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::genesis_build</span>]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">GenesisBuild</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GenesisConfig</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pool</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">clone</span>();
+	<span class="attribute">#[pallet::genesis_build]
+	</span><span class="kw">impl</span>&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt; GenesisBuild&lt;T, I&gt; <span class="kw">for </span>GenesisConfig&lt;T, I&gt; {
+		<span class="kw">fn </span>build(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+			<span class="kw">let </span><span class="kw-2">mut </span>pool = <span class="self">self</span>.pool.clone();
 
-			<span class="comment">// reserve balance for each candidate in the pool.</span>
-			<span class="comment">// panicking here is ok, since this just happens one time, pre-genesis.</span>
-			<span class="ident">pool</span>.<span class="ident">iter</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">who</span>, <span class="kw">_</span>)<span class="op">|</span> {
-				<span class="ident">T::Currency::reserve</span>(<span class="ident">who</span>, <span class="ident">T::CandidateDeposit::get</span>())
-					.<span class="ident">expect</span>(<span class="string">&quot;balance too low to create candidacy&quot;</span>);
-				<span class="op">&lt;</span><span class="ident">CandidateExists</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="ident">who</span>, <span class="bool-val">true</span>);
+			<span class="comment">// reserve balance for each candidate in the pool.
+			// panicking here is ok, since this just happens one time, pre-genesis.
+			</span>pool.iter().for_each(|(who, <span class="kw">_</span>)| {
+				T::Currency::reserve(who, T::CandidateDeposit::get())
+					.expect(<span class="string">&quot;balance too low to create candidacy&quot;</span>);
+				&lt;CandidateExists&lt;T, I&gt;&gt;::insert(who, <span class="bool-val">true</span>);
 			});
 
-			<span class="comment">// Sorts the `Pool` by score in a descending order. Entities which</span>
-			<span class="comment">// have a score of `None` are sorted to the end of the bounded vec.</span>
-			<span class="ident">pool</span>.<span class="ident">sort_by_key</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">maybe_score</span>)<span class="op">|</span> <span class="ident">Reverse</span>(<span class="ident">maybe_score</span>.<span class="ident">unwrap_or_default</span>()));
-			<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::update_member_count</span>(<span class="self">self</span>.<span class="ident">member_count</span>)
-				.<span class="ident">expect</span>(<span class="string">&quot;Number of allowed members exceeded&quot;</span>);
-			<span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>);
-			<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::refresh_members</span>(<span class="ident">pool</span>, <span class="ident">ChangeReceiver::MembershipInitialized</span>);
+			<span class="comment">// Sorts the `Pool` by score in a descending order. Entities which
+			// have a score of `None` are sorted to the end of the bounded vec.
+			</span>pool.sort_by_key(|(<span class="kw">_</span>, maybe_score)| Reverse(maybe_score.unwrap_or_default()));
+			&lt;Pallet&lt;T, I&gt;&gt;::update_member_count(<span class="self">self</span>.member_count)
+				.expect(<span class="string">&quot;Number of allowed members exceeded&quot;</span>);
+			&lt;Pool&lt;T, I&gt;&gt;::put(<span class="kw-2">&amp;</span>pool);
+			&lt;Pallet&lt;T, I&gt;&gt;::refresh_members(pool, ChangeReceiver::MembershipInitialized);
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::hooks</span>]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Hooks</span><span class="op">&lt;</span><span class="ident">BlockNumberFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Every `Period` blocks the `Members` set is refreshed from the</span>
-		<span class="doccomment">/// highest scoring members in the pool.</span>
-		<span class="kw">fn</span> <span class="ident">on_initialize</span>(<span class="ident">n</span>: <span class="ident">T::BlockNumber</span>) -&gt; <span class="ident">Weight</span> {
-			<span class="kw">if</span> <span class="ident">n</span> <span class="op">%</span> <span class="ident">T::Period::get</span>() <span class="op">==</span> <span class="ident">Zero::zero</span>() {
-				<span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>();
-				<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::refresh_members</span>(<span class="ident">pool</span>, <span class="ident">ChangeReceiver::MembershipChanged</span>);
+	<span class="attribute">#[pallet::hooks]
+	</span><span class="kw">impl</span>&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt; Hooks&lt;BlockNumberFor&lt;T&gt;&gt; <span class="kw">for </span>Pallet&lt;T, I&gt; {
+		<span class="doccomment">/// Every `Period` blocks the `Members` set is refreshed from the
+		/// highest scoring members in the pool.
+		</span><span class="kw">fn </span>on_initialize(n: T::BlockNumber) -&gt; Weight {
+			<span class="kw">if </span>n % T::Period::get() == Zero::zero() {
+				<span class="kw">let </span>pool = &lt;Pool&lt;T, I&gt;&gt;::get();
+				&lt;Pallet&lt;T, I&gt;&gt;::refresh_members(pool, ChangeReceiver::MembershipChanged);
 			}
-			<span class="ident">Weight::zero</span>()
+			Weight::zero()
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::call</span>]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Add `origin` to the pool of candidates.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This results in `CandidateDeposit` being reserved from</span>
-		<span class="doccomment">/// the `origin` account. The deposit is returned once</span>
-		<span class="doccomment">/// candidacy is withdrawn by the candidate or the entity</span>
-		<span class="doccomment">/// is kicked by `KickOrigin`.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The dispatch origin of this function must be signed.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The `index` parameter of this function must be set to</span>
-		<span class="doccomment">/// the index of the transactor in the `Pool`.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="number">0</span>)]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submit_candidacy</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
-			<span class="macro">ensure!</span>(<span class="op">!</span><span class="op">&lt;</span><span class="ident">CandidateExists</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>), <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::AlreadyInPool</span>);
+	<span class="attribute">#[pallet::call]
+	</span><span class="kw">impl</span>&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt; Pallet&lt;T, I&gt; {
+		<span class="doccomment">/// Add `origin` to the pool of candidates.
+		///
+		/// This results in `CandidateDeposit` being reserved from
+		/// the `origin` account. The deposit is returned once
+		/// candidacy is withdrawn by the candidate or the entity
+		/// is kicked by `KickOrigin`.
+		///
+		/// The dispatch origin of this function must be signed.
+		///
+		/// The `index` parameter of this function must be set to
+		/// the index of the transactor in the `Pool`.
+		</span><span class="attribute">#[pallet::weight(<span class="number">0</span>)]
+		</span><span class="kw">pub fn </span>submit_candidacy(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
+			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
+			<span class="macro">ensure!</span>(!&lt;CandidateExists&lt;T, I&gt;&gt;::contains_key(<span class="kw-2">&amp;</span>who), Error::&lt;T, I&gt;::AlreadyInPool);
 
-			<span class="kw">let</span> <span class="ident">deposit</span> <span class="op">=</span> <span class="ident">T::CandidateDeposit::get</span>();
-			<span class="ident">T::Currency::reserve</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>, <span class="ident">deposit</span>)<span class="question-mark">?</span>;
+			<span class="kw">let </span>deposit = T::CandidateDeposit::get();
+			T::Currency::reserve(<span class="kw-2">&amp;</span>who, deposit)<span class="question-mark">?</span>;
 
-			<span class="comment">// can be inserted as last element in pool, since entities with</span>
-			<span class="comment">// `None` are always sorted to the end.</span>
-			<span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::try_append</span>((<span class="ident">who</span>.<span class="ident">clone</span>(), <span class="prelude-ty">Option</span>::<span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Score</span><span class="op">&gt;</span><span class="ident">::None</span>))
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::TooManyMembers</span>)<span class="question-mark">?</span>;
+			<span class="comment">// can be inserted as last element in pool, since entities with
+			// `None` are always sorted to the end.
+			</span>&lt;Pool&lt;T, I&gt;&gt;::try_append((who.clone(), <span class="prelude-ty">Option</span>::&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Score&gt;::None))
+				.map_err(|<span class="kw">_</span>| Error::&lt;T, I&gt;::TooManyMembers)<span class="question-mark">?</span>;
 
-			<span class="op">&lt;</span><span class="ident">CandidateExists</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>, <span class="bool-val">true</span>);
+			&lt;CandidateExists&lt;T, I&gt;&gt;::insert(<span class="kw-2">&amp;</span>who, <span class="bool-val">true</span>);
 
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::CandidateAdded</span>);
+			<span class="self">Self</span>::deposit_event(Event::&lt;T, I&gt;::CandidateAdded);
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// An entity withdraws candidacy and gets its deposit back.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// If the entity is part of the `Members`, then the highest member</span>
-		<span class="doccomment">/// of the `Pool` that is not currently in `Members` is immediately</span>
-		<span class="doccomment">/// placed in the set instead.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The dispatch origin of this function must be signed.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The `index` parameter of this function must be set to</span>
-		<span class="doccomment">/// the index of the transactor in the `Pool`.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="number">0</span>)]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">withdraw_candidacy</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">index</span>: <span class="ident">u32</span>) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
+		<span class="doccomment">/// An entity withdraws candidacy and gets its deposit back.
+		///
+		/// If the entity is part of the `Members`, then the highest member
+		/// of the `Pool` that is not currently in `Members` is immediately
+		/// placed in the set instead.
+		///
+		/// The dispatch origin of this function must be signed.
+		///
+		/// The `index` parameter of this function must be set to
+		/// the index of the transactor in the `Pool`.
+		</span><span class="attribute">#[pallet::weight(<span class="number">0</span>)]
+		</span><span class="kw">pub fn </span>withdraw_candidacy(origin: OriginFor&lt;T&gt;, index: u32) -&gt; DispatchResult {
+			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>();
-			<span class="ident"><span class="self">Self</span>::ensure_index</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>, <span class="kw-2">&amp;</span><span class="ident">who</span>, <span class="ident">index</span>)<span class="question-mark">?</span>;
+			<span class="kw">let </span>pool = &lt;Pool&lt;T, I&gt;&gt;::get();
+			<span class="self">Self</span>::ensure_index(<span class="kw-2">&amp;</span>pool, <span class="kw-2">&amp;</span>who, index)<span class="question-mark">?</span>;
 
-			<span class="ident"><span class="self">Self</span>::remove_member</span>(<span class="ident">pool</span>, <span class="ident">who</span>, <span class="ident">index</span>)<span class="question-mark">?</span>;
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::CandidateWithdrew</span>);
+			<span class="self">Self</span>::remove_member(pool, who, index)<span class="question-mark">?</span>;
+			<span class="self">Self</span>::deposit_event(Event::&lt;T, I&gt;::CandidateWithdrew);
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Kick a member `who` from the set.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// May only be called from `T::KickOrigin`.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The `index` parameter of this function must be set to</span>
-		<span class="doccomment">/// the index of `dest` in the `Pool`.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="number">0</span>)]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kick</span>(
-			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">dest</span>: <span class="ident">AccountIdLookupOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">index</span>: <span class="ident">u32</span>,
-		) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="ident">T::KickOrigin::ensure_origin</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
+		<span class="doccomment">/// Kick a member `who` from the set.
+		///
+		/// May only be called from `T::KickOrigin`.
+		///
+		/// The `index` parameter of this function must be set to
+		/// the index of `dest` in the `Pool`.
+		</span><span class="attribute">#[pallet::weight(<span class="number">0</span>)]
+		</span><span class="kw">pub fn </span>kick(
+			origin: OriginFor&lt;T&gt;,
+			dest: AccountIdLookupOf&lt;T&gt;,
+			index: u32,
+		) -&gt; DispatchResult {
+			T::KickOrigin::ensure_origin(origin)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">T::Lookup::lookup</span>(<span class="ident">dest</span>)<span class="question-mark">?</span>;
+			<span class="kw">let </span>who = T::Lookup::lookup(dest)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>();
-			<span class="ident"><span class="self">Self</span>::ensure_index</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>, <span class="kw-2">&amp;</span><span class="ident">who</span>, <span class="ident">index</span>)<span class="question-mark">?</span>;
+			<span class="kw">let </span>pool = &lt;Pool&lt;T, I&gt;&gt;::get();
+			<span class="self">Self</span>::ensure_index(<span class="kw-2">&amp;</span>pool, <span class="kw-2">&amp;</span>who, index)<span class="question-mark">?</span>;
 
-			<span class="ident"><span class="self">Self</span>::remove_member</span>(<span class="ident">pool</span>, <span class="ident">who</span>, <span class="ident">index</span>)<span class="question-mark">?</span>;
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::CandidateKicked</span>);
+			<span class="self">Self</span>::remove_member(pool, who, index)<span class="question-mark">?</span>;
+			<span class="self">Self</span>::deposit_event(Event::&lt;T, I&gt;::CandidateKicked);
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Score a member `who` with `score`.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// May only be called from `T::ScoreOrigin`.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The `index` parameter of this function must be set to</span>
-		<span class="doccomment">/// the index of the `dest` in the `Pool`.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="number">0</span>)]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">score</span>(
-			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">dest</span>: <span class="ident">AccountIdLookupOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">index</span>: <span class="ident">u32</span>,
-			<span class="ident">score</span>: <span class="ident">T::Score</span>,
-		) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="ident">T::ScoreOrigin::ensure_origin</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
+		<span class="doccomment">/// Score a member `who` with `score`.
+		///
+		/// May only be called from `T::ScoreOrigin`.
+		///
+		/// The `index` parameter of this function must be set to
+		/// the index of the `dest` in the `Pool`.
+		</span><span class="attribute">#[pallet::weight(<span class="number">0</span>)]
+		</span><span class="kw">pub fn </span>score(
+			origin: OriginFor&lt;T&gt;,
+			dest: AccountIdLookupOf&lt;T&gt;,
+			index: u32,
+			score: T::Score,
+		) -&gt; DispatchResult {
+			T::ScoreOrigin::ensure_origin(origin)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">T::Lookup::lookup</span>(<span class="ident">dest</span>)<span class="question-mark">?</span>;
+			<span class="kw">let </span>who = T::Lookup::lookup(dest)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pool</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>();
-			<span class="ident"><span class="self">Self</span>::ensure_index</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>, <span class="kw-2">&amp;</span><span class="ident">who</span>, <span class="ident">index</span>)<span class="question-mark">?</span>;
+			<span class="kw">let </span><span class="kw-2">mut </span>pool = &lt;Pool&lt;T, I&gt;&gt;::get();
+			<span class="self">Self</span>::ensure_index(<span class="kw-2">&amp;</span>pool, <span class="kw-2">&amp;</span>who, index)<span class="question-mark">?</span>;
 
-			<span class="ident">pool</span>.<span class="ident">remove</span>(<span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>);
+			pool.remove(index <span class="kw">as </span>usize);
 
-			<span class="comment">// we binary search the pool (which is sorted descending by score).</span>
-			<span class="comment">// if there is already an element with `score`, we insert</span>
-			<span class="comment">// right before that. if not, the search returns a location</span>
-			<span class="comment">// where we can insert while maintaining order.</span>
-			<span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> (<span class="ident">who</span>, <span class="prelude-val">Some</span>(<span class="ident">score</span>));
-			<span class="kw">let</span> <span class="ident">location</span> <span class="op">=</span> <span class="ident">pool</span>
-				.<span class="ident">binary_search_by_key</span>(<span class="kw-2">&amp;</span><span class="ident">Reverse</span>(<span class="ident">score</span>), <span class="op">|</span>(<span class="kw">_</span>, <span class="ident">maybe_score</span>)<span class="op">|</span> {
-					<span class="ident">Reverse</span>(<span class="ident">maybe_score</span>.<span class="ident">unwrap_or_default</span>())
+			<span class="comment">// we binary search the pool (which is sorted descending by score).
+			// if there is already an element with `score`, we insert
+			// right before that. if not, the search returns a location
+			// where we can insert while maintaining order.
+			</span><span class="kw">let </span>item = (who, <span class="prelude-val">Some</span>(score));
+			<span class="kw">let </span>location = pool
+				.binary_search_by_key(<span class="kw-2">&amp;</span>Reverse(score), |(<span class="kw">_</span>, maybe_score)| {
+					Reverse(maybe_score.unwrap_or_default())
 				})
-				.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span>);
-			<span class="ident">pool</span>.<span class="ident">try_insert</span>(<span class="ident">location</span>, <span class="ident">item</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::TooManyMembers</span>)<span class="question-mark">?</span>;
+				.unwrap_or_else(|l| l);
+			pool.try_insert(location, item).map_err(|<span class="kw">_</span>| Error::&lt;T, I&gt;::TooManyMembers)<span class="question-mark">?</span>;
 
-			<span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>);
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::CandidateScored</span>);
+			&lt;Pool&lt;T, I&gt;&gt;::put(<span class="kw-2">&amp;</span>pool);
+			<span class="self">Self</span>::deposit_event(Event::&lt;T, I&gt;::CandidateScored);
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Dispatchable call to change `MemberCount`.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This will only have an effect the next time a refresh happens</span>
-		<span class="doccomment">/// (this happens each `Period`).</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// May only be called from root.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="number">0</span>)]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">change_member_count</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">count</span>: <span class="ident">u32</span>) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="ident">ensure_root</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
-			<span class="ident"><span class="self">Self</span>::update_member_count</span>(<span class="ident">count</span>).<span class="ident">map_err</span>(<span class="ident">Into::into</span>)
+		<span class="doccomment">/// Dispatchable call to change `MemberCount`.
+		///
+		/// This will only have an effect the next time a refresh happens
+		/// (this happens each `Period`).
+		///
+		/// May only be called from root.
+		</span><span class="attribute">#[pallet::weight(<span class="number">0</span>)]
+		</span><span class="kw">pub fn </span>change_member_count(origin: OriginFor&lt;T&gt;, count: u32) -&gt; DispatchResult {
+			ensure_root(origin)<span class="question-mark">?</span>;
+			<span class="self">Self</span>::update_member_count(count).map_err(Into::into)
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Fetches the `MemberCount` highest scoring members from</span>
-	<span class="doccomment">/// `Pool` and puts them into `Members`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The `notify` parameter is used to deduct which associated</span>
-	<span class="doccomment">/// type function to invoke at the end of the method.</span>
-	<span class="kw">fn</span> <span class="ident">refresh_members</span>(<span class="ident">pool</span>: <span class="ident">PoolT</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">notify</span>: <span class="ident">ChangeReceiver</span>) {
-		<span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">MemberCount</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>();
-		<span class="kw">let</span> <span class="ident">old_members</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Members</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>();
+<span class="kw">impl</span>&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt; Pallet&lt;T, I&gt; {
+	<span class="doccomment">/// Fetches the `MemberCount` highest scoring members from
+	/// `Pool` and puts them into `Members`.
+	///
+	/// The `notify` parameter is used to deduct which associated
+	/// type function to invoke at the end of the method.
+	</span><span class="kw">fn </span>refresh_members(pool: PoolT&lt;T, I&gt;, notify: ChangeReceiver) {
+		<span class="kw">let </span>count = MemberCount::&lt;T, I&gt;::get();
+		<span class="kw">let </span>old_members = &lt;Members&lt;T, I&gt;&gt;::get();
 
-		<span class="kw">let</span> <span class="ident">new_members</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">pool</span>
-			.<span class="ident">into_iter</span>()
-			.<span class="ident">filter</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">score</span>)<span class="op">|</span> <span class="ident">score</span>.<span class="ident">is_some</span>())
-			.<span class="ident">take</span>(<span class="ident">count</span> <span class="kw">as</span> <span class="ident">usize</span>)
-			.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">account_id</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">account_id</span>)
-			.<span class="ident">collect</span>();
+		<span class="kw">let </span>new_members: Vec&lt;T::AccountId&gt; = pool
+			.into_iter()
+			.filter(|(<span class="kw">_</span>, score)| score.is_some())
+			.take(count <span class="kw">as </span>usize)
+			.map(|(account_id, <span class="kw">_</span>)| account_id)
+			.collect();
 
-		<span class="comment">// It&#39;s safe to truncate_from at this point since MemberCount</span>
-		<span class="comment">// is verified that it does not exceed the MaximumMembers value</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_members_bounded</span>: <span class="ident">MembersT</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">BoundedVec::truncate_from</span>(<span class="ident">new_members</span>);
+		<span class="comment">// It&#39;s safe to truncate_from at this point since MemberCount
+		// is verified that it does not exceed the MaximumMembers value
+		</span><span class="kw">let </span><span class="kw-2">mut </span>new_members_bounded: MembersT&lt;T, I&gt; = BoundedVec::truncate_from(new_members);
 
-		<span class="ident">new_members_bounded</span>.<span class="ident">sort</span>();
+		new_members_bounded.sort();
 
-		<span class="op">&lt;</span><span class="ident">Members</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="kw-2">&amp;</span><span class="ident">new_members_bounded</span>);
+		&lt;Members&lt;T, I&gt;&gt;::put(<span class="kw-2">&amp;</span>new_members_bounded);
 
-		<span class="kw">match</span> <span class="ident">notify</span> {
-			<span class="ident">ChangeReceiver::MembershipInitialized</span> =&gt;
-				<span class="ident">T::MembershipInitialized::initialize_members</span>(<span class="kw-2">&amp;</span><span class="ident">new_members_bounded</span>),
-			<span class="ident">ChangeReceiver::MembershipChanged</span> =&gt;
-				<span class="ident">T::MembershipChanged::set_members_sorted</span>(<span class="kw-2">&amp;</span><span class="ident">new_members_bounded</span>[..], <span class="kw-2">&amp;</span><span class="ident">old_members</span>[..]),
+		<span class="kw">match </span>notify {
+			ChangeReceiver::MembershipInitialized =&gt;
+				T::MembershipInitialized::initialize_members(<span class="kw-2">&amp;</span>new_members_bounded),
+			ChangeReceiver::MembershipChanged =&gt;
+				T::MembershipChanged::set_members_sorted(<span class="kw-2">&amp;</span>new_members_bounded[..], <span class="kw-2">&amp;</span>old_members[..]),
 		}
 	}
 
-	<span class="doccomment">/// Removes an entity `remove` at `index` from the `Pool`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If the entity is a member it is also removed from `Members` and</span>
-	<span class="doccomment">/// the deposit is returned.</span>
-	<span class="kw">fn</span> <span class="ident">remove_member</span>(
-		<span class="kw-2">mut</span> <span class="ident">pool</span>: <span class="ident">PoolT</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>,
-		<span class="ident">remove</span>: <span class="ident">T::AccountId</span>,
-		<span class="ident">index</span>: <span class="ident">u32</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="comment">// all callers of this function in this pallet also check</span>
-		<span class="comment">// the index for validity before calling this function.</span>
-		<span class="comment">// nevertheless we check again here, to assert that there was</span>
-		<span class="comment">// no mistake when invoking this sensible function.</span>
-		<span class="ident"><span class="self">Self</span>::ensure_index</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>, <span class="kw-2">&amp;</span><span class="ident">remove</span>, <span class="ident">index</span>)<span class="question-mark">?</span>;
+	<span class="doccomment">/// Removes an entity `remove` at `index` from the `Pool`.
+	///
+	/// If the entity is a member it is also removed from `Members` and
+	/// the deposit is returned.
+	</span><span class="kw">fn </span>remove_member(
+		<span class="kw-2">mut </span>pool: PoolT&lt;T, I&gt;,
+		remove: T::AccountId,
+		index: u32,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&lt;T, I&gt;&gt; {
+		<span class="comment">// all callers of this function in this pallet also check
+		// the index for validity before calling this function.
+		// nevertheless we check again here, to assert that there was
+		// no mistake when invoking this sensible function.
+		</span><span class="self">Self</span>::ensure_index(<span class="kw-2">&amp;</span>pool, <span class="kw-2">&amp;</span>remove, index)<span class="question-mark">?</span>;
 
-		<span class="ident">pool</span>.<span class="ident">remove</span>(<span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>);
-		<span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>);
+		pool.remove(index <span class="kw">as </span>usize);
+		&lt;Pool&lt;T, I&gt;&gt;::put(<span class="kw-2">&amp;</span>pool);
 
-		<span class="comment">// remove from set, if it was in there</span>
-		<span class="kw">let</span> <span class="ident">members</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Members</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>();
-		<span class="kw">if</span> <span class="ident">members</span>.<span class="ident">binary_search</span>(<span class="kw-2">&amp;</span><span class="ident">remove</span>).<span class="ident">is_ok</span>() {
-			<span class="ident"><span class="self">Self</span>::refresh_members</span>(<span class="ident">pool</span>, <span class="ident">ChangeReceiver::MembershipChanged</span>);
+		<span class="comment">// remove from set, if it was in there
+		</span><span class="kw">let </span>members = &lt;Members&lt;T, I&gt;&gt;::get();
+		<span class="kw">if </span>members.binary_search(<span class="kw-2">&amp;</span>remove).is_ok() {
+			<span class="self">Self</span>::refresh_members(pool, ChangeReceiver::MembershipChanged);
 		}
 
-		<span class="op">&lt;</span><span class="ident">CandidateExists</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::remove</span>(<span class="kw-2">&amp;</span><span class="ident">remove</span>);
+		&lt;CandidateExists&lt;T, I&gt;&gt;::remove(<span class="kw-2">&amp;</span>remove);
 
-		<span class="ident">T::Currency::unreserve</span>(<span class="kw-2">&amp;</span><span class="ident">remove</span>, <span class="ident">T::CandidateDeposit::get</span>());
+		T::Currency::unreserve(<span class="kw-2">&amp;</span>remove, T::CandidateDeposit::get());
 
-		<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::MemberRemoved</span>);
+		<span class="self">Self</span>::deposit_event(Event::&lt;T, I&gt;::MemberRemoved);
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Checks if `index` is a valid number and if the element found</span>
-	<span class="doccomment">/// at `index` in `Pool` is equal to `who`.</span>
-	<span class="kw">fn</span> <span class="ident">ensure_index</span>(<span class="ident">pool</span>: <span class="kw-2">&amp;</span><span class="ident">PoolT</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">T::AccountId</span>, <span class="ident">index</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="macro">ensure!</span>(<span class="ident">index</span> <span class="op">&lt;</span> <span class="ident">pool</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::InvalidIndex</span>);
+	<span class="doccomment">/// Checks if `index` is a valid number and if the element found
+	/// at `index` in `Pool` is equal to `who`.
+	</span><span class="kw">fn </span>ensure_index(pool: <span class="kw-2">&amp;</span>PoolT&lt;T, I&gt;, who: <span class="kw-2">&amp;</span>T::AccountId, index: u32) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&lt;T, I&gt;&gt; {
+		<span class="macro">ensure!</span>(index &lt; pool.len() <span class="kw">as </span>u32, Error::&lt;T, I&gt;::InvalidIndex);
 
-		<span class="kw">let</span> (<span class="ident">index_who</span>, <span class="ident">_index_score</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">pool</span>[<span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>];
-		<span class="macro">ensure!</span>(<span class="ident">index_who</span> <span class="op">==</span> <span class="ident">who</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::WrongAccountIndex</span>);
+		<span class="kw">let </span>(index_who, _index_score) = <span class="kw-2">&amp;</span>pool[index <span class="kw">as </span>usize];
+		<span class="macro">ensure!</span>(index_who == who, Error::&lt;T, I&gt;::WrongAccountIndex);
 
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Make sure the new member count value does not exceed the MaximumMembers</span>
-	<span class="kw">fn</span> <span class="ident">update_member_count</span>(<span class="ident">new_member_count</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="macro">ensure!</span>(<span class="ident">new_member_count</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">T::MaximumMembers::get</span>(), <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::TooManyMembers</span>);
-		<span class="op">&lt;</span><span class="ident">MemberCount</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">new_member_count</span>);
+	<span class="doccomment">/// Make sure the new member count value does not exceed the MaximumMembers
+	</span><span class="kw">fn </span>update_member_count(new_member_count: u32) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&lt;T, I&gt;&gt; {
+		<span class="macro">ensure!</span>(new_member_count &lt;= T::MaximumMembers::get(), Error::&lt;T, I&gt;::TooManyMembers);
+		&lt;MemberCount&lt;T, I&gt;&gt;::put(new_member_count);
 		<span class="prelude-val">Ok</span>(())
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_scored_pool" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_scored_pool" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

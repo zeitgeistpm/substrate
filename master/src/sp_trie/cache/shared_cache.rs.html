@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/trie/src/cache/shared_cache.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>shared_cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../sp_trie/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../sp_trie/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../sp_trie/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/trie/src/cache/shared_cache.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>shared_cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../sp_trie/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../sp_trie/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -681,462 +675,462 @@
 <span id="675">675</span>
 <span id="676">676</span>
 <span id="677">677</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">///! Provides the [`SharedNodeCache`], the [`SharedValueCache`] and the [`SharedTrieCache`]</span>
-<span class="doccomment">///! that combines both caches and is exported to the outside.</span>
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">CacheSize</span>, <span class="ident">LOG_TARGET</span>};
-<span class="kw">use</span> <span class="ident">hash_db::Hasher</span>;
-<span class="kw">use</span> <span class="ident">hashbrown</span>::{<span class="ident">hash_set::Entry</span> <span class="kw">as</span> <span class="ident">SetEntry</span>, <span class="ident">HashSet</span>};
-<span class="kw">use</span> <span class="ident">lru::LruCache</span>;
-<span class="kw">use</span> <span class="ident">nohash_hasher::BuildNoHashHasher</span>;
-<span class="kw">use</span> <span class="ident">parking_lot</span>::{<span class="ident">RwLock</span>, <span class="ident">RwLockReadGuard</span>, <span class="ident">RwLockWriteGuard</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-	<span class="ident">hash</span>::{<span class="ident">BuildHasher</span>, <span class="ident">Hasher</span> <span class="kw">as</span> <span class="kw">_</span>},
-	<span class="ident">mem</span>,
-	<span class="ident">sync::Arc</span>,
+</span><span class="doccomment">///! Provides the [`SharedNodeCache`], the [`SharedValueCache`] and the [`SharedTrieCache`]
+///! that combines both caches and is exported to the outside.
+</span><span class="kw">use super</span>::{CacheSize, LOG_TARGET};
+<span class="kw">use </span>hash_db::Hasher;
+<span class="kw">use </span>hashbrown::{hash_set::Entry <span class="kw">as </span>SetEntry, HashSet};
+<span class="kw">use </span>lru::LruCache;
+<span class="kw">use </span>nohash_hasher::BuildNoHashHasher;
+<span class="kw">use </span>parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
+<span class="kw">use </span>std::{
+	hash::{BuildHasher, Hasher <span class="kw">as _</span>},
+	mem,
+	sync::Arc,
 };
-<span class="kw">use</span> <span class="ident">trie_db</span>::{<span class="ident">node::NodeOwned</span>, <span class="ident">CachedValue</span>};
+<span class="kw">use </span>trie_db::{node::NodeOwned, CachedValue};
 
-<span class="macro">lazy_static::lazy_static!</span> {
-	<span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">RANDOM_STATE</span>: <span class="ident">ahash::RandomState</span> <span class="op">=</span> <span class="ident">ahash::RandomState::default</span>();
+<span class="macro">lazy_static::lazy_static! </span>{
+	<span class="kw">static </span><span class="kw-2">ref </span>RANDOM_STATE: ahash::RandomState = ahash::RandomState::default();
 }
 
-<span class="doccomment">/// No hashing [`LruCache`].</span>
-<span class="kw">type</span> <span class="ident">NoHashingLruCache</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">lru::LruCache</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">T</span>, <span class="ident">BuildNoHashHasher</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="doccomment">/// No hashing [`LruCache`].
+</span><span class="kw">type </span>NoHashingLruCache&lt;K, T&gt; = lru::LruCache&lt;K, T, BuildNoHashHasher&lt;K&gt;&gt;;
 
-<span class="doccomment">/// The shared node cache.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Internally this stores all cached nodes in a [`LruCache`]. It ensures that when updating the</span>
-<span class="doccomment">/// cache, that the cache stays within its allowed bounds.</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">SharedNodeCache</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The cached nodes, ordered by least recently used.</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">lru</span>: <span class="ident">LruCache</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">NodeOwned</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// The size of [`Self::lru`] in bytes.</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">size_in_bytes</span>: <span class="ident">usize</span>,
-	<span class="doccomment">/// The maximum cache size of [`Self::lru`].</span>
-	<span class="ident">maximum_cache_size</span>: <span class="ident">CacheSize</span>,
+<span class="doccomment">/// The shared node cache.
+///
+/// Internally this stores all cached nodes in a [`LruCache`]. It ensures that when updating the
+/// cache, that the cache stays within its allowed bounds.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>SharedNodeCache&lt;H&gt; {
+	<span class="doccomment">/// The cached nodes, ordered by least recently used.
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) lru: LruCache&lt;H, NodeOwned&lt;H&gt;&gt;,
+	<span class="doccomment">/// The size of [`Self::lru`] in bytes.
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) size_in_bytes: usize,
+	<span class="doccomment">/// The maximum cache size of [`Self::lru`].
+	</span>maximum_cache_size: CacheSize,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span><span class="op">&gt;</span> <span class="ident">SharedNodeCache</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Create a new instance.</span>
-	<span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cache_size</span>: <span class="ident">CacheSize</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">lru</span>: <span class="ident">LruCache::unbounded</span>(), <span class="ident">size_in_bytes</span>: <span class="number">0</span>, <span class="ident">maximum_cache_size</span>: <span class="ident">cache_size</span> }
+<span class="kw">impl</span>&lt;H: AsRef&lt;[u8]&gt; + Eq + std::hash::Hash&gt; SharedNodeCache&lt;H&gt; {
+	<span class="doccomment">/// Create a new instance.
+	</span><span class="kw">fn </span>new(cache_size: CacheSize) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ lru: LruCache::unbounded(), size_in_bytes: <span class="number">0</span>, maximum_cache_size: cache_size }
 	}
 
-	<span class="doccomment">/// Get the node for `key`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This doesn&#39;t change the least recently order in the internal [`LruCache`].</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">H</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">NodeOwned</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">lru</span>.<span class="ident">peek</span>(<span class="ident">key</span>)
+	<span class="doccomment">/// Get the node for `key`.
+	///
+	/// This doesn&#39;t change the least recently order in the internal [`LruCache`].
+	</span><span class="kw">pub fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>H) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>NodeOwned&lt;H&gt;&gt; {
+		<span class="self">self</span>.lru.peek(key)
 	}
 
-	<span class="doccomment">/// Update the cache with the `added` nodes and the `accessed` nodes.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The `added` nodes are the ones that have been collected by doing operations on the trie and</span>
-	<span class="doccomment">/// now should be stored in the shared cache. The `accessed` nodes are only referenced by hash</span>
-	<span class="doccomment">/// and represent the nodes that were retrieved from this shared cache through [`Self::get`].</span>
-	<span class="doccomment">/// These `accessed` nodes are being put to the front of the internal [`LruCache`] like the</span>
-	<span class="doccomment">/// `added` ones.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// After the internal [`LruCache`] was updated, it is ensured that the internal [`LruCache`] is</span>
-	<span class="doccomment">/// inside its bounds ([`Self::maximum_size_in_bytes`]).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">added</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">H</span>, <span class="ident">NodeOwned</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-		<span class="ident">accessed</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">H</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Update the cache with the `added` nodes and the `accessed` nodes.
+	///
+	/// The `added` nodes are the ones that have been collected by doing operations on the trie and
+	/// now should be stored in the shared cache. The `accessed` nodes are only referenced by hash
+	/// and represent the nodes that were retrieved from this shared cache through [`Self::get`].
+	/// These `accessed` nodes are being put to the front of the internal [`LruCache`] like the
+	/// `added` ones.
+	///
+	/// After the internal [`LruCache`] was updated, it is ensured that the internal [`LruCache`] is
+	/// inside its bounds ([`Self::maximum_size_in_bytes`]).
+	</span><span class="kw">pub fn </span>update(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		added: <span class="kw">impl </span>IntoIterator&lt;Item = (H, NodeOwned&lt;H&gt;)&gt;,
+		accessed: <span class="kw">impl </span>IntoIterator&lt;Item = H&gt;,
 	) {
-		<span class="kw">let</span> <span class="ident">update_size_in_bytes</span> <span class="op">=</span> <span class="op">|</span><span class="ident">size_in_bytes</span>: <span class="kw-2">&amp;mut</span> <span class="ident">usize</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">H</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">NodeOwned</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">|</span> {
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">new_size_in_bytes</span>) <span class="op">=</span>
-				<span class="ident">size_in_bytes</span>.<span class="ident">checked_sub</span>(<span class="ident">key</span>.<span class="ident">as_ref</span>().<span class="ident">len</span>() <span class="op">+</span> <span class="ident">node</span>.<span class="ident">size_in_bytes</span>())
+		<span class="kw">let </span>update_size_in_bytes = |size_in_bytes: <span class="kw-2">&amp;mut </span>usize, key: <span class="kw-2">&amp;</span>H, node: <span class="kw-2">&amp;</span>NodeOwned&lt;H&gt;| {
+			<span class="kw">if let </span><span class="prelude-val">Some</span>(new_size_in_bytes) =
+				size_in_bytes.checked_sub(key.as_ref().len() + node.size_in_bytes())
 			{
-				<span class="kw-2">*</span><span class="ident">size_in_bytes</span> <span class="op">=</span> <span class="ident">new_size_in_bytes</span>;
-			} <span class="kw">else</span> {
-				<span class="kw-2">*</span><span class="ident">size_in_bytes</span> <span class="op">=</span> <span class="number">0</span>;
-				<span class="macro">tracing::error!</span>(<span class="ident">target</span>: <span class="ident">LOG_TARGET</span>, <span class="string">&quot;`SharedNodeCache` underflow detected!&quot;</span>,);
+				<span class="kw-2">*</span>size_in_bytes = new_size_in_bytes;
+			} <span class="kw">else </span>{
+				<span class="kw-2">*</span>size_in_bytes = <span class="number">0</span>;
+				<span class="macro">tracing::error!</span>(target: LOG_TARGET, <span class="string">&quot;`SharedNodeCache` underflow detected!&quot;</span>,);
 			}
 		};
 
-		<span class="ident">accessed</span>.<span class="ident">into_iter</span>().<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> {
-			<span class="comment">// Access every node in the lru to put it to the front.</span>
-			<span class="self">self</span>.<span class="ident">lru</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>);
+		accessed.into_iter().for_each(|key| {
+			<span class="comment">// Access every node in the lru to put it to the front.
+			</span><span class="self">self</span>.lru.get(<span class="kw-2">&amp;</span>key);
 		});
-		<span class="ident">added</span>.<span class="ident">into_iter</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">key</span>, <span class="ident">node</span>)<span class="op">|</span> {
-			<span class="self">self</span>.<span class="ident">size_in_bytes</span> <span class="op">+</span><span class="op">=</span> <span class="ident">key</span>.<span class="ident">as_ref</span>().<span class="ident">len</span>() <span class="op">+</span> <span class="ident">node</span>.<span class="ident">size_in_bytes</span>();
+		added.into_iter().for_each(|(key, node)| {
+			<span class="self">self</span>.size_in_bytes += key.as_ref().len() + node.size_in_bytes();
 
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">r_key</span>, <span class="ident">r_node</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">lru</span>.<span class="ident">push</span>(<span class="ident">key</span>, <span class="ident">node</span>) {
-				<span class="ident">update_size_in_bytes</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">size_in_bytes</span>, <span class="kw-2">&amp;</span><span class="ident">r_key</span>, <span class="kw-2">&amp;</span><span class="ident">r_node</span>);
+			<span class="kw">if let </span><span class="prelude-val">Some</span>((r_key, r_node)) = <span class="self">self</span>.lru.push(key, node) {
+				update_size_in_bytes(<span class="kw-2">&amp;mut </span><span class="self">self</span>.size_in_bytes, <span class="kw-2">&amp;</span>r_key, <span class="kw-2">&amp;</span>r_node);
 			}
 
-			<span class="comment">// Directly ensure that we respect the maximum size. By doing it directly here we ensure</span>
-			<span class="comment">// that the internal map of the [`LruCache`] doesn&#39;t grow too much.</span>
-			<span class="kw">while</span> <span class="self">self</span>.<span class="ident">maximum_cache_size</span>.<span class="ident">exceeds</span>(<span class="self">self</span>.<span class="ident">size_in_bytes</span>) {
-				<span class="comment">// This should always be `Some(_)`, otherwise something is wrong!</span>
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">key</span>, <span class="ident">node</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">lru</span>.<span class="ident">pop_lru</span>() {
-					<span class="ident">update_size_in_bytes</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">size_in_bytes</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">node</span>);
+			<span class="comment">// Directly ensure that we respect the maximum size. By doing it directly here we ensure
+			// that the internal map of the [`LruCache`] doesn&#39;t grow too much.
+			</span><span class="kw">while </span><span class="self">self</span>.maximum_cache_size.exceeds(<span class="self">self</span>.size_in_bytes) {
+				<span class="comment">// This should always be `Some(_)`, otherwise something is wrong!
+				</span><span class="kw">if let </span><span class="prelude-val">Some</span>((key, node)) = <span class="self">self</span>.lru.pop_lru() {
+					update_size_in_bytes(<span class="kw-2">&amp;mut </span><span class="self">self</span>.size_in_bytes, <span class="kw-2">&amp;</span>key, <span class="kw-2">&amp;</span>node);
 				}
 			}
 		});
 	}
 
-	<span class="doccomment">/// Reset the cache.</span>
-	<span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-		<span class="self">self</span>.<span class="ident">size_in_bytes</span> <span class="op">=</span> <span class="number">0</span>;
-		<span class="self">self</span>.<span class="ident">lru</span>.<span class="ident">clear</span>();
+	<span class="doccomment">/// Reset the cache.
+	</span><span class="kw">fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+		<span class="self">self</span>.size_in_bytes = <span class="number">0</span>;
+		<span class="self">self</span>.lru.clear();
 	}
 }
 
-<span class="doccomment">/// The hash of [`ValueCacheKey`].</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ValueCacheKeyHash</span>(<span class="ident">u64</span>);
+<span class="doccomment">/// The hash of [`ValueCacheKey`].
+</span><span class="attribute">#[derive(Eq, Clone, Copy)]
+</span><span class="kw">pub struct </span>ValueCacheKeyHash(u64);
 
-<span class="kw">impl</span> <span class="ident">ValueCacheKeyHash</span> {
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_hasher_and_storage_key</span>(
-		<span class="kw-2">mut</span> <span class="ident">hasher</span>: <span class="kw">impl</span> <span class="ident">std::hash::Hasher</span>,
-		<span class="ident">storage_key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-	) -&gt; <span class="self">Self</span> {
-		<span class="ident">hasher</span>.<span class="ident">write</span>(<span class="ident">storage_key</span>);
+<span class="kw">impl </span>ValueCacheKeyHash {
+	<span class="kw">pub fn </span>from_hasher_and_storage_key(
+		<span class="kw-2">mut </span>hasher: <span class="kw">impl </span>std::hash::Hasher,
+		storage_key: <span class="kw-2">&amp;</span>[u8],
+	) -&gt; <span class="self">Self </span>{
+		hasher.write(storage_key);
 
-		<span class="self">Self</span>(<span class="ident">hasher</span>.<span class="ident">finish</span>())
+		<span class="self">Self</span>(hasher.finish())
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">ValueCacheKeyHash</span> {
-	<span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-		<span class="self">self</span>.<span class="number">0</span> <span class="op">==</span> <span class="ident">other</span>.<span class="number">0</span>
+<span class="kw">impl </span>PartialEq <span class="kw">for </span>ValueCacheKeyHash {
+	<span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+		<span class="self">self</span>.<span class="number">0 </span>== other.<span class="number">0
+	</span>}
+}
+
+<span class="kw">impl </span>std::hash::Hash <span class="kw">for </span>ValueCacheKeyHash {
+	<span class="kw">fn </span>hash&lt;Hasher: std::hash::Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>Hasher) {
+		state.write_u64(<span class="self">self</span>.<span class="number">0</span>);
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">std::hash::Hash</span> <span class="kw">for</span> <span class="ident">ValueCacheKeyHash</span> {
-	<span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">Hasher</span>: <span class="ident">std::hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Hasher</span>) {
-		<span class="ident">state</span>.<span class="ident">write_u64</span>(<span class="self">self</span>.<span class="number">0</span>);
-	}
-}
+<span class="kw">impl </span>nohash_hasher::IsEnabled <span class="kw">for </span>ValueCacheKeyHash {}
 
-<span class="kw">impl</span> <span class="ident">nohash_hasher::IsEnabled</span> <span class="kw">for</span> <span class="ident">ValueCacheKeyHash</span> {}
+<span class="doccomment">/// A type that can only be constructed inside of this file.
+///
+/// It &quot;requires&quot; that the user has read the docs to prevent fuck ups.
+</span><span class="attribute">#[derive(Eq, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>IReadTheDocumentation(());
 
-<span class="doccomment">/// A type that can only be constructed inside of this file.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It &quot;requires&quot; that the user has read the docs to prevent fuck ups.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">IReadTheDocumentation</span>(());
-
-<span class="doccomment">/// The key type that is being used to address a [`CachedValue`].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This type is implemented as `enum` to improve the performance when accessing the value cache.</span>
-<span class="doccomment">/// The problem being that we need to calculate the `hash` of [`Self`] in worst case three times</span>
-<span class="doccomment">/// when trying to find a value in the value cache. First to lookup the local cache, then the shared</span>
-<span class="doccomment">/// cache and if we found it in the shared cache a third time to insert it into the list of accessed</span>
-<span class="doccomment">/// values. To work around each variant stores the `hash` to identify a unique combination of</span>
-<span class="doccomment">/// `storage_key` and `storage_root`. However, be aware that this `hash` can lead to collisions when</span>
-<span class="doccomment">/// there are two different `storage_key` and `storage_root` pairs that map to the same `hash`. This</span>
-<span class="doccomment">/// type also has the `Hash` variant. This variant should only be used for the use case of updating</span>
-<span class="doccomment">/// the lru for a key. Because when using only the `Hash` variant to getting a value from a hash map</span>
-<span class="doccomment">/// it could happen that a wrong value is returned when there is another key in the same hash map</span>
-<span class="doccomment">/// that maps to the same `hash`. The [`PartialEq`] implementation is written in a way that when one</span>
-<span class="doccomment">/// of the two compared instances is the `Hash` variant, we will only compare the hashes. This</span>
-<span class="doccomment">/// ensures that we can use the `Hash` variant to bring values up in the lru.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum</span> <span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Variant that stores the `storage_key` by value.</span>
-	<span class="ident">Value</span> {
-		<span class="doccomment">/// The storage root of the trie this key belongs to.</span>
-		<span class="ident">storage_root</span>: <span class="ident">H</span>,
-		<span class="doccomment">/// The key to access the value in the storage.</span>
-		<span class="ident">storage_key</span>: <span class="ident">Arc</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-		<span class="doccomment">/// The hash that identifying this instance of `storage_root` and `storage_key`.</span>
-		<span class="ident">hash</span>: <span class="ident">ValueCacheKeyHash</span>,
+<span class="doccomment">/// The key type that is being used to address a [`CachedValue`].
+///
+/// This type is implemented as `enum` to improve the performance when accessing the value cache.
+/// The problem being that we need to calculate the `hash` of [`Self`] in worst case three times
+/// when trying to find a value in the value cache. First to lookup the local cache, then the shared
+/// cache and if we found it in the shared cache a third time to insert it into the list of accessed
+/// values. To work around each variant stores the `hash` to identify a unique combination of
+/// `storage_key` and `storage_root`. However, be aware that this `hash` can lead to collisions when
+/// there are two different `storage_key` and `storage_root` pairs that map to the same `hash`. This
+/// type also has the `Hash` variant. This variant should only be used for the use case of updating
+/// the lru for a key. Because when using only the `Hash` variant to getting a value from a hash map
+/// it could happen that a wrong value is returned when there is another key in the same hash map
+/// that maps to the same `hash`. The [`PartialEq`] implementation is written in a way that when one
+/// of the two compared instances is the `Hash` variant, we will only compare the hashes. This
+/// ensures that we can use the `Hash` variant to bring values up in the lru.
+</span><span class="attribute">#[derive(Eq)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum </span>ValueCacheKey&lt;<span class="lifetime">&#39;a</span>, H&gt; {
+	<span class="doccomment">/// Variant that stores the `storage_key` by value.
+	</span>Value {
+		<span class="doccomment">/// The storage root of the trie this key belongs to.
+		</span>storage_root: H,
+		<span class="doccomment">/// The key to access the value in the storage.
+		</span>storage_key: Arc&lt;[u8]&gt;,
+		<span class="doccomment">/// The hash that identifying this instance of `storage_root` and `storage_key`.
+		</span>hash: ValueCacheKeyHash,
 	},
-	<span class="doccomment">/// Variant that only references the `storage_key`.</span>
-	<span class="ident">Ref</span> {
-		<span class="doccomment">/// The storage root of the trie this key belongs to.</span>
-		<span class="ident">storage_root</span>: <span class="ident">H</span>,
-		<span class="doccomment">/// The key to access the value in the storage.</span>
-		<span class="ident">storage_key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
-		<span class="doccomment">/// The hash that identifying this instance of `storage_root` and `storage_key`.</span>
-		<span class="ident">hash</span>: <span class="ident">ValueCacheKeyHash</span>,
+	<span class="doccomment">/// Variant that only references the `storage_key`.
+	</span>Ref {
+		<span class="doccomment">/// The storage root of the trie this key belongs to.
+		</span>storage_root: H,
+		<span class="doccomment">/// The key to access the value in the storage.
+		</span>storage_key: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8],
+		<span class="doccomment">/// The hash that identifying this instance of `storage_root` and `storage_key`.
+		</span>hash: ValueCacheKeyHash,
 	},
-	<span class="doccomment">/// Variant that only stores the hash that represents the `storage_root` and `storage_key`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This should be used by caution, because it can lead to accessing the wrong value in a</span>
-	<span class="doccomment">/// hash map/set when there exists two different `storage_root`s and `storage_key`s that</span>
-	<span class="doccomment">/// map to the same `hash`.</span>
-	<span class="ident">Hash</span> { <span class="ident">hash</span>: <span class="ident">ValueCacheKeyHash</span>, <span class="ident">_i_read_the_documentation</span>: <span class="ident">IReadTheDocumentation</span> },
+	<span class="doccomment">/// Variant that only stores the hash that represents the `storage_root` and `storage_key`.
+	///
+	/// This should be used by caution, because it can lead to accessing the wrong value in a
+	/// hash map/set when there exists two different `storage_root`s and `storage_key`s that
+	/// map to the same `hash`.
+	</span>Hash { hash: ValueCacheKeyHash, _i_read_the_documentation: IReadTheDocumentation },
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">H</span><span class="op">&gt;</span> <span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Constructs [`Self::Value`].</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_value</span>(<span class="ident">storage_key</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">storage_root</span>: <span class="ident">H</span>) -&gt; <span class="self">Self</span>
-	<span class="kw">where</span>
-		<span class="ident">H</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, H&gt; ValueCacheKey&lt;<span class="lifetime">&#39;a</span>, H&gt; {
+	<span class="doccomment">/// Constructs [`Self::Value`].
+	</span><span class="kw">pub fn </span>new_value(storage_key: <span class="kw">impl </span>Into&lt;Arc&lt;[u8]&gt;&gt;, storage_root: H) -&gt; <span class="self">Self
+	</span><span class="kw">where
+		</span>H: AsRef&lt;[u8]&gt;,
 	{
-		<span class="kw">let</span> <span class="ident">storage_key</span> <span class="op">=</span> <span class="ident">storage_key</span>.<span class="ident">into</span>();
-		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::hash_data</span>(<span class="kw-2">&amp;</span><span class="ident">storage_key</span>, <span class="kw-2">&amp;</span><span class="ident">storage_root</span>);
-		<span class="ident"><span class="self">Self</span>::Value</span> { <span class="ident">storage_root</span>, <span class="ident">storage_key</span>, <span class="ident">hash</span> }
+		<span class="kw">let </span>storage_key = storage_key.into();
+		<span class="kw">let </span>hash = <span class="self">Self</span>::hash_data(<span class="kw-2">&amp;</span>storage_key, <span class="kw-2">&amp;</span>storage_root);
+		<span class="self">Self</span>::Value { storage_root, storage_key, hash }
 	}
 
-	<span class="doccomment">/// Constructs [`Self::Ref`].</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_ref</span>(<span class="ident">storage_key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="ident">storage_root</span>: <span class="ident">H</span>) -&gt; <span class="self">Self</span>
-	<span class="kw">where</span>
-		<span class="ident">H</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+	<span class="doccomment">/// Constructs [`Self::Ref`].
+	</span><span class="kw">pub fn </span>new_ref(storage_key: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], storage_root: H) -&gt; <span class="self">Self
+	</span><span class="kw">where
+		</span>H: AsRef&lt;[u8]&gt;,
 	{
-		<span class="kw">let</span> <span class="ident">storage_key</span> <span class="op">=</span> <span class="ident">storage_key</span>.<span class="ident">into</span>();
-		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::hash_data</span>(<span class="ident">storage_key</span>, <span class="kw-2">&amp;</span><span class="ident">storage_root</span>);
-		<span class="ident"><span class="self">Self</span>::Ref</span> { <span class="ident">storage_root</span>, <span class="ident">storage_key</span>, <span class="ident">hash</span> }
+		<span class="kw">let </span>storage_key = storage_key.into();
+		<span class="kw">let </span>hash = <span class="self">Self</span>::hash_data(storage_key, <span class="kw-2">&amp;</span>storage_root);
+		<span class="self">Self</span>::Ref { storage_root, storage_key, hash }
 	}
 
-	<span class="doccomment">/// Returns a hasher prepared to build the final hash to identify [`Self`].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// See [`Self::hash_data`] for building the hash directly.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hash_partial_data</span>(<span class="ident">storage_root</span>: <span class="kw-2">&amp;</span><span class="ident">H</span>) -&gt; <span class="kw">impl</span> <span class="ident">std::hash::Hasher</span> <span class="op">+</span> <span class="ident">Clone</span>
-	<span class="kw">where</span>
-		<span class="ident">H</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+	<span class="doccomment">/// Returns a hasher prepared to build the final hash to identify [`Self`].
+	///
+	/// See [`Self::hash_data`] for building the hash directly.
+	</span><span class="kw">pub fn </span>hash_partial_data(storage_root: <span class="kw-2">&amp;</span>H) -&gt; <span class="kw">impl </span>std::hash::Hasher + Clone
+	<span class="kw">where
+		</span>H: AsRef&lt;[u8]&gt;,
 	{
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hasher</span> <span class="op">=</span> <span class="ident">RANDOM_STATE</span>.<span class="ident">build_hasher</span>();
-		<span class="ident">hasher</span>.<span class="ident">write</span>(<span class="ident">storage_root</span>.<span class="ident">as_ref</span>());
-		<span class="ident">hasher</span>
+		<span class="kw">let </span><span class="kw-2">mut </span>hasher = RANDOM_STATE.build_hasher();
+		hasher.write(storage_root.as_ref());
+		hasher
 	}
 
-	<span class="doccomment">/// Hash the `key` and `storage_root` that identify [`Self`].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns a `u64` which represents the unique hash for the given inputs.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hash_data</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">storage_root</span>: <span class="kw-2">&amp;</span><span class="ident">H</span>) -&gt; <span class="ident">ValueCacheKeyHash</span>
-	<span class="kw">where</span>
-		<span class="ident">H</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+	<span class="doccomment">/// Hash the `key` and `storage_root` that identify [`Self`].
+	///
+	/// Returns a `u64` which represents the unique hash for the given inputs.
+	</span><span class="kw">pub fn </span>hash_data(key: <span class="kw-2">&amp;</span>[u8], storage_root: <span class="kw-2">&amp;</span>H) -&gt; ValueCacheKeyHash
+	<span class="kw">where
+		</span>H: AsRef&lt;[u8]&gt;,
 	{
-		<span class="kw">let</span> <span class="ident">hasher</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::hash_partial_data</span>(<span class="ident">storage_root</span>);
+		<span class="kw">let </span>hasher = <span class="self">Self</span>::hash_partial_data(storage_root);
 
-		<span class="ident">ValueCacheKeyHash::from_hasher_and_storage_key</span>(<span class="ident">hasher</span>, <span class="ident">key</span>)
+		ValueCacheKeyHash::from_hasher_and_storage_key(hasher, key)
 	}
 
-	<span class="doccomment">/// Returns the `hash` that identifies the current instance.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ValueCacheKeyHash</span> {
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::Value</span> { <span class="ident">hash</span>, .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Ref</span> { <span class="ident">hash</span>, .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Hash</span> { <span class="ident">hash</span>, .. } =&gt; <span class="kw-2">*</span><span class="ident">hash</span>,
+	<span class="doccomment">/// Returns the `hash` that identifies the current instance.
+	</span><span class="kw">pub fn </span>get_hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ValueCacheKeyHash {
+		<span class="kw">match </span><span class="self">self </span>{
+			<span class="self">Self</span>::Value { hash, .. } | <span class="self">Self</span>::Ref { hash, .. } | <span class="self">Self</span>::Hash { hash, .. } =&gt; <span class="kw-2">*</span>hash,
 		}
 	}
 
-	<span class="doccomment">/// Returns the stored storage root.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">storage_root</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">H</span><span class="op">&gt;</span> {
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::Value</span> { <span class="ident">storage_root</span>, .. } <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Ref</span> { <span class="ident">storage_root</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="ident">storage_root</span>),
-			<span class="ident"><span class="self">Self</span>::Hash</span> { .. } =&gt; <span class="prelude-val">None</span>,
+	<span class="doccomment">/// Returns the stored storage root.
+	</span><span class="kw">pub fn </span>storage_root(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>H&gt; {
+		<span class="kw">match </span><span class="self">self </span>{
+			<span class="self">Self</span>::Value { storage_root, .. } | <span class="self">Self</span>::Ref { storage_root, .. } =&gt; <span class="prelude-val">Some</span>(storage_root),
+			<span class="self">Self</span>::Hash { .. } =&gt; <span class="prelude-val">None</span>,
 		}
 	}
 
-	<span class="doccomment">/// Returns the stored storage key.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">storage_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::Ref</span> { <span class="ident">storage_key</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">storage_key</span>),
-			<span class="ident"><span class="self">Self</span>::Value</span> { <span class="ident">storage_key</span>, .. } =&gt; <span class="prelude-val">Some</span>(<span class="ident">storage_key</span>),
-			<span class="ident"><span class="self">Self</span>::Hash</span> { .. } =&gt; <span class="prelude-val">None</span>,
-		}
-	}
-}
-
-<span class="comment">// Implement manually to ensure that the `Value` and `Hash` are treated equally.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">std::hash::Hash</span><span class="op">&gt;</span> <span class="ident">std::hash::Hash</span> <span class="kw">for</span> <span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">Hasher</span>: <span class="ident">std::hash::Hasher</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Hasher</span>) {
-		<span class="self">self</span>.<span class="ident">get_hash</span>().<span class="ident">hash</span>(<span class="ident">state</span>)
-	}
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> <span class="ident">nohash_hasher::IsEnabled</span> <span class="kw">for</span> <span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">H</span><span class="op">&gt;</span> {}
-
-<span class="comment">// Implement manually to ensure that the `Value` and `Hash` are treated equally.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">PartialEq</span><span class="op">&gt;</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">bool</span> {
-		<span class="comment">// First check if `self` or `other` is only the `Hash`.</span>
-		<span class="comment">// Then we only compare the `hash`. So, there could actually be some collision</span>
-		<span class="comment">// if two different storage roots and keys are mapping to the same key. See the</span>
-		<span class="comment">// [`ValueCacheKey`] docs for more information.</span>
-		<span class="kw">match</span> (<span class="self">self</span>, <span class="ident">other</span>) {
-			(<span class="ident"><span class="self">Self</span>::Hash</span> { <span class="ident">hash</span>, .. }, <span class="ident"><span class="self">Self</span>::Hash</span> { <span class="ident">hash</span>: <span class="ident">other_hash</span>, .. }) =&gt; <span class="ident">hash</span> <span class="op">==</span> <span class="ident">other_hash</span>,
-			(<span class="ident"><span class="self">Self</span>::Hash</span> { <span class="ident">hash</span>, .. }, <span class="kw">_</span>) =&gt; <span class="kw-2">*</span><span class="ident">hash</span> <span class="op">==</span> <span class="ident">other</span>.<span class="ident">get_hash</span>(),
-			(<span class="kw">_</span>, <span class="ident"><span class="self">Self</span>::Hash</span> { <span class="ident">hash</span>: <span class="ident">other_hash</span>, .. }) =&gt; <span class="self">self</span>.<span class="ident">get_hash</span>() <span class="op">==</span> <span class="kw-2">*</span><span class="ident">other_hash</span>,
-			<span class="comment">// If both are not the `Hash` variant, we compare all the values.</span>
-			<span class="kw">_</span> =&gt;
-				<span class="self">self</span>.<span class="ident">get_hash</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">get_hash</span>() <span class="op">&amp;&amp;</span>
-					<span class="self">self</span>.<span class="ident">storage_root</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">storage_root</span>() <span class="op">&amp;&amp;</span>
-					<span class="self">self</span>.<span class="ident">storage_key</span>() <span class="op">==</span> <span class="ident">other</span>.<span class="ident">storage_key</span>(),
+	<span class="doccomment">/// Returns the stored storage key.
+	</span><span class="kw">pub fn </span>storage_key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt; {
+		<span class="kw">match </span><span class="self">self </span>{
+			<span class="self">Self</span>::Ref { storage_key, .. } =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>storage_key),
+			<span class="self">Self</span>::Value { storage_key, .. } =&gt; <span class="prelude-val">Some</span>(storage_key),
+			<span class="self">Self</span>::Hash { .. } =&gt; <span class="prelude-val">None</span>,
 		}
 	}
 }
 
-<span class="doccomment">/// The shared value cache.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The cache ensures that it stays in the configured size bounds.</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">SharedValueCache</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The cached nodes, ordered by least recently used.</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">lru</span>: <span class="ident">NoHashingLruCache</span><span class="op">&lt;</span><span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">H</span><span class="op">&gt;</span>, <span class="ident">CachedValue</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// The size of [`Self::lru`] in bytes.</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="ident">size_in_bytes</span>: <span class="ident">usize</span>,
-	<span class="doccomment">/// The maximum cache size of [`Self::lru`].</span>
-	<span class="ident">maximum_cache_size</span>: <span class="ident">CacheSize</span>,
-	<span class="doccomment">/// All known storage keys that are stored in [`Self::lru`].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This is used to de-duplicate keys in memory that use the</span>
-	<span class="doccomment">/// same [`SharedValueCache::storage_key`], but have a different</span>
-	<span class="doccomment">/// [`SharedValueCache::storage_root`].</span>
-	<span class="ident">known_storage_keys</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="comment">// Implement manually to ensure that the `Value` and `Hash` are treated equally.
+</span><span class="kw">impl</span>&lt;H: std::hash::Hash&gt; std::hash::Hash <span class="kw">for </span>ValueCacheKey&lt;<span class="lifetime">&#39;_</span>, H&gt; {
+	<span class="kw">fn </span>hash&lt;Hasher: std::hash::Hasher&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, state: <span class="kw-2">&amp;mut </span>Hasher) {
+		<span class="self">self</span>.get_hash().hash(state)
+	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">SharedValueCache</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Create a new instance.</span>
-	<span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cache_size</span>: <span class="ident">CacheSize</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> {
-			<span class="ident">lru</span>: <span class="ident">NoHashingLruCache::unbounded_with_hasher</span>(<span class="ident">Default::default</span>()),
-			<span class="ident">size_in_bytes</span>: <span class="number">0</span>,
-			<span class="ident">maximum_cache_size</span>: <span class="ident">cache_size</span>,
-			<span class="ident">known_storage_keys</span>: <span class="ident">Default::default</span>(),
+<span class="kw">impl</span>&lt;H&gt; nohash_hasher::IsEnabled <span class="kw">for </span>ValueCacheKey&lt;<span class="lifetime">&#39;_</span>, H&gt; {}
+
+<span class="comment">// Implement manually to ensure that the `Value` and `Hash` are treated equally.
+</span><span class="kw">impl</span>&lt;H: PartialEq&gt; PartialEq <span class="kw">for </span>ValueCacheKey&lt;<span class="lifetime">&#39;_</span>, H&gt; {
+	<span class="kw">fn </span>eq(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; bool {
+		<span class="comment">// First check if `self` or `other` is only the `Hash`.
+		// Then we only compare the `hash`. So, there could actually be some collision
+		// if two different storage roots and keys are mapping to the same key. See the
+		// [`ValueCacheKey`] docs for more information.
+		</span><span class="kw">match </span>(<span class="self">self</span>, other) {
+			(<span class="self">Self</span>::Hash { hash, .. }, <span class="self">Self</span>::Hash { hash: other_hash, .. }) =&gt; hash == other_hash,
+			(<span class="self">Self</span>::Hash { hash, .. }, <span class="kw">_</span>) =&gt; <span class="kw-2">*</span>hash == other.get_hash(),
+			(<span class="kw">_</span>, <span class="self">Self</span>::Hash { hash: other_hash, .. }) =&gt; <span class="self">self</span>.get_hash() == <span class="kw-2">*</span>other_hash,
+			<span class="comment">// If both are not the `Hash` variant, we compare all the values.
+			</span><span class="kw">_ </span>=&gt;
+				<span class="self">self</span>.get_hash() == other.get_hash() &amp;&amp;
+					<span class="self">self</span>.storage_root() == other.storage_root() &amp;&amp;
+					<span class="self">self</span>.storage_key() == other.storage_key(),
+		}
+	}
+}
+
+<span class="doccomment">/// The shared value cache.
+///
+/// The cache ensures that it stays in the configured size bounds.
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>SharedValueCache&lt;H&gt; {
+	<span class="doccomment">/// The cached nodes, ordered by least recently used.
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) lru: NoHashingLruCache&lt;ValueCacheKey&lt;<span class="lifetime">&#39;static</span>, H&gt;, CachedValue&lt;H&gt;&gt;,
+	<span class="doccomment">/// The size of [`Self::lru`] in bytes.
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) size_in_bytes: usize,
+	<span class="doccomment">/// The maximum cache size of [`Self::lru`].
+	</span>maximum_cache_size: CacheSize,
+	<span class="doccomment">/// All known storage keys that are stored in [`Self::lru`].
+	///
+	/// This is used to de-duplicate keys in memory that use the
+	/// same [`SharedValueCache::storage_key`], but have a different
+	/// [`SharedValueCache::storage_root`].
+	</span>known_storage_keys: HashSet&lt;Arc&lt;[u8]&gt;&gt;,
+}
+
+<span class="kw">impl</span>&lt;H: Eq + std::hash::Hash + Clone + Copy + AsRef&lt;[u8]&gt;&gt; SharedValueCache&lt;H&gt; {
+	<span class="doccomment">/// Create a new instance.
+	</span><span class="kw">fn </span>new(cache_size: CacheSize) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			lru: NoHashingLruCache::unbounded_with_hasher(Default::default()),
+			size_in_bytes: <span class="number">0</span>,
+			maximum_cache_size: cache_size,
+			known_storage_keys: Default::default(),
 		}
 	}
 
-	<span class="doccomment">/// Get the [`CachedValue`] for `key`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This doesn&#39;t change the least recently order in the internal [`LruCache`].</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">CachedValue</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Get the [`CachedValue`] for `key`.
+	///
+	/// This doesn&#39;t change the least recently order in the internal [`LruCache`].
+	</span><span class="kw">pub fn </span>get&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>ValueCacheKey&lt;H&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>CachedValue&lt;H&gt;&gt; {
 		<span class="macro">debug_assert!</span>(
-			<span class="op">!</span><span class="macro">matches!</span>(<span class="ident">key</span>, <span class="ident">ValueCacheKey::Hash</span> { .. }),
-			<span class="string">&quot;`get` can not be called with `Hash` variant as this may returns the wrong value.&quot;</span>
-		);
+			!<span class="macro">matches!</span>(key, ValueCacheKey::Hash { .. }),
+			<span class="string">&quot;`get` can not be called with `Hash` variant as this may returns the wrong value.&quot;
+		</span>);
 
-		<span class="self">self</span>.<span class="ident">lru</span>.<span class="ident">peek</span>(<span class="kw">unsafe</span> {
-			<span class="comment">// SAFETY</span>
-			<span class="comment">//</span>
-			<span class="comment">// We need to convert the lifetime to make the compiler happy. However, as</span>
-			<span class="comment">// we only use the `key` to looking up the value this lifetime conversion is</span>
-			<span class="comment">// safe.</span>
-			<span class="ident">mem::transmute</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">H</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">key</span>)
+		<span class="self">self</span>.lru.peek(<span class="kw">unsafe </span>{
+			<span class="comment">// SAFETY
+			//
+			// We need to convert the lifetime to make the compiler happy. However, as
+			// we only use the `key` to looking up the value this lifetime conversion is
+			// safe.
+			</span>mem::transmute::&lt;<span class="kw-2">&amp;</span>ValueCacheKey&lt;<span class="lifetime">&#39;_</span>, H&gt;, <span class="kw-2">&amp;</span>ValueCacheKey&lt;<span class="lifetime">&#39;static</span>, H&gt;&gt;(key)
 		})
 	}
 
-	<span class="doccomment">/// Update the cache with the `added` values and the `accessed` values.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The `added` values are the ones that have been collected by doing operations on the trie and</span>
-	<span class="doccomment">/// now should be stored in the shared cache. The `accessed` values are only referenced by the</span>
-	<span class="doccomment">/// [`ValueCacheKeyHash`] and represent the values that were retrieved from this shared cache</span>
-	<span class="doccomment">/// through [`Self::get`]. These `accessed` values are being put to the front of the internal</span>
-	<span class="doccomment">/// [`LruCache`] like the `added` ones.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// After the internal [`LruCache`] was updated, it is ensured that the internal [`LruCache`] is</span>
-	<span class="doccomment">/// inside its bounds ([`Self::maximum_size_in_bytes`]).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">update</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">added</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">H</span><span class="op">&gt;</span>, <span class="ident">CachedValue</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
-		<span class="ident">accessed</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">ValueCacheKeyHash</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Update the cache with the `added` values and the `accessed` values.
+	///
+	/// The `added` values are the ones that have been collected by doing operations on the trie and
+	/// now should be stored in the shared cache. The `accessed` values are only referenced by the
+	/// [`ValueCacheKeyHash`] and represent the values that were retrieved from this shared cache
+	/// through [`Self::get`]. These `accessed` values are being put to the front of the internal
+	/// [`LruCache`] like the `added` ones.
+	///
+	/// After the internal [`LruCache`] was updated, it is ensured that the internal [`LruCache`] is
+	/// inside its bounds ([`Self::maximum_size_in_bytes`]).
+	</span><span class="kw">pub fn </span>update(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		added: <span class="kw">impl </span>IntoIterator&lt;Item = (ValueCacheKey&lt;<span class="lifetime">&#39;static</span>, H&gt;, CachedValue&lt;H&gt;)&gt;,
+		accessed: <span class="kw">impl </span>IntoIterator&lt;Item = ValueCacheKeyHash&gt;,
 	) {
-		<span class="comment">// The base size in memory per ([`ValueCacheKey&lt;H&gt;`], [`CachedValue`]).</span>
-		<span class="kw">let</span> <span class="ident">base_size</span> <span class="op">=</span> <span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span>() <span class="op">+</span> <span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">CachedValue</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-		<span class="kw">let</span> <span class="ident">known_keys_entry_size</span> <span class="op">=</span> <span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="comment">// The base size in memory per ([`ValueCacheKey&lt;H&gt;`], [`CachedValue`]).
+		</span><span class="kw">let </span>base_size = mem::size_of::&lt;ValueCacheKey&lt;H&gt;&gt;() + mem::size_of::&lt;CachedValue&lt;H&gt;&gt;();
+		<span class="kw">let </span>known_keys_entry_size = mem::size_of::&lt;Arc&lt;[u8]&gt;&gt;();
 
-		<span class="kw">let</span> <span class="ident">update_size_in_bytes</span> <span class="op">=</span>
-			<span class="op">|</span><span class="ident">size_in_bytes</span>: <span class="kw-2">&amp;mut</span> <span class="ident">usize</span>, <span class="ident">r_key</span>: <span class="ident">Arc</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>, <span class="ident">known_keys</span>: <span class="kw-2">&amp;mut</span> <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">|</span> {
-				<span class="comment">// If the `strong_count == 2`, it means this is the last instance of the key.</span>
-				<span class="comment">// One being `r_key` and the other being stored in `known_storage_keys`.</span>
-				<span class="kw">let</span> <span class="ident">last_instance</span> <span class="op">=</span> <span class="ident">Arc::strong_count</span>(<span class="kw-2">&amp;</span><span class="ident">r_key</span>) <span class="op">==</span> <span class="number">2</span>;
+		<span class="kw">let </span>update_size_in_bytes =
+			|size_in_bytes: <span class="kw-2">&amp;mut </span>usize, r_key: Arc&lt;[u8]&gt;, known_keys: <span class="kw-2">&amp;mut </span>HashSet&lt;Arc&lt;[u8]&gt;&gt;| {
+				<span class="comment">// If the `strong_count == 2`, it means this is the last instance of the key.
+				// One being `r_key` and the other being stored in `known_storage_keys`.
+				</span><span class="kw">let </span>last_instance = Arc::strong_count(<span class="kw-2">&amp;</span>r_key) == <span class="number">2</span>;
 
-				<span class="kw">let</span> <span class="ident">key_len</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">last_instance</span> {
-					<span class="ident">known_keys</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">r_key</span>);
-					<span class="ident">r_key</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">known_keys_entry_size</span>
-				} <span class="kw">else</span> {
-					<span class="comment">// The key is still in `keys`, because it is still used by another</span>
-					<span class="comment">// `ValueCacheKey&lt;H&gt;`.</span>
-					<span class="number">0</span>
-				};
+				<span class="kw">let </span>key_len = <span class="kw">if </span>last_instance {
+					known_keys.remove(<span class="kw-2">&amp;</span>r_key);
+					r_key.len() + known_keys_entry_size
+				} <span class="kw">else </span>{
+					<span class="comment">// The key is still in `keys`, because it is still used by another
+					// `ValueCacheKey&lt;H&gt;`.
+					</span><span class="number">0
+				</span>};
 
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">new_size_in_bytes</span>) <span class="op">=</span> <span class="ident">size_in_bytes</span>.<span class="ident">checked_sub</span>(<span class="ident">key_len</span> <span class="op">+</span> <span class="ident">base_size</span>) {
-					<span class="kw-2">*</span><span class="ident">size_in_bytes</span> <span class="op">=</span> <span class="ident">new_size_in_bytes</span>;
-				} <span class="kw">else</span> {
-					<span class="kw-2">*</span><span class="ident">size_in_bytes</span> <span class="op">=</span> <span class="number">0</span>;
-					<span class="macro">tracing::error!</span>(<span class="ident">target</span>: <span class="ident">LOG_TARGET</span>, <span class="string">&quot;`SharedValueCache` underflow detected!&quot;</span>,);
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(new_size_in_bytes) = size_in_bytes.checked_sub(key_len + base_size) {
+					<span class="kw-2">*</span>size_in_bytes = new_size_in_bytes;
+				} <span class="kw">else </span>{
+					<span class="kw-2">*</span>size_in_bytes = <span class="number">0</span>;
+					<span class="macro">tracing::error!</span>(target: LOG_TARGET, <span class="string">&quot;`SharedValueCache` underflow detected!&quot;</span>,);
 				}
 			};
 
-		<span class="ident">accessed</span>.<span class="ident">into_iter</span>().<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> {
-			<span class="comment">// Access every node in the lru to put it to the front.</span>
-			<span class="comment">// As we are using the `Hash` variant here, it may leads to putting the wrong value to</span>
-			<span class="comment">// the top. However, the only consequence of this is that we may prune a recently used</span>
-			<span class="comment">// value to early.</span>
-			<span class="self">self</span>.<span class="ident">lru</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">ValueCacheKey::Hash</span> {
-				<span class="ident">hash</span>: <span class="ident">key</span>,
-				<span class="ident">_i_read_the_documentation</span>: <span class="ident">IReadTheDocumentation</span>(()),
+		accessed.into_iter().for_each(|key| {
+			<span class="comment">// Access every node in the lru to put it to the front.
+			// As we are using the `Hash` variant here, it may leads to putting the wrong value to
+			// the top. However, the only consequence of this is that we may prune a recently used
+			// value to early.
+			</span><span class="self">self</span>.lru.get(<span class="kw-2">&amp;</span>ValueCacheKey::Hash {
+				hash: key,
+				_i_read_the_documentation: IReadTheDocumentation(()),
 			});
 		});
 
-		<span class="ident">added</span>.<span class="ident">into_iter</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">key</span>, <span class="ident">value</span>)<span class="op">|</span> {
-			<span class="kw">let</span> (<span class="ident">storage_root</span>, <span class="ident">storage_key</span>, <span class="ident">key_hash</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">key</span> {
-				<span class="ident">ValueCacheKey::Hash</span> { .. } =&gt; {
-					<span class="comment">// Ignore the hash variant and try the next.</span>
-					<span class="macro">tracing::error!</span>(
-						<span class="ident">target</span>: <span class="ident">LOG_TARGET</span>,
+		added.into_iter().for_each(|(key, value)| {
+			<span class="kw">let </span>(storage_root, storage_key, key_hash) = <span class="kw">match </span>key {
+				ValueCacheKey::Hash { .. } =&gt; {
+					<span class="comment">// Ignore the hash variant and try the next.
+					</span><span class="macro">tracing::error!</span>(
+						target: LOG_TARGET,
 						<span class="string">&quot;`SharedValueCached::update` was called with a key to add \
 						that uses the `Hash` variant. This would lead to potential hash collision!&quot;</span>,
 					);
-					<span class="kw">return</span>
-				},
-				<span class="ident">ValueCacheKey::Ref</span> { <span class="ident">storage_key</span>, <span class="ident">storage_root</span>, <span class="ident">hash</span> } =&gt;
-					(<span class="ident">storage_root</span>, <span class="ident">storage_key</span>.<span class="ident">into</span>(), <span class="ident">hash</span>),
-				<span class="ident">ValueCacheKey::Value</span> { <span class="ident">storage_root</span>, <span class="ident">storage_key</span>, <span class="ident">hash</span> } =&gt;
-					(<span class="ident">storage_root</span>, <span class="ident">storage_key</span>, <span class="ident">hash</span>),
+					<span class="kw">return
+				</span>},
+				ValueCacheKey::Ref { storage_key, storage_root, hash } =&gt;
+					(storage_root, storage_key.into(), hash),
+				ValueCacheKey::Value { storage_root, storage_key, hash } =&gt;
+					(storage_root, storage_key, hash),
 			};
 
-			<span class="kw">let</span> (<span class="ident">size_update</span>, <span class="ident">storage_key</span>) <span class="op">=</span>
-				<span class="kw">match</span> <span class="self">self</span>.<span class="ident">known_storage_keys</span>.<span class="ident">entry</span>(<span class="ident">storage_key</span>.<span class="ident">clone</span>()) {
-					<span class="ident">SetEntry::Vacant</span>(<span class="ident">v</span>) =&gt; {
-						<span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">get</span>().<span class="ident">len</span>();
-						<span class="ident">v</span>.<span class="ident">insert</span>();
+			<span class="kw">let </span>(size_update, storage_key) =
+				<span class="kw">match </span><span class="self">self</span>.known_storage_keys.entry(storage_key.clone()) {
+					SetEntry::Vacant(v) =&gt; {
+						<span class="kw">let </span>len = v.get().len();
+						v.insert();
 
-						<span class="comment">// If the key was unknown, we need to also take its length and the size of</span>
-						<span class="comment">// the entry of `known_keys` into account.</span>
-						(<span class="ident">len</span> <span class="op">+</span> <span class="ident">base_size</span> <span class="op">+</span> <span class="ident">known_keys_entry_size</span>, <span class="ident">storage_key</span>)
+						<span class="comment">// If the key was unknown, we need to also take its length and the size of
+						// the entry of `known_keys` into account.
+						</span>(len + base_size + known_keys_entry_size, storage_key)
 					},
-					<span class="ident">SetEntry::Occupied</span>(<span class="ident">o</span>) =&gt; {
-						<span class="comment">// Key is known</span>
-						(<span class="ident">base_size</span>, <span class="ident">o</span>.<span class="ident">get</span>().<span class="ident">clone</span>())
+					SetEntry::Occupied(o) =&gt; {
+						<span class="comment">// Key is known
+						</span>(base_size, o.get().clone())
 					},
 				};
 
-			<span class="self">self</span>.<span class="ident">size_in_bytes</span> <span class="op">+</span><span class="op">=</span> <span class="ident">size_update</span>;
+			<span class="self">self</span>.size_in_bytes += size_update;
 
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">r_key</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>
-				.<span class="ident">lru</span>
-				.<span class="ident">push</span>(<span class="ident">ValueCacheKey::Value</span> { <span class="ident">storage_key</span>, <span class="ident">storage_root</span>, <span class="ident">hash</span>: <span class="ident">key_hash</span> }, <span class="ident">value</span>)
+			<span class="kw">if let </span><span class="prelude-val">Some</span>((r_key, <span class="kw">_</span>)) = <span class="self">self
+				</span>.lru
+				.push(ValueCacheKey::Value { storage_key, storage_root, hash: key_hash }, value)
 			{
-				<span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueCacheKey::Value</span> { <span class="ident">storage_key</span>, .. } <span class="op">=</span> <span class="ident">r_key</span> {
-					<span class="ident">update_size_in_bytes</span>(
-						<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">size_in_bytes</span>,
-						<span class="ident">storage_key</span>,
-						<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">known_storage_keys</span>,
+				<span class="kw">if let </span>ValueCacheKey::Value { storage_key, .. } = r_key {
+					update_size_in_bytes(
+						<span class="kw-2">&amp;mut </span><span class="self">self</span>.size_in_bytes,
+						storage_key,
+						<span class="kw-2">&amp;mut </span><span class="self">self</span>.known_storage_keys,
 					);
 				}
 			}
 
-			<span class="comment">// Directly ensure that we respect the maximum size. By doing it directly here we</span>
-			<span class="comment">// ensure that the internal map of the [`LruCache`] doesn&#39;t grow too much.</span>
-			<span class="kw">while</span> <span class="self">self</span>.<span class="ident">maximum_cache_size</span>.<span class="ident">exceeds</span>(<span class="self">self</span>.<span class="ident">size_in_bytes</span>) {
-				<span class="comment">// This should always be `Some(_)`, otherwise something is wrong!</span>
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">r_key</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">lru</span>.<span class="ident">pop_lru</span>() {
-					<span class="kw">if</span> <span class="kw">let</span> <span class="ident">ValueCacheKey::Value</span> { <span class="ident">storage_key</span>, .. } <span class="op">=</span> <span class="ident">r_key</span> {
-						<span class="ident">update_size_in_bytes</span>(
-							<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">size_in_bytes</span>,
-							<span class="ident">storage_key</span>,
-							<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">known_storage_keys</span>,
+			<span class="comment">// Directly ensure that we respect the maximum size. By doing it directly here we
+			// ensure that the internal map of the [`LruCache`] doesn&#39;t grow too much.
+			</span><span class="kw">while </span><span class="self">self</span>.maximum_cache_size.exceeds(<span class="self">self</span>.size_in_bytes) {
+				<span class="comment">// This should always be `Some(_)`, otherwise something is wrong!
+				</span><span class="kw">if let </span><span class="prelude-val">Some</span>((r_key, <span class="kw">_</span>)) = <span class="self">self</span>.lru.pop_lru() {
+					<span class="kw">if let </span>ValueCacheKey::Value { storage_key, .. } = r_key {
+						update_size_in_bytes(
+							<span class="kw-2">&amp;mut </span><span class="self">self</span>.size_in_bytes,
+							storage_key,
+							<span class="kw-2">&amp;mut </span><span class="self">self</span>.known_storage_keys,
 						);
 					}
 				}
@@ -1144,220 +1138,219 @@
 		});
 	}
 
-	<span class="doccomment">/// Reset the cache.</span>
-	<span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-		<span class="self">self</span>.<span class="ident">size_in_bytes</span> <span class="op">=</span> <span class="number">0</span>;
-		<span class="self">self</span>.<span class="ident">lru</span>.<span class="ident">clear</span>();
-		<span class="self">self</span>.<span class="ident">known_storage_keys</span>.<span class="ident">clear</span>();
+	<span class="doccomment">/// Reset the cache.
+	</span><span class="kw">fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+		<span class="self">self</span>.size_in_bytes = <span class="number">0</span>;
+		<span class="self">self</span>.lru.clear();
+		<span class="self">self</span>.known_storage_keys.clear();
 	}
 }
 
-<span class="doccomment">/// The inner of [`SharedTrieCache`].</span>
-<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">SharedTrieCacheInner</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span> {
-	<span class="ident">node_cache</span>: <span class="ident">SharedNodeCache</span><span class="op">&lt;</span><span class="ident">H::Out</span><span class="op">&gt;</span>,
-	<span class="ident">value_cache</span>: <span class="ident">SharedValueCache</span><span class="op">&lt;</span><span class="ident">H::Out</span><span class="op">&gt;</span>,
+<span class="doccomment">/// The inner of [`SharedTrieCache`].
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>SharedTrieCacheInner&lt;H: Hasher&gt; {
+	node_cache: SharedNodeCache&lt;H::Out&gt;,
+	value_cache: SharedValueCache&lt;H::Out&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span> <span class="ident">SharedTrieCacheInner</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Returns a reference to the [`SharedValueCache`].</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">value_cache</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SharedValueCache</span><span class="op">&lt;</span><span class="ident">H::Out</span><span class="op">&gt;</span> {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value_cache</span>
+<span class="kw">impl</span>&lt;H: Hasher&gt; SharedTrieCacheInner&lt;H&gt; {
+	<span class="doccomment">/// Returns a reference to the [`SharedValueCache`].
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>value_cache(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SharedValueCache&lt;H::Out&gt; {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.value_cache
 	}
 
-	<span class="doccomment">/// Returns a mutable reference to the [`SharedValueCache`].</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">value_cache_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">SharedValueCache</span><span class="op">&lt;</span><span class="ident">H::Out</span><span class="op">&gt;</span> {
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">value_cache</span>
+	<span class="doccomment">/// Returns a mutable reference to the [`SharedValueCache`].
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>value_cache_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>SharedValueCache&lt;H::Out&gt; {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.value_cache
 	}
 
-	<span class="doccomment">/// Returns a reference to the [`SharedNodeCache`].</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">node_cache</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SharedNodeCache</span><span class="op">&lt;</span><span class="ident">H::Out</span><span class="op">&gt;</span> {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">node_cache</span>
+	<span class="doccomment">/// Returns a reference to the [`SharedNodeCache`].
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>node_cache(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SharedNodeCache&lt;H::Out&gt; {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.node_cache
 	}
 
-	<span class="doccomment">/// Returns a mutable reference to the [`SharedNodeCache`].</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">node_cache_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">SharedNodeCache</span><span class="op">&lt;</span><span class="ident">H::Out</span><span class="op">&gt;</span> {
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">node_cache</span>
-	}
-}
-
-<span class="doccomment">/// The shared trie cache.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It should be instantiated once per node. It will hold the trie nodes and values of all</span>
-<span class="doccomment">/// operations to the state. To not use all available memory it will ensure to stay in the</span>
-<span class="doccomment">/// bounds given via the [`CacheSize`] at startup.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The instance of this object can be shared between multiple threads.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SharedTrieCache</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span> {
-	<span class="ident">inner</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">SharedTrieCacheInner</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">SharedTrieCache</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">clone</span>() }
+	<span class="doccomment">/// Returns a mutable reference to the [`SharedNodeCache`].
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>node_cache_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>SharedNodeCache&lt;H::Out&gt; {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.node_cache
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">Hasher</span><span class="op">&gt;</span> <span class="ident">SharedTrieCache</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Create a new [`SharedTrieCache`].</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">cache_size</span>: <span class="ident">CacheSize</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> (<span class="ident">node_cache_size</span>, <span class="ident">value_cache_size</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">cache_size</span> {
-			<span class="ident">CacheSize::Maximum</span>(<span class="ident">max</span>) =&gt; {
-				<span class="comment">// Allocate 20% for the value cache.</span>
-				<span class="kw">let</span> <span class="ident">value_cache_size_in_bytes</span> <span class="op">=</span> (<span class="ident">max</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">*</span> <span class="number">0.20</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+<span class="doccomment">/// The shared trie cache.
+///
+/// It should be instantiated once per node. It will hold the trie nodes and values of all
+/// operations to the state. To not use all available memory it will ensure to stay in the
+/// bounds given via the [`CacheSize`] at startup.
+///
+/// The instance of this object can be shared between multiple threads.
+</span><span class="kw">pub struct </span>SharedTrieCache&lt;H: Hasher&gt; {
+	inner: Arc&lt;RwLock&lt;SharedTrieCacheInner&lt;H&gt;&gt;&gt;,
+}
+
+<span class="kw">impl</span>&lt;H: Hasher&gt; Clone <span class="kw">for </span>SharedTrieCache&lt;H&gt; {
+	<span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ inner: <span class="self">self</span>.inner.clone() }
+	}
+}
+
+<span class="kw">impl</span>&lt;H: Hasher&gt; SharedTrieCache&lt;H&gt; {
+	<span class="doccomment">/// Create a new [`SharedTrieCache`].
+	</span><span class="kw">pub fn </span>new(cache_size: CacheSize) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>(node_cache_size, value_cache_size) = <span class="kw">match </span>cache_size {
+			CacheSize::Maximum(max) =&gt; {
+				<span class="comment">// Allocate 20% for the value cache.
+				</span><span class="kw">let </span>value_cache_size_in_bytes = (max <span class="kw">as </span>f32 * <span class="number">0.20</span>) <span class="kw">as </span>usize;
 
 				(
-					<span class="ident">CacheSize::Maximum</span>(<span class="ident">max</span> <span class="op">-</span> <span class="ident">value_cache_size_in_bytes</span>),
-					<span class="ident">CacheSize::Maximum</span>(<span class="ident">value_cache_size_in_bytes</span>),
+					CacheSize::Maximum(max - value_cache_size_in_bytes),
+					CacheSize::Maximum(value_cache_size_in_bytes),
 				)
 			},
-			<span class="ident">CacheSize::Unlimited</span> =&gt; (<span class="ident">CacheSize::Unlimited</span>, <span class="ident">CacheSize::Unlimited</span>),
+			CacheSize::Unlimited =&gt; (CacheSize::Unlimited, CacheSize::Unlimited),
 		};
 
-		<span class="self">Self</span> {
-			<span class="ident">inner</span>: <span class="ident">Arc::new</span>(<span class="ident">RwLock::new</span>(<span class="ident">SharedTrieCacheInner</span> {
-				<span class="ident">node_cache</span>: <span class="ident">SharedNodeCache::new</span>(<span class="ident">node_cache_size</span>),
-				<span class="ident">value_cache</span>: <span class="ident">SharedValueCache::new</span>(<span class="ident">value_cache_size</span>),
+		<span class="self">Self </span>{
+			inner: Arc::new(RwLock::new(SharedTrieCacheInner {
+				node_cache: SharedNodeCache::new(node_cache_size),
+				value_cache: SharedValueCache::new(value_cache_size),
 			})),
 		}
 	}
 
-	<span class="doccomment">/// Create a new [`LocalTrieCache`](super::LocalTrieCache) instance from this shared cache.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">local_cache</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident"><span class="kw">super</span>::LocalTrieCache</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-		<span class="ident"><span class="kw">super</span>::LocalTrieCache</span> {
-			<span class="ident">shared</span>: <span class="self">self</span>.<span class="ident">clone</span>(),
-			<span class="ident">node_cache</span>: <span class="ident">Default::default</span>(),
-			<span class="ident">value_cache</span>: <span class="ident">Default::default</span>(),
-			<span class="ident">shared_node_cache_access</span>: <span class="ident">Default::default</span>(),
-			<span class="ident">shared_value_cache_access</span>: <span class="ident">Default::default</span>(),
+	<span class="doccomment">/// Create a new [`LocalTrieCache`](super::LocalTrieCache) instance from this shared cache.
+	</span><span class="kw">pub fn </span>local_cache(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">super</span>::LocalTrieCache&lt;H&gt; {
+		<span class="kw">super</span>::LocalTrieCache {
+			shared: <span class="self">self</span>.clone(),
+			node_cache: Default::default(),
+			value_cache: Default::default(),
+			shared_node_cache_access: Default::default(),
+			shared_value_cache_access: Default::default(),
 		}
 	}
 
-	<span class="doccomment">/// Returns the used memory size of this cache in bytes.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">used_memory_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-		<span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">read</span>();
-		<span class="kw">let</span> <span class="ident">value_cache_size</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">value_cache</span>.<span class="ident">size_in_bytes</span>;
-		<span class="kw">let</span> <span class="ident">node_cache_size</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">node_cache</span>.<span class="ident">size_in_bytes</span>;
+	<span class="doccomment">/// Returns the used memory size of this cache in bytes.
+	</span><span class="kw">pub fn </span>used_memory_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+		<span class="kw">let </span>inner = <span class="self">self</span>.inner.read();
+		<span class="kw">let </span>value_cache_size = inner.value_cache.size_in_bytes;
+		<span class="kw">let </span>node_cache_size = inner.node_cache.size_in_bytes;
 
-		<span class="ident">node_cache_size</span> <span class="op">+</span> <span class="ident">value_cache_size</span>
+		node_cache_size + value_cache_size
 	}
 
-	<span class="doccomment">/// Reset the node cache.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset_node_cache</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">write</span>().<span class="ident">node_cache</span>.<span class="ident">reset</span>();
+	<span class="doccomment">/// Reset the node cache.
+	</span><span class="kw">pub fn </span>reset_node_cache(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+		<span class="self">self</span>.inner.write().node_cache.reset();
 	}
 
-	<span class="doccomment">/// Reset the value cache.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset_value_cache</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">write</span>().<span class="ident">value_cache</span>.<span class="ident">reset</span>();
+	<span class="doccomment">/// Reset the value cache.
+	</span><span class="kw">pub fn </span>reset_value_cache(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+		<span class="self">self</span>.inner.write().value_cache.reset();
 	}
 
-	<span class="doccomment">/// Reset the entire cache.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.<span class="ident">reset_node_cache</span>();
-		<span class="self">self</span>.<span class="ident">reset_value_cache</span>();
+	<span class="doccomment">/// Reset the entire cache.
+	</span><span class="kw">pub fn </span>reset(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+		<span class="self">self</span>.reset_node_cache();
+		<span class="self">self</span>.reset_value_cache();
 	}
 
-	<span class="doccomment">/// Returns the read locked inner.</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">read_lock_inner</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RwLockReadGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">SharedTrieCacheInner</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">read</span>()
+	<span class="doccomment">/// Returns the read locked inner.
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>read_lock_inner(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RwLockReadGuard&lt;<span class="lifetime">&#39;_</span>, SharedTrieCacheInner&lt;H&gt;&gt; {
+		<span class="self">self</span>.inner.read()
 	}
 
-	<span class="doccomment">/// Returns the write locked inner.</span>
-	<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">write_lock_inner</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">RwLockWriteGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">SharedTrieCacheInner</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">write</span>()
+	<span class="doccomment">/// Returns the write locked inner.
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>write_lock_inner(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RwLockWriteGuard&lt;<span class="lifetime">&#39;_</span>, SharedTrieCacheInner&lt;H&gt;&gt; {
+		<span class="self">self</span>.inner.write()
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">sp_core::H256</span> <span class="kw">as</span> <span class="ident">Hash</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>sp_core::H256 <span class="kw">as </span>Hash;
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">shared_value_cache_works</span>() {
-		<span class="kw">let</span> <span class="ident">base_size</span> <span class="op">=</span> <span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">CachedValue</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>() <span class="op">+</span> <span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">ValueCacheKey</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-		<span class="kw">let</span> <span class="ident">arc_size</span> <span class="op">=</span> <span class="ident">mem::size_of</span>::<span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>shared_value_cache_works() {
+		<span class="kw">let </span>base_size = mem::size_of::&lt;CachedValue&lt;Hash&gt;&gt;() + mem::size_of::&lt;ValueCacheKey&lt;Hash&gt;&gt;();
+		<span class="kw">let </span>arc_size = mem::size_of::&lt;Arc&lt;[u8]&gt;&gt;();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cache</span> <span class="op">=</span> <span class="ident">SharedValueCache</span>::<span class="op">&lt;</span><span class="ident">sp_core::H256</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">CacheSize::Maximum</span>(
-			(<span class="ident">base_size</span> <span class="op">+</span> <span class="ident">arc_size</span> <span class="op">+</span> <span class="number">10</span>) <span class="op">*</span> <span class="number">10</span>,
+		<span class="kw">let </span><span class="kw-2">mut </span>cache = SharedValueCache::&lt;sp_core::H256&gt;::new(CacheSize::Maximum(
+			(base_size + arc_size + <span class="number">10</span>) * <span class="number">10</span>,
 		));
 
-		<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">10</span>];
+		<span class="kw">let </span>key = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">10</span>];
 
-		<span class="kw">let</span> <span class="ident">root0</span> <span class="op">=</span> <span class="ident">Hash::repeat_byte</span>(<span class="number">1</span>);
-		<span class="kw">let</span> <span class="ident">root1</span> <span class="op">=</span> <span class="ident">Hash::repeat_byte</span>(<span class="number">2</span>);
+		<span class="kw">let </span>root0 = Hash::repeat_byte(<span class="number">1</span>);
+		<span class="kw">let </span>root1 = Hash::repeat_byte(<span class="number">2</span>);
 
-		<span class="ident">cache</span>.<span class="ident">update</span>(
+		cache.update(
 			<span class="macro">vec!</span>[
-				(<span class="ident">ValueCacheKey::new_value</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..], <span class="ident">root0</span>), <span class="ident">CachedValue::NonExisting</span>),
-				(<span class="ident">ValueCacheKey::new_value</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..], <span class="ident">root1</span>), <span class="ident">CachedValue::NonExisting</span>),
+				(ValueCacheKey::new_value(<span class="kw-2">&amp;</span>key[..], root0), CachedValue::NonExisting),
+				(ValueCacheKey::new_value(<span class="kw-2">&amp;</span>key[..], root1), CachedValue::NonExisting),
 			],
 			<span class="macro">vec!</span>[],
 		);
 
-		<span class="comment">// Ensure that the basics are working</span>
-		<span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">cache</span>.<span class="ident">known_storage_keys</span>.<span class="ident">len</span>());
-		<span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">Arc::strong_count</span>(<span class="ident">cache</span>.<span class="ident">known_storage_keys</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..]).<span class="ident">unwrap</span>()));
-		<span class="macro">assert_eq!</span>(<span class="ident">base_size</span> <span class="op">*</span> <span class="number">2</span> <span class="op">+</span> <span class="ident">key</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">arc_size</span>, <span class="ident">cache</span>.<span class="ident">size_in_bytes</span>);
+		<span class="comment">// Ensure that the basics are working
+		</span><span class="macro">assert_eq!</span>(<span class="number">1</span>, cache.known_storage_keys.len());
+		<span class="macro">assert_eq!</span>(<span class="number">3</span>, Arc::strong_count(cache.known_storage_keys.get(<span class="kw-2">&amp;</span>key[..]).unwrap()));
+		<span class="macro">assert_eq!</span>(base_size * <span class="number">2 </span>+ key.len() + arc_size, cache.size_in_bytes);
 
-		<span class="comment">// Just accessing a key should not change anything on the size and number of entries.</span>
-		<span class="ident">cache</span>.<span class="ident">update</span>(<span class="macro">vec!</span>[], <span class="macro">vec!</span>[<span class="ident">ValueCacheKey::hash_data</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..], <span class="kw-2">&amp;</span><span class="ident">root0</span>)]);
-		<span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">cache</span>.<span class="ident">known_storage_keys</span>.<span class="ident">len</span>());
-		<span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">Arc::strong_count</span>(<span class="ident">cache</span>.<span class="ident">known_storage_keys</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..]).<span class="ident">unwrap</span>()));
-		<span class="macro">assert_eq!</span>(<span class="ident">base_size</span> <span class="op">*</span> <span class="number">2</span> <span class="op">+</span> <span class="ident">key</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">arc_size</span>, <span class="ident">cache</span>.<span class="ident">size_in_bytes</span>);
+		<span class="comment">// Just accessing a key should not change anything on the size and number of entries.
+		</span>cache.update(<span class="macro">vec!</span>[], <span class="macro">vec!</span>[ValueCacheKey::hash_data(<span class="kw-2">&amp;</span>key[..], <span class="kw-2">&amp;</span>root0)]);
+		<span class="macro">assert_eq!</span>(<span class="number">1</span>, cache.known_storage_keys.len());
+		<span class="macro">assert_eq!</span>(<span class="number">3</span>, Arc::strong_count(cache.known_storage_keys.get(<span class="kw-2">&amp;</span>key[..]).unwrap()));
+		<span class="macro">assert_eq!</span>(base_size * <span class="number">2 </span>+ key.len() + arc_size, cache.size_in_bytes);
 
-		<span class="comment">// Add 9 other entries and this should move out the key for `root1`.</span>
-		<span class="ident">cache</span>.<span class="ident">update</span>(
+		<span class="comment">// Add 9 other entries and this should move out the key for `root1`.
+		</span>cache.update(
 			(<span class="number">1</span>..<span class="number">10</span>)
-				.<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="macro">vec!</span>[<span class="ident">i</span>; <span class="number">10</span>])
-				.<span class="ident">map</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> (<span class="ident">ValueCacheKey::new_value</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..], <span class="ident">root0</span>), <span class="ident">CachedValue::NonExisting</span>)),
+				.map(|i| <span class="macro">vec!</span>[i; <span class="number">10</span>])
+				.map(|key| (ValueCacheKey::new_value(<span class="kw-2">&amp;</span>key[..], root0), CachedValue::NonExisting)),
 			<span class="macro">vec!</span>[],
 		);
 
-		<span class="macro">assert_eq!</span>(<span class="number">10</span>, <span class="ident">cache</span>.<span class="ident">known_storage_keys</span>.<span class="ident">len</span>());
-		<span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">Arc::strong_count</span>(<span class="ident">cache</span>.<span class="ident">known_storage_keys</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..]).<span class="ident">unwrap</span>()));
-		<span class="macro">assert_eq!</span>((<span class="ident">base_size</span> <span class="op">+</span> <span class="ident">key</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">arc_size</span>) <span class="op">*</span> <span class="number">10</span>, <span class="ident">cache</span>.<span class="ident">size_in_bytes</span>);
+		<span class="macro">assert_eq!</span>(<span class="number">10</span>, cache.known_storage_keys.len());
+		<span class="macro">assert_eq!</span>(<span class="number">2</span>, Arc::strong_count(cache.known_storage_keys.get(<span class="kw-2">&amp;</span>key[..]).unwrap()));
+		<span class="macro">assert_eq!</span>((base_size + key.len() + arc_size) * <span class="number">10</span>, cache.size_in_bytes);
 		<span class="macro">assert!</span>(<span class="macro">matches!</span>(
-			<span class="ident">cache</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">ValueCacheKey::new_ref</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="ident">root0</span>)).<span class="ident">unwrap</span>(),
-			<span class="ident">CachedValue</span>::<span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="ident">::NonExisting</span>
+			cache.get(<span class="kw-2">&amp;</span>ValueCacheKey::new_ref(<span class="kw-2">&amp;</span>key, root0)).unwrap(),
+			CachedValue::&lt;Hash&gt;::NonExisting
 		));
-		<span class="macro">assert!</span>(<span class="ident">cache</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">ValueCacheKey::new_ref</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="ident">root1</span>)).<span class="ident">is_none</span>());
+		<span class="macro">assert!</span>(cache.get(<span class="kw-2">&amp;</span>ValueCacheKey::new_ref(<span class="kw-2">&amp;</span>key, root1)).is_none());
 
-		<span class="ident">cache</span>.<span class="ident">update</span>(
-			<span class="macro">vec!</span>[(<span class="ident">ValueCacheKey::new_value</span>(<span class="macro">vec!</span>[<span class="number">10</span>; <span class="number">10</span>], <span class="ident">root0</span>), <span class="ident">CachedValue::NonExisting</span>)],
+		cache.update(
+			<span class="macro">vec!</span>[(ValueCacheKey::new_value(<span class="macro">vec!</span>[<span class="number">10</span>; <span class="number">10</span>], root0), CachedValue::NonExisting)],
 			<span class="macro">vec!</span>[],
 		);
 
-		<span class="macro">assert!</span>(<span class="ident">cache</span>.<span class="ident">known_storage_keys</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>[..]).<span class="ident">is_none</span>());
+		<span class="macro">assert!</span>(cache.known_storage_keys.get(<span class="kw-2">&amp;</span>key[..]).is_none());
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">value_cache_key_eq_works</span>() {
-		<span class="kw">let</span> <span class="ident">storage_key</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="string">b&quot;something&quot;</span>[..];
-		<span class="kw">let</span> <span class="ident">storage_key2</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="string">b&quot;something2&quot;</span>[..];
-		<span class="kw">let</span> <span class="ident">storage_root</span> <span class="op">=</span> <span class="ident">Hash::random</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>value_cache_key_eq_works() {
+		<span class="kw">let </span>storage_key = <span class="kw-2">&amp;</span><span class="string">b&quot;something&quot;</span>[..];
+		<span class="kw">let </span>storage_key2 = <span class="kw-2">&amp;</span><span class="string">b&quot;something2&quot;</span>[..];
+		<span class="kw">let </span>storage_root = Hash::random();
 
-		<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">ValueCacheKey::new_value</span>(<span class="ident">storage_key</span>, <span class="ident">storage_root</span>);
-		<span class="comment">// Ref gets the same hash, but a different storage key</span>
-		<span class="kw">let</span> <span class="ident">ref_</span> <span class="op">=</span>
-			<span class="ident">ValueCacheKey::Ref</span> { <span class="ident">storage_root</span>, <span class="ident">storage_key</span>: <span class="ident">storage_key2</span>, <span class="ident">hash</span>: <span class="ident">value</span>.<span class="ident">get_hash</span>() };
-		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident">ValueCacheKey::Hash</span> {
-			<span class="ident">hash</span>: <span class="ident">value</span>.<span class="ident">get_hash</span>(),
-			<span class="ident">_i_read_the_documentation</span>: <span class="ident">IReadTheDocumentation</span>(()),
+		<span class="kw">let </span>value = ValueCacheKey::new_value(storage_key, storage_root);
+		<span class="comment">// Ref gets the same hash, but a different storage key
+		</span><span class="kw">let </span>ref_ =
+			ValueCacheKey::Ref { storage_root, storage_key: storage_key2, hash: value.get_hash() };
+		<span class="kw">let </span>hash = ValueCacheKey::Hash {
+			hash: value.get_hash(),
+			_i_read_the_documentation: IReadTheDocumentation(()),
 		};
 
-		<span class="comment">// Ensure that the hash variants is equal to `value`, `ref_` and itself.</span>
-		<span class="macro">assert!</span>(<span class="ident">hash</span> <span class="op">==</span> <span class="ident">value</span>);
-		<span class="macro">assert!</span>(<span class="ident">value</span> <span class="op">==</span> <span class="ident">hash</span>);
-		<span class="macro">assert!</span>(<span class="ident">hash</span> <span class="op">==</span> <span class="ident">ref_</span>);
-		<span class="macro">assert!</span>(<span class="ident">ref_</span> <span class="op">==</span> <span class="ident">hash</span>);
-		<span class="macro">assert!</span>(<span class="ident">hash</span> <span class="op">==</span> <span class="ident">hash</span>);
+		<span class="comment">// Ensure that the hash variants is equal to `value`, `ref_` and itself.
+		</span><span class="macro">assert!</span>(hash == value);
+		<span class="macro">assert!</span>(value == hash);
+		<span class="macro">assert!</span>(hash == ref_);
+		<span class="macro">assert!</span>(ref_ == hash);
+		<span class="macro">assert!</span>(hash == hash);
 
-		<span class="comment">// But when we compare `value` and `ref_` the different storage key is detected.</span>
-		<span class="macro">assert!</span>(<span class="ident">value</span> <span class="op">!</span><span class="op">=</span> <span class="ident">ref_</span>);
-		<span class="macro">assert!</span>(<span class="ident">ref_</span> <span class="op">!</span><span class="op">=</span> <span class="ident">value</span>);
+		<span class="comment">// But when we compare `value` and `ref_` the different storage key is detected.
+		</span><span class="macro">assert!</span>(value != ref_);
+		<span class="macro">assert!</span>(ref_ != value);
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="sp_trie" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="sp_trie" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

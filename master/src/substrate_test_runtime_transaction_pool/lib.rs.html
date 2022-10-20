@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test-utils/runtime/transaction-pool/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../substrate_test_runtime_transaction_pool/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../substrate_test_runtime_transaction_pool/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../substrate_test_runtime_transaction_pool/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test-utils/runtime/transaction-pool/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../substrate_test_runtime_transaction_pool/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../substrate_test_runtime_transaction_pool/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -379,381 +373,380 @@
 <span id="373">373</span>
 <span id="374">374</span>
 <span id="375">375</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Test utils for the transaction pool together with the test runtime.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! See [`TestApi`] for more information.</span>
+</span><span class="doccomment">//! Test utils for the transaction pool together with the test runtime.
+//!
+//! See [`TestApi`] for more information.
 
-<span class="kw">use</span> <span class="ident">codec::Encode</span>;
-<span class="kw">use</span> <span class="ident">futures::future::ready</span>;
-<span class="kw">use</span> <span class="ident">parking_lot::RwLock</span>;
-<span class="kw">use</span> <span class="ident">sp_blockchain</span>::{<span class="ident">CachedHeaderMetadata</span>, <span class="ident">TreeRoute</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">generic</span>::{<span class="self">self</span>, <span class="ident">BlockId</span>},
-	<span class="ident">traits</span>::{
-		<span class="ident">BlakeTwo256</span>, <span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">Hash</span> <span class="kw">as</span> <span class="ident">HashT</span>, <span class="ident">Header</span> <span class="kw">as</span> <span class="kw">_</span>, <span class="ident">NumberFor</span>, <span class="ident">TrailingZeroInput</span>,
+</span><span class="kw">use </span>codec::Encode;
+<span class="kw">use </span>futures::future::ready;
+<span class="kw">use </span>parking_lot::RwLock;
+<span class="kw">use </span>sp_blockchain::{CachedHeaderMetadata, TreeRoute};
+<span class="kw">use </span>sp_runtime::{
+	generic::{<span class="self">self</span>, BlockId},
+	traits::{
+		BlakeTwo256, Block <span class="kw">as </span>BlockT, Hash <span class="kw">as </span>HashT, Header <span class="kw">as _</span>, NumberFor, TrailingZeroInput,
 	},
-	<span class="ident">transaction_validity</span>::{
-		<span class="ident">InvalidTransaction</span>, <span class="ident">TransactionSource</span>, <span class="ident">TransactionValidity</span>, <span class="ident">TransactionValidityError</span>,
-		<span class="ident">ValidTransaction</span>,
+	transaction_validity::{
+		InvalidTransaction, TransactionSource, TransactionValidity, TransactionValidityError,
+		ValidTransaction,
 	},
 };
-<span class="kw">use</span> <span class="ident">std::collections</span>::{<span class="ident">BTreeMap</span>, <span class="ident">HashMap</span>, <span class="ident">HashSet</span>};
-<span class="kw">use</span> <span class="ident">substrate_test_runtime_client</span>::{
-	<span class="ident">runtime</span>::{<span class="ident">AccountId</span>, <span class="ident">Block</span>, <span class="ident">BlockNumber</span>, <span class="ident">Extrinsic</span>, <span class="ident">Hash</span>, <span class="ident">Header</span>, <span class="ident">Index</span>, <span class="ident">Transfer</span>},
-	<span class="ident">AccountKeyring</span>::{<span class="self">self</span>, <span class="kw-2">*</span>},
+<span class="kw">use </span>std::collections::{BTreeMap, HashMap, HashSet};
+<span class="kw">use </span>substrate_test_runtime_client::{
+	runtime::{AccountId, Block, BlockNumber, Extrinsic, Hash, Header, Index, Transfer},
+	AccountKeyring::{<span class="self">self</span>, <span class="kw-2">*</span>},
 };
 
-<span class="doccomment">/// Error type used by [`TestApi`].</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">thiserror::Error</span>)]</span>
-<span class="attribute">#[<span class="ident">error</span>(<span class="ident">transparent</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">sc_transaction_pool_api::error::Error</span>);
+<span class="doccomment">/// Error type used by [`TestApi`].
+</span><span class="attribute">#[derive(Debug, thiserror::Error)]
+#[error(transparent)]
+</span><span class="kw">pub struct </span>Error(<span class="attribute">#[from] </span>sc_transaction_pool_api::error::Error);
 
-<span class="kw">impl</span> <span class="ident">sc_transaction_pool_api::error::IntoPoolError</span> <span class="kw">for</span> <span class="ident">Error</span> {
-	<span class="kw">fn</span> <span class="ident">into_pool_error</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">sc_transaction_pool_api::error::Error</span>, <span class="self">Self</span><span class="op">&gt;</span> {
+<span class="kw">impl </span>sc_transaction_pool_api::error::IntoPoolError <span class="kw">for </span>Error {
+	<span class="kw">fn </span>into_pool_error(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;sc_transaction_pool_api::error::Error, <span class="self">Self</span>&gt; {
 		<span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="number">0</span>)
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">IsBestBlock</span> {
-	<span class="ident">Yes</span>,
-	<span class="ident">No</span>,
+<span class="kw">pub enum </span>IsBestBlock {
+	Yes,
+	No,
 }
 
-<span class="kw">impl</span> <span class="ident">IsBestBlock</span> {
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_best</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-		<span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident"><span class="self">Self</span>::Yes</span>)
+<span class="kw">impl </span>IsBestBlock {
+	<span class="kw">pub fn </span>is_best(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+		<span class="macro">matches!</span>(<span class="self">self</span>, <span class="self">Self</span>::Yes)
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">IsBestBlock</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">is_best</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">if</span> <span class="ident">is_best</span> {
-			<span class="ident"><span class="self">Self</span>::Yes</span>
-		} <span class="kw">else</span> {
-			<span class="ident"><span class="self">Self</span>::No</span>
+<span class="kw">impl </span>From&lt;bool&gt; <span class="kw">for </span>IsBestBlock {
+	<span class="kw">fn </span>from(is_best: bool) -&gt; <span class="self">Self </span>{
+		<span class="kw">if </span>is_best {
+			<span class="self">Self</span>::Yes
+		} <span class="kw">else </span>{
+			<span class="self">Self</span>::No
 		}
 	}
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChainState</span> {
-	<span class="kw">pub</span> <span class="ident">block_by_number</span>: <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">BlockNumber</span>, <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Block</span>, <span class="ident">IsBestBlock</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="kw">pub</span> <span class="ident">block_by_hash</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Hash</span>, <span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="kw">pub</span> <span class="ident">nonces</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">u64</span><span class="op">&gt;</span>,
-	<span class="kw">pub</span> <span class="ident">invalid_hashes</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(Default)]
+</span><span class="kw">pub struct </span>ChainState {
+	<span class="kw">pub </span>block_by_number: BTreeMap&lt;BlockNumber, Vec&lt;(Block, IsBestBlock)&gt;&gt;,
+	<span class="kw">pub </span>block_by_hash: HashMap&lt;Hash, Block&gt;,
+	<span class="kw">pub </span>nonces: HashMap&lt;AccountId, u64&gt;,
+	<span class="kw">pub </span>invalid_hashes: HashSet&lt;Hash&gt;,
 }
 
-<span class="doccomment">/// Test Api for transaction pool.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TestApi</span> {
-	<span class="ident">valid_modifier</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ValidTransaction</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">chain</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">ChainState</span><span class="op">&gt;</span>,
-	<span class="ident">validation_requests</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Extrinsic</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Test Api for transaction pool.
+</span><span class="kw">pub struct </span>TestApi {
+	valid_modifier: RwLock&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>ValidTransaction) + Send + Sync&gt;&gt;,
+	chain: RwLock&lt;ChainState&gt;,
+	validation_requests: RwLock&lt;Vec&lt;Extrinsic&gt;&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">TestApi</span> {
-	<span class="doccomment">/// Test Api with Alice nonce set initially.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_alice_nonce</span>(<span class="ident">nonce</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">api</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::empty</span>();
+<span class="kw">impl </span>TestApi {
+	<span class="doccomment">/// Test Api with Alice nonce set initially.
+	</span><span class="kw">pub fn </span>with_alice_nonce(nonce: u64) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>api = <span class="self">Self</span>::empty();
 
-		<span class="ident">api</span>.<span class="ident">chain</span>.<span class="ident">write</span>().<span class="ident">nonces</span>.<span class="ident">insert</span>(<span class="ident">Alice</span>.<span class="ident">into</span>(), <span class="ident">nonce</span>);
+		api.chain.write().nonces.insert(Alice.into(), nonce);
 
-		<span class="ident">api</span>
+		api
 	}
 
-	<span class="doccomment">/// Default Test Api</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">empty</span>() -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">api</span> <span class="op">=</span> <span class="ident">TestApi</span> {
-			<span class="ident">valid_modifier</span>: <span class="ident">RwLock::new</span>(<span class="ident">Box::new</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {})),
-			<span class="ident">chain</span>: <span class="ident">Default::default</span>(),
-			<span class="ident">validation_requests</span>: <span class="ident">RwLock::new</span>(<span class="ident">Default::default</span>()),
+	<span class="doccomment">/// Default Test Api
+	</span><span class="kw">pub fn </span>empty() -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>api = TestApi {
+			valid_modifier: RwLock::new(Box::new(|<span class="kw">_</span>| {})),
+			chain: Default::default(),
+			validation_requests: RwLock::new(Default::default()),
 		};
 
-		<span class="comment">// Push genesis block</span>
-		<span class="ident">api</span>.<span class="ident">push_block</span>(<span class="number">0</span>, <span class="ident">Vec::new</span>(), <span class="bool-val">true</span>);
+		<span class="comment">// Push genesis block
+		</span>api.push_block(<span class="number">0</span>, Vec::new(), <span class="bool-val">true</span>);
 
-		<span class="ident">api</span>
+		api
 	}
 
-	<span class="doccomment">/// Set hook on modify valid result of transaction.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_valid_modifier</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">modifier</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ValidTransaction</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>) {
-		<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">valid_modifier</span>.<span class="ident">write</span>() <span class="op">=</span> <span class="ident">modifier</span>;
+	<span class="doccomment">/// Set hook on modify valid result of transaction.
+	</span><span class="kw">pub fn </span>set_valid_modifier(<span class="kw-2">&amp;</span><span class="self">self</span>, modifier: Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>ValidTransaction) + Send + Sync&gt;) {
+		<span class="kw-2">*</span><span class="self">self</span>.valid_modifier.write() = modifier;
 	}
 
-	<span class="doccomment">/// Push block under given number.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_block</span>(
+	<span class="doccomment">/// Push block under given number.
+	</span><span class="kw">pub fn </span>push_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">block_number</span>: <span class="ident">BlockNumber</span>,
-		<span class="ident">xts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Extrinsic</span><span class="op">&gt;</span>,
-		<span class="ident">is_best_block</span>: <span class="ident">bool</span>,
-	) -&gt; <span class="ident">Header</span> {
-		<span class="kw">let</span> <span class="ident">parent_hash</span> <span class="op">=</span> {
-			<span class="kw">let</span> <span class="ident">chain</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>();
-			<span class="ident">block_number</span>
-				.<span class="ident">checked_sub</span>(<span class="number">1</span>)
-				.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">num</span><span class="op">|</span> {
-					<span class="ident">chain</span>.<span class="ident">block_by_number</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">num</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">blocks</span><span class="op">|</span> <span class="ident">blocks</span>[<span class="number">0</span>].<span class="number">0</span>.<span class="ident">header</span>.<span class="ident">hash</span>())
+		block_number: BlockNumber,
+		xts: Vec&lt;Extrinsic&gt;,
+		is_best_block: bool,
+	) -&gt; Header {
+		<span class="kw">let </span>parent_hash = {
+			<span class="kw">let </span>chain = <span class="self">self</span>.chain.read();
+			block_number
+				.checked_sub(<span class="number">1</span>)
+				.and_then(|num| {
+					chain.block_by_number.get(<span class="kw-2">&amp;</span>num).map(|blocks| blocks[<span class="number">0</span>].<span class="number">0</span>.header.hash())
 				})
-				.<span class="ident">unwrap_or_default</span>()
+				.unwrap_or_default()
 		};
 
-		<span class="self">self</span>.<span class="ident">push_block_with_parent</span>(<span class="ident">parent_hash</span>, <span class="ident">xts</span>, <span class="ident">is_best_block</span>)
+		<span class="self">self</span>.push_block_with_parent(parent_hash, xts, is_best_block)
 	}
 
-	<span class="doccomment">/// Push a block using the given `parent`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Panics if `parent` does not exists.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push_block_with_parent</span>(
+	<span class="doccomment">/// Push a block using the given `parent`.
+	///
+	/// Panics if `parent` does not exists.
+	</span><span class="kw">pub fn </span>push_block_with_parent(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">parent</span>: <span class="ident">Hash</span>,
-		<span class="ident">xts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Extrinsic</span><span class="op">&gt;</span>,
-		<span class="ident">is_best_block</span>: <span class="ident">bool</span>,
-	) -&gt; <span class="ident">Header</span> {
-		<span class="comment">// `Hash::default()` is the genesis parent hash</span>
-		<span class="kw">let</span> <span class="ident">block_number</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">parent</span> <span class="op">==</span> <span class="ident">Hash::default</span>() {
-			<span class="number">0</span>
-		} <span class="kw">else</span> {
-			<span class="kw-2">*</span><span class="self">self</span>
-				.<span class="ident">chain</span>
-				.<span class="ident">read</span>()
-				.<span class="ident">block_by_hash</span>
-				.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">parent</span>)
-				.<span class="ident">expect</span>(<span class="string">&quot;`parent` exists&quot;</span>)
-				.<span class="ident">header</span>()
-				.<span class="ident">number</span>() <span class="op">+</span> <span class="number">1</span>
+		parent: Hash,
+		xts: Vec&lt;Extrinsic&gt;,
+		is_best_block: bool,
+	) -&gt; Header {
+		<span class="comment">// `Hash::default()` is the genesis parent hash
+		</span><span class="kw">let </span>block_number = <span class="kw">if </span>parent == Hash::default() {
+			<span class="number">0
+		</span>} <span class="kw">else </span>{
+			<span class="kw-2">*</span><span class="self">self
+				</span>.chain
+				.read()
+				.block_by_hash
+				.get(<span class="kw-2">&amp;</span>parent)
+				.expect(<span class="string">&quot;`parent` exists&quot;</span>)
+				.header()
+				.number() + <span class="number">1
+		</span>};
+
+		<span class="kw">let </span>header = Header {
+			number: block_number,
+			digest: Default::default(),
+			extrinsics_root: Hash::random(),
+			parent_hash: parent,
+			state_root: Default::default(),
 		};
 
-		<span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">Header</span> {
-			<span class="ident">number</span>: <span class="ident">block_number</span>,
-			<span class="ident">digest</span>: <span class="ident">Default::default</span>(),
-			<span class="ident">extrinsics_root</span>: <span class="ident">Hash::random</span>(),
-			<span class="ident">parent_hash</span>: <span class="ident">parent</span>,
-			<span class="ident">state_root</span>: <span class="ident">Default::default</span>(),
-		};
+		<span class="self">self</span>.add_block(Block::new(header.clone(), xts), is_best_block);
 
-		<span class="self">self</span>.<span class="ident">add_block</span>(<span class="ident">Block::new</span>(<span class="ident">header</span>.<span class="ident">clone</span>(), <span class="ident">xts</span>), <span class="ident">is_best_block</span>);
-
-		<span class="ident">header</span>
+		header
 	}
 
-	<span class="doccomment">/// Add a block to the internal state.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">block</span>: <span class="ident">Block</span>, <span class="ident">is_best_block</span>: <span class="ident">bool</span>) {
-		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident">block</span>.<span class="ident">header</span>.<span class="ident">hash</span>();
-		<span class="kw">let</span> <span class="ident">block_number</span> <span class="op">=</span> <span class="ident">block</span>.<span class="ident">header</span>.<span class="ident">number</span>();
+	<span class="doccomment">/// Add a block to the internal state.
+	</span><span class="kw">pub fn </span>add_block(<span class="kw-2">&amp;</span><span class="self">self</span>, block: Block, is_best_block: bool) {
+		<span class="kw">let </span>hash = block.header.hash();
+		<span class="kw">let </span>block_number = block.header.number();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chain</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">write</span>();
-		<span class="ident">chain</span>.<span class="ident">block_by_hash</span>.<span class="ident">insert</span>(<span class="ident">hash</span>, <span class="ident">block</span>.<span class="ident">clone</span>());
-		<span class="ident">chain</span>
-			.<span class="ident">block_by_number</span>
-			.<span class="ident">entry</span>(<span class="kw-2">*</span><span class="ident">block_number</span>)
-			.<span class="ident">or_default</span>()
-			.<span class="ident">push</span>((<span class="ident">block</span>, <span class="ident">is_best_block</span>.<span class="ident">into</span>()));
+		<span class="kw">let </span><span class="kw-2">mut </span>chain = <span class="self">self</span>.chain.write();
+		chain.block_by_hash.insert(hash, block.clone());
+		chain
+			.block_by_number
+			.entry(<span class="kw-2">*</span>block_number)
+			.or_default()
+			.push((block, is_best_block.into()));
 	}
 
-	<span class="kw">fn</span> <span class="ident">hash_and_length_inner</span>(<span class="ident">ex</span>: <span class="kw-2">&amp;</span><span class="ident">Extrinsic</span>) -&gt; (<span class="ident">Hash</span>, <span class="ident">usize</span>) {
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">ex</span>.<span class="ident">encode</span>();
-		(<span class="ident">BlakeTwo256::hash</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>), <span class="ident">encoded</span>.<span class="ident">len</span>())
+	<span class="kw">fn </span>hash_and_length_inner(ex: <span class="kw-2">&amp;</span>Extrinsic) -&gt; (Hash, usize) {
+		<span class="kw">let </span>encoded = ex.encode();
+		(BlakeTwo256::hash(<span class="kw-2">&amp;</span>encoded), encoded.len())
 	}
 
-	<span class="doccomment">/// Mark some transaction is invalid.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Next time transaction pool will try to validate this</span>
-	<span class="doccomment">/// extrinsic, api will return invalid result.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_invalid</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">xts</span>: <span class="kw-2">&amp;</span><span class="ident">Extrinsic</span>) {
-		<span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">write</span>().<span class="ident">invalid_hashes</span>.<span class="ident">insert</span>(<span class="ident"><span class="self">Self</span>::hash_and_length_inner</span>(<span class="ident">xts</span>).<span class="number">0</span>);
+	<span class="doccomment">/// Mark some transaction is invalid.
+	///
+	/// Next time transaction pool will try to validate this
+	/// extrinsic, api will return invalid result.
+	</span><span class="kw">pub fn </span>add_invalid(<span class="kw-2">&amp;</span><span class="self">self</span>, xts: <span class="kw-2">&amp;</span>Extrinsic) {
+		<span class="self">self</span>.chain.write().invalid_hashes.insert(<span class="self">Self</span>::hash_and_length_inner(xts).<span class="number">0</span>);
 	}
 
-	<span class="doccomment">/// Query validation requests received.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">validation_requests</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Extrinsic</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">validation_requests</span>.<span class="ident">read</span>().<span class="ident">clone</span>()
+	<span class="doccomment">/// Query validation requests received.
+	</span><span class="kw">pub fn </span>validation_requests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Extrinsic&gt; {
+		<span class="self">self</span>.validation_requests.read().clone()
 	}
 
-	<span class="doccomment">/// get a reference to the chain state</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chain</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">ChainState</span><span class="op">&gt;</span> {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">chain</span>
+	<span class="doccomment">/// get a reference to the chain state
+	</span><span class="kw">pub fn </span>chain(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>RwLock&lt;ChainState&gt; {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.chain
 	}
 
-	<span class="doccomment">/// Increment nonce in the inner state.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">increment_nonce</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">account</span>: <span class="ident">AccountId</span>) {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chain</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">write</span>();
-		<span class="ident">chain</span>.<span class="ident">nonces</span>.<span class="ident">entry</span>(<span class="ident">account</span>).<span class="ident">and_modify</span>(<span class="op">|</span><span class="ident">n</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">n</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>).<span class="ident">or_insert</span>(<span class="number">1</span>);
+	<span class="doccomment">/// Increment nonce in the inner state.
+	</span><span class="kw">pub fn </span>increment_nonce(<span class="kw-2">&amp;</span><span class="self">self</span>, account: AccountId) {
+		<span class="kw">let </span><span class="kw-2">mut </span>chain = <span class="self">self</span>.chain.write();
+		chain.nonces.entry(account).and_modify(|n| <span class="kw-2">*</span>n += <span class="number">1</span>).or_insert(<span class="number">1</span>);
 	}
 
-	<span class="doccomment">/// Calculate a tree route between the two given blocks.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tree_route</span>(
+	<span class="doccomment">/// Calculate a tree route between the two given blocks.
+	</span><span class="kw">pub fn </span>tree_route(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">from</span>: <span class="ident">Hash</span>,
-		<span class="ident">to</span>: <span class="ident">Hash</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">sp_blockchain::TreeRoute</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="ident">sp_blockchain::tree_route</span>(<span class="self">self</span>, <span class="ident">from</span>, <span class="ident">to</span>)
+		from: Hash,
+		to: Hash,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;sp_blockchain::TreeRoute&lt;Block&gt;, Error&gt; {
+		sp_blockchain::tree_route(<span class="self">self</span>, from, to)
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">sc_transaction_pool::ChainApi</span> <span class="kw">for</span> <span class="ident">TestApi</span> {
-	<span class="kw">type</span> <span class="ident">Block</span> <span class="op">=</span> <span class="ident">Block</span>;
-	<span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
-	<span class="kw">type</span> <span class="ident">ValidationFuture</span> <span class="op">=</span> <span class="ident">futures::future::Ready</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TransactionValidity</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">BodyFuture</span> <span class="op">=</span> <span class="ident">futures::future::Ready</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Extrinsic</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="kw">impl </span>sc_transaction_pool::ChainApi <span class="kw">for </span>TestApi {
+	<span class="kw">type </span>Block = Block;
+	<span class="kw">type </span>Error = Error;
+	<span class="kw">type </span>ValidationFuture = futures::future::Ready&lt;<span class="prelude-ty">Result</span>&lt;TransactionValidity, Error&gt;&gt;;
+	<span class="kw">type </span>BodyFuture = futures::future::Ready&lt;<span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Extrinsic&gt;&gt;, Error&gt;&gt;;
 
-	<span class="kw">fn</span> <span class="ident">validate_transaction</span>(
+	<span class="kw">fn </span>validate_transaction(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">at</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span><span class="op">&gt;</span>,
-		<span class="ident">_source</span>: <span class="ident">TransactionSource</span>,
-		<span class="ident">uxt</span>: <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Extrinsic</span>,
-	) -&gt; <span class="ident"><span class="self">Self</span>::ValidationFuture</span> {
-		<span class="self">self</span>.<span class="ident">validation_requests</span>.<span class="ident">write</span>().<span class="ident">push</span>(<span class="ident">uxt</span>.<span class="ident">clone</span>());
+		at: <span class="kw-2">&amp;</span>BlockId&lt;<span class="self">Self</span>::Block&gt;,
+		_source: TransactionSource,
+		uxt: &lt;<span class="self">Self</span>::Block <span class="kw">as </span>BlockT&gt;::Extrinsic,
+	) -&gt; <span class="self">Self</span>::ValidationFuture {
+		<span class="self">self</span>.validation_requests.write().push(uxt.clone());
 
-		<span class="kw">match</span> <span class="self">self</span>.<span class="ident">block_id_to_number</span>(<span class="ident">at</span>) {
-			<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">number</span>)) =&gt; {
-				<span class="kw">let</span> <span class="ident">found_best</span> <span class="op">=</span> <span class="self">self</span>
-					.<span class="ident">chain</span>
-					.<span class="ident">read</span>()
-					.<span class="ident">block_by_number</span>
-					.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">number</span>)
-					.<span class="ident">map</span>(<span class="op">|</span><span class="ident">blocks</span><span class="op">|</span> <span class="ident">blocks</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="number">1</span>.<span class="ident">is_best</span>()))
-					.<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>);
+		<span class="kw">match </span><span class="self">self</span>.block_id_to_number(at) {
+			<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(number)) =&gt; {
+				<span class="kw">let </span>found_best = <span class="self">self
+					</span>.chain
+					.read()
+					.block_by_number
+					.get(<span class="kw-2">&amp;</span>number)
+					.map(|blocks| blocks.iter().any(|b| b.<span class="number">1</span>.is_best()))
+					.unwrap_or(<span class="bool-val">false</span>);
 
-				<span class="comment">// If there is no best block, we don&#39;t know based on which block we should validate</span>
-				<span class="comment">// the transaction. (This is not required for this test function, but in real</span>
-				<span class="comment">// environment it would fail because of this).</span>
-				<span class="kw">if</span> <span class="op">!</span><span class="ident">found_best</span> {
-					<span class="kw">return</span> <span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">TransactionValidityError::Invalid</span>(
-						<span class="ident">InvalidTransaction::Custom</span>(<span class="number">1</span>),
+				<span class="comment">// If there is no best block, we don&#39;t know based on which block we should validate
+				// the transaction. (This is not required for this test function, but in real
+				// environment it would fail because of this).
+				</span><span class="kw">if </span>!found_best {
+					<span class="kw">return </span>ready(<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(TransactionValidityError::Invalid(
+						InvalidTransaction::Custom(<span class="number">1</span>),
 					))))
 				}
 			},
 			<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt;
-				<span class="kw">return</span> <span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">TransactionValidityError::Invalid</span>(
-					<span class="ident">InvalidTransaction::Custom</span>(<span class="number">2</span>),
+				<span class="kw">return </span>ready(<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(TransactionValidityError::Invalid(
+					InvalidTransaction::Custom(<span class="number">2</span>),
 				)))),
-			<span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="kw">return</span> <span class="ident">ready</span>(<span class="prelude-val">Err</span>(<span class="ident">e</span>)),
+			<span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span>ready(<span class="prelude-val">Err</span>(e)),
 		}
 
-		<span class="kw">let</span> (<span class="ident">requires</span>, <span class="ident">provides</span>) <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">transfer</span>) <span class="op">=</span> <span class="ident">uxt</span>.<span class="ident">try_transfer</span>() {
-			<span class="kw">let</span> <span class="ident">chain_nonce</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>().<span class="ident">nonces</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">transfer</span>.<span class="ident">from</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or</span>(<span class="number">0</span>);
-			<span class="kw">let</span> <span class="ident">requires</span> <span class="op">=</span>
-				<span class="kw">if</span> <span class="ident">chain_nonce</span> <span class="op">==</span> <span class="ident">transfer</span>.<span class="ident">nonce</span> { <span class="macro">vec!</span>[] } <span class="kw">else</span> { <span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="ident">chain_nonce</span> <span class="kw">as</span> <span class="ident">u8</span>]] };
-			<span class="kw">let</span> <span class="ident">provides</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="ident">transfer</span>.<span class="ident">nonce</span> <span class="kw">as</span> <span class="ident">u8</span>]];
+		<span class="kw">let </span>(requires, provides) = <span class="kw">if let </span><span class="prelude-val">Some</span>(transfer) = uxt.try_transfer() {
+			<span class="kw">let </span>chain_nonce = <span class="self">self</span>.chain.read().nonces.get(<span class="kw-2">&amp;</span>transfer.from).cloned().unwrap_or(<span class="number">0</span>);
+			<span class="kw">let </span>requires =
+				<span class="kw">if </span>chain_nonce == transfer.nonce { <span class="macro">vec!</span>[] } <span class="kw">else </span>{ <span class="macro">vec!</span>[<span class="macro">vec!</span>[chain_nonce <span class="kw">as </span>u8]] };
+			<span class="kw">let </span>provides = <span class="macro">vec!</span>[<span class="macro">vec!</span>[transfer.nonce <span class="kw">as </span>u8]];
 
-			(<span class="ident">requires</span>, <span class="ident">provides</span>)
-		} <span class="kw">else</span> {
-			(<span class="ident">Vec::new</span>(), <span class="macro">vec!</span>[<span class="ident">uxt</span>.<span class="ident">encode</span>()])
+			(requires, provides)
+		} <span class="kw">else </span>{
+			(Vec::new(), <span class="macro">vec!</span>[uxt.encode()])
 		};
 
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>().<span class="ident">invalid_hashes</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">hash_and_length</span>(<span class="kw-2">&amp;</span><span class="ident">uxt</span>).<span class="number">0</span>) {
-			<span class="kw">return</span> <span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">TransactionValidityError::Invalid</span>(<span class="ident">InvalidTransaction::Custom</span>(<span class="number">0</span>)))))
+		<span class="kw">if </span><span class="self">self</span>.chain.read().invalid_hashes.contains(<span class="kw-2">&amp;</span><span class="self">self</span>.hash_and_length(<span class="kw-2">&amp;</span>uxt).<span class="number">0</span>) {
+			<span class="kw">return </span>ready(<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(TransactionValidityError::Invalid(InvalidTransaction::Custom(<span class="number">0</span>)))))
 		}
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">validity</span> <span class="op">=</span>
-			<span class="ident">ValidTransaction</span> { <span class="ident">priority</span>: <span class="number">1</span>, <span class="ident">requires</span>, <span class="ident">provides</span>, <span class="ident">longevity</span>: <span class="number">64</span>, <span class="ident">propagate</span>: <span class="bool-val">true</span> };
+		<span class="kw">let </span><span class="kw-2">mut </span>validity =
+			ValidTransaction { priority: <span class="number">1</span>, requires, provides, longevity: <span class="number">64</span>, propagate: <span class="bool-val">true </span>};
 
-		(<span class="self">self</span>.<span class="ident">valid_modifier</span>.<span class="ident">read</span>())(<span class="kw-2">&amp;mut</span> <span class="ident">validity</span>);
+		(<span class="self">self</span>.valid_modifier.read())(<span class="kw-2">&amp;mut </span>validity);
 
-		<span class="ident">ready</span>(<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">validity</span>)))
+		ready(<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(validity)))
 	}
 
-	<span class="kw">fn</span> <span class="ident">block_id_to_number</span>(
+	<span class="kw">fn </span>block_id_to_number(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">at</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">at</span> {
-			<span class="ident">generic::BlockId::Hash</span>(<span class="ident">x</span>) =&gt;
-				<span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>().<span class="ident">block_by_hash</span>.<span class="ident">get</span>(<span class="ident">x</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">b</span>.<span class="ident">header</span>.<span class="ident">number</span>()),
-			<span class="ident">generic::BlockId::Number</span>(<span class="ident">num</span>) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">num</span>),
+		at: <span class="kw-2">&amp;</span>BlockId&lt;<span class="self">Self</span>::Block&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;NumberFor&lt;<span class="self">Self</span>::Block&gt;&gt;, Error&gt; {
+		<span class="prelude-val">Ok</span>(<span class="kw">match </span>at {
+			generic::BlockId::Hash(x) =&gt;
+				<span class="self">self</span>.chain.read().block_by_hash.get(x).map(|b| <span class="kw-2">*</span>b.header.number()),
+			generic::BlockId::Number(num) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>num),
 		})
 	}
 
-	<span class="kw">fn</span> <span class="ident">block_id_to_hash</span>(
+	<span class="kw">fn </span>block_id_to_hash(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">at</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">at</span> {
-			<span class="ident">generic::BlockId::Hash</span>(<span class="ident">x</span>) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">x</span>),
-			<span class="ident">generic::BlockId::Number</span>(<span class="ident">num</span>) =&gt;
-				<span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>().<span class="ident">block_by_number</span>.<span class="ident">get</span>(<span class="ident">num</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">blocks</span><span class="op">|</span> {
-					<span class="ident">blocks</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="number">1</span>.<span class="ident">is_best</span>()).<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="number">0</span>.<span class="ident">header</span>().<span class="ident">hash</span>())
+		at: <span class="kw-2">&amp;</span>BlockId&lt;<span class="self">Self</span>::Block&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;&lt;<span class="self">Self</span>::Block <span class="kw">as </span>BlockT&gt;::Hash&gt;, Error&gt; {
+		<span class="prelude-val">Ok</span>(<span class="kw">match </span>at {
+			generic::BlockId::Hash(x) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>x),
+			generic::BlockId::Number(num) =&gt;
+				<span class="self">self</span>.chain.read().block_by_number.get(num).and_then(|blocks| {
+					blocks.iter().find(|b| b.<span class="number">1</span>.is_best()).map(|b| b.<span class="number">0</span>.header().hash())
 				}),
 		})
 	}
 
-	<span class="kw">fn</span> <span class="ident">hash_and_length</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ex</span>: <span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Extrinsic</span>) -&gt; (<span class="ident">Hash</span>, <span class="ident">usize</span>) {
-		<span class="ident"><span class="self">Self</span>::hash_and_length_inner</span>(<span class="ident">ex</span>)
+	<span class="kw">fn </span>hash_and_length(<span class="kw-2">&amp;</span><span class="self">self</span>, ex: <span class="kw-2">&amp;</span>&lt;<span class="self">Self</span>::Block <span class="kw">as </span>BlockT&gt;::Extrinsic) -&gt; (Hash, usize) {
+		<span class="self">Self</span>::hash_and_length_inner(ex)
 	}
 
-	<span class="kw">fn</span> <span class="ident">block_body</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span><span class="op">&gt;</span>) -&gt; <span class="ident"><span class="self">Self</span>::BodyFuture</span> {
-		<span class="ident">futures::future::ready</span>(<span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">id</span> {
-			<span class="ident">BlockId::Number</span>(<span class="ident">num</span>) =&gt;
-				<span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>().<span class="ident">block_by_number</span>.<span class="ident">get</span>(<span class="ident">num</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>[<span class="number">0</span>].<span class="number">0</span>.<span class="ident">extrinsics</span>().<span class="ident">to_vec</span>()),
-			<span class="ident">BlockId::Hash</span>(<span class="ident">hash</span>) =&gt;
-				<span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>().<span class="ident">block_by_hash</span>.<span class="ident">get</span>(<span class="ident">hash</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="ident">extrinsics</span>().<span class="ident">to_vec</span>()),
+	<span class="kw">fn </span>block_body(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>BlockId&lt;<span class="self">Self</span>::Block&gt;) -&gt; <span class="self">Self</span>::BodyFuture {
+		futures::future::ready(<span class="prelude-val">Ok</span>(<span class="kw">match </span>id {
+			BlockId::Number(num) =&gt;
+				<span class="self">self</span>.chain.read().block_by_number.get(num).map(|b| b[<span class="number">0</span>].<span class="number">0</span>.extrinsics().to_vec()),
+			BlockId::Hash(hash) =&gt;
+				<span class="self">self</span>.chain.read().block_by_hash.get(hash).map(|b| b.extrinsics().to_vec()),
 		}))
 	}
 
-	<span class="kw">fn</span> <span class="ident">block_header</span>(
+	<span class="kw">fn </span>block_header(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">at</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Header</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">at</span> {
-			<span class="ident">BlockId::Number</span>(<span class="ident">num</span>) =&gt;
-				<span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>().<span class="ident">block_by_number</span>.<span class="ident">get</span>(<span class="ident">num</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>[<span class="number">0</span>].<span class="number">0</span>.<span class="ident">header</span>().<span class="ident">clone</span>()),
-			<span class="ident">BlockId::Hash</span>(<span class="ident">hash</span>) =&gt;
-				<span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>().<span class="ident">block_by_hash</span>.<span class="ident">get</span>(<span class="ident">hash</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="ident">header</span>().<span class="ident">clone</span>()),
+		at: <span class="kw-2">&amp;</span>BlockId&lt;<span class="self">Self</span>::Block&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;&lt;<span class="self">Self</span>::Block <span class="kw">as </span>BlockT&gt;::Header&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="prelude-val">Ok</span>(<span class="kw">match </span>at {
+			BlockId::Number(num) =&gt;
+				<span class="self">self</span>.chain.read().block_by_number.get(num).map(|b| b[<span class="number">0</span>].<span class="number">0</span>.header().clone()),
+			BlockId::Hash(hash) =&gt;
+				<span class="self">self</span>.chain.read().block_by_hash.get(hash).map(|b| b.header().clone()),
 		})
 	}
 
-	<span class="kw">fn</span> <span class="ident">tree_route</span>(
+	<span class="kw">fn </span>tree_route(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">from</span>: <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Hash</span>,
-		<span class="ident">to</span>: <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Hash</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TreeRoute</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Block</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="ident">sp_blockchain::tree_route</span>::<span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">TestApi</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">from</span>, <span class="ident">to</span>).<span class="ident">map_err</span>(<span class="ident">Into::into</span>)
+		from: &lt;<span class="self">Self</span>::Block <span class="kw">as </span>BlockT&gt;::Hash,
+		to: &lt;<span class="self">Self</span>::Block <span class="kw">as </span>BlockT&gt;::Hash,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;TreeRoute&lt;<span class="self">Self</span>::Block&gt;, <span class="self">Self</span>::Error&gt; {
+		sp_blockchain::tree_route::&lt;Block, TestApi&gt;(<span class="self">self</span>, from, to).map_err(Into::into)
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">sp_blockchain::HeaderMetadata</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TestApi</span> {
-	<span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
+<span class="kw">impl </span>sp_blockchain::HeaderMetadata&lt;Block&gt; <span class="kw">for </span>TestApi {
+	<span class="kw">type </span>Error = Error;
 
-	<span class="kw">fn</span> <span class="ident">header_metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">Hash</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CachedHeaderMetadata</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">chain</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">chain</span>.<span class="ident">read</span>();
-		<span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="ident">chain</span>.<span class="ident">block_by_hash</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">hash</span>).<span class="ident">expect</span>(<span class="string">&quot;Hash exists&quot;</span>);
+	<span class="kw">fn </span>header_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Hash) -&gt; <span class="prelude-ty">Result</span>&lt;CachedHeaderMetadata&lt;Block&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="kw">let </span>chain = <span class="self">self</span>.chain.read();
+		<span class="kw">let </span>block = chain.block_by_hash.get(<span class="kw-2">&amp;</span>hash).expect(<span class="string">&quot;Hash exists&quot;</span>);
 
-		<span class="prelude-val">Ok</span>(<span class="ident">block</span>.<span class="ident">header</span>().<span class="ident">into</span>())
+		<span class="prelude-val">Ok</span>(block.header().into())
 	}
 
-	<span class="kw">fn</span> <span class="ident">insert_header_metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Hash</span>, <span class="kw">_</span>: <span class="ident">CachedHeaderMetadata</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>) {
+	<span class="kw">fn </span>insert_header_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: Hash, <span class="kw">_</span>: CachedHeaderMetadata&lt;Block&gt;) {
 		<span class="macro">unimplemented!</span>(<span class="string">&quot;Not implemented for tests&quot;</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">remove_header_metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Hash</span>) {
+	<span class="kw">fn </span>remove_header_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: Hash) {
 		<span class="macro">unimplemented!</span>(<span class="string">&quot;Not implemented for tests&quot;</span>)
 	}
 }
 
-<span class="doccomment">/// Generate transfer extrinsic with a given nonce.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Part of the test api.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">uxt</span>(<span class="ident">who</span>: <span class="ident">AccountKeyring</span>, <span class="ident">nonce</span>: <span class="ident">Index</span>) -&gt; <span class="ident">Extrinsic</span> {
-	<span class="kw">let</span> <span class="ident">dummy</span> <span class="op">=</span> <span class="ident">codec::Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">TrailingZeroInput::zeroes</span>()).<span class="ident">unwrap</span>();
-	<span class="kw">let</span> <span class="ident">transfer</span> <span class="op">=</span> <span class="ident">Transfer</span> { <span class="ident">from</span>: <span class="ident">who</span>.<span class="ident">into</span>(), <span class="ident">to</span>: <span class="ident">dummy</span>, <span class="ident">nonce</span>, <span class="ident">amount</span>: <span class="number">1</span> };
-	<span class="kw">let</span> <span class="ident">signature</span> <span class="op">=</span> <span class="ident">transfer</span>.<span class="ident">using_encoded</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">who</span>.<span class="ident">sign</span>(<span class="ident">e</span>));
-	<span class="ident">Extrinsic::Transfer</span> { <span class="ident">transfer</span>, <span class="ident">signature</span>, <span class="ident">exhaust_resources_when_not_first</span>: <span class="bool-val">false</span> }
+<span class="doccomment">/// Generate transfer extrinsic with a given nonce.
+///
+/// Part of the test api.
+</span><span class="kw">pub fn </span>uxt(who: AccountKeyring, nonce: Index) -&gt; Extrinsic {
+	<span class="kw">let </span>dummy = codec::Decode::decode(<span class="kw-2">&amp;mut </span>TrailingZeroInput::zeroes()).unwrap();
+	<span class="kw">let </span>transfer = Transfer { from: who.into(), to: dummy, nonce, amount: <span class="number">1 </span>};
+	<span class="kw">let </span>signature = transfer.using_encoded(|e| who.sign(e));
+	Extrinsic::Transfer { transfer, signature, exhaust_resources_when_not_first: <span class="bool-val">false </span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="substrate_test_runtime_transaction_pool" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="substrate_test_runtime_transaction_pool" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/network/src/behaviour.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>behaviour.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sc_network/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sc_network/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_network/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/network/src/behaviour.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>behaviour.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sc_network/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_network/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -449,451 +443,450 @@
 <span id="443">443</span>
 <span id="444">444</span>
 <span id="445">445</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">discovery</span>::{<span class="ident">DiscoveryBehaviour</span>, <span class="ident">DiscoveryConfig</span>, <span class="ident">DiscoveryOut</span>},
-	<span class="ident">peer_info</span>,
-	<span class="ident">protocol</span>::{<span class="ident">CustomMessageOutcome</span>, <span class="ident">NotificationsSink</span>, <span class="ident">Protocol</span>},
-	<span class="ident">request_responses</span>,
+</span><span class="kw">use crate</span>::{
+	discovery::{DiscoveryBehaviour, DiscoveryConfig, DiscoveryOut},
+	peer_info,
+	protocol::{CustomMessageOutcome, NotificationsSink, Protocol},
+	request_responses,
 };
 
-<span class="kw">use</span> <span class="ident">bytes::Bytes</span>;
-<span class="kw">use</span> <span class="ident">futures::channel::oneshot</span>;
-<span class="kw">use</span> <span class="ident">libp2p</span>::{
-	<span class="ident">core</span>::{<span class="ident">Multiaddr</span>, <span class="ident">PeerId</span>, <span class="ident">PublicKey</span>},
-	<span class="ident">identify::Info</span> <span class="kw">as</span> <span class="ident">IdentifyInfo</span>,
-	<span class="ident">kad::record</span>,
-	<span class="ident">NetworkBehaviour</span>,
+<span class="kw">use </span>bytes::Bytes;
+<span class="kw">use </span>futures::channel::oneshot;
+<span class="kw">use </span>libp2p::{
+	core::{Multiaddr, PeerId, PublicKey},
+	identify::Info <span class="kw">as </span>IdentifyInfo,
+	kad::record,
+	NetworkBehaviour,
 };
 
-<span class="kw">use</span> <span class="ident">sc_consensus::import_queue</span>::{<span class="ident">IncomingBlock</span>, <span class="ident">RuntimeOrigin</span>};
-<span class="kw">use</span> <span class="ident">sc_network_common</span>::{
-	<span class="ident">config::ProtocolId</span>,
-	<span class="ident">protocol</span>::{
-		<span class="ident">event::DhtEvent</span>,
-		<span class="ident">role</span>::{<span class="ident">ObservedRole</span>, <span class="ident">Roles</span>},
-		<span class="ident">ProtocolName</span>,
+<span class="kw">use </span>sc_consensus::import_queue::{IncomingBlock, RuntimeOrigin};
+<span class="kw">use </span>sc_network_common::{
+	config::ProtocolId,
+	protocol::{
+		event::DhtEvent,
+		role::{ObservedRole, Roles},
+		ProtocolName,
 	},
-	<span class="ident">request_responses</span>::{<span class="ident">IfDisconnected</span>, <span class="ident">ProtocolConfig</span>, <span class="ident">RequestFailure</span>},
-	<span class="ident">sync</span>::{<span class="ident">warp::WarpProofRequest</span>, <span class="ident">OpaqueBlockRequest</span>, <span class="ident">OpaqueStateRequest</span>},
+	request_responses::{IfDisconnected, ProtocolConfig, RequestFailure},
+	sync::{warp::WarpProofRequest, OpaqueBlockRequest, OpaqueStateRequest},
 };
-<span class="kw">use</span> <span class="ident">sc_peerset</span>::{<span class="ident">PeersetHandle</span>, <span class="ident">ReputationChange</span>};
-<span class="kw">use</span> <span class="ident">sp_blockchain::HeaderBackend</span>;
-<span class="kw">use</span> <span class="ident">sp_consensus::BlockOrigin</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">NumberFor</span>},
-	<span class="ident">Justifications</span>,
+<span class="kw">use </span>sc_peerset::{PeersetHandle, ReputationChange};
+<span class="kw">use </span>sp_blockchain::HeaderBackend;
+<span class="kw">use </span>sp_consensus::BlockOrigin;
+<span class="kw">use </span>sp_runtime::{
+	traits::{Block <span class="kw">as </span>BlockT, NumberFor},
+	Justifications,
 };
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashSet</span>, <span class="ident">time::Duration</span>};
+<span class="kw">use </span>std::{collections::HashSet, time::Duration};
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::request_responses</span>::{<span class="ident">InboundFailure</span>, <span class="ident">OutboundFailure</span>, <span class="ident">RequestId</span>, <span class="ident">ResponseFailure</span>};
+<span class="kw">pub use </span><span class="kw">crate</span>::request_responses::{InboundFailure, OutboundFailure, RequestId, ResponseFailure};
 
-<span class="doccomment">/// General behaviour of the network. Combines all protocols together.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">NetworkBehaviour</span>)]</span>
-<span class="attribute">#[<span class="ident">behaviour</span>(<span class="ident">out_event</span> <span class="op">=</span> <span class="string">&quot;BehaviourOut&lt;B&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Behaviour</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">B</span>: <span class="ident">BlockT</span>,
-	<span class="ident">Client</span>: <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="doccomment">/// General behaviour of the network. Combines all protocols together.
+</span><span class="attribute">#[derive(NetworkBehaviour)]
+#[behaviour(out_event = <span class="string">&quot;BehaviourOut&lt;B&gt;&quot;</span>)]
+</span><span class="kw">pub struct </span>Behaviour&lt;B, Client&gt;
+<span class="kw">where
+	</span>B: BlockT,
+	Client: HeaderBackend&lt;B&gt; + <span class="lifetime">&#39;static</span>,
 {
-	<span class="doccomment">/// All the substrate-specific protocols.</span>
-	<span class="ident">substrate</span>: <span class="ident">Protocol</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Periodically pings and identifies the nodes we are connected to, and store information in a</span>
-	<span class="doccomment">/// cache.</span>
-	<span class="ident">peer_info</span>: <span class="ident">peer_info::PeerInfoBehaviour</span>,
-	<span class="doccomment">/// Discovers nodes of the network.</span>
-	<span class="ident">discovery</span>: <span class="ident">DiscoveryBehaviour</span>,
-	<span class="doccomment">/// Generic request-response protocols.</span>
-	<span class="ident">request_responses</span>: <span class="ident">request_responses::RequestResponsesBehaviour</span>,
+	<span class="doccomment">/// All the substrate-specific protocols.
+	</span>substrate: Protocol&lt;B, Client&gt;,
+	<span class="doccomment">/// Periodically pings and identifies the nodes we are connected to, and store information in a
+	/// cache.
+	</span>peer_info: peer_info::PeerInfoBehaviour,
+	<span class="doccomment">/// Discovers nodes of the network.
+	</span>discovery: DiscoveryBehaviour,
+	<span class="doccomment">/// Generic request-response protocols.
+	</span>request_responses: request_responses::RequestResponsesBehaviour,
 }
 
-<span class="doccomment">/// Event generated by `Behaviour`.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BehaviourOut</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="ident">BlockImport</span>(<span class="ident">BlockOrigin</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">IncomingBlock</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>),
-	<span class="ident">JustificationImport</span>(<span class="ident">RuntimeOrigin</span>, <span class="ident">B::Hash</span>, <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">Justifications</span>),
+<span class="doccomment">/// Event generated by `Behaviour`.
+</span><span class="kw">pub enum </span>BehaviourOut&lt;B: BlockT&gt; {
+	BlockImport(BlockOrigin, Vec&lt;IncomingBlock&lt;B&gt;&gt;),
+	JustificationImport(RuntimeOrigin, B::Hash, NumberFor&lt;B&gt;, Justifications),
 
-	<span class="doccomment">/// Started a random iterative Kademlia discovery query.</span>
-	<span class="ident">RandomKademliaStarted</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ProtocolId</span><span class="op">&gt;</span>),
+	<span class="doccomment">/// Started a random iterative Kademlia discovery query.
+	</span>RandomKademliaStarted(Vec&lt;ProtocolId&gt;),
 
-	<span class="doccomment">/// We have received a request from a peer and answered it.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This event is generated for statistics purposes.</span>
-	<span class="ident">InboundRequest</span> {
-		<span class="doccomment">/// Peer which sent us a request.</span>
-		<span class="ident">peer</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Protocol name of the request.</span>
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="doccomment">/// If `Ok`, contains the time elapsed between when we received the request and when we</span>
-		<span class="doccomment">/// sent back the response. If `Err`, the error that happened.</span>
-		<span class="ident">result</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Duration</span>, <span class="ident">ResponseFailure</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// We have received a request from a peer and answered it.
+	///
+	/// This event is generated for statistics purposes.
+	</span>InboundRequest {
+		<span class="doccomment">/// Peer which sent us a request.
+		</span>peer: PeerId,
+		<span class="doccomment">/// Protocol name of the request.
+		</span>protocol: ProtocolName,
+		<span class="doccomment">/// If `Ok`, contains the time elapsed between when we received the request and when we
+		/// sent back the response. If `Err`, the error that happened.
+		</span>result: <span class="prelude-ty">Result</span>&lt;Duration, ResponseFailure&gt;,
 	},
 
-	<span class="doccomment">/// A request has succeeded or failed.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This event is generated for statistics purposes.</span>
-	<span class="ident">RequestFinished</span> {
-		<span class="doccomment">/// Peer that we send a request to.</span>
-		<span class="ident">peer</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Name of the protocol in question.</span>
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="doccomment">/// Duration the request took.</span>
-		<span class="ident">duration</span>: <span class="ident">Duration</span>,
-		<span class="doccomment">/// Result of the request.</span>
-		<span class="ident">result</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">RequestFailure</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// A request has succeeded or failed.
+	///
+	/// This event is generated for statistics purposes.
+	</span>RequestFinished {
+		<span class="doccomment">/// Peer that we send a request to.
+		</span>peer: PeerId,
+		<span class="doccomment">/// Name of the protocol in question.
+		</span>protocol: ProtocolName,
+		<span class="doccomment">/// Duration the request took.
+		</span>duration: Duration,
+		<span class="doccomment">/// Result of the request.
+		</span>result: <span class="prelude-ty">Result</span>&lt;(), RequestFailure&gt;,
 	},
 
-	<span class="doccomment">/// A request protocol handler issued reputation changes for the given peer.</span>
-	<span class="ident">ReputationChanges</span> {
-		<span class="ident">peer</span>: <span class="ident">PeerId</span>,
-		<span class="ident">changes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ReputationChange</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// A request protocol handler issued reputation changes for the given peer.
+	</span>ReputationChanges {
+		peer: PeerId,
+		changes: Vec&lt;ReputationChange&gt;,
 	},
 
-	<span class="doccomment">/// Opened a substream with the given node with the given notifications protocol.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The protocol is always one of the notification protocols that have been registered.</span>
-	<span class="ident">NotificationStreamOpened</span> {
-		<span class="doccomment">/// Node we opened the substream with.</span>
-		<span class="ident">remote</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.</span>
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="doccomment">/// If the negotiation didn&#39;t use the main name of the protocol (the one in</span>
-		<span class="doccomment">/// `notifications_protocol`), then this field contains which name has actually been</span>
-		<span class="doccomment">/// used.</span>
-		<span class="doccomment">/// See also [`crate::Event::NotificationStreamOpened`].</span>
-		<span class="ident">negotiated_fallback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ProtocolName</span><span class="op">&gt;</span>,
-		<span class="doccomment">/// Object that permits sending notifications to the peer.</span>
-		<span class="ident">notifications_sink</span>: <span class="ident">NotificationsSink</span>,
-		<span class="doccomment">/// Role of the remote.</span>
-		<span class="ident">role</span>: <span class="ident">ObservedRole</span>,
+	<span class="doccomment">/// Opened a substream with the given node with the given notifications protocol.
+	///
+	/// The protocol is always one of the notification protocols that have been registered.
+	</span>NotificationStreamOpened {
+		<span class="doccomment">/// Node we opened the substream with.
+		</span>remote: PeerId,
+		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.
+		</span>protocol: ProtocolName,
+		<span class="doccomment">/// If the negotiation didn&#39;t use the main name of the protocol (the one in
+		/// `notifications_protocol`), then this field contains which name has actually been
+		/// used.
+		/// See also [`crate::Event::NotificationStreamOpened`].
+		</span>negotiated_fallback: <span class="prelude-ty">Option</span>&lt;ProtocolName&gt;,
+		<span class="doccomment">/// Object that permits sending notifications to the peer.
+		</span>notifications_sink: NotificationsSink,
+		<span class="doccomment">/// Role of the remote.
+		</span>role: ObservedRole,
 	},
 
-	<span class="doccomment">/// The [`NotificationsSink`] object used to send notifications with the given peer must be</span>
-	<span class="doccomment">/// replaced with a new one.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This event is typically emitted when a transport-level connection is closed and we fall</span>
-	<span class="doccomment">/// back to a secondary connection.</span>
-	<span class="ident">NotificationStreamReplaced</span> {
-		<span class="doccomment">/// Id of the peer we are connected to.</span>
-		<span class="ident">remote</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.</span>
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="doccomment">/// Replacement for the previous [`NotificationsSink`].</span>
-		<span class="ident">notifications_sink</span>: <span class="ident">NotificationsSink</span>,
+	<span class="doccomment">/// The [`NotificationsSink`] object used to send notifications with the given peer must be
+	/// replaced with a new one.
+	///
+	/// This event is typically emitted when a transport-level connection is closed and we fall
+	/// back to a secondary connection.
+	</span>NotificationStreamReplaced {
+		<span class="doccomment">/// Id of the peer we are connected to.
+		</span>remote: PeerId,
+		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.
+		</span>protocol: ProtocolName,
+		<span class="doccomment">/// Replacement for the previous [`NotificationsSink`].
+		</span>notifications_sink: NotificationsSink,
 	},
 
-	<span class="doccomment">/// Closed a substream with the given node. Always matches a corresponding previous</span>
-	<span class="doccomment">/// `NotificationStreamOpened` message.</span>
-	<span class="ident">NotificationStreamClosed</span> {
-		<span class="doccomment">/// Node we closed the substream with.</span>
-		<span class="ident">remote</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.</span>
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
+	<span class="doccomment">/// Closed a substream with the given node. Always matches a corresponding previous
+	/// `NotificationStreamOpened` message.
+	</span>NotificationStreamClosed {
+		<span class="doccomment">/// Node we closed the substream with.
+		</span>remote: PeerId,
+		<span class="doccomment">/// The concerned protocol. Each protocol uses a different substream.
+		</span>protocol: ProtocolName,
 	},
 
-	<span class="doccomment">/// Received one or more messages from the given node using the given protocol.</span>
-	<span class="ident">NotificationsReceived</span> {
-		<span class="doccomment">/// Node we received the message from.</span>
-		<span class="ident">remote</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Concerned protocol and associated message.</span>
-		<span class="ident">messages</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">ProtocolName</span>, <span class="ident">Bytes</span>)<span class="op">&gt;</span>,
+	<span class="doccomment">/// Received one or more messages from the given node using the given protocol.
+	</span>NotificationsReceived {
+		<span class="doccomment">/// Node we received the message from.
+		</span>remote: PeerId,
+		<span class="doccomment">/// Concerned protocol and associated message.
+		</span>messages: Vec&lt;(ProtocolName, Bytes)&gt;,
 	},
 
-	<span class="doccomment">/// A new block request must be emitted.</span>
-	<span class="ident">BlockRequest</span> {
-		<span class="doccomment">/// Node we send the request to.</span>
-		<span class="ident">target</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Opaque implementation-specific block request.</span>
-		<span class="ident">request</span>: <span class="ident">OpaqueBlockRequest</span>,
-		<span class="doccomment">/// One-shot channel to receive the response.</span>
-		<span class="ident">pending_response</span>: <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">RequestFailure</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// A new block request must be emitted.
+	</span>BlockRequest {
+		<span class="doccomment">/// Node we send the request to.
+		</span>target: PeerId,
+		<span class="doccomment">/// Opaque implementation-specific block request.
+		</span>request: OpaqueBlockRequest,
+		<span class="doccomment">/// One-shot channel to receive the response.
+		</span>pending_response: oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, RequestFailure&gt;&gt;,
 	},
 
-	<span class="doccomment">/// A new state request must be emitted.</span>
-	<span class="ident">StateRequest</span> {
-		<span class="doccomment">/// Node we send the request to.</span>
-		<span class="ident">target</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Opaque implementation-specific state request.</span>
-		<span class="ident">request</span>: <span class="ident">OpaqueStateRequest</span>,
-		<span class="doccomment">/// One-shot channel to receive the response.</span>
-		<span class="ident">pending_response</span>: <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">RequestFailure</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// A new state request must be emitted.
+	</span>StateRequest {
+		<span class="doccomment">/// Node we send the request to.
+		</span>target: PeerId,
+		<span class="doccomment">/// Opaque implementation-specific state request.
+		</span>request: OpaqueStateRequest,
+		<span class="doccomment">/// One-shot channel to receive the response.
+		</span>pending_response: oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, RequestFailure&gt;&gt;,
 	},
 
-	<span class="doccomment">/// A new warp sync request must be emitted.</span>
-	<span class="ident">WarpSyncRequest</span> {
-		<span class="doccomment">/// Node we send the request to.</span>
-		<span class="ident">target</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Warp sync request.</span>
-		<span class="ident">request</span>: <span class="ident">WarpProofRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="doccomment">/// One-shot channel to receive the response.</span>
-		<span class="ident">pending_response</span>: <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">RequestFailure</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// A new warp sync request must be emitted.
+	</span>WarpSyncRequest {
+		<span class="doccomment">/// Node we send the request to.
+		</span>target: PeerId,
+		<span class="doccomment">/// Warp sync request.
+		</span>request: WarpProofRequest&lt;B&gt;,
+		<span class="doccomment">/// One-shot channel to receive the response.
+		</span>pending_response: oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, RequestFailure&gt;&gt;,
 	},
 
-	<span class="doccomment">/// Now connected to a new peer for syncing purposes.</span>
-	<span class="ident">SyncConnected</span>(<span class="ident">PeerId</span>),
+	<span class="doccomment">/// Now connected to a new peer for syncing purposes.
+	</span>SyncConnected(PeerId),
 
-	<span class="doccomment">/// No longer connected to a peer for syncing purposes.</span>
-	<span class="ident">SyncDisconnected</span>(<span class="ident">PeerId</span>),
+	<span class="doccomment">/// No longer connected to a peer for syncing purposes.
+	</span>SyncDisconnected(PeerId),
 
-	<span class="doccomment">/// We have obtained identity information from a peer, including the addresses it is listening</span>
-	<span class="doccomment">/// on.</span>
-	<span class="ident">PeerIdentify</span> {
-		<span class="doccomment">/// Id of the peer that has been identified.</span>
-		<span class="ident">peer_id</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Information about the peer.</span>
-		<span class="ident">info</span>: <span class="ident">IdentifyInfo</span>,
+	<span class="doccomment">/// We have obtained identity information from a peer, including the addresses it is listening
+	/// on.
+	</span>PeerIdentify {
+		<span class="doccomment">/// Id of the peer that has been identified.
+		</span>peer_id: PeerId,
+		<span class="doccomment">/// Information about the peer.
+		</span>info: IdentifyInfo,
 	},
 
-	<span class="doccomment">/// We have learned about the existence of a node on the default set.</span>
-	<span class="ident">Discovered</span>(<span class="ident">PeerId</span>),
+	<span class="doccomment">/// We have learned about the existence of a node on the default set.
+	</span>Discovered(PeerId),
 
-	<span class="doccomment">/// Events generated by a DHT as a response to get_value or put_value requests as well as the</span>
-	<span class="doccomment">/// request duration.</span>
-	<span class="ident">Dht</span>(<span class="ident">DhtEvent</span>, <span class="ident">Duration</span>),
+	<span class="doccomment">/// Events generated by a DHT as a response to get_value or put_value requests as well as the
+	/// request duration.
+	</span>Dht(DhtEvent, Duration),
 
-	<span class="doccomment">/// Ignored event generated by lower layers.</span>
-	<span class="prelude-val">None</span>,
+	<span class="doccomment">/// Ignored event generated by lower layers.
+	</span><span class="prelude-val">None</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span> <span class="ident">Behaviour</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">B</span>: <span class="ident">BlockT</span>,
-	<span class="ident">Client</span>: <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="kw">impl</span>&lt;B, Client&gt; Behaviour&lt;B, Client&gt;
+<span class="kw">where
+	</span>B: BlockT,
+	Client: HeaderBackend&lt;B&gt; + <span class="lifetime">&#39;static</span>,
 {
-	<span class="doccomment">/// Builds a new `Behaviour`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-		<span class="ident">substrate</span>: <span class="ident">Protocol</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span>,
-		<span class="ident">user_agent</span>: <span class="ident">String</span>,
-		<span class="ident">local_public_key</span>: <span class="ident">PublicKey</span>,
-		<span class="ident">disco_config</span>: <span class="ident">DiscoveryConfig</span>,
-		<span class="ident">block_request_protocol_config</span>: <span class="ident">ProtocolConfig</span>,
-		<span class="ident">state_request_protocol_config</span>: <span class="ident">ProtocolConfig</span>,
-		<span class="ident">warp_sync_protocol_config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ProtocolConfig</span><span class="op">&gt;</span>,
-		<span class="ident">light_client_request_protocol_config</span>: <span class="ident">ProtocolConfig</span>,
-		<span class="comment">// All remaining request protocol configs.</span>
-		<span class="kw-2">mut</span> <span class="ident">request_response_protocols</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ProtocolConfig</span><span class="op">&gt;</span>,
-		<span class="ident">peerset</span>: <span class="ident">PeersetHandle</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">request_responses::RegisterError</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">warp_sync_protocol_config</span> {
-			<span class="ident">request_response_protocols</span>.<span class="ident">push</span>(<span class="ident">config</span>);
+	<span class="doccomment">/// Builds a new `Behaviour`.
+	</span><span class="kw">pub fn </span>new(
+		substrate: Protocol&lt;B, Client&gt;,
+		user_agent: String,
+		local_public_key: PublicKey,
+		disco_config: DiscoveryConfig,
+		block_request_protocol_config: ProtocolConfig,
+		state_request_protocol_config: ProtocolConfig,
+		warp_sync_protocol_config: <span class="prelude-ty">Option</span>&lt;ProtocolConfig&gt;,
+		light_client_request_protocol_config: ProtocolConfig,
+		<span class="comment">// All remaining request protocol configs.
+		</span><span class="kw-2">mut </span>request_response_protocols: Vec&lt;ProtocolConfig&gt;,
+		peerset: PeersetHandle,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, request_responses::RegisterError&gt; {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(config) = warp_sync_protocol_config {
+			request_response_protocols.push(config);
 		}
-		<span class="ident">request_response_protocols</span>.<span class="ident">push</span>(<span class="ident">block_request_protocol_config</span>);
-		<span class="ident">request_response_protocols</span>.<span class="ident">push</span>(<span class="ident">state_request_protocol_config</span>);
-		<span class="ident">request_response_protocols</span>.<span class="ident">push</span>(<span class="ident">light_client_request_protocol_config</span>);
+		request_response_protocols.push(block_request_protocol_config);
+		request_response_protocols.push(state_request_protocol_config);
+		request_response_protocols.push(light_client_request_protocol_config);
 
-		<span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-			<span class="ident">substrate</span>,
-			<span class="ident">peer_info</span>: <span class="ident">peer_info::PeerInfoBehaviour::new</span>(<span class="ident">user_agent</span>, <span class="ident">local_public_key</span>),
-			<span class="ident">discovery</span>: <span class="ident">disco_config</span>.<span class="ident">finish</span>(),
-			<span class="ident">request_responses</span>: <span class="ident">request_responses::RequestResponsesBehaviour::new</span>(
-				<span class="ident">request_response_protocols</span>.<span class="ident">into_iter</span>(),
-				<span class="ident">peerset</span>,
+		<span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+			substrate,
+			peer_info: peer_info::PeerInfoBehaviour::new(user_agent, local_public_key),
+			discovery: disco_config.finish(),
+			request_responses: request_responses::RequestResponsesBehaviour::new(
+				request_response_protocols.into_iter(),
+				peerset,
 			)<span class="question-mark">?</span>,
 		})
 	}
 
-	<span class="doccomment">/// Returns the list of nodes that we know exist in the network.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">known_peers</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">discovery</span>.<span class="ident">known_peers</span>()
+	<span class="doccomment">/// Returns the list of nodes that we know exist in the network.
+	</span><span class="kw">pub fn </span>known_peers(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; HashSet&lt;PeerId&gt; {
+		<span class="self">self</span>.discovery.known_peers()
 	}
 
-	<span class="doccomment">/// Adds a hard-coded address for the given peer, that never expires.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_known_address</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">peer_id</span>: <span class="ident">PeerId</span>, <span class="ident">addr</span>: <span class="ident">Multiaddr</span>) {
-		<span class="self">self</span>.<span class="ident">discovery</span>.<span class="ident">add_known_address</span>(<span class="ident">peer_id</span>, <span class="ident">addr</span>)
+	<span class="doccomment">/// Adds a hard-coded address for the given peer, that never expires.
+	</span><span class="kw">pub fn </span>add_known_address(<span class="kw-2">&amp;mut </span><span class="self">self</span>, peer_id: PeerId, addr: Multiaddr) {
+		<span class="self">self</span>.discovery.add_known_address(peer_id, addr)
 	}
 
-	<span class="doccomment">/// Returns the number of nodes in each Kademlia kbucket for each Kademlia instance.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Identifies Kademlia instances by their [`ProtocolId`] and kbuckets by the base 2 logarithm</span>
-	<span class="doccomment">/// of their lower bound.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">num_entries_per_kbucket</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-	) -&gt; <span class="kw">impl</span> <span class="ident">ExactSizeIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="ident">ProtocolId</span>, <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">u32</span>, <span class="ident">usize</span>)<span class="op">&gt;</span>)<span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">discovery</span>.<span class="ident">num_entries_per_kbucket</span>()
+	<span class="doccomment">/// Returns the number of nodes in each Kademlia kbucket for each Kademlia instance.
+	///
+	/// Identifies Kademlia instances by their [`ProtocolId`] and kbuckets by the base 2 logarithm
+	/// of their lower bound.
+	</span><span class="kw">pub fn </span>num_entries_per_kbucket(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+	) -&gt; <span class="kw">impl </span>ExactSizeIterator&lt;Item = (<span class="kw-2">&amp;</span>ProtocolId, Vec&lt;(u32, usize)&gt;)&gt; {
+		<span class="self">self</span>.discovery.num_entries_per_kbucket()
 	}
 
-	<span class="doccomment">/// Returns the number of records in the Kademlia record stores.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">num_kademlia_records</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">ExactSizeIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="ident">ProtocolId</span>, <span class="ident">usize</span>)<span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">discovery</span>.<span class="ident">num_kademlia_records</span>()
+	<span class="doccomment">/// Returns the number of records in the Kademlia record stores.
+	</span><span class="kw">pub fn </span>num_kademlia_records(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw">impl </span>ExactSizeIterator&lt;Item = (<span class="kw-2">&amp;</span>ProtocolId, usize)&gt; {
+		<span class="self">self</span>.discovery.num_kademlia_records()
 	}
 
-	<span class="doccomment">/// Returns the total size in bytes of all the records in the Kademlia record stores.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kademlia_records_total_size</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-	) -&gt; <span class="kw">impl</span> <span class="ident">ExactSizeIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="ident">ProtocolId</span>, <span class="ident">usize</span>)<span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">discovery</span>.<span class="ident">kademlia_records_total_size</span>()
+	<span class="doccomment">/// Returns the total size in bytes of all the records in the Kademlia record stores.
+	</span><span class="kw">pub fn </span>kademlia_records_total_size(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+	) -&gt; <span class="kw">impl </span>ExactSizeIterator&lt;Item = (<span class="kw-2">&amp;</span>ProtocolId, usize)&gt; {
+		<span class="self">self</span>.discovery.kademlia_records_total_size()
 	}
 
-	<span class="doccomment">/// Borrows `self` and returns a struct giving access to the information about a node.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns `None` if we don&#39;t know anything about this node. Always returns `Some` for nodes</span>
-	<span class="doccomment">/// we&#39;re connected to, meaning that if `None` is returned then we&#39;re not connected to that</span>
-	<span class="doccomment">/// node.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">node</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peer_id</span>: <span class="kw-2">&amp;</span><span class="ident">PeerId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">peer_info::Node</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">peer_info</span>.<span class="ident">node</span>(<span class="ident">peer_id</span>)
+	<span class="doccomment">/// Borrows `self` and returns a struct giving access to the information about a node.
+	///
+	/// Returns `None` if we don&#39;t know anything about this node. Always returns `Some` for nodes
+	/// we&#39;re connected to, meaning that if `None` is returned then we&#39;re not connected to that
+	/// node.
+	</span><span class="kw">pub fn </span>node(<span class="kw-2">&amp;</span><span class="self">self</span>, peer_id: <span class="kw-2">&amp;</span>PeerId) -&gt; <span class="prelude-ty">Option</span>&lt;peer_info::Node&gt; {
+		<span class="self">self</span>.peer_info.node(peer_id)
 	}
 
-	<span class="doccomment">/// Initiates sending a request.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_request</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">PeerId</span>,
-		<span class="ident">protocol</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-		<span class="ident">request</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">pending_response</span>: <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">RequestFailure</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-		<span class="ident">connect</span>: <span class="ident">IfDisconnected</span>,
+	<span class="doccomment">/// Initiates sending a request.
+	</span><span class="kw">pub fn </span>send_request(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		target: <span class="kw-2">&amp;</span>PeerId,
+		protocol: <span class="kw-2">&amp;</span>str,
+		request: Vec&lt;u8&gt;,
+		pending_response: oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, RequestFailure&gt;&gt;,
+		connect: IfDisconnected,
 	) {
-		<span class="self">self</span>.<span class="ident">request_responses</span>
-			.<span class="ident">send_request</span>(<span class="ident">target</span>, <span class="ident">protocol</span>, <span class="ident">request</span>, <span class="ident">pending_response</span>, <span class="ident">connect</span>)
+		<span class="self">self</span>.request_responses
+			.send_request(target, protocol, request, pending_response, connect)
 	}
 
-	<span class="doccomment">/// Returns a shared reference to the user protocol.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_protocol</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Protocol</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span> {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">substrate</span>
+	<span class="doccomment">/// Returns a shared reference to the user protocol.
+	</span><span class="kw">pub fn </span>user_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Protocol&lt;B, Client&gt; {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.substrate
 	}
 
-	<span class="doccomment">/// Returns a mutable reference to the user protocol.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_protocol_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">Protocol</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span> {
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">substrate</span>
+	<span class="doccomment">/// Returns a mutable reference to the user protocol.
+	</span><span class="kw">pub fn </span>user_protocol_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>Protocol&lt;B, Client&gt; {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.substrate
 	}
 
-	<span class="doccomment">/// Add a self-reported address of a remote peer to the k-buckets of the supported</span>
-	<span class="doccomment">/// DHTs (`supported_protocols`).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_self_reported_address_to_dht</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">peer_id</span>: <span class="kw-2">&amp;</span><span class="ident">PeerId</span>,
-		<span class="ident">supported_protocols</span>: <span class="kw-2">&amp;</span>[<span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>],
-		<span class="ident">addr</span>: <span class="ident">Multiaddr</span>,
+	<span class="doccomment">/// Add a self-reported address of a remote peer to the k-buckets of the supported
+	/// DHTs (`supported_protocols`).
+	</span><span class="kw">pub fn </span>add_self_reported_address_to_dht(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		peer_id: <span class="kw-2">&amp;</span>PeerId,
+		supported_protocols: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;[u8]&gt;],
+		addr: Multiaddr,
 	) {
-		<span class="self">self</span>.<span class="ident">discovery</span>.<span class="ident">add_self_reported_address</span>(<span class="ident">peer_id</span>, <span class="ident">supported_protocols</span>, <span class="ident">addr</span>);
+		<span class="self">self</span>.discovery.add_self_reported_address(peer_id, supported_protocols, addr);
 	}
 
-	<span class="doccomment">/// Start querying a record from the DHT. Will later produce either a `ValueFound` or a</span>
-	<span class="doccomment">/// `ValueNotFound` event.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_value</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">record::Key</span>) {
-		<span class="self">self</span>.<span class="ident">discovery</span>.<span class="ident">get_value</span>(<span class="ident">key</span>);
+	<span class="doccomment">/// Start querying a record from the DHT. Will later produce either a `ValueFound` or a
+	/// `ValueNotFound` event.
+	</span><span class="kw">pub fn </span>get_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: record::Key) {
+		<span class="self">self</span>.discovery.get_value(key);
 	}
 
-	<span class="doccomment">/// Starts putting a record into DHT. Will later produce either a `ValuePut` or a</span>
-	<span class="doccomment">/// `ValuePutFailed` event.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">put_value</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">record::Key</span>, <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
-		<span class="self">self</span>.<span class="ident">discovery</span>.<span class="ident">put_value</span>(<span class="ident">key</span>, <span class="ident">value</span>);
+	<span class="doccomment">/// Starts putting a record into DHT. Will later produce either a `ValuePut` or a
+	/// `ValuePutFailed` event.
+	</span><span class="kw">pub fn </span>put_value(<span class="kw-2">&amp;mut </span><span class="self">self</span>, key: record::Key, value: Vec&lt;u8&gt;) {
+		<span class="self">self</span>.discovery.put_value(key, value);
 	}
 }
 
-<span class="kw">fn</span> <span class="ident">reported_roles_to_observed_role</span>(<span class="ident">roles</span>: <span class="ident">Roles</span>) -&gt; <span class="ident">ObservedRole</span> {
-	<span class="kw">if</span> <span class="ident">roles</span>.<span class="ident">is_authority</span>() {
-		<span class="ident">ObservedRole::Authority</span>
-	} <span class="kw">else</span> <span class="kw">if</span> <span class="ident">roles</span>.<span class="ident">is_full</span>() {
-		<span class="ident">ObservedRole::Full</span>
-	} <span class="kw">else</span> {
-		<span class="ident">ObservedRole::Light</span>
+<span class="kw">fn </span>reported_roles_to_observed_role(roles: Roles) -&gt; ObservedRole {
+	<span class="kw">if </span>roles.is_authority() {
+		ObservedRole::Authority
+	} <span class="kw">else if </span>roles.is_full() {
+		ObservedRole::Full
+	} <span class="kw">else </span>{
+		ObservedRole::Light
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">CustomMessageOutcome</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BehaviourOut</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">event</span>: <span class="ident">CustomMessageOutcome</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">match</span> <span class="ident">event</span> {
-			<span class="ident">CustomMessageOutcome::BlockImport</span>(<span class="ident">origin</span>, <span class="ident">blocks</span>) =&gt;
-				<span class="ident">BehaviourOut::BlockImport</span>(<span class="ident">origin</span>, <span class="ident">blocks</span>),
-			<span class="ident">CustomMessageOutcome::JustificationImport</span>(<span class="ident">origin</span>, <span class="ident">hash</span>, <span class="ident">nb</span>, <span class="ident">justification</span>) =&gt;
-				<span class="ident">BehaviourOut::JustificationImport</span>(<span class="ident">origin</span>, <span class="ident">hash</span>, <span class="ident">nb</span>, <span class="ident">justification</span>),
-			<span class="ident">CustomMessageOutcome::BlockRequest</span> { <span class="ident">target</span>, <span class="ident">request</span>, <span class="ident">pending_response</span> } =&gt;
-				<span class="ident">BehaviourOut::BlockRequest</span> { <span class="ident">target</span>, <span class="ident">request</span>, <span class="ident">pending_response</span> },
-			<span class="ident">CustomMessageOutcome::StateRequest</span> { <span class="ident">target</span>, <span class="ident">request</span>, <span class="ident">pending_response</span> } =&gt;
-				<span class="ident">BehaviourOut::StateRequest</span> { <span class="ident">target</span>, <span class="ident">request</span>, <span class="ident">pending_response</span> },
-			<span class="ident">CustomMessageOutcome::WarpSyncRequest</span> { <span class="ident">target</span>, <span class="ident">request</span>, <span class="ident">pending_response</span> } =&gt;
-				<span class="ident">BehaviourOut::WarpSyncRequest</span> { <span class="ident">target</span>, <span class="ident">request</span>, <span class="ident">pending_response</span> },
-			<span class="ident">CustomMessageOutcome::NotificationStreamOpened</span> {
-				<span class="ident">remote</span>,
-				<span class="ident">protocol</span>,
-				<span class="ident">negotiated_fallback</span>,
-				<span class="ident">roles</span>,
-				<span class="ident">notifications_sink</span>,
-			} =&gt; <span class="ident">BehaviourOut::NotificationStreamOpened</span> {
-				<span class="ident">remote</span>,
-				<span class="ident">protocol</span>,
-				<span class="ident">negotiated_fallback</span>,
-				<span class="ident">role</span>: <span class="ident">reported_roles_to_observed_role</span>(<span class="ident">roles</span>),
-				<span class="ident">notifications_sink</span>,
+<span class="kw">impl</span>&lt;B: BlockT&gt; From&lt;CustomMessageOutcome&lt;B&gt;&gt; <span class="kw">for </span>BehaviourOut&lt;B&gt; {
+	<span class="kw">fn </span>from(event: CustomMessageOutcome&lt;B&gt;) -&gt; <span class="self">Self </span>{
+		<span class="kw">match </span>event {
+			CustomMessageOutcome::BlockImport(origin, blocks) =&gt;
+				BehaviourOut::BlockImport(origin, blocks),
+			CustomMessageOutcome::JustificationImport(origin, hash, nb, justification) =&gt;
+				BehaviourOut::JustificationImport(origin, hash, nb, justification),
+			CustomMessageOutcome::BlockRequest { target, request, pending_response } =&gt;
+				BehaviourOut::BlockRequest { target, request, pending_response },
+			CustomMessageOutcome::StateRequest { target, request, pending_response } =&gt;
+				BehaviourOut::StateRequest { target, request, pending_response },
+			CustomMessageOutcome::WarpSyncRequest { target, request, pending_response } =&gt;
+				BehaviourOut::WarpSyncRequest { target, request, pending_response },
+			CustomMessageOutcome::NotificationStreamOpened {
+				remote,
+				protocol,
+				negotiated_fallback,
+				roles,
+				notifications_sink,
+			} =&gt; BehaviourOut::NotificationStreamOpened {
+				remote,
+				protocol,
+				negotiated_fallback,
+				role: reported_roles_to_observed_role(roles),
+				notifications_sink,
 			},
-			<span class="ident">CustomMessageOutcome::NotificationStreamReplaced</span> {
-				<span class="ident">remote</span>,
-				<span class="ident">protocol</span>,
-				<span class="ident">notifications_sink</span>,
-			} =&gt; <span class="ident">BehaviourOut::NotificationStreamReplaced</span> { <span class="ident">remote</span>, <span class="ident">protocol</span>, <span class="ident">notifications_sink</span> },
-			<span class="ident">CustomMessageOutcome::NotificationStreamClosed</span> { <span class="ident">remote</span>, <span class="ident">protocol</span> } =&gt;
-				<span class="ident">BehaviourOut::NotificationStreamClosed</span> { <span class="ident">remote</span>, <span class="ident">protocol</span> },
-			<span class="ident">CustomMessageOutcome::NotificationsReceived</span> { <span class="ident">remote</span>, <span class="ident">messages</span> } =&gt;
-				<span class="ident">BehaviourOut::NotificationsReceived</span> { <span class="ident">remote</span>, <span class="ident">messages</span> },
-			<span class="ident">CustomMessageOutcome::PeerNewBest</span>(<span class="ident">_peer_id</span>, <span class="ident">_number</span>) =&gt; <span class="ident">BehaviourOut::None</span>,
-			<span class="ident">CustomMessageOutcome::SyncConnected</span>(<span class="ident">peer_id</span>) =&gt; <span class="ident">BehaviourOut::SyncConnected</span>(<span class="ident">peer_id</span>),
-			<span class="ident">CustomMessageOutcome::SyncDisconnected</span>(<span class="ident">peer_id</span>) =&gt;
-				<span class="ident">BehaviourOut::SyncDisconnected</span>(<span class="ident">peer_id</span>),
-			<span class="ident">CustomMessageOutcome::None</span> =&gt; <span class="ident">BehaviourOut::None</span>,
+			CustomMessageOutcome::NotificationStreamReplaced {
+				remote,
+				protocol,
+				notifications_sink,
+			} =&gt; BehaviourOut::NotificationStreamReplaced { remote, protocol, notifications_sink },
+			CustomMessageOutcome::NotificationStreamClosed { remote, protocol } =&gt;
+				BehaviourOut::NotificationStreamClosed { remote, protocol },
+			CustomMessageOutcome::NotificationsReceived { remote, messages } =&gt;
+				BehaviourOut::NotificationsReceived { remote, messages },
+			CustomMessageOutcome::PeerNewBest(_peer_id, _number) =&gt; BehaviourOut::None,
+			CustomMessageOutcome::SyncConnected(peer_id) =&gt; BehaviourOut::SyncConnected(peer_id),
+			CustomMessageOutcome::SyncDisconnected(peer_id) =&gt;
+				BehaviourOut::SyncDisconnected(peer_id),
+			CustomMessageOutcome::None =&gt; BehaviourOut::None,
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">request_responses::Event</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BehaviourOut</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">event</span>: <span class="ident">request_responses::Event</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">match</span> <span class="ident">event</span> {
-			<span class="ident">request_responses::Event::InboundRequest</span> { <span class="ident">peer</span>, <span class="ident">protocol</span>, <span class="ident">result</span> } =&gt;
-				<span class="ident">BehaviourOut::InboundRequest</span> { <span class="ident">peer</span>, <span class="ident">protocol</span>, <span class="ident">result</span> },
-			<span class="ident">request_responses::Event::RequestFinished</span> { <span class="ident">peer</span>, <span class="ident">protocol</span>, <span class="ident">duration</span>, <span class="ident">result</span> } =&gt;
-				<span class="ident">BehaviourOut::RequestFinished</span> { <span class="ident">peer</span>, <span class="ident">protocol</span>, <span class="ident">duration</span>, <span class="ident">result</span> },
-			<span class="ident">request_responses::Event::ReputationChanges</span> { <span class="ident">peer</span>, <span class="ident">changes</span> } =&gt;
-				<span class="ident">BehaviourOut::ReputationChanges</span> { <span class="ident">peer</span>, <span class="ident">changes</span> },
+<span class="kw">impl</span>&lt;B: BlockT&gt; From&lt;request_responses::Event&gt; <span class="kw">for </span>BehaviourOut&lt;B&gt; {
+	<span class="kw">fn </span>from(event: request_responses::Event) -&gt; <span class="self">Self </span>{
+		<span class="kw">match </span>event {
+			request_responses::Event::InboundRequest { peer, protocol, result } =&gt;
+				BehaviourOut::InboundRequest { peer, protocol, result },
+			request_responses::Event::RequestFinished { peer, protocol, duration, result } =&gt;
+				BehaviourOut::RequestFinished { peer, protocol, duration, result },
+			request_responses::Event::ReputationChanges { peer, changes } =&gt;
+				BehaviourOut::ReputationChanges { peer, changes },
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">peer_info::PeerInfoEvent</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BehaviourOut</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">event</span>: <span class="ident">peer_info::PeerInfoEvent</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">peer_info::PeerInfoEvent::Identified</span> { <span class="ident">peer_id</span>, <span class="ident">info</span> } <span class="op">=</span> <span class="ident">event</span>;
-		<span class="ident">BehaviourOut::PeerIdentify</span> { <span class="ident">peer_id</span>, <span class="ident">info</span> }
+<span class="kw">impl</span>&lt;B: BlockT&gt; From&lt;peer_info::PeerInfoEvent&gt; <span class="kw">for </span>BehaviourOut&lt;B&gt; {
+	<span class="kw">fn </span>from(event: peer_info::PeerInfoEvent) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>peer_info::PeerInfoEvent::Identified { peer_id, info } = event;
+		BehaviourOut::PeerIdentify { peer_id, info }
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">DiscoveryOut</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BehaviourOut</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">event</span>: <span class="ident">DiscoveryOut</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">match</span> <span class="ident">event</span> {
-			<span class="ident">DiscoveryOut::UnroutablePeer</span>(<span class="ident">_peer_id</span>) =&gt; {
-				<span class="comment">// Obtaining and reporting listen addresses for unroutable peers back</span>
-				<span class="comment">// to Kademlia is handled by the `Identify` protocol, part of the</span>
-				<span class="comment">// `PeerInfoBehaviour`. See the `From&lt;peer_info::PeerInfoEvent&gt;`</span>
-				<span class="comment">// implementation.</span>
-				<span class="ident">BehaviourOut::None</span>
+<span class="kw">impl</span>&lt;B: BlockT&gt; From&lt;DiscoveryOut&gt; <span class="kw">for </span>BehaviourOut&lt;B&gt; {
+	<span class="kw">fn </span>from(event: DiscoveryOut) -&gt; <span class="self">Self </span>{
+		<span class="kw">match </span>event {
+			DiscoveryOut::UnroutablePeer(_peer_id) =&gt; {
+				<span class="comment">// Obtaining and reporting listen addresses for unroutable peers back
+				// to Kademlia is handled by the `Identify` protocol, part of the
+				// `PeerInfoBehaviour`. See the `From&lt;peer_info::PeerInfoEvent&gt;`
+				// implementation.
+				</span>BehaviourOut::None
 			},
-			<span class="ident">DiscoveryOut::Discovered</span>(<span class="ident">peer_id</span>) =&gt; <span class="ident">BehaviourOut::Discovered</span>(<span class="ident">peer_id</span>),
-			<span class="ident">DiscoveryOut::ValueFound</span>(<span class="ident">results</span>, <span class="ident">duration</span>) =&gt;
-				<span class="ident">BehaviourOut::Dht</span>(<span class="ident">DhtEvent::ValueFound</span>(<span class="ident">results</span>), <span class="ident">duration</span>),
-			<span class="ident">DiscoveryOut::ValueNotFound</span>(<span class="ident">key</span>, <span class="ident">duration</span>) =&gt;
-				<span class="ident">BehaviourOut::Dht</span>(<span class="ident">DhtEvent::ValueNotFound</span>(<span class="ident">key</span>), <span class="ident">duration</span>),
-			<span class="ident">DiscoveryOut::ValuePut</span>(<span class="ident">key</span>, <span class="ident">duration</span>) =&gt;
-				<span class="ident">BehaviourOut::Dht</span>(<span class="ident">DhtEvent::ValuePut</span>(<span class="ident">key</span>), <span class="ident">duration</span>),
-			<span class="ident">DiscoveryOut::ValuePutFailed</span>(<span class="ident">key</span>, <span class="ident">duration</span>) =&gt;
-				<span class="ident">BehaviourOut::Dht</span>(<span class="ident">DhtEvent::ValuePutFailed</span>(<span class="ident">key</span>), <span class="ident">duration</span>),
-			<span class="ident">DiscoveryOut::RandomKademliaStarted</span>(<span class="ident">protocols</span>) =&gt;
-				<span class="ident">BehaviourOut::RandomKademliaStarted</span>(<span class="ident">protocols</span>),
+			DiscoveryOut::Discovered(peer_id) =&gt; BehaviourOut::Discovered(peer_id),
+			DiscoveryOut::ValueFound(results, duration) =&gt;
+				BehaviourOut::Dht(DhtEvent::ValueFound(results), duration),
+			DiscoveryOut::ValueNotFound(key, duration) =&gt;
+				BehaviourOut::Dht(DhtEvent::ValueNotFound(key), duration),
+			DiscoveryOut::ValuePut(key, duration) =&gt;
+				BehaviourOut::Dht(DhtEvent::ValuePut(key), duration),
+			DiscoveryOut::ValuePutFailed(key, duration) =&gt;
+				BehaviourOut::Dht(DhtEvent::ValuePutFailed(key), duration),
+			DiscoveryOut::RandomKademliaStarted(protocols) =&gt;
+				BehaviourOut::RandomKademliaStarted(protocols),
 		}
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_network" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_network" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/transaction-payment/asset-tx-payment/src/payment.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>payment.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_asset_tx_payment/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_asset_tx_payment/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_asset_tx_payment/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/transaction-payment/asset-tx-payment/src/payment.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>payment.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_asset_tx_payment/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_asset_tx_payment/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -169,171 +163,170 @@
 <span id="163">163</span>
 <span id="164">164</span>
 <span id="165">165</span>
-</pre><pre class="rust"><code><span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+</pre><pre class="rust"><code><span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">///! Traits and default implementation for paying transaction fees in assets.</span>
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Config</span>;
+</span><span class="doccomment">///! Traits and default implementation for paying transaction fees in assets.
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::Config;
 
-<span class="kw">use</span> <span class="ident">codec::FullCodec</span>;
-<span class="kw">use</span> <span class="ident">frame_support</span>::{
-	<span class="ident">traits</span>::{
-		<span class="ident">fungibles</span>::{<span class="ident">Balanced</span>, <span class="ident">CreditOf</span>, <span class="ident">Inspect</span>},
-		<span class="ident">tokens::BalanceConversion</span>,
+<span class="kw">use </span>codec::FullCodec;
+<span class="kw">use </span>frame_support::{
+	traits::{
+		fungibles::{Balanced, CreditOf, Inspect},
+		tokens::BalanceConversion,
 	},
-	<span class="ident">unsigned::TransactionValidityError</span>,
+	unsigned::TransactionValidityError,
 };
-<span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">traits</span>::{
-		<span class="ident">AtLeast32BitUnsigned</span>, <span class="ident">DispatchInfoOf</span>, <span class="ident">MaybeSerializeDeserialize</span>, <span class="ident">One</span>, <span class="ident">PostDispatchInfoOf</span>,
+<span class="kw">use </span>scale_info::TypeInfo;
+<span class="kw">use </span>sp_runtime::{
+	traits::{
+		AtLeast32BitUnsigned, DispatchInfoOf, MaybeSerializeDeserialize, One, PostDispatchInfoOf,
 	},
-	<span class="ident">transaction_validity::InvalidTransaction</span>,
+	transaction_validity::InvalidTransaction,
 };
-<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">marker::PhantomData</span>};
+<span class="kw">use </span>sp_std::{fmt::Debug, marker::PhantomData};
 
-<span class="doccomment">/// Handle withdrawing, refunding and depositing of transaction fees.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OnChargeAssetTransaction</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The underlying integer type in which fees are calculated.</span>
-	<span class="kw">type</span> <span class="ident">Balance</span>: <span class="ident">AtLeast32BitUnsigned</span>
-		<span class="op">+</span> <span class="ident">FullCodec</span>
-		<span class="op">+</span> <span class="ident">Copy</span>
-		<span class="op">+</span> <span class="ident">MaybeSerializeDeserialize</span>
-		<span class="op">+</span> <span class="ident">Debug</span>
-		<span class="op">+</span> <span class="ident">Default</span>
-		<span class="op">+</span> <span class="ident">TypeInfo</span>;
-	<span class="doccomment">/// The type used to identify the assets used for transaction payment.</span>
-	<span class="kw">type</span> <span class="ident">AssetId</span>: <span class="ident">FullCodec</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">MaybeSerializeDeserialize</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Default</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">TypeInfo</span>;
-	<span class="doccomment">/// The type used to store the intermediate values between pre- and post-dispatch.</span>
-	<span class="kw">type</span> <span class="ident">LiquidityInfo</span>;
+<span class="doccomment">/// Handle withdrawing, refunding and depositing of transaction fees.
+</span><span class="kw">pub trait </span>OnChargeAssetTransaction&lt;T: Config&gt; {
+	<span class="doccomment">/// The underlying integer type in which fees are calculated.
+	</span><span class="kw">type </span>Balance: AtLeast32BitUnsigned
+		+ FullCodec
+		+ Copy
+		+ MaybeSerializeDeserialize
+		+ Debug
+		+ Default
+		+ TypeInfo;
+	<span class="doccomment">/// The type used to identify the assets used for transaction payment.
+	</span><span class="kw">type </span>AssetId: FullCodec + Copy + MaybeSerializeDeserialize + Debug + Default + Eq + TypeInfo;
+	<span class="doccomment">/// The type used to store the intermediate values between pre- and post-dispatch.
+	</span><span class="kw">type </span>LiquidityInfo;
 
-	<span class="doccomment">/// Before the transaction is executed the payment of the transaction fees needs to be secured.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Note: The `fee` already includes the `tip`.</span>
-	<span class="kw">fn</span> <span class="ident">withdraw_fee</span>(
-		<span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">T::AccountId</span>,
-		<span class="ident">call</span>: <span class="kw-2">&amp;</span><span class="ident">T::RuntimeCall</span>,
-		<span class="ident">dispatch_info</span>: <span class="kw-2">&amp;</span><span class="ident">DispatchInfoOf</span><span class="op">&lt;</span><span class="ident">T::RuntimeCall</span><span class="op">&gt;</span>,
-		<span class="ident">asset_id</span>: <span class="ident"><span class="self">Self</span>::AssetId</span>,
-		<span class="ident">fee</span>: <span class="ident"><span class="self">Self</span>::Balance</span>,
-		<span class="ident">tip</span>: <span class="ident"><span class="self">Self</span>::Balance</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::LiquidityInfo</span>, <span class="ident">TransactionValidityError</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Before the transaction is executed the payment of the transaction fees needs to be secured.
+	///
+	/// Note: The `fee` already includes the `tip`.
+	</span><span class="kw">fn </span>withdraw_fee(
+		who: <span class="kw-2">&amp;</span>T::AccountId,
+		call: <span class="kw-2">&amp;</span>T::RuntimeCall,
+		dispatch_info: <span class="kw-2">&amp;</span>DispatchInfoOf&lt;T::RuntimeCall&gt;,
+		asset_id: <span class="self">Self</span>::AssetId,
+		fee: <span class="self">Self</span>::Balance,
+		tip: <span class="self">Self</span>::Balance,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::LiquidityInfo, TransactionValidityError&gt;;
 
-	<span class="doccomment">/// After the transaction was executed the actual fee can be calculated.</span>
-	<span class="doccomment">/// This function should refund any overpaid fees and optionally deposit</span>
-	<span class="doccomment">/// the corrected amount.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Note: The `fee` already includes the `tip`.</span>
-	<span class="kw">fn</span> <span class="ident">correct_and_deposit_fee</span>(
-		<span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">T::AccountId</span>,
-		<span class="ident">dispatch_info</span>: <span class="kw-2">&amp;</span><span class="ident">DispatchInfoOf</span><span class="op">&lt;</span><span class="ident">T::RuntimeCall</span><span class="op">&gt;</span>,
-		<span class="ident">post_info</span>: <span class="kw-2">&amp;</span><span class="ident">PostDispatchInfoOf</span><span class="op">&lt;</span><span class="ident">T::RuntimeCall</span><span class="op">&gt;</span>,
-		<span class="ident">corrected_fee</span>: <span class="ident"><span class="self">Self</span>::Balance</span>,
-		<span class="ident">tip</span>: <span class="ident"><span class="self">Self</span>::Balance</span>,
-		<span class="ident">already_withdrawn</span>: <span class="ident"><span class="self">Self</span>::LiquidityInfo</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TransactionValidityError</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// After the transaction was executed the actual fee can be calculated.
+	/// This function should refund any overpaid fees and optionally deposit
+	/// the corrected amount.
+	///
+	/// Note: The `fee` already includes the `tip`.
+	</span><span class="kw">fn </span>correct_and_deposit_fee(
+		who: <span class="kw-2">&amp;</span>T::AccountId,
+		dispatch_info: <span class="kw-2">&amp;</span>DispatchInfoOf&lt;T::RuntimeCall&gt;,
+		post_info: <span class="kw-2">&amp;</span>PostDispatchInfoOf&lt;T::RuntimeCall&gt;,
+		corrected_fee: <span class="self">Self</span>::Balance,
+		tip: <span class="self">Self</span>::Balance,
+		already_withdrawn: <span class="self">Self</span>::LiquidityInfo,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), TransactionValidityError&gt;;
 }
 
-<span class="doccomment">/// Allows specifying what to do with the withdrawn asset fees.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">HandleCredit</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">B</span>: <span class="ident">Balanced</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Implement to determine what to do with the withdrawn asset fees.</span>
-	<span class="doccomment">/// Default for `CreditOf` from the assets pallet is to burn and</span>
-	<span class="doccomment">/// decrease total issuance.</span>
-	<span class="kw">fn</span> <span class="ident">handle_credit</span>(<span class="ident">credit</span>: <span class="ident">CreditOf</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">B</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Allows specifying what to do with the withdrawn asset fees.
+</span><span class="kw">pub trait </span>HandleCredit&lt;AccountId, B: Balanced&lt;AccountId&gt;&gt; {
+	<span class="doccomment">/// Implement to determine what to do with the withdrawn asset fees.
+	/// Default for `CreditOf` from the assets pallet is to burn and
+	/// decrease total issuance.
+	</span><span class="kw">fn </span>handle_credit(credit: CreditOf&lt;AccountId, B&gt;);
 }
 
-<span class="doccomment">/// Default implementation that just drops the credit according to the `OnDrop` in the underlying</span>
-<span class="doccomment">/// imbalance type.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span>: <span class="ident">Balanced</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">HandleCredit</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="kw">for</span> () {
-	<span class="kw">fn</span> <span class="ident">handle_credit</span>(<span class="ident">_credit</span>: <span class="ident">CreditOf</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span>) {}
+<span class="doccomment">/// Default implementation that just drops the credit according to the `OnDrop` in the underlying
+/// imbalance type.
+</span><span class="kw">impl</span>&lt;A, B: Balanced&lt;A&gt;&gt; HandleCredit&lt;A, B&gt; <span class="kw">for </span>() {
+	<span class="kw">fn </span>handle_credit(_credit: CreditOf&lt;A, B&gt;) {}
 }
 
-<span class="doccomment">/// Implements the asset transaction for a balance to asset converter (implementing</span>
-<span class="doccomment">/// [`BalanceConversion`]) and a credit handler (implementing [`HandleCredit`]).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The credit handler is given the complete fee in terms of the asset used for the transaction.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FungiblesAdapter</span><span class="op">&lt;</span><span class="ident">CON</span>, <span class="ident">HC</span><span class="op">&gt;</span>(<span class="ident">PhantomData</span><span class="op">&lt;</span>(<span class="ident">CON</span>, <span class="ident">HC</span>)<span class="op">&gt;</span>);
+<span class="doccomment">/// Implements the asset transaction for a balance to asset converter (implementing
+/// [`BalanceConversion`]) and a credit handler (implementing [`HandleCredit`]).
+///
+/// The credit handler is given the complete fee in terms of the asset used for the transaction.
+</span><span class="kw">pub struct </span>FungiblesAdapter&lt;CON, HC&gt;(PhantomData&lt;(CON, HC)&gt;);
 
-<span class="doccomment">/// Default implementation for a runtime instantiating this pallet, a balance to asset converter and</span>
-<span class="doccomment">/// a credit handler.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">CON</span>, <span class="ident">HC</span><span class="op">&gt;</span> <span class="ident">OnChargeAssetTransaction</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FungiblesAdapter</span><span class="op">&lt;</span><span class="ident">CON</span>, <span class="ident">HC</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span>,
-	<span class="ident">CON</span>: <span class="ident">BalanceConversion</span><span class="op">&lt;</span><span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">AssetIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">AssetBalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">HC</span>: <span class="ident">HandleCredit</span><span class="op">&lt;</span><span class="ident">T::AccountId</span>, <span class="ident">T::Fungibles</span><span class="op">&gt;</span>,
-	<span class="ident">AssetIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>: <span class="ident">FullCodec</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">MaybeSerializeDeserialize</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Default</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">TypeInfo</span>,
+<span class="doccomment">/// Default implementation for a runtime instantiating this pallet, a balance to asset converter and
+/// a credit handler.
+</span><span class="kw">impl</span>&lt;T, CON, HC&gt; OnChargeAssetTransaction&lt;T&gt; <span class="kw">for </span>FungiblesAdapter&lt;CON, HC&gt;
+<span class="kw">where
+	</span>T: Config,
+	CON: BalanceConversion&lt;BalanceOf&lt;T&gt;, AssetIdOf&lt;T&gt;, AssetBalanceOf&lt;T&gt;&gt;,
+	HC: HandleCredit&lt;T::AccountId, T::Fungibles&gt;,
+	AssetIdOf&lt;T&gt;: FullCodec + Copy + MaybeSerializeDeserialize + Debug + Default + Eq + TypeInfo,
 {
-	<span class="kw">type</span> <span class="ident">Balance</span> <span class="op">=</span> <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">AssetId</span> <span class="op">=</span> <span class="ident">AssetIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">LiquidityInfo</span> <span class="op">=</span> <span class="ident">CreditOf</span><span class="op">&lt;</span><span class="ident">T::AccountId</span>, <span class="ident">T::Fungibles</span><span class="op">&gt;</span>;
+	<span class="kw">type </span>Balance = BalanceOf&lt;T&gt;;
+	<span class="kw">type </span>AssetId = AssetIdOf&lt;T&gt;;
+	<span class="kw">type </span>LiquidityInfo = CreditOf&lt;T::AccountId, T::Fungibles&gt;;
 
-	<span class="doccomment">/// Withdraw the predicted fee from the transaction origin.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Note: The `fee` already includes the `tip`.</span>
-	<span class="kw">fn</span> <span class="ident">withdraw_fee</span>(
-		<span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">T::AccountId</span>,
-		<span class="ident">_call</span>: <span class="kw-2">&amp;</span><span class="ident">T::RuntimeCall</span>,
-		<span class="ident">_info</span>: <span class="kw-2">&amp;</span><span class="ident">DispatchInfoOf</span><span class="op">&lt;</span><span class="ident">T::RuntimeCall</span><span class="op">&gt;</span>,
-		<span class="ident">asset_id</span>: <span class="ident"><span class="self">Self</span>::AssetId</span>,
-		<span class="ident">fee</span>: <span class="ident"><span class="self">Self</span>::Balance</span>,
-		<span class="ident">_tip</span>: <span class="ident"><span class="self">Self</span>::Balance</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::LiquidityInfo</span>, <span class="ident">TransactionValidityError</span><span class="op">&gt;</span> {
-		<span class="comment">// We don&#39;t know the precision of the underlying asset. Because the converted fee could be</span>
-		<span class="comment">// less than one (e.g. 0.5) but gets rounded down by integer division we introduce a minimum</span>
-		<span class="comment">// fee.</span>
-		<span class="kw">let</span> <span class="ident">min_converted_fee</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">fee</span>.<span class="ident">is_zero</span>() { <span class="ident">Zero::zero</span>() } <span class="kw">else</span> { <span class="ident">One::one</span>() };
-		<span class="kw">let</span> <span class="ident">converted_fee</span> <span class="op">=</span> <span class="ident">CON::to_asset_balance</span>(<span class="ident">fee</span>, <span class="ident">asset_id</span>)
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">TransactionValidityError::from</span>(<span class="ident">InvalidTransaction::Payment</span>))<span class="question-mark">?</span>
-			.<span class="ident">max</span>(<span class="ident">min_converted_fee</span>);
-		<span class="kw">let</span> <span class="ident">can_withdraw</span> <span class="op">=</span>
-			<span class="op">&lt;</span><span class="ident">T::Fungibles</span> <span class="kw">as</span> <span class="ident">Inspect</span><span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::can_withdraw</span>(<span class="ident">asset_id</span>, <span class="ident">who</span>, <span class="ident">converted_fee</span>);
-		<span class="kw">if</span> <span class="op">!</span><span class="macro">matches!</span>(<span class="ident">can_withdraw</span>, <span class="ident">WithdrawConsequence::Success</span>) {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InvalidTransaction::Payment</span>.<span class="ident">into</span>())
+	<span class="doccomment">/// Withdraw the predicted fee from the transaction origin.
+	///
+	/// Note: The `fee` already includes the `tip`.
+	</span><span class="kw">fn </span>withdraw_fee(
+		who: <span class="kw-2">&amp;</span>T::AccountId,
+		_call: <span class="kw-2">&amp;</span>T::RuntimeCall,
+		_info: <span class="kw-2">&amp;</span>DispatchInfoOf&lt;T::RuntimeCall&gt;,
+		asset_id: <span class="self">Self</span>::AssetId,
+		fee: <span class="self">Self</span>::Balance,
+		_tip: <span class="self">Self</span>::Balance,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::LiquidityInfo, TransactionValidityError&gt; {
+		<span class="comment">// We don&#39;t know the precision of the underlying asset. Because the converted fee could be
+		// less than one (e.g. 0.5) but gets rounded down by integer division we introduce a minimum
+		// fee.
+		</span><span class="kw">let </span>min_converted_fee = <span class="kw">if </span>fee.is_zero() { Zero::zero() } <span class="kw">else </span>{ One::one() };
+		<span class="kw">let </span>converted_fee = CON::to_asset_balance(fee, asset_id)
+			.map_err(|<span class="kw">_</span>| TransactionValidityError::from(InvalidTransaction::Payment))<span class="question-mark">?
+			</span>.max(min_converted_fee);
+		<span class="kw">let </span>can_withdraw =
+			&lt;T::Fungibles <span class="kw">as </span>Inspect&lt;T::AccountId&gt;&gt;::can_withdraw(asset_id, who, converted_fee);
+		<span class="kw">if </span>!<span class="macro">matches!</span>(can_withdraw, WithdrawConsequence::Success) {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(InvalidTransaction::Payment.into())
 		}
-		<span class="op">&lt;</span><span class="ident">T::Fungibles</span> <span class="kw">as</span> <span class="ident">Balanced</span><span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::withdraw</span>(<span class="ident">asset_id</span>, <span class="ident">who</span>, <span class="ident">converted_fee</span>)
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">TransactionValidityError::from</span>(<span class="ident">InvalidTransaction::Payment</span>))
+		&lt;T::Fungibles <span class="kw">as </span>Balanced&lt;T::AccountId&gt;&gt;::withdraw(asset_id, who, converted_fee)
+			.map_err(|<span class="kw">_</span>| TransactionValidityError::from(InvalidTransaction::Payment))
 	}
 
-	<span class="doccomment">/// Hand the fee and the tip over to the `[HandleCredit]` implementation.</span>
-	<span class="doccomment">/// Since the predicted fee might have been too high, parts of the fee may be refunded.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Note: The `corrected_fee` already includes the `tip`.</span>
-	<span class="kw">fn</span> <span class="ident">correct_and_deposit_fee</span>(
-		<span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">T::AccountId</span>,
-		<span class="ident">_dispatch_info</span>: <span class="kw-2">&amp;</span><span class="ident">DispatchInfoOf</span><span class="op">&lt;</span><span class="ident">T::RuntimeCall</span><span class="op">&gt;</span>,
-		<span class="ident">_post_info</span>: <span class="kw-2">&amp;</span><span class="ident">PostDispatchInfoOf</span><span class="op">&lt;</span><span class="ident">T::RuntimeCall</span><span class="op">&gt;</span>,
-		<span class="ident">corrected_fee</span>: <span class="ident"><span class="self">Self</span>::Balance</span>,
-		<span class="ident">_tip</span>: <span class="ident"><span class="self">Self</span>::Balance</span>,
-		<span class="ident">paid</span>: <span class="ident"><span class="self">Self</span>::LiquidityInfo</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TransactionValidityError</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">min_converted_fee</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">corrected_fee</span>.<span class="ident">is_zero</span>() { <span class="ident">Zero::zero</span>() } <span class="kw">else</span> { <span class="ident">One::one</span>() };
-		<span class="comment">// Convert the corrected fee into the asset used for payment.</span>
-		<span class="kw">let</span> <span class="ident">converted_fee</span> <span class="op">=</span> <span class="ident">CON::to_asset_balance</span>(<span class="ident">corrected_fee</span>, <span class="ident">paid</span>.<span class="ident">asset</span>())
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> -&gt; <span class="ident">TransactionValidityError</span> { <span class="ident">InvalidTransaction::Payment</span>.<span class="ident">into</span>() })<span class="question-mark">?</span>
-			.<span class="ident">max</span>(<span class="ident">min_converted_fee</span>);
-		<span class="comment">// Calculate how much refund we should return.</span>
-		<span class="kw">let</span> (<span class="ident">final_fee</span>, <span class="ident">refund</span>) <span class="op">=</span> <span class="ident">paid</span>.<span class="ident">split</span>(<span class="ident">converted_fee</span>);
-		<span class="comment">// Refund to the account that paid the fees. If this fails, the account might have dropped</span>
-		<span class="comment">// below the existential balance. In that case we don&#39;t refund anything.</span>
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">T::Fungibles</span> <span class="kw">as</span> <span class="ident">Balanced</span><span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::resolve</span>(<span class="ident">who</span>, <span class="ident">refund</span>);
-		<span class="comment">// Handle the final fee, e.g. by transferring to the block author or burning.</span>
-		<span class="ident">HC::handle_credit</span>(<span class="ident">final_fee</span>);
+	<span class="doccomment">/// Hand the fee and the tip over to the `[HandleCredit]` implementation.
+	/// Since the predicted fee might have been too high, parts of the fee may be refunded.
+	///
+	/// Note: The `corrected_fee` already includes the `tip`.
+	</span><span class="kw">fn </span>correct_and_deposit_fee(
+		who: <span class="kw-2">&amp;</span>T::AccountId,
+		_dispatch_info: <span class="kw-2">&amp;</span>DispatchInfoOf&lt;T::RuntimeCall&gt;,
+		_post_info: <span class="kw-2">&amp;</span>PostDispatchInfoOf&lt;T::RuntimeCall&gt;,
+		corrected_fee: <span class="self">Self</span>::Balance,
+		_tip: <span class="self">Self</span>::Balance,
+		paid: <span class="self">Self</span>::LiquidityInfo,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), TransactionValidityError&gt; {
+		<span class="kw">let </span>min_converted_fee = <span class="kw">if </span>corrected_fee.is_zero() { Zero::zero() } <span class="kw">else </span>{ One::one() };
+		<span class="comment">// Convert the corrected fee into the asset used for payment.
+		</span><span class="kw">let </span>converted_fee = CON::to_asset_balance(corrected_fee, paid.asset())
+			.map_err(|<span class="kw">_</span>| -&gt; TransactionValidityError { InvalidTransaction::Payment.into() })<span class="question-mark">?
+			</span>.max(min_converted_fee);
+		<span class="comment">// Calculate how much refund we should return.
+		</span><span class="kw">let </span>(final_fee, refund) = paid.split(converted_fee);
+		<span class="comment">// Refund to the account that paid the fees. If this fails, the account might have dropped
+		// below the existential balance. In that case we don&#39;t refund anything.
+		</span><span class="kw">let _ </span>= &lt;T::Fungibles <span class="kw">as </span>Balanced&lt;T::AccountId&gt;&gt;::resolve(who, refund);
+		<span class="comment">// Handle the final fee, e.g. by transferring to the block author or burning.
+		</span>HC::handle_credit(final_fee);
 		<span class="prelude-val">Ok</span>(())
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_asset_tx_payment" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_asset_tx_payment" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

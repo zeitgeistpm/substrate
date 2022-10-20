@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/storage.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>storage.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/storage.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>storage.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -349,351 +343,350 @@
 <span id="343">343</span>
 <span id="344">344</span>
 <span id="345">345</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! This module contains routines for accessing and altering a contract related state.</span>
+</span><span class="doccomment">//! This module contains routines for accessing and altering a contract related state.
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">meter</span>;
+</span><span class="kw">pub mod </span>meter;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">exec</span>::{<span class="ident">AccountIdOf</span>, <span class="ident">StorageKey</span>},
-	<span class="ident">weights::WeightInfo</span>,
-	<span class="ident">BalanceOf</span>, <span class="ident">CodeHash</span>, <span class="ident">Config</span>, <span class="ident">ContractInfoOf</span>, <span class="ident">DeletionQueue</span>, <span class="ident">Error</span>, <span class="ident">TrieId</span>, <span class="ident">SENTINEL</span>,
+<span class="kw">use crate</span>::{
+	exec::{AccountIdOf, StorageKey},
+	weights::WeightInfo,
+	BalanceOf, CodeHash, Config, ContractInfoOf, DeletionQueue, Error, TrieId, SENTINEL,
 };
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">MaxEncodedLen</span>};
-<span class="kw">use</span> <span class="ident">frame_support</span>::{
-	<span class="ident">dispatch</span>::{<span class="ident">DispatchError</span>, <span class="ident">DispatchResult</span>},
-	<span class="ident">storage::child</span>::{<span class="self">self</span>, <span class="ident">ChildInfo</span>},
-	<span class="ident">weights::Weight</span>,
+<span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
+<span class="kw">use </span>frame_support::{
+	dispatch::{DispatchError, DispatchResult},
+	storage::child::{<span class="self">self</span>, ChildInfo},
+	weights::Weight,
 };
-<span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
-<span class="kw">use</span> <span class="ident">sp_core::crypto::UncheckedFrom</span>;
-<span class="kw">use</span> <span class="ident">sp_io::KillStorageResult</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">traits</span>::{<span class="ident">Hash</span>, <span class="ident">Saturating</span>, <span class="ident">Zero</span>},
-	<span class="ident">RuntimeDebug</span>,
+<span class="kw">use </span>scale_info::TypeInfo;
+<span class="kw">use </span>sp_core::crypto::UncheckedFrom;
+<span class="kw">use </span>sp_io::KillStorageResult;
+<span class="kw">use </span>sp_runtime::{
+	traits::{Hash, Saturating, Zero},
+	RuntimeDebug,
 };
-<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
+<span class="kw">use </span>sp_std::{marker::PhantomData, prelude::<span class="kw-2">*</span>};
 
-<span class="doccomment">/// Information for managing an account and its sub trie abstraction.</span>
-<span class="doccomment">/// This is the required info to cache for an account.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">TypeInfo</span>, <span class="ident">MaxEncodedLen</span>)]</span>
-<span class="attribute">#[<span class="ident">scale_info</span>(<span class="ident">skip_type_params</span>(<span class="ident">T</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Unique ID for the subtree encoded as a bytes vector.</span>
-	<span class="kw">pub</span> <span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
-	<span class="doccomment">/// The code associated with a given account.</span>
-	<span class="kw">pub</span> <span class="ident">code_hash</span>: <span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// How many bytes of storage are accumulated in this contract&#39;s child trie.</span>
-	<span class="kw">pub</span> <span class="ident">storage_bytes</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// How many items of storage are accumulated in this contract&#39;s child trie.</span>
-	<span class="kw">pub</span> <span class="ident">storage_items</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// This records to how much deposit the accumulated `storage_bytes` amount to.</span>
-	<span class="kw">pub</span> <span class="ident">storage_byte_deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// This records to how much deposit the accumulated `storage_items` amount to.</span>
-	<span class="kw">pub</span> <span class="ident">storage_item_deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// This records how much deposit is put down in order to pay for the contract itself.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// We need to store this information separately so it is not used when calculating any refunds</span>
-	<span class="doccomment">/// since the base deposit can only ever be refunded on contract termination.</span>
-	<span class="kw">pub</span> <span class="ident">storage_base_deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Information for managing an account and its sub trie abstraction.
+/// This is the required info to cache for an account.
+</span><span class="attribute">#[derive(Encode, Decode, Clone, PartialEq, Eq, RuntimeDebug, TypeInfo, MaxEncodedLen)]
+#[scale_info(skip_type_params(T))]
+</span><span class="kw">pub struct </span>ContractInfo&lt;T: Config&gt; {
+	<span class="doccomment">/// Unique ID for the subtree encoded as a bytes vector.
+	</span><span class="kw">pub </span>trie_id: TrieId,
+	<span class="doccomment">/// The code associated with a given account.
+	</span><span class="kw">pub </span>code_hash: CodeHash&lt;T&gt;,
+	<span class="doccomment">/// How many bytes of storage are accumulated in this contract&#39;s child trie.
+	</span><span class="kw">pub </span>storage_bytes: u32,
+	<span class="doccomment">/// How many items of storage are accumulated in this contract&#39;s child trie.
+	</span><span class="kw">pub </span>storage_items: u32,
+	<span class="doccomment">/// This records to how much deposit the accumulated `storage_bytes` amount to.
+	</span><span class="kw">pub </span>storage_byte_deposit: BalanceOf&lt;T&gt;,
+	<span class="doccomment">/// This records to how much deposit the accumulated `storage_items` amount to.
+	</span><span class="kw">pub </span>storage_item_deposit: BalanceOf&lt;T&gt;,
+	<span class="doccomment">/// This records how much deposit is put down in order to pay for the contract itself.
+	///
+	/// We need to store this information separately so it is not used when calculating any refunds
+	/// since the base deposit can only ever be refunded on contract termination.
+	</span><span class="kw">pub </span>storage_base_deposit: BalanceOf&lt;T&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Associated child trie unique id is built from the hash part of the trie id.</span>
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">child_trie_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ChildInfo</span> {
-		<span class="ident">child_trie_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">trie_id</span>[..])
+<span class="kw">impl</span>&lt;T: Config&gt; ContractInfo&lt;T&gt; {
+	<span class="doccomment">/// Associated child trie unique id is built from the hash part of the trie id.
+	</span><span class="attribute">#[cfg(test)]
+	</span><span class="kw">pub fn </span>child_trie_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ChildInfo {
+		child_trie_info(<span class="kw-2">&amp;</span><span class="self">self</span>.trie_id[..])
 	}
 
-	<span class="doccomment">/// The deposit paying for the accumulated storage generated within the contract&#39;s child trie.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extra_deposit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">storage_byte_deposit</span>.<span class="ident">saturating_add</span>(<span class="self">self</span>.<span class="ident">storage_item_deposit</span>)
+	<span class="doccomment">/// The deposit paying for the accumulated storage generated within the contract&#39;s child trie.
+	</span><span class="kw">pub fn </span>extra_deposit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BalanceOf&lt;T&gt; {
+		<span class="self">self</span>.storage_byte_deposit.saturating_add(<span class="self">self</span>.storage_item_deposit)
 	}
 
-	<span class="doccomment">/// Same as [`Self::extra_deposit`] but including the base deposit.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">total_deposit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">extra_deposit</span>().<span class="ident">saturating_add</span>(<span class="self">self</span>.<span class="ident">storage_base_deposit</span>)
+	<span class="doccomment">/// Same as [`Self::extra_deposit`] but including the base deposit.
+	</span><span class="kw">pub fn </span>total_deposit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BalanceOf&lt;T&gt; {
+		<span class="self">self</span>.extra_deposit().saturating_add(<span class="self">self</span>.storage_base_deposit)
 	}
 }
 
-<span class="doccomment">/// Associated child trie unique id is built from the hash part of the trie id.</span>
-<span class="kw">fn</span> <span class="ident">child_trie_info</span>(<span class="ident">trie_id</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">ChildInfo</span> {
-	<span class="ident">ChildInfo::new_default</span>(<span class="ident">trie_id</span>)
+<span class="doccomment">/// Associated child trie unique id is built from the hash part of the trie id.
+</span><span class="kw">fn </span>child_trie_info(trie_id: <span class="kw-2">&amp;</span>[u8]) -&gt; ChildInfo {
+	ChildInfo::new_default(trie_id)
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">TypeInfo</span>, <span class="ident">MaxEncodedLen</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DeletedContract</span> {
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
+<span class="attribute">#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
+</span><span class="kw">pub struct </span>DeletedContract {
+	<span class="kw">pub</span>(<span class="kw">crate</span>) trie_id: TrieId,
 }
 
-<span class="doccomment">/// Information about what happended to the pre-existing value when calling [`Storage::write`].</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">WriteOutcome</span> {
-	<span class="doccomment">/// No value existed at the specified key.</span>
-	<span class="ident">New</span>,
-	<span class="doccomment">/// A value of the returned length was overwritten.</span>
-	<span class="ident">Overwritten</span>(<span class="ident">u32</span>),
-	<span class="doccomment">/// The returned value was taken out of storage before being overwritten.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This is only returned when specifically requested because it causes additional work</span>
-	<span class="doccomment">/// depending on the size of the pre-existing value. When not requested [`Self::Overwritten`]</span>
-	<span class="doccomment">/// is returned instead.</span>
-	<span class="ident">Taken</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>),
+<span class="doccomment">/// Information about what happended to the pre-existing value when calling [`Storage::write`].
+</span><span class="attribute">#[cfg_attr(test, derive(Debug, PartialEq))]
+</span><span class="kw">pub enum </span>WriteOutcome {
+	<span class="doccomment">/// No value existed at the specified key.
+	</span>New,
+	<span class="doccomment">/// A value of the returned length was overwritten.
+	</span>Overwritten(u32),
+	<span class="doccomment">/// The returned value was taken out of storage before being overwritten.
+	///
+	/// This is only returned when specifically requested because it causes additional work
+	/// depending on the size of the pre-existing value. When not requested [`Self::Overwritten`]
+	/// is returned instead.
+	</span>Taken(Vec&lt;u8&gt;),
 }
 
-<span class="kw">impl</span> <span class="ident">WriteOutcome</span> {
-	<span class="doccomment">/// Extracts the size of the overwritten value or `0` if there</span>
-	<span class="doccomment">/// was no value in storage.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">old_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::New</span> =&gt; <span class="number">0</span>,
-			<span class="ident"><span class="self">Self</span>::Overwritten</span>(<span class="ident">len</span>) =&gt; <span class="kw-2">*</span><span class="ident">len</span>,
-			<span class="ident"><span class="self">Self</span>::Taken</span>(<span class="ident">value</span>) =&gt; <span class="ident">value</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>,
+<span class="kw">impl </span>WriteOutcome {
+	<span class="doccomment">/// Extracts the size of the overwritten value or `0` if there
+	/// was no value in storage.
+	</span><span class="kw">pub fn </span>old_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+		<span class="kw">match </span><span class="self">self </span>{
+			<span class="self">Self</span>::New =&gt; <span class="number">0</span>,
+			<span class="self">Self</span>::Overwritten(len) =&gt; <span class="kw-2">*</span>len,
+			<span class="self">Self</span>::Taken(value) =&gt; value.len() <span class="kw">as </span>u32,
 		}
 	}
 
-	<span class="doccomment">/// Extracts the size of the overwritten value or `SENTINEL` if there</span>
-	<span class="doccomment">/// was no value in storage.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Note</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// We cannot use `0` as sentinel value because there could be a zero sized</span>
-	<span class="doccomment">/// storage entry which is different from a non existing one.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">old_len_with_sentinel</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::New</span> =&gt; <span class="ident">SENTINEL</span>,
-			<span class="ident"><span class="self">Self</span>::Overwritten</span>(<span class="ident">len</span>) =&gt; <span class="kw-2">*</span><span class="ident">len</span>,
-			<span class="ident"><span class="self">Self</span>::Taken</span>(<span class="ident">value</span>) =&gt; <span class="ident">value</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>,
+	<span class="doccomment">/// Extracts the size of the overwritten value or `SENTINEL` if there
+	/// was no value in storage.
+	///
+	/// # Note
+	///
+	/// We cannot use `0` as sentinel value because there could be a zero sized
+	/// storage entry which is different from a non existing one.
+	</span><span class="kw">pub fn </span>old_len_with_sentinel(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+		<span class="kw">match </span><span class="self">self </span>{
+			<span class="self">Self</span>::New =&gt; SENTINEL,
+			<span class="self">Self</span>::Overwritten(len) =&gt; <span class="kw-2">*</span>len,
+			<span class="self">Self</span>::Taken(value) =&gt; value.len() <span class="kw">as </span>u32,
 		}
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
+<span class="kw">pub struct </span>Storage&lt;T&gt;(PhantomData&lt;T&gt;);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span>,
-	<span class="ident">T::AccountId</span>: <span class="ident">UncheckedFrom</span><span class="op">&lt;</span><span class="ident">T::Hash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;T&gt; Storage&lt;T&gt;
+<span class="kw">where
+	</span>T: Config,
+	T::AccountId: UncheckedFrom&lt;T::Hash&gt; + AsRef&lt;[u8]&gt;,
 {
-	<span class="doccomment">/// Reads a storage kv pair of a contract.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The read is performed from the `trie_id` only. The `address` is not necessary. If the</span>
-	<span class="doccomment">/// contract doesn&#39;t store under the given `key` `None` is returned.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">StorageKey</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">trie_id</span>: <span class="kw-2">&amp;</span><span class="ident">TrieId</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">K</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="ident">child::get_raw</span>(<span class="kw-2">&amp;</span><span class="ident">child_trie_info</span>(<span class="ident">trie_id</span>), <span class="ident">key</span>.<span class="ident">hash</span>().<span class="ident">as_slice</span>())
+	<span class="doccomment">/// Reads a storage kv pair of a contract.
+	///
+	/// The read is performed from the `trie_id` only. The `address` is not necessary. If the
+	/// contract doesn&#39;t store under the given `key` `None` is returned.
+	</span><span class="kw">pub fn </span>read&lt;K: StorageKey&lt;T&gt;&gt;(trie_id: <span class="kw-2">&amp;</span>TrieId, key: <span class="kw-2">&amp;</span>K) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
+		child::get_raw(<span class="kw-2">&amp;</span>child_trie_info(trie_id), key.hash().as_slice())
 	}
 
-	<span class="doccomment">/// Returns `Some(len)` (in bytes) if a storage item exists at `key`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns `None` if the `key` wasn&#39;t previously set by `set_storage` or</span>
-	<span class="doccomment">/// was deleted.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">size</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">StorageKey</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">trie_id</span>: <span class="kw-2">&amp;</span><span class="ident">TrieId</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">K</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
-		<span class="ident">child::len</span>(<span class="kw-2">&amp;</span><span class="ident">child_trie_info</span>(<span class="ident">trie_id</span>), <span class="ident">key</span>.<span class="ident">hash</span>().<span class="ident">as_slice</span>())
+	<span class="doccomment">/// Returns `Some(len)` (in bytes) if a storage item exists at `key`.
+	///
+	/// Returns `None` if the `key` wasn&#39;t previously set by `set_storage` or
+	/// was deleted.
+	</span><span class="kw">pub fn </span>size&lt;K: StorageKey&lt;T&gt;&gt;(trie_id: <span class="kw-2">&amp;</span>TrieId, key: <span class="kw-2">&amp;</span>K) -&gt; <span class="prelude-ty">Option</span>&lt;u32&gt; {
+		child::len(<span class="kw-2">&amp;</span>child_trie_info(trie_id), key.hash().as_slice())
 	}
 
-	<span class="doccomment">/// Update a storage entry into a contract&#39;s kv storage.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If the `new_value` is `None` then the kv pair is removed. If `take` is true</span>
-	<span class="doccomment">/// a [`WriteOutcome::Taken`] is returned instead of a [`WriteOutcome::Overwritten`].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This function also records how much storage was created or removed if a `storage_meter`</span>
-	<span class="doccomment">/// is supplied. It should only be absent for testing or benchmarking code.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">StorageKey</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(
-		<span class="ident">trie_id</span>: <span class="kw-2">&amp;</span><span class="ident">TrieId</span>,
-		<span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">K</span>,
-		<span class="ident">new_value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-		<span class="ident">storage_meter</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="ident">meter::NestedMeter</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-		<span class="ident">take</span>: <span class="ident">bool</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WriteOutcome</span>, <span class="ident">DispatchError</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">child_trie_info</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">child_trie_info</span>(<span class="ident">trie_id</span>);
-		<span class="kw">let</span> <span class="ident">hashed_key</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">hash</span>();
-		<span class="kw">let</span> (<span class="ident">old_len</span>, <span class="ident">old_value</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">take</span> {
-			<span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">child::get_raw</span>(<span class="ident">child_trie_info</span>, <span class="kw-2">&amp;</span><span class="ident">hashed_key</span>);
-			(<span class="ident">val</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>), <span class="ident">val</span>)
-		} <span class="kw">else</span> {
-			(<span class="ident">child::len</span>(<span class="ident">child_trie_info</span>, <span class="kw-2">&amp;</span><span class="ident">hashed_key</span>), <span class="prelude-val">None</span>)
+	<span class="doccomment">/// Update a storage entry into a contract&#39;s kv storage.
+	///
+	/// If the `new_value` is `None` then the kv pair is removed. If `take` is true
+	/// a [`WriteOutcome::Taken`] is returned instead of a [`WriteOutcome::Overwritten`].
+	///
+	/// This function also records how much storage was created or removed if a `storage_meter`
+	/// is supplied. It should only be absent for testing or benchmarking code.
+	</span><span class="kw">pub fn </span>write&lt;K: StorageKey&lt;T&gt;&gt;(
+		trie_id: <span class="kw-2">&amp;</span>TrieId,
+		key: <span class="kw-2">&amp;</span>K,
+		new_value: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
+		storage_meter: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>meter::NestedMeter&lt;T&gt;&gt;,
+		take: bool,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;WriteOutcome, DispatchError&gt; {
+		<span class="kw">let </span>child_trie_info = <span class="kw-2">&amp;</span>child_trie_info(trie_id);
+		<span class="kw">let </span>hashed_key = key.hash();
+		<span class="kw">let </span>(old_len, old_value) = <span class="kw">if </span>take {
+			<span class="kw">let </span>val = child::get_raw(child_trie_info, <span class="kw-2">&amp;</span>hashed_key);
+			(val.as_ref().map(|v| v.len() <span class="kw">as </span>u32), val)
+		} <span class="kw">else </span>{
+			(child::len(child_trie_info, <span class="kw-2">&amp;</span>hashed_key), <span class="prelude-val">None</span>)
 		};
 
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">storage_meter</span>) <span class="op">=</span> <span class="ident">storage_meter</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">diff</span> <span class="op">=</span> <span class="ident">meter::Diff::default</span>();
-			<span class="kw">match</span> (<span class="ident">old_len</span>, <span class="ident">new_value</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>)) {
-				(<span class="prelude-val">Some</span>(<span class="ident">old_len</span>), <span class="prelude-val">Some</span>(<span class="ident">new_len</span>)) =&gt;
-					<span class="kw">if</span> <span class="ident">new_len</span> <span class="op">&gt;</span> <span class="ident">old_len</span> {
-						<span class="ident">diff</span>.<span class="ident">bytes_added</span> <span class="op">=</span> <span class="ident">new_len</span> <span class="op">-</span> <span class="ident">old_len</span>;
-					} <span class="kw">else</span> {
-						<span class="ident">diff</span>.<span class="ident">bytes_removed</span> <span class="op">=</span> <span class="ident">old_len</span> <span class="op">-</span> <span class="ident">new_len</span>;
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(storage_meter) = storage_meter {
+			<span class="kw">let </span><span class="kw-2">mut </span>diff = meter::Diff::default();
+			<span class="kw">match </span>(old_len, new_value.as_ref().map(|v| v.len() <span class="kw">as </span>u32)) {
+				(<span class="prelude-val">Some</span>(old_len), <span class="prelude-val">Some</span>(new_len)) =&gt;
+					<span class="kw">if </span>new_len &gt; old_len {
+						diff.bytes_added = new_len - old_len;
+					} <span class="kw">else </span>{
+						diff.bytes_removed = old_len - new_len;
 					},
-				(<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">new_len</span>)) =&gt; {
-					<span class="ident">diff</span>.<span class="ident">bytes_added</span> <span class="op">=</span> <span class="ident">new_len</span>;
-					<span class="ident">diff</span>.<span class="ident">items_added</span> <span class="op">=</span> <span class="number">1</span>;
+				(<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(new_len)) =&gt; {
+					diff.bytes_added = new_len;
+					diff.items_added = <span class="number">1</span>;
 				},
-				(<span class="prelude-val">Some</span>(<span class="ident">old_len</span>), <span class="prelude-val">None</span>) =&gt; {
-					<span class="ident">diff</span>.<span class="ident">bytes_removed</span> <span class="op">=</span> <span class="ident">old_len</span>;
-					<span class="ident">diff</span>.<span class="ident">items_removed</span> <span class="op">=</span> <span class="number">1</span>;
+				(<span class="prelude-val">Some</span>(old_len), <span class="prelude-val">None</span>) =&gt; {
+					diff.bytes_removed = old_len;
+					diff.items_removed = <span class="number">1</span>;
 				},
 				(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) =&gt; (),
 			}
-			<span class="ident">storage_meter</span>.<span class="ident">charge</span>(<span class="kw-2">&amp;</span><span class="ident">diff</span>);
+			storage_meter.charge(<span class="kw-2">&amp;</span>diff);
 		}
 
-		<span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">new_value</span> {
-			<span class="prelude-val">Some</span>(<span class="ident">new_value</span>) =&gt; <span class="ident">child::put_raw</span>(<span class="ident">child_trie_info</span>, <span class="kw-2">&amp;</span><span class="ident">hashed_key</span>, <span class="ident">new_value</span>),
-			<span class="prelude-val">None</span> =&gt; <span class="ident">child::kill</span>(<span class="ident">child_trie_info</span>, <span class="kw-2">&amp;</span><span class="ident">hashed_key</span>),
+		<span class="kw">match </span><span class="kw-2">&amp;</span>new_value {
+			<span class="prelude-val">Some</span>(new_value) =&gt; child::put_raw(child_trie_info, <span class="kw-2">&amp;</span>hashed_key, new_value),
+			<span class="prelude-val">None </span>=&gt; child::kill(child_trie_info, <span class="kw-2">&amp;</span>hashed_key),
 		}
 
-		<span class="prelude-val">Ok</span>(<span class="kw">match</span> (<span class="ident">old_len</span>, <span class="ident">old_value</span>) {
-			(<span class="prelude-val">None</span>, <span class="kw">_</span>) =&gt; <span class="ident">WriteOutcome::New</span>,
-			(<span class="prelude-val">Some</span>(<span class="ident">old_len</span>), <span class="prelude-val">None</span>) =&gt; <span class="ident">WriteOutcome::Overwritten</span>(<span class="ident">old_len</span>),
-			(<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">Some</span>(<span class="ident">old_value</span>)) =&gt; <span class="ident">WriteOutcome::Taken</span>(<span class="ident">old_value</span>),
+		<span class="prelude-val">Ok</span>(<span class="kw">match </span>(old_len, old_value) {
+			(<span class="prelude-val">None</span>, <span class="kw">_</span>) =&gt; WriteOutcome::New,
+			(<span class="prelude-val">Some</span>(old_len), <span class="prelude-val">None</span>) =&gt; WriteOutcome::Overwritten(old_len),
+			(<span class="prelude-val">Some</span>(<span class="kw">_</span>), <span class="prelude-val">Some</span>(old_value)) =&gt; WriteOutcome::Taken(old_value),
 		})
 	}
 
-	<span class="doccomment">/// Creates a new contract descriptor in the storage with the given code hash at the given</span>
-	<span class="doccomment">/// address.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns `Err` if there is already a contract at the given address.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_contract</span>(
-		<span class="ident">account</span>: <span class="kw-2">&amp;</span><span class="ident">AccountIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
-		<span class="ident">code_hash</span>: <span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">DispatchError</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="op">&lt;</span><span class="ident">ContractInfoOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="ident">account</span>) {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::DuplicateContract</span>.<span class="ident">into</span>())
+	<span class="doccomment">/// Creates a new contract descriptor in the storage with the given code hash at the given
+	/// address.
+	///
+	/// Returns `Err` if there is already a contract at the given address.
+	</span><span class="kw">pub fn </span>new_contract(
+		account: <span class="kw-2">&amp;</span>AccountIdOf&lt;T&gt;,
+		trie_id: TrieId,
+		code_hash: CodeHash&lt;T&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;ContractInfo&lt;T&gt;, DispatchError&gt; {
+		<span class="kw">if </span>&lt;ContractInfoOf&lt;T&gt;&gt;::contains_key(account) {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(Error::&lt;T&gt;::DuplicateContract.into())
 		}
 
-		<span class="kw">let</span> <span class="ident">contract</span> <span class="op">=</span> <span class="ident">ContractInfo</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-			<span class="ident">code_hash</span>,
-			<span class="ident">trie_id</span>,
-			<span class="ident">storage_bytes</span>: <span class="number">0</span>,
-			<span class="ident">storage_items</span>: <span class="number">0</span>,
-			<span class="ident">storage_byte_deposit</span>: <span class="ident">Zero::zero</span>(),
-			<span class="ident">storage_item_deposit</span>: <span class="ident">Zero::zero</span>(),
-			<span class="ident">storage_base_deposit</span>: <span class="ident">Zero::zero</span>(),
+		<span class="kw">let </span>contract = ContractInfo::&lt;T&gt; {
+			code_hash,
+			trie_id,
+			storage_bytes: <span class="number">0</span>,
+			storage_items: <span class="number">0</span>,
+			storage_byte_deposit: Zero::zero(),
+			storage_item_deposit: Zero::zero(),
+			storage_base_deposit: Zero::zero(),
 		};
 
-		<span class="prelude-val">Ok</span>(<span class="ident">contract</span>)
+		<span class="prelude-val">Ok</span>(contract)
 	}
 
-	<span class="doccomment">/// Push a contract&#39;s trie to the deletion queue for lazy removal.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// You must make sure that the contract is also removed when queuing the trie for deletion.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue_trie_for_deletion</span>(<span class="ident">contract</span>: <span class="kw-2">&amp;</span><span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">DispatchResult</span> {
-		<span class="op">&lt;</span><span class="ident">DeletionQueue</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::try_append</span>(<span class="ident">DeletedContract</span> { <span class="ident">trie_id</span>: <span class="ident">contract</span>.<span class="ident">trie_id</span>.<span class="ident">clone</span>() })
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::DeletionQueueFull</span>.<span class="ident">into</span>())
+	<span class="doccomment">/// Push a contract&#39;s trie to the deletion queue for lazy removal.
+	///
+	/// You must make sure that the contract is also removed when queuing the trie for deletion.
+	</span><span class="kw">pub fn </span>queue_trie_for_deletion(contract: <span class="kw-2">&amp;</span>ContractInfo&lt;T&gt;) -&gt; DispatchResult {
+		&lt;DeletionQueue&lt;T&gt;&gt;::try_append(DeletedContract { trie_id: contract.trie_id.clone() })
+			.map_err(|<span class="kw">_</span>| &lt;Error&lt;T&gt;&gt;::DeletionQueueFull.into())
 	}
 
-	<span class="doccomment">/// Calculates the weight that is necessary to remove one key from the trie and how many</span>
-	<span class="doccomment">/// of those keys can be deleted from the deletion queue given the supplied queue length</span>
-	<span class="doccomment">/// and weight limit.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deletion_budget</span>(<span class="ident">queue_len</span>: <span class="ident">usize</span>, <span class="ident">weight_limit</span>: <span class="ident">Weight</span>) -&gt; (<span class="ident">u64</span>, <span class="ident">u32</span>) {
-		<span class="kw">let</span> <span class="ident">base_weight</span> <span class="op">=</span> <span class="ident">T::WeightInfo::on_process_deletion_queue_batch</span>();
-		<span class="kw">let</span> <span class="ident">weight_per_queue_item</span> <span class="op">=</span> <span class="ident">T::WeightInfo::on_initialize_per_queue_item</span>(<span class="number">1</span>) <span class="op">-</span>
-			<span class="ident">T::WeightInfo::on_initialize_per_queue_item</span>(<span class="number">0</span>);
-		<span class="kw">let</span> <span class="ident">weight_per_key</span> <span class="op">=</span> (<span class="ident">T::WeightInfo::on_initialize_per_trie_key</span>(<span class="number">1</span>) <span class="op">-</span>
-			<span class="ident">T::WeightInfo::on_initialize_per_trie_key</span>(<span class="number">0</span>))
-		.<span class="ident">ref_time</span>();
-		<span class="kw">let</span> <span class="ident">decoding_weight</span> <span class="op">=</span> <span class="ident">weight_per_queue_item</span>.<span class="ident">saturating_mul</span>(<span class="ident">queue_len</span> <span class="kw">as</span> <span class="ident">u64</span>);
+	<span class="doccomment">/// Calculates the weight that is necessary to remove one key from the trie and how many
+	/// of those keys can be deleted from the deletion queue given the supplied queue length
+	/// and weight limit.
+	</span><span class="kw">pub fn </span>deletion_budget(queue_len: usize, weight_limit: Weight) -&gt; (u64, u32) {
+		<span class="kw">let </span>base_weight = T::WeightInfo::on_process_deletion_queue_batch();
+		<span class="kw">let </span>weight_per_queue_item = T::WeightInfo::on_initialize_per_queue_item(<span class="number">1</span>) -
+			T::WeightInfo::on_initialize_per_queue_item(<span class="number">0</span>);
+		<span class="kw">let </span>weight_per_key = (T::WeightInfo::on_initialize_per_trie_key(<span class="number">1</span>) -
+			T::WeightInfo::on_initialize_per_trie_key(<span class="number">0</span>))
+		.ref_time();
+		<span class="kw">let </span>decoding_weight = weight_per_queue_item.saturating_mul(queue_len <span class="kw">as </span>u64);
 
-		<span class="comment">// `weight_per_key` being zero makes no sense and would constitute a failure to</span>
-		<span class="comment">// benchmark properly. We opt for not removing any keys at all in this case.</span>
-		<span class="kw">let</span> <span class="ident">key_budget</span> <span class="op">=</span> <span class="ident">weight_limit</span>
-			.<span class="ident">saturating_sub</span>(<span class="ident">base_weight</span>)
-			.<span class="ident">saturating_sub</span>(<span class="ident">decoding_weight</span>)
-			.<span class="ident">checked_div</span>(<span class="ident">weight_per_key</span>)
-			.<span class="ident">unwrap_or</span>(<span class="ident">Weight::zero</span>())
-			.<span class="ident">ref_time</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+		<span class="comment">// `weight_per_key` being zero makes no sense and would constitute a failure to
+		// benchmark properly. We opt for not removing any keys at all in this case.
+		</span><span class="kw">let </span>key_budget = weight_limit
+			.saturating_sub(base_weight)
+			.saturating_sub(decoding_weight)
+			.checked_div(weight_per_key)
+			.unwrap_or(Weight::zero())
+			.ref_time() <span class="kw">as </span>u32;
 
-		(<span class="ident">weight_per_key</span>, <span class="ident">key_budget</span>)
+		(weight_per_key, key_budget)
 	}
 
-	<span class="doccomment">/// Delete as many items from the deletion queue possible within the supplied weight limit.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// It returns the amount of weight used for that task.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">process_deletion_queue_batch</span>(<span class="ident">weight_limit</span>: <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="kw">let</span> <span class="ident">queue_len</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">DeletionQueue</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::decode_len</span>().<span class="ident">unwrap_or</span>(<span class="number">0</span>);
-		<span class="kw">if</span> <span class="ident">queue_len</span> <span class="op">==</span> <span class="number">0</span> {
-			<span class="kw">return</span> <span class="ident">Weight::zero</span>()
+	<span class="doccomment">/// Delete as many items from the deletion queue possible within the supplied weight limit.
+	///
+	/// It returns the amount of weight used for that task.
+	</span><span class="kw">pub fn </span>process_deletion_queue_batch(weight_limit: Weight) -&gt; Weight {
+		<span class="kw">let </span>queue_len = &lt;DeletionQueue&lt;T&gt;&gt;::decode_len().unwrap_or(<span class="number">0</span>);
+		<span class="kw">if </span>queue_len == <span class="number">0 </span>{
+			<span class="kw">return </span>Weight::zero()
 		}
 
-		<span class="kw">let</span> (<span class="ident">weight_per_key</span>, <span class="kw-2">mut</span> <span class="ident">remaining_key_budget</span>) <span class="op">=</span>
-			<span class="ident"><span class="self">Self</span>::deletion_budget</span>(<span class="ident">queue_len</span>, <span class="ident">weight_limit</span>);
+		<span class="kw">let </span>(weight_per_key, <span class="kw-2">mut </span>remaining_key_budget) =
+			<span class="self">Self</span>::deletion_budget(queue_len, weight_limit);
 
-		<span class="comment">// We want to check whether we have enough weight to decode the queue before</span>
-		<span class="comment">// proceeding. Too little weight for decoding might happen during runtime upgrades</span>
-		<span class="comment">// which consume the whole block before the other `on_initialize` blocks are called.</span>
-		<span class="kw">if</span> <span class="ident">remaining_key_budget</span> <span class="op">==</span> <span class="number">0</span> {
-			<span class="kw">return</span> <span class="ident">weight_limit</span>
+		<span class="comment">// We want to check whether we have enough weight to decode the queue before
+		// proceeding. Too little weight for decoding might happen during runtime upgrades
+		// which consume the whole block before the other `on_initialize` blocks are called.
+		</span><span class="kw">if </span>remaining_key_budget == <span class="number">0 </span>{
+			<span class="kw">return </span>weight_limit
 		}
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">queue</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">DeletionQueue</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>();
+		<span class="kw">let </span><span class="kw-2">mut </span>queue = &lt;DeletionQueue&lt;T&gt;&gt;::get();
 
-		<span class="kw">while</span> <span class="op">!</span><span class="ident">queue</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="ident">remaining_key_budget</span> <span class="op">&gt;</span> <span class="number">0</span> {
-			<span class="comment">// Cannot panic due to loop condition</span>
-			<span class="kw">let</span> <span class="ident">trie</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">queue</span>[<span class="number">0</span>];
-			<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-			<span class="kw">let</span> <span class="ident">outcome</span> <span class="op">=</span> <span class="ident">child::kill_storage</span>(<span class="kw-2">&amp;</span><span class="ident">child_trie_info</span>(<span class="kw-2">&amp;</span><span class="ident">trie</span>.<span class="ident">trie_id</span>), <span class="prelude-val">Some</span>(<span class="ident">remaining_key_budget</span>));
-			<span class="kw">let</span> <span class="ident">keys_removed</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">outcome</span> {
-				<span class="comment">// This happens when our budget wasn&#39;t large enough to remove all keys.</span>
-				<span class="ident">KillStorageResult::SomeRemaining</span>(<span class="ident">c</span>) =&gt; <span class="ident">c</span>,
-				<span class="ident">KillStorageResult::AllRemoved</span>(<span class="ident">c</span>) =&gt; {
-					<span class="comment">// We do not care to preserve order. The contract is deleted already and</span>
-					<span class="comment">// no one waits for the trie to be deleted.</span>
-					<span class="ident">queue</span>.<span class="ident">swap_remove</span>(<span class="number">0</span>);
-					<span class="ident">c</span>
+		<span class="kw">while </span>!queue.is_empty() &amp;&amp; remaining_key_budget &gt; <span class="number">0 </span>{
+			<span class="comment">// Cannot panic due to loop condition
+			</span><span class="kw">let </span>trie = <span class="kw-2">&amp;mut </span>queue[<span class="number">0</span>];
+			<span class="attribute">#[allow(deprecated)]
+			</span><span class="kw">let </span>outcome = child::kill_storage(<span class="kw-2">&amp;</span>child_trie_info(<span class="kw-2">&amp;</span>trie.trie_id), <span class="prelude-val">Some</span>(remaining_key_budget));
+			<span class="kw">let </span>keys_removed = <span class="kw">match </span>outcome {
+				<span class="comment">// This happens when our budget wasn&#39;t large enough to remove all keys.
+				</span>KillStorageResult::SomeRemaining(c) =&gt; c,
+				KillStorageResult::AllRemoved(c) =&gt; {
+					<span class="comment">// We do not care to preserve order. The contract is deleted already and
+					// no one waits for the trie to be deleted.
+					</span>queue.swap_remove(<span class="number">0</span>);
+					c
 				},
 			};
-			<span class="ident">remaining_key_budget</span> <span class="op">=</span> <span class="ident">remaining_key_budget</span>.<span class="ident">saturating_sub</span>(<span class="ident">keys_removed</span>);
+			remaining_key_budget = remaining_key_budget.saturating_sub(keys_removed);
 		}
 
-		<span class="op">&lt;</span><span class="ident">DeletionQueue</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">queue</span>);
-		<span class="kw">let</span> <span class="ident">ref_time_weight</span> <span class="op">=</span> <span class="ident">weight_limit</span>
-			.<span class="ident">ref_time</span>()
-			.<span class="ident">saturating_sub</span>(<span class="ident">weight_per_key</span>.<span class="ident">saturating_mul</span>(<span class="ident">u64::from</span>(<span class="ident">remaining_key_budget</span>)));
-		<span class="ident">Weight::from_ref_time</span>(<span class="ident">ref_time_weight</span>)
+		&lt;DeletionQueue&lt;T&gt;&gt;::put(queue);
+		<span class="kw">let </span>ref_time_weight = weight_limit
+			.ref_time()
+			.saturating_sub(weight_per_key.saturating_mul(u64::from(remaining_key_budget)));
+		Weight::from_ref_time(ref_time_weight)
 	}
 
-	<span class="doccomment">/// Generates a unique trie id by returning  `hash(account_id ++ nonce)`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_trie_id</span>(<span class="ident">account_id</span>: <span class="kw-2">&amp;</span><span class="ident">AccountIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">nonce</span>: <span class="ident">u64</span>) -&gt; <span class="ident">TrieId</span> {
-		<span class="kw">let</span> <span class="ident">buf</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">account_id</span>.<span class="ident">as_ref</span>().<span class="ident">iter</span>().<span class="ident">chain</span>(<span class="kw-2">&amp;</span><span class="ident">nonce</span>.<span class="ident">to_le_bytes</span>()).<span class="ident">cloned</span>().<span class="ident">collect</span>();
-		<span class="ident">T::Hashing::hash</span>(<span class="kw-2">&amp;</span><span class="ident">buf</span>)
-			.<span class="ident">as_ref</span>()
-			.<span class="ident">to_vec</span>()
-			.<span class="ident">try_into</span>()
-			.<span class="ident">expect</span>(<span class="string">&quot;Runtime uses a reasonable hash size. Hence sizeof(T::Hash) &lt;= 128; qed&quot;</span>)
+	<span class="doccomment">/// Generates a unique trie id by returning  `hash(account_id ++ nonce)`.
+	</span><span class="kw">pub fn </span>generate_trie_id(account_id: <span class="kw-2">&amp;</span>AccountIdOf&lt;T&gt;, nonce: u64) -&gt; TrieId {
+		<span class="kw">let </span>buf: Vec&lt;<span class="kw">_</span>&gt; = account_id.as_ref().iter().chain(<span class="kw-2">&amp;</span>nonce.to_le_bytes()).cloned().collect();
+		T::Hashing::hash(<span class="kw-2">&amp;</span>buf)
+			.as_ref()
+			.to_vec()
+			.try_into()
+			.expect(<span class="string">&quot;Runtime uses a reasonable hash size. Hence sizeof(T::Hash) &lt;= 128; qed&quot;</span>)
 	}
 
-	<span class="doccomment">/// Returns the code hash of the contract specified by `account` ID.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">code_hash</span>(<span class="ident">account</span>: <span class="kw-2">&amp;</span><span class="ident">AccountIdOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="op">&lt;</span><span class="ident">ContractInfoOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">account</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="ident">i</span>.<span class="ident">code_hash</span>)
+	<span class="doccomment">/// Returns the code hash of the contract specified by `account` ID.
+	</span><span class="kw">pub fn </span>code_hash(account: <span class="kw-2">&amp;</span>AccountIdOf&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;CodeHash&lt;T&gt;&gt; {
+		&lt;ContractInfoOf&lt;T&gt;&gt;::get(account).map(|i| i.code_hash)
 	}
 
-	<span class="doccomment">/// Fill up the queue in order to exercise the limits during testing.</span>
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fill_queue_with_dummies</span>() {
-		<span class="kw">use</span> <span class="ident">frame_support</span>::{<span class="ident">traits::Get</span>, <span class="ident">BoundedVec</span>};
-		<span class="kw">let</span> <span class="ident">queue</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DeletedContract</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">T::DeletionQueueDepth::get</span>())
-			.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">DeletedContract</span> { <span class="ident">trie_id</span>: <span class="ident">TrieId::default</span>() })
-			.<span class="ident">collect</span>();
-		<span class="kw">let</span> <span class="ident">bounded</span>: <span class="ident">BoundedVec</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">queue</span>.<span class="ident">try_into</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ()).<span class="ident">unwrap</span>();
-		<span class="op">&lt;</span><span class="ident">DeletionQueue</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">bounded</span>);
+	<span class="doccomment">/// Fill up the queue in order to exercise the limits during testing.
+	</span><span class="attribute">#[cfg(test)]
+	</span><span class="kw">pub fn </span>fill_queue_with_dummies() {
+		<span class="kw">use </span>frame_support::{traits::Get, BoundedVec};
+		<span class="kw">let </span>queue: Vec&lt;DeletedContract&gt; = (<span class="number">0</span>..T::DeletionQueueDepth::get())
+			.map(|<span class="kw">_</span>| DeletedContract { trie_id: TrieId::default() })
+			.collect();
+		<span class="kw">let </span>bounded: BoundedVec&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = queue.try_into().map_err(|<span class="kw">_</span>| ()).unwrap();
+		&lt;DeletionQueue&lt;T&gt;&gt;::put(bounded);
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

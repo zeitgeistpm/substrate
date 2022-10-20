@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/beefy/src/witness.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>witness.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../beefy_primitives/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../beefy_primitives/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../beefy_primitives/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/beefy/src/witness.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>witness.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../beefy_primitives/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../beefy_primitives/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -168,170 +162,169 @@
 <span id="162">162</span>
 <span id="163">163</span>
 <span id="164">164</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Primitives for light, 2-phase interactive verification protocol.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Instead of submitting full list of signatures, it&#39;s possible to submit first a witness</span>
-<span class="doccomment">//! form of [SignedCommitment].</span>
-<span class="doccomment">//! This can later be verified by the client requesting only some (out of all) signatures for</span>
-<span class="doccomment">//! verification. This allows lowering the data and computation cost of verifying the</span>
-<span class="doccomment">//! signed commitment.</span>
+</span><span class="doccomment">//! Primitives for light, 2-phase interactive verification protocol.
+//!
+//! Instead of submitting full list of signatures, it&#39;s possible to submit first a witness
+//! form of [SignedCommitment].
+//! This can later be verified by the client requesting only some (out of all) signatures for
+//! verification. This allows lowering the data and computation cost of verifying the
+//! signed commitment.
 
-<span class="kw">use</span> <span class="ident">sp_std::prelude</span>::<span class="kw-2">*</span>;
+</span><span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::commitment</span>::{<span class="ident">Commitment</span>, <span class="ident">SignedCommitment</span>};
+<span class="kw">use </span><span class="kw">crate</span>::commitment::{Commitment, SignedCommitment};
 
-<span class="doccomment">/// A light form of [SignedCommitment].</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This is a light (&quot;witness&quot;) form of the signed commitment. Instead of containing full list of</span>
-<span class="doccomment">/// signatures, which might be heavy and expensive to verify, it only contains a bit vector of</span>
-<span class="doccomment">/// validators which signed the original [SignedCommitment] and a merkle root of all signatures.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This can be used by light clients for 2-phase interactive verification (for instance for</span>
-<span class="doccomment">/// Ethereum Mainnet), in a commit-reveal like scheme, where first we submit only the signed</span>
-<span class="doccomment">/// commitment witness and later on, the client picks only some signatures to verify at random.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SignedCommitmentWitness</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TMerkleRoot</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The full content of the commitment.</span>
-	<span class="kw">pub</span> <span class="ident">commitment</span>: <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A light form of [SignedCommitment].
+///
+/// This is a light (&quot;witness&quot;) form of the signed commitment. Instead of containing full list of
+/// signatures, which might be heavy and expensive to verify, it only contains a bit vector of
+/// validators which signed the original [SignedCommitment] and a merkle root of all signatures.
+///
+/// This can be used by light clients for 2-phase interactive verification (for instance for
+/// Ethereum Mainnet), in a commit-reveal like scheme, where first we submit only the signed
+/// commitment witness and later on, the client picks only some signatures to verify at random.
+</span><span class="attribute">#[derive(Debug, PartialEq, Eq, codec::Encode, codec::Decode)]
+</span><span class="kw">pub struct </span>SignedCommitmentWitness&lt;TBlockNumber, TMerkleRoot&gt; {
+	<span class="doccomment">/// The full content of the commitment.
+	</span><span class="kw">pub </span>commitment: Commitment&lt;TBlockNumber&gt;,
 
-	<span class="doccomment">/// The bit vector of validators who signed the commitment.</span>
-	<span class="kw">pub</span> <span class="ident">signed_by</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>, <span class="comment">// TODO [ToDr] Consider replacing with bitvec crate</span>
+	<span class="doccomment">/// The bit vector of validators who signed the commitment.
+	</span><span class="kw">pub </span>signed_by: Vec&lt;bool&gt;, <span class="comment">// TODO [ToDr] Consider replacing with bitvec crate
 
-	<span class="doccomment">/// A merkle root of signatures in the original signed commitment.</span>
-	<span class="kw">pub</span> <span class="ident">signatures_merkle_root</span>: <span class="ident">TMerkleRoot</span>,
+	</span><span class="doccomment">/// A merkle root of signatures in the original signed commitment.
+	</span><span class="kw">pub </span>signatures_merkle_root: TMerkleRoot,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TMerkleRoot</span><span class="op">&gt;</span> <span class="ident">SignedCommitmentWitness</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TMerkleRoot</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Convert [SignedCommitment] into [SignedCommitmentWitness].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This takes a [SignedCommitment], which contains full signatures</span>
-	<span class="doccomment">/// and converts it into a witness form, which does not contain full signatures,</span>
-	<span class="doccomment">/// only a bit vector indicating which validators have signed the original [SignedCommitment]</span>
-	<span class="doccomment">/// and a merkle root of all signatures.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns the full list of signatures along with the witness.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_signed</span><span class="op">&lt;</span><span class="ident">TMerkelize</span>, <span class="ident">TSignature</span><span class="op">&gt;</span>(
-		<span class="ident">signed</span>: <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span>,
-		<span class="ident">merkelize</span>: <span class="ident">TMerkelize</span>,
-	) -&gt; (<span class="self">Self</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TSignature</span><span class="op">&gt;</span><span class="op">&gt;</span>)
-	<span class="kw">where</span>
-		<span class="ident">TMerkelize</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TSignature</span><span class="op">&gt;</span>]) -&gt; <span class="ident">TMerkleRoot</span>,
+<span class="kw">impl</span>&lt;TBlockNumber, TMerkleRoot&gt; SignedCommitmentWitness&lt;TBlockNumber, TMerkleRoot&gt; {
+	<span class="doccomment">/// Convert [SignedCommitment] into [SignedCommitmentWitness].
+	///
+	/// This takes a [SignedCommitment], which contains full signatures
+	/// and converts it into a witness form, which does not contain full signatures,
+	/// only a bit vector indicating which validators have signed the original [SignedCommitment]
+	/// and a merkle root of all signatures.
+	///
+	/// Returns the full list of signatures along with the witness.
+	</span><span class="kw">pub fn </span>from_signed&lt;TMerkelize, TSignature&gt;(
+		signed: SignedCommitment&lt;TBlockNumber, TSignature&gt;,
+		merkelize: TMerkelize,
+	) -&gt; (<span class="self">Self</span>, Vec&lt;<span class="prelude-ty">Option</span>&lt;TSignature&gt;&gt;)
+	<span class="kw">where
+		</span>TMerkelize: FnOnce(<span class="kw-2">&amp;</span>[<span class="prelude-ty">Option</span>&lt;TSignature&gt;]) -&gt; TMerkleRoot,
 	{
-		<span class="kw">let</span> <span class="ident">SignedCommitment</span> { <span class="ident">commitment</span>, <span class="ident">signatures</span> } <span class="op">=</span> <span class="ident">signed</span>;
-		<span class="kw">let</span> <span class="ident">signed_by</span> <span class="op">=</span> <span class="ident">signatures</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">is_some</span>()).<span class="ident">collect</span>();
-		<span class="kw">let</span> <span class="ident">signatures_merkle_root</span> <span class="op">=</span> <span class="ident">merkelize</span>(<span class="kw-2">&amp;</span><span class="ident">signatures</span>);
+		<span class="kw">let </span>SignedCommitment { commitment, signatures } = signed;
+		<span class="kw">let </span>signed_by = signatures.iter().map(|s| s.is_some()).collect();
+		<span class="kw">let </span>signatures_merkle_root = merkelize(<span class="kw-2">&amp;</span>signatures);
 
-		(<span class="self">Self</span> { <span class="ident">commitment</span>, <span class="ident">signed_by</span>, <span class="ident">signatures_merkle_root</span> }, <span class="ident">signatures</span>)
+		(<span class="self">Self </span>{ commitment, signed_by, signatures_merkle_root }, signatures)
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
 
-	<span class="kw">use</span> <span class="ident">sp_core</span>::{<span class="ident">keccak_256</span>, <span class="ident">Pair</span>};
-	<span class="kw">use</span> <span class="ident">sp_keystore</span>::{<span class="ident">testing::KeyStore</span>, <span class="ident">SyncCryptoStore</span>, <span class="ident">SyncCryptoStorePtr</span>};
+	<span class="kw">use </span>sp_core::{keccak_256, Pair};
+	<span class="kw">use </span>sp_keystore::{testing::KeyStore, SyncCryptoStore, SyncCryptoStorePtr};
 
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">codec::Decode</span>;
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>codec::Decode;
 
-	<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">crypto</span>, <span class="ident">known_payloads</span>, <span class="ident">Payload</span>, <span class="ident">KEY_TYPE</span>};
+	<span class="kw">use crate</span>::{crypto, known_payloads, Payload, KEY_TYPE};
 
-	<span class="kw">type</span> <span class="ident">TestCommitment</span> <span class="op">=</span> <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">u128</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">TestSignedCommitment</span> <span class="op">=</span> <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">u128</span>, <span class="ident">crypto::Signature</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">TestSignedCommitmentWitness</span> <span class="op">=</span>
-		<span class="ident">SignedCommitmentWitness</span><span class="op">&lt;</span><span class="ident">u128</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">crypto::Signature</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="kw">type </span>TestCommitment = Commitment&lt;u128&gt;;
+	<span class="kw">type </span>TestSignedCommitment = SignedCommitment&lt;u128, crypto::Signature&gt;;
+	<span class="kw">type </span>TestSignedCommitmentWitness =
+		SignedCommitmentWitness&lt;u128, Vec&lt;<span class="prelude-ty">Option</span>&lt;crypto::Signature&gt;&gt;&gt;;
 
-	<span class="comment">// The mock signatures are equivalent to the ones produced by the BEEFY keystore</span>
-	<span class="kw">fn</span> <span class="ident">mock_signatures</span>() -&gt; (<span class="ident">crypto::Signature</span>, <span class="ident">crypto::Signature</span>) {
-		<span class="kw">let</span> <span class="ident">store</span>: <span class="ident">SyncCryptoStorePtr</span> <span class="op">=</span> <span class="ident">KeyStore::new</span>().<span class="ident">into</span>();
+	<span class="comment">// The mock signatures are equivalent to the ones produced by the BEEFY keystore
+	</span><span class="kw">fn </span>mock_signatures() -&gt; (crypto::Signature, crypto::Signature) {
+		<span class="kw">let </span>store: SyncCryptoStorePtr = KeyStore::new().into();
 
-		<span class="kw">let</span> <span class="ident">alice</span> <span class="op">=</span> <span class="ident">sp_core::ecdsa::Pair::from_string</span>(<span class="string">&quot;//Alice&quot;</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span>
-			<span class="ident">SyncCryptoStore::insert_unknown</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">store</span>, <span class="ident">KEY_TYPE</span>, <span class="string">&quot;//Alice&quot;</span>, <span class="ident">alice</span>.<span class="ident">public</span>().<span class="ident">as_ref</span>())
-				.<span class="ident">unwrap</span>();
+		<span class="kw">let </span>alice = sp_core::ecdsa::Pair::from_string(<span class="string">&quot;//Alice&quot;</span>, <span class="prelude-val">None</span>).unwrap();
+		<span class="kw">let _ </span>=
+			SyncCryptoStore::insert_unknown(<span class="kw-2">&amp;*</span>store, KEY_TYPE, <span class="string">&quot;//Alice&quot;</span>, alice.public().as_ref())
+				.unwrap();
 
-		<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">keccak_256</span>(<span class="string">b&quot;This is the first message&quot;</span>);
-		<span class="kw">let</span> <span class="ident">sig1</span> <span class="op">=</span> <span class="ident">SyncCryptoStore::ecdsa_sign_prehashed</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">store</span>, <span class="ident">KEY_TYPE</span>, <span class="kw-2">&amp;</span><span class="ident">alice</span>.<span class="ident">public</span>(), <span class="kw-2">&amp;</span><span class="ident">msg</span>)
-			.<span class="ident">unwrap</span>()
-			.<span class="ident">unwrap</span>();
+		<span class="kw">let </span>msg = keccak_256(<span class="string">b&quot;This is the first message&quot;</span>);
+		<span class="kw">let </span>sig1 = SyncCryptoStore::ecdsa_sign_prehashed(<span class="kw-2">&amp;*</span>store, KEY_TYPE, <span class="kw-2">&amp;</span>alice.public(), <span class="kw-2">&amp;</span>msg)
+			.unwrap()
+			.unwrap();
 
-		<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">keccak_256</span>(<span class="string">b&quot;This is the second message&quot;</span>);
-		<span class="kw">let</span> <span class="ident">sig2</span> <span class="op">=</span> <span class="ident">SyncCryptoStore::ecdsa_sign_prehashed</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">store</span>, <span class="ident">KEY_TYPE</span>, <span class="kw-2">&amp;</span><span class="ident">alice</span>.<span class="ident">public</span>(), <span class="kw-2">&amp;</span><span class="ident">msg</span>)
-			.<span class="ident">unwrap</span>()
-			.<span class="ident">unwrap</span>();
+		<span class="kw">let </span>msg = keccak_256(<span class="string">b&quot;This is the second message&quot;</span>);
+		<span class="kw">let </span>sig2 = SyncCryptoStore::ecdsa_sign_prehashed(<span class="kw-2">&amp;*</span>store, KEY_TYPE, <span class="kw-2">&amp;</span>alice.public(), <span class="kw-2">&amp;</span>msg)
+			.unwrap()
+			.unwrap();
 
-		(<span class="ident">sig1</span>.<span class="ident">into</span>(), <span class="ident">sig2</span>.<span class="ident">into</span>())
+		(sig1.into(), sig2.into())
 	}
 
-	<span class="kw">fn</span> <span class="ident">signed_commitment</span>() -&gt; <span class="ident">TestSignedCommitment</span> {
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">Payload::from_single_entry</span>(
-			<span class="ident">known_payloads::MMR_ROOT_ID</span>,
-			<span class="string">&quot;Hello World!&quot;</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>(),
+	<span class="kw">fn </span>signed_commitment() -&gt; TestSignedCommitment {
+		<span class="kw">let </span>payload = Payload::from_single_entry(
+			known_payloads::MMR_ROOT_ID,
+			<span class="string">&quot;Hello World!&quot;</span>.as_bytes().to_vec(),
 		);
-		<span class="kw">let</span> <span class="ident">commitment</span>: <span class="ident">TestCommitment</span> <span class="op">=</span>
-			<span class="ident">Commitment</span> { <span class="ident">payload</span>, <span class="ident">block_number</span>: <span class="number">5</span>, <span class="ident">validator_set_id</span>: <span class="number">0</span> };
+		<span class="kw">let </span>commitment: TestCommitment =
+			Commitment { payload, block_number: <span class="number">5</span>, validator_set_id: <span class="number">0 </span>};
 
-		<span class="kw">let</span> <span class="ident">sigs</span> <span class="op">=</span> <span class="ident">mock_signatures</span>();
+		<span class="kw">let </span>sigs = mock_signatures();
 
-		<span class="ident">SignedCommitment</span> { <span class="ident">commitment</span>, <span class="ident">signatures</span>: <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">sigs</span>.<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="ident">sigs</span>.<span class="number">1</span>)] }
+		SignedCommitment { commitment, signatures: <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(sigs.<span class="number">0</span>), <span class="prelude-val">Some</span>(sigs.<span class="number">1</span>)] }
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">should_convert_signed_commitment_to_witness</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">signed</span> <span class="op">=</span> <span class="ident">signed_commitment</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>should_convert_signed_commitment_to_witness() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>signed = signed_commitment();
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> (<span class="ident">witness</span>, <span class="ident">signatures</span>) <span class="op">=</span>
-			<span class="ident">TestSignedCommitmentWitness::from_signed</span>(<span class="ident">signed</span>, <span class="op">|</span><span class="ident">sigs</span><span class="op">|</span> <span class="ident">sigs</span>.<span class="ident">to_vec</span>());
+		<span class="comment">// when
+		</span><span class="kw">let </span>(witness, signatures) =
+			TestSignedCommitmentWitness::from_signed(signed, |sigs| sigs.to_vec());
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">witness</span>.<span class="ident">signatures_merkle_root</span>, <span class="ident">signatures</span>);
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(witness.signatures_merkle_root, signatures);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">should_encode_and_decode_witness</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">signed</span> <span class="op">=</span> <span class="ident">signed_commitment</span>();
-		<span class="kw">let</span> (<span class="ident">witness</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">TestSignedCommitmentWitness::from_signed</span>(<span class="ident">signed</span>, <span class="op">|</span><span class="ident">sigs</span><span class="op">|</span> <span class="ident">sigs</span>.<span class="ident">to_vec</span>());
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>should_encode_and_decode_witness() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>signed = signed_commitment();
+		<span class="kw">let </span>(witness, <span class="kw">_</span>) = TestSignedCommitmentWitness::from_signed(signed, |sigs| sigs.to_vec());
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">codec::Encode::encode</span>(<span class="kw-2">&amp;</span><span class="ident">witness</span>);
-		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">TestSignedCommitmentWitness::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>);
+		<span class="comment">// when
+		</span><span class="kw">let </span>encoded = codec::Encode::encode(<span class="kw-2">&amp;</span>witness);
+		<span class="kw">let </span>decoded = TestSignedCommitmentWitness::decode(<span class="kw-2">&amp;mut &amp;*</span>encoded);
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>, <span class="prelude-val">Ok</span>(<span class="ident">witness</span>));
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(decoded, <span class="prelude-val">Ok</span>(witness));
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">encoded</span>,
-			<span class="ident">array_bytes::hex2bytes_unchecked</span>(
+			encoded,
+			array_bytes::hex2bytes_unchecked(
 				<span class="string">&quot;\
 				046d683048656c6c6f20576f726c642105000000000000000000000000000000000000000000000010\
 				0000010110000001558455ad81279df0795cc985580e4fb75d72d948d1107b2ac80a09abed4da8480c\
 				746cc321f2319a5e99a830e314d10dd3cd68ce3dc0c33c86e99bcb7816f9ba01012d6e1f8105c337a8\
 				6cdd9aaacdc496577f3db8c55ef9e6fd48f2c5c05a2274707491635d8ba3df64f324575b7b2a34487b\
 				ca2324b6a0046395a71681be3d0c2a00\
-			&quot;</span>
-			)
+			&quot;
+			</span>)
 		);
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beefy_primitives" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beefy_primitives" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

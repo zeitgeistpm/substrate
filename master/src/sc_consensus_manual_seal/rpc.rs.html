@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/manual-seal/src/rpc.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rpc.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sc_consensus_manual_seal/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sc_consensus_manual_seal/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_consensus_manual_seal/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/manual-seal/src/rpc.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>rpc.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sc_consensus_manual_seal/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_consensus_manual_seal/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -173,175 +167,174 @@
 <span id="167">167</span>
 <span id="168">168</span>
 <span id="169">169</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! RPC interface for the `ManualSeal` Engine.</span>
+</span><span class="doccomment">//! RPC interface for the `ManualSeal` Engine.
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::error::Error</span>;
-<span class="kw">use</span> <span class="ident">futures</span>::{
-	<span class="ident">channel</span>::{<span class="ident">mpsc</span>, <span class="ident">oneshot</span>},
-	<span class="ident">SinkExt</span>,
+</span><span class="kw">use </span><span class="kw">crate</span>::error::Error;
+<span class="kw">use </span>futures::{
+	channel::{mpsc, oneshot},
+	SinkExt,
 };
-<span class="kw">use</span> <span class="ident">jsonrpsee</span>::{
-	<span class="ident">core</span>::{<span class="ident">async_trait</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">JsonRpseeError</span>, <span class="ident">RpcResult</span>},
-	<span class="ident">proc_macros::rpc</span>,
+<span class="kw">use </span>jsonrpsee::{
+	core::{async_trait, Error <span class="kw">as </span>JsonRpseeError, RpcResult},
+	proc_macros::rpc,
 };
-<span class="kw">use</span> <span class="ident">sc_consensus::ImportedAux</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime::EncodedJustification</span>;
+<span class="kw">use </span>sc_consensus::ImportedAux;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>sp_runtime::EncodedJustification;
 
-<span class="doccomment">/// Sender passed to the authorship task to report errors or successes.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Sender passed to the authorship task to report errors or successes.
+</span><span class="kw">pub type </span>Sender&lt;T&gt; = <span class="prelude-ty">Option</span>&lt;oneshot::Sender&lt;std::result::Result&lt;T, Error&gt;&gt;&gt;;
 
-<span class="doccomment">/// Message sent to the background authorship task, usually by RPC.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EngineCommand</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Tells the engine to propose a new block</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// if create_empty == true, it will create empty blocks if there are no transactions</span>
-	<span class="doccomment">/// in the transaction pool.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// if finalize == true, the block will be instantly finalized.</span>
-	<span class="ident">SealNewBlock</span> {
-		<span class="doccomment">/// if true, empty blocks(without extrinsics) will be created.</span>
-		<span class="doccomment">/// otherwise, will return Error::EmptyTransactionPool.</span>
-		<span class="ident">create_empty</span>: <span class="ident">bool</span>,
-		<span class="doccomment">/// instantly finalize this block?</span>
-		<span class="ident">finalize</span>: <span class="ident">bool</span>,
-		<span class="doccomment">/// specify the parent hash of the about-to-created block</span>
-		<span class="ident">parent_hash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
-		<span class="doccomment">/// sender to report errors/success to the rpc.</span>
-		<span class="ident">sender</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">CreatedBlock</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Message sent to the background authorship task, usually by RPC.
+</span><span class="kw">pub enum </span>EngineCommand&lt;Hash&gt; {
+	<span class="doccomment">/// Tells the engine to propose a new block
+	///
+	/// if create_empty == true, it will create empty blocks if there are no transactions
+	/// in the transaction pool.
+	///
+	/// if finalize == true, the block will be instantly finalized.
+	</span>SealNewBlock {
+		<span class="doccomment">/// if true, empty blocks(without extrinsics) will be created.
+		/// otherwise, will return Error::EmptyTransactionPool.
+		</span>create_empty: bool,
+		<span class="doccomment">/// instantly finalize this block?
+		</span>finalize: bool,
+		<span class="doccomment">/// specify the parent hash of the about-to-created block
+		</span>parent_hash: <span class="prelude-ty">Option</span>&lt;Hash&gt;,
+		<span class="doccomment">/// sender to report errors/success to the rpc.
+		</span>sender: Sender&lt;CreatedBlock&lt;Hash&gt;&gt;,
 	},
-	<span class="doccomment">/// Tells the engine to finalize the block with the supplied hash</span>
-	<span class="ident">FinalizeBlock</span> {
-		<span class="doccomment">/// hash of the block</span>
-		<span class="ident">hash</span>: <span class="ident">Hash</span>,
-		<span class="doccomment">/// sender to report errors/success to the rpc.</span>
-		<span class="ident">sender</span>: <span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
-		<span class="doccomment">/// finalization justification</span>
-		<span class="ident">justification</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EncodedJustification</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Tells the engine to finalize the block with the supplied hash
+	</span>FinalizeBlock {
+		<span class="doccomment">/// hash of the block
+		</span>hash: Hash,
+		<span class="doccomment">/// sender to report errors/success to the rpc.
+		</span>sender: Sender&lt;()&gt;,
+		<span class="doccomment">/// finalization justification
+		</span>justification: <span class="prelude-ty">Option</span>&lt;EncodedJustification&gt;,
 	},
 }
 
-<span class="doccomment">/// RPC trait that provides methods for interacting with the manual-seal authorship task over rpc.</span>
-<span class="attribute">#[<span class="ident">rpc</span>(<span class="ident">client</span>, <span class="ident">server</span>)]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ManualSealApi</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Instructs the manual-seal authorship task to create a new block</span>
-	<span class="attribute">#[<span class="ident">method</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;engine_createBlock&quot;</span>)]</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_block</span>(
+<span class="doccomment">/// RPC trait that provides methods for interacting with the manual-seal authorship task over rpc.
+</span><span class="attribute">#[rpc(client, server)]
+</span><span class="kw">pub trait </span>ManualSealApi&lt;Hash&gt; {
+	<span class="doccomment">/// Instructs the manual-seal authorship task to create a new block
+	</span><span class="attribute">#[method(name = <span class="string">&quot;engine_createBlock&quot;</span>)]
+	</span><span class="kw">async fn </span>create_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">create_empty</span>: <span class="ident">bool</span>,
-		<span class="ident">finalize</span>: <span class="ident">bool</span>,
-		<span class="ident">parent_hash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
-	) -&gt; <span class="ident">RpcResult</span><span class="op">&lt;</span><span class="ident">CreatedBlock</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+		create_empty: bool,
+		finalize: bool,
+		parent_hash: <span class="prelude-ty">Option</span>&lt;Hash&gt;,
+	) -&gt; RpcResult&lt;CreatedBlock&lt;Hash&gt;&gt;;
 
-	<span class="doccomment">/// Instructs the manual-seal authorship task to finalize a block</span>
-	<span class="attribute">#[<span class="ident">method</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;engine_finalizeBlock&quot;</span>)]</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">finalize_block</span>(
+	<span class="doccomment">/// Instructs the manual-seal authorship task to finalize a block
+	</span><span class="attribute">#[method(name = <span class="string">&quot;engine_finalizeBlock&quot;</span>)]
+	</span><span class="kw">async fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">hash</span>: <span class="ident">Hash</span>,
-		<span class="ident">justification</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EncodedJustification</span><span class="op">&gt;</span>,
-	) -&gt; <span class="ident">RpcResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>;
+		hash: Hash,
+		justification: <span class="prelude-ty">Option</span>&lt;EncodedJustification&gt;,
+	) -&gt; RpcResult&lt;bool&gt;;
 }
 
-<span class="doccomment">/// A struct that implements the [`ManualSealApiServer`].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ManualSeal</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="ident">import_block_channel</span>: <span class="ident">mpsc::Sender</span><span class="op">&lt;</span><span class="ident">EngineCommand</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A struct that implements the [`ManualSealApiServer`].
+</span><span class="kw">pub struct </span>ManualSeal&lt;Hash&gt; {
+	import_block_channel: mpsc::Sender&lt;EngineCommand&lt;Hash&gt;&gt;,
 }
 
-<span class="doccomment">/// return type of `engine_createBlock`</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CreatedBlock</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// hash of the created block.</span>
-	<span class="kw">pub</span> <span class="ident">hash</span>: <span class="ident">Hash</span>,
-	<span class="doccomment">/// some extra details about the import operation</span>
-	<span class="kw">pub</span> <span class="ident">aux</span>: <span class="ident">ImportedAux</span>,
+<span class="doccomment">/// return type of `engine_createBlock`
+</span><span class="attribute">#[derive(Debug, Deserialize, Serialize, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>CreatedBlock&lt;Hash&gt; {
+	<span class="doccomment">/// hash of the created block.
+	</span><span class="kw">pub </span>hash: Hash,
+	<span class="doccomment">/// some extra details about the import operation
+	</span><span class="kw">pub </span>aux: ImportedAux,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="ident">ManualSeal</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Create new `ManualSeal` with the given reference to the client.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">import_block_channel</span>: <span class="ident">mpsc::Sender</span><span class="op">&lt;</span><span class="ident">EngineCommand</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">import_block_channel</span> }
+<span class="kw">impl</span>&lt;Hash&gt; ManualSeal&lt;Hash&gt; {
+	<span class="doccomment">/// Create new `ManualSeal` with the given reference to the client.
+	</span><span class="kw">pub fn </span>new(import_block_channel: mpsc::Sender&lt;EngineCommand&lt;Hash&gt;&gt;) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ import_block_channel }
 	}
 }
 
-<span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Hash</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">ManualSealApiServer</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ManualSeal</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_block</span>(
+<span class="attribute">#[async_trait]
+</span><span class="kw">impl</span>&lt;Hash: Send + <span class="lifetime">&#39;static</span>&gt; ManualSealApiServer&lt;Hash&gt; <span class="kw">for </span>ManualSeal&lt;Hash&gt; {
+	<span class="kw">async fn </span>create_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">create_empty</span>: <span class="ident">bool</span>,
-		<span class="ident">finalize</span>: <span class="ident">bool</span>,
-		<span class="ident">parent_hash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
-	) -&gt; <span class="ident">RpcResult</span><span class="op">&lt;</span><span class="ident">CreatedBlock</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sink</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">import_block_channel</span>.<span class="ident">clone</span>();
-		<span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
-		<span class="comment">// NOTE: this sends a Result over the channel.</span>
-		<span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">EngineCommand::SealNewBlock</span> {
-			<span class="ident">create_empty</span>,
-			<span class="ident">finalize</span>,
-			<span class="ident">parent_hash</span>,
-			<span class="ident">sender</span>: <span class="prelude-val">Some</span>(<span class="ident">sender</span>),
+		create_empty: bool,
+		finalize: bool,
+		parent_hash: <span class="prelude-ty">Option</span>&lt;Hash&gt;,
+	) -&gt; RpcResult&lt;CreatedBlock&lt;Hash&gt;&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>sink = <span class="self">self</span>.import_block_channel.clone();
+		<span class="kw">let </span>(sender, receiver) = oneshot::channel();
+		<span class="comment">// NOTE: this sends a Result over the channel.
+		</span><span class="kw">let </span>command = EngineCommand::SealNewBlock {
+			create_empty,
+			finalize,
+			parent_hash,
+			sender: <span class="prelude-val">Some</span>(sender),
 		};
 
-		<span class="ident">sink</span>.<span class="ident">send</span>(<span class="ident">command</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+		sink.send(command).<span class="kw">await</span><span class="question-mark">?</span>;
 
-		<span class="kw">match</span> <span class="ident">receiver</span>.<span class="kw">await</span> {
-			<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(<span class="ident">rx</span>)) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">rx</span>),
-			<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">e</span>)) =&gt; <span class="prelude-val">Err</span>(<span class="ident">e</span>.<span class="ident">into</span>()),
-			<span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">JsonRpseeError::to_call_error</span>(<span class="ident">e</span>)),
+		<span class="kw">match </span>receiver.<span class="kw">await </span>{
+			<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(rx)) =&gt; <span class="prelude-val">Ok</span>(rx),
+			<span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(e)) =&gt; <span class="prelude-val">Err</span>(e.into()),
+			<span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(JsonRpseeError::to_call_error(e)),
 		}
 	}
 
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">finalize_block</span>(
+	<span class="kw">async fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">hash</span>: <span class="ident">Hash</span>,
-		<span class="ident">justification</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EncodedJustification</span><span class="op">&gt;</span>,
-	) -&gt; <span class="ident">RpcResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sink</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">import_block_channel</span>.<span class="ident">clone</span>();
-		<span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
-		<span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">EngineCommand::FinalizeBlock</span> { <span class="ident">hash</span>, <span class="ident">sender</span>: <span class="prelude-val">Some</span>(<span class="ident">sender</span>), <span class="ident">justification</span> };
-		<span class="ident">sink</span>.<span class="ident">send</span>(<span class="ident">command</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-		<span class="ident">receiver</span>.<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="bool-val">true</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">JsonRpseeError::to_call_error</span>(<span class="ident">e</span>))
+		hash: Hash,
+		justification: <span class="prelude-ty">Option</span>&lt;EncodedJustification&gt;,
+	) -&gt; RpcResult&lt;bool&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>sink = <span class="self">self</span>.import_block_channel.clone();
+		<span class="kw">let </span>(sender, receiver) = oneshot::channel();
+		<span class="kw">let </span>command = EngineCommand::FinalizeBlock { hash, sender: <span class="prelude-val">Some</span>(sender), justification };
+		sink.send(command).<span class="kw">await</span><span class="question-mark">?</span>;
+		receiver.<span class="kw">await</span>.map(|<span class="kw">_</span>| <span class="bool-val">true</span>).map_err(|e| JsonRpseeError::to_call_error(e))
 	}
 }
 
-<span class="doccomment">/// report any errors or successes encountered by the authorship task back</span>
-<span class="doccomment">/// to the rpc</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_result</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std::fmt::Debug</span><span class="op">&gt;</span>(
-	<span class="ident">sender</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="ident">result</span>: <span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span>,
+<span class="doccomment">/// report any errors or successes encountered by the authorship task back
+/// to the rpc
+</span><span class="kw">pub fn </span>send_result&lt;T: std::fmt::Debug&gt;(
+	sender: <span class="kw-2">&amp;mut </span>Sender&lt;T&gt;,
+	result: std::result::Result&lt;T, <span class="kw">crate</span>::Error&gt;,
 ) {
-	<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sender</span>) <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">take</span>() {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">result</span>) {
-			<span class="kw">match</span> <span class="ident">err</span> {
-				<span class="prelude-val">Ok</span>(<span class="ident">value</span>) =&gt; <span class="macro">log::warn!</span>(<span class="string">&quot;Server is shutting down: {:?}&quot;</span>, <span class="ident">value</span>),
-				<span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; <span class="macro">log::warn!</span>(<span class="string">&quot;Server is shutting down with error: {}&quot;</span>, <span class="ident">error</span>),
+	<span class="kw">if let </span><span class="prelude-val">Some</span>(sender) = sender.take() {
+		<span class="kw">if let </span><span class="prelude-val">Err</span>(err) = sender.send(result) {
+			<span class="kw">match </span>err {
+				<span class="prelude-val">Ok</span>(value) =&gt; <span class="macro">log::warn!</span>(<span class="string">&quot;Server is shutting down: {:?}&quot;</span>, value),
+				<span class="prelude-val">Err</span>(error) =&gt; <span class="macro">log::warn!</span>(<span class="string">&quot;Server is shutting down with error: {}&quot;</span>, error),
 			}
 		}
-	} <span class="kw">else</span> {
-		<span class="comment">// instant seal doesn&#39;t report errors over rpc, simply log them.</span>
-		<span class="kw">match</span> <span class="ident">result</span> {
-			<span class="prelude-val">Ok</span>(<span class="ident">r</span>) =&gt; <span class="macro">log::info!</span>(<span class="string">&quot;Instant Seal success: {:?}&quot;</span>, <span class="ident">r</span>),
-			<span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="macro">log::error!</span>(<span class="string">&quot;Instant Seal encountered an error: {}&quot;</span>, <span class="ident">e</span>),
+	} <span class="kw">else </span>{
+		<span class="comment">// instant seal doesn&#39;t report errors over rpc, simply log them.
+		</span><span class="kw">match </span>result {
+			<span class="prelude-val">Ok</span>(r) =&gt; <span class="macro">log::info!</span>(<span class="string">&quot;Instant Seal success: {:?}&quot;</span>, r),
+			<span class="prelude-val">Err</span>(e) =&gt; <span class="macro">log::error!</span>(<span class="string">&quot;Instant Seal encountered an error: {}&quot;</span>, e),
 		}
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_consensus_manual_seal" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_consensus_manual_seal" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/block/bench.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>bench.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/block/bench.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>bench.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -187,189 +181,188 @@
 <span id="181">181</span>
 <span id="182">182</span>
 <span id="183">183</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Contains the core benchmarking logic.</span>
+</span><span class="doccomment">//! Contains the core benchmarking logic.
 
-<span class="kw">use</span> <span class="ident">codec::DecodeAll</span>;
-<span class="kw">use</span> <span class="ident">frame_support::weights::constants::WEIGHT_PER_NANOS</span>;
-<span class="kw">use</span> <span class="ident">frame_system::ConsumedWeight</span>;
-<span class="kw">use</span> <span class="ident">sc_block_builder</span>::{<span class="ident">BlockBuilderApi</span>, <span class="ident">BlockBuilderProvider</span>};
-<span class="kw">use</span> <span class="ident">sc_cli</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
-<span class="kw">use</span> <span class="ident">sc_client_api</span>::{
-	<span class="ident">Backend</span> <span class="kw">as</span> <span class="ident">ClientBackend</span>, <span class="ident">BlockBackend</span>, <span class="ident">HeaderBackend</span>, <span class="ident">StorageProvider</span>, <span class="ident">UsageProvider</span>,
+</span><span class="kw">use </span>codec::DecodeAll;
+<span class="kw">use </span>frame_support::weights::constants::WEIGHT_PER_NANOS;
+<span class="kw">use </span>frame_system::ConsumedWeight;
+<span class="kw">use </span>sc_block_builder::{BlockBuilderApi, BlockBuilderProvider};
+<span class="kw">use </span>sc_cli::{Error, <span class="prelude-ty">Result</span>};
+<span class="kw">use </span>sc_client_api::{
+	Backend <span class="kw">as </span>ClientBackend, BlockBackend, HeaderBackend, StorageProvider, UsageProvider,
 };
-<span class="kw">use</span> <span class="ident">sp_api</span>::{<span class="ident">ApiExt</span>, <span class="ident">Core</span>, <span class="ident">HeaderT</span>, <span class="ident">ProvideRuntimeApi</span>};
-<span class="kw">use</span> <span class="ident">sp_blockchain::Error::RuntimeApiError</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">generic::BlockId</span>, <span class="ident">traits::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">DigestItem</span>, <span class="ident">OpaqueExtrinsic</span>};
-<span class="kw">use</span> <span class="ident">sp_storage::StorageKey</span>;
+<span class="kw">use </span>sp_api::{ApiExt, Core, HeaderT, ProvideRuntimeApi};
+<span class="kw">use </span>sp_blockchain::Error::RuntimeApiError;
+<span class="kw">use </span>sp_runtime::{generic::BlockId, traits::Block <span class="kw">as </span>BlockT, DigestItem, OpaqueExtrinsic};
+<span class="kw">use </span>sp_storage::StorageKey;
 
-<span class="kw">use</span> <span class="ident">clap::Args</span>;
-<span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">info</span>, <span class="ident">warn</span>};
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">sync::Arc</span>, <span class="ident">time::Instant</span>};
-<span class="kw">use</span> <span class="ident">thousands::Separable</span>;
+<span class="kw">use </span>clap::Args;
+<span class="kw">use </span>log::{info, warn};
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>std::{fmt::Debug, marker::PhantomData, sync::Arc, time::Instant};
+<span class="kw">use </span>thousands::Separable;
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::shared</span>::{<span class="ident">StatSelect</span>, <span class="ident">Stats</span>};
+<span class="kw">use </span><span class="kw">crate</span>::shared::{StatSelect, Stats};
 
-<span class="doccomment">/// Log target for printing block weight info.</span>
-<span class="kw">const</span> <span class="ident">LOG_TARGET</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;benchmark::block::weight&quot;</span>;
+<span class="doccomment">/// Log target for printing block weight info.
+</span><span class="kw">const </span>LOG_TARGET: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;benchmark::block::weight&quot;</span>;
 
-<span class="doccomment">/// Parameters for modifying the benchmark behaviour.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Serialize</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Args</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BenchmarkParams</span> {
-	<span class="doccomment">/// Number of the first block to consider.</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">from</span>: <span class="ident">u32</span>,
+<span class="doccomment">/// Parameters for modifying the benchmark behaviour.
+</span><span class="attribute">#[derive(Debug, Default, Serialize, Clone, PartialEq, Args)]
+</span><span class="kw">pub struct </span>BenchmarkParams {
+	<span class="doccomment">/// Number of the first block to consider.
+	</span><span class="attribute">#[arg(long)]
+	</span><span class="kw">pub </span>from: u32,
 
-	<span class="doccomment">/// Last block number to consider.</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">to</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// Last block number to consider.
+	</span><span class="attribute">#[arg(long)]
+	</span><span class="kw">pub </span>to: u32,
 
-	<span class="doccomment">/// Number of times that the benchmark should be repeated for each block.</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="number">10</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">repeat</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// Number of times that the benchmark should be repeated for each block.
+	</span><span class="attribute">#[arg(long, default_value_t = <span class="number">10</span>)]
+	</span><span class="kw">pub </span>repeat: u32,
 }
 
-<span class="doccomment">/// Convenience closure for the [`Benchmark::run()`] function.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Benchmark</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">BA</span>, <span class="ident">C</span><span class="op">&gt;</span> {
-	<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-	<span class="ident">params</span>: <span class="ident">BenchmarkParams</span>,
-	<span class="ident">_p</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span>(<span class="ident">Block</span>, <span class="ident">BA</span>, <span class="ident">C</span>)<span class="op">&gt;</span>,
+<span class="doccomment">/// Convenience closure for the [`Benchmark::run()`] function.
+</span><span class="kw">pub struct </span>Benchmark&lt;Block, BA, C&gt; {
+	client: Arc&lt;C&gt;,
+	params: BenchmarkParams,
+	_p: PhantomData&lt;(Block, BA, C)&gt;,
 }
 
-<span class="doccomment">/// Helper for nano seconds.</span>
-<span class="kw">type</span> <span class="ident">NanoSeconds</span> <span class="op">=</span> <span class="ident">u64</span>;
+<span class="doccomment">/// Helper for nano seconds.
+</span><span class="kw">type </span>NanoSeconds = u64;
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">BA</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">Benchmark</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">BA</span>, <span class="ident">C</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&lt;</span><span class="ident">Extrinsic</span> <span class="op">=</span> <span class="ident">OpaqueExtrinsic</span><span class="op">&gt;</span>,
-	<span class="ident">BA</span>: <span class="ident">ClientBackend</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">C</span>: <span class="ident">BlockBuilderProvider</span><span class="op">&lt;</span><span class="ident">BA</span>, <span class="ident">Block</span>, <span class="ident">C</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">StorageProvider</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">BA</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">BlockBackend</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">C::Api</span>: <span class="ident">ApiExt</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">StateBackend</span> <span class="op">=</span> <span class="ident">BA::State</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">BlockBuilderApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;Block, BA, C&gt; Benchmark&lt;Block, BA, C&gt;
+<span class="kw">where
+	</span>Block: BlockT&lt;Extrinsic = OpaqueExtrinsic&gt;,
+	BA: ClientBackend&lt;Block&gt;,
+	C: BlockBuilderProvider&lt;BA, Block, C&gt;
+		+ ProvideRuntimeApi&lt;Block&gt;
+		+ StorageProvider&lt;Block, BA&gt;
+		+ UsageProvider&lt;Block&gt;
+		+ BlockBackend&lt;Block&gt;
+		+ HeaderBackend&lt;Block&gt;,
+	C::Api: ApiExt&lt;Block, StateBackend = BA::State&gt; + BlockBuilderApi&lt;Block&gt;,
 {
-	<span class="doccomment">/// Returns a new [`Self`] from the arguments.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>, <span class="ident">params</span>: <span class="ident">BenchmarkParams</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">client</span>, <span class="ident">params</span>, <span class="ident">_p</span>: <span class="ident">PhantomData</span> }
+	<span class="doccomment">/// Returns a new [`Self`] from the arguments.
+	</span><span class="kw">pub fn </span>new(client: Arc&lt;C&gt;, params: BenchmarkParams) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ client, params, _p: PhantomData }
 	}
 
-	<span class="doccomment">/// Benchmark the execution speed of historic blocks and log the results.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">params</span>.<span class="ident">from</span> <span class="op">==</span> <span class="number">0</span> {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Cannot benchmark the genesis block&quot;</span>.<span class="ident">into</span>())
+	<span class="doccomment">/// Benchmark the execution speed of historic blocks and log the results.
+	</span><span class="kw">pub fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+		<span class="kw">if </span><span class="self">self</span>.params.from == <span class="number">0 </span>{
+			<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Cannot benchmark the genesis block&quot;</span>.into())
 		}
 
-		<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">params</span>.<span class="ident">from</span>..<span class="op">=</span><span class="self">self</span>.<span class="ident">params</span>.<span class="ident">to</span> {
-			<span class="kw">let</span> <span class="ident">block_num</span> <span class="op">=</span> <span class="ident">BlockId::Number</span>(<span class="ident">i</span>.<span class="ident">into</span>());
-			<span class="kw">let</span> <span class="ident">parent_num</span> <span class="op">=</span> <span class="ident">BlockId::Number</span>(((<span class="ident">i</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">u32</span>).<span class="ident">into</span>());
-			<span class="kw">let</span> <span class="ident">consumed</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">consumed_weight</span>(<span class="kw-2">&amp;</span><span class="ident">block_num</span>)<span class="question-mark">?</span>;
+		<span class="kw">for </span>i <span class="kw">in </span><span class="self">self</span>.params.from..=<span class="self">self</span>.params.to {
+			<span class="kw">let </span>block_num = BlockId::Number(i.into());
+			<span class="kw">let </span>parent_num = BlockId::Number(((i - <span class="number">1</span>) <span class="kw">as </span>u32).into());
+			<span class="kw">let </span>consumed = <span class="self">self</span>.consumed_weight(<span class="kw-2">&amp;</span>block_num)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span>
-				<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">block</span>(<span class="kw-2">&amp;</span><span class="ident">block_num</span>)<span class="question-mark">?</span>.<span class="ident">ok_or</span>(<span class="macro">format!</span>(<span class="string">&quot;Block {} not found&quot;</span>, <span class="ident">block_num</span>))<span class="question-mark">?</span>;
-			<span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">unsealed</span>(<span class="ident">block</span>.<span class="ident">block</span>);
-			<span class="kw">let</span> <span class="ident">took</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">measure_block</span>(<span class="kw-2">&amp;</span><span class="ident">block</span>, <span class="kw-2">&amp;</span><span class="ident">parent_num</span>)<span class="question-mark">?</span>;
+			<span class="kw">let </span>block =
+				<span class="self">self</span>.client.block(<span class="kw-2">&amp;</span>block_num)<span class="question-mark">?</span>.ok_or(<span class="macro">format!</span>(<span class="string">&quot;Block {} not found&quot;</span>, block_num))<span class="question-mark">?</span>;
+			<span class="kw">let </span>block = <span class="self">self</span>.unsealed(block.block);
+			<span class="kw">let </span>took = <span class="self">self</span>.measure_block(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>parent_num)<span class="question-mark">?</span>;
 
-			<span class="self">self</span>.<span class="ident">log_weight</span>(<span class="ident">i</span>, <span class="ident">block</span>.<span class="ident">extrinsics</span>().<span class="ident">len</span>(), <span class="ident">consumed</span>, <span class="ident">took</span>);
+			<span class="self">self</span>.log_weight(i, block.extrinsics().len(), consumed, took);
 		}
 
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Return the average *execution* aka. *import* time of the block.</span>
-	<span class="kw">fn</span> <span class="ident">measure_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">block</span>: <span class="kw-2">&amp;</span><span class="ident">Block</span>, <span class="ident">parent_num</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NanoSeconds</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">record</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="op">&lt;</span><span class="ident">NanoSeconds</span><span class="op">&gt;</span><span class="ident">::default</span>();
-		<span class="comment">// Interesting part here:</span>
-		<span class="comment">// Execute the block multiple times and collect stats about its execution time.</span>
-		<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">params</span>.<span class="ident">repeat</span> {
-			<span class="kw">let</span> <span class="ident">block</span> <span class="op">=</span> <span class="ident">block</span>.<span class="ident">clone</span>();
-			<span class="kw">let</span> <span class="ident">runtime_api</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">runtime_api</span>();
-			<span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">Instant::now</span>();
+	<span class="doccomment">/// Return the average *execution* aka. *import* time of the block.
+	</span><span class="kw">fn </span>measure_block(<span class="kw-2">&amp;</span><span class="self">self</span>, block: <span class="kw-2">&amp;</span>Block, parent_num: <span class="kw-2">&amp;</span>BlockId&lt;Block&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;NanoSeconds&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>record = Vec::&lt;NanoSeconds&gt;::default();
+		<span class="comment">// Interesting part here:
+		// Execute the block multiple times and collect stats about its execution time.
+		</span><span class="kw">for _ in </span><span class="number">0</span>..<span class="self">self</span>.params.repeat {
+			<span class="kw">let </span>block = block.clone();
+			<span class="kw">let </span>runtime_api = <span class="self">self</span>.client.runtime_api();
+			<span class="kw">let </span>start = Instant::now();
 
-			<span class="ident">runtime_api</span>
-				.<span class="ident">execute_block</span>(<span class="kw-2">&amp;</span><span class="ident">parent_num</span>, <span class="ident">block</span>)
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Client</span>(<span class="ident">RuntimeApiError</span>(<span class="ident">e</span>)))<span class="question-mark">?</span>;
+			runtime_api
+				.execute_block(<span class="kw-2">&amp;</span>parent_num, block)
+				.map_err(|e| Error::Client(RuntimeApiError(e)))<span class="question-mark">?</span>;
 
-			<span class="ident">record</span>.<span class="ident">push</span>(<span class="ident">start</span>.<span class="ident">elapsed</span>().<span class="ident">as_nanos</span>() <span class="kw">as</span> <span class="ident">NanoSeconds</span>);
+			record.push(start.elapsed().as_nanos() <span class="kw">as </span>NanoSeconds);
 		}
 
-		<span class="kw">let</span> <span class="ident">took</span> <span class="op">=</span> <span class="ident">Stats::new</span>(<span class="kw-2">&amp;</span><span class="ident">record</span>)<span class="question-mark">?</span>.<span class="ident">select</span>(<span class="ident">StatSelect::Average</span>);
-		<span class="prelude-val">Ok</span>(<span class="ident">took</span>)
+		<span class="kw">let </span>took = Stats::new(<span class="kw-2">&amp;</span>record)<span class="question-mark">?</span>.select(StatSelect::Average);
+		<span class="prelude-val">Ok</span>(took)
 	}
 
-	<span class="doccomment">/// Returns the total nanoseconds of a [`frame_system::ConsumedWeight`] for a block number.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This is the post-dispatch corrected weight and is only available</span>
-	<span class="doccomment">/// after executing the block.</span>
-	<span class="kw">fn</span> <span class="ident">consumed_weight</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">block</span>: <span class="kw-2">&amp;</span><span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NanoSeconds</span><span class="op">&gt;</span> {
-		<span class="comment">// Hard-coded key for System::BlockWeight. It could also be passed in as argument</span>
-		<span class="comment">// for the benchmark, but I think this should work as well.</span>
-		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident">array_bytes::hex2bytes</span>(
+	<span class="doccomment">/// Returns the total nanoseconds of a [`frame_system::ConsumedWeight`] for a block number.
+	///
+	/// This is the post-dispatch corrected weight and is only available
+	/// after executing the block.
+	</span><span class="kw">fn </span>consumed_weight(<span class="kw-2">&amp;</span><span class="self">self</span>, block: <span class="kw-2">&amp;</span>BlockId&lt;Block&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;NanoSeconds&gt; {
+		<span class="comment">// Hard-coded key for System::BlockWeight. It could also be passed in as argument
+		// for the benchmark, but I think this should work as well.
+		</span><span class="kw">let </span>hash = array_bytes::hex2bytes(
 			<span class="string">&quot;26aa394eea5630e07c48ae0c9558cef734abf5cb34d6244378cddbf18e849d96&quot;</span>,
 		)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">StorageKey</span>(<span class="ident">hash</span>);
+		<span class="kw">let </span>key = StorageKey(hash);
 
-		<span class="kw">let</span> <span class="ident">block_hash</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">expect_block_hash_from_id</span>(<span class="ident">block</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">raw_weight</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>
-			.<span class="ident">client</span>
-			.<span class="ident">storage</span>(<span class="kw-2">&amp;</span><span class="ident">block_hash</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>)<span class="question-mark">?</span>
-			.<span class="ident">ok_or</span>(<span class="macro">format!</span>(<span class="string">&quot;Could not find System::BlockWeight for block: {}&quot;</span>, <span class="ident">block</span>))<span class="question-mark">?</span>
-			.<span class="number">0</span>[..];
+		<span class="kw">let </span>block_hash = <span class="self">self</span>.client.expect_block_hash_from_id(block)<span class="question-mark">?</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>raw_weight = <span class="kw-2">&amp;</span><span class="self">self
+			</span>.client
+			.storage(<span class="kw-2">&amp;</span>block_hash, <span class="kw-2">&amp;</span>key)<span class="question-mark">?
+			</span>.ok_or(<span class="macro">format!</span>(<span class="string">&quot;Could not find System::BlockWeight for block: {}&quot;</span>, block))<span class="question-mark">?
+			</span>.<span class="number">0</span>[..];
 
-		<span class="kw">let</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">ConsumedWeight::decode_all</span>(<span class="kw-2">&amp;mut</span> <span class="ident">raw_weight</span>)<span class="question-mark">?</span>;
-		<span class="comment">// Should be divisible, but still use floats in case we ever change that.</span>
-		<span class="prelude-val">Ok</span>((<span class="ident">weight</span>.<span class="ident">total</span>().<span class="ident">ref_time</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">WEIGHT_PER_NANOS</span>.<span class="ident">ref_time</span>() <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">floor</span>()
-			<span class="kw">as</span> <span class="ident">NanoSeconds</span>)
+		<span class="kw">let </span>weight = ConsumedWeight::decode_all(<span class="kw-2">&amp;mut </span>raw_weight)<span class="question-mark">?</span>;
+		<span class="comment">// Should be divisible, but still use floats in case we ever change that.
+		</span><span class="prelude-val">Ok</span>((weight.total().ref_time() <span class="kw">as </span>f64 / WEIGHT_PER_NANOS.ref_time() <span class="kw">as </span>f64).floor()
+			<span class="kw">as </span>NanoSeconds)
 	}
 
-	<span class="doccomment">/// Prints the weight info of a block to the console.</span>
-	<span class="kw">fn</span> <span class="ident">log_weight</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">num</span>: <span class="ident">u32</span>, <span class="ident">num_ext</span>: <span class="ident">usize</span>, <span class="ident">consumed</span>: <span class="ident">NanoSeconds</span>, <span class="ident">took</span>: <span class="ident">NanoSeconds</span>) {
-		<span class="comment">// The ratio of weight that the block used vs what it consumed.</span>
-		<span class="comment">// This should in general not exceed 100% (minus outliers).</span>
-		<span class="kw">let</span> <span class="ident">percent</span> <span class="op">=</span> (<span class="ident">took</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">consumed</span> <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">*</span> <span class="number">100.0</span>;
+	<span class="doccomment">/// Prints the weight info of a block to the console.
+	</span><span class="kw">fn </span>log_weight(<span class="kw-2">&amp;</span><span class="self">self</span>, num: u32, num_ext: usize, consumed: NanoSeconds, took: NanoSeconds) {
+		<span class="comment">// The ratio of weight that the block used vs what it consumed.
+		// This should in general not exceed 100% (minus outliers).
+		</span><span class="kw">let </span>percent = (took <span class="kw">as </span>f64 / consumed <span class="kw">as </span>f64) * <span class="number">100.0</span>;
 
-		<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="macro">format!</span>(
+		<span class="kw">let </span>msg = <span class="macro">format!</span>(
 			<span class="string">&quot;Block {} with {: &gt;5} tx used {: &gt;6.2}% of its weight ({: &gt;14} of {: &gt;14} ns)&quot;</span>,
-			<span class="ident">num</span>,
-			<span class="ident">num_ext</span>,
-			<span class="ident">percent</span>,
-			<span class="ident">took</span>.<span class="ident">separate_with_commas</span>(),
-			<span class="ident">consumed</span>.<span class="ident">separate_with_commas</span>()
+			num,
+			num_ext,
+			percent,
+			took.separate_with_commas(),
+			consumed.separate_with_commas()
 		);
 
-		<span class="kw">if</span> <span class="ident">took</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">consumed</span> {
-			<span class="macro">info!</span>(<span class="ident">target</span>: <span class="ident">LOG_TARGET</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">msg</span>);
-		} <span class="kw">else</span> {
-			<span class="macro">warn!</span>(<span class="ident">target</span>: <span class="ident">LOG_TARGET</span>, <span class="string">&quot;{} - OVER WEIGHT!&quot;</span>, <span class="ident">msg</span>);
+		<span class="kw">if </span>took &lt;= consumed {
+			<span class="macro">info!</span>(target: LOG_TARGET, <span class="string">&quot;{}&quot;</span>, msg);
+		} <span class="kw">else </span>{
+			<span class="macro">warn!</span>(target: LOG_TARGET, <span class="string">&quot;{} - OVER WEIGHT!&quot;</span>, msg);
 		}
 	}
 
-	<span class="doccomment">/// Removes the consensus seal from the block.</span>
-	<span class="kw">fn</span> <span class="ident">unsealed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">block</span>: <span class="ident">Block</span>) -&gt; <span class="ident">Block</span> {
-		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">header</span>, <span class="ident">exts</span>) <span class="op">=</span> <span class="ident">block</span>.<span class="ident">deconstruct</span>();
-		<span class="ident">header</span>.<span class="ident">digest_mut</span>().<span class="ident">logs</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> <span class="op">!</span><span class="macro">matches!</span>(<span class="ident">item</span>, <span class="ident">DigestItem::Seal</span>(<span class="kw">_</span>, <span class="kw">_</span>)));
-		<span class="ident">Block::new</span>(<span class="ident">header</span>, <span class="ident">exts</span>)
+	<span class="doccomment">/// Removes the consensus seal from the block.
+	</span><span class="kw">fn </span>unsealed(<span class="kw-2">&amp;</span><span class="self">self</span>, block: Block) -&gt; Block {
+		<span class="kw">let </span>(<span class="kw-2">mut </span>header, exts) = block.deconstruct();
+		header.digest_mut().logs.retain(|item| !<span class="macro">matches!</span>(item, DigestItem::Seal(<span class="kw">_</span>, <span class="kw">_</span>)));
+		Block::new(header, exts)
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

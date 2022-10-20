@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/fast-unstake/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_fast_unstake/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_fast_unstake/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_fast_unstake/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/fast-unstake/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_fast_unstake/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_fast_unstake/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -487,489 +481,488 @@
 <span id="481">481</span>
 <span id="482">482</span>
 <span id="483">483</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! A pallet that&#39;s designed to JUST do the following:</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! If a nominator is not exposed in any `ErasStakers` (i.e. &quot;has not actively backed any</span>
-<span class="doccomment">//! validators in the last `BondingDuration` days&quot;), then they can register themselves in this</span>
-<span class="doccomment">//! pallet, unstake faster than having to wait an entire bonding duration.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Appearing in the exposure of a validator means being exposed equal to that validator from the</span>
-<span class="doccomment">//! point of view of the staking system. This usually means earning rewards with the validator, and</span>
-<span class="doccomment">//! also being at the risk of slashing with the validator. This is equivalent to the &quot;Active</span>
-<span class="doccomment">//! Nominator&quot; role explained in the</span>
-<span class="doccomment">//! [February Staking Update](https://polkadot.network/blog/staking-update-february-2022/).</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This pallet works off the basis of `on_idle`, meaning that it provides no guarantee about when</span>
-<span class="doccomment">//! it will succeed, if at all. Moreover, the queue implementation is unordered. In case of</span>
-<span class="doccomment">//! congestion, no FIFO ordering is provided.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Stakers who are certain about NOT being exposed can register themselves with</span>
-<span class="doccomment">//! [`Call::register_fast_unstake`]. This will chill, and fully unbond the staker, and place them in</span>
-<span class="doccomment">//! the queue to be checked.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Once queued, but not being actively processed, stakers can withdraw their request via</span>
-<span class="doccomment">//! [`Call::deregister`].</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Once queued, a staker wishing to unbond can perform no further action in pallet-staking. This is</span>
-<span class="doccomment">//! to prevent them from accidentally exposing themselves behind a validator etc.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Once processed, if successful, no additional fee for the checking process is taken, and the</span>
-<span class="doccomment">//! staker is instantly unbonded.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! If unsuccessful, meaning that the staker was exposed sometime in the last `BondingDuration` eras</span>
-<span class="doccomment">//! they will end up being slashed for the amount of wasted work they have inflicted on the chian.</span>
+</span><span class="doccomment">//! A pallet that&#39;s designed to JUST do the following:
+//!
+//! If a nominator is not exposed in any `ErasStakers` (i.e. &quot;has not actively backed any
+//! validators in the last `BondingDuration` days&quot;), then they can register themselves in this
+//! pallet, unstake faster than having to wait an entire bonding duration.
+//!
+//! Appearing in the exposure of a validator means being exposed equal to that validator from the
+//! point of view of the staking system. This usually means earning rewards with the validator, and
+//! also being at the risk of slashing with the validator. This is equivalent to the &quot;Active
+//! Nominator&quot; role explained in the
+//! [February Staking Update](https://polkadot.network/blog/staking-update-february-2022/).
+//!
+//! This pallet works off the basis of `on_idle`, meaning that it provides no guarantee about when
+//! it will succeed, if at all. Moreover, the queue implementation is unordered. In case of
+//! congestion, no FIFO ordering is provided.
+//!
+//! Stakers who are certain about NOT being exposed can register themselves with
+//! [`Call::register_fast_unstake`]. This will chill, and fully unbond the staker, and place them in
+//! the queue to be checked.
+//!
+//! Once queued, but not being actively processed, stakers can withdraw their request via
+//! [`Call::deregister`].
+//!
+//! Once queued, a staker wishing to unbond can perform no further action in pallet-staking. This is
+//! to prevent them from accidentally exposing themselves behind a validator etc.
+//!
+//! Once processed, if successful, no additional fee for the checking process is taken, and the
+//! staker is instantly unbonded.
+//!
+//! If unsuccessful, meaning that the staker was exposed sometime in the last `BondingDuration` eras
+//! they will end up being slashed for the amount of wasted work they have inflicted on the chian.
 
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pallet</span>::<span class="kw-2">*</span>;
+</span><span class="kw">pub use </span>pallet::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">mock</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>mock;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests;
 
-<span class="comment">// NOTE: enable benchmarking in tests as well.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime-benchmarks&quot;</span>)]</span>
-<span class="kw">mod</span> <span class="ident">benchmarking</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">types</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">weights</span>;
+<span class="comment">// NOTE: enable benchmarking in tests as well.
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+</span><span class="kw">mod </span>benchmarking;
+<span class="kw">pub mod </span>types;
+<span class="kw">pub mod </span>weights;
 
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">LOG_TARGET</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;runtime::fast-unstake&quot;</span>;
+<span class="kw">pub const </span>LOG_TARGET: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;runtime::fast-unstake&quot;</span>;
 
-<span class="comment">// syntactic sugar for logging.</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">log</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">level</span>:<span class="ident">tt</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">patter</span>:<span class="ident">expr</span> $(, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">values</span>:<span class="ident">expr</span>)<span class="op">*</span> $(,)<span class="question-mark">?</span>) =&gt; {
-		<span class="ident">log</span>::<span class="macro-nonterminal">$</span><span class="macro">level!</span>(
-			<span class="macro-nonterminal">target</span>: <span class="ident"><span class="kw">crate</span>::LOG_TARGET</span>,
-			<span class="macro">concat!</span>(<span class="string">&quot;[{:?}] 💨 &quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">patter</span>), <span class="op">&lt;</span><span class="ident">frame_system::Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::block_number</span>() $(, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">values</span>)<span class="op">*</span>
+<span class="comment">// syntactic sugar for logging.
+</span><span class="attribute">#[macro_export]
+</span><span class="macro">macro_rules! </span>log {
+	(<span class="macro-nonterminal">$level</span>:tt, <span class="macro-nonterminal">$patter</span>:expr $(, <span class="macro-nonterminal">$values</span>:expr)* $(,)<span class="question-mark">?</span>) =&gt; {
+		log::<span class="macro-nonterminal">$</span><span class="macro">level!</span>(
+			<span class="macro-nonterminal">target</span>: <span class="kw">crate</span>::LOG_TARGET,
+			<span class="macro">concat!</span>(<span class="string">&quot;[{:?}] 💨 &quot;</span>, <span class="macro-nonterminal">$patter</span>), &lt;frame_system::Pallet&lt;T&gt;&gt;::block_number() $(, <span class="macro-nonterminal">$values</span>)*
 		)
 	};
 }
 
-<span class="attribute">#[<span class="ident">frame_support::pallet</span>]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pallet</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_election_provider_support::ElectionProviderBase</span>;
-	<span class="kw">use</span> <span class="ident">frame_support</span>::{
-		<span class="ident">pallet_prelude</span>::<span class="kw-2">*</span>,
-		<span class="ident">traits</span>::{<span class="ident">Defensive</span>, <span class="ident">ReservableCurrency</span>},
+<span class="attribute">#[frame_support::pallet]
+</span><span class="kw">pub mod </span>pallet {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span><span class="kw">crate</span>::types::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_election_provider_support::ElectionProviderBase;
+	<span class="kw">use </span>frame_support::{
+		pallet_prelude::<span class="kw-2">*</span>,
+		traits::{Defensive, ReservableCurrency},
 	};
-	<span class="kw">use</span> <span class="ident">frame_system</span>::{<span class="ident">pallet_prelude</span>::<span class="kw-2">*</span>, <span class="ident">RawOrigin</span>};
-	<span class="kw">use</span> <span class="ident">pallet_staking::Pallet</span> <span class="kw">as</span> <span class="ident">Staking</span>;
-	<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-		<span class="ident">traits</span>::{<span class="ident">Saturating</span>, <span class="ident">Zero</span>},
-		<span class="ident">DispatchResult</span>,
+	<span class="kw">use </span>frame_system::{pallet_prelude::<span class="kw-2">*</span>, RawOrigin};
+	<span class="kw">use </span>pallet_staking::Pallet <span class="kw">as </span>Staking;
+	<span class="kw">use </span>sp_runtime::{
+		traits::{Saturating, Zero},
+		DispatchResult,
 	};
-	<span class="kw">use</span> <span class="ident">sp_staking::EraIndex</span>;
-	<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">prelude</span>::<span class="kw-2">*</span>, <span class="ident">vec::Vec</span>};
-	<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">weights::WeightInfo</span>;
+	<span class="kw">use </span>sp_staking::EraIndex;
+	<span class="kw">use </span>sp_std::{prelude::<span class="kw-2">*</span>, vec::Vec};
+	<span class="kw">pub use </span>weights::WeightInfo;
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">scale_info::TypeInfo</span>, <span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">codec::MaxEncodedLen</span>)]</span>
-	<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">mel_bound</span>(<span class="ident">T</span>: <span class="ident">Config</span>))]</span>
-	<span class="attribute">#[<span class="ident">scale_info</span>(<span class="ident">skip_type_params</span>(<span class="ident">T</span>))]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MaxChecking</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">frame_support::traits::Get</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MaxChecking</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">get</span>() -&gt; <span class="ident">u32</span> {
-			<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">pallet_staking::Config</span><span class="op">&gt;</span><span class="ident">::BondingDuration::get</span>() <span class="op">+</span> <span class="number">1</span>
-		}
+	<span class="attribute">#[derive(scale_info::TypeInfo, codec::Encode, codec::Decode, codec::MaxEncodedLen)]
+	#[codec(mel_bound(T: Config))]
+	#[scale_info(skip_type_params(T))]
+	</span><span class="kw">pub struct </span>MaxChecking&lt;T: Config&gt;(sp_std::marker::PhantomData&lt;T&gt;);
+	<span class="kw">impl</span>&lt;T: Config&gt; frame_support::traits::Get&lt;u32&gt; <span class="kw">for </span>MaxChecking&lt;T&gt; {
+		<span class="kw">fn </span>get() -&gt; u32 {
+			&lt;T <span class="kw">as </span>pallet_staking::Config&gt;::BondingDuration::get() + <span class="number">1
+		</span>}
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::pallet</span>]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw">_</span>);
+	<span class="attribute">#[pallet::pallet]
+	</span><span class="kw">pub struct </span>Pallet&lt;T&gt;(<span class="kw">_</span>);
 
-	<span class="attribute">#[<span class="ident">pallet::config</span>]</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Config</span>: <span class="ident">frame_system::Config</span> <span class="op">+</span> <span class="ident">pallet_staking::Config</span> {
-		<span class="doccomment">/// The overarching event type.</span>
-		<span class="kw">type</span> <span class="ident">RuntimeEvent</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>
-			<span class="op">+</span> <span class="ident">IsType</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::RuntimeEvent</span><span class="op">&gt;</span>
-			<span class="op">+</span> <span class="ident">TryInto</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="attribute">#[pallet::config]
+	</span><span class="kw">pub trait </span>Config: frame_system::Config + pallet_staking::Config {
+		<span class="doccomment">/// The overarching event type.
+		</span><span class="kw">type </span>RuntimeEvent: From&lt;Event&lt;<span class="self">Self</span>&gt;&gt;
+			+ IsType&lt;&lt;<span class="self">Self </span><span class="kw">as </span>frame_system::Config&gt;::RuntimeEvent&gt;
+			+ TryInto&lt;Event&lt;<span class="self">Self</span>&gt;&gt;;
 
-		<span class="doccomment">/// The currency used for deposits.</span>
-		<span class="kw">type</span> <span class="ident">DepositCurrency</span>: <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span>, <span class="ident">Balance</span> <span class="op">=</span> <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// The currency used for deposits.
+		</span><span class="kw">type </span>DepositCurrency: ReservableCurrency&lt;<span class="self">Self</span>::AccountId, Balance = BalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
 
-		<span class="doccomment">/// Deposit to take for unstaking, to make sure we&#39;re able to slash the it in order to cover</span>
-		<span class="doccomment">/// the costs of resources on unsuccessful unstake.</span>
-		<span class="kw">type</span> <span class="ident">Deposit</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// Deposit to take for unstaking, to make sure we&#39;re able to slash the it in order to cover
+		/// the costs of resources on unsuccessful unstake.
+		</span><span class="kw">type </span>Deposit: Get&lt;BalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
 
-		<span class="doccomment">/// The origin that can control this pallet.</span>
-		<span class="kw">type</span> <span class="ident">ControlOrigin</span>: <span class="ident">frame_support::traits::EnsureOrigin</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::RuntimeOrigin</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// The origin that can control this pallet.
+		</span><span class="kw">type </span>ControlOrigin: frame_support::traits::EnsureOrigin&lt;<span class="self">Self</span>::RuntimeOrigin&gt;;
 
-		<span class="doccomment">/// The weight information of this pallet.</span>
-		<span class="kw">type</span> <span class="ident">WeightInfo</span>: <span class="ident">WeightInfo</span>;
+		<span class="doccomment">/// The weight information of this pallet.
+		</span><span class="kw">type </span>WeightInfo: WeightInfo;
 	}
 
-	<span class="doccomment">/// The current &quot;head of the queue&quot; being unstaked.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Head</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span>
-		<span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">UnstakeRequest</span><span class="op">&lt;</span><span class="ident">T::AccountId</span>, <span class="ident">MaxChecking</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">OptionQuery</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// The current &quot;head of the queue&quot; being unstaked.
+	</span><span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>Head&lt;T: Config&gt; =
+		StorageValue&lt;<span class="kw">_</span>, UnstakeRequest&lt;T::AccountId, MaxChecking&lt;T&gt;, BalanceOf&lt;T&gt;&gt;, OptionQuery&gt;;
 
-	<span class="doccomment">/// The map of all accounts wishing to be unstaked.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Keeps track of `AccountId` wishing to unstake and it&#39;s corresponding deposit.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Queue</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">CountedStorageMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Twox64Concat</span>, <span class="ident">T::AccountId</span>, <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// The map of all accounts wishing to be unstaked.
+	///
+	/// Keeps track of `AccountId` wishing to unstake and it&#39;s corresponding deposit.
+	</span><span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>Queue&lt;T: Config&gt; = CountedStorageMap&lt;<span class="kw">_</span>, Twox64Concat, T::AccountId, BalanceOf&lt;T&gt;&gt;;
 
-	<span class="doccomment">/// Number of eras to check per block.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If set to 0, this pallet does absolutely nothing.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Based on the amount of weight available at `on_idle`, up to this many eras of a single</span>
-	<span class="doccomment">/// nominator might be checked.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ErasToCheckPerBlock</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Number of eras to check per block.
+	///
+	/// If set to 0, this pallet does absolutely nothing.
+	///
+	/// Based on the amount of weight available at `on_idle`, up to this many eras of a single
+	/// nominator might be checked.
+	</span><span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>ErasToCheckPerBlock&lt;T: Config&gt; = StorageValue&lt;<span class="kw">_</span>, u32, ValueQuery&gt;;
 
-	<span class="doccomment">/// The events of this pallet.</span>
-	<span class="attribute">#[<span class="ident">pallet::event</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::generate_deposit</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">deposit_event</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// A staker was unstaked.</span>
-		<span class="ident">Unstaked</span> { <span class="ident">stash</span>: <span class="ident">T::AccountId</span>, <span class="ident">result</span>: <span class="ident">DispatchResult</span> },
-		<span class="doccomment">/// A staker was slashed for requesting fast-unstake whilst being exposed.</span>
-		<span class="ident">Slashed</span> { <span class="ident">stash</span>: <span class="ident">T::AccountId</span>, <span class="ident">amount</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> },
-		<span class="doccomment">/// A staker was partially checked for the given eras, but the process did not finish.</span>
-		<span class="ident">Checking</span> { <span class="ident">stash</span>: <span class="ident">T::AccountId</span>, <span class="ident">eras</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EraIndex</span><span class="op">&gt;</span> },
-		<span class="doccomment">/// Some internal error happened while migrating stash. They are removed as head as a</span>
-		<span class="doccomment">/// consequence.</span>
-		<span class="ident">Errored</span> { <span class="ident">stash</span>: <span class="ident">T::AccountId</span> },
-		<span class="doccomment">/// An internal error happened. Operations will be paused now.</span>
-		<span class="ident">InternalError</span>,
+	<span class="doccomment">/// The events of this pallet.
+	</span><span class="attribute">#[pallet::event]
+	#[pallet::generate_deposit(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>deposit_event)]
+	</span><span class="kw">pub enum </span>Event&lt;T: Config&gt; {
+		<span class="doccomment">/// A staker was unstaked.
+		</span>Unstaked { stash: T::AccountId, result: DispatchResult },
+		<span class="doccomment">/// A staker was slashed for requesting fast-unstake whilst being exposed.
+		</span>Slashed { stash: T::AccountId, amount: BalanceOf&lt;T&gt; },
+		<span class="doccomment">/// A staker was partially checked for the given eras, but the process did not finish.
+		</span>Checking { stash: T::AccountId, eras: Vec&lt;EraIndex&gt; },
+		<span class="doccomment">/// Some internal error happened while migrating stash. They are removed as head as a
+		/// consequence.
+		</span>Errored { stash: T::AccountId },
+		<span class="doccomment">/// An internal error happened. Operations will be paused now.
+		</span>InternalError,
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::error</span>]</span>
-	<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">test</span>, <span class="ident">derive</span>(<span class="ident">PartialEq</span>))]</span>
-	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// The provided Controller account was not found.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This means that the given account is not bonded.</span>
-		<span class="ident">NotController</span>,
-		<span class="doccomment">/// The bonded account has already been queued.</span>
-		<span class="ident">AlreadyQueued</span>,
-		<span class="doccomment">/// The bonded account has active unlocking chunks.</span>
-		<span class="ident">NotFullyBonded</span>,
-		<span class="doccomment">/// The provided un-staker is not in the `Queue`.</span>
-		<span class="ident">NotQueued</span>,
-		<span class="doccomment">/// The provided un-staker is already in Head, and cannot deregister.</span>
-		<span class="ident">AlreadyHead</span>,
-		<span class="doccomment">/// The call is not allowed at this point because the pallet is not active.</span>
-		<span class="ident">CallNotAllowed</span>,
+	<span class="attribute">#[pallet::error]
+	#[cfg_attr(test, derive(PartialEq))]
+	</span><span class="kw">pub enum </span>Error&lt;T&gt; {
+		<span class="doccomment">/// The provided Controller account was not found.
+		///
+		/// This means that the given account is not bonded.
+		</span>NotController,
+		<span class="doccomment">/// The bonded account has already been queued.
+		</span>AlreadyQueued,
+		<span class="doccomment">/// The bonded account has active unlocking chunks.
+		</span>NotFullyBonded,
+		<span class="doccomment">/// The provided un-staker is not in the `Queue`.
+		</span>NotQueued,
+		<span class="doccomment">/// The provided un-staker is already in Head, and cannot deregister.
+		</span>AlreadyHead,
+		<span class="doccomment">/// The call is not allowed at this point because the pallet is not active.
+		</span>CallNotAllowed,
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::hooks</span>]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Hooks</span><span class="op">&lt;</span><span class="ident">T::BlockNumber</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">on_idle</span>(<span class="kw">_</span>: <span class="ident">T::BlockNumber</span>, <span class="ident">remaining_weight</span>: <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span> {
-			<span class="kw">if</span> <span class="ident">remaining_weight</span>.<span class="ident">any_lt</span>(<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">2</span>)) {
-				<span class="kw">return</span> <span class="ident">Weight::from_ref_time</span>(<span class="number">0</span>)
+	<span class="attribute">#[pallet::hooks]
+	</span><span class="kw">impl</span>&lt;T: Config&gt; Hooks&lt;T::BlockNumber&gt; <span class="kw">for </span>Pallet&lt;T&gt; {
+		<span class="kw">fn </span>on_idle(<span class="kw">_</span>: T::BlockNumber, remaining_weight: Weight) -&gt; Weight {
+			<span class="kw">if </span>remaining_weight.any_lt(T::DbWeight::get().reads(<span class="number">2</span>)) {
+				<span class="kw">return </span>Weight::from_ref_time(<span class="number">0</span>)
 			}
 
-			<span class="ident"><span class="self">Self</span>::do_on_idle</span>(<span class="ident">remaining_weight</span>)
+			<span class="self">Self</span>::do_on_idle(remaining_weight)
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::call</span>]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Register oneself for fast-unstake.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The dispatch origin of this call must be signed by the controller account, similar to</span>
-		<span class="doccomment">/// `staking::unbond`.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The stash associated with the origin must have no ongoing unlocking chunks. If</span>
-		<span class="doccomment">/// successful, this will fully unbond and chill the stash. Then, it will enqueue the stash</span>
-		<span class="doccomment">/// to be checked in further blocks.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// If by the time this is called, the stash is actually eligible for fast-unstake, then</span>
-		<span class="doccomment">/// they are guaranteed to remain eligible, because the call will chill them as well.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// If the check works, the entire staking data is removed, i.e. the stash is fully</span>
-		<span class="doccomment">/// unstaked.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// If the check fails, the stash remains chilled and waiting for being unbonded as in with</span>
-		<span class="doccomment">/// the normal staking system, but they lose part of their unbonding chunks due to consuming</span>
-		<span class="doccomment">/// the chain&#39;s resources.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::register_fast_unstake</span>())]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">register_fast_unstake</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="kw">let</span> <span class="ident">ctrl</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
+	<span class="attribute">#[pallet::call]
+	</span><span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
+		<span class="doccomment">/// Register oneself for fast-unstake.
+		///
+		/// The dispatch origin of this call must be signed by the controller account, similar to
+		/// `staking::unbond`.
+		///
+		/// The stash associated with the origin must have no ongoing unlocking chunks. If
+		/// successful, this will fully unbond and chill the stash. Then, it will enqueue the stash
+		/// to be checked in further blocks.
+		///
+		/// If by the time this is called, the stash is actually eligible for fast-unstake, then
+		/// they are guaranteed to remain eligible, because the call will chill them as well.
+		///
+		/// If the check works, the entire staking data is removed, i.e. the stash is fully
+		/// unstaked.
+		///
+		/// If the check fails, the stash remains chilled and waiting for being unbonded as in with
+		/// the normal staking system, but they lose part of their unbonding chunks due to consuming
+		/// the chain&#39;s resources.
+		</span><span class="attribute">#[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::register_fast_unstake())]
+		</span><span class="kw">pub fn </span>register_fast_unstake(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
+			<span class="kw">let </span>ctrl = ensure_signed(origin)<span class="question-mark">?</span>;
 
-			<span class="macro">ensure!</span>(<span class="ident">ErasToCheckPerBlock</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">!</span><span class="op">=</span> <span class="number">0</span>, <span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::CallNotAllowed</span>);
+			<span class="macro">ensure!</span>(ErasToCheckPerBlock::&lt;T&gt;::get() != <span class="number">0</span>, &lt;Error&lt;T&gt;&gt;::CallNotAllowed);
 
-			<span class="kw">let</span> <span class="ident">ledger</span> <span class="op">=</span>
-				<span class="ident">pallet_staking::Ledger</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="kw-2">&amp;</span><span class="ident">ctrl</span>).<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::NotController</span>)<span class="question-mark">?</span>;
-			<span class="macro">ensure!</span>(<span class="op">!</span><span class="ident">Queue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">ledger</span>.<span class="ident">stash</span>), <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::AlreadyQueued</span>);
+			<span class="kw">let </span>ledger =
+				pallet_staking::Ledger::&lt;T&gt;::get(<span class="kw-2">&amp;</span>ctrl).ok_or(Error::&lt;T&gt;::NotController)<span class="question-mark">?</span>;
+			<span class="macro">ensure!</span>(!Queue::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>ledger.stash), Error::&lt;T&gt;::AlreadyQueued);
 			<span class="macro">ensure!</span>(
-				<span class="ident">Head</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>().<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">UnstakeRequest</span> { <span class="ident">stash</span>, .. }<span class="op">|</span> <span class="ident">stash</span> <span class="op">!</span><span class="op">=</span> <span class="ident">ledger</span>.<span class="ident">stash</span>),
-				<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::AlreadyHead</span>
+				Head::&lt;T&gt;::get().map_or(<span class="bool-val">true</span>, |UnstakeRequest { stash, .. }| stash != ledger.stash),
+				Error::&lt;T&gt;::AlreadyHead
 			);
-			<span class="comment">// second part of the &amp;&amp; is defensive.</span>
-			<span class="macro">ensure!</span>(
-				<span class="ident">ledger</span>.<span class="ident">active</span> <span class="op">==</span> <span class="ident">ledger</span>.<span class="ident">total</span> <span class="op">&amp;&amp;</span> <span class="ident">ledger</span>.<span class="ident">unlocking</span>.<span class="ident">is_empty</span>(),
-				<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::NotFullyBonded</span>
+			<span class="comment">// second part of the &amp;&amp; is defensive.
+			</span><span class="macro">ensure!</span>(
+				ledger.active == ledger.total &amp;&amp; ledger.unlocking.is_empty(),
+				Error::&lt;T&gt;::NotFullyBonded
 			);
 
-			<span class="comment">// chill and fully unstake.</span>
-			<span class="ident">Staking</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::chill</span>(<span class="ident">RawOrigin::Signed</span>(<span class="ident">ctrl</span>.<span class="ident">clone</span>()).<span class="ident">into</span>())<span class="question-mark">?</span>;
-			<span class="ident">Staking</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::unbond</span>(<span class="ident">RawOrigin::Signed</span>(<span class="ident">ctrl</span>).<span class="ident">into</span>(), <span class="ident">ledger</span>.<span class="ident">total</span>)<span class="question-mark">?</span>;
+			<span class="comment">// chill and fully unstake.
+			</span>Staking::&lt;T&gt;::chill(RawOrigin::Signed(ctrl.clone()).into())<span class="question-mark">?</span>;
+			Staking::&lt;T&gt;::unbond(RawOrigin::Signed(ctrl).into(), ledger.total)<span class="question-mark">?</span>;
 
-			<span class="ident">T::DepositCurrency::reserve</span>(<span class="kw-2">&amp;</span><span class="ident">ledger</span>.<span class="ident">stash</span>, <span class="ident">T::Deposit::get</span>())<span class="question-mark">?</span>;
+			T::DepositCurrency::reserve(<span class="kw-2">&amp;</span>ledger.stash, T::Deposit::get())<span class="question-mark">?</span>;
 
-			<span class="comment">// enqueue them.</span>
-			<span class="ident">Queue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="ident">ledger</span>.<span class="ident">stash</span>, <span class="ident">T::Deposit::get</span>());
+			<span class="comment">// enqueue them.
+			</span>Queue::&lt;T&gt;::insert(ledger.stash, T::Deposit::get());
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Deregister oneself from the fast-unstake.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This is useful if one is registered, they are still waiting, and they change their mind.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Note that the associated stash is still fully unbonded and chilled as a consequence of</span>
-		<span class="doccomment">/// calling `register_fast_unstake`. This should probably be followed by a call to</span>
-		<span class="doccomment">/// `Staking::rebond`.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::deregister</span>())]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deregister</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="kw">let</span> <span class="ident">ctrl</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
+		<span class="doccomment">/// Deregister oneself from the fast-unstake.
+		///
+		/// This is useful if one is registered, they are still waiting, and they change their mind.
+		///
+		/// Note that the associated stash is still fully unbonded and chilled as a consequence of
+		/// calling `register_fast_unstake`. This should probably be followed by a call to
+		/// `Staking::rebond`.
+		</span><span class="attribute">#[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::deregister())]
+		</span><span class="kw">pub fn </span>deregister(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
+			<span class="kw">let </span>ctrl = ensure_signed(origin)<span class="question-mark">?</span>;
 
-			<span class="macro">ensure!</span>(<span class="ident">ErasToCheckPerBlock</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">!</span><span class="op">=</span> <span class="number">0</span>, <span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::CallNotAllowed</span>);
+			<span class="macro">ensure!</span>(ErasToCheckPerBlock::&lt;T&gt;::get() != <span class="number">0</span>, &lt;Error&lt;T&gt;&gt;::CallNotAllowed);
 
-			<span class="kw">let</span> <span class="ident">stash</span> <span class="op">=</span> <span class="ident">pallet_staking::Ledger</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="kw-2">&amp;</span><span class="ident">ctrl</span>)
-				.<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span>.<span class="ident">stash</span>)
-				.<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::NotController</span>)<span class="question-mark">?</span>;
-			<span class="macro">ensure!</span>(<span class="ident">Queue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">stash</span>), <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::NotQueued</span>);
+			<span class="kw">let </span>stash = pallet_staking::Ledger::&lt;T&gt;::get(<span class="kw-2">&amp;</span>ctrl)
+				.map(|l| l.stash)
+				.ok_or(Error::&lt;T&gt;::NotController)<span class="question-mark">?</span>;
+			<span class="macro">ensure!</span>(Queue::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>stash), Error::&lt;T&gt;::NotQueued);
 			<span class="macro">ensure!</span>(
-				<span class="ident">Head</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>().<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">UnstakeRequest</span> { <span class="ident">stash</span>, .. }<span class="op">|</span> <span class="ident">stash</span> <span class="op">!</span><span class="op">=</span> <span class="ident">stash</span>),
-				<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::AlreadyHead</span>
+				Head::&lt;T&gt;::get().map_or(<span class="bool-val">true</span>, |UnstakeRequest { stash, .. }| stash != stash),
+				Error::&lt;T&gt;::AlreadyHead
 			);
-			<span class="kw">let</span> <span class="ident">deposit</span> <span class="op">=</span> <span class="ident">Queue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::take</span>(<span class="ident">stash</span>.<span class="ident">clone</span>());
+			<span class="kw">let </span>deposit = Queue::&lt;T&gt;::take(stash.clone());
 
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">deposit</span>) <span class="op">=</span> <span class="ident">deposit</span>.<span class="ident">defensive</span>() {
-				<span class="kw">let</span> <span class="ident">remaining</span> <span class="op">=</span> <span class="ident">T::DepositCurrency::unreserve</span>(<span class="kw-2">&amp;</span><span class="ident">stash</span>, <span class="ident">deposit</span>);
-				<span class="kw">if</span> <span class="op">!</span><span class="ident">remaining</span>.<span class="ident">is_zero</span>() {
+			<span class="kw">if let </span><span class="prelude-val">Some</span>(deposit) = deposit.defensive() {
+				<span class="kw">let </span>remaining = T::DepositCurrency::unreserve(<span class="kw-2">&amp;</span>stash, deposit);
+				<span class="kw">if </span>!remaining.is_zero() {
 					<span class="macro">frame_support::defensive!</span>(<span class="string">&quot;`not enough balance to unreserve`&quot;</span>);
-					<span class="ident">ErasToCheckPerBlock</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="number">0</span>);
-					<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::InternalError</span>)
+					ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">0</span>);
+					<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::InternalError)
 				}
 			}
 
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Control the operation of this pallet.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Dispatch origin must be signed by the [`Config::ControlOrigin`].</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::control</span>())]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">control</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">unchecked_eras_to_check</span>: <span class="ident">EraIndex</span>) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">T::ControlOrigin::ensure_origin</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
-			<span class="ident">ErasToCheckPerBlock</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">unchecked_eras_to_check</span>);
+		<span class="doccomment">/// Control the operation of this pallet.
+		///
+		/// Dispatch origin must be signed by the [`Config::ControlOrigin`].
+		</span><span class="attribute">#[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::control())]
+		</span><span class="kw">pub fn </span>control(origin: OriginFor&lt;T&gt;, unchecked_eras_to_check: EraIndex) -&gt; DispatchResult {
+			<span class="kw">let _ </span>= T::ControlOrigin::ensure_origin(origin)<span class="question-mark">?</span>;
+			ErasToCheckPerBlock::&lt;T&gt;::put(unchecked_eras_to_check);
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
 
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// process up to `remaining_weight`.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Returns the actual weight consumed.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Written for readability in mind, not efficiency. For example:</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// 1. We assume this is only ever called once per `on_idle`. This is because we know that</span>
-		<span class="doccomment">/// in all use cases, even a single nominator cannot be unbonded in a single call. Multiple</span>
-		<span class="doccomment">/// calls to this function are thus not needed.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// 2. We will only mark a staker as unstaked if at the beginning of a check cycle, they are</span>
-		<span class="doccomment">/// found out to have no eras to check. At the end of a check cycle, even if they are fully</span>
-		<span class="doccomment">/// checked, we don&#39;t finish the process.</span>
-		<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">do_on_idle</span>(<span class="ident">remaining_weight</span>: <span class="ident">Weight</span>) -&gt; <span class="ident">Weight</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">eras_to_check_per_block</span> <span class="op">=</span> <span class="ident">ErasToCheckPerBlock</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>();
-			<span class="kw">if</span> <span class="ident">eras_to_check_per_block</span>.<span class="ident">is_zero</span>() {
-				<span class="kw">return</span> <span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+	<span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
+		<span class="doccomment">/// process up to `remaining_weight`.
+		///
+		/// Returns the actual weight consumed.
+		///
+		/// Written for readability in mind, not efficiency. For example:
+		///
+		/// 1. We assume this is only ever called once per `on_idle`. This is because we know that
+		/// in all use cases, even a single nominator cannot be unbonded in a single call. Multiple
+		/// calls to this function are thus not needed.
+		///
+		/// 2. We will only mark a staker as unstaked if at the beginning of a check cycle, they are
+		/// found out to have no eras to check. At the end of a check cycle, even if they are fully
+		/// checked, we don&#39;t finish the process.
+		</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>do_on_idle(remaining_weight: Weight) -&gt; Weight {
+			<span class="kw">let </span><span class="kw-2">mut </span>eras_to_check_per_block = ErasToCheckPerBlock::&lt;T&gt;::get();
+			<span class="kw">if </span>eras_to_check_per_block.is_zero() {
+				<span class="kw">return </span>T::DbWeight::get().reads(<span class="number">1</span>)
 			}
 
-			<span class="comment">// NOTE: here we&#39;re assuming that the number of validators has only ever increased,</span>
-			<span class="comment">// meaning that the number of exposures to check is either this per era, or less.</span>
-			<span class="kw">let</span> <span class="ident">validator_count</span> <span class="op">=</span> <span class="ident">pallet_staking::ValidatorCount</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>();
+			<span class="comment">// NOTE: here we&#39;re assuming that the number of validators has only ever increased,
+			// meaning that the number of exposures to check is either this per era, or less.
+			</span><span class="kw">let </span>validator_count = pallet_staking::ValidatorCount::&lt;T&gt;::get();
 
-			<span class="comment">// determine the number of eras to check. This is based on both `ErasToCheckPerBlock`</span>
-			<span class="comment">// and `remaining_weight` passed on to us from the runtime executive.</span>
-			<span class="kw">let</span> <span class="ident">max_weight</span> <span class="op">=</span> <span class="op">|</span><span class="ident">v</span>, <span class="ident">u</span><span class="op">|</span> {
-				<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::on_idle_check</span>(<span class="ident">v</span> <span class="op">*</span> <span class="ident">u</span>)
-					.<span class="ident">max</span>(<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::on_idle_unstake</span>())
+			<span class="comment">// determine the number of eras to check. This is based on both `ErasToCheckPerBlock`
+			// and `remaining_weight` passed on to us from the runtime executive.
+			</span><span class="kw">let </span>max_weight = |v, u| {
+				&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::on_idle_check(v * u)
+					.max(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::on_idle_unstake())
 			};
-			<span class="kw">while</span> <span class="ident">max_weight</span>(<span class="ident">validator_count</span>, <span class="ident">eras_to_check_per_block</span>).<span class="ident">any_gt</span>(<span class="ident">remaining_weight</span>) {
-				<span class="ident">eras_to_check_per_block</span>.<span class="ident">saturating_dec</span>();
-				<span class="kw">if</span> <span class="ident">eras_to_check_per_block</span>.<span class="ident">is_zero</span>() {
-					<span class="macro">log!</span>(<span class="ident">debug</span>, <span class="string">&quot;early existing because eras_to_check_per_block is zero&quot;</span>);
-					<span class="kw">return</span> <span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">2</span>)
+			<span class="kw">while </span>max_weight(validator_count, eras_to_check_per_block).any_gt(remaining_weight) {
+				eras_to_check_per_block.saturating_dec();
+				<span class="kw">if </span>eras_to_check_per_block.is_zero() {
+					<span class="macro">log!</span>(debug, <span class="string">&quot;early existing because eras_to_check_per_block is zero&quot;</span>);
+					<span class="kw">return </span>T::DbWeight::get().reads(<span class="number">2</span>)
 				}
 			}
 
-			<span class="kw">if</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">pallet_staking::Config</span><span class="op">&gt;</span><span class="ident">::ElectionProvider</span> <span class="kw">as</span> <span class="ident">ElectionProviderBase</span><span class="op">&gt;</span><span class="ident">::ongoing</span>()
+			<span class="kw">if </span>&lt;&lt;T <span class="kw">as </span>pallet_staking::Config&gt;::ElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::ongoing()
 			{
-				<span class="comment">// NOTE: we assume `ongoing` does not consume any weight.</span>
-				<span class="comment">// there is an ongoing election -- we better not do anything. Imagine someone is not</span>
-				<span class="comment">// exposed anywhere in the last era, and the snapshot for the election is already</span>
-				<span class="comment">// taken. In this time period, we don&#39;t want to accidentally unstake them.</span>
-				<span class="kw">return</span> <span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">2</span>)
+				<span class="comment">// NOTE: we assume `ongoing` does not consume any weight.
+				// there is an ongoing election -- we better not do anything. Imagine someone is not
+				// exposed anywhere in the last era, and the snapshot for the election is already
+				// taken. In this time period, we don&#39;t want to accidentally unstake them.
+				</span><span class="kw">return </span>T::DbWeight::get().reads(<span class="number">2</span>)
 			}
 
-			<span class="kw">let</span> <span class="ident">UnstakeRequest</span> { <span class="ident">stash</span>, <span class="kw-2">mut</span> <span class="ident">checked</span>, <span class="ident">deposit</span> } <span class="op">=</span>
-				<span class="kw">match</span> <span class="ident">Head</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::take</span>().<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> {
-					<span class="comment">// NOTE: there is no order guarantees in `Queue`.</span>
-					<span class="ident">Queue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::drain</span>()
-						.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">stash</span>, <span class="ident">deposit</span>)<span class="op">|</span> <span class="ident">UnstakeRequest</span> {
-							<span class="ident">stash</span>,
-							<span class="ident">deposit</span>,
-							<span class="ident">checked</span>: <span class="ident">Default::default</span>(),
+			<span class="kw">let </span>UnstakeRequest { stash, <span class="kw-2">mut </span>checked, deposit } =
+				<span class="kw">match </span>Head::&lt;T&gt;::take().or_else(|| {
+					<span class="comment">// NOTE: there is no order guarantees in `Queue`.
+					</span>Queue::&lt;T&gt;::drain()
+						.map(|(stash, deposit)| UnstakeRequest {
+							stash,
+							deposit,
+							checked: Default::default(),
 						})
-						.<span class="ident">next</span>()
+						.next()
 				}) {
-					<span class="prelude-val">None</span> =&gt; {
-						<span class="comment">// There&#39;s no `Head` and nothing in the `Queue`, nothing to do here.</span>
-						<span class="kw">return</span> <span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">4</span>)
+					<span class="prelude-val">None </span>=&gt; {
+						<span class="comment">// There&#39;s no `Head` and nothing in the `Queue`, nothing to do here.
+						</span><span class="kw">return </span>T::DbWeight::get().reads(<span class="number">4</span>)
 					},
-					<span class="prelude-val">Some</span>(<span class="ident">head</span>) =&gt; <span class="ident">head</span>,
+					<span class="prelude-val">Some</span>(head) =&gt; head,
 				};
 
 			<span class="macro">log!</span>(
-				<span class="ident">debug</span>,
+				debug,
 				<span class="string">&quot;checking {:?}, eras_to_check_per_block = {:?}, remaining_weight = {:?}&quot;</span>,
-				<span class="ident">stash</span>,
-				<span class="ident">eras_to_check_per_block</span>,
-				<span class="ident">remaining_weight</span>
+				stash,
+				eras_to_check_per_block,
+				remaining_weight
 			);
 
-			<span class="comment">// the range that we&#39;re allowed to check in this round.</span>
-			<span class="kw">let</span> <span class="ident">current_era</span> <span class="op">=</span> <span class="ident">pallet_staking::CurrentEra</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>().<span class="ident">unwrap_or_default</span>();
-			<span class="kw">let</span> <span class="ident">bonding_duration</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">pallet_staking::Config</span><span class="op">&gt;</span><span class="ident">::BondingDuration::get</span>();
-			<span class="comment">// prune all the old eras that we don&#39;t care about. This will help us keep the bound</span>
-			<span class="comment">// of `checked`.</span>
-			<span class="ident">checked</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">e</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">current_era</span>.<span class="ident">saturating_sub</span>(<span class="ident">bonding_duration</span>));
-			<span class="kw">let</span> <span class="ident">unchecked_eras_to_check</span> <span class="op">=</span> {
-				<span class="comment">// get the last available `bonding_duration` eras up to current era in reverse</span>
-				<span class="comment">// order.</span>
-				<span class="kw">let</span> <span class="ident">total_check_range</span> <span class="op">=</span> (<span class="ident">current_era</span>.<span class="ident">saturating_sub</span>(<span class="ident">bonding_duration</span>)..<span class="op">=</span>
-					<span class="ident">current_era</span>)
-					.<span class="ident">rev</span>()
-					.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+			<span class="comment">// the range that we&#39;re allowed to check in this round.
+			</span><span class="kw">let </span>current_era = pallet_staking::CurrentEra::&lt;T&gt;::get().unwrap_or_default();
+			<span class="kw">let </span>bonding_duration = &lt;T <span class="kw">as </span>pallet_staking::Config&gt;::BondingDuration::get();
+			<span class="comment">// prune all the old eras that we don&#39;t care about. This will help us keep the bound
+			// of `checked`.
+			</span>checked.retain(|e| <span class="kw-2">*</span>e &gt;= current_era.saturating_sub(bonding_duration));
+			<span class="kw">let </span>unchecked_eras_to_check = {
+				<span class="comment">// get the last available `bonding_duration` eras up to current era in reverse
+				// order.
+				</span><span class="kw">let </span>total_check_range = (current_era.saturating_sub(bonding_duration)..=
+					current_era)
+					.rev()
+					.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 				<span class="macro">debug_assert!</span>(
-					<span class="ident">total_check_range</span>.<span class="ident">len</span>() <span class="op">&lt;</span><span class="op">=</span> (<span class="ident">bonding_duration</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>,
+					total_check_range.len() &lt;= (bonding_duration + <span class="number">1</span>) <span class="kw">as </span>usize,
 					<span class="string">&quot;{:?}&quot;</span>,
-					<span class="ident">total_check_range</span>
+					total_check_range
 				);
 
-				<span class="comment">// remove eras that have already been checked, take a maximum of</span>
-				<span class="comment">// eras_to_check_per_block.</span>
-				<span class="ident">total_check_range</span>
-					.<span class="ident">into_iter</span>()
-					.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="op">!</span><span class="ident">checked</span>.<span class="ident">contains</span>(<span class="ident">e</span>))
-					.<span class="ident">take</span>(<span class="ident">eras_to_check_per_block</span> <span class="kw">as</span> <span class="ident">usize</span>)
-					.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+				<span class="comment">// remove eras that have already been checked, take a maximum of
+				// eras_to_check_per_block.
+				</span>total_check_range
+					.into_iter()
+					.filter(|e| !checked.contains(e))
+					.take(eras_to_check_per_block <span class="kw">as </span>usize)
+					.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
 			};
 
 			<span class="macro">log!</span>(
-				<span class="ident">debug</span>,
+				debug,
 				<span class="string">&quot;{} eras to check: {:?}&quot;</span>,
-				<span class="ident">unchecked_eras_to_check</span>.<span class="ident">len</span>(),
-				<span class="ident">unchecked_eras_to_check</span>
+				unchecked_eras_to_check.len(),
+				unchecked_eras_to_check
 			);
 
-			<span class="kw">if</span> <span class="ident">unchecked_eras_to_check</span>.<span class="ident">is_empty</span>() {
-				<span class="comment">// `stash` is not exposed in any era now -- we can let go of them now.</span>
-				<span class="kw">let</span> <span class="ident">num_slashing_spans</span> <span class="op">=</span> <span class="ident">Staking</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::slashing_spans</span>(<span class="kw-2">&amp;</span><span class="ident">stash</span>).<span class="ident">iter</span>().<span class="ident">count</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+			<span class="kw">if </span>unchecked_eras_to_check.is_empty() {
+				<span class="comment">// `stash` is not exposed in any era now -- we can let go of them now.
+				</span><span class="kw">let </span>num_slashing_spans = Staking::&lt;T&gt;::slashing_spans(<span class="kw-2">&amp;</span>stash).iter().count() <span class="kw">as </span>u32;
 
-				<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">pallet_staking::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::force_unstake</span>(
-					<span class="ident">RawOrigin::Root</span>.<span class="ident">into</span>(),
-					<span class="ident">stash</span>.<span class="ident">clone</span>(),
-					<span class="ident">num_slashing_spans</span>,
+				<span class="kw">let </span>result = pallet_staking::Pallet::&lt;T&gt;::force_unstake(
+					RawOrigin::Root.into(),
+					stash.clone(),
+					num_slashing_spans,
 				);
 
-				<span class="kw">let</span> <span class="ident">remaining</span> <span class="op">=</span> <span class="ident">T::DepositCurrency::unreserve</span>(<span class="kw-2">&amp;</span><span class="ident">stash</span>, <span class="ident">deposit</span>);
-				<span class="kw">if</span> <span class="op">!</span><span class="ident">remaining</span>.<span class="ident">is_zero</span>() {
+				<span class="kw">let </span>remaining = T::DepositCurrency::unreserve(<span class="kw-2">&amp;</span>stash, deposit);
+				<span class="kw">if </span>!remaining.is_zero() {
 					<span class="macro">frame_support::defensive!</span>(<span class="string">&quot;`not enough balance to unreserve`&quot;</span>);
-					<span class="ident">ErasToCheckPerBlock</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="number">0</span>);
-					<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::InternalError</span>)
-				} <span class="kw">else</span> {
-					<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;unstaked {:?}, outcome: {:?}&quot;</span>, <span class="ident">stash</span>, <span class="ident">result</span>);
-					<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Unstaked</span> { <span class="ident">stash</span>, <span class="ident">result</span> });
+					ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">0</span>);
+					<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::InternalError)
+				} <span class="kw">else </span>{
+					<span class="macro">log!</span>(info, <span class="string">&quot;unstaked {:?}, outcome: {:?}&quot;</span>, stash, result);
+					<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Unstaked { stash, result });
 				}
 
-				<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::on_idle_unstake</span>()
-			} <span class="kw">else</span> {
-				<span class="comment">// eras remaining to be checked.</span>
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">eras_checked</span> <span class="op">=</span> <span class="number">0u32</span>;
-				<span class="kw">let</span> <span class="ident">is_exposed</span> <span class="op">=</span> <span class="ident">unchecked_eras_to_check</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-					<span class="ident">eras_checked</span>.<span class="ident">saturating_inc</span>();
-					<span class="ident"><span class="self">Self</span>::is_exposed_in_era</span>(<span class="kw-2">&amp;</span><span class="ident">stash</span>, <span class="ident">e</span>)
+				&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::on_idle_unstake()
+			} <span class="kw">else </span>{
+				<span class="comment">// eras remaining to be checked.
+				</span><span class="kw">let </span><span class="kw-2">mut </span>eras_checked = <span class="number">0u32</span>;
+				<span class="kw">let </span>is_exposed = unchecked_eras_to_check.iter().any(|e| {
+					eras_checked.saturating_inc();
+					<span class="self">Self</span>::is_exposed_in_era(<span class="kw-2">&amp;</span>stash, e)
 				});
 
 				<span class="macro">log!</span>(
-					<span class="ident">debug</span>,
+					debug,
 					<span class="string">&quot;checked {:?} eras, exposed? {}, (v: {:?}, u: {:?})&quot;</span>,
-					<span class="ident">eras_checked</span>,
-					<span class="ident">is_exposed</span>,
-					<span class="ident">validator_count</span>,
-					<span class="ident">unchecked_eras_to_check</span>.<span class="ident">len</span>()
+					eras_checked,
+					is_exposed,
+					validator_count,
+					unchecked_eras_to_check.len()
 				);
 
-				<span class="comment">// NOTE: you can be extremely unlucky and get slashed here: You are not exposed in</span>
-				<span class="comment">// the last 28 eras, have registered yourself to be unstaked, midway being checked,</span>
-				<span class="comment">// you are exposed.</span>
-				<span class="kw">if</span> <span class="ident">is_exposed</span> {
-					<span class="ident">T::DepositCurrency::slash_reserved</span>(<span class="kw-2">&amp;</span><span class="ident">stash</span>, <span class="ident">deposit</span>);
-					<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;slashed {:?} by {:?}&quot;</span>, <span class="ident">stash</span>, <span class="ident">deposit</span>);
-					<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Slashed</span> { <span class="ident">stash</span>, <span class="ident">amount</span>: <span class="ident">deposit</span> });
-				} <span class="kw">else</span> {
-					<span class="comment">// Not exposed in these eras.</span>
-					<span class="kw">match</span> <span class="ident">checked</span>.<span class="ident">try_extend</span>(<span class="ident">unchecked_eras_to_check</span>.<span class="ident">clone</span>().<span class="ident">into_iter</span>()) {
+				<span class="comment">// NOTE: you can be extremely unlucky and get slashed here: You are not exposed in
+				// the last 28 eras, have registered yourself to be unstaked, midway being checked,
+				// you are exposed.
+				</span><span class="kw">if </span>is_exposed {
+					T::DepositCurrency::slash_reserved(<span class="kw-2">&amp;</span>stash, deposit);
+					<span class="macro">log!</span>(info, <span class="string">&quot;slashed {:?} by {:?}&quot;</span>, stash, deposit);
+					<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Slashed { stash, amount: deposit });
+				} <span class="kw">else </span>{
+					<span class="comment">// Not exposed in these eras.
+					</span><span class="kw">match </span>checked.try_extend(unchecked_eras_to_check.clone().into_iter()) {
 						<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-							<span class="ident">Head</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">UnstakeRequest</span> {
-								<span class="ident">stash</span>: <span class="ident">stash</span>.<span class="ident">clone</span>(),
-								<span class="ident">checked</span>,
-								<span class="ident">deposit</span>,
+							Head::&lt;T&gt;::put(UnstakeRequest {
+								stash: stash.clone(),
+								checked,
+								deposit,
 							});
-							<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Checking</span> {
-								<span class="ident">stash</span>,
-								<span class="ident">eras</span>: <span class="ident">unchecked_eras_to_check</span>,
+							<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Checking {
+								stash,
+								eras: unchecked_eras_to_check,
 							});
 						},
 						<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-							<span class="comment">// don&#39;t put the head back in -- there is an internal error in the</span>
-							<span class="comment">// pallet.</span>
-							<span class="macro">frame_support::defensive!</span>(<span class="string">&quot;`checked is pruned via retain above`&quot;</span>);
-							<span class="ident">ErasToCheckPerBlock</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="number">0</span>);
-							<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::InternalError</span>);
+							<span class="comment">// don&#39;t put the head back in -- there is an internal error in the
+							// pallet.
+							</span><span class="macro">frame_support::defensive!</span>(<span class="string">&quot;`checked is pruned via retain above`&quot;</span>);
+							ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">0</span>);
+							<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::InternalError);
 						},
 					}
 				}
 
-				<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::WeightInfo::on_idle_check</span>(<span class="ident">validator_count</span> <span class="op">*</span> <span class="ident">eras_checked</span>)
+				&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::on_idle_check(validator_count * eras_checked)
 			}
 		}
 
-		<span class="doccomment">/// Checks whether an account `staker` has been exposed in an era.</span>
-		<span class="kw">fn</span> <span class="ident">is_exposed_in_era</span>(<span class="ident">staker</span>: <span class="kw-2">&amp;</span><span class="ident">T::AccountId</span>, <span class="ident">era</span>: <span class="kw-2">&amp;</span><span class="ident">EraIndex</span>) -&gt; <span class="ident">bool</span> {
-			<span class="ident">pallet_staking::ErasStakers</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter_prefix</span>(<span class="ident">era</span>).<span class="ident">any</span>(<span class="op">|</span>(<span class="ident">validator</span>, <span class="ident">exposures</span>)<span class="op">|</span> {
-				<span class="ident">validator</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">staker</span> <span class="op">|</span><span class="op">|</span> <span class="ident">exposures</span>.<span class="ident">others</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">i</span><span class="op">|</span> <span class="ident">i</span>.<span class="ident">who</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">staker</span>)
+		<span class="doccomment">/// Checks whether an account `staker` has been exposed in an era.
+		</span><span class="kw">fn </span>is_exposed_in_era(staker: <span class="kw-2">&amp;</span>T::AccountId, era: <span class="kw-2">&amp;</span>EraIndex) -&gt; bool {
+			pallet_staking::ErasStakers::&lt;T&gt;::iter_prefix(era).any(|(validator, exposures)| {
+				validator == <span class="kw-2">*</span>staker || exposures.others.iter().any(|i| i.who == <span class="kw-2">*</span>staker)
 			})
 		}
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_fast_unstake" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_fast_unstake" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

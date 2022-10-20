@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test-utils/runtime/src/system.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>system.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../substrate_test_runtime/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../substrate_test_runtime/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../substrate_test_runtime/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test-utils/runtime/src/system.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>system.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../substrate_test_runtime/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../substrate_test_runtime/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -552,554 +546,553 @@
 <span id="546">546</span>
 <span id="547">547</span>
 <span id="548">548</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! System manager: Handles all of the top-level stuff; executing block/transaction, setting code</span>
-<span class="doccomment">//! and depositing logs.</span>
+</span><span class="doccomment">//! System manager: Handles all of the top-level stuff; executing block/transaction, setting code
+//! and depositing logs.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">AccountId</span>, <span class="ident">AuthorityId</span>, <span class="ident">Block</span>, <span class="ident">BlockNumber</span>, <span class="ident">Digest</span>, <span class="ident">Extrinsic</span>, <span class="ident">Header</span>, <span class="ident">Runtime</span>, <span class="ident">Transfer</span>,
-	<span class="ident">H256</span> <span class="kw">as</span> <span class="ident">Hash</span>,
+</span><span class="kw">use crate</span>::{
+	AccountId, AuthorityId, Block, BlockNumber, Digest, Extrinsic, Header, Runtime, Transfer,
+	H256 <span class="kw">as </span>Hash,
 };
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">KeyedVec</span>};
-<span class="kw">use</span> <span class="ident">frame_support::storage</span>;
-<span class="kw">use</span> <span class="ident">sp_core::storage::well_known_keys</span>;
-<span class="kw">use</span> <span class="ident">sp_io</span>::{<span class="ident">hashing::blake2_256</span>, <span class="ident">storage::root</span> <span class="kw">as</span> <span class="ident">storage_root</span>, <span class="ident">trie</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">generic</span>,
-	<span class="ident">traits::Header</span> <span class="kw">as</span> <span class="kw">_</span>,
-	<span class="ident">transaction_validity</span>::{
-		<span class="ident">InvalidTransaction</span>, <span class="ident">TransactionValidity</span>, <span class="ident">TransactionValidityError</span>, <span class="ident">ValidTransaction</span>,
+<span class="kw">use </span>codec::{Decode, Encode, KeyedVec};
+<span class="kw">use </span>frame_support::storage;
+<span class="kw">use </span>sp_core::storage::well_known_keys;
+<span class="kw">use </span>sp_io::{hashing::blake2_256, storage::root <span class="kw">as </span>storage_root, trie};
+<span class="kw">use </span>sp_runtime::{
+	generic,
+	traits::Header <span class="kw">as _</span>,
+	transaction_validity::{
+		InvalidTransaction, TransactionValidity, TransactionValidityError, ValidTransaction,
 	},
-	<span class="ident">ApplyExtrinsicResult</span>,
+	ApplyExtrinsicResult,
 };
-<span class="kw">use</span> <span class="ident">sp_std::prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">const</span> <span class="ident">NONCE_OF</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;nonce:&quot;</span>;
-<span class="kw">const</span> <span class="ident">BALANCE_OF</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;balance:&quot;</span>;
+<span class="kw">const </span>NONCE_OF: <span class="kw-2">&amp;</span>[u8] = <span class="string">b&quot;nonce:&quot;</span>;
+<span class="kw">const </span>BALANCE_OF: <span class="kw-2">&amp;</span>[u8] = <span class="string">b&quot;balance:&quot;</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::pallet</span>::<span class="kw-2">*</span>;
+<span class="kw">pub use </span><span class="self">self</span>::pallet::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">frame_support::pallet</span>]</span>
-<span class="kw">mod</span> <span class="ident">pallet</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::pallet_prelude</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[frame_support::pallet]
+</span><span class="kw">mod </span>pallet {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">pallet::pallet</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::generate_store</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait</span> <span class="ident">Store</span>)]</span>
-	<span class="attribute">#[<span class="ident">pallet::without_storage_info</span>]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
+	<span class="attribute">#[pallet::pallet]
+	#[pallet::generate_store(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait </span>Store)]
+	#[pallet::without_storage_info]
+	</span><span class="kw">pub struct </span>Pallet&lt;T&gt;(PhantomData&lt;T&gt;);
 
-	<span class="attribute">#[<span class="ident">pallet::config</span>]</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Config</span>: <span class="ident">frame_system::Config</span> {}
+	<span class="attribute">#[pallet::config]
+	</span><span class="kw">pub trait </span>Config: frame_system::Config {}
 
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ExtrinsicData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Blake2_128Concat</span>, <span class="ident">u32</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>ExtrinsicData&lt;T&gt; = StorageMap&lt;<span class="kw">_</span>, Blake2_128Concat, u32, Vec&lt;u8&gt;, ValueQuery&gt;;
 
-	<span class="comment">// The current block number being processed. Set by `execute_block`.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Number</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">BlockNumber</span>, <span class="ident">OptionQuery</span><span class="op">&gt;</span>;
+	<span class="comment">// The current block number being processed. Set by `execute_block`.
+	</span><span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>Number&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, BlockNumber, OptionQuery&gt;;
 
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ParentHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Hash</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>ParentHash&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, Hash, ValueQuery&gt;;
 
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">NewAuthorities</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&gt;</span>, <span class="ident">OptionQuery</span><span class="op">&gt;</span>;
+	<span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>NewAuthorities&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, Vec&lt;AuthorityId&gt;, OptionQuery&gt;;
 
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">StorageDigest</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Digest</span>, <span class="ident">OptionQuery</span><span class="op">&gt;</span>;
+	<span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>StorageDigest&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, Digest, OptionQuery&gt;;
 
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Authorities</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&gt;</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>Authorities&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, Vec&lt;AuthorityId&gt;, ValueQuery&gt;;
 
-	<span class="attribute">#[<span class="ident">pallet::genesis_config</span>]</span>
-	<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">derive</span>(<span class="ident">Default</span>))]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GenesisConfig</span> {
-		<span class="kw">pub</span> <span class="ident">authorities</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&gt;</span>,
+	<span class="attribute">#[pallet::genesis_config]
+	#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, derive(Default))]
+	</span><span class="kw">pub struct </span>GenesisConfig {
+		<span class="kw">pub </span>authorities: Vec&lt;AuthorityId&gt;,
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::genesis_build</span>]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">GenesisBuild</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">GenesisConfig</span> {
-		<span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-			<span class="op">&lt;</span><span class="ident">Authorities</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="self">self</span>.<span class="ident">authorities</span>.<span class="ident">clone</span>());
+	<span class="attribute">#[pallet::genesis_build]
+	</span><span class="kw">impl</span>&lt;T: Config&gt; GenesisBuild&lt;T&gt; <span class="kw">for </span>GenesisConfig {
+		<span class="kw">fn </span>build(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+			&lt;Authorities&lt;T&gt;&gt;::put(<span class="self">self</span>.authorities.clone());
 		}
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">balance_of_key</span>(<span class="ident">who</span>: <span class="ident">AccountId</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-	<span class="ident">who</span>.<span class="ident">to_keyed_vec</span>(<span class="ident">BALANCE_OF</span>)
+<span class="kw">pub fn </span>balance_of_key(who: AccountId) -&gt; Vec&lt;u8&gt; {
+	who.to_keyed_vec(BALANCE_OF)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">balance_of</span>(<span class="ident">who</span>: <span class="ident">AccountId</span>) -&gt; <span class="ident">u64</span> {
-	<span class="ident">storage::hashed::get_or</span>(<span class="kw-2">&amp;</span><span class="ident">blake2_256</span>, <span class="kw-2">&amp;</span><span class="ident">balance_of_key</span>(<span class="ident">who</span>), <span class="number">0</span>)
+<span class="kw">pub fn </span>balance_of(who: AccountId) -&gt; u64 {
+	storage::hashed::get_or(<span class="kw-2">&amp;</span>blake2_256, <span class="kw-2">&amp;</span>balance_of_key(who), <span class="number">0</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">nonce_of</span>(<span class="ident">who</span>: <span class="ident">AccountId</span>) -&gt; <span class="ident">u64</span> {
-	<span class="ident">storage::hashed::get_or</span>(<span class="kw-2">&amp;</span><span class="ident">blake2_256</span>, <span class="kw-2">&amp;</span><span class="ident">who</span>.<span class="ident">to_keyed_vec</span>(<span class="ident">NONCE_OF</span>), <span class="number">0</span>)
+<span class="kw">pub fn </span>nonce_of(who: AccountId) -&gt; u64 {
+	storage::hashed::get_or(<span class="kw-2">&amp;</span>blake2_256, <span class="kw-2">&amp;</span>who.to_keyed_vec(NONCE_OF), <span class="number">0</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">initialize_block</span>(<span class="ident">header</span>: <span class="kw-2">&amp;</span><span class="ident">Header</span>) {
-	<span class="comment">// populate environment.</span>
-	<span class="op">&lt;</span><span class="ident">Number</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>.<span class="ident">number</span>);
-	<span class="op">&lt;</span><span class="ident">ParentHash</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>.<span class="ident">parent_hash</span>);
-	<span class="op">&lt;</span><span class="ident">StorageDigest</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">header</span>.<span class="ident">digest</span>());
-	<span class="ident">storage::unhashed::put</span>(<span class="ident">well_known_keys::EXTRINSIC_INDEX</span>, <span class="kw-2">&amp;</span><span class="number">0u32</span>);
+<span class="kw">pub fn </span>initialize_block(header: <span class="kw-2">&amp;</span>Header) {
+	<span class="comment">// populate environment.
+	</span>&lt;Number&lt;Runtime&gt;&gt;::put(<span class="kw-2">&amp;</span>header.number);
+	&lt;ParentHash&lt;Runtime&gt;&gt;::put(<span class="kw-2">&amp;</span>header.parent_hash);
+	&lt;StorageDigest&lt;Runtime&gt;&gt;::put(header.digest());
+	storage::unhashed::put(well_known_keys::EXTRINSIC_INDEX, <span class="kw-2">&amp;</span><span class="number">0u32</span>);
 
-	<span class="comment">// try to read something that depends on current header digest</span>
-	<span class="comment">// so that it&#39;ll be included in execution proof</span>
-	<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">generic::DigestItem::Other</span>(<span class="ident">v</span>)) <span class="op">=</span> <span class="ident">header</span>.<span class="ident">digest</span>().<span class="ident">logs</span>().<span class="ident">iter</span>().<span class="ident">next</span>() {
-		<span class="kw">let</span> <span class="kw">_</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">storage::unhashed::get</span>(<span class="ident">v</span>);
+	<span class="comment">// try to read something that depends on current header digest
+	// so that it&#39;ll be included in execution proof
+	</span><span class="kw">if let </span><span class="prelude-val">Some</span>(generic::DigestItem::Other(v)) = header.digest().logs().iter().next() {
+		<span class="kw">let _</span>: <span class="prelude-ty">Option</span>&lt;u32&gt; = storage::unhashed::get(v);
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">authorities</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&gt;</span> {
-	<span class="op">&lt;</span><span class="ident">Authorities</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>()
+<span class="kw">pub fn </span>authorities() -&gt; Vec&lt;AuthorityId&gt; {
+	&lt;Authorities&lt;Runtime&gt;&gt;::get()
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_block_number</span>() -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-	<span class="op">&lt;</span><span class="ident">Number</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>()
+<span class="kw">pub fn </span>get_block_number() -&gt; <span class="prelude-ty">Option</span>&lt;BlockNumber&gt; {
+	&lt;Number&lt;Runtime&gt;&gt;::get()
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">take_block_number</span>() -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-	<span class="op">&lt;</span><span class="ident">Number</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::take</span>()
+<span class="kw">pub fn </span>take_block_number() -&gt; <span class="prelude-ty">Option</span>&lt;BlockNumber&gt; {
+	&lt;Number&lt;Runtime&gt;&gt;::take()
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">enum</span> <span class="ident">Mode</span> {
-	<span class="ident">Verify</span>,
-	<span class="ident">Overwrite</span>,
+<span class="attribute">#[derive(Copy, Clone)]
+</span><span class="kw">enum </span>Mode {
+	Verify,
+	Overwrite,
 }
 
-<span class="doccomment">/// Actually execute all transitioning for `block`.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">polish_block</span>(<span class="ident">block</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Block</span>) {
-	<span class="ident">execute_block_with_state_root_handler</span>(<span class="ident">block</span>, <span class="ident">Mode::Overwrite</span>);
+<span class="doccomment">/// Actually execute all transitioning for `block`.
+</span><span class="kw">pub fn </span>polish_block(block: <span class="kw-2">&amp;mut </span>Block) {
+	execute_block_with_state_root_handler(block, Mode::Overwrite);
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">execute_block</span>(<span class="kw-2">mut</span> <span class="ident">block</span>: <span class="ident">Block</span>) -&gt; <span class="ident">Header</span> {
-	<span class="ident">execute_block_with_state_root_handler</span>(<span class="kw-2">&amp;mut</span> <span class="ident">block</span>, <span class="ident">Mode::Verify</span>)
+<span class="kw">pub fn </span>execute_block(<span class="kw-2">mut </span>block: Block) -&gt; Header {
+	execute_block_with_state_root_handler(<span class="kw-2">&amp;mut </span>block, Mode::Verify)
 }
 
-<span class="kw">fn</span> <span class="ident">execute_block_with_state_root_handler</span>(<span class="ident">block</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Block</span>, <span class="ident">mode</span>: <span class="ident">Mode</span>) -&gt; <span class="ident">Header</span> {
-	<span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">block</span>.<span class="ident">header</span>;
+<span class="kw">fn </span>execute_block_with_state_root_handler(block: <span class="kw-2">&amp;mut </span>Block, mode: Mode) -&gt; Header {
+	<span class="kw">let </span>header = <span class="kw-2">&amp;mut </span>block.header;
 
-	<span class="ident">initialize_block</span>(<span class="ident">header</span>);
+	initialize_block(header);
 
-	<span class="comment">// execute transactions</span>
-	<span class="ident">block</span>.<span class="ident">extrinsics</span>.<span class="ident">iter</span>().<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">execute_transaction</span>(<span class="ident">e</span>.<span class="ident">clone</span>()).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="macro">panic!</span>(<span class="string">&quot;Invalid transaction&quot;</span>));
+	<span class="comment">// execute transactions
+	</span>block.extrinsics.iter().for_each(|e| {
+		<span class="kw">let _ </span>= execute_transaction(e.clone()).unwrap_or_else(|<span class="kw">_</span>| <span class="macro">panic!</span>(<span class="string">&quot;Invalid transaction&quot;</span>));
 	});
 
-	<span class="kw">let</span> <span class="ident">new_header</span> <span class="op">=</span> <span class="ident">finalize_block</span>();
+	<span class="kw">let </span>new_header = finalize_block();
 
-	<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Mode::Overwrite</span> <span class="op">=</span> <span class="ident">mode</span> {
-		<span class="ident">header</span>.<span class="ident">state_root</span> <span class="op">=</span> <span class="ident">new_header</span>.<span class="ident">state_root</span>;
-	} <span class="kw">else</span> {
-		<span class="ident">info_expect_equal_hash</span>(<span class="kw-2">&amp;</span><span class="ident">new_header</span>.<span class="ident">state_root</span>, <span class="kw-2">&amp;</span><span class="ident">header</span>.<span class="ident">state_root</span>);
+	<span class="kw">if let </span>Mode::Overwrite = mode {
+		header.state_root = new_header.state_root;
+	} <span class="kw">else </span>{
+		info_expect_equal_hash(<span class="kw-2">&amp;</span>new_header.state_root, <span class="kw-2">&amp;</span>header.state_root);
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">new_header</span>.<span class="ident">state_root</span>, <span class="ident">header</span>.<span class="ident">state_root</span>,
+			new_header.state_root, header.state_root,
 			<span class="string">&quot;Storage root must match that calculated.&quot;</span>,
 		);
 	}
 
-	<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Mode::Overwrite</span> <span class="op">=</span> <span class="ident">mode</span> {
-		<span class="ident">header</span>.<span class="ident">extrinsics_root</span> <span class="op">=</span> <span class="ident">new_header</span>.<span class="ident">extrinsics_root</span>;
-	} <span class="kw">else</span> {
-		<span class="ident">info_expect_equal_hash</span>(<span class="kw-2">&amp;</span><span class="ident">new_header</span>.<span class="ident">extrinsics_root</span>, <span class="kw-2">&amp;</span><span class="ident">header</span>.<span class="ident">extrinsics_root</span>);
+	<span class="kw">if let </span>Mode::Overwrite = mode {
+		header.extrinsics_root = new_header.extrinsics_root;
+	} <span class="kw">else </span>{
+		info_expect_equal_hash(<span class="kw-2">&amp;</span>new_header.extrinsics_root, <span class="kw-2">&amp;</span>header.extrinsics_root);
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">new_header</span>.<span class="ident">extrinsics_root</span>, <span class="ident">header</span>.<span class="ident">extrinsics_root</span>,
+			new_header.extrinsics_root, header.extrinsics_root,
 			<span class="string">&quot;Transaction trie root must be valid.&quot;</span>,
 		);
 	}
 
-	<span class="ident">new_header</span>
+	new_header
 }
 
-<span class="doccomment">/// The block executor.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BlockExecutor</span>;
+<span class="doccomment">/// The block executor.
+</span><span class="kw">pub struct </span>BlockExecutor;
 
-<span class="kw">impl</span> <span class="ident">frame_support::traits::ExecuteBlock</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BlockExecutor</span> {
-	<span class="kw">fn</span> <span class="ident">execute_block</span>(<span class="ident">block</span>: <span class="ident">Block</span>) {
-		<span class="ident">execute_block</span>(<span class="ident">block</span>);
+<span class="kw">impl </span>frame_support::traits::ExecuteBlock&lt;Block&gt; <span class="kw">for </span>BlockExecutor {
+	<span class="kw">fn </span>execute_block(block: Block) {
+		execute_block(block);
 	}
 }
 
-<span class="doccomment">/// Execute a transaction outside of the block execution function.</span>
-<span class="doccomment">/// This doesn&#39;t attempt to validate anything regarding the block.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">validate_transaction</span>(<span class="ident">utx</span>: <span class="ident">Extrinsic</span>) -&gt; <span class="ident">TransactionValidity</span> {
-	<span class="kw">if</span> <span class="ident">check_signature</span>(<span class="kw-2">&amp;</span><span class="ident">utx</span>).<span class="ident">is_err</span>() {
-		<span class="kw">return</span> <span class="ident">InvalidTransaction::BadProof</span>.<span class="ident">into</span>()
+<span class="doccomment">/// Execute a transaction outside of the block execution function.
+/// This doesn&#39;t attempt to validate anything regarding the block.
+</span><span class="kw">pub fn </span>validate_transaction(utx: Extrinsic) -&gt; TransactionValidity {
+	<span class="kw">if </span>check_signature(<span class="kw-2">&amp;</span>utx).is_err() {
+		<span class="kw">return </span>InvalidTransaction::BadProof.into()
 	}
 
-	<span class="kw">let</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">utx</span>.<span class="ident">transfer</span>();
-	<span class="kw">let</span> <span class="ident">nonce_key</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">from</span>.<span class="ident">to_keyed_vec</span>(<span class="ident">NONCE_OF</span>);
-	<span class="kw">let</span> <span class="ident">expected_nonce</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="ident">storage::hashed::get_or</span>(<span class="kw-2">&amp;</span><span class="ident">blake2_256</span>, <span class="kw-2">&amp;</span><span class="ident">nonce_key</span>, <span class="number">0</span>);
-	<span class="kw">if</span> <span class="ident">tx</span>.<span class="ident">nonce</span> <span class="op">&lt;</span> <span class="ident">expected_nonce</span> {
-		<span class="kw">return</span> <span class="ident">InvalidTransaction::Stale</span>.<span class="ident">into</span>()
+	<span class="kw">let </span>tx = utx.transfer();
+	<span class="kw">let </span>nonce_key = tx.from.to_keyed_vec(NONCE_OF);
+	<span class="kw">let </span>expected_nonce: u64 = storage::hashed::get_or(<span class="kw-2">&amp;</span>blake2_256, <span class="kw-2">&amp;</span>nonce_key, <span class="number">0</span>);
+	<span class="kw">if </span>tx.nonce &lt; expected_nonce {
+		<span class="kw">return </span>InvalidTransaction::Stale.into()
 	}
-	<span class="kw">if</span> <span class="ident">tx</span>.<span class="ident">nonce</span> <span class="op">&gt;</span> <span class="ident">expected_nonce</span> <span class="op">+</span> <span class="number">64</span> {
-		<span class="kw">return</span> <span class="ident">InvalidTransaction::Future</span>.<span class="ident">into</span>()
+	<span class="kw">if </span>tx.nonce &gt; expected_nonce + <span class="number">64 </span>{
+		<span class="kw">return </span>InvalidTransaction::Future.into()
 	}
 
-	<span class="kw">let</span> <span class="ident">encode</span> <span class="op">=</span> <span class="op">|</span><span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="ident">AccountId</span>, <span class="ident">nonce</span>: <span class="ident">u64</span><span class="op">|</span> (<span class="ident">from</span>, <span class="ident">nonce</span>).<span class="ident">encode</span>();
-	<span class="kw">let</span> <span class="ident">requires</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">tx</span>.<span class="ident">nonce</span> <span class="op">!</span><span class="op">=</span> <span class="ident">expected_nonce</span> <span class="op">&amp;&amp;</span> <span class="ident">tx</span>.<span class="ident">nonce</span> <span class="op">&gt;</span> <span class="number">0</span> {
-		<span class="macro">vec!</span>[<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">tx</span>.<span class="ident">from</span>, <span class="ident">tx</span>.<span class="ident">nonce</span> <span class="op">-</span> <span class="number">1</span>)]
-	} <span class="kw">else</span> {
+	<span class="kw">let </span>encode = |from: <span class="kw-2">&amp;</span>AccountId, nonce: u64| (from, nonce).encode();
+	<span class="kw">let </span>requires = <span class="kw">if </span>tx.nonce != expected_nonce &amp;&amp; tx.nonce &gt; <span class="number">0 </span>{
+		<span class="macro">vec!</span>[encode(<span class="kw-2">&amp;</span>tx.from, tx.nonce - <span class="number">1</span>)]
+	} <span class="kw">else </span>{
 		<span class="macro">vec!</span>[]
 	};
 
-	<span class="kw">let</span> <span class="ident">provides</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">tx</span>.<span class="ident">from</span>, <span class="ident">tx</span>.<span class="ident">nonce</span>)];
+	<span class="kw">let </span>provides = <span class="macro">vec!</span>[encode(<span class="kw-2">&amp;</span>tx.from, tx.nonce)];
 
-	<span class="prelude-val">Ok</span>(<span class="ident">ValidTransaction</span> { <span class="ident">priority</span>: <span class="ident">tx</span>.<span class="ident">amount</span>, <span class="ident">requires</span>, <span class="ident">provides</span>, <span class="ident">longevity</span>: <span class="number">64</span>, <span class="ident">propagate</span>: <span class="bool-val">true</span> })
+	<span class="prelude-val">Ok</span>(ValidTransaction { priority: tx.amount, requires, provides, longevity: <span class="number">64</span>, propagate: <span class="bool-val">true </span>})
 }
 
-<span class="doccomment">/// Execute a transaction outside of the block execution function.</span>
-<span class="doccomment">/// This doesn&#39;t attempt to validate anything regarding the block.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">execute_transaction</span>(<span class="ident">utx</span>: <span class="ident">Extrinsic</span>) -&gt; <span class="ident">ApplyExtrinsicResult</span> {
-	<span class="kw">let</span> <span class="ident">extrinsic_index</span>: <span class="ident">u32</span> <span class="op">=</span>
-		<span class="ident">storage::unhashed::get</span>(<span class="ident">well_known_keys::EXTRINSIC_INDEX</span>).<span class="ident">unwrap_or_default</span>();
-	<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">execute_transaction_backend</span>(<span class="kw-2">&amp;</span><span class="ident">utx</span>, <span class="ident">extrinsic_index</span>);
-	<span class="op">&lt;</span><span class="ident">ExtrinsicData</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="ident">extrinsic_index</span>, <span class="ident">utx</span>.<span class="ident">encode</span>());
-	<span class="ident">storage::unhashed::put</span>(<span class="ident">well_known_keys::EXTRINSIC_INDEX</span>, <span class="kw-2">&amp;</span>(<span class="ident">extrinsic_index</span> <span class="op">+</span> <span class="number">1</span>));
-	<span class="ident">result</span>
+<span class="doccomment">/// Execute a transaction outside of the block execution function.
+/// This doesn&#39;t attempt to validate anything regarding the block.
+</span><span class="kw">pub fn </span>execute_transaction(utx: Extrinsic) -&gt; ApplyExtrinsicResult {
+	<span class="kw">let </span>extrinsic_index: u32 =
+		storage::unhashed::get(well_known_keys::EXTRINSIC_INDEX).unwrap_or_default();
+	<span class="kw">let </span>result = execute_transaction_backend(<span class="kw-2">&amp;</span>utx, extrinsic_index);
+	&lt;ExtrinsicData&lt;Runtime&gt;&gt;::insert(extrinsic_index, utx.encode());
+	storage::unhashed::put(well_known_keys::EXTRINSIC_INDEX, <span class="kw-2">&amp;</span>(extrinsic_index + <span class="number">1</span>));
+	result
 }
 
-<span class="doccomment">/// Finalize the block.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">finalize_block</span>() -&gt; <span class="ident">Header</span> {
-	<span class="kw">use</span> <span class="ident">sp_core::storage::StateVersion</span>;
-	<span class="kw">let</span> <span class="ident">extrinsic_index</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">storage::unhashed::take</span>(<span class="ident">well_known_keys::EXTRINSIC_INDEX</span>).<span class="ident">unwrap</span>();
-	<span class="kw">let</span> <span class="ident">txs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">extrinsic_index</span>).<span class="ident">map</span>(<span class="op">&lt;</span><span class="ident">ExtrinsicData</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::take</span>).<span class="ident">collect</span>();
-	<span class="kw">let</span> <span class="ident">extrinsics_root</span> <span class="op">=</span> <span class="ident">trie::blake2_256_ordered_root</span>(<span class="ident">txs</span>, <span class="ident">StateVersion::V0</span>);
-	<span class="kw">let</span> <span class="ident">number</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">Number</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::take</span>().<span class="ident">expect</span>(<span class="string">&quot;Number is set by `initialize_block`&quot;</span>);
-	<span class="kw">let</span> <span class="ident">parent_hash</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">ParentHash</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::take</span>();
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">digest</span> <span class="op">=</span>
-		<span class="op">&lt;</span><span class="ident">StorageDigest</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::take</span>().<span class="ident">expect</span>(<span class="string">&quot;StorageDigest is set by `initialize_block`&quot;</span>);
+<span class="doccomment">/// Finalize the block.
+</span><span class="kw">pub fn </span>finalize_block() -&gt; Header {
+	<span class="kw">use </span>sp_core::storage::StateVersion;
+	<span class="kw">let </span>extrinsic_index: u32 = storage::unhashed::take(well_known_keys::EXTRINSIC_INDEX).unwrap();
+	<span class="kw">let </span>txs: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">0</span>..extrinsic_index).map(&lt;ExtrinsicData&lt;Runtime&gt;&gt;::take).collect();
+	<span class="kw">let </span>extrinsics_root = trie::blake2_256_ordered_root(txs, StateVersion::V0);
+	<span class="kw">let </span>number = &lt;Number&lt;Runtime&gt;&gt;::take().expect(<span class="string">&quot;Number is set by `initialize_block`&quot;</span>);
+	<span class="kw">let </span>parent_hash = &lt;ParentHash&lt;Runtime&gt;&gt;::take();
+	<span class="kw">let </span><span class="kw-2">mut </span>digest =
+		&lt;StorageDigest&lt;Runtime&gt;&gt;::take().expect(<span class="string">&quot;StorageDigest is set by `initialize_block`&quot;</span>);
 
-	<span class="kw">let</span> <span class="ident">o_new_authorities</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">NewAuthorities</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::take</span>();
+	<span class="kw">let </span>o_new_authorities = &lt;NewAuthorities&lt;Runtime&gt;&gt;::take();
 
-	<span class="comment">// This MUST come after all changes to storage are done. Otherwise we will fail the</span>
-	<span class="comment">// “Storage root does not match that calculated” assertion.</span>
-	<span class="kw">let</span> <span class="ident">storage_root</span> <span class="op">=</span> <span class="ident">Hash::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="ident">storage_root</span>(<span class="ident">StateVersion::V1</span>)[..])
-		.<span class="ident">expect</span>(<span class="string">&quot;`storage_root` is a valid hash&quot;</span>);
+	<span class="comment">// This MUST come after all changes to storage are done. Otherwise we will fail the
+	// “Storage root does not match that calculated” assertion.
+	</span><span class="kw">let </span>storage_root = Hash::decode(<span class="kw-2">&amp;mut &amp;</span>storage_root(StateVersion::V1)[..])
+		.expect(<span class="string">&quot;`storage_root` is a valid hash&quot;</span>);
 
-	<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">new_authorities</span>) <span class="op">=</span> <span class="ident">o_new_authorities</span> {
-		<span class="ident">digest</span>.<span class="ident">push</span>(<span class="ident">generic::DigestItem::Consensus</span>(<span class="kw-2">*</span><span class="string">b&quot;aura&quot;</span>, <span class="ident">new_authorities</span>.<span class="ident">encode</span>()));
-		<span class="ident">digest</span>.<span class="ident">push</span>(<span class="ident">generic::DigestItem::Consensus</span>(<span class="kw-2">*</span><span class="string">b&quot;babe&quot;</span>, <span class="ident">new_authorities</span>.<span class="ident">encode</span>()));
+	<span class="kw">if let </span><span class="prelude-val">Some</span>(new_authorities) = o_new_authorities {
+		digest.push(generic::DigestItem::Consensus(<span class="kw-2">*</span><span class="string">b&quot;aura&quot;</span>, new_authorities.encode()));
+		digest.push(generic::DigestItem::Consensus(<span class="kw-2">*</span><span class="string">b&quot;babe&quot;</span>, new_authorities.encode()));
 	}
 
-	<span class="ident">Header</span> { <span class="ident">number</span>, <span class="ident">extrinsics_root</span>, <span class="ident">state_root</span>: <span class="ident">storage_root</span>, <span class="ident">parent_hash</span>, <span class="ident">digest</span> }
+	Header { number, extrinsics_root, state_root: storage_root, parent_hash, digest }
 }
 
-<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">fn</span> <span class="ident">check_signature</span>(<span class="ident">utx</span>: <span class="kw-2">&amp;</span><span class="ident">Extrinsic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">TransactionValidityError</span><span class="op">&gt;</span> {
-	<span class="kw">use</span> <span class="ident">sp_runtime::traits::BlindCheckable</span>;
-	<span class="ident">utx</span>.<span class="ident">clone</span>().<span class="ident">check</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">InvalidTransaction::BadProof</span>.<span class="ident">into</span>()).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ())
+<span class="attribute">#[inline(always)]
+</span><span class="kw">fn </span>check_signature(utx: <span class="kw-2">&amp;</span>Extrinsic) -&gt; <span class="prelude-ty">Result</span>&lt;(), TransactionValidityError&gt; {
+	<span class="kw">use </span>sp_runtime::traits::BlindCheckable;
+	utx.clone().check().map_err(|<span class="kw">_</span>| InvalidTransaction::BadProof.into()).map(|<span class="kw">_</span>| ())
 }
 
-<span class="kw">fn</span> <span class="ident">execute_transaction_backend</span>(<span class="ident">utx</span>: <span class="kw-2">&amp;</span><span class="ident">Extrinsic</span>, <span class="ident">extrinsic_index</span>: <span class="ident">u32</span>) -&gt; <span class="ident">ApplyExtrinsicResult</span> {
-	<span class="ident">check_signature</span>(<span class="ident">utx</span>)<span class="question-mark">?</span>;
-	<span class="kw">match</span> <span class="ident">utx</span> {
-		<span class="ident">Extrinsic::Transfer</span> { <span class="ident">exhaust_resources_when_not_first</span>: <span class="bool-val">true</span>, .. }
-			<span class="kw">if</span> <span class="ident">extrinsic_index</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> =&gt;
-			<span class="prelude-val">Err</span>(<span class="ident">InvalidTransaction::ExhaustsResources</span>.<span class="ident">into</span>()),
-		<span class="ident">Extrinsic::Transfer</span> { <span class="kw-2">ref</span> <span class="ident">transfer</span>, .. } =&gt; <span class="ident">execute_transfer_backend</span>(<span class="ident">transfer</span>),
-		<span class="ident">Extrinsic::AuthoritiesChange</span>(<span class="kw-2">ref</span> <span class="ident">new_auth</span>) =&gt; <span class="ident">execute_new_authorities_backend</span>(<span class="ident">new_auth</span>),
-		<span class="ident">Extrinsic::IncludeData</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(())),
-		<span class="ident">Extrinsic::StorageChange</span>(<span class="ident">key</span>, <span class="ident">value</span>) =&gt;
-			<span class="ident">execute_storage_change</span>(<span class="ident">key</span>, <span class="ident">value</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">v</span>)),
-		<span class="ident">Extrinsic::OffchainIndexSet</span>(<span class="ident">key</span>, <span class="ident">value</span>) =&gt; {
-			<span class="ident">sp_io::offchain_index::set</span>(<span class="ident">key</span>, <span class="ident">value</span>);
+<span class="kw">fn </span>execute_transaction_backend(utx: <span class="kw-2">&amp;</span>Extrinsic, extrinsic_index: u32) -&gt; ApplyExtrinsicResult {
+	check_signature(utx)<span class="question-mark">?</span>;
+	<span class="kw">match </span>utx {
+		Extrinsic::Transfer { exhaust_resources_when_not_first: <span class="bool-val">true</span>, .. }
+			<span class="kw">if </span>extrinsic_index != <span class="number">0 </span>=&gt;
+			<span class="prelude-val">Err</span>(InvalidTransaction::ExhaustsResources.into()),
+		Extrinsic::Transfer { <span class="kw-2">ref </span>transfer, .. } =&gt; execute_transfer_backend(transfer),
+		Extrinsic::AuthoritiesChange(<span class="kw-2">ref </span>new_auth) =&gt; execute_new_authorities_backend(new_auth),
+		Extrinsic::IncludeData(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(())),
+		Extrinsic::StorageChange(key, value) =&gt;
+			execute_storage_change(key, value.as_ref().map(|v| <span class="kw-2">&amp;**</span>v)),
+		Extrinsic::OffchainIndexSet(key, value) =&gt; {
+			sp_io::offchain_index::set(key, value);
 			<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
 		},
-		<span class="ident">Extrinsic::OffchainIndexClear</span>(<span class="ident">key</span>) =&gt; {
-			<span class="ident">sp_io::offchain_index::clear</span>(<span class="ident">key</span>);
+		Extrinsic::OffchainIndexClear(key) =&gt; {
+			sp_io::offchain_index::clear(key);
 			<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
 		},
-		<span class="ident">Extrinsic::Store</span>(<span class="ident">data</span>) =&gt; <span class="ident">execute_store</span>(<span class="ident">data</span>.<span class="ident">clone</span>()),
+		Extrinsic::Store(data) =&gt; execute_store(data.clone()),
 	}
 }
 
-<span class="kw">fn</span> <span class="ident">execute_transfer_backend</span>(<span class="ident">tx</span>: <span class="kw-2">&amp;</span><span class="ident">Transfer</span>) -&gt; <span class="ident">ApplyExtrinsicResult</span> {
-	<span class="comment">// check nonce</span>
-	<span class="kw">let</span> <span class="ident">nonce_key</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">from</span>.<span class="ident">to_keyed_vec</span>(<span class="ident">NONCE_OF</span>);
-	<span class="kw">let</span> <span class="ident">expected_nonce</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="ident">storage::hashed::get_or</span>(<span class="kw-2">&amp;</span><span class="ident">blake2_256</span>, <span class="kw-2">&amp;</span><span class="ident">nonce_key</span>, <span class="number">0</span>);
-	<span class="kw">if</span> <span class="ident">tx</span>.<span class="ident">nonce</span> <span class="op">!</span><span class="op">=</span> <span class="ident">expected_nonce</span> {
-		<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InvalidTransaction::Stale</span>.<span class="ident">into</span>())
+<span class="kw">fn </span>execute_transfer_backend(tx: <span class="kw-2">&amp;</span>Transfer) -&gt; ApplyExtrinsicResult {
+	<span class="comment">// check nonce
+	</span><span class="kw">let </span>nonce_key = tx.from.to_keyed_vec(NONCE_OF);
+	<span class="kw">let </span>expected_nonce: u64 = storage::hashed::get_or(<span class="kw-2">&amp;</span>blake2_256, <span class="kw-2">&amp;</span>nonce_key, <span class="number">0</span>);
+	<span class="kw">if </span>tx.nonce != expected_nonce {
+		<span class="kw">return </span><span class="prelude-val">Err</span>(InvalidTransaction::Stale.into())
 	}
 
-	<span class="comment">// increment nonce in storage</span>
-	<span class="ident">storage::hashed::put</span>(<span class="kw-2">&amp;</span><span class="ident">blake2_256</span>, <span class="kw-2">&amp;</span><span class="ident">nonce_key</span>, <span class="kw-2">&amp;</span>(<span class="ident">expected_nonce</span> <span class="op">+</span> <span class="number">1</span>));
+	<span class="comment">// increment nonce in storage
+	</span>storage::hashed::put(<span class="kw-2">&amp;</span>blake2_256, <span class="kw-2">&amp;</span>nonce_key, <span class="kw-2">&amp;</span>(expected_nonce + <span class="number">1</span>));
 
-	<span class="comment">// check sender balance</span>
-	<span class="kw">let</span> <span class="ident">from_balance_key</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">from</span>.<span class="ident">to_keyed_vec</span>(<span class="ident">BALANCE_OF</span>);
-	<span class="kw">let</span> <span class="ident">from_balance</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="ident">storage::hashed::get_or</span>(<span class="kw-2">&amp;</span><span class="ident">blake2_256</span>, <span class="kw-2">&amp;</span><span class="ident">from_balance_key</span>, <span class="number">0</span>);
+	<span class="comment">// check sender balance
+	</span><span class="kw">let </span>from_balance_key = tx.from.to_keyed_vec(BALANCE_OF);
+	<span class="kw">let </span>from_balance: u64 = storage::hashed::get_or(<span class="kw-2">&amp;</span>blake2_256, <span class="kw-2">&amp;</span>from_balance_key, <span class="number">0</span>);
 
-	<span class="comment">// enact transfer</span>
-	<span class="kw">if</span> <span class="ident">tx</span>.<span class="ident">amount</span> <span class="op">&gt;</span> <span class="ident">from_balance</span> {
-		<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InvalidTransaction::Payment</span>.<span class="ident">into</span>())
+	<span class="comment">// enact transfer
+	</span><span class="kw">if </span>tx.amount &gt; from_balance {
+		<span class="kw">return </span><span class="prelude-val">Err</span>(InvalidTransaction::Payment.into())
 	}
-	<span class="kw">let</span> <span class="ident">to_balance_key</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">to</span>.<span class="ident">to_keyed_vec</span>(<span class="ident">BALANCE_OF</span>);
-	<span class="kw">let</span> <span class="ident">to_balance</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="ident">storage::hashed::get_or</span>(<span class="kw-2">&amp;</span><span class="ident">blake2_256</span>, <span class="kw-2">&amp;</span><span class="ident">to_balance_key</span>, <span class="number">0</span>);
-	<span class="ident">storage::hashed::put</span>(<span class="kw-2">&amp;</span><span class="ident">blake2_256</span>, <span class="kw-2">&amp;</span><span class="ident">from_balance_key</span>, <span class="kw-2">&amp;</span>(<span class="ident">from_balance</span> <span class="op">-</span> <span class="ident">tx</span>.<span class="ident">amount</span>));
-	<span class="ident">storage::hashed::put</span>(<span class="kw-2">&amp;</span><span class="ident">blake2_256</span>, <span class="kw-2">&amp;</span><span class="ident">to_balance_key</span>, <span class="kw-2">&amp;</span>(<span class="ident">to_balance</span> <span class="op">+</span> <span class="ident">tx</span>.<span class="ident">amount</span>));
+	<span class="kw">let </span>to_balance_key = tx.to.to_keyed_vec(BALANCE_OF);
+	<span class="kw">let </span>to_balance: u64 = storage::hashed::get_or(<span class="kw-2">&amp;</span>blake2_256, <span class="kw-2">&amp;</span>to_balance_key, <span class="number">0</span>);
+	storage::hashed::put(<span class="kw-2">&amp;</span>blake2_256, <span class="kw-2">&amp;</span>from_balance_key, <span class="kw-2">&amp;</span>(from_balance - tx.amount));
+	storage::hashed::put(<span class="kw-2">&amp;</span>blake2_256, <span class="kw-2">&amp;</span>to_balance_key, <span class="kw-2">&amp;</span>(to_balance + tx.amount));
 	<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
 }
 
-<span class="kw">fn</span> <span class="ident">execute_store</span>(<span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">ApplyExtrinsicResult</span> {
-	<span class="kw">let</span> <span class="ident">content_hash</span> <span class="op">=</span> <span class="ident">sp_io::hashing::blake2_256</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>);
-	<span class="kw">let</span> <span class="ident">extrinsic_index</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="ident">storage::unhashed::get</span>(<span class="ident">well_known_keys::EXTRINSIC_INDEX</span>).<span class="ident">unwrap</span>();
-	<span class="ident">sp_io::transaction_index::index</span>(<span class="ident">extrinsic_index</span>, <span class="ident">data</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">content_hash</span>);
+<span class="kw">fn </span>execute_store(data: Vec&lt;u8&gt;) -&gt; ApplyExtrinsicResult {
+	<span class="kw">let </span>content_hash = sp_io::hashing::blake2_256(<span class="kw-2">&amp;</span>data);
+	<span class="kw">let </span>extrinsic_index: u32 = storage::unhashed::get(well_known_keys::EXTRINSIC_INDEX).unwrap();
+	sp_io::transaction_index::index(extrinsic_index, data.len() <span class="kw">as </span>u32, content_hash);
 	<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
 }
 
-<span class="kw">fn</span> <span class="ident">execute_new_authorities_backend</span>(<span class="ident">new_authorities</span>: <span class="kw-2">&amp;</span>[<span class="ident">AuthorityId</span>]) -&gt; <span class="ident">ApplyExtrinsicResult</span> {
-	<span class="op">&lt;</span><span class="ident">NewAuthorities</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">new_authorities</span>.<span class="ident">to_vec</span>());
+<span class="kw">fn </span>execute_new_authorities_backend(new_authorities: <span class="kw-2">&amp;</span>[AuthorityId]) -&gt; ApplyExtrinsicResult {
+	&lt;NewAuthorities&lt;Runtime&gt;&gt;::put(new_authorities.to_vec());
 	<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
 }
 
-<span class="kw">fn</span> <span class="ident">execute_storage_change</span>(<span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>) -&gt; <span class="ident">ApplyExtrinsicResult</span> {
-	<span class="kw">match</span> <span class="ident">value</span> {
-		<span class="prelude-val">Some</span>(<span class="ident">value</span>) =&gt; <span class="ident">storage::unhashed::put_raw</span>(<span class="ident">key</span>, <span class="ident">value</span>),
-		<span class="prelude-val">None</span> =&gt; <span class="ident">storage::unhashed::kill</span>(<span class="ident">key</span>),
+<span class="kw">fn </span>execute_storage_change(key: <span class="kw-2">&amp;</span>[u8], value: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;) -&gt; ApplyExtrinsicResult {
+	<span class="kw">match </span>value {
+		<span class="prelude-val">Some</span>(value) =&gt; storage::unhashed::put_raw(key, value),
+		<span class="prelude-val">None </span>=&gt; storage::unhashed::kill(key),
 	}
 	<span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(()))
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">fn</span> <span class="ident">info_expect_equal_hash</span>(<span class="ident">given</span>: <span class="kw-2">&amp;</span><span class="ident">Hash</span>, <span class="ident">expected</span>: <span class="kw-2">&amp;</span><span class="ident">Hash</span>) {
-	<span class="kw">use</span> <span class="ident">sp_core::hexdisplay::HexDisplay</span>;
-	<span class="kw">if</span> <span class="ident">given</span> <span class="op">!</span><span class="op">=</span> <span class="ident">expected</span> {
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">fn </span>info_expect_equal_hash(given: <span class="kw-2">&amp;</span>Hash, expected: <span class="kw-2">&amp;</span>Hash) {
+	<span class="kw">use </span>sp_core::hexdisplay::HexDisplay;
+	<span class="kw">if </span>given != expected {
 		<span class="macro">println!</span>(
 			<span class="string">&quot;Hash: given={}, expected={}&quot;</span>,
-			<span class="ident">HexDisplay::from</span>(<span class="ident">given</span>.<span class="ident">as_fixed_bytes</span>()),
-			<span class="ident">HexDisplay::from</span>(<span class="ident">expected</span>.<span class="ident">as_fixed_bytes</span>()),
+			HexDisplay::from(given.as_fixed_bytes()),
+			HexDisplay::from(expected.as_fixed_bytes()),
 		);
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">fn</span> <span class="ident">info_expect_equal_hash</span>(<span class="ident">given</span>: <span class="kw-2">&amp;</span><span class="ident">Hash</span>, <span class="ident">expected</span>: <span class="kw-2">&amp;</span><span class="ident">Hash</span>) {
-	<span class="kw">if</span> <span class="ident">given</span> <span class="op">!</span><span class="op">=</span> <span class="ident">expected</span> {
-		<span class="ident">sp_runtime::print</span>(<span class="string">&quot;Hash not equal&quot;</span>);
-		<span class="ident">sp_runtime::print</span>(<span class="ident">given</span>.<span class="ident">as_bytes</span>());
-		<span class="ident">sp_runtime::print</span>(<span class="ident">expected</span>.<span class="ident">as_bytes</span>());
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+</span><span class="kw">fn </span>info_expect_equal_hash(given: <span class="kw-2">&amp;</span>Hash, expected: <span class="kw-2">&amp;</span>Hash) {
+	<span class="kw">if </span>given != expected {
+		sp_runtime::print(<span class="string">&quot;Hash not equal&quot;</span>);
+		sp_runtime::print(given.as_bytes());
+		sp_runtime::print(expected.as_bytes());
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">wasm_binary_unwrap</span>, <span class="ident">Header</span>, <span class="ident">Transfer</span>};
-	<span class="kw">use</span> <span class="ident">sc_executor</span>::{<span class="ident">NativeElseWasmExecutor</span>, <span class="ident">WasmExecutionMethod</span>};
-	<span class="kw">use</span> <span class="ident">sp_core</span>::{
-		<span class="ident">map</span>,
-		<span class="ident">traits</span>::{<span class="ident">CodeExecutor</span>, <span class="ident">RuntimeCode</span>},
+	<span class="kw">use crate</span>::{wasm_binary_unwrap, Header, Transfer};
+	<span class="kw">use </span>sc_executor::{NativeElseWasmExecutor, WasmExecutionMethod};
+	<span class="kw">use </span>sp_core::{
+		map,
+		traits::{CodeExecutor, RuntimeCode},
 	};
-	<span class="kw">use</span> <span class="ident">sp_io</span>::{<span class="ident">hashing::twox_128</span>, <span class="ident">TestExternalities</span>};
-	<span class="kw">use</span> <span class="ident">substrate_test_runtime_client</span>::{<span class="ident">AccountKeyring</span>, <span class="ident">Sr25519Keyring</span>};
+	<span class="kw">use </span>sp_io::{hashing::twox_128, TestExternalities};
+	<span class="kw">use </span>substrate_test_runtime_client::{AccountKeyring, Sr25519Keyring};
 
-	<span class="comment">// Declare an instance of the native executor dispatch for the test runtime.</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NativeDispatch</span>;
+	<span class="comment">// Declare an instance of the native executor dispatch for the test runtime.
+	</span><span class="kw">pub struct </span>NativeDispatch;
 
-	<span class="kw">impl</span> <span class="ident">sc_executor::NativeExecutionDispatch</span> <span class="kw">for</span> <span class="ident">NativeDispatch</span> {
-		<span class="kw">type</span> <span class="ident">ExtendHostFunctions</span> <span class="op">=</span> ();
+	<span class="kw">impl </span>sc_executor::NativeExecutionDispatch <span class="kw">for </span>NativeDispatch {
+		<span class="kw">type </span>ExtendHostFunctions = ();
 
-		<span class="kw">fn</span> <span class="ident">dispatch</span>(<span class="ident">method</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-			<span class="ident"><span class="kw">crate</span>::api::dispatch</span>(<span class="ident">method</span>, <span class="ident">data</span>)
+		<span class="kw">fn </span>dispatch(method: <span class="kw-2">&amp;</span>str, data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
+			<span class="kw">crate</span>::api::dispatch(method, data)
 		}
 
-		<span class="kw">fn</span> <span class="ident">native_version</span>() -&gt; <span class="ident">sc_executor::NativeVersion</span> {
-			<span class="ident"><span class="kw">crate</span>::native_version</span>()
+		<span class="kw">fn </span>native_version() -&gt; sc_executor::NativeVersion {
+			<span class="kw">crate</span>::native_version()
 		}
 	}
 
-	<span class="kw">fn</span> <span class="ident">executor</span>() -&gt; <span class="ident">NativeElseWasmExecutor</span><span class="op">&lt;</span><span class="ident">NativeDispatch</span><span class="op">&gt;</span> {
-		<span class="ident">NativeElseWasmExecutor::new</span>(<span class="ident">WasmExecutionMethod::Interpreted</span>, <span class="prelude-val">None</span>, <span class="number">8</span>, <span class="number">2</span>)
+	<span class="kw">fn </span>executor() -&gt; NativeElseWasmExecutor&lt;NativeDispatch&gt; {
+		NativeElseWasmExecutor::new(WasmExecutionMethod::Interpreted, <span class="prelude-val">None</span>, <span class="number">8</span>, <span class="number">2</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">new_test_ext</span>() -&gt; <span class="ident">TestExternalities</span> {
-		<span class="kw">let</span> <span class="ident">authorities</span> <span class="op">=</span> <span class="macro">vec!</span>[
-			<span class="ident">Sr25519Keyring::Alice</span>.<span class="ident">to_raw_public</span>(),
-			<span class="ident">Sr25519Keyring::Bob</span>.<span class="ident">to_raw_public</span>(),
-			<span class="ident">Sr25519Keyring::Charlie</span>.<span class="ident">to_raw_public</span>(),
+	<span class="kw">fn </span>new_test_ext() -&gt; TestExternalities {
+		<span class="kw">let </span>authorities = <span class="macro">vec!</span>[
+			Sr25519Keyring::Alice.to_raw_public(),
+			Sr25519Keyring::Bob.to_raw_public(),
+			Sr25519Keyring::Charlie.to_raw_public(),
 		];
 
-		<span class="ident">TestExternalities::new_with_code</span>(
-			<span class="ident">wasm_binary_unwrap</span>(),
-			<span class="ident">sp_core::storage::Storage</span> {
-				<span class="ident">top</span>: <span class="macro">map!</span>[
-					<span class="ident">twox_128</span>(<span class="string">b&quot;latest&quot;</span>).<span class="ident">to_vec</span>() =&gt; <span class="macro">vec!</span>[<span class="number">69u8</span>; <span class="number">32</span>],
-					<span class="ident">twox_128</span>(<span class="string">b&quot;sys:auth&quot;</span>).<span class="ident">to_vec</span>() =&gt; <span class="ident">authorities</span>.<span class="ident">encode</span>(),
-					<span class="ident">blake2_256</span>(<span class="kw-2">&amp;</span><span class="ident">AccountKeyring::Alice</span>.<span class="ident">to_raw_public</span>().<span class="ident">to_keyed_vec</span>(<span class="string">b&quot;balance:&quot;</span>)).<span class="ident">to_vec</span>() =&gt; {
+		TestExternalities::new_with_code(
+			wasm_binary_unwrap(),
+			sp_core::storage::Storage {
+				top: <span class="macro">map!</span>[
+					twox_128(<span class="string">b&quot;latest&quot;</span>).to_vec() =&gt; <span class="macro">vec!</span>[<span class="number">69u8</span>; <span class="number">32</span>],
+					twox_128(<span class="string">b&quot;sys:auth&quot;</span>).to_vec() =&gt; authorities.encode(),
+					blake2_256(<span class="kw-2">&amp;</span>AccountKeyring::Alice.to_raw_public().to_keyed_vec(<span class="string">b&quot;balance:&quot;</span>)).to_vec() =&gt; {
 						<span class="macro">vec!</span>[<span class="number">111u8</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]
 					},
 				],
-				<span class="ident">children_default</span>: <span class="macro">map!</span>[],
+				children_default: <span class="macro">map!</span>[],
 			},
 		)
 	}
 
-	<span class="kw">fn</span> <span class="ident">block_import_works</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">block_executor</span>: <span class="ident">F</span>)
-	<span class="kw">where</span>
-		<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">Block</span>, <span class="kw-2">&amp;mut</span> <span class="ident">TestExternalities</span>),
+	<span class="kw">fn </span>block_import_works&lt;F&gt;(block_executor: F)
+	<span class="kw">where
+		</span>F: Fn(Block, <span class="kw-2">&amp;mut </span>TestExternalities),
 	{
-		<span class="kw">let</span> <span class="ident">h</span> <span class="op">=</span> <span class="ident">Header</span> {
-			<span class="ident">parent_hash</span>: [<span class="number">69u8</span>; <span class="number">32</span>].<span class="ident">into</span>(),
-			<span class="ident">number</span>: <span class="number">1</span>,
-			<span class="ident">state_root</span>: <span class="ident">Default::default</span>(),
-			<span class="ident">extrinsics_root</span>: <span class="ident">Default::default</span>(),
-			<span class="ident">digest</span>: <span class="ident">Default::default</span>(),
+		<span class="kw">let </span>h = Header {
+			parent_hash: [<span class="number">69u8</span>; <span class="number">32</span>].into(),
+			number: <span class="number">1</span>,
+			state_root: Default::default(),
+			extrinsics_root: Default::default(),
+			digest: Default::default(),
 		};
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">Block</span> { <span class="ident">header</span>: <span class="ident">h</span>, <span class="ident">extrinsics</span>: <span class="macro">vec!</span>[] };
+		<span class="kw">let </span><span class="kw-2">mut </span>b = Block { header: h, extrinsics: <span class="macro">vec!</span>[] };
 
-		<span class="ident">new_test_ext</span>().<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">polish_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">b</span>));
+		new_test_ext().execute_with(|| polish_block(<span class="kw-2">&amp;mut </span>b));
 
-		<span class="ident">block_executor</span>(<span class="ident">b</span>, <span class="kw-2">&amp;mut</span> <span class="ident">new_test_ext</span>());
+		block_executor(b, <span class="kw-2">&amp;mut </span>new_test_ext());
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">block_import_works_native</span>() {
-		<span class="ident">block_import_works</span>(<span class="op">|</span><span class="ident">b</span>, <span class="ident">ext</span><span class="op">|</span> {
-			<span class="ident">ext</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-				<span class="ident">execute_block</span>(<span class="ident">b</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>block_import_works_native() {
+		block_import_works(|b, ext| {
+			ext.execute_with(|| {
+				execute_block(b);
 			})
 		});
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">block_import_works_wasm</span>() {
-		<span class="ident">block_import_works</span>(<span class="op">|</span><span class="ident">b</span>, <span class="ident">ext</span><span class="op">|</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident">ext</span>.<span class="ident">ext</span>();
-			<span class="kw">let</span> <span class="ident">runtime_code</span> <span class="op">=</span> <span class="ident">RuntimeCode</span> {
-				<span class="ident">code_fetcher</span>: <span class="kw-2">&amp;</span><span class="ident">sp_core::traits::WrappedRuntimeCode</span>(<span class="ident">wasm_binary_unwrap</span>().<span class="ident">into</span>()),
-				<span class="ident">hash</span>: <span class="ident">Vec::new</span>(),
-				<span class="ident">heap_pages</span>: <span class="prelude-val">None</span>,
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>block_import_works_wasm() {
+		block_import_works(|b, ext| {
+			<span class="kw">let </span><span class="kw-2">mut </span>ext = ext.ext();
+			<span class="kw">let </span>runtime_code = RuntimeCode {
+				code_fetcher: <span class="kw-2">&amp;</span>sp_core::traits::WrappedRuntimeCode(wasm_binary_unwrap().into()),
+				hash: Vec::new(),
+				heap_pages: <span class="prelude-val">None</span>,
 			};
 
-			<span class="ident">executor</span>()
-				.<span class="ident">call</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ext</span>, <span class="kw-2">&amp;</span><span class="ident">runtime_code</span>, <span class="string">&quot;Core_execute_block&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">encode</span>(), <span class="bool-val">false</span>)
-				.<span class="number">0</span>
-				.<span class="ident">unwrap</span>();
+			executor()
+				.call(<span class="kw-2">&amp;mut </span>ext, <span class="kw-2">&amp;</span>runtime_code, <span class="string">&quot;Core_execute_block&quot;</span>, <span class="kw-2">&amp;</span>b.encode(), <span class="bool-val">false</span>)
+				.<span class="number">0
+				</span>.unwrap();
 		})
 	}
 
-	<span class="kw">fn</span> <span class="ident">block_import_with_transaction_works</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">block_executor</span>: <span class="ident">F</span>)
-	<span class="kw">where</span>
-		<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">Block</span>, <span class="kw-2">&amp;mut</span> <span class="ident">TestExternalities</span>),
+	<span class="kw">fn </span>block_import_with_transaction_works&lt;F&gt;(block_executor: F)
+	<span class="kw">where
+		</span>F: Fn(Block, <span class="kw-2">&amp;mut </span>TestExternalities),
 	{
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">b1</span> <span class="op">=</span> <span class="ident">Block</span> {
-			<span class="ident">header</span>: <span class="ident">Header</span> {
-				<span class="ident">parent_hash</span>: [<span class="number">69u8</span>; <span class="number">32</span>].<span class="ident">into</span>(),
-				<span class="ident">number</span>: <span class="number">1</span>,
-				<span class="ident">state_root</span>: <span class="ident">Default::default</span>(),
-				<span class="ident">extrinsics_root</span>: <span class="ident">Default::default</span>(),
-				<span class="ident">digest</span>: <span class="ident">Default::default</span>(),
+		<span class="kw">let </span><span class="kw-2">mut </span>b1 = Block {
+			header: Header {
+				parent_hash: [<span class="number">69u8</span>; <span class="number">32</span>].into(),
+				number: <span class="number">1</span>,
+				state_root: Default::default(),
+				extrinsics_root: Default::default(),
+				digest: Default::default(),
 			},
-			<span class="ident">extrinsics</span>: <span class="macro">vec!</span>[<span class="ident">Transfer</span> {
-				<span class="ident">from</span>: <span class="ident">AccountKeyring::Alice</span>.<span class="ident">into</span>(),
-				<span class="ident">to</span>: <span class="ident">AccountKeyring::Bob</span>.<span class="ident">into</span>(),
-				<span class="ident">amount</span>: <span class="number">69</span>,
-				<span class="ident">nonce</span>: <span class="number">0</span>,
+			extrinsics: <span class="macro">vec!</span>[Transfer {
+				from: AccountKeyring::Alice.into(),
+				to: AccountKeyring::Bob.into(),
+				amount: <span class="number">69</span>,
+				nonce: <span class="number">0</span>,
 			}
-			.<span class="ident">into_signed_tx</span>()],
+			.into_signed_tx()],
 		};
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dummy_ext</span> <span class="op">=</span> <span class="ident">new_test_ext</span>();
-		<span class="ident">dummy_ext</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">polish_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">b1</span>));
+		<span class="kw">let </span><span class="kw-2">mut </span>dummy_ext = new_test_ext();
+		dummy_ext.execute_with(|| polish_block(<span class="kw-2">&amp;mut </span>b1));
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">b2</span> <span class="op">=</span> <span class="ident">Block</span> {
-			<span class="ident">header</span>: <span class="ident">Header</span> {
-				<span class="ident">parent_hash</span>: <span class="ident">b1</span>.<span class="ident">header</span>.<span class="ident">hash</span>(),
-				<span class="ident">number</span>: <span class="number">2</span>,
-				<span class="ident">state_root</span>: <span class="ident">Default::default</span>(),
-				<span class="ident">extrinsics_root</span>: <span class="ident">Default::default</span>(),
-				<span class="ident">digest</span>: <span class="ident">Default::default</span>(),
+		<span class="kw">let </span><span class="kw-2">mut </span>b2 = Block {
+			header: Header {
+				parent_hash: b1.header.hash(),
+				number: <span class="number">2</span>,
+				state_root: Default::default(),
+				extrinsics_root: Default::default(),
+				digest: Default::default(),
 			},
-			<span class="ident">extrinsics</span>: <span class="macro">vec!</span>[
-				<span class="ident">Transfer</span> {
-					<span class="ident">from</span>: <span class="ident">AccountKeyring::Bob</span>.<span class="ident">into</span>(),
-					<span class="ident">to</span>: <span class="ident">AccountKeyring::Alice</span>.<span class="ident">into</span>(),
-					<span class="ident">amount</span>: <span class="number">27</span>,
-					<span class="ident">nonce</span>: <span class="number">0</span>,
+			extrinsics: <span class="macro">vec!</span>[
+				Transfer {
+					from: AccountKeyring::Bob.into(),
+					to: AccountKeyring::Alice.into(),
+					amount: <span class="number">27</span>,
+					nonce: <span class="number">0</span>,
 				}
-				.<span class="ident">into_signed_tx</span>(),
-				<span class="ident">Transfer</span> {
-					<span class="ident">from</span>: <span class="ident">AccountKeyring::Alice</span>.<span class="ident">into</span>(),
-					<span class="ident">to</span>: <span class="ident">AccountKeyring::Charlie</span>.<span class="ident">into</span>(),
-					<span class="ident">amount</span>: <span class="number">69</span>,
-					<span class="ident">nonce</span>: <span class="number">1</span>,
+				.into_signed_tx(),
+				Transfer {
+					from: AccountKeyring::Alice.into(),
+					to: AccountKeyring::Charlie.into(),
+					amount: <span class="number">69</span>,
+					nonce: <span class="number">1</span>,
 				}
-				.<span class="ident">into_signed_tx</span>(),
+				.into_signed_tx(),
 			],
 		};
 
-		<span class="ident">dummy_ext</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">polish_block</span>(<span class="kw-2">&amp;mut</span> <span class="ident">b2</span>));
-		<span class="ident">drop</span>(<span class="ident">dummy_ext</span>);
+		dummy_ext.execute_with(|| polish_block(<span class="kw-2">&amp;mut </span>b2));
+		drop(dummy_ext);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">new_test_ext</span>();
+		<span class="kw">let </span><span class="kw-2">mut </span>t = new_test_ext();
 
-		<span class="ident">t</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">balance_of</span>(<span class="ident">AccountKeyring::Alice</span>.<span class="ident">into</span>()), <span class="number">111</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">balance_of</span>(<span class="ident">AccountKeyring::Bob</span>.<span class="ident">into</span>()), <span class="number">0</span>);
+		t.execute_with(|| {
+			<span class="macro">assert_eq!</span>(balance_of(AccountKeyring::Alice.into()), <span class="number">111</span>);
+			<span class="macro">assert_eq!</span>(balance_of(AccountKeyring::Bob.into()), <span class="number">0</span>);
 		});
 
-		<span class="ident">block_executor</span>(<span class="ident">b1</span>, <span class="kw-2">&amp;mut</span> <span class="ident">t</span>);
+		block_executor(b1, <span class="kw-2">&amp;mut </span>t);
 
-		<span class="ident">t</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">balance_of</span>(<span class="ident">AccountKeyring::Alice</span>.<span class="ident">into</span>()), <span class="number">42</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">balance_of</span>(<span class="ident">AccountKeyring::Bob</span>.<span class="ident">into</span>()), <span class="number">69</span>);
+		t.execute_with(|| {
+			<span class="macro">assert_eq!</span>(balance_of(AccountKeyring::Alice.into()), <span class="number">42</span>);
+			<span class="macro">assert_eq!</span>(balance_of(AccountKeyring::Bob.into()), <span class="number">69</span>);
 		});
 
-		<span class="ident">block_executor</span>(<span class="ident">b2</span>, <span class="kw-2">&amp;mut</span> <span class="ident">t</span>);
+		block_executor(b2, <span class="kw-2">&amp;mut </span>t);
 
-		<span class="ident">t</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">balance_of</span>(<span class="ident">AccountKeyring::Alice</span>.<span class="ident">into</span>()), <span class="number">0</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">balance_of</span>(<span class="ident">AccountKeyring::Bob</span>.<span class="ident">into</span>()), <span class="number">42</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">balance_of</span>(<span class="ident">AccountKeyring::Charlie</span>.<span class="ident">into</span>()), <span class="number">69</span>);
+		t.execute_with(|| {
+			<span class="macro">assert_eq!</span>(balance_of(AccountKeyring::Alice.into()), <span class="number">0</span>);
+			<span class="macro">assert_eq!</span>(balance_of(AccountKeyring::Bob.into()), <span class="number">42</span>);
+			<span class="macro">assert_eq!</span>(balance_of(AccountKeyring::Charlie.into()), <span class="number">69</span>);
 		});
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">block_import_with_transaction_works_native</span>() {
-		<span class="ident">block_import_with_transaction_works</span>(<span class="op">|</span><span class="ident">b</span>, <span class="ident">ext</span><span class="op">|</span> {
-			<span class="ident">ext</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-				<span class="ident">execute_block</span>(<span class="ident">b</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>block_import_with_transaction_works_native() {
+		block_import_with_transaction_works(|b, ext| {
+			ext.execute_with(|| {
+				execute_block(b);
 			})
 		});
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">block_import_with_transaction_works_wasm</span>() {
-		<span class="ident">block_import_with_transaction_works</span>(<span class="op">|</span><span class="ident">b</span>, <span class="ident">ext</span><span class="op">|</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident">ext</span>.<span class="ident">ext</span>();
-			<span class="kw">let</span> <span class="ident">runtime_code</span> <span class="op">=</span> <span class="ident">RuntimeCode</span> {
-				<span class="ident">code_fetcher</span>: <span class="kw-2">&amp;</span><span class="ident">sp_core::traits::WrappedRuntimeCode</span>(<span class="ident">wasm_binary_unwrap</span>().<span class="ident">into</span>()),
-				<span class="ident">hash</span>: <span class="ident">Vec::new</span>(),
-				<span class="ident">heap_pages</span>: <span class="prelude-val">None</span>,
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>block_import_with_transaction_works_wasm() {
+		block_import_with_transaction_works(|b, ext| {
+			<span class="kw">let </span><span class="kw-2">mut </span>ext = ext.ext();
+			<span class="kw">let </span>runtime_code = RuntimeCode {
+				code_fetcher: <span class="kw-2">&amp;</span>sp_core::traits::WrappedRuntimeCode(wasm_binary_unwrap().into()),
+				hash: Vec::new(),
+				heap_pages: <span class="prelude-val">None</span>,
 			};
 
-			<span class="ident">executor</span>()
-				.<span class="ident">call</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ext</span>, <span class="kw-2">&amp;</span><span class="ident">runtime_code</span>, <span class="string">&quot;Core_execute_block&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">encode</span>(), <span class="bool-val">false</span>)
-				.<span class="number">0</span>
-				.<span class="ident">unwrap</span>();
+			executor()
+				.call(<span class="kw-2">&amp;mut </span>ext, <span class="kw-2">&amp;</span>runtime_code, <span class="string">&quot;Core_execute_block&quot;</span>, <span class="kw-2">&amp;</span>b.encode(), <span class="bool-val">false</span>)
+				.<span class="number">0
+				</span>.unwrap();
 		})
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="substrate_test_runtime" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="substrate_test_runtime" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

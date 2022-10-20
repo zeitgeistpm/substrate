@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/nomination-pools/src/migration.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migration.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_nomination_pools/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_nomination_pools/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_nomination_pools/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/nomination-pools/src/migration.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migration.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_nomination_pools/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_nomination_pools/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -455,457 +449,456 @@
 <span id="449">449</span>
 <span id="450">450</span>
 <span id="451">451</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::log</span>;
-<span class="kw">use</span> <span class="ident">frame_support::traits::OnRuntimeUpgrade</span>;
-<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">collections::btree_map::BTreeMap</span>, <span class="ident">vec::Vec</span>};
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::log;
+<span class="kw">use </span>frame_support::traits::OnRuntimeUpgrade;
+<span class="kw">use </span>sp_std::{collections::btree_map::BTreeMap, vec::Vec};
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v1</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="kw">pub mod </span>v1 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OldPoolRoles</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span> {
-		<span class="kw">pub</span> <span class="ident">depositor</span>: <span class="ident">AccountId</span>,
-		<span class="kw">pub</span> <span class="ident">root</span>: <span class="ident">AccountId</span>,
-		<span class="kw">pub</span> <span class="ident">nominator</span>: <span class="ident">AccountId</span>,
-		<span class="kw">pub</span> <span class="ident">state_toggler</span>: <span class="ident">AccountId</span>,
+	<span class="attribute">#[derive(Decode)]
+	</span><span class="kw">pub struct </span>OldPoolRoles&lt;AccountId&gt; {
+		<span class="kw">pub </span>depositor: AccountId,
+		<span class="kw">pub </span>root: AccountId,
+		<span class="kw">pub </span>nominator: AccountId,
+		<span class="kw">pub </span>state_toggler: AccountId,
 	}
 
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span> <span class="ident">OldPoolRoles</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">migrate_to_v1</span>(<span class="self">self</span>) -&gt; <span class="ident">PoolRoles</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span> {
-			<span class="ident">PoolRoles</span> {
-				<span class="ident">depositor</span>: <span class="self">self</span>.<span class="ident">depositor</span>,
-				<span class="ident">root</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">root</span>),
-				<span class="ident">nominator</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">nominator</span>),
-				<span class="ident">state_toggler</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">state_toggler</span>),
+	<span class="kw">impl</span>&lt;AccountId&gt; OldPoolRoles&lt;AccountId&gt; {
+		<span class="kw">fn </span>migrate_to_v1(<span class="self">self</span>) -&gt; PoolRoles&lt;AccountId&gt; {
+			PoolRoles {
+				depositor: <span class="self">self</span>.depositor,
+				root: <span class="prelude-val">Some</span>(<span class="self">self</span>.root),
+				nominator: <span class="prelude-val">Some</span>(<span class="self">self</span>.nominator),
+				state_toggler: <span class="prelude-val">Some</span>(<span class="self">self</span>.state_toggler),
 			}
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OldBondedPoolInner</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-		<span class="kw">pub</span> <span class="ident">points</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="kw">pub</span> <span class="ident">state</span>: <span class="ident">PoolState</span>,
-		<span class="kw">pub</span> <span class="ident">member_counter</span>: <span class="ident">u32</span>,
-		<span class="kw">pub</span> <span class="ident">roles</span>: <span class="ident">OldPoolRoles</span><span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span>,
+	<span class="attribute">#[derive(Decode)]
+	</span><span class="kw">pub struct </span>OldBondedPoolInner&lt;T: Config&gt; {
+		<span class="kw">pub </span>points: BalanceOf&lt;T&gt;,
+		<span class="kw">pub </span>state: PoolState,
+		<span class="kw">pub </span>member_counter: u32,
+		<span class="kw">pub </span>roles: OldPoolRoles&lt;T::AccountId&gt;,
 	}
 
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">OldBondedPoolInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">migrate_to_v1</span>(<span class="self">self</span>) -&gt; <span class="ident">BondedPoolInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-			<span class="ident">BondedPoolInner</span> {
-				<span class="ident">member_counter</span>: <span class="self">self</span>.<span class="ident">member_counter</span>,
-				<span class="ident">points</span>: <span class="self">self</span>.<span class="ident">points</span>,
-				<span class="ident">state</span>: <span class="self">self</span>.<span class="ident">state</span>,
-				<span class="ident">roles</span>: <span class="self">self</span>.<span class="ident">roles</span>.<span class="ident">migrate_to_v1</span>(),
+	<span class="kw">impl</span>&lt;T: Config&gt; OldBondedPoolInner&lt;T&gt; {
+		<span class="kw">fn </span>migrate_to_v1(<span class="self">self</span>) -&gt; BondedPoolInner&lt;T&gt; {
+			BondedPoolInner {
+				member_counter: <span class="self">self</span>.member_counter,
+				points: <span class="self">self</span>.points,
+				state: <span class="self">self</span>.state,
+				roles: <span class="self">self</span>.roles.migrate_to_v1(),
 			}
 		}
 	}
 
-	<span class="doccomment">/// Trivial migration which makes the roles of each pool optional.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Note: The depositor is not optional since he can never change.</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MigrateToV1</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">MigrateToV1</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-			<span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::current_storage_version</span>();
-			<span class="kw">let</span> <span class="ident">onchain</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_chain_storage_version</span>();
+	<span class="doccomment">/// Trivial migration which makes the roles of each pool optional.
+	///
+	/// Note: The depositor is not optional since he can never change.
+	</span><span class="kw">pub struct </span>MigrateToV1&lt;T&gt;(sp_std::marker::PhantomData&lt;T&gt;);
+	<span class="kw">impl</span>&lt;T: Config&gt; OnRuntimeUpgrade <span class="kw">for </span>MigrateToV1&lt;T&gt; {
+		<span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+			<span class="kw">let </span>current = Pallet::&lt;T&gt;::current_storage_version();
+			<span class="kw">let </span>onchain = Pallet::&lt;T&gt;::on_chain_storage_version();
 
 			<span class="macro">log!</span>(
-				<span class="ident">info</span>,
+				info,
 				<span class="string">&quot;Running migration with current storage version {:?} / onchain {:?}&quot;</span>,
-				<span class="ident">current</span>,
-				<span class="ident">onchain</span>
+				current,
+				onchain
 			);
 
-			<span class="kw">if</span> <span class="ident">current</span> <span class="op">==</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="ident">onchain</span> <span class="op">==</span> <span class="number">0</span> {
-				<span class="comment">// this is safe to execute on any runtime that has a bounded number of pools.</span>
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">translated</span> <span class="op">=</span> <span class="number">0u64</span>;
-				<span class="ident">BondedPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::translate</span>::<span class="op">&lt;</span><span class="ident">OldBondedPoolInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="op">|</span><span class="ident">_key</span>, <span class="ident">old_value</span><span class="op">|</span> {
-					<span class="ident">translated</span>.<span class="ident">saturating_inc</span>();
-					<span class="prelude-val">Some</span>(<span class="ident">old_value</span>.<span class="ident">migrate_to_v1</span>())
+			<span class="kw">if </span>current == <span class="number">1 </span>&amp;&amp; onchain == <span class="number">0 </span>{
+				<span class="comment">// this is safe to execute on any runtime that has a bounded number of pools.
+				</span><span class="kw">let </span><span class="kw-2">mut </span>translated = <span class="number">0u64</span>;
+				BondedPools::&lt;T&gt;::translate::&lt;OldBondedPoolInner&lt;T&gt;, <span class="kw">_</span>&gt;(|_key, old_value| {
+					translated.saturating_inc();
+					<span class="prelude-val">Some</span>(old_value.migrate_to_v1())
 				});
 
-				<span class="ident">current</span>.<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+				current.put::&lt;Pallet&lt;T&gt;&gt;();
 
-				<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;Upgraded {} pools, storage to version {:?}&quot;</span>, <span class="ident">translated</span>, <span class="ident">current</span>);
+				<span class="macro">log!</span>(info, <span class="string">&quot;Upgraded {} pools, storage to version {:?}&quot;</span>, translated, current);
 
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="ident">translated</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">translated</span> <span class="op">+</span> <span class="number">1</span>)
-			} <span class="kw">else</span> {
-				<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;Migration did not executed. This probably should be removed&quot;</span>);
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+				T::DbWeight::get().reads_writes(translated + <span class="number">1</span>, translated + <span class="number">1</span>)
+			} <span class="kw">else </span>{
+				<span class="macro">log!</span>(info, <span class="string">&quot;Migration did not executed. This probably should be removed&quot;</span>);
+				T::DbWeight::get().reads(<span class="number">1</span>)
 			}
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="kw">_</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-			<span class="comment">// new version must be set.</span>
-			<span class="macro">assert_eq!</span>(<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_chain_storage_version</span>(), <span class="number">1</span>);
-			<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::try_state</span>(<span class="ident">frame_system::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::block_number</span>())<span class="question-mark">?</span>;
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>post_upgrade(<span class="kw">_</span>: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+			<span class="comment">// new version must be set.
+			</span><span class="macro">assert_eq!</span>(Pallet::&lt;T&gt;::on_chain_storage_version(), <span class="number">1</span>);
+			Pallet::&lt;T&gt;::try_state(frame_system::Pallet::&lt;T&gt;::block_number())<span class="question-mark">?</span>;
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v2</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">sp_runtime::Perbill</span>;
+<span class="kw">pub mod </span>v2 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>sp_runtime::Perbill;
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">migration_assumption_is_correct</span>() {
-		<span class="comment">// this migrations cleans all the reward accounts to contain exactly ed, and all members</span>
-		<span class="comment">// having no claimable rewards. In this state, all fields of the `RewardPool` and</span>
-		<span class="comment">// `member.last_recorded_reward_counter` are all zero.</span>
-		<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::mock</span>::<span class="kw-2">*</span>;
-		<span class="ident">ExtBuilder::default</span>().<span class="ident">build_and_execute</span>(<span class="op">|</span><span class="op">|</span> {
-			<span class="kw">let</span> <span class="ident">join</span> <span class="op">=</span> <span class="op">|</span><span class="ident">x</span><span class="op">|</span> {
-				<span class="ident">Balances::make_free_balance_be</span>(<span class="kw-2">&amp;</span><span class="ident">x</span>, <span class="ident">Balances::minimum_balance</span>() <span class="op">+</span> <span class="number">10</span>);
-				<span class="macro">frame_support::assert_ok!</span>(<span class="ident">Pools::join</span>(<span class="ident">RuntimeOrigin::signed</span>(<span class="ident">x</span>), <span class="number">10</span>, <span class="number">1</span>));
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>migration_assumption_is_correct() {
+		<span class="comment">// this migrations cleans all the reward accounts to contain exactly ed, and all members
+		// having no claimable rewards. In this state, all fields of the `RewardPool` and
+		// `member.last_recorded_reward_counter` are all zero.
+		</span><span class="kw">use </span><span class="kw">crate</span>::mock::<span class="kw-2">*</span>;
+		ExtBuilder::default().build_and_execute(|| {
+			<span class="kw">let </span>join = |x| {
+				Balances::make_free_balance_be(<span class="kw-2">&amp;</span>x, Balances::minimum_balance() + <span class="number">10</span>);
+				<span class="macro">frame_support::assert_ok!</span>(Pools::join(RuntimeOrigin::signed(x), <span class="number">10</span>, <span class="number">1</span>));
 			};
 
-			<span class="macro">assert_eq!</span>(<span class="ident">BondedPool</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>().<span class="ident">points</span>, <span class="number">10</span>);
+			<span class="macro">assert_eq!</span>(BondedPool::&lt;Runtime&gt;::get(<span class="number">1</span>).unwrap().points, <span class="number">10</span>);
 			<span class="macro">assert_eq!</span>(
-				<span class="ident">RewardPools</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>(),
-				<span class="ident">RewardPool</span> { ..<span class="ident">Default::default</span>() }
+				RewardPools::&lt;Runtime&gt;::get(<span class="number">1</span>).unwrap(),
+				RewardPool { ..Default::default() }
 			);
 			<span class="macro">assert_eq!</span>(
-				<span class="ident">PoolMembers</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">10</span>).<span class="ident">unwrap</span>().<span class="ident">last_recorded_reward_counter</span>,
-				<span class="ident">Zero::zero</span>()
-			);
-
-			<span class="ident">join</span>(<span class="number">20</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">BondedPool</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>().<span class="ident">points</span>, <span class="number">20</span>);
-			<span class="macro">assert_eq!</span>(
-				<span class="ident">RewardPools</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>(),
-				<span class="ident">RewardPool</span> { ..<span class="ident">Default::default</span>() }
-			);
-			<span class="macro">assert_eq!</span>(
-				<span class="ident">PoolMembers</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">10</span>).<span class="ident">unwrap</span>().<span class="ident">last_recorded_reward_counter</span>,
-				<span class="ident">Zero::zero</span>()
-			);
-			<span class="macro">assert_eq!</span>(
-				<span class="ident">PoolMembers</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">20</span>).<span class="ident">unwrap</span>().<span class="ident">last_recorded_reward_counter</span>,
-				<span class="ident">Zero::zero</span>()
+				PoolMembers::&lt;Runtime&gt;::get(<span class="number">10</span>).unwrap().last_recorded_reward_counter,
+				Zero::zero()
 			);
 
-			<span class="ident">join</span>(<span class="number">30</span>);
-			<span class="macro">assert_eq!</span>(<span class="ident">BondedPool</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>().<span class="ident">points</span>, <span class="number">30</span>);
+			join(<span class="number">20</span>);
+			<span class="macro">assert_eq!</span>(BondedPool::&lt;Runtime&gt;::get(<span class="number">1</span>).unwrap().points, <span class="number">20</span>);
 			<span class="macro">assert_eq!</span>(
-				<span class="ident">RewardPools</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>(),
-				<span class="ident">RewardPool</span> { ..<span class="ident">Default::default</span>() }
+				RewardPools::&lt;Runtime&gt;::get(<span class="number">1</span>).unwrap(),
+				RewardPool { ..Default::default() }
 			);
 			<span class="macro">assert_eq!</span>(
-				<span class="ident">PoolMembers</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">10</span>).<span class="ident">unwrap</span>().<span class="ident">last_recorded_reward_counter</span>,
-				<span class="ident">Zero::zero</span>()
+				PoolMembers::&lt;Runtime&gt;::get(<span class="number">10</span>).unwrap().last_recorded_reward_counter,
+				Zero::zero()
 			);
 			<span class="macro">assert_eq!</span>(
-				<span class="ident">PoolMembers</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">20</span>).<span class="ident">unwrap</span>().<span class="ident">last_recorded_reward_counter</span>,
-				<span class="ident">Zero::zero</span>()
+				PoolMembers::&lt;Runtime&gt;::get(<span class="number">20</span>).unwrap().last_recorded_reward_counter,
+				Zero::zero()
+			);
+
+			join(<span class="number">30</span>);
+			<span class="macro">assert_eq!</span>(BondedPool::&lt;Runtime&gt;::get(<span class="number">1</span>).unwrap().points, <span class="number">30</span>);
+			<span class="macro">assert_eq!</span>(
+				RewardPools::&lt;Runtime&gt;::get(<span class="number">1</span>).unwrap(),
+				RewardPool { ..Default::default() }
 			);
 			<span class="macro">assert_eq!</span>(
-				<span class="ident">PoolMembers</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">30</span>).<span class="ident">unwrap</span>().<span class="ident">last_recorded_reward_counter</span>,
-				<span class="ident">Zero::zero</span>()
+				PoolMembers::&lt;Runtime&gt;::get(<span class="number">10</span>).unwrap().last_recorded_reward_counter,
+				Zero::zero()
+			);
+			<span class="macro">assert_eq!</span>(
+				PoolMembers::&lt;Runtime&gt;::get(<span class="number">20</span>).unwrap().last_recorded_reward_counter,
+				Zero::zero()
+			);
+			<span class="macro">assert_eq!</span>(
+				PoolMembers::&lt;Runtime&gt;::get(<span class="number">30</span>).unwrap().last_recorded_reward_counter,
+				Zero::zero()
 			);
 		});
 	}
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OldRewardPool</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-		<span class="kw">pub</span> <span class="ident">balance</span>: <span class="ident">B</span>,
-		<span class="kw">pub</span> <span class="ident">total_earnings</span>: <span class="ident">B</span>,
-		<span class="kw">pub</span> <span class="ident">points</span>: <span class="ident">U256</span>,
+	<span class="attribute">#[derive(Decode)]
+	</span><span class="kw">pub struct </span>OldRewardPool&lt;B&gt; {
+		<span class="kw">pub </span>balance: B,
+		<span class="kw">pub </span>total_earnings: B,
+		<span class="kw">pub </span>points: U256,
 	}
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OldPoolMember</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-		<span class="kw">pub</span> <span class="ident">pool_id</span>: <span class="ident">PoolId</span>,
-		<span class="kw">pub</span> <span class="ident">points</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="kw">pub</span> <span class="ident">reward_pool_total_earnings</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="kw">pub</span> <span class="ident">unbonding_eras</span>: <span class="ident">BoundedBTreeMap</span><span class="op">&lt;</span><span class="ident">EraIndex</span>, <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">T::MaxUnbonding</span><span class="op">&gt;</span>,
+	<span class="attribute">#[derive(Decode)]
+	</span><span class="kw">pub struct </span>OldPoolMember&lt;T: Config&gt; {
+		<span class="kw">pub </span>pool_id: PoolId,
+		<span class="kw">pub </span>points: BalanceOf&lt;T&gt;,
+		<span class="kw">pub </span>reward_pool_total_earnings: BalanceOf&lt;T&gt;,
+		<span class="kw">pub </span>unbonding_eras: BoundedBTreeMap&lt;EraIndex, BalanceOf&lt;T&gt;, T::MaxUnbonding&gt;,
 	}
 
-	<span class="doccomment">/// Migrate the pool reward scheme to the new version, as per</span>
-	<span class="doccomment">/// &lt;https://github.com/paritytech/substrate/pull/11669.&gt;.</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MigrateToV2</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">MigrateToV2</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">run</span>(<span class="ident">current</span>: <span class="ident">StorageVersion</span>) -&gt; <span class="ident">Weight</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reward_pools_translated</span> <span class="op">=</span> <span class="number">0u64</span>;
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">members_translated</span> <span class="op">=</span> <span class="number">0u64</span>;
-			<span class="comment">// just for logging.</span>
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total_value_locked</span> <span class="op">=</span> <span class="ident">BalanceOf</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::zero</span>();
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total_points_locked</span> <span class="op">=</span> <span class="ident">BalanceOf</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::zero</span>();
+	<span class="doccomment">/// Migrate the pool reward scheme to the new version, as per
+	/// &lt;https://github.com/paritytech/substrate/pull/11669.&gt;.
+	</span><span class="kw">pub struct </span>MigrateToV2&lt;T&gt;(sp_std::marker::PhantomData&lt;T&gt;);
+	<span class="kw">impl</span>&lt;T: Config&gt; MigrateToV2&lt;T&gt; {
+		<span class="kw">fn </span>run(current: StorageVersion) -&gt; Weight {
+			<span class="kw">let </span><span class="kw-2">mut </span>reward_pools_translated = <span class="number">0u64</span>;
+			<span class="kw">let </span><span class="kw-2">mut </span>members_translated = <span class="number">0u64</span>;
+			<span class="comment">// just for logging.
+			</span><span class="kw">let </span><span class="kw-2">mut </span>total_value_locked = BalanceOf::&lt;T&gt;::zero();
+			<span class="kw">let </span><span class="kw-2">mut </span>total_points_locked = BalanceOf::&lt;T&gt;::zero();
 
-			<span class="comment">// store each member of the pool, with their active points. In the process, migrate</span>
-			<span class="comment">// their data as well.</span>
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">temp_members</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="op">&lt;</span><span class="ident">PoolId</span>, <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T::AccountId</span>, <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>)<span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::new</span>();
-			<span class="ident">PoolMembers</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::translate</span>::<span class="op">&lt;</span><span class="ident">OldPoolMember</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="op">|</span><span class="ident">key</span>, <span class="ident">old_member</span><span class="op">|</span> {
-				<span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">old_member</span>.<span class="ident">pool_id</span>;
-				<span class="ident">temp_members</span>.<span class="ident">entry</span>(<span class="ident">id</span>).<span class="ident">or_default</span>().<span class="ident">push</span>((<span class="ident">key</span>, <span class="ident">old_member</span>.<span class="ident">points</span>));
+			<span class="comment">// store each member of the pool, with their active points. In the process, migrate
+			// their data as well.
+			</span><span class="kw">let </span><span class="kw-2">mut </span>temp_members = BTreeMap::&lt;PoolId, Vec&lt;(T::AccountId, BalanceOf&lt;T&gt;)&gt;&gt;::new();
+			PoolMembers::&lt;T&gt;::translate::&lt;OldPoolMember&lt;T&gt;, <span class="kw">_</span>&gt;(|key, old_member| {
+				<span class="kw">let </span>id = old_member.pool_id;
+				temp_members.entry(id).or_default().push((key, old_member.points));
 
-				<span class="ident">total_points_locked</span> <span class="op">+</span><span class="op">=</span> <span class="ident">old_member</span>.<span class="ident">points</span>;
-				<span class="ident">members_translated</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-				<span class="prelude-val">Some</span>(<span class="ident">PoolMember</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-					<span class="ident">last_recorded_reward_counter</span>: <span class="ident">Zero::zero</span>(),
-					<span class="ident">pool_id</span>: <span class="ident">old_member</span>.<span class="ident">pool_id</span>,
-					<span class="ident">points</span>: <span class="ident">old_member</span>.<span class="ident">points</span>,
-					<span class="ident">unbonding_eras</span>: <span class="ident">old_member</span>.<span class="ident">unbonding_eras</span>,
+				total_points_locked += old_member.points;
+				members_translated += <span class="number">1</span>;
+				<span class="prelude-val">Some</span>(PoolMember::&lt;T&gt; {
+					last_recorded_reward_counter: Zero::zero(),
+					pool_id: old_member.pool_id,
+					points: old_member.points,
+					unbonding_eras: old_member.unbonding_eras,
 				})
 			});
 
-			<span class="comment">// translate all reward pools. In the process, do the last payout as well.</span>
-			<span class="ident">RewardPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::translate</span>::<span class="op">&lt;</span><span class="ident">OldRewardPool</span><span class="op">&lt;</span><span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-				<span class="op">|</span><span class="ident">id</span>, <span class="ident">_old_reward_pool</span><span class="op">|</span> {
-					<span class="comment">// each pool should have at least one member.</span>
-					<span class="kw">let</span> <span class="ident">members</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">temp_members</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>) {
-						<span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
-						<span class="prelude-val">None</span> =&gt; {
-							<span class="macro">log!</span>(<span class="ident">error</span>, <span class="string">&quot;pool {} has no member! deleting it..&quot;</span>, <span class="ident">id</span>);
-							<span class="kw">return</span> <span class="prelude-val">None</span>
-						},
+			<span class="comment">// translate all reward pools. In the process, do the last payout as well.
+			</span>RewardPools::&lt;T&gt;::translate::&lt;OldRewardPool&lt;BalanceOf&lt;T&gt;&gt;, <span class="kw">_</span>&gt;(
+				|id, _old_reward_pool| {
+					<span class="comment">// each pool should have at least one member.
+					</span><span class="kw">let </span>members = <span class="kw">match </span>temp_members.get(<span class="kw-2">&amp;</span>id) {
+						<span class="prelude-val">Some</span>(x) =&gt; x,
+						<span class="prelude-val">None </span>=&gt; {
+							<span class="macro">log!</span>(error, <span class="string">&quot;pool {} has no member! deleting it..&quot;</span>, id);
+							<span class="kw">return </span><span class="prelude-val">None
+						</span>},
 					};
-					<span class="kw">let</span> <span class="ident">bonded_pool</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">BondedPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">id</span>) {
-						<span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
-						<span class="prelude-val">None</span> =&gt; {
-							<span class="macro">log!</span>(<span class="ident">error</span>, <span class="string">&quot;pool {} has no bonded pool! deleting it..&quot;</span>, <span class="ident">id</span>);
-							<span class="kw">return</span> <span class="prelude-val">None</span>
-						},
+					<span class="kw">let </span>bonded_pool = <span class="kw">match </span>BondedPools::&lt;T&gt;::get(id) {
+						<span class="prelude-val">Some</span>(x) =&gt; x,
+						<span class="prelude-val">None </span>=&gt; {
+							<span class="macro">log!</span>(error, <span class="string">&quot;pool {} has no bonded pool! deleting it..&quot;</span>, id);
+							<span class="kw">return </span><span class="prelude-val">None
+						</span>},
 					};
 
-					<span class="kw">let</span> <span class="ident">accumulated_reward</span> <span class="op">=</span> <span class="ident">RewardPool</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::current_balance</span>(<span class="ident">id</span>);
-					<span class="kw">let</span> <span class="ident">reward_account</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::create_reward_account</span>(<span class="ident">id</span>);
-					<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sum_paid_out</span> <span class="op">=</span> <span class="ident">BalanceOf</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::zero</span>();
+					<span class="kw">let </span>accumulated_reward = RewardPool::&lt;T&gt;::current_balance(id);
+					<span class="kw">let </span>reward_account = Pallet::&lt;T&gt;::create_reward_account(id);
+					<span class="kw">let </span><span class="kw-2">mut </span>sum_paid_out = BalanceOf::&lt;T&gt;::zero();
 
-					<span class="ident">members</span>
-						.<span class="ident">into_iter</span>()
-						.<span class="ident">filter_map</span>(<span class="op">|</span>(<span class="ident">who</span>, <span class="ident">points</span>)<span class="op">|</span> {
-							<span class="kw">let</span> <span class="ident">bonded_pool</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">BondedPool</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">id</span>) {
-								<span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>,
-								<span class="prelude-val">None</span> =&gt; {
-									<span class="macro">log!</span>(<span class="ident">error</span>, <span class="string">&quot;pool {} for member {:?} does not exist!&quot;</span>, <span class="ident">id</span>, <span class="ident">who</span>);
-									<span class="kw">return</span> <span class="prelude-val">None</span>
-								},
+					members
+						.into_iter()
+						.filter_map(|(who, points)| {
+							<span class="kw">let </span>bonded_pool = <span class="kw">match </span>BondedPool::&lt;T&gt;::get(id) {
+								<span class="prelude-val">Some</span>(x) =&gt; x,
+								<span class="prelude-val">None </span>=&gt; {
+									<span class="macro">log!</span>(error, <span class="string">&quot;pool {} for member {:?} does not exist!&quot;</span>, id, who);
+									<span class="kw">return </span><span class="prelude-val">None
+								</span>},
 							};
 
-							<span class="ident">total_value_locked</span> <span class="op">+</span><span class="op">=</span> <span class="ident">bonded_pool</span>.<span class="ident">points_to_balance</span>(<span class="kw-2">*</span><span class="ident">points</span>);
-							<span class="kw">let</span> <span class="ident">portion</span> <span class="op">=</span> <span class="ident">Perbill::from_rational</span>(<span class="kw-2">*</span><span class="ident">points</span>, <span class="ident">bonded_pool</span>.<span class="ident">points</span>);
-							<span class="kw">let</span> <span class="ident">last_claim</span> <span class="op">=</span> <span class="ident">portion</span> <span class="op">*</span> <span class="ident">accumulated_reward</span>;
+							total_value_locked += bonded_pool.points_to_balance(<span class="kw-2">*</span>points);
+							<span class="kw">let </span>portion = Perbill::from_rational(<span class="kw-2">*</span>points, bonded_pool.points);
+							<span class="kw">let </span>last_claim = portion * accumulated_reward;
 
 							<span class="macro">log!</span>(
-								<span class="ident">debug</span>,
+								debug,
 								<span class="string">&quot;{:?} has {:?} ({:?}) of pool {} with total reward of {:?}&quot;</span>,
-								<span class="ident">who</span>,
-								<span class="ident">portion</span>,
-								<span class="ident">last_claim</span>,
-								<span class="ident">id</span>,
-								<span class="ident">accumulated_reward</span>
+								who,
+								portion,
+								last_claim,
+								id,
+								accumulated_reward
 							);
 
-							<span class="kw">if</span> <span class="ident">last_claim</span>.<span class="ident">is_zero</span>() {
-								<span class="prelude-val">None</span>
-							} <span class="kw">else</span> {
-								<span class="prelude-val">Some</span>((<span class="ident">who</span>, <span class="ident">last_claim</span>))
+							<span class="kw">if </span>last_claim.is_zero() {
+								<span class="prelude-val">None
+							</span>} <span class="kw">else </span>{
+								<span class="prelude-val">Some</span>((who, last_claim))
 							}
 						})
-						.<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">who</span>, <span class="ident">last_claim</span>)<span class="op">|</span> {
-							<span class="kw">let</span> <span class="ident">outcome</span> <span class="op">=</span> <span class="ident">T::Currency::transfer</span>(
-								<span class="kw-2">&amp;</span><span class="ident">reward_account</span>,
-								<span class="kw-2">&amp;</span><span class="ident">who</span>,
-								<span class="ident">last_claim</span>,
-								<span class="ident">ExistenceRequirement::KeepAlive</span>,
+						.for_each(|(who, last_claim)| {
+							<span class="kw">let </span>outcome = T::Currency::transfer(
+								<span class="kw-2">&amp;</span>reward_account,
+								<span class="kw-2">&amp;</span>who,
+								last_claim,
+								ExistenceRequirement::KeepAlive,
 							);
 
-							<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">reason</span>) <span class="op">=</span> <span class="ident">outcome</span> {
-								<span class="macro">log!</span>(<span class="ident">warn</span>, <span class="string">&quot;last reward claim failed due to {:?}&quot;</span>, <span class="ident">reason</span>,);
-							} <span class="kw">else</span> {
-								<span class="ident">sum_paid_out</span> <span class="op">=</span> <span class="ident">sum_paid_out</span>.<span class="ident">saturating_add</span>(<span class="ident">last_claim</span>);
+							<span class="kw">if let </span><span class="prelude-val">Err</span>(reason) = outcome {
+								<span class="macro">log!</span>(warn, <span class="string">&quot;last reward claim failed due to {:?}&quot;</span>, reason,);
+							} <span class="kw">else </span>{
+								sum_paid_out = sum_paid_out.saturating_add(last_claim);
 							}
 
-							<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::PaidOut</span> {
-								<span class="ident">member</span>: <span class="ident">who</span>.<span class="ident">clone</span>(),
-								<span class="ident">pool_id</span>: <span class="ident">id</span>,
-								<span class="ident">payout</span>: <span class="ident">last_claim</span>,
+							Pallet::&lt;T&gt;::deposit_event(Event::&lt;T&gt;::PaidOut {
+								member: who.clone(),
+								pool_id: id,
+								payout: last_claim,
 							});
 						});
 
-					<span class="comment">// this can only be because of rounding down, or because the person we</span>
-					<span class="comment">// wanted to pay their reward to could not accept it (dust).</span>
-					<span class="kw">let</span> <span class="ident">leftover</span> <span class="op">=</span> <span class="ident">accumulated_reward</span>.<span class="ident">saturating_sub</span>(<span class="ident">sum_paid_out</span>);
-					<span class="kw">if</span> <span class="op">!</span><span class="ident">leftover</span>.<span class="ident">is_zero</span>() {
-						<span class="comment">// pay it all to depositor.</span>
-						<span class="kw">let</span> <span class="ident">o</span> <span class="op">=</span> <span class="ident">T::Currency::transfer</span>(
-							<span class="kw-2">&amp;</span><span class="ident">reward_account</span>,
-							<span class="kw-2">&amp;</span><span class="ident">bonded_pool</span>.<span class="ident">roles</span>.<span class="ident">depositor</span>,
-							<span class="ident">leftover</span>,
-							<span class="ident">ExistenceRequirement::KeepAlive</span>,
+					<span class="comment">// this can only be because of rounding down, or because the person we
+					// wanted to pay their reward to could not accept it (dust).
+					</span><span class="kw">let </span>leftover = accumulated_reward.saturating_sub(sum_paid_out);
+					<span class="kw">if </span>!leftover.is_zero() {
+						<span class="comment">// pay it all to depositor.
+						</span><span class="kw">let </span>o = T::Currency::transfer(
+							<span class="kw-2">&amp;</span>reward_account,
+							<span class="kw-2">&amp;</span>bonded_pool.roles.depositor,
+							leftover,
+							ExistenceRequirement::KeepAlive,
 						);
-						<span class="macro">log!</span>(<span class="ident">warn</span>, <span class="string">&quot;paying {:?} leftover to the depositor: {:?}&quot;</span>, <span class="ident">leftover</span>, <span class="ident">o</span>);
+						<span class="macro">log!</span>(warn, <span class="string">&quot;paying {:?} leftover to the depositor: {:?}&quot;</span>, leftover, o);
 					}
 
-					<span class="comment">// finally, migrate the reward pool.</span>
-					<span class="ident">reward_pools_translated</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+					<span class="comment">// finally, migrate the reward pool.
+					</span>reward_pools_translated += <span class="number">1</span>;
 
-					<span class="prelude-val">Some</span>(<span class="ident">RewardPool</span> {
-						<span class="ident">last_recorded_reward_counter</span>: <span class="ident">Zero::zero</span>(),
-						<span class="ident">last_recorded_total_payouts</span>: <span class="ident">Zero::zero</span>(),
-						<span class="ident">total_rewards_claimed</span>: <span class="ident">Zero::zero</span>(),
+					<span class="prelude-val">Some</span>(RewardPool {
+						last_recorded_reward_counter: Zero::zero(),
+						last_recorded_total_payouts: Zero::zero(),
+						total_rewards_claimed: Zero::zero(),
 					})
 				},
 			);
 
 			<span class="macro">log!</span>(
-				<span class="ident">info</span>,
+				info,
 				<span class="string">&quot;Upgraded {} members, {} reward pools, TVL {:?} TPL {:?}, storage to version {:?}&quot;</span>,
-				<span class="ident">members_translated</span>,
-				<span class="ident">reward_pools_translated</span>,
-				<span class="ident">total_value_locked</span>,
-				<span class="ident">total_points_locked</span>,
-				<span class="ident">current</span>
+				members_translated,
+				reward_pools_translated,
+				total_value_locked,
+				total_points_locked,
+				current
 			);
-			<span class="ident">current</span>.<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+			current.put::&lt;Pallet&lt;T&gt;&gt;();
 
-			<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="ident">members_translated</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">reward_pools_translated</span> <span class="op">+</span> <span class="number">1</span>)
+			T::DbWeight::get().reads_writes(members_translated + <span class="number">1</span>, reward_pools_translated + <span class="number">1</span>)
 		}
 	}
 
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">MigrateToV2</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-			<span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::current_storage_version</span>();
-			<span class="kw">let</span> <span class="ident">onchain</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_chain_storage_version</span>();
+	<span class="kw">impl</span>&lt;T: Config&gt; OnRuntimeUpgrade <span class="kw">for </span>MigrateToV2&lt;T&gt; {
+		<span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+			<span class="kw">let </span>current = Pallet::&lt;T&gt;::current_storage_version();
+			<span class="kw">let </span>onchain = Pallet::&lt;T&gt;::on_chain_storage_version();
 
 			<span class="macro">log!</span>(
-				<span class="ident">info</span>,
+				info,
 				<span class="string">&quot;Running migration with current storage version {:?} / onchain {:?}&quot;</span>,
-				<span class="ident">current</span>,
-				<span class="ident">onchain</span>
+				current,
+				onchain
 			);
 
-			<span class="kw">if</span> <span class="ident">current</span> <span class="op">==</span> <span class="number">2</span> <span class="op">&amp;&amp;</span> <span class="ident">onchain</span> <span class="op">==</span> <span class="number">1</span> {
-				<span class="ident"><span class="self">Self</span>::run</span>(<span class="ident">current</span>)
-			} <span class="kw">else</span> {
-				<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;MigrateToV2 did not executed. This probably should be removed&quot;</span>);
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+			<span class="kw">if </span>current == <span class="number">2 </span>&amp;&amp; onchain == <span class="number">1 </span>{
+				<span class="self">Self</span>::run(current)
+			} <span class="kw">else </span>{
+				<span class="macro">log!</span>(info, <span class="string">&quot;MigrateToV2 did not executed. This probably should be removed&quot;</span>);
+				T::DbWeight::get().reads(<span class="number">1</span>)
 			}
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-			<span class="comment">// all reward accounts must have more than ED.</span>
-			<span class="ident">RewardPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">id</span>, <span class="kw">_</span>)<span class="op">|</span> {
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+			<span class="comment">// all reward accounts must have more than ED.
+			</span>RewardPools::&lt;T&gt;::iter().for_each(|(id, <span class="kw">_</span>)| {
 				<span class="macro">assert!</span>(
-					<span class="ident">T::Currency::free_balance</span>(<span class="kw-2">&amp;</span><span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::create_reward_account</span>(<span class="ident">id</span>)) <span class="op">&gt;</span><span class="op">=</span>
-						<span class="ident">T::Currency::minimum_balance</span>()
+					T::Currency::free_balance(<span class="kw-2">&amp;</span>Pallet::&lt;T&gt;::create_reward_account(id)) &gt;=
+						T::Currency::minimum_balance()
 				)
 			});
 
-			<span class="prelude-val">Ok</span>(<span class="ident">Vec::new</span>())
+			<span class="prelude-val">Ok</span>(Vec::new())
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="kw">_</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-			<span class="comment">// new version must be set.</span>
-			<span class="macro">assert_eq!</span>(<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_chain_storage_version</span>(), <span class="number">2</span>);
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>post_upgrade(<span class="kw">_</span>: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+			<span class="comment">// new version must be set.
+			</span><span class="macro">assert_eq!</span>(Pallet::&lt;T&gt;::on_chain_storage_version(), <span class="number">2</span>);
 
-			<span class="comment">// no reward or bonded pool has been skipped.</span>
-			<span class="macro">assert_eq!</span>(<span class="ident">RewardPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">RewardPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>());
-			<span class="macro">assert_eq!</span>(<span class="ident">BondedPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>() <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">BondedPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::count</span>());
+			<span class="comment">// no reward or bonded pool has been skipped.
+			</span><span class="macro">assert_eq!</span>(RewardPools::&lt;T&gt;::iter().count() <span class="kw">as </span>u32, RewardPools::&lt;T&gt;::count());
+			<span class="macro">assert_eq!</span>(BondedPools::&lt;T&gt;::iter().count() <span class="kw">as </span>u32, BondedPools::&lt;T&gt;::count());
 
-			<span class="comment">// all reward pools must have exactly ED in them. This means no reward can be claimed,</span>
-			<span class="comment">// and that setting reward counters all over the board to zero will work henceforth.</span>
-			<span class="ident">RewardPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">for_each</span>(<span class="op">|</span>(<span class="ident">id</span>, <span class="kw">_</span>)<span class="op">|</span> {
+			<span class="comment">// all reward pools must have exactly ED in them. This means no reward can be claimed,
+			// and that setting reward counters all over the board to zero will work henceforth.
+			</span>RewardPools::&lt;T&gt;::iter().for_each(|(id, <span class="kw">_</span>)| {
 				<span class="macro">assert_eq!</span>(
-					<span class="ident">RewardPool</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::current_balance</span>(<span class="ident">id</span>),
-					<span class="ident">Zero::zero</span>(),
+					RewardPool::&lt;T&gt;::current_balance(id),
+					Zero::zero(),
 					<span class="string">&quot;reward pool({}) balance is {:?}&quot;</span>,
-					<span class="ident">id</span>,
-					<span class="ident">RewardPool</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::current_balance</span>(<span class="ident">id</span>)
+					id,
+					RewardPool::&lt;T&gt;::current_balance(id)
 				);
 			});
 
-			<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;post upgrade hook for MigrateToV2 executed.&quot;</span>);
+			<span class="macro">log!</span>(info, <span class="string">&quot;post upgrade hook for MigrateToV2 executed.&quot;</span>);
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v3</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="kw">pub mod </span>v3 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="doccomment">/// This migration removes stale bonded-pool metadata, if any.</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MigrateToV3</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">MigrateToV3</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-			<span class="kw">let</span> <span class="ident">current</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::current_storage_version</span>();
-			<span class="kw">let</span> <span class="ident">onchain</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_chain_storage_version</span>();
+	<span class="doccomment">/// This migration removes stale bonded-pool metadata, if any.
+	</span><span class="kw">pub struct </span>MigrateToV3&lt;T&gt;(sp_std::marker::PhantomData&lt;T&gt;);
+	<span class="kw">impl</span>&lt;T: Config&gt; OnRuntimeUpgrade <span class="kw">for </span>MigrateToV3&lt;T&gt; {
+		<span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+			<span class="kw">let </span>current = Pallet::&lt;T&gt;::current_storage_version();
+			<span class="kw">let </span>onchain = Pallet::&lt;T&gt;::on_chain_storage_version();
 
 			<span class="macro">log!</span>(
-				<span class="ident">info</span>,
+				info,
 				<span class="string">&quot;Running migration with current storage version {:?} / onchain {:?}&quot;</span>,
-				<span class="ident">current</span>,
-				<span class="ident">onchain</span>
+				current,
+				onchain
 			);
 
-			<span class="kw">if</span> <span class="ident">current</span> <span class="op">&gt;</span> <span class="ident">onchain</span> {
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">metadata_iterated</span> <span class="op">=</span> <span class="number">0u64</span>;
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">metadata_removed</span> <span class="op">=</span> <span class="number">0u64</span>;
-				<span class="ident">Metadata</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter_keys</span>()
-					.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> {
-						<span class="ident">metadata_iterated</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-						<span class="op">!</span><span class="ident">BondedPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>)
+			<span class="kw">if </span>current &gt; onchain {
+				<span class="kw">let </span><span class="kw-2">mut </span>metadata_iterated = <span class="number">0u64</span>;
+				<span class="kw">let </span><span class="kw-2">mut </span>metadata_removed = <span class="number">0u64</span>;
+				Metadata::&lt;T&gt;::iter_keys()
+					.filter(|id| {
+						metadata_iterated += <span class="number">1</span>;
+						!BondedPools::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>id)
 					})
-					.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
-					.<span class="ident">into_iter</span>()
-					.<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> {
-						<span class="ident">metadata_removed</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-						<span class="ident">Metadata</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::remove</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>);
+					.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+					.into_iter()
+					.for_each(|id| {
+						metadata_removed += <span class="number">1</span>;
+						Metadata::&lt;T&gt;::remove(<span class="kw-2">&amp;</span>id);
 					});
-				<span class="ident">current</span>.<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-				<span class="comment">// metadata iterated + bonded pools read + a storage version read</span>
-				<span class="kw">let</span> <span class="ident">total_reads</span> <span class="op">=</span> <span class="ident">metadata_iterated</span> <span class="op">*</span> <span class="number">2</span> <span class="op">+</span> <span class="number">1</span>;
-				<span class="comment">// metadata removed + a storage version write</span>
-				<span class="kw">let</span> <span class="ident">total_writes</span> <span class="op">=</span> <span class="ident">metadata_removed</span> <span class="op">+</span> <span class="number">1</span>;
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="ident">total_reads</span>, <span class="ident">total_writes</span>)
-			} <span class="kw">else</span> {
-				<span class="macro">log!</span>(<span class="ident">info</span>, <span class="string">&quot;MigrateToV3 should be removed&quot;</span>);
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+				current.put::&lt;Pallet&lt;T&gt;&gt;();
+				<span class="comment">// metadata iterated + bonded pools read + a storage version read
+				</span><span class="kw">let </span>total_reads = metadata_iterated * <span class="number">2 </span>+ <span class="number">1</span>;
+				<span class="comment">// metadata removed + a storage version write
+				</span><span class="kw">let </span>total_writes = metadata_removed + <span class="number">1</span>;
+				T::DbWeight::get().reads_writes(total_reads, total_writes)
+			} <span class="kw">else </span>{
+				<span class="macro">log!</span>(info, <span class="string">&quot;MigrateToV3 should be removed&quot;</span>);
+				T::DbWeight::get().reads(<span class="number">1</span>)
 			}
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 			<span class="macro">ensure!</span>(
-				<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::current_storage_version</span>() <span class="op">&gt;</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_chain_storage_version</span>(),
-				<span class="string">&quot;the on_chain version is equal or more than the current one&quot;</span>
-			);
-			<span class="prelude-val">Ok</span>(<span class="ident">Vec::new</span>())
+				Pallet::&lt;T&gt;::current_storage_version() &gt; Pallet::&lt;T&gt;::on_chain_storage_version(),
+				<span class="string">&quot;the on_chain version is equal or more than the current one&quot;
+			</span>);
+			<span class="prelude-val">Ok</span>(Vec::new())
 		}
 
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-		<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="kw">_</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
+		<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+		</span><span class="kw">fn </span>post_upgrade(<span class="kw">_</span>: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 			<span class="macro">ensure!</span>(
-				<span class="ident">Metadata</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter_keys</span>().<span class="ident">all</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="ident">BondedPools</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>)),
-				<span class="string">&quot;not all of the stale metadata has been removed&quot;</span>
-			);
-			<span class="macro">ensure!</span>(<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::on_chain_storage_version</span>() <span class="op">==</span> <span class="number">3</span>, <span class="string">&quot;wrong storage version&quot;</span>);
+				Metadata::&lt;T&gt;::iter_keys().all(|id| BondedPools::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>id)),
+				<span class="string">&quot;not all of the stale metadata has been removed&quot;
+			</span>);
+			<span class="macro">ensure!</span>(Pallet::&lt;T&gt;::on_chain_storage_version() == <span class="number">3</span>, <span class="string">&quot;wrong storage version&quot;</span>);
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_nomination_pools" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_nomination_pools" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

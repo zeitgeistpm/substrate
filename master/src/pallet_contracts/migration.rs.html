@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/migration.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migration.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/migration.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migration.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -420,422 +414,421 @@
 <span id="414">414</span>
 <span id="415">415</span>
 <span id="416">416</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">BalanceOf</span>, <span class="ident">CodeHash</span>, <span class="ident">Config</span>, <span class="ident">Pallet</span>, <span class="ident">TrieId</span>, <span class="ident">Weight</span>};
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
-<span class="kw">use</span> <span class="ident">frame_support</span>::{
-	<span class="ident">codec</span>,
-	<span class="ident">pallet_prelude</span>::<span class="kw-2">*</span>,
-	<span class="ident">storage::migration</span>,
-	<span class="ident">storage_alias</span>,
-	<span class="ident">traits</span>::{<span class="ident">Get</span>, <span class="ident">OnRuntimeUpgrade</span>},
-	<span class="ident">Identity</span>, <span class="ident">Twox64Concat</span>,
+</span><span class="kw">use crate</span>::{BalanceOf, CodeHash, Config, Pallet, TrieId, Weight};
+<span class="kw">use </span>codec::{Decode, Encode};
+<span class="kw">use </span>frame_support::{
+	codec,
+	pallet_prelude::<span class="kw-2">*</span>,
+	storage::migration,
+	storage_alias,
+	traits::{Get, OnRuntimeUpgrade},
+	Identity, Twox64Concat,
 };
-<span class="kw">use</span> <span class="ident">sp_runtime::traits::Saturating</span>;
-<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
+<span class="kw">use </span>sp_runtime::traits::Saturating;
+<span class="kw">use </span>sp_std::{marker::PhantomData, prelude::<span class="kw-2">*</span>};
 
-<span class="doccomment">/// Performs all necessary migrations based on `StorageVersion`.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Migration</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">OnRuntimeUpgrade</span> <span class="kw">for</span> <span class="ident">Migration</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">on_runtime_upgrade</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">StorageVersion::get</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">Weight::zero</span>();
+<span class="doccomment">/// Performs all necessary migrations based on `StorageVersion`.
+</span><span class="kw">pub struct </span>Migration&lt;T: Config&gt;(PhantomData&lt;T&gt;);
+<span class="kw">impl</span>&lt;T: Config&gt; OnRuntimeUpgrade <span class="kw">for </span>Migration&lt;T&gt; {
+	<span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
+		<span class="kw">let </span>version = StorageVersion::get::&lt;Pallet&lt;T&gt;&gt;();
+		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
 
-		<span class="kw">if</span> <span class="ident">version</span> <span class="op">&lt;</span> <span class="number">4</span> {
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">v4::migrate</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>());
-			<span class="ident">StorageVersion::new</span>(<span class="number">4</span>).<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">if </span>version &lt; <span class="number">4 </span>{
+			weight = weight.saturating_add(v4::migrate::&lt;T&gt;());
+			StorageVersion::new(<span class="number">4</span>).put::&lt;Pallet&lt;T&gt;&gt;();
 		}
 
-		<span class="kw">if</span> <span class="ident">version</span> <span class="op">&lt;</span> <span class="number">5</span> {
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">v5::migrate</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>());
-			<span class="ident">StorageVersion::new</span>(<span class="number">5</span>).<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">if </span>version &lt; <span class="number">5 </span>{
+			weight = weight.saturating_add(v5::migrate::&lt;T&gt;());
+			StorageVersion::new(<span class="number">5</span>).put::&lt;Pallet&lt;T&gt;&gt;();
 		}
 
-		<span class="kw">if</span> <span class="ident">version</span> <span class="op">&lt;</span> <span class="number">6</span> {
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">v6::migrate</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>());
-			<span class="ident">StorageVersion::new</span>(<span class="number">6</span>).<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">if </span>version &lt; <span class="number">6 </span>{
+			weight = weight.saturating_add(v6::migrate::&lt;T&gt;());
+			StorageVersion::new(<span class="number">6</span>).put::&lt;Pallet&lt;T&gt;&gt;();
 		}
 
-		<span class="kw">if</span> <span class="ident">version</span> <span class="op">&lt;</span> <span class="number">7</span> {
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">v7::migrate</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>());
-			<span class="ident">StorageVersion::new</span>(<span class="number">7</span>).<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">if </span>version &lt; <span class="number">7 </span>{
+			weight = weight.saturating_add(v7::migrate::&lt;T&gt;());
+			StorageVersion::new(<span class="number">7</span>).put::&lt;Pallet&lt;T&gt;&gt;();
 		}
 
-		<span class="kw">if</span> <span class="ident">version</span> <span class="op">&lt;</span> <span class="number">8</span> {
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">v8::migrate</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>());
-			<span class="ident">StorageVersion::new</span>(<span class="number">8</span>).<span class="ident">put</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">if </span>version &lt; <span class="number">8 </span>{
+			weight = weight.saturating_add(v8::migrate::&lt;T&gt;());
+			StorageVersion::new(<span class="number">8</span>).put::&lt;Pallet&lt;T&gt;&gt;();
 		}
 
-		<span class="ident">weight</span>
+		weight
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">pre_upgrade</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">StorageVersion::get</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span>version = StorageVersion::get::&lt;Pallet&lt;T&gt;&gt;();
 
-		<span class="kw">if</span> <span class="ident">version</span> <span class="op">&lt;</span> <span class="number">7</span> {
-			<span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[])
+		<span class="kw">if </span>version &lt; <span class="number">7 </span>{
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[])
 		}
 
-		<span class="kw">if</span> <span class="ident">version</span> <span class="op">&lt;</span> <span class="number">8</span> {
-			<span class="ident">v8::pre_upgrade</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+		<span class="kw">if </span>version &lt; <span class="number">8 </span>{
+			v8::pre_upgrade::&lt;T&gt;()<span class="question-mark">?</span>;
 		}
 
 		<span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[])
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">fn</span> <span class="ident">post_upgrade</span>(<span class="ident">_state</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">StorageVersion::get</span>::<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">fn </span>post_upgrade(_state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span>version = StorageVersion::get::&lt;Pallet&lt;T&gt;&gt;();
 
-		<span class="kw">if</span> <span class="ident">version</span> <span class="op">&lt;</span> <span class="number">7</span> {
-			<span class="kw">return</span> <span class="prelude-val">Ok</span>(())
+		<span class="kw">if </span>version &lt; <span class="number">7 </span>{
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="kw">if</span> <span class="ident">version</span> <span class="op">&lt;</span> <span class="number">8</span> {
-			<span class="ident">v8::post_upgrade</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+		<span class="kw">if </span>version &lt; <span class="number">8 </span>{
+			v8::post_upgrade::&lt;T&gt;()<span class="question-mark">?</span>;
 		}
 
 		<span class="prelude-val">Ok</span>(())
 	}
 }
 
-<span class="doccomment">/// V4: `Schedule` is changed to be a config item rather than an in-storage value.</span>
-<span class="kw">mod</span> <span class="ident">v4</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="doccomment">/// V4: `Schedule` is changed to be a config item rather than an in-storage value.
+</span><span class="kw">mod </span>v4 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-		<span class="ident">migration::remove_storage_prefix</span>(<span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::name</span>().<span class="ident">as_bytes</span>(), <span class="string">b&quot;CurrentSchedule&quot;</span>, <span class="string">b&quot;&quot;</span>);
-		<span class="ident">T::DbWeight::get</span>().<span class="ident">writes</span>(<span class="number">1</span>)
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+		<span class="attribute">#[allow(deprecated)]
+		</span>migration::remove_storage_prefix(&lt;Pallet&lt;T&gt;&gt;::name().as_bytes(), <span class="string">b&quot;CurrentSchedule&quot;</span>, <span class="string">b&quot;&quot;</span>);
+		T::DbWeight::get().writes(<span class="number">1</span>)
 	}
 }
 
-<span class="doccomment">/// V5: State rent is removed which obsoletes some fields in `ContractInfo`.</span>
-<span class="kw">mod</span> <span class="ident">v5</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="doccomment">/// V5: State rent is removed which obsoletes some fields in `ContractInfo`.
+</span><span class="kw">mod </span>v5 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="kw">type</span> <span class="ident">AliveContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span>
-		<span class="ident">RawAliveContractInfo</span><span class="op">&lt;</span><span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::BlockNumber</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">TombstoneContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">RawTombstoneContractInfo</span><span class="op">&lt;</span>
-		<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span>,
-		<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hashing</span>,
-	<span class="op">&gt;</span>;
+	<span class="kw">type </span>AliveContractInfo&lt;T&gt; =
+		RawAliveContractInfo&lt;CodeHash&lt;T&gt;, BalanceOf&lt;T&gt;, &lt;T <span class="kw">as </span>frame_system::Config&gt;::BlockNumber&gt;;
+	<span class="kw">type </span>TombstoneContractInfo&lt;T&gt; = RawTombstoneContractInfo&lt;
+		&lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash,
+		&lt;T <span class="kw">as </span>frame_system::Config&gt;::Hashing,
+	&gt;;
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>)]</span>
-	<span class="kw">enum</span> <span class="ident">OldContractInfo</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-		<span class="ident">Alive</span>(<span class="ident">AliveContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>),
-		<span class="ident">Tombstone</span>(<span class="ident">TombstoneContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>),
+	<span class="attribute">#[derive(Decode)]
+	</span><span class="kw">enum </span>OldContractInfo&lt;T: Config&gt; {
+		Alive(AliveContractInfo&lt;T&gt;),
+		Tombstone(TombstoneContractInfo&lt;T&gt;),
 	}
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>)]</span>
-	<span class="kw">struct</span> <span class="ident">RawAliveContractInfo</span><span class="op">&lt;</span><span class="ident">CodeHash</span>, <span class="ident">Balance</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-		<span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
-		<span class="ident">_storage_size</span>: <span class="ident">u32</span>,
-		<span class="ident">_pair_count</span>: <span class="ident">u32</span>,
-		<span class="ident">code_hash</span>: <span class="ident">CodeHash</span>,
-		<span class="ident">_rent_allowance</span>: <span class="ident">Balance</span>,
-		<span class="ident">_rent_paid</span>: <span class="ident">Balance</span>,
-		<span class="ident">_deduct_block</span>: <span class="ident">BlockNumber</span>,
-		<span class="ident">_last_write</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span>,
-		<span class="ident">_reserved</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
+	<span class="attribute">#[derive(Decode)]
+	</span><span class="kw">struct </span>RawAliveContractInfo&lt;CodeHash, Balance, BlockNumber&gt; {
+		trie_id: TrieId,
+		_storage_size: u32,
+		_pair_count: u32,
+		code_hash: CodeHash,
+		_rent_allowance: Balance,
+		_rent_paid: Balance,
+		_deduct_block: BlockNumber,
+		_last_write: <span class="prelude-ty">Option</span>&lt;BlockNumber&gt;,
+		_reserved: <span class="prelude-ty">Option</span>&lt;()&gt;,
 	}
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>)]</span>
-	<span class="kw">struct</span> <span class="ident">RawTombstoneContractInfo</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">Hasher</span><span class="op">&gt;</span>(<span class="ident">H</span>, <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">Hasher</span><span class="op">&gt;</span>);
+	<span class="attribute">#[derive(Decode)]
+	</span><span class="kw">struct </span>RawTombstoneContractInfo&lt;H, Hasher&gt;(H, PhantomData&lt;Hasher&gt;);
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Decode</span>)]</span>
-	<span class="kw">struct</span> <span class="ident">OldDeletedContract</span> {
-		<span class="ident">_pair_count</span>: <span class="ident">u32</span>,
-		<span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
+	<span class="attribute">#[derive(Decode)]
+	</span><span class="kw">struct </span>OldDeletedContract {
+		_pair_count: u32,
+		trie_id: TrieId,
 	}
 
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">RawContractInfo</span><span class="op">&lt;</span><span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="kw">pub type </span>ContractInfo&lt;T&gt; = RawContractInfo&lt;CodeHash&lt;T&gt;&gt;;
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawContractInfo</span><span class="op">&lt;</span><span class="ident">CodeHash</span><span class="op">&gt;</span> {
-		<span class="kw">pub</span> <span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
-		<span class="kw">pub</span> <span class="ident">code_hash</span>: <span class="ident">CodeHash</span>,
-		<span class="kw">pub</span> <span class="ident">_reserved</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
+	<span class="attribute">#[derive(Encode, Decode)]
+	</span><span class="kw">pub struct </span>RawContractInfo&lt;CodeHash&gt; {
+		<span class="kw">pub </span>trie_id: TrieId,
+		<span class="kw">pub </span>code_hash: CodeHash,
+		<span class="kw">pub </span>_reserved: <span class="prelude-ty">Option</span>&lt;()&gt;,
 	}
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-	<span class="kw">struct</span> <span class="ident">DeletedContract</span> {
-		<span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
+	<span class="attribute">#[derive(Encode, Decode)]
+	</span><span class="kw">struct </span>DeletedContract {
+		trie_id: TrieId,
 	}
 
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">ContractInfoOf</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span>
-		<span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span>,
-		<span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="op">&gt;</span>;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>ContractInfoOf&lt;T: Config&gt; = StorageMap&lt;
+		Pallet&lt;T&gt;,
+		Twox64Concat,
+		&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId,
+		ContractInfo&lt;T&gt;,
+	&gt;;
 
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">DeletionQueue</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">DeletedContract</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>DeletionQueue&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, Vec&lt;DeletedContract&gt;&gt;;
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">Weight::zero</span>();
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
 
-		<span class="op">&lt;</span><span class="ident">ContractInfoOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::translate</span>(<span class="op">|</span><span class="ident">_key</span>, <span class="ident">old</span>: <span class="ident">OldContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">|</span> {
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">1</span>));
-			<span class="kw">match</span> <span class="ident">old</span> {
-				<span class="ident">OldContractInfo::Alive</span>(<span class="ident">old</span>) =&gt; <span class="prelude-val">Some</span>(<span class="ident">ContractInfo</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-					<span class="ident">trie_id</span>: <span class="ident">old</span>.<span class="ident">trie_id</span>,
-					<span class="ident">code_hash</span>: <span class="ident">old</span>.<span class="ident">code_hash</span>,
-					<span class="ident">_reserved</span>: <span class="ident">old</span>.<span class="ident">_reserved</span>,
+		&lt;ContractInfoOf&lt;T&gt;&gt;::translate(|_key, old: OldContractInfo&lt;T&gt;| {
+			weight = weight.saturating_add(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
+			<span class="kw">match </span>old {
+				OldContractInfo::Alive(old) =&gt; <span class="prelude-val">Some</span>(ContractInfo::&lt;T&gt; {
+					trie_id: old.trie_id,
+					code_hash: old.code_hash,
+					_reserved: old._reserved,
 				}),
-				<span class="ident">OldContractInfo::Tombstone</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+				OldContractInfo::Tombstone(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
 			}
 		});
 
-		<span class="ident">DeletionQueue</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::translate</span>(<span class="op">|</span><span class="ident">old</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OldDeletedContract</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">|</span> {
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">1</span>));
-			<span class="ident">old</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">old</span><span class="op">|</span> <span class="ident">old</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">DeletedContract</span> { <span class="ident">trie_id</span>: <span class="ident">o</span>.<span class="ident">trie_id</span> }).<span class="ident">collect</span>())
+		DeletionQueue::&lt;T&gt;::translate(|old: <span class="prelude-ty">Option</span>&lt;Vec&lt;OldDeletedContract&gt;&gt;| {
+			weight = weight.saturating_add(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
+			old.map(|old| old.into_iter().map(|o| DeletedContract { trie_id: o.trie_id }).collect())
 		})
-		.<span class="ident">ok</span>();
+		.ok();
 
-		<span class="ident">weight</span>
+		weight
 	}
 }
 
-<span class="doccomment">/// V6: Added storage deposits</span>
-<span class="kw">mod</span> <span class="ident">v6</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="doccomment">/// V6: Added storage deposits
+</span><span class="kw">mod </span>v6 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-	<span class="kw">struct</span> <span class="ident">OldPrefabWasmModule</span> {
-		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">compact</span>)]</span>
-		<span class="ident">instruction_weights_version</span>: <span class="ident">u32</span>,
-		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">compact</span>)]</span>
-		<span class="ident">initial</span>: <span class="ident">u32</span>,
-		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">compact</span>)]</span>
-		<span class="ident">maximum</span>: <span class="ident">u32</span>,
-		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">compact</span>)]</span>
-		<span class="ident">refcount</span>: <span class="ident">u64</span>,
-		<span class="ident">_reserved</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
-		<span class="ident">code</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">original_code_len</span>: <span class="ident">u32</span>,
+	<span class="attribute">#[derive(Encode, Decode)]
+	</span><span class="kw">struct </span>OldPrefabWasmModule {
+		<span class="attribute">#[codec(compact)]
+		</span>instruction_weights_version: u32,
+		<span class="attribute">#[codec(compact)]
+		</span>initial: u32,
+		<span class="attribute">#[codec(compact)]
+		</span>maximum: u32,
+		<span class="attribute">#[codec(compact)]
+		</span>refcount: u64,
+		_reserved: <span class="prelude-ty">Option</span>&lt;()&gt;,
+		code: Vec&lt;u8&gt;,
+		original_code_len: u32,
 	}
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-	<span class="kw">struct</span> <span class="ident">PrefabWasmModule</span> {
-		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">compact</span>)]</span>
-		<span class="ident">instruction_weights_version</span>: <span class="ident">u32</span>,
-		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">compact</span>)]</span>
-		<span class="ident">initial</span>: <span class="ident">u32</span>,
-		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">compact</span>)]</span>
-		<span class="ident">maximum</span>: <span class="ident">u32</span>,
-		<span class="ident">code</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+	<span class="attribute">#[derive(Encode, Decode)]
+	</span><span class="kw">struct </span>PrefabWasmModule {
+		<span class="attribute">#[codec(compact)]
+		</span>instruction_weights_version: u32,
+		<span class="attribute">#[codec(compact)]
+		</span>initial: u32,
+		<span class="attribute">#[codec(compact)]
+		</span>maximum: u32,
+		code: Vec&lt;u8&gt;,
 	}
 
-	<span class="kw">use</span> <span class="ident">v5::ContractInfo</span> <span class="kw">as</span> <span class="ident">OldContractInfo</span>;
+	<span class="kw">use </span>v5::ContractInfo <span class="kw">as </span>OldContractInfo;
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RawContractInfo</span><span class="op">&lt;</span><span class="ident">CodeHash</span>, <span class="ident">Balance</span><span class="op">&gt;</span> {
-		<span class="kw">pub</span> <span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
-		<span class="kw">pub</span> <span class="ident">code_hash</span>: <span class="ident">CodeHash</span>,
-		<span class="kw">pub</span> <span class="ident">storage_deposit</span>: <span class="ident">Balance</span>,
+	<span class="attribute">#[derive(Encode, Decode)]
+	</span><span class="kw">pub struct </span>RawContractInfo&lt;CodeHash, Balance&gt; {
+		<span class="kw">pub </span>trie_id: TrieId,
+		<span class="kw">pub </span>code_hash: CodeHash,
+		<span class="kw">pub </span>storage_deposit: Balance,
 	}
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OwnerInfo</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-		<span class="ident">owner</span>: <span class="ident">T::AccountId</span>,
-		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">compact</span>)]</span>
-		<span class="ident">deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">compact</span>)]</span>
-		<span class="ident">refcount</span>: <span class="ident">u64</span>,
+	<span class="attribute">#[derive(Encode, Decode)]
+	</span><span class="kw">pub struct </span>OwnerInfo&lt;T: Config&gt; {
+		owner: T::AccountId,
+		<span class="attribute">#[codec(compact)]
+		</span>deposit: BalanceOf&lt;T&gt;,
+		<span class="attribute">#[codec(compact)]
+		</span>refcount: u64,
 	}
 
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">RawContractInfo</span><span class="op">&lt;</span><span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="kw">pub type </span>ContractInfo&lt;T&gt; = RawContractInfo&lt;CodeHash&lt;T&gt;, BalanceOf&lt;T&gt;&gt;;
 
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">ContractInfoOf</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span>
-		<span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span>,
-		<span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="op">&gt;</span>;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>ContractInfoOf&lt;T: Config&gt; = StorageMap&lt;
+		Pallet&lt;T&gt;,
+		Twox64Concat,
+		&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId,
+		ContractInfo&lt;T&gt;,
+	&gt;;
 
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">CodeStorage</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Identity</span>, <span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">PrefabWasmModule</span><span class="op">&gt;</span>;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>CodeStorage&lt;T: Config&gt; = StorageMap&lt;Pallet&lt;T&gt;, Identity, CodeHash&lt;T&gt;, PrefabWasmModule&gt;;
 
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">OwnerInfoOf</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Identity</span>, <span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">OwnerInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>OwnerInfoOf&lt;T: Config&gt; = StorageMap&lt;Pallet&lt;T&gt;, Identity, CodeHash&lt;T&gt;, OwnerInfo&lt;T&gt;&gt;;
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">Weight::zero</span>();
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
 
-		<span class="op">&lt;</span><span class="ident">ContractInfoOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::translate</span>(<span class="op">|</span><span class="ident">_key</span>, <span class="ident">old</span>: <span class="ident">OldContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">|</span> {
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">1</span>));
-			<span class="prelude-val">Some</span>(<span class="ident">ContractInfo</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-				<span class="ident">trie_id</span>: <span class="ident">old</span>.<span class="ident">trie_id</span>,
-				<span class="ident">code_hash</span>: <span class="ident">old</span>.<span class="ident">code_hash</span>,
-				<span class="ident">storage_deposit</span>: <span class="ident">Default::default</span>(),
+		&lt;ContractInfoOf&lt;T&gt;&gt;::translate(|_key, old: OldContractInfo&lt;T&gt;| {
+			weight = weight.saturating_add(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
+			<span class="prelude-val">Some</span>(ContractInfo::&lt;T&gt; {
+				trie_id: old.trie_id,
+				code_hash: old.code_hash,
+				storage_deposit: Default::default(),
 			})
 		});
 
-		<span class="kw">let</span> <span class="ident">nobody</span> <span class="op">=</span> <span class="ident">T::AccountId::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">sp_runtime::traits::TrailingZeroInput::zeroes</span>())
-			.<span class="ident">expect</span>(<span class="string">&quot;Infinite input; no dead input space; qed&quot;</span>);
+		<span class="kw">let </span>nobody = T::AccountId::decode(<span class="kw-2">&amp;mut </span>sp_runtime::traits::TrailingZeroInput::zeroes())
+			.expect(<span class="string">&quot;Infinite input; no dead input space; qed&quot;</span>);
 
-		<span class="op">&lt;</span><span class="ident">CodeStorage</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::translate</span>(<span class="op">|</span><span class="ident">key</span>, <span class="ident">old</span>: <span class="ident">OldPrefabWasmModule</span><span class="op">|</span> {
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>.<span class="ident">saturating_add</span>(<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">2</span>));
-			<span class="op">&lt;</span><span class="ident">OwnerInfoOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::insert</span>(
-				<span class="ident">key</span>,
-				<span class="ident">OwnerInfo</span> {
-					<span class="ident">refcount</span>: <span class="ident">old</span>.<span class="ident">refcount</span>,
-					<span class="ident">owner</span>: <span class="ident">nobody</span>.<span class="ident">clone</span>(),
-					<span class="ident">deposit</span>: <span class="ident">Default::default</span>(),
+		&lt;CodeStorage&lt;T&gt;&gt;::translate(|key, old: OldPrefabWasmModule| {
+			weight = weight.saturating_add(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">2</span>));
+			&lt;OwnerInfoOf&lt;T&gt;&gt;::insert(
+				key,
+				OwnerInfo {
+					refcount: old.refcount,
+					owner: nobody.clone(),
+					deposit: Default::default(),
 				},
 			);
-			<span class="prelude-val">Some</span>(<span class="ident">PrefabWasmModule</span> {
-				<span class="ident">instruction_weights_version</span>: <span class="ident">old</span>.<span class="ident">instruction_weights_version</span>,
-				<span class="ident">initial</span>: <span class="ident">old</span>.<span class="ident">initial</span>,
-				<span class="ident">maximum</span>: <span class="ident">old</span>.<span class="ident">maximum</span>,
-				<span class="ident">code</span>: <span class="ident">old</span>.<span class="ident">code</span>,
+			<span class="prelude-val">Some</span>(PrefabWasmModule {
+				instruction_weights_version: old.instruction_weights_version,
+				initial: old.initial,
+				maximum: old.maximum,
+				code: old.code,
 			})
 		});
 
-		<span class="ident">weight</span>
+		weight
 	}
 }
 
-<span class="doccomment">/// Rename `AccountCounter` to `Nonce`.</span>
-<span class="kw">mod</span> <span class="ident">v7</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="doccomment">/// Rename `AccountCounter` to `Nonce`.
+</span><span class="kw">mod </span>v7 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-		<span class="kw">type</span> <span class="ident">AccountCounter</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">u64</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
-		<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-		<span class="kw">type</span> <span class="ident">Nonce</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">u64</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+		<span class="attribute">#[storage_alias]
+		</span><span class="kw">type </span>AccountCounter&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, u64, ValueQuery&gt;;
+		<span class="attribute">#[storage_alias]
+		</span><span class="kw">type </span>Nonce&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, u64, ValueQuery&gt;;
 
-		<span class="ident">Nonce</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::set</span>(<span class="ident">AccountCounter</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::take</span>());
-		<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">2</span>)
+		Nonce::&lt;T&gt;::set(AccountCounter::&lt;T&gt;::take());
+		T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">2</span>)
 	}
 }
 
-<span class="doccomment">/// Update `ContractInfo` with new fields that track storage deposits.</span>
-<span class="kw">mod</span> <span class="ident">v8</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">sp_io::default_child_storage</span> <span class="kw">as</span> <span class="ident">child</span>;
-	<span class="kw">use</span> <span class="ident">v6::ContractInfo</span> <span class="kw">as</span> <span class="ident">OldContractInfo</span>;
+<span class="doccomment">/// Update `ContractInfo` with new fields that track storage deposits.
+</span><span class="kw">mod </span>v8 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>sp_io::default_child_storage <span class="kw">as </span>child;
+	<span class="kw">use </span>v6::ContractInfo <span class="kw">as </span>OldContractInfo;
 
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-	<span class="kw">struct</span> <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-		<span class="ident">trie_id</span>: <span class="ident">TrieId</span>,
-		<span class="ident">code_hash</span>: <span class="ident">CodeHash</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">storage_bytes</span>: <span class="ident">u32</span>,
-		<span class="ident">storage_items</span>: <span class="ident">u32</span>,
-		<span class="ident">storage_byte_deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">storage_item_deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-		<span class="ident">storage_base_deposit</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+	<span class="attribute">#[derive(Encode, Decode)]
+	</span><span class="kw">struct </span>ContractInfo&lt;T: Config&gt; {
+		trie_id: TrieId,
+		code_hash: CodeHash&lt;T&gt;,
+		storage_bytes: u32,
+		storage_items: u32,
+		storage_byte_deposit: BalanceOf&lt;T&gt;,
+		storage_item_deposit: BalanceOf&lt;T&gt;,
+		storage_base_deposit: BalanceOf&lt;T&gt;,
 	}
 
-	<span class="attribute">#[<span class="ident">storage_alias</span>]</span>
-	<span class="kw">type</span> <span class="ident">ContractInfoOf</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="op">=</span>
-		<span class="ident">StorageMap</span><span class="op">&lt;</span><span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Twox64Concat</span>, <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span>, <span class="ident">V</span><span class="op">&gt;</span>;
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>ContractInfoOf&lt;T: Config, V&gt; =
+		StorageMap&lt;Pallet&lt;T&gt;, Twox64Concat, &lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId, V&gt;;
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">Weight::zero</span>();
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
 
-		<span class="op">&lt;</span><span class="ident">ContractInfoOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::translate_values</span>(<span class="op">|</span><span class="ident">old</span>: <span class="ident">OldContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">|</span> {
-			<span class="comment">// Count storage items of this contract</span>
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage_bytes</span> <span class="op">=</span> <span class="number">0u32</span>;
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage_items</span> <span class="op">=</span> <span class="number">0u32</span>;
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-			<span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">next</span>) <span class="op">=</span> <span class="ident">child::next_key</span>(<span class="kw-2">&amp;</span><span class="ident">old</span>.<span class="ident">trie_id</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>) {
-				<span class="ident">key</span> <span class="op">=</span> <span class="ident">next</span>;
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">val_out</span> <span class="op">=</span> [];
-				<span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">child::read</span>(<span class="kw-2">&amp;</span><span class="ident">old</span>.<span class="ident">trie_id</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="kw-2">&amp;mut</span> <span class="ident">val_out</span>, <span class="number">0</span>)
-					.<span class="ident">expect</span>(<span class="string">&quot;The loop conditions checks for existence of the key; qed&quot;</span>);
-				<span class="ident">storage_bytes</span>.<span class="ident">saturating_accrue</span>(<span class="ident">len</span>);
-				<span class="ident">storage_items</span>.<span class="ident">saturating_accrue</span>(<span class="number">1</span>);
+		&lt;ContractInfoOf&lt;T, ContractInfo&lt;T&gt;&gt;&gt;::translate_values(|old: OldContractInfo&lt;T&gt;| {
+			<span class="comment">// Count storage items of this contract
+			</span><span class="kw">let </span><span class="kw-2">mut </span>storage_bytes = <span class="number">0u32</span>;
+			<span class="kw">let </span><span class="kw-2">mut </span>storage_items = <span class="number">0u32</span>;
+			<span class="kw">let </span><span class="kw-2">mut </span>key = Vec::new();
+			<span class="kw">while let </span><span class="prelude-val">Some</span>(next) = child::next_key(<span class="kw-2">&amp;</span>old.trie_id, <span class="kw-2">&amp;</span>key) {
+				key = next;
+				<span class="kw">let </span><span class="kw-2">mut </span>val_out = [];
+				<span class="kw">let </span>len = child::read(<span class="kw-2">&amp;</span>old.trie_id, <span class="kw-2">&amp;</span>key, <span class="kw-2">&amp;mut </span>val_out, <span class="number">0</span>)
+					.expect(<span class="string">&quot;The loop conditions checks for existence of the key; qed&quot;</span>);
+				storage_bytes.saturating_accrue(len);
+				storage_items.saturating_accrue(<span class="number">1</span>);
 			}
 
-			<span class="kw">let</span> <span class="ident">storage_byte_deposit</span> <span class="op">=</span>
-				<span class="ident">T::DepositPerByte::get</span>().<span class="ident">saturating_mul</span>(<span class="ident">storage_bytes</span>.<span class="ident">into</span>());
-			<span class="kw">let</span> <span class="ident">storage_item_deposit</span> <span class="op">=</span>
-				<span class="ident">T::DepositPerItem::get</span>().<span class="ident">saturating_mul</span>(<span class="ident">storage_items</span>.<span class="ident">into</span>());
-			<span class="kw">let</span> <span class="ident">storage_base_deposit</span> <span class="op">=</span> <span class="ident">old</span>
-				.<span class="ident">storage_deposit</span>
-				.<span class="ident">saturating_sub</span>(<span class="ident">storage_byte_deposit</span>)
-				.<span class="ident">saturating_sub</span>(<span class="ident">storage_item_deposit</span>);
+			<span class="kw">let </span>storage_byte_deposit =
+				T::DepositPerByte::get().saturating_mul(storage_bytes.into());
+			<span class="kw">let </span>storage_item_deposit =
+				T::DepositPerItem::get().saturating_mul(storage_items.into());
+			<span class="kw">let </span>storage_base_deposit = old
+				.storage_deposit
+				.saturating_sub(storage_byte_deposit)
+				.saturating_sub(storage_item_deposit);
 
-			<span class="comment">// Reads: One read for each storage item plus the contract info itself.</span>
-			<span class="comment">// Writes: Only the new contract info.</span>
-			<span class="ident">weight</span> <span class="op">=</span> <span class="ident">weight</span>
-				.<span class="ident">saturating_add</span>(<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="ident">u64::from</span>(<span class="ident">storage_items</span>) <span class="op">+</span> <span class="number">1</span>, <span class="number">1</span>));
+			<span class="comment">// Reads: One read for each storage item plus the contract info itself.
+			// Writes: Only the new contract info.
+			</span>weight = weight
+				.saturating_add(T::DbWeight::get().reads_writes(u64::from(storage_items) + <span class="number">1</span>, <span class="number">1</span>));
 
-			<span class="prelude-val">Some</span>(<span class="ident">ContractInfo</span> {
-				<span class="ident">trie_id</span>: <span class="ident">old</span>.<span class="ident">trie_id</span>,
-				<span class="ident">code_hash</span>: <span class="ident">old</span>.<span class="ident">code_hash</span>,
-				<span class="ident">storage_bytes</span>,
-				<span class="ident">storage_items</span>,
-				<span class="ident">storage_byte_deposit</span>,
-				<span class="ident">storage_item_deposit</span>,
-				<span class="ident">storage_base_deposit</span>,
+			<span class="prelude-val">Some</span>(ContractInfo {
+				trie_id: old.trie_id,
+				code_hash: old.code_hash,
+				storage_bytes,
+				storage_items,
+				storage_byte_deposit,
+				storage_item_deposit,
+				storage_base_deposit,
 			})
 		});
 
-		<span class="ident">weight</span>
+		weight
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pre_upgrade</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">use</span> <span class="ident">frame_support::traits::ReservableCurrency</span>;
-		<span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">ContractInfoOf</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">OldContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::iter</span>() {
-			<span class="kw">let</span> <span class="ident">reserved</span> <span class="op">=</span> <span class="ident">T::Currency::reserved_balance</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>);
-			<span class="macro">ensure!</span>(<span class="ident">reserved</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">value</span>.<span class="ident">storage_deposit</span>, <span class="string">&quot;Reserved balance out of sync.&quot;</span>);
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">pub fn </span>pre_upgrade&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">use </span>frame_support::traits::ReservableCurrency;
+		<span class="kw">for </span>(key, value) <span class="kw">in </span>ContractInfoOf::&lt;T, OldContractInfo&lt;T&gt;&gt;::iter() {
+			<span class="kw">let </span>reserved = T::Currency::reserved_balance(<span class="kw-2">&amp;</span>key);
+			<span class="macro">ensure!</span>(reserved &gt;= value.storage_deposit, <span class="string">&quot;Reserved balance out of sync.&quot;</span>);
 		}
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">post_upgrade</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="kw">use</span> <span class="ident">frame_support::traits::ReservableCurrency</span>;
-		<span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">ContractInfoOf</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">ContractInfo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::iter</span>() {
-			<span class="kw">let</span> <span class="ident">reserved</span> <span class="op">=</span> <span class="ident">T::Currency::reserved_balance</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>);
-			<span class="kw">let</span> <span class="ident">stored</span> <span class="op">=</span> <span class="ident">value</span>
-				.<span class="ident">storage_base_deposit</span>
-				.<span class="ident">saturating_add</span>(<span class="ident">value</span>.<span class="ident">storage_byte_deposit</span>)
-				.<span class="ident">saturating_add</span>(<span class="ident">value</span>.<span class="ident">storage_item_deposit</span>);
-			<span class="macro">ensure!</span>(<span class="ident">reserved</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">stored</span>, <span class="string">&quot;Reserved balance out of sync.&quot;</span>);
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">pub fn </span>post_upgrade&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">use </span>frame_support::traits::ReservableCurrency;
+		<span class="kw">for </span>(key, value) <span class="kw">in </span>ContractInfoOf::&lt;T, ContractInfo&lt;T&gt;&gt;::iter() {
+			<span class="kw">let </span>reserved = T::Currency::reserved_balance(<span class="kw-2">&amp;</span>key);
+			<span class="kw">let </span>stored = value
+				.storage_base_deposit
+				.saturating_add(value.storage_byte_deposit)
+				.saturating_add(value.storage_item_deposit);
+			<span class="macro">ensure!</span>(reserved &gt;= stored, <span class="string">&quot;Reserved balance out of sync.&quot;</span>);
 
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage_bytes</span> <span class="op">=</span> <span class="number">0u32</span>;
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage_items</span> <span class="op">=</span> <span class="number">0u32</span>;
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-			<span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">next</span>) <span class="op">=</span> <span class="ident">child::next_key</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">trie_id</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>) {
-				<span class="ident">key</span> <span class="op">=</span> <span class="ident">next</span>;
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">val_out</span> <span class="op">=</span> [];
-				<span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">child::read</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">trie_id</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="kw-2">&amp;mut</span> <span class="ident">val_out</span>, <span class="number">0</span>)
-					.<span class="ident">expect</span>(<span class="string">&quot;The loop conditions checks for existence of the key; qed&quot;</span>);
-				<span class="ident">storage_bytes</span>.<span class="ident">saturating_accrue</span>(<span class="ident">len</span>);
-				<span class="ident">storage_items</span>.<span class="ident">saturating_accrue</span>(<span class="number">1</span>);
+			<span class="kw">let </span><span class="kw-2">mut </span>storage_bytes = <span class="number">0u32</span>;
+			<span class="kw">let </span><span class="kw-2">mut </span>storage_items = <span class="number">0u32</span>;
+			<span class="kw">let </span><span class="kw-2">mut </span>key = Vec::new();
+			<span class="kw">while let </span><span class="prelude-val">Some</span>(next) = child::next_key(<span class="kw-2">&amp;</span>value.trie_id, <span class="kw-2">&amp;</span>key) {
+				key = next;
+				<span class="kw">let </span><span class="kw-2">mut </span>val_out = [];
+				<span class="kw">let </span>len = child::read(<span class="kw-2">&amp;</span>value.trie_id, <span class="kw-2">&amp;</span>key, <span class="kw-2">&amp;mut </span>val_out, <span class="number">0</span>)
+					.expect(<span class="string">&quot;The loop conditions checks for existence of the key; qed&quot;</span>);
+				storage_bytes.saturating_accrue(len);
+				storage_items.saturating_accrue(<span class="number">1</span>);
 			}
-			<span class="macro">ensure!</span>(<span class="ident">storage_bytes</span> <span class="op">==</span> <span class="ident">value</span>.<span class="ident">storage_bytes</span>, <span class="string">&quot;Storage bytes do not match.&quot;</span>,);
-			<span class="macro">ensure!</span>(<span class="ident">storage_items</span> <span class="op">==</span> <span class="ident">value</span>.<span class="ident">storage_items</span>, <span class="string">&quot;Storage items do not match.&quot;</span>,);
+			<span class="macro">ensure!</span>(storage_bytes == value.storage_bytes, <span class="string">&quot;Storage bytes do not match.&quot;</span>,);
+			<span class="macro">ensure!</span>(storage_items == value.storage_items, <span class="string">&quot;Storage items do not match.&quot;</span>,);
 		}
 		<span class="prelude-val">Ok</span>(())
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

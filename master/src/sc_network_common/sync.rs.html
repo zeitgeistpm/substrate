@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/network/common/src/sync.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>sync.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sc_network_common/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sc_network_common/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_network_common/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/network/common/src/sync.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>sync.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sc_network_common/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_network_common/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -412,414 +406,413 @@
 <span id="406">406</span>
 <span id="407">407</span>
 <span id="408">408</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Abstract interfaces and data structures related to network sync.</span>
+</span><span class="doccomment">//! Abstract interfaces and data structures related to network sync.
 
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">message</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">metrics</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">warp</span>;
+</span><span class="kw">pub mod </span>message;
+<span class="kw">pub mod </span>metrics;
+<span class="kw">pub mod </span>warp;
 
-<span class="kw">use</span> <span class="ident">libp2p::PeerId</span>;
-<span class="kw">use</span> <span class="ident">message</span>::{<span class="ident">BlockAnnounce</span>, <span class="ident">BlockData</span>, <span class="ident">BlockRequest</span>, <span class="ident">BlockResponse</span>};
-<span class="kw">use</span> <span class="ident">sc_consensus</span>::{<span class="ident">BlockImportError</span>, <span class="ident">BlockImportStatus</span>, <span class="ident">IncomingBlock</span>};
-<span class="kw">use</span> <span class="ident">sp_consensus::BlockOrigin</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">NumberFor</span>},
-	<span class="ident">Justifications</span>,
+<span class="kw">use </span>libp2p::PeerId;
+<span class="kw">use </span>message::{BlockAnnounce, BlockData, BlockRequest, BlockResponse};
+<span class="kw">use </span>sc_consensus::{BlockImportError, BlockImportStatus, IncomingBlock};
+<span class="kw">use </span>sp_consensus::BlockOrigin;
+<span class="kw">use </span>sp_runtime::{
+	traits::{Block <span class="kw">as </span>BlockT, NumberFor},
+	Justifications,
 };
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any::Any</span>, <span class="ident">fmt</span>, <span class="ident">fmt::Formatter</span>, <span class="ident">task::Poll</span>};
-<span class="kw">use</span> <span class="ident">warp</span>::{<span class="ident">EncodedProof</span>, <span class="ident">WarpProofRequest</span>, <span class="ident">WarpSyncProgress</span>};
+<span class="kw">use </span>std::{any::Any, fmt, fmt::Formatter, task::Poll};
+<span class="kw">use </span>warp::{EncodedProof, WarpProofRequest, WarpSyncProgress};
 
-<span class="doccomment">/// The sync status of a peer we are trying to sync with</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PeerInfo</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Their best block hash.</span>
-	<span class="kw">pub</span> <span class="ident">best_hash</span>: <span class="ident">Block::Hash</span>,
-	<span class="doccomment">/// Their best block number.</span>
-	<span class="kw">pub</span> <span class="ident">best_number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+<span class="doccomment">/// The sync status of a peer we are trying to sync with
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>PeerInfo&lt;Block: BlockT&gt; {
+	<span class="doccomment">/// Their best block hash.
+	</span><span class="kw">pub </span>best_hash: Block::Hash,
+	<span class="doccomment">/// Their best block number.
+	</span><span class="kw">pub </span>best_number: NumberFor&lt;Block&gt;,
 }
 
-<span class="doccomment">/// Reported sync state.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SyncState</span> {
-	<span class="doccomment">/// Initial sync is complete, keep-up sync is active.</span>
-	<span class="ident">Idle</span>,
-	<span class="doccomment">/// Actively catching up with the chain.</span>
-	<span class="ident">Downloading</span>,
+<span class="doccomment">/// Reported sync state.
+</span><span class="attribute">#[derive(Clone, Eq, PartialEq, Debug)]
+</span><span class="kw">pub enum </span>SyncState {
+	<span class="doccomment">/// Initial sync is complete, keep-up sync is active.
+	</span>Idle,
+	<span class="doccomment">/// Actively catching up with the chain.
+	</span>Downloading,
 }
 
-<span class="doccomment">/// Reported state download progress.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StateDownloadProgress</span> {
-	<span class="doccomment">/// Estimated download percentage.</span>
-	<span class="kw">pub</span> <span class="ident">percentage</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// Total state size in bytes downloaded so far.</span>
-	<span class="kw">pub</span> <span class="ident">size</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Reported state download progress.
+</span><span class="attribute">#[derive(Clone, Eq, PartialEq, Debug)]
+</span><span class="kw">pub struct </span>StateDownloadProgress {
+	<span class="doccomment">/// Estimated download percentage.
+	</span><span class="kw">pub </span>percentage: u32,
+	<span class="doccomment">/// Total state size in bytes downloaded so far.
+	</span><span class="kw">pub </span>size: u64,
 }
 
-<span class="doccomment">/// Syncing status and statistics.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SyncStatus</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Current global sync state.</span>
-	<span class="kw">pub</span> <span class="ident">state</span>: <span class="ident">SyncState</span>,
-	<span class="doccomment">/// Target sync block number.</span>
-	<span class="kw">pub</span> <span class="ident">best_seen_block</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Number of peers participating in syncing.</span>
-	<span class="kw">pub</span> <span class="ident">num_peers</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// Number of blocks queued for import</span>
-	<span class="kw">pub</span> <span class="ident">queued_blocks</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// State sync status in progress, if any.</span>
-	<span class="kw">pub</span> <span class="ident">state_sync</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StateDownloadProgress</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Warp sync in progress, if any.</span>
-	<span class="kw">pub</span> <span class="ident">warp_sync</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WarpSyncProgress</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Syncing status and statistics.
+</span><span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>SyncStatus&lt;Block: BlockT&gt; {
+	<span class="doccomment">/// Current global sync state.
+	</span><span class="kw">pub </span>state: SyncState,
+	<span class="doccomment">/// Target sync block number.
+	</span><span class="kw">pub </span>best_seen_block: <span class="prelude-ty">Option</span>&lt;NumberFor&lt;Block&gt;&gt;,
+	<span class="doccomment">/// Number of peers participating in syncing.
+	</span><span class="kw">pub </span>num_peers: u32,
+	<span class="doccomment">/// Number of blocks queued for import
+	</span><span class="kw">pub </span>queued_blocks: u32,
+	<span class="doccomment">/// State sync status in progress, if any.
+	</span><span class="kw">pub </span>state_sync: <span class="prelude-ty">Option</span>&lt;StateDownloadProgress&gt;,
+	<span class="doccomment">/// Warp sync in progress, if any.
+	</span><span class="kw">pub </span>warp_sync: <span class="prelude-ty">Option</span>&lt;WarpSyncProgress&lt;Block&gt;&gt;,
 }
 
-<span class="doccomment">/// A peer did not behave as expected and should be reported.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BadPeer</span>(<span class="kw">pub</span> <span class="ident">PeerId</span>, <span class="kw">pub</span> <span class="ident">sc_peerset::ReputationChange</span>);
+<span class="doccomment">/// A peer did not behave as expected and should be reported.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>BadPeer(<span class="kw">pub </span>PeerId, <span class="kw">pub </span>sc_peerset::ReputationChange);
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">BadPeer</span> {
-	<span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span>) -&gt; <span class="ident">fmt::Result</span> {
-		<span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Bad peer {}; Reputation change: {:?}&quot;</span>, <span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>)
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>BadPeer {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+		<span class="macro">write!</span>(f, <span class="string">&quot;Bad peer {}; Reputation change: {:?}&quot;</span>, <span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>)
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">std::error::Error</span> <span class="kw">for</span> <span class="ident">BadPeer</span> {}
+<span class="kw">impl </span>std::error::Error <span class="kw">for </span>BadPeer {}
 
-<span class="doccomment">/// Result of [`ChainSync::on_block_data`].</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">OnBlockData</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The block should be imported.</span>
-	<span class="ident">Import</span>(<span class="ident">BlockOrigin</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">IncomingBlock</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>),
-	<span class="doccomment">/// A new block request needs to be made to the given peer.</span>
-	<span class="ident">Request</span>(<span class="ident">PeerId</span>, <span class="ident">BlockRequest</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>),
-	<span class="doccomment">/// Continue processing events.</span>
-	<span class="ident">Continue</span>,
+<span class="doccomment">/// Result of [`ChainSync::on_block_data`].
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>OnBlockData&lt;Block: BlockT&gt; {
+	<span class="doccomment">/// The block should be imported.
+	</span>Import(BlockOrigin, Vec&lt;IncomingBlock&lt;Block&gt;&gt;),
+	<span class="doccomment">/// A new block request needs to be made to the given peer.
+	</span>Request(PeerId, BlockRequest&lt;Block&gt;),
+	<span class="doccomment">/// Continue processing events.
+	</span>Continue,
 }
 
-<span class="doccomment">/// Result of [`ChainSync::on_block_justification`].</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">OnBlockJustification</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The justification needs no further handling.</span>
-	<span class="ident">Nothing</span>,
-	<span class="doccomment">/// The justification should be imported.</span>
-	<span class="ident">Import</span> {
-		<span class="ident">peer</span>: <span class="ident">PeerId</span>,
-		<span class="ident">hash</span>: <span class="ident">Block::Hash</span>,
-		<span class="ident">number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">justifications</span>: <span class="ident">Justifications</span>,
+<span class="doccomment">/// Result of [`ChainSync::on_block_justification`].
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>OnBlockJustification&lt;Block: BlockT&gt; {
+	<span class="doccomment">/// The justification needs no further handling.
+	</span>Nothing,
+	<span class="doccomment">/// The justification should be imported.
+	</span>Import {
+		peer: PeerId,
+		hash: Block::Hash,
+		number: NumberFor&lt;Block&gt;,
+		justifications: Justifications,
 	},
 }
 
-<span class="doccomment">/// Result of [`ChainSync::on_state_data`].</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">OnStateData</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The block and state that should be imported.</span>
-	<span class="ident">Import</span>(<span class="ident">BlockOrigin</span>, <span class="ident">IncomingBlock</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>),
-	<span class="doccomment">/// A new state request needs to be made to the given peer.</span>
-	<span class="ident">Continue</span>,
+<span class="doccomment">/// Result of [`ChainSync::on_state_data`].
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub enum </span>OnStateData&lt;Block: BlockT&gt; {
+	<span class="doccomment">/// The block and state that should be imported.
+	</span>Import(BlockOrigin, IncomingBlock&lt;Block&gt;),
+	<span class="doccomment">/// A new state request needs to be made to the given peer.
+	</span>Continue,
 }
 
-<span class="doccomment">/// Result of [`ChainSync::poll_block_announce_validation`].</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PollBlockAnnounceValidation</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The announcement failed at validation.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The peer reputation should be decreased.</span>
-	<span class="ident">Failure</span> {
-		<span class="doccomment">/// Who sent the processed block announcement?</span>
-		<span class="ident">who</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Should the peer be disconnected?</span>
-		<span class="ident">disconnect</span>: <span class="ident">bool</span>,
+<span class="doccomment">/// Result of [`ChainSync::poll_block_announce_validation`].
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>PollBlockAnnounceValidation&lt;H&gt; {
+	<span class="doccomment">/// The announcement failed at validation.
+	///
+	/// The peer reputation should be decreased.
+	</span>Failure {
+		<span class="doccomment">/// Who sent the processed block announcement?
+		</span>who: PeerId,
+		<span class="doccomment">/// Should the peer be disconnected?
+		</span>disconnect: bool,
 	},
-	<span class="doccomment">/// The announcement does not require further handling.</span>
-	<span class="ident">Nothing</span> {
-		<span class="doccomment">/// Who sent the processed block announcement?</span>
-		<span class="ident">who</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Was this their new best block?</span>
-		<span class="ident">is_best</span>: <span class="ident">bool</span>,
-		<span class="doccomment">/// The announcement.</span>
-		<span class="ident">announce</span>: <span class="ident">BlockAnnounce</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// The announcement does not require further handling.
+	</span>Nothing {
+		<span class="doccomment">/// Who sent the processed block announcement?
+		</span>who: PeerId,
+		<span class="doccomment">/// Was this their new best block?
+		</span>is_best: bool,
+		<span class="doccomment">/// The announcement.
+		</span>announce: BlockAnnounce&lt;H&gt;,
 	},
-	<span class="doccomment">/// The announcement header should be imported.</span>
-	<span class="ident">ImportHeader</span> {
-		<span class="doccomment">/// Who sent the processed block announcement?</span>
-		<span class="ident">who</span>: <span class="ident">PeerId</span>,
-		<span class="doccomment">/// Was this their new best block?</span>
-		<span class="ident">is_best</span>: <span class="ident">bool</span>,
-		<span class="doccomment">/// The announcement.</span>
-		<span class="ident">announce</span>: <span class="ident">BlockAnnounce</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// The announcement header should be imported.
+	</span>ImportHeader {
+		<span class="doccomment">/// Who sent the processed block announcement?
+		</span>who: PeerId,
+		<span class="doccomment">/// Was this their new best block?
+		</span>is_best: bool,
+		<span class="doccomment">/// The announcement.
+		</span>announce: BlockAnnounce&lt;H&gt;,
 	},
-	<span class="doccomment">/// The block announcement should be skipped.</span>
-	<span class="ident">Skip</span>,
+	<span class="doccomment">/// The block announcement should be skipped.
+	</span>Skip,
 }
 
-<span class="doccomment">/// Operation mode.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SyncMode</span> {
-	<span class="comment">// Sync headers only</span>
-	<span class="ident">Light</span>,
-	<span class="comment">// Sync headers and block bodies</span>
-	<span class="ident">Full</span>,
-	<span class="comment">// Sync headers and the last finalied state</span>
-	<span class="ident">LightState</span> { <span class="ident">storage_chain_mode</span>: <span class="ident">bool</span>, <span class="ident">skip_proofs</span>: <span class="ident">bool</span> },
-	<span class="comment">// Warp sync mode.</span>
-	<span class="ident">Warp</span>,
+<span class="doccomment">/// Operation mode.
+</span><span class="attribute">#[derive(Debug, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>SyncMode {
+	<span class="comment">// Sync headers only
+	</span>Light,
+	<span class="comment">// Sync headers and block bodies
+	</span>Full,
+	<span class="comment">// Sync headers and the last finalied state
+	</span>LightState { storage_chain_mode: bool, skip_proofs: bool },
+	<span class="comment">// Warp sync mode.
+	</span>Warp,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Metrics</span> {
-	<span class="kw">pub</span> <span class="ident">queued_blocks</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">fork_targets</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">justifications</span>: <span class="ident">metrics::Metrics</span>,
+<span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub struct </span>Metrics {
+	<span class="kw">pub </span>queued_blocks: u32,
+	<span class="kw">pub </span>fork_targets: u32,
+	<span class="kw">pub </span>justifications: metrics::Metrics,
 }
 
-<span class="doccomment">/// Wrapper for implementation-specific state request.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// NOTE: Implementation must be able to encode and decode it for network purposes.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OpaqueStateRequest</span>(<span class="kw">pub</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Wrapper for implementation-specific state request.
+///
+/// NOTE: Implementation must be able to encode and decode it for network purposes.
+</span><span class="kw">pub struct </span>OpaqueStateRequest(<span class="kw">pub </span>Box&lt;<span class="kw">dyn </span>Any + Send&gt;);
 
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">OpaqueStateRequest</span> {
-	<span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-		<span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;OpaqueStateRequest&quot;</span>).<span class="ident">finish</span>()
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>OpaqueStateRequest {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+		f.debug_struct(<span class="string">&quot;OpaqueStateRequest&quot;</span>).finish()
 	}
 }
 
-<span class="doccomment">/// Wrapper for implementation-specific state response.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// NOTE: Implementation must be able to encode and decode it for network purposes.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OpaqueStateResponse</span>(<span class="kw">pub</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Wrapper for implementation-specific state response.
+///
+/// NOTE: Implementation must be able to encode and decode it for network purposes.
+</span><span class="kw">pub struct </span>OpaqueStateResponse(<span class="kw">pub </span>Box&lt;<span class="kw">dyn </span>Any + Send&gt;);
 
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">OpaqueStateResponse</span> {
-	<span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-		<span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;OpaqueStateResponse&quot;</span>).<span class="ident">finish</span>()
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>OpaqueStateResponse {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+		f.debug_struct(<span class="string">&quot;OpaqueStateResponse&quot;</span>).finish()
 	}
 }
 
-<span class="doccomment">/// Wrapper for implementation-specific block request.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// NOTE: Implementation must be able to encode and decode it for network purposes.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OpaqueBlockRequest</span>(<span class="kw">pub</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Wrapper for implementation-specific block request.
+///
+/// NOTE: Implementation must be able to encode and decode it for network purposes.
+</span><span class="kw">pub struct </span>OpaqueBlockRequest(<span class="kw">pub </span>Box&lt;<span class="kw">dyn </span>Any + Send&gt;);
 
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">OpaqueBlockRequest</span> {
-	<span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-		<span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;OpaqueBlockRequest&quot;</span>).<span class="ident">finish</span>()
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>OpaqueBlockRequest {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+		f.debug_struct(<span class="string">&quot;OpaqueBlockRequest&quot;</span>).finish()
 	}
 }
 
-<span class="doccomment">/// Wrapper for implementation-specific block response.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// NOTE: Implementation must be able to encode and decode it for network purposes.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OpaqueBlockResponse</span>(<span class="kw">pub</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Wrapper for implementation-specific block response.
+///
+/// NOTE: Implementation must be able to encode and decode it for network purposes.
+</span><span class="kw">pub struct </span>OpaqueBlockResponse(<span class="kw">pub </span>Box&lt;<span class="kw">dyn </span>Any + Send&gt;);
 
-<span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">OpaqueBlockResponse</span> {
-	<span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-		<span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;OpaqueBlockResponse&quot;</span>).<span class="ident">finish</span>()
+<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>OpaqueBlockResponse {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+		f.debug_struct(<span class="string">&quot;OpaqueBlockResponse&quot;</span>).finish()
 	}
 }
 
-<span class="doccomment">/// Something that represents the syncing strategy to download past and future blocks of the chain.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ChainSync</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span>: <span class="ident">Send</span> {
-	<span class="doccomment">/// Returns the state of the sync of the given peer.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns `None` if the peer is unknown.</span>
-	<span class="kw">fn</span> <span class="ident">peer_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">PeerId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PeerInfo</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Something that represents the syncing strategy to download past and future blocks of the chain.
+</span><span class="kw">pub trait </span>ChainSync&lt;Block: BlockT&gt;: Send {
+	<span class="doccomment">/// Returns the state of the sync of the given peer.
+	///
+	/// Returns `None` if the peer is unknown.
+	</span><span class="kw">fn </span>peer_info(<span class="kw-2">&amp;</span><span class="self">self</span>, who: <span class="kw-2">&amp;</span>PeerId) -&gt; <span class="prelude-ty">Option</span>&lt;PeerInfo&lt;Block&gt;&gt;;
 
-	<span class="doccomment">/// Returns the current sync status.</span>
-	<span class="kw">fn</span> <span class="ident">status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">SyncStatus</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Returns the current sync status.
+	</span><span class="kw">fn </span>status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyncStatus&lt;Block&gt;;
 
-	<span class="doccomment">/// Number of active forks requests. This includes</span>
-	<span class="doccomment">/// requests that are pending or could be issued right away.</span>
-	<span class="kw">fn</span> <span class="ident">num_sync_requests</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span>;
+	<span class="doccomment">/// Number of active forks requests. This includes
+	/// requests that are pending or could be issued right away.
+	</span><span class="kw">fn </span>num_sync_requests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
 
-	<span class="doccomment">/// Number of downloaded blocks.</span>
-	<span class="kw">fn</span> <span class="ident">num_downloaded_blocks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span>;
+	<span class="doccomment">/// Number of downloaded blocks.
+	</span><span class="kw">fn </span>num_downloaded_blocks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
 
-	<span class="doccomment">/// Returns the current number of peers stored within this state machine.</span>
-	<span class="kw">fn</span> <span class="ident">num_peers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span>;
+	<span class="doccomment">/// Returns the current number of peers stored within this state machine.
+	</span><span class="kw">fn </span>num_peers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
 
-	<span class="doccomment">/// Handle a new connected peer.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Call this method whenever we connect to a new peer.</span>
-	<span class="kw">fn</span> <span class="ident">new_peer</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">who</span>: <span class="ident">PeerId</span>,
-		<span class="ident">best_hash</span>: <span class="ident">Block::Hash</span>,
-		<span class="ident">best_number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BlockRequest</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">BadPeer</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Handle a new connected peer.
+	///
+	/// Call this method whenever we connect to a new peer.
+	</span><span class="kw">fn </span>new_peer(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		who: PeerId,
+		best_hash: Block::Hash,
+		best_number: NumberFor&lt;Block&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;BlockRequest&lt;Block&gt;&gt;, BadPeer&gt;;
 
-	<span class="doccomment">/// Signal that a new best block has been imported.</span>
-	<span class="kw">fn</span> <span class="ident">update_chain_info</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">best_hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>, <span class="ident">best_number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>);
+	<span class="doccomment">/// Signal that a new best block has been imported.
+	</span><span class="kw">fn </span>update_chain_info(<span class="kw-2">&amp;mut </span><span class="self">self</span>, best_hash: <span class="kw-2">&amp;</span>Block::Hash, best_number: NumberFor&lt;Block&gt;);
 
-	<span class="doccomment">/// Schedule a justification request for the given block.</span>
-	<span class="kw">fn</span> <span class="ident">request_justification</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>, <span class="ident">number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>);
+	<span class="doccomment">/// Schedule a justification request for the given block.
+	</span><span class="kw">fn </span>request_justification(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash, number: NumberFor&lt;Block&gt;);
 
-	<span class="doccomment">/// Clear all pending justification requests.</span>
-	<span class="kw">fn</span> <span class="ident">clear_justification_requests</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>);
+	<span class="doccomment">/// Clear all pending justification requests.
+	</span><span class="kw">fn </span>clear_justification_requests(<span class="kw-2">&amp;mut </span><span class="self">self</span>);
 
-	<span class="doccomment">/// Request syncing for the given block from given set of peers.</span>
-	<span class="kw">fn</span> <span class="ident">set_sync_fork_request</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">peers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>,
-		<span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>,
-		<span class="ident">number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Request syncing for the given block from given set of peers.
+	</span><span class="kw">fn </span>set_sync_fork_request(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		peers: Vec&lt;PeerId&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		number: NumberFor&lt;Block&gt;,
 	);
 
-	<span class="doccomment">/// Get an iterator over all scheduled justification requests.</span>
-	<span class="kw">fn</span> <span class="ident">justification_requests</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-		<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>,
-	) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">PeerId</span>, <span class="ident">BlockRequest</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Get an iterator over all scheduled justification requests.
+	</span><span class="kw">fn </span>justification_requests&lt;<span class="lifetime">&#39;a</span>&gt;(
+		<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>,
+	) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = (PeerId, BlockRequest&lt;Block&gt;)&gt; + <span class="lifetime">&#39;a</span>&gt;;
 
-	<span class="doccomment">/// Get an iterator over all block requests of all peers.</span>
-	<span class="kw">fn</span> <span class="ident">block_requests</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-		<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>,
-	) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">PeerId</span>, <span class="ident">BlockRequest</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Get an iterator over all block requests of all peers.
+	</span><span class="kw">fn </span>block_requests&lt;<span class="lifetime">&#39;a</span>&gt;(
+		<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span><span class="self">self</span>,
+	) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = (PeerId, BlockRequest&lt;Block&gt;)&gt; + <span class="lifetime">&#39;a</span>&gt;;
 
-	<span class="doccomment">/// Get a state request, if any.</span>
-	<span class="kw">fn</span> <span class="ident">state_request</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">PeerId</span>, <span class="ident">OpaqueStateRequest</span>)<span class="op">&gt;</span>;
+	<span class="doccomment">/// Get a state request, if any.
+	</span><span class="kw">fn </span>state_request(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(PeerId, OpaqueStateRequest)&gt;;
 
-	<span class="doccomment">/// Get a warp sync request, if any.</span>
-	<span class="kw">fn</span> <span class="ident">warp_sync_request</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">PeerId</span>, <span class="ident">WarpProofRequest</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>)<span class="op">&gt;</span>;
+	<span class="doccomment">/// Get a warp sync request, if any.
+	</span><span class="kw">fn </span>warp_sync_request(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;(PeerId, WarpProofRequest&lt;Block&gt;)&gt;;
 
-	<span class="doccomment">/// Handle a response from the remote to a block request that we made.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// `request` must be the original request that triggered `response`.</span>
-	<span class="doccomment">/// or `None` if data comes from the block announcement.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If this corresponds to a valid block, this outputs the block that</span>
-	<span class="doccomment">/// must be imported in the import queue.</span>
-	<span class="kw">fn</span> <span class="ident">on_block_data</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">PeerId</span>,
-		<span class="ident">request</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BlockRequest</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-		<span class="ident">response</span>: <span class="ident">BlockResponse</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OnBlockData</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">BadPeer</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Handle a response from the remote to a block request that we made.
+	///
+	/// `request` must be the original request that triggered `response`.
+	/// or `None` if data comes from the block announcement.
+	///
+	/// If this corresponds to a valid block, this outputs the block that
+	/// must be imported in the import queue.
+	</span><span class="kw">fn </span>on_block_data(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		who: <span class="kw-2">&amp;</span>PeerId,
+		request: <span class="prelude-ty">Option</span>&lt;BlockRequest&lt;Block&gt;&gt;,
+		response: BlockResponse&lt;Block&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;OnBlockData&lt;Block&gt;, BadPeer&gt;;
 
-	<span class="doccomment">/// Handle a response from the remote to a state request that we made.</span>
-	<span class="kw">fn</span> <span class="ident">on_state_data</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">PeerId</span>,
-		<span class="ident">response</span>: <span class="ident">OpaqueStateResponse</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OnStateData</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">BadPeer</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Handle a response from the remote to a state request that we made.
+	</span><span class="kw">fn </span>on_state_data(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		who: <span class="kw-2">&amp;</span>PeerId,
+		response: OpaqueStateResponse,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;OnStateData&lt;Block&gt;, BadPeer&gt;;
 
-	<span class="doccomment">/// Handle a response from the remote to a warp proof request that we made.</span>
-	<span class="kw">fn</span> <span class="ident">on_warp_sync_data</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">PeerId</span>, <span class="ident">response</span>: <span class="ident">EncodedProof</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">BadPeer</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Handle a response from the remote to a warp proof request that we made.
+	</span><span class="kw">fn </span>on_warp_sync_data(<span class="kw-2">&amp;mut </span><span class="self">self</span>, who: <span class="kw-2">&amp;</span>PeerId, response: EncodedProof) -&gt; <span class="prelude-ty">Result</span>&lt;(), BadPeer&gt;;
 
-	<span class="doccomment">/// Handle a response from the remote to a justification request that we made.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// `request` must be the original request that triggered `response`.</span>
-	<span class="kw">fn</span> <span class="ident">on_block_justification</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">who</span>: <span class="ident">PeerId</span>,
-		<span class="ident">response</span>: <span class="ident">BlockResponse</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OnBlockJustification</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">BadPeer</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Handle a response from the remote to a justification request that we made.
+	///
+	/// `request` must be the original request that triggered `response`.
+	</span><span class="kw">fn </span>on_block_justification(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		who: PeerId,
+		response: BlockResponse&lt;Block&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;OnBlockJustification&lt;Block&gt;, BadPeer&gt;;
 
-	<span class="doccomment">/// A batch of blocks have been processed, with or without errors.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Call this when a batch of blocks have been processed by the import</span>
-	<span class="doccomment">/// queue, with or without errors.</span>
-	<span class="kw">fn</span> <span class="ident">on_blocks_processed</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">imported</span>: <span class="ident">usize</span>,
-		<span class="ident">count</span>: <span class="ident">usize</span>,
-		<span class="ident">results</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BlockImportStatus</span><span class="op">&lt;</span><span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">BlockImportError</span><span class="op">&gt;</span>, <span class="ident">Block::Hash</span>)<span class="op">&gt;</span>,
-	) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">PeerId</span>, <span class="ident">BlockRequest</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>), <span class="ident">BadPeer</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// A batch of blocks have been processed, with or without errors.
+	///
+	/// Call this when a batch of blocks have been processed by the import
+	/// queue, with or without errors.
+	</span><span class="kw">fn </span>on_blocks_processed(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		imported: usize,
+		count: usize,
+		results: Vec&lt;(<span class="prelude-ty">Result</span>&lt;BlockImportStatus&lt;NumberFor&lt;Block&gt;&gt;, BlockImportError&gt;, Block::Hash)&gt;,
+	) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = <span class="prelude-ty">Result</span>&lt;(PeerId, BlockRequest&lt;Block&gt;), BadPeer&gt;&gt;&gt;;
 
-	<span class="doccomment">/// Call this when a justification has been processed by the import queue,</span>
-	<span class="doccomment">/// with or without errors.</span>
-	<span class="kw">fn</span> <span class="ident">on_justification_import</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">hash</span>: <span class="ident">Block::Hash</span>,
-		<span class="ident">number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">success</span>: <span class="ident">bool</span>,
+	<span class="doccomment">/// Call this when a justification has been processed by the import queue,
+	/// with or without errors.
+	</span><span class="kw">fn </span>on_justification_import(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		hash: Block::Hash,
+		number: NumberFor&lt;Block&gt;,
+		success: bool,
 	);
 
-	<span class="doccomment">/// Notify about finalization of the given block.</span>
-	<span class="kw">fn</span> <span class="ident">on_block_finalized</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">hash</span>: <span class="kw-2">&amp;</span><span class="ident">Block::Hash</span>, <span class="ident">number</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>);
+	<span class="doccomment">/// Notify about finalization of the given block.
+	</span><span class="kw">fn </span>on_block_finalized(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash, number: NumberFor&lt;Block&gt;);
 
-	<span class="doccomment">/// Push a block announce validation.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// It is required that [`ChainSync::poll_block_announce_validation`] is called</span>
-	<span class="doccomment">/// to check for finished block announce validations.</span>
-	<span class="kw">fn</span> <span class="ident">push_block_announce_validation</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">who</span>: <span class="ident">PeerId</span>,
-		<span class="ident">hash</span>: <span class="ident">Block::Hash</span>,
-		<span class="ident">announce</span>: <span class="ident">BlockAnnounce</span><span class="op">&lt;</span><span class="ident">Block::Header</span><span class="op">&gt;</span>,
-		<span class="ident">is_best</span>: <span class="ident">bool</span>,
+	<span class="doccomment">/// Push a block announce validation.
+	///
+	/// It is required that [`ChainSync::poll_block_announce_validation`] is called
+	/// to check for finished block announce validations.
+	</span><span class="kw">fn </span>push_block_announce_validation(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		who: PeerId,
+		hash: Block::Hash,
+		announce: BlockAnnounce&lt;Block::Header&gt;,
+		is_best: bool,
 	);
 
-	<span class="doccomment">/// Poll block announce validation.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Block announce validations can be pushed by using</span>
-	<span class="doccomment">/// [`ChainSync::push_block_announce_validation`].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This should be polled until it returns [`Poll::Pending`].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If [`PollBlockAnnounceValidation::ImportHeader`] is returned, then the caller MUST try to</span>
-	<span class="doccomment">/// import passed header (call `on_block_data`). The network request isn&#39;t sent in this case.</span>
-	<span class="kw">fn</span> <span class="ident">poll_block_announce_validation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::task::Context</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-	) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">PollBlockAnnounceValidation</span><span class="op">&lt;</span><span class="ident">Block::Header</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Poll block announce validation.
+	///
+	/// Block announce validations can be pushed by using
+	/// [`ChainSync::push_block_announce_validation`].
+	///
+	/// This should be polled until it returns [`Poll::Pending`].
+	///
+	/// If [`PollBlockAnnounceValidation::ImportHeader`] is returned, then the caller MUST try to
+	/// import passed header (call `on_block_data`). The network request isn&#39;t sent in this case.
+	</span><span class="kw">fn </span>poll_block_announce_validation&lt;<span class="lifetime">&#39;a</span>&gt;(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		cx: <span class="kw-2">&amp;mut </span>std::task::Context&lt;<span class="lifetime">&#39;a</span>&gt;,
+	) -&gt; Poll&lt;PollBlockAnnounceValidation&lt;Block::Header&gt;&gt;;
 
-	<span class="doccomment">/// Call when a peer has disconnected.</span>
-	<span class="doccomment">/// Canceled obsolete block request may result in some blocks being ready for</span>
-	<span class="doccomment">/// import, so this functions checks for such blocks and returns them.</span>
-	<span class="kw">fn</span> <span class="ident">peer_disconnected</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="ident">PeerId</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">OnBlockData</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Call when a peer has disconnected.
+	/// Canceled obsolete block request may result in some blocks being ready for
+	/// import, so this functions checks for such blocks and returns them.
+	</span><span class="kw">fn </span>peer_disconnected(<span class="kw-2">&amp;mut </span><span class="self">self</span>, who: <span class="kw-2">&amp;</span>PeerId) -&gt; <span class="prelude-ty">Option</span>&lt;OnBlockData&lt;Block&gt;&gt;;
 
-	<span class="doccomment">/// Return some key metrics.</span>
-	<span class="kw">fn</span> <span class="ident">metrics</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Metrics</span>;
+	<span class="doccomment">/// Return some key metrics.
+	</span><span class="kw">fn </span>metrics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Metrics;
 
-	<span class="doccomment">/// Create implementation-specific block request.</span>
-	<span class="kw">fn</span> <span class="ident">create_opaque_block_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">request</span>: <span class="kw-2">&amp;</span><span class="ident">BlockRequest</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>) -&gt; <span class="ident">OpaqueBlockRequest</span>;
+	<span class="doccomment">/// Create implementation-specific block request.
+	</span><span class="kw">fn </span>create_opaque_block_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request: <span class="kw-2">&amp;</span>BlockRequest&lt;Block&gt;) -&gt; OpaqueBlockRequest;
 
-	<span class="doccomment">/// Encode implementation-specific block request.</span>
-	<span class="kw">fn</span> <span class="ident">encode_block_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">request</span>: <span class="kw-2">&amp;</span><span class="ident">OpaqueBlockRequest</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Encode implementation-specific block request.
+	</span><span class="kw">fn </span>encode_block_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request: <span class="kw-2">&amp;</span>OpaqueBlockRequest) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, String&gt;;
 
-	<span class="doccomment">/// Decode implementation-specific block response.</span>
-	<span class="kw">fn</span> <span class="ident">decode_block_response</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OpaqueBlockResponse</span>, <span class="ident">String</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Decode implementation-specific block response.
+	</span><span class="kw">fn </span>decode_block_response(<span class="kw-2">&amp;</span><span class="self">self</span>, response: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;OpaqueBlockResponse, String&gt;;
 
-	<span class="doccomment">/// Access blocks from implementation-specific block response.</span>
-	<span class="kw">fn</span> <span class="ident">block_response_into_blocks</span>(
+	<span class="doccomment">/// Access blocks from implementation-specific block response.
+	</span><span class="kw">fn </span>block_response_into_blocks(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">request</span>: <span class="kw-2">&amp;</span><span class="ident">BlockRequest</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-		<span class="ident">response</span>: <span class="ident">OpaqueBlockResponse</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BlockData</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span>;
+		request: <span class="kw-2">&amp;</span>BlockRequest&lt;Block&gt;,
+		response: OpaqueBlockResponse,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;BlockData&lt;Block&gt;&gt;, String&gt;;
 
-	<span class="doccomment">/// Encode implementation-specific state request.</span>
-	<span class="kw">fn</span> <span class="ident">encode_state_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">request</span>: <span class="kw-2">&amp;</span><span class="ident">OpaqueStateRequest</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Encode implementation-specific state request.
+	</span><span class="kw">fn </span>encode_state_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request: <span class="kw-2">&amp;</span>OpaqueStateRequest) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, String&gt;;
 
-	<span class="doccomment">/// Decode implementation-specific state response.</span>
-	<span class="kw">fn</span> <span class="ident">decode_state_response</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OpaqueStateResponse</span>, <span class="ident">String</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Decode implementation-specific state response.
+	</span><span class="kw">fn </span>decode_state_response(<span class="kw-2">&amp;</span><span class="self">self</span>, response: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;OpaqueStateResponse, String&gt;;
 
-	<span class="doccomment">/// Advance the state of `ChainSync`</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Internally calls [`ChainSync::poll_block_announce_validation()`] and</span>
-	<span class="doccomment">/// this function should be polled until it returns [`Poll::Pending`] to</span>
-	<span class="doccomment">/// consume all pending events.</span>
-	<span class="kw">fn</span> <span class="ident">poll</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::task::Context</span>,
-	) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">PollBlockAnnounceValidation</span><span class="op">&lt;</span><span class="ident">Block::Header</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Advance the state of `ChainSync`
+	///
+	/// Internally calls [`ChainSync::poll_block_announce_validation()`] and
+	/// this function should be polled until it returns [`Poll::Pending`] to
+	/// consume all pending events.
+	</span><span class="kw">fn </span>poll(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		cx: <span class="kw-2">&amp;mut </span>std::task::Context,
+	) -&gt; Poll&lt;PollBlockAnnounceValidation&lt;Block::Header&gt;&gt;;
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_network_common" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_network_common" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

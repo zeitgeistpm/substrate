@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `bin/node/bench/src/tempdb.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tempdb.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../node_bench/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../node_bench/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../node_bench/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `bin/node/bench/src/tempdb.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>tempdb.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../node_bench/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../node_bench/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -128,130 +122,129 @@
 <span id="122">122</span>
 <span id="123">123</span>
 <span id="124">124</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="kw">use</span> <span class="ident">kvdb</span>::{<span class="ident">DBKeyValue</span>, <span class="ident">DBTransaction</span>, <span class="ident">KeyValueDB</span>};
-<span class="kw">use</span> <span class="ident">kvdb_rocksdb</span>::{<span class="ident">Database</span>, <span class="ident">DatabaseConfig</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">io</span>, <span class="ident">path::PathBuf</span>, <span class="ident">sync::Arc</span>};
+</span><span class="kw">use </span>kvdb::{DBKeyValue, DBTransaction, KeyValueDB};
+<span class="kw">use </span>kvdb_rocksdb::{Database, DatabaseConfig};
+<span class="kw">use </span>std::{io, path::PathBuf, sync::Arc};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DatabaseType</span> {
-	<span class="ident">RocksDb</span>,
-	<span class="ident">ParityDb</span>,
+<span class="attribute">#[derive(Clone, Copy, Debug)]
+</span><span class="kw">pub enum </span>DatabaseType {
+	RocksDb,
+	ParityDb,
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TempDatabase</span>(<span class="ident">tempfile::TempDir</span>);
+<span class="kw">pub struct </span>TempDatabase(tempfile::TempDir);
 
-<span class="kw">struct</span> <span class="ident">ParityDbWrapper</span>(<span class="ident">parity_db::Db</span>);
-<span class="macro">parity_util_mem::malloc_size_of_is_0!</span>(<span class="ident">ParityDbWrapper</span>);
+<span class="kw">struct </span>ParityDbWrapper(parity_db::Db);
+<span class="macro">parity_util_mem::malloc_size_of_is_0!</span>(ParityDbWrapper);
 
-<span class="kw">impl</span> <span class="ident">KeyValueDB</span> <span class="kw">for</span> <span class="ident">ParityDbWrapper</span> {
-	<span class="doccomment">/// Get a value by key.</span>
-	<span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">col</span>: <span class="ident">u32</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>(<span class="ident">col</span> <span class="kw">as</span> <span class="ident">u8</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>[<span class="ident">key</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">32</span>..]).<span class="ident">expect</span>(<span class="string">&quot;db error&quot;</span>))
+<span class="kw">impl </span>KeyValueDB <span class="kw">for </span>ParityDbWrapper {
+	<span class="doccomment">/// Get a value by key.
+	</span><span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, col: u32, key: <span class="kw-2">&amp;</span>[u8]) -&gt; io::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt; {
+		<span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="number">0</span>.get(col <span class="kw">as </span>u8, <span class="kw-2">&amp;</span>key[key.len() - <span class="number">32</span>..]).expect(<span class="string">&quot;db error&quot;</span>))
 	}
 
-	<span class="doccomment">/// Get a value by partial key. Only works for flushed data.</span>
-	<span class="kw">fn</span> <span class="ident">get_by_prefix</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_col</span>: <span class="ident">u32</span>, <span class="ident">_prefix</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Get a value by partial key. Only works for flushed data.
+	</span><span class="kw">fn </span>get_by_prefix(<span class="kw-2">&amp;</span><span class="self">self</span>, _col: u32, _prefix: <span class="kw-2">&amp;</span>[u8]) -&gt; io::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt; {
 		<span class="macro">unimplemented!</span>()
 	}
 
-	<span class="doccomment">/// Write a transaction of changes to the buffer.</span>
-	<span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">transaction</span>: <span class="ident">DBTransaction</span>) -&gt; <span class="ident">io::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="number">0</span>
-			.<span class="ident">commit</span>(<span class="ident">transaction</span>.<span class="ident">ops</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">op</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">op</span> {
-				<span class="ident">kvdb::DBOp::Insert</span> { <span class="ident">col</span>, <span class="ident">key</span>, <span class="ident">value</span> } =&gt;
-					(<span class="kw-2">*</span><span class="ident">col</span> <span class="kw">as</span> <span class="ident">u8</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>[<span class="ident">key</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">32</span>..], <span class="prelude-val">Some</span>(<span class="ident">value</span>.<span class="ident">to_vec</span>())),
-				<span class="ident">kvdb::DBOp::Delete</span> { <span class="ident">col</span>, <span class="ident">key</span> } =&gt; (<span class="kw-2">*</span><span class="ident">col</span> <span class="kw">as</span> <span class="ident">u8</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>[<span class="ident">key</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">32</span>..], <span class="prelude-val">None</span>),
-				<span class="ident">kvdb::DBOp::DeletePrefix</span> { <span class="ident">col</span>: <span class="kw">_</span>, <span class="ident">prefix</span>: <span class="kw">_</span> } =&gt; <span class="macro">unimplemented!</span>(),
+	<span class="doccomment">/// Write a transaction of changes to the buffer.
+	</span><span class="kw">fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, transaction: DBTransaction) -&gt; io::Result&lt;()&gt; {
+		<span class="self">self</span>.<span class="number">0
+			</span>.commit(transaction.ops.iter().map(|op| <span class="kw">match </span>op {
+				kvdb::DBOp::Insert { col, key, value } =&gt;
+					(<span class="kw-2">*</span>col <span class="kw">as </span>u8, <span class="kw-2">&amp;</span>key[key.len() - <span class="number">32</span>..], <span class="prelude-val">Some</span>(value.to_vec())),
+				kvdb::DBOp::Delete { col, key } =&gt; (<span class="kw-2">*</span>col <span class="kw">as </span>u8, <span class="kw-2">&amp;</span>key[key.len() - <span class="number">32</span>..], <span class="prelude-val">None</span>),
+				kvdb::DBOp::DeletePrefix { col: <span class="kw">_</span>, prefix: <span class="kw">_ </span>} =&gt; <span class="macro">unimplemented!</span>(),
 			}))
-			.<span class="ident">expect</span>(<span class="string">&quot;db error&quot;</span>);
+			.expect(<span class="string">&quot;db error&quot;</span>);
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Iterate over flushed data for a given column.</span>
-	<span class="kw">fn</span> <span class="ident">iter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">_col</span>: <span class="ident">u32</span>) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">DBKeyValue</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Iterate over flushed data for a given column.
+	</span><span class="kw">fn </span>iter&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, _col: u32) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = io::Result&lt;DBKeyValue&gt;&gt; + <span class="lifetime">&#39;a</span>&gt; {
 		<span class="macro">unimplemented!</span>()
 	}
 
-	<span class="doccomment">/// Iterate over flushed data for a given column, starting from a given prefix.</span>
-	<span class="kw">fn</span> <span class="ident">iter_with_prefix</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-		<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-		<span class="ident">_col</span>: <span class="ident">u32</span>,
-		<span class="ident">_prefix</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
-	) -&gt; <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">io::Result</span><span class="op">&lt;</span><span class="ident">DBKeyValue</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Iterate over flushed data for a given column, starting from a given prefix.
+	</span><span class="kw">fn </span>iter_with_prefix&lt;<span class="lifetime">&#39;a</span>&gt;(
+		<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>,
+		_col: u32,
+		_prefix: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8],
+	) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = io::Result&lt;DBKeyValue&gt;&gt; + <span class="lifetime">&#39;a</span>&gt; {
 		<span class="macro">unimplemented!</span>()
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">TempDatabase</span> {
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="ident">tempfile::tempdir</span>().<span class="ident">expect</span>(<span class="string">&quot;temp dir creation failed&quot;</span>);
+<span class="kw">impl </span>TempDatabase {
+	<span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>dir = tempfile::tempdir().expect(<span class="string">&quot;temp dir creation failed&quot;</span>);
 		<span class="macro">log::trace!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;bench-logistics&quot;</span>,
+			target: <span class="string">&quot;bench-logistics&quot;</span>,
 			<span class="string">&quot;Created temp db at {}&quot;</span>,
-			<span class="ident">dir</span>.<span class="ident">path</span>().<span class="ident">to_string_lossy</span>(),
+			dir.path().to_string_lossy(),
 		);
 
-		<span class="ident">TempDatabase</span>(<span class="ident">dir</span>)
+		TempDatabase(dir)
 	}
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">db_type</span>: <span class="ident">DatabaseType</span>) -&gt; <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">KeyValueDB</span><span class="op">&gt;</span> {
-		<span class="kw">match</span> <span class="ident">db_type</span> {
-			<span class="ident">DatabaseType::RocksDb</span> =&gt; {
-				<span class="kw">let</span> <span class="ident">db_cfg</span> <span class="op">=</span> <span class="ident">DatabaseConfig::with_columns</span>(<span class="number">1</span>);
-				<span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Database::open</span>(<span class="kw-2">&amp;</span><span class="ident">db_cfg</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">path</span>()).<span class="ident">expect</span>(<span class="string">&quot;Database backend error&quot;</span>);
-				<span class="ident">Arc::new</span>(<span class="ident">db</span>)
+	<span class="kw">pub fn </span>open(<span class="kw-2">&amp;mut </span><span class="self">self</span>, db_type: DatabaseType) -&gt; Arc&lt;<span class="kw">dyn </span>KeyValueDB&gt; {
+		<span class="kw">match </span>db_type {
+			DatabaseType::RocksDb =&gt; {
+				<span class="kw">let </span>db_cfg = DatabaseConfig::with_columns(<span class="number">1</span>);
+				<span class="kw">let </span>db = Database::open(<span class="kw-2">&amp;</span>db_cfg, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.path()).expect(<span class="string">&quot;Database backend error&quot;</span>);
+				Arc::new(db)
 			},
-			<span class="ident">DatabaseType::ParityDb</span> =&gt; <span class="ident">Arc::new</span>(<span class="ident">ParityDbWrapper</span>({
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">parity_db::Options::with_columns</span>(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">path</span>(), <span class="number">1</span>);
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">column_options</span> <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">options</span>.<span class="ident">columns</span>[<span class="number">0</span>];
-				<span class="ident">column_options</span>.<span class="ident">ref_counted</span> <span class="op">=</span> <span class="bool-val">true</span>;
-				<span class="ident">column_options</span>.<span class="ident">preimage</span> <span class="op">=</span> <span class="bool-val">true</span>;
-				<span class="ident">column_options</span>.<span class="ident">uniform</span> <span class="op">=</span> <span class="bool-val">true</span>;
-				<span class="ident">parity_db::Db::open_or_create</span>(<span class="kw-2">&amp;</span><span class="ident">options</span>).<span class="ident">expect</span>(<span class="string">&quot;db open error&quot;</span>)
+			DatabaseType::ParityDb =&gt; Arc::new(ParityDbWrapper({
+				<span class="kw">let </span><span class="kw-2">mut </span>options = parity_db::Options::with_columns(<span class="self">self</span>.<span class="number">0</span>.path(), <span class="number">1</span>);
+				<span class="kw">let </span><span class="kw-2">mut </span>column_options = <span class="kw-2">&amp;mut </span>options.columns[<span class="number">0</span>];
+				column_options.ref_counted = <span class="bool-val">true</span>;
+				column_options.preimage = <span class="bool-val">true</span>;
+				column_options.uniform = <span class="bool-val">true</span>;
+				parity_db::Db::open_or_create(<span class="kw-2">&amp;</span>options).expect(<span class="string">&quot;db open error&quot;</span>)
 			})),
 		}
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">TempDatabase</span> {
-	<span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">new_dir</span> <span class="op">=</span> <span class="ident">tempfile::tempdir</span>().<span class="ident">expect</span>(<span class="string">&quot;temp dir creation failed&quot;</span>);
-		<span class="kw">let</span> <span class="ident">self_dir</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">path</span>();
+<span class="kw">impl </span>Clone <span class="kw">for </span>TempDatabase {
+	<span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>new_dir = tempfile::tempdir().expect(<span class="string">&quot;temp dir creation failed&quot;</span>);
+		<span class="kw">let </span>self_dir = <span class="self">self</span>.<span class="number">0</span>.path();
 
 		<span class="macro">log::trace!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;bench-logistics&quot;</span>,
+			target: <span class="string">&quot;bench-logistics&quot;</span>,
 			<span class="string">&quot;Cloning db ({}) to {}&quot;</span>,
-			<span class="ident">self_dir</span>.<span class="ident">to_string_lossy</span>(),
-			<span class="ident">new_dir</span>.<span class="ident">path</span>().<span class="ident">to_string_lossy</span>(),
+			self_dir.to_string_lossy(),
+			new_dir.path().to_string_lossy(),
 		);
-		<span class="kw">let</span> <span class="ident">self_db_files</span> <span class="op">=</span> <span class="ident">std::fs::read_dir</span>(<span class="ident">self_dir</span>)
-			.<span class="ident">expect</span>(<span class="string">&quot;failed to list file in seed dir&quot;</span>)
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">f_result</span><span class="op">|</span> <span class="ident">f_result</span>.<span class="ident">expect</span>(<span class="string">&quot;failed to read file in seed db&quot;</span>).<span class="ident">path</span>())
-			.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-		<span class="ident">fs_extra::copy_items</span>(<span class="kw-2">&amp;</span><span class="ident">self_db_files</span>, <span class="ident">new_dir</span>.<span class="ident">path</span>(), <span class="kw-2">&amp;</span><span class="ident">fs_extra::dir::CopyOptions::new</span>())
-			.<span class="ident">expect</span>(<span class="string">&quot;Copy of seed database is ok&quot;</span>);
+		<span class="kw">let </span>self_db_files = std::fs::read_dir(self_dir)
+			.expect(<span class="string">&quot;failed to list file in seed dir&quot;</span>)
+			.map(|f_result| f_result.expect(<span class="string">&quot;failed to read file in seed db&quot;</span>).path())
+			.collect::&lt;Vec&lt;PathBuf&gt;&gt;();
+		fs_extra::copy_items(<span class="kw-2">&amp;</span>self_db_files, new_dir.path(), <span class="kw-2">&amp;</span>fs_extra::dir::CopyOptions::new())
+			.expect(<span class="string">&quot;Copy of seed database is ok&quot;</span>);
 
-		<span class="ident">TempDatabase</span>(<span class="ident">new_dir</span>)
+		TempDatabase(new_dir)
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="node_bench" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="node_bench" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

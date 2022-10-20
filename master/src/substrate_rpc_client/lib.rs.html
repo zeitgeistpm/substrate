@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/rpc/client/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../substrate_rpc_client/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../substrate_rpc_client/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../substrate_rpc_client/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/rpc/client/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../substrate_rpc_client/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../substrate_rpc_client/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -269,271 +263,270 @@
 <span id="263">263</span>
 <span id="264">264</span>
 <span id="265">265</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! # Shared JSON-RPC client related code and abstractions.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! It exposes a `WebSocket JSON-RPC` client that implements the RPC interface in [`sc-rpc-api`]</span>
-<span class="doccomment">//! along with some abstractions.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Usage</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```no_run</span>
-<span class="doccomment">//! # use substrate_rpc_client::{ws_client, StateApi};</span>
-<span class="doccomment">//! # use sp_core::{H256, storage::StorageKey};</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! #[tokio::main]</span>
-<span class="doccomment">//! async fn main() {</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     let client = ws_client(&quot;ws://127.0.0.1:9944&quot;).await.unwrap();</span>
-<span class="doccomment">//!     client.storage(StorageKey(vec![]), Some(H256::zero())).await.unwrap();</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//!     // if all type params are not known you need to provide type params</span>
-<span class="doccomment">//!     StateApi::&lt;H256&gt;::storage(&amp;client, StorageKey(vec![]), None).await.unwrap();</span>
-<span class="doccomment">//! }</span>
-<span class="doccomment">//! ```</span>
+</span><span class="doccomment">//! # Shared JSON-RPC client related code and abstractions.
+//!
+//! It exposes a `WebSocket JSON-RPC` client that implements the RPC interface in [`sc-rpc-api`]
+//! along with some abstractions.
+//!
+//! ## Usage
+//!
+//! ```no_run
+//! # use substrate_rpc_client::{ws_client, StateApi};
+//! # use sp_core::{H256, storage::StorageKey};
+//!
+//! #[tokio::main]
+//! async fn main() {
+//!
+//!     let client = ws_client(&quot;ws://127.0.0.1:9944&quot;).await.unwrap();
+//!     client.storage(StorageKey(vec![]), Some(H256::zero())).await.unwrap();
+//!
+//!     // if all type params are not known you need to provide type params
+//!     StateApi::&lt;H256&gt;::storage(&amp;client, StorageKey(vec![]), None).await.unwrap();
+//! }
+//! ```
 
-<span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
-<span class="kw">use</span> <span class="ident">serde::de::DeserializeOwned</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">Header</span> <span class="kw">as</span> <span class="ident">HeaderT</span>};
-<span class="kw">use</span> <span class="ident">std::collections::VecDeque</span>;
+</span><span class="kw">use </span>async_trait::async_trait;
+<span class="kw">use </span>serde::de::DeserializeOwned;
+<span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, Header <span class="kw">as </span>HeaderT};
+<span class="kw">use </span>std::collections::VecDeque;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">jsonrpsee</span>::{
-	<span class="ident">core::client</span>::{<span class="ident">ClientT</span>, <span class="ident">Subscription</span>, <span class="ident">SubscriptionClientT</span>},
-	<span class="ident">rpc_params</span>,
-	<span class="ident">ws_client</span>::{<span class="ident">WsClient</span>, <span class="ident">WsClientBuilder</span>},
+<span class="kw">pub use </span>jsonrpsee::{
+	core::client::{ClientT, Subscription, SubscriptionClientT},
+	rpc_params,
+	ws_client::{WsClient, WsClientBuilder},
 };
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sc_rpc_api</span>::{
-	<span class="ident">author::AuthorApiClient</span> <span class="kw">as</span> <span class="ident">AuthorApi</span>, <span class="ident">chain::ChainApiClient</span> <span class="kw">as</span> <span class="ident">ChainApi</span>,
-	<span class="ident">child_state::ChildStateApiClient</span> <span class="kw">as</span> <span class="ident">ChildStateApi</span>, <span class="ident">dev::DevApiClient</span> <span class="kw">as</span> <span class="ident">DevApi</span>,
-	<span class="ident">offchain::OffchainApiClient</span> <span class="kw">as</span> <span class="ident">OffchainApi</span>, <span class="ident">state::StateApiClient</span> <span class="kw">as</span> <span class="ident">StateApi</span>,
-	<span class="ident">system::SystemApiClient</span> <span class="kw">as</span> <span class="ident">SystemApi</span>,
+<span class="kw">pub use </span>sc_rpc_api::{
+	author::AuthorApiClient <span class="kw">as </span>AuthorApi, chain::ChainApiClient <span class="kw">as </span>ChainApi,
+	child_state::ChildStateApiClient <span class="kw">as </span>ChildStateApi, dev::DevApiClient <span class="kw">as </span>DevApi,
+	offchain::OffchainApiClient <span class="kw">as </span>OffchainApi, state::StateApiClient <span class="kw">as </span>StateApi,
+	system::SystemApiClient <span class="kw">as </span>SystemApi,
 };
 
-<span class="doccomment">/// Create a new `WebSocket` connection with shared settings.</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">ws_client</span>(<span class="ident">uri</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">WsClient</span>, <span class="ident">String</span><span class="op">&gt;</span> {
-	<span class="ident">WsClientBuilder::default</span>()
-		.<span class="ident">max_request_body_size</span>(<span class="ident">u32::MAX</span>)
-		.<span class="ident">request_timeout</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="number">60</span> <span class="op">*</span> <span class="number">10</span>))
-		.<span class="ident">connection_timeout</span>(<span class="ident">std::time::Duration::from_secs</span>(<span class="number">60</span>))
-		.<span class="ident">max_notifs_per_subscription</span>(<span class="number">1024</span>)
-		.<span class="ident">build</span>(<span class="ident">uri</span>)
-		.<span class="kw">await</span>
-		.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;`WsClientBuilder` failed to build: {:?}&quot;</span>, <span class="ident">e</span>))
+<span class="doccomment">/// Create a new `WebSocket` connection with shared settings.
+</span><span class="kw">pub async fn </span>ws_client(uri: <span class="kw">impl </span>AsRef&lt;str&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;WsClient, String&gt; {
+	WsClientBuilder::default()
+		.max_request_body_size(u32::MAX)
+		.request_timeout(std::time::Duration::from_secs(<span class="number">60 </span>* <span class="number">10</span>))
+		.connection_timeout(std::time::Duration::from_secs(<span class="number">60</span>))
+		.max_notifs_per_subscription(<span class="number">1024</span>)
+		.build(uri)
+		.<span class="kw">await
+		</span>.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;`WsClientBuilder` failed to build: {:?}&quot;</span>, e))
 }
 
-<span class="doccomment">/// Abstraction over RPC calling for headers.</span>
-<span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">HeaderProvider</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Block::Header</span>: <span class="ident">HeaderT</span>,
+<span class="doccomment">/// Abstraction over RPC calling for headers.
+</span><span class="attribute">#[async_trait]
+</span><span class="kw">pub trait </span>HeaderProvider&lt;Block: BlockT&gt;
+<span class="kw">where
+	</span>Block::Header: HeaderT,
 {
-	<span class="doccomment">/// Awaits for the header of the block with hash `hash`.</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_header</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">Block::Hash</span>) -&gt; <span class="ident">Block::Header</span>;
+	<span class="doccomment">/// Awaits for the header of the block with hash `hash`.
+	</span><span class="kw">async fn </span>get_header(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; Block::Header;
 }
 
-<span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">HeaderProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">WsClient</span>
-<span class="kw">where</span>
-	<span class="ident">Block::Header</span>: <span class="ident">DeserializeOwned</span>,
+<span class="attribute">#[async_trait]
+</span><span class="kw">impl</span>&lt;Block: BlockT&gt; HeaderProvider&lt;Block&gt; <span class="kw">for </span>WsClient
+<span class="kw">where
+	</span>Block::Header: DeserializeOwned,
 {
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_header</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">Block::Hash</span>) -&gt; <span class="ident">Block::Header</span> {
-		<span class="ident">ChainApi</span>::<span class="op">&lt;</span>(), <span class="ident">Block::Hash</span>, <span class="ident">Block::Header</span>, ()<span class="op">&gt;</span><span class="ident">::header</span>(<span class="self">self</span>, <span class="prelude-val">Some</span>(<span class="ident">hash</span>))
-			.<span class="kw">await</span>
-			.<span class="ident">unwrap</span>()
-			.<span class="ident">unwrap</span>()
+	<span class="kw">async fn </span>get_header(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; Block::Header {
+		ChainApi::&lt;(), Block::Hash, Block::Header, ()&gt;::header(<span class="self">self</span>, <span class="prelude-val">Some</span>(hash))
+			.<span class="kw">await
+			</span>.unwrap()
+			.unwrap()
 	}
 }
 
-<span class="doccomment">/// Abstraction over RPC subscription for finalized headers.</span>
-<span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">HeaderSubscription</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Block::Header</span>: <span class="ident">HeaderT</span>,
+<span class="doccomment">/// Abstraction over RPC subscription for finalized headers.
+</span><span class="attribute">#[async_trait]
+</span><span class="kw">pub trait </span>HeaderSubscription&lt;Block: BlockT&gt;
+<span class="kw">where
+	</span>Block::Header: HeaderT,
 {
-	<span class="doccomment">/// Await for the next finalized header from the subscription.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns `None` if either the subscription has been closed or there was an error when reading</span>
-	<span class="doccomment">/// an object from the client.</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next_header</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Block::Header</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Await for the next finalized header from the subscription.
+	///
+	/// Returns `None` if either the subscription has been closed or there was an error when reading
+	/// an object from the client.
+	</span><span class="kw">async fn </span>next_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Block::Header&gt;;
 }
 
-<span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">HeaderSubscription</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Subscription</span><span class="op">&lt;</span><span class="ident">Block::Header</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Block::Header</span>: <span class="ident">DeserializeOwned</span>,
+<span class="attribute">#[async_trait]
+</span><span class="kw">impl</span>&lt;Block: BlockT&gt; HeaderSubscription&lt;Block&gt; <span class="kw">for </span>Subscription&lt;Block::Header&gt;
+<span class="kw">where
+	</span>Block::Header: DeserializeOwned,
 {
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next_header</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Block::Header</span><span class="op">&gt;</span> {
-		<span class="kw">match</span> <span class="self">self</span>.<span class="ident">next</span>().<span class="kw">await</span> {
-			<span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">header</span>)) =&gt; <span class="prelude-val">Some</span>(<span class="ident">header</span>),
-			<span class="prelude-val">None</span> =&gt; {
+	<span class="kw">async fn </span>next_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Block::Header&gt; {
+		<span class="kw">match </span><span class="self">self</span>.next().<span class="kw">await </span>{
+			<span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(header)) =&gt; <span class="prelude-val">Some</span>(header),
+			<span class="prelude-val">None </span>=&gt; {
 				<span class="macro">log::warn!</span>(<span class="string">&quot;subscription closed&quot;</span>);
-				<span class="prelude-val">None</span>
-			},
-			<span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">why</span>)) =&gt; {
-				<span class="macro">log::warn!</span>(<span class="string">&quot;subscription returned error: {:?}. Probably decoding has failed.&quot;</span>, <span class="ident">why</span>);
-				<span class="prelude-val">None</span>
-			},
+				<span class="prelude-val">None
+			</span>},
+			<span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(why)) =&gt; {
+				<span class="macro">log::warn!</span>(<span class="string">&quot;subscription returned error: {:?}. Probably decoding has failed.&quot;</span>, why);
+				<span class="prelude-val">None
+			</span>},
 		}
 	}
 }
 
-<span class="doccomment">/// Stream of all finalized headers.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returned headers are guaranteed to be ordered. There are no missing headers (even if some of</span>
-<span class="doccomment">/// them lack justification).</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FinalizedHeaders</span><span class="op">&lt;</span>
+<span class="doccomment">/// Stream of all finalized headers.
+///
+/// Returned headers are guaranteed to be ordered. There are no missing headers (even if some of
+/// them lack justification).
+</span><span class="kw">pub struct </span>FinalizedHeaders&lt;
 	<span class="lifetime">&#39;a</span>,
-	<span class="ident">Block</span>: <span class="ident">BlockT</span>,
-	<span class="ident">HP</span>: <span class="ident">HeaderProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">HS</span>: <span class="ident">HeaderSubscription</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-<span class="op">&gt;</span> {
-	<span class="ident">header_provider</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">HP</span>,
-	<span class="ident">subscription</span>: <span class="ident">HS</span>,
-	<span class="ident">fetched_headers</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">Block::Header</span><span class="op">&gt;</span>,
-	<span class="ident">last_returned</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">Block::Header</span> <span class="kw">as</span> <span class="ident">HeaderT</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span>,
+	Block: BlockT,
+	HP: HeaderProvider&lt;Block&gt;,
+	HS: HeaderSubscription&lt;Block&gt;,
+&gt; {
+	header_provider: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>HP,
+	subscription: HS,
+	fetched_headers: VecDeque&lt;Block::Header&gt;,
+	last_returned: <span class="prelude-ty">Option</span>&lt;&lt;Block::Header <span class="kw">as </span>HeaderT&gt;::Hash&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Block</span>: <span class="ident">BlockT</span>, <span class="ident">HP</span>: <span class="ident">HeaderProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">HS</span>: <span class="ident">HeaderSubscription</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>
-	<span class="ident">FinalizedHeaders</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Block</span>, <span class="ident">HP</span>, <span class="ident">HS</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="op">&lt;</span><span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Header</span>: <span class="ident">DeserializeOwned</span>,
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, Block: BlockT, HP: HeaderProvider&lt;Block&gt;, HS: HeaderSubscription&lt;Block&gt;&gt;
+	FinalizedHeaders&lt;<span class="lifetime">&#39;a</span>, Block, HP, HS&gt;
+<span class="kw">where
+	</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Header: DeserializeOwned,
 {
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">header_provider</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">HP</span>, <span class="ident">subscription</span>: <span class="ident">HS</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> {
-			<span class="ident">header_provider</span>,
-			<span class="ident">subscription</span>,
-			<span class="ident">fetched_headers</span>: <span class="ident">VecDeque::new</span>(),
-			<span class="ident">last_returned</span>: <span class="prelude-val">None</span>,
+	<span class="kw">pub fn </span>new(header_provider: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>HP, subscription: HS) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			header_provider,
+			subscription,
+			fetched_headers: VecDeque::new(),
+			last_returned: <span class="prelude-val">None</span>,
 		}
 	}
 
-	<span class="doccomment">/// Reads next finalized header from the subscription. If some headers (without justification)</span>
-	<span class="doccomment">/// have been skipped, fetches them as well. Returns number of headers that have been fetched.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// All fetched headers are stored in `self.fetched_headers`.</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">fetch</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-		<span class="kw">let</span> <span class="ident">last_finalized</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">subscription</span>.<span class="ident">next_header</span>().<span class="kw">await</span> {
-			<span class="prelude-val">Some</span>(<span class="ident">header</span>) =&gt; <span class="ident">header</span>,
-			<span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="number">0</span>,
+	<span class="doccomment">/// Reads next finalized header from the subscription. If some headers (without justification)
+	/// have been skipped, fetches them as well. Returns number of headers that have been fetched.
+	///
+	/// All fetched headers are stored in `self.fetched_headers`.
+	</span><span class="kw">async fn </span>fetch(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; usize {
+		<span class="kw">let </span>last_finalized = <span class="kw">match </span><span class="self">self</span>.subscription.next_header().<span class="kw">await </span>{
+			<span class="prelude-val">Some</span>(header) =&gt; header,
+			<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="number">0</span>,
 		};
 
-		<span class="self">self</span>.<span class="ident">fetched_headers</span>.<span class="ident">push_front</span>(<span class="ident">last_finalized</span>.<span class="ident">clone</span>());
+		<span class="self">self</span>.fetched_headers.push_front(last_finalized.clone());
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_finalized_parent</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">last_finalized</span>.<span class="ident">parent_hash</span>();
-		<span class="kw">let</span> <span class="ident">last_returned</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">last_returned</span>.<span class="ident">unwrap_or</span>(<span class="ident">last_finalized_parent</span>);
+		<span class="kw">let </span><span class="kw-2">mut </span>last_finalized_parent = <span class="kw-2">*</span>last_finalized.parent_hash();
+		<span class="kw">let </span>last_returned = <span class="self">self</span>.last_returned.unwrap_or(last_finalized_parent);
 
-		<span class="kw">while</span> <span class="ident">last_finalized_parent</span> <span class="op">!</span><span class="op">=</span> <span class="ident">last_returned</span> {
-			<span class="kw">let</span> <span class="ident">parent_header</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">header_provider</span>.<span class="ident">get_header</span>(<span class="ident">last_finalized_parent</span>).<span class="kw">await</span>;
-			<span class="self">self</span>.<span class="ident">fetched_headers</span>.<span class="ident">push_front</span>(<span class="ident">parent_header</span>.<span class="ident">clone</span>());
-			<span class="ident">last_finalized_parent</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">parent_header</span>.<span class="ident">parent_hash</span>();
+		<span class="kw">while </span>last_finalized_parent != last_returned {
+			<span class="kw">let </span>parent_header = <span class="self">self</span>.header_provider.get_header(last_finalized_parent).<span class="kw">await</span>;
+			<span class="self">self</span>.fetched_headers.push_front(parent_header.clone());
+			last_finalized_parent = <span class="kw-2">*</span>parent_header.parent_hash();
 		}
 
-		<span class="self">self</span>.<span class="ident">fetched_headers</span>.<span class="ident">len</span>()
+		<span class="self">self</span>.fetched_headers.len()
 	}
 
-	<span class="doccomment">/// Get the next finalized header.</span>
-	<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Block::Header</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">fetched_headers</span>.<span class="ident">is_empty</span>() {
-			<span class="self">self</span>.<span class="ident">fetch</span>().<span class="kw">await</span>;
+	<span class="doccomment">/// Get the next finalized header.
+	</span><span class="kw">pub async fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Block::Header&gt; {
+		<span class="kw">if </span><span class="self">self</span>.fetched_headers.is_empty() {
+			<span class="self">self</span>.fetch().<span class="kw">await</span>;
 		}
 
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">header</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">fetched_headers</span>.<span class="ident">pop_front</span>() {
-			<span class="self">self</span>.<span class="ident">last_returned</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">header</span>.<span class="ident">hash</span>());
-			<span class="prelude-val">Some</span>(<span class="ident">header</span>)
-		} <span class="kw">else</span> {
-			<span class="prelude-val">None</span>
-		}
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(header) = <span class="self">self</span>.fetched_headers.pop_front() {
+			<span class="self">self</span>.last_returned = <span class="prelude-val">Some</span>(header.hash());
+			<span class="prelude-val">Some</span>(header)
+		} <span class="kw">else </span>{
+			<span class="prelude-val">None
+		</span>}
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">sp_runtime::testing</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">TBlock</span>, <span class="ident">ExtrinsicWrapper</span>, <span class="ident">Header</span>, <span class="ident">H256</span>};
-	<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
-	<span class="kw">use</span> <span class="ident">tokio::sync::Mutex</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>sp_runtime::testing::{Block <span class="kw">as </span>TBlock, ExtrinsicWrapper, Header, H256};
+	<span class="kw">use </span>std::sync::Arc;
+	<span class="kw">use </span>tokio::sync::Mutex;
 
-	<span class="kw">type</span> <span class="ident">Block</span> <span class="op">=</span> <span class="ident">TBlock</span><span class="op">&lt;</span><span class="ident">ExtrinsicWrapper</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">BlockNumber</span> <span class="op">=</span> <span class="ident">u64</span>;
-	<span class="kw">type</span> <span class="ident">Hash</span> <span class="op">=</span> <span class="ident">H256</span>;
+	<span class="kw">type </span>Block = TBlock&lt;ExtrinsicWrapper&lt;()&gt;&gt;;
+	<span class="kw">type </span>BlockNumber = u64;
+	<span class="kw">type </span>Hash = H256;
 
-	<span class="kw">struct</span> <span class="ident">MockHeaderProvider</span>(<span class="kw">pub</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+	<span class="kw">struct </span>MockHeaderProvider(<span class="kw">pub </span>Arc&lt;Mutex&lt;VecDeque&lt;BlockNumber&gt;&gt;&gt;);
 
-	<span class="kw">fn</span> <span class="ident">headers</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Header</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">Header::new_from_number</span>(<span class="number">0</span>)];
-		<span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">1</span>..<span class="number">11</span> {
-			<span class="ident">headers</span>.<span class="ident">push</span>(<span class="ident">Header</span> {
-				<span class="ident">parent_hash</span>: <span class="ident">headers</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>().<span class="ident">hash</span>(),
-				..<span class="ident">Header::new_from_number</span>(<span class="ident">n</span>)
+	<span class="kw">fn </span>headers() -&gt; Vec&lt;Header&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>headers = <span class="macro">vec!</span>[Header::new_from_number(<span class="number">0</span>)];
+		<span class="kw">for </span>n <span class="kw">in </span><span class="number">1</span>..<span class="number">11 </span>{
+			headers.push(Header {
+				parent_hash: headers.last().unwrap().hash(),
+				..Header::new_from_number(n)
 			})
 		}
-		<span class="ident">headers</span>
+		headers
 	}
 
-	<span class="attribute">#[<span class="ident">async_trait</span>]</span>
-	<span class="kw">impl</span> <span class="ident">HeaderProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MockHeaderProvider</span> {
-		<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_header</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_hash</span>: <span class="ident">Hash</span>) -&gt; <span class="ident">Header</span> {
-			<span class="kw">let</span> <span class="ident">height</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">lock</span>().<span class="kw">await</span>.<span class="ident">pop_front</span>().<span class="ident">unwrap</span>();
-			<span class="ident">headers</span>()[<span class="ident">height</span> <span class="kw">as</span> <span class="ident">usize</span>].<span class="ident">clone</span>()
+	<span class="attribute">#[async_trait]
+	</span><span class="kw">impl </span>HeaderProvider&lt;Block&gt; <span class="kw">for </span>MockHeaderProvider {
+		<span class="kw">async fn </span>get_header(<span class="kw-2">&amp;</span><span class="self">self</span>, _hash: Hash) -&gt; Header {
+			<span class="kw">let </span>height = <span class="self">self</span>.<span class="number">0</span>.lock().<span class="kw">await</span>.pop_front().unwrap();
+			headers()[height <span class="kw">as </span>usize].clone()
 		}
 	}
 
-	<span class="kw">struct</span> <span class="ident">MockHeaderSubscription</span>(<span class="kw">pub</span> <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span>);
+	<span class="kw">struct </span>MockHeaderSubscription(<span class="kw">pub </span>VecDeque&lt;BlockNumber&gt;);
 
-	<span class="attribute">#[<span class="ident">async_trait</span>]</span>
-	<span class="kw">impl</span> <span class="ident">HeaderSubscription</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">MockHeaderSubscription</span> {
-		<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next_header</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Header</span><span class="op">&gt;</span> {
-			<span class="self">self</span>.<span class="number">0</span>.<span class="ident">pop_front</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">h</span><span class="op">|</span> <span class="ident">headers</span>()[<span class="ident">h</span> <span class="kw">as</span> <span class="ident">usize</span>].<span class="ident">clone</span>())
+	<span class="attribute">#[async_trait]
+	</span><span class="kw">impl </span>HeaderSubscription&lt;Block&gt; <span class="kw">for </span>MockHeaderSubscription {
+		<span class="kw">async fn </span>next_header(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Header&gt; {
+			<span class="self">self</span>.<span class="number">0</span>.pop_front().map(|h| headers()[h <span class="kw">as </span>usize].clone())
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">finalized_headers_works_when_every_block_comes_from_subscription</span>() {
-		<span class="kw">let</span> <span class="ident">heights</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>];
+	<span class="attribute">#[tokio::test]
+	</span><span class="kw">async fn </span>finalized_headers_works_when_every_block_comes_from_subscription() {
+		<span class="kw">let </span>heights = <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>];
 
-		<span class="kw">let</span> <span class="ident">provider</span> <span class="op">=</span> <span class="ident">MockHeaderProvider</span>(<span class="ident">Default::default</span>());
-		<span class="kw">let</span> <span class="ident">subscription</span> <span class="op">=</span> <span class="ident">MockHeaderSubscription</span>(<span class="ident">heights</span>.<span class="ident">clone</span>().<span class="ident">into</span>());
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">FinalizedHeaders::new</span>(<span class="kw-2">&amp;</span><span class="ident">provider</span>, <span class="ident">subscription</span>);
+		<span class="kw">let </span>provider = MockHeaderProvider(Default::default());
+		<span class="kw">let </span>subscription = MockHeaderSubscription(heights.clone().into());
+		<span class="kw">let </span><span class="kw-2">mut </span>headers = FinalizedHeaders::new(<span class="kw-2">&amp;</span>provider, subscription);
 
-		<span class="kw">for</span> <span class="ident">h</span> <span class="kw">in</span> <span class="ident">heights</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">h</span>, <span class="ident">headers</span>.<span class="ident">next</span>().<span class="kw">await</span>.<span class="ident">unwrap</span>().<span class="ident">number</span>);
+		<span class="kw">for </span>h <span class="kw">in </span>heights {
+			<span class="macro">assert_eq!</span>(h, headers.next().<span class="kw">await</span>.unwrap().number);
 		}
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, <span class="ident">headers</span>.<span class="ident">next</span>().<span class="kw">await</span>);
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, headers.next().<span class="kw">await</span>);
 	}
 
-	<span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">finalized_headers_come_from_subscription_and_provider_if_in_need</span>() {
-		<span class="kw">let</span> <span class="ident">all_heights</span> <span class="op">=</span> <span class="number">3</span>..<span class="number">11</span>;
-		<span class="kw">let</span> <span class="ident">heights_in_subscription</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">10</span>];
-		<span class="comment">// Consecutive headers will be requested in the reversed order.</span>
-		<span class="kw">let</span> <span class="ident">heights_not_in_subscription</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">5</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>];
+	<span class="attribute">#[tokio::test]
+	</span><span class="kw">async fn </span>finalized_headers_come_from_subscription_and_provider_if_in_need() {
+		<span class="kw">let </span>all_heights = <span class="number">3</span>..<span class="number">11</span>;
+		<span class="kw">let </span>heights_in_subscription = <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">10</span>];
+		<span class="comment">// Consecutive headers will be requested in the reversed order.
+		</span><span class="kw">let </span>heights_not_in_subscription = <span class="macro">vec!</span>[<span class="number">5</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>];
 
-		<span class="kw">let</span> <span class="ident">provider</span> <span class="op">=</span> <span class="ident">MockHeaderProvider</span>(<span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">heights_not_in_subscription</span>.<span class="ident">into</span>())));
-		<span class="kw">let</span> <span class="ident">subscription</span> <span class="op">=</span> <span class="ident">MockHeaderSubscription</span>(<span class="ident">heights_in_subscription</span>.<span class="ident">into</span>());
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">FinalizedHeaders::new</span>(<span class="kw-2">&amp;</span><span class="ident">provider</span>, <span class="ident">subscription</span>);
+		<span class="kw">let </span>provider = MockHeaderProvider(Arc::new(Mutex::new(heights_not_in_subscription.into())));
+		<span class="kw">let </span>subscription = MockHeaderSubscription(heights_in_subscription.into());
+		<span class="kw">let </span><span class="kw-2">mut </span>headers = FinalizedHeaders::new(<span class="kw-2">&amp;</span>provider, subscription);
 
-		<span class="kw">for</span> <span class="ident">h</span> <span class="kw">in</span> <span class="ident">all_heights</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">h</span>, <span class="ident">headers</span>.<span class="ident">next</span>().<span class="kw">await</span>.<span class="ident">unwrap</span>().<span class="ident">number</span>);
+		<span class="kw">for </span>h <span class="kw">in </span>all_heights {
+			<span class="macro">assert_eq!</span>(h, headers.next().<span class="kw">await</span>.unwrap().number);
 		}
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, <span class="ident">headers</span>.<span class="ident">next</span>().<span class="kw">await</span>);
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, headers.next().<span class="kw">await</span>);
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="substrate_rpc_client" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="substrate_rpc_client" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

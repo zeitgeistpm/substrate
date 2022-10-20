@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/network/common/src/service.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>service.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sc_network_common/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sc_network_common/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_network_common/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/network/common/src/service.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>service.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sc_network_common/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_network_common/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -635,637 +629,636 @@
 <span id="629">629</span>
 <span id="630">630</span>
 <span id="631">631</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
-<span class="comment">//</span>
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
-<span class="comment">//</span>
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
-<span class="comment">//</span>
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
-<span class="comment">//</span>
-<span class="comment">// If you read this, you are very thorough, congratulations.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
+//
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
+//
+// If you read this, you are very thorough, congratulations.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">config::MultiaddrWithPeerId</span>,
-	<span class="ident">protocol</span>::{<span class="ident">event::Event</span>, <span class="ident">ProtocolName</span>},
-	<span class="ident">request_responses</span>::{<span class="ident">IfDisconnected</span>, <span class="ident">RequestFailure</span>},
-	<span class="ident">sync</span>::{<span class="ident">warp::WarpSyncProgress</span>, <span class="ident">StateDownloadProgress</span>, <span class="ident">SyncState</span>},
+</span><span class="kw">use crate</span>::{
+	config::MultiaddrWithPeerId,
+	protocol::{event::Event, ProtocolName},
+	request_responses::{IfDisconnected, RequestFailure},
+	sync::{warp::WarpSyncProgress, StateDownloadProgress, SyncState},
 };
-<span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">channel::oneshot</span>, <span class="ident">Stream</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">libp2p</span>::{<span class="ident">identity::error::SigningError</span>, <span class="ident">kad::record::Key</span> <span class="kw">as</span> <span class="ident">KademliaKey</span>};
-<span class="kw">use</span> <span class="ident">libp2p</span>::{<span class="ident">Multiaddr</span>, <span class="ident">PeerId</span>};
-<span class="kw">use</span> <span class="ident">sc_peerset::ReputationChange</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">signature::Signature</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">NumberFor</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashSet</span>, <span class="ident">future::Future</span>, <span class="ident">pin::Pin</span>, <span class="ident">sync::Arc</span>};
+<span class="kw">use </span>futures::{channel::oneshot, Stream};
+<span class="kw">pub use </span>libp2p::{identity::error::SigningError, kad::record::Key <span class="kw">as </span>KademliaKey};
+<span class="kw">use </span>libp2p::{Multiaddr, PeerId};
+<span class="kw">use </span>sc_peerset::ReputationChange;
+<span class="kw">pub use </span>signature::Signature;
+<span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, NumberFor};
+<span class="kw">use </span>std::{collections::HashSet, future::Future, pin::Pin, sync::Arc};
 
-<span class="kw">mod</span> <span class="ident">signature</span>;
+<span class="kw">mod </span>signature;
 
-<span class="doccomment">/// Signer with network identity</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkSigner</span> {
-	<span class="doccomment">/// Signs the message with the `KeyPair` that defines the local [`PeerId`].</span>
-	<span class="kw">fn</span> <span class="ident">sign_with_local_identity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Signature</span>, <span class="ident">SigningError</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Signer with network identity
+</span><span class="kw">pub trait </span>NetworkSigner {
+	<span class="doccomment">/// Signs the message with the `KeyPair` that defines the local [`PeerId`].
+	</span><span class="kw">fn </span>sign_with_local_identity(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: <span class="kw">impl </span>AsRef&lt;[u8]&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Signature, SigningError&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NetworkSigner</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkSigner</span>,
+<span class="kw">impl</span>&lt;T&gt; NetworkSigner <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkSigner,
 {
-	<span class="kw">fn</span> <span class="ident">sign_with_local_identity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Signature</span>, <span class="ident">SigningError</span><span class="op">&gt;</span> {
-		<span class="ident">T::sign_with_local_identity</span>(<span class="self">self</span>, <span class="ident">msg</span>)
+	<span class="kw">fn </span>sign_with_local_identity(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: <span class="kw">impl </span>AsRef&lt;[u8]&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Signature, SigningError&gt; {
+		T::sign_with_local_identity(<span class="self">self</span>, msg)
 	}
 }
 
-<span class="doccomment">/// Provides access to the networking DHT.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkDHTProvider</span> {
-	<span class="doccomment">/// Start getting a value from the DHT.</span>
-	<span class="kw">fn</span> <span class="ident">get_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">KademliaKey</span>);
+<span class="doccomment">/// Provides access to the networking DHT.
+</span><span class="kw">pub trait </span>NetworkDHTProvider {
+	<span class="doccomment">/// Start getting a value from the DHT.
+	</span><span class="kw">fn </span>get_value(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>KademliaKey);
 
-	<span class="doccomment">/// Start putting a value in the DHT.</span>
-	<span class="kw">fn</span> <span class="ident">put_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="ident">KademliaKey</span>, <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>);
+	<span class="doccomment">/// Start putting a value in the DHT.
+	</span><span class="kw">fn </span>put_value(<span class="kw-2">&amp;</span><span class="self">self</span>, key: KademliaKey, value: Vec&lt;u8&gt;);
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NetworkDHTProvider</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkDHTProvider</span>,
+<span class="kw">impl</span>&lt;T&gt; NetworkDHTProvider <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkDHTProvider,
 {
-	<span class="kw">fn</span> <span class="ident">get_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">KademliaKey</span>) {
-		<span class="ident">T::get_value</span>(<span class="self">self</span>, <span class="ident">key</span>)
+	<span class="kw">fn </span>get_value(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>KademliaKey) {
+		T::get_value(<span class="self">self</span>, key)
 	}
 
-	<span class="kw">fn</span> <span class="ident">put_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="ident">KademliaKey</span>, <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
-		<span class="ident">T::put_value</span>(<span class="self">self</span>, <span class="ident">key</span>, <span class="ident">value</span>)
-	}
-}
-
-<span class="doccomment">/// Provides an ability to set a fork sync request for a particular block.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkSyncForkRequest</span><span class="op">&lt;</span><span class="ident">BlockHash</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Notifies the sync service to try and sync the given block from the given</span>
-	<span class="doccomment">/// peers.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If the given vector of peers is empty then the underlying implementation</span>
-	<span class="doccomment">/// should make a best effort to fetch the block from any peers it is</span>
-	<span class="doccomment">/// connected to (NOTE: this assumption will change in the future #3629).</span>
-	<span class="kw">fn</span> <span class="ident">set_sync_fork_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>, <span class="ident">hash</span>: <span class="ident">BlockHash</span>, <span class="ident">number</span>: <span class="ident">BlockNumber</span>);
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">BlockHash</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> <span class="ident">NetworkSyncForkRequest</span><span class="op">&lt;</span><span class="ident">BlockHash</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkSyncForkRequest</span><span class="op">&lt;</span><span class="ident">BlockHash</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span>,
-{
-	<span class="kw">fn</span> <span class="ident">set_sync_fork_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>, <span class="ident">hash</span>: <span class="ident">BlockHash</span>, <span class="ident">number</span>: <span class="ident">BlockNumber</span>) {
-		<span class="ident">T::set_sync_fork_request</span>(<span class="self">self</span>, <span class="ident">peers</span>, <span class="ident">hash</span>, <span class="ident">number</span>)
+	<span class="kw">fn </span>put_value(<span class="kw-2">&amp;</span><span class="self">self</span>, key: KademliaKey, value: Vec&lt;u8&gt;) {
+		T::put_value(<span class="self">self</span>, key, value)
 	}
 }
 
-<span class="doccomment">/// Overview status of the network.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NetworkStatus</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Current global sync state.</span>
-	<span class="kw">pub</span> <span class="ident">sync_state</span>: <span class="ident">SyncState</span>,
-	<span class="doccomment">/// Target sync block number.</span>
-	<span class="kw">pub</span> <span class="ident">best_seen_block</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Number of peers participating in syncing.</span>
-	<span class="kw">pub</span> <span class="ident">num_sync_peers</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// Total number of connected peers</span>
-	<span class="kw">pub</span> <span class="ident">num_connected_peers</span>: <span class="ident">usize</span>,
-	<span class="doccomment">/// Total number of active peers.</span>
-	<span class="kw">pub</span> <span class="ident">num_active_peers</span>: <span class="ident">usize</span>,
-	<span class="doccomment">/// The total number of bytes received.</span>
-	<span class="kw">pub</span> <span class="ident">total_bytes_inbound</span>: <span class="ident">u64</span>,
-	<span class="doccomment">/// The total number of bytes sent.</span>
-	<span class="kw">pub</span> <span class="ident">total_bytes_outbound</span>: <span class="ident">u64</span>,
-	<span class="doccomment">/// State sync in progress.</span>
-	<span class="kw">pub</span> <span class="ident">state_sync</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StateDownloadProgress</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Warp sync in progress.</span>
-	<span class="kw">pub</span> <span class="ident">warp_sync</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">WarpSyncProgress</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Provides an ability to set a fork sync request for a particular block.
+</span><span class="kw">pub trait </span>NetworkSyncForkRequest&lt;BlockHash, BlockNumber&gt; {
+	<span class="doccomment">/// Notifies the sync service to try and sync the given block from the given
+	/// peers.
+	///
+	/// If the given vector of peers is empty then the underlying implementation
+	/// should make a best effort to fetch the block from any peers it is
+	/// connected to (NOTE: this assumption will change in the future #3629).
+	</span><span class="kw">fn </span>set_sync_fork_request(<span class="kw-2">&amp;</span><span class="self">self</span>, peers: Vec&lt;PeerId&gt;, hash: BlockHash, number: BlockNumber);
 }
 
-<span class="doccomment">/// Provides high-level status information about network.</span>
-<span class="attribute">#[<span class="ident">async_trait::async_trait</span>]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkStatusProvider</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// High-level network status information.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns an error if the `NetworkWorker` is no longer running.</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NetworkStatus</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span>;
-}
-
-<span class="comment">// Manual implementation to avoid extra boxing here</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">NetworkStatusProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkStatusProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;T, BlockHash, BlockNumber&gt; NetworkSyncForkRequest&lt;BlockHash, BlockNumber&gt; <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkSyncForkRequest&lt;BlockHash, BlockNumber&gt;,
 {
-	<span class="kw">fn</span> <span class="ident">status</span><span class="op">&lt;</span><span class="lifetime">&#39;life0</span>, <span class="lifetime">&#39;async_trait</span><span class="op">&gt;</span>(
-		<span class="kw-2">&amp;</span><span class="lifetime">&#39;life0</span> <span class="self">self</span>,
-	) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NetworkStatus</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, ()<span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;async_trait</span><span class="op">&gt;</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="lifetime">&#39;life0</span>: <span class="lifetime">&#39;async_trait</span>,
+	<span class="kw">fn </span>set_sync_fork_request(<span class="kw-2">&amp;</span><span class="self">self</span>, peers: Vec&lt;PeerId&gt;, hash: BlockHash, number: BlockNumber) {
+		T::set_sync_fork_request(<span class="self">self</span>, peers, hash, number)
+	}
+}
+
+<span class="doccomment">/// Overview status of the network.
+</span><span class="attribute">#[derive(Clone)]
+</span><span class="kw">pub struct </span>NetworkStatus&lt;B: BlockT&gt; {
+	<span class="doccomment">/// Current global sync state.
+	</span><span class="kw">pub </span>sync_state: SyncState,
+	<span class="doccomment">/// Target sync block number.
+	</span><span class="kw">pub </span>best_seen_block: <span class="prelude-ty">Option</span>&lt;NumberFor&lt;B&gt;&gt;,
+	<span class="doccomment">/// Number of peers participating in syncing.
+	</span><span class="kw">pub </span>num_sync_peers: u32,
+	<span class="doccomment">/// Total number of connected peers
+	</span><span class="kw">pub </span>num_connected_peers: usize,
+	<span class="doccomment">/// Total number of active peers.
+	</span><span class="kw">pub </span>num_active_peers: usize,
+	<span class="doccomment">/// The total number of bytes received.
+	</span><span class="kw">pub </span>total_bytes_inbound: u64,
+	<span class="doccomment">/// The total number of bytes sent.
+	</span><span class="kw">pub </span>total_bytes_outbound: u64,
+	<span class="doccomment">/// State sync in progress.
+	</span><span class="kw">pub </span>state_sync: <span class="prelude-ty">Option</span>&lt;StateDownloadProgress&gt;,
+	<span class="doccomment">/// Warp sync in progress.
+	</span><span class="kw">pub </span>warp_sync: <span class="prelude-ty">Option</span>&lt;WarpSyncProgress&lt;B&gt;&gt;,
+}
+
+<span class="doccomment">/// Provides high-level status information about network.
+</span><span class="attribute">#[async_trait::async_trait]
+</span><span class="kw">pub trait </span>NetworkStatusProvider&lt;Block: BlockT&gt; {
+	<span class="doccomment">/// High-level network status information.
+	///
+	/// Returns an error if the `NetworkWorker` is no longer running.
+	</span><span class="kw">async fn </span>status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;NetworkStatus&lt;Block&gt;, ()&gt;;
+}
+
+<span class="comment">// Manual implementation to avoid extra boxing here
+</span><span class="kw">impl</span>&lt;T, Block: BlockT&gt; NetworkStatusProvider&lt;Block&gt; <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkStatusProvider&lt;Block&gt;,
+{
+	<span class="kw">fn </span>status&lt;<span class="lifetime">&#39;life0</span>, <span class="lifetime">&#39;async_trait</span>&gt;(
+		<span class="kw-2">&amp;</span><span class="lifetime">&#39;life0 </span><span class="self">self</span>,
+	) -&gt; Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;NetworkStatus&lt;Block&gt;, ()&gt;&gt; + Send + <span class="lifetime">&#39;async_trait</span>&gt;&gt;
+	<span class="kw">where
+		</span><span class="lifetime">&#39;life0</span>: <span class="lifetime">&#39;async_trait</span>,
 		<span class="self">Self</span>: <span class="lifetime">&#39;async_trait</span>,
 	{
-		<span class="ident">T::status</span>(<span class="self">self</span>)
+		T::status(<span class="self">self</span>)
 	}
 }
 
-<span class="doccomment">/// Provides low-level API for manipulating network peers.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkPeers</span> {
-	<span class="doccomment">/// Set authorized peers.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Need a better solution to manage authorized peers, but now just use reserved peers for</span>
-	<span class="doccomment">/// prototyping.</span>
-	<span class="kw">fn</span> <span class="ident">set_authorized_peers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Provides low-level API for manipulating network peers.
+</span><span class="kw">pub trait </span>NetworkPeers {
+	<span class="doccomment">/// Set authorized peers.
+	///
+	/// Need a better solution to manage authorized peers, but now just use reserved peers for
+	/// prototyping.
+	</span><span class="kw">fn </span>set_authorized_peers(<span class="kw-2">&amp;</span><span class="self">self</span>, peers: HashSet&lt;PeerId&gt;);
 
-	<span class="doccomment">/// Set authorized_only flag.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Need a better solution to decide authorized_only, but now just use reserved_only flag for</span>
-	<span class="doccomment">/// prototyping.</span>
-	<span class="kw">fn</span> <span class="ident">set_authorized_only</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">reserved_only</span>: <span class="ident">bool</span>);
+	<span class="doccomment">/// Set authorized_only flag.
+	///
+	/// Need a better solution to decide authorized_only, but now just use reserved_only flag for
+	/// prototyping.
+	</span><span class="kw">fn </span>set_authorized_only(<span class="kw-2">&amp;</span><span class="self">self</span>, reserved_only: bool);
 
-	<span class="doccomment">/// Adds an address known to a node.</span>
-	<span class="kw">fn</span> <span class="ident">add_known_address</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peer_id</span>: <span class="ident">PeerId</span>, <span class="ident">addr</span>: <span class="ident">Multiaddr</span>);
+	<span class="doccomment">/// Adds an address known to a node.
+	</span><span class="kw">fn </span>add_known_address(<span class="kw-2">&amp;</span><span class="self">self</span>, peer_id: PeerId, addr: Multiaddr);
 
-	<span class="doccomment">/// Report a given peer as either beneficial (+) or costly (-) according to the</span>
-	<span class="doccomment">/// given scalar.</span>
-	<span class="kw">fn</span> <span class="ident">report_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">who</span>: <span class="ident">PeerId</span>, <span class="ident">cost_benefit</span>: <span class="ident">ReputationChange</span>);
+	<span class="doccomment">/// Report a given peer as either beneficial (+) or costly (-) according to the
+	/// given scalar.
+	</span><span class="kw">fn </span>report_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, who: PeerId, cost_benefit: ReputationChange);
 
-	<span class="doccomment">/// Disconnect from a node as soon as possible.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This triggers the same effects as if the connection had closed itself spontaneously.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// See also [`NetworkPeers::remove_from_peers_set`], which has the same effect but also</span>
-	<span class="doccomment">/// prevents the local node from re-establishing an outgoing substream to this peer until it</span>
-	<span class="doccomment">/// is added again.</span>
-	<span class="kw">fn</span> <span class="ident">disconnect_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">who</span>: <span class="ident">PeerId</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>);
+	<span class="doccomment">/// Disconnect from a node as soon as possible.
+	///
+	/// This triggers the same effects as if the connection had closed itself spontaneously.
+	///
+	/// See also [`NetworkPeers::remove_from_peers_set`], which has the same effect but also
+	/// prevents the local node from re-establishing an outgoing substream to this peer until it
+	/// is added again.
+	</span><span class="kw">fn </span>disconnect_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, who: PeerId, protocol: ProtocolName);
 
-	<span class="doccomment">/// Connect to unreserved peers and allow unreserved peers to connect for syncing purposes.</span>
-	<span class="kw">fn</span> <span class="ident">accept_unreserved_peers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>);
+	<span class="doccomment">/// Connect to unreserved peers and allow unreserved peers to connect for syncing purposes.
+	</span><span class="kw">fn </span>accept_unreserved_peers(<span class="kw-2">&amp;</span><span class="self">self</span>);
 
-	<span class="doccomment">/// Disconnect from unreserved peers and deny new unreserved peers to connect for syncing</span>
-	<span class="doccomment">/// purposes.</span>
-	<span class="kw">fn</span> <span class="ident">deny_unreserved_peers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>);
+	<span class="doccomment">/// Disconnect from unreserved peers and deny new unreserved peers to connect for syncing
+	/// purposes.
+	</span><span class="kw">fn </span>deny_unreserved_peers(<span class="kw-2">&amp;</span><span class="self">self</span>);
 
-	<span class="doccomment">/// Adds a `PeerId` and its `Multiaddr` as reserved.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns an `Err` if the given string is not a valid multiaddress</span>
-	<span class="doccomment">/// or contains an invalid peer ID (which includes the local peer ID).</span>
-	<span class="kw">fn</span> <span class="ident">add_reserved_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peer</span>: <span class="ident">MultiaddrWithPeerId</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Adds a `PeerId` and its `Multiaddr` as reserved.
+	///
+	/// Returns an `Err` if the given string is not a valid multiaddress
+	/// or contains an invalid peer ID (which includes the local peer ID).
+	</span><span class="kw">fn </span>add_reserved_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, peer: MultiaddrWithPeerId) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt;;
 
-	<span class="doccomment">/// Removes a `PeerId` from the list of reserved peers.</span>
-	<span class="kw">fn</span> <span class="ident">remove_reserved_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peer_id</span>: <span class="ident">PeerId</span>);
+	<span class="doccomment">/// Removes a `PeerId` from the list of reserved peers.
+	</span><span class="kw">fn </span>remove_reserved_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, peer_id: PeerId);
 
-	<span class="doccomment">/// Sets the reserved set of a protocol to the given set of peers.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Each `Multiaddr` must end with a `/p2p/` component containing the `PeerId`. It can also</span>
-	<span class="doccomment">/// consist of only `/p2p/&lt;peerid&gt;`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The node will start establishing/accepting connections and substreams to/from peers in this</span>
-	<span class="doccomment">/// set, if it doesn&#39;t have any substream open with them yet.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Note however, if a call to this function results in less peers on the reserved set, they</span>
-	<span class="doccomment">/// will not necessarily get disconnected (depending on available free slots in the peer set).</span>
-	<span class="doccomment">/// If you want to also disconnect those removed peers, you will have to call</span>
-	<span class="doccomment">/// `remove_from_peers_set` on those in addition to updating the reserved set. You can omit</span>
-	<span class="doccomment">/// this step if the peer set is in reserved only mode.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns an `Err` if one of the given addresses is invalid or contains an</span>
-	<span class="doccomment">/// invalid peer ID (which includes the local peer ID).</span>
-	<span class="kw">fn</span> <span class="ident">set_reserved_peers</span>(
+	<span class="doccomment">/// Sets the reserved set of a protocol to the given set of peers.
+	///
+	/// Each `Multiaddr` must end with a `/p2p/` component containing the `PeerId`. It can also
+	/// consist of only `/p2p/&lt;peerid&gt;`.
+	///
+	/// The node will start establishing/accepting connections and substreams to/from peers in this
+	/// set, if it doesn&#39;t have any substream open with them yet.
+	///
+	/// Note however, if a call to this function results in less peers on the reserved set, they
+	/// will not necessarily get disconnected (depending on available free slots in the peer set).
+	/// If you want to also disconnect those removed peers, you will have to call
+	/// `remove_from_peers_set` on those in addition to updating the reserved set. You can omit
+	/// this step if the peer set is in reserved only mode.
+	///
+	/// Returns an `Err` if one of the given addresses is invalid or contains an
+	/// invalid peer ID (which includes the local peer ID).
+	</span><span class="kw">fn </span>set_reserved_peers(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Multiaddr</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span>;
+		protocol: ProtocolName,
+		peers: HashSet&lt;Multiaddr&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt;;
 
-	<span class="doccomment">/// Add peers to a peer set.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Each `Multiaddr` must end with a `/p2p/` component containing the `PeerId`. It can also</span>
-	<span class="doccomment">/// consist of only `/p2p/&lt;peerid&gt;`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns an `Err` if one of the given addresses is invalid or contains an</span>
-	<span class="doccomment">/// invalid peer ID (which includes the local peer ID).</span>
-	<span class="kw">fn</span> <span class="ident">add_peers_to_reserved_set</span>(
+	<span class="doccomment">/// Add peers to a peer set.
+	///
+	/// Each `Multiaddr` must end with a `/p2p/` component containing the `PeerId`. It can also
+	/// consist of only `/p2p/&lt;peerid&gt;`.
+	///
+	/// Returns an `Err` if one of the given addresses is invalid or contains an
+	/// invalid peer ID (which includes the local peer ID).
+	</span><span class="kw">fn </span>add_peers_to_reserved_set(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Multiaddr</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span>;
+		protocol: ProtocolName,
+		peers: HashSet&lt;Multiaddr&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt;;
 
-	<span class="doccomment">/// Remove peers from a peer set.</span>
-	<span class="kw">fn</span> <span class="ident">remove_peers_from_reserved_set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">peers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>);
+	<span class="doccomment">/// Remove peers from a peer set.
+	</span><span class="kw">fn </span>remove_peers_from_reserved_set(<span class="kw-2">&amp;</span><span class="self">self</span>, protocol: ProtocolName, peers: Vec&lt;PeerId&gt;);
 
-	<span class="doccomment">/// Add a peer to a set of peers.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If the set has slots available, it will try to open a substream with this peer.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Each `Multiaddr` must end with a `/p2p/` component containing the `PeerId`. It can also</span>
-	<span class="doccomment">/// consist of only `/p2p/&lt;peerid&gt;`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns an `Err` if one of the given addresses is invalid or contains an</span>
-	<span class="doccomment">/// invalid peer ID (which includes the local peer ID).</span>
-	<span class="kw">fn</span> <span class="ident">add_to_peers_set</span>(
+	<span class="doccomment">/// Add a peer to a set of peers.
+	///
+	/// If the set has slots available, it will try to open a substream with this peer.
+	///
+	/// Each `Multiaddr` must end with a `/p2p/` component containing the `PeerId`. It can also
+	/// consist of only `/p2p/&lt;peerid&gt;`.
+	///
+	/// Returns an `Err` if one of the given addresses is invalid or contains an
+	/// invalid peer ID (which includes the local peer ID).
+	</span><span class="kw">fn </span>add_to_peers_set(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Multiaddr</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span>;
+		protocol: ProtocolName,
+		peers: HashSet&lt;Multiaddr&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt;;
 
-	<span class="doccomment">/// Remove peers from a peer set.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If we currently have an open substream with this peer, it will soon be closed.</span>
-	<span class="kw">fn</span> <span class="ident">remove_from_peers_set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">peers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>);
+	<span class="doccomment">/// Remove peers from a peer set.
+	///
+	/// If we currently have an open substream with this peer, it will soon be closed.
+	</span><span class="kw">fn </span>remove_from_peers_set(<span class="kw-2">&amp;</span><span class="self">self</span>, protocol: ProtocolName, peers: Vec&lt;PeerId&gt;);
 
-	<span class="doccomment">/// Returns the number of peers in the sync peer set we&#39;re connected to.</span>
-	<span class="kw">fn</span> <span class="ident">sync_num_connected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span>;
+	<span class="doccomment">/// Returns the number of peers in the sync peer set we&#39;re connected to.
+	</span><span class="kw">fn </span>sync_num_connected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
 }
 
-<span class="comment">// Manual implementation to avoid extra boxing here</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NetworkPeers</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkPeers</span>,
+<span class="comment">// Manual implementation to avoid extra boxing here
+</span><span class="kw">impl</span>&lt;T&gt; NetworkPeers <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkPeers,
 {
-	<span class="kw">fn</span> <span class="ident">set_authorized_peers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>) {
-		<span class="ident">T::set_authorized_peers</span>(<span class="self">self</span>, <span class="ident">peers</span>)
+	<span class="kw">fn </span>set_authorized_peers(<span class="kw-2">&amp;</span><span class="self">self</span>, peers: HashSet&lt;PeerId&gt;) {
+		T::set_authorized_peers(<span class="self">self</span>, peers)
 	}
 
-	<span class="kw">fn</span> <span class="ident">set_authorized_only</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">reserved_only</span>: <span class="ident">bool</span>) {
-		<span class="ident">T::set_authorized_only</span>(<span class="self">self</span>, <span class="ident">reserved_only</span>)
+	<span class="kw">fn </span>set_authorized_only(<span class="kw-2">&amp;</span><span class="self">self</span>, reserved_only: bool) {
+		T::set_authorized_only(<span class="self">self</span>, reserved_only)
 	}
 
-	<span class="kw">fn</span> <span class="ident">add_known_address</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peer_id</span>: <span class="ident">PeerId</span>, <span class="ident">addr</span>: <span class="ident">Multiaddr</span>) {
-		<span class="ident">T::add_known_address</span>(<span class="self">self</span>, <span class="ident">peer_id</span>, <span class="ident">addr</span>)
+	<span class="kw">fn </span>add_known_address(<span class="kw-2">&amp;</span><span class="self">self</span>, peer_id: PeerId, addr: Multiaddr) {
+		T::add_known_address(<span class="self">self</span>, peer_id, addr)
 	}
 
-	<span class="kw">fn</span> <span class="ident">report_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">who</span>: <span class="ident">PeerId</span>, <span class="ident">cost_benefit</span>: <span class="ident">ReputationChange</span>) {
-		<span class="ident">T::report_peer</span>(<span class="self">self</span>, <span class="ident">who</span>, <span class="ident">cost_benefit</span>)
+	<span class="kw">fn </span>report_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, who: PeerId, cost_benefit: ReputationChange) {
+		T::report_peer(<span class="self">self</span>, who, cost_benefit)
 	}
 
-	<span class="kw">fn</span> <span class="ident">disconnect_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">who</span>: <span class="ident">PeerId</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>) {
-		<span class="ident">T::disconnect_peer</span>(<span class="self">self</span>, <span class="ident">who</span>, <span class="ident">protocol</span>)
+	<span class="kw">fn </span>disconnect_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, who: PeerId, protocol: ProtocolName) {
+		T::disconnect_peer(<span class="self">self</span>, who, protocol)
 	}
 
-	<span class="kw">fn</span> <span class="ident">accept_unreserved_peers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="ident">T::accept_unreserved_peers</span>(<span class="self">self</span>)
+	<span class="kw">fn </span>accept_unreserved_peers(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+		T::accept_unreserved_peers(<span class="self">self</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">deny_unreserved_peers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="ident">T::deny_unreserved_peers</span>(<span class="self">self</span>)
+	<span class="kw">fn </span>deny_unreserved_peers(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+		T::deny_unreserved_peers(<span class="self">self</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">add_reserved_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peer</span>: <span class="ident">MultiaddrWithPeerId</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="ident">T::add_reserved_peer</span>(<span class="self">self</span>, <span class="ident">peer</span>)
+	<span class="kw">fn </span>add_reserved_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, peer: MultiaddrWithPeerId) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
+		T::add_reserved_peer(<span class="self">self</span>, peer)
 	}
 
-	<span class="kw">fn</span> <span class="ident">remove_reserved_peer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">peer_id</span>: <span class="ident">PeerId</span>) {
-		<span class="ident">T::remove_reserved_peer</span>(<span class="self">self</span>, <span class="ident">peer_id</span>)
+	<span class="kw">fn </span>remove_reserved_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, peer_id: PeerId) {
+		T::remove_reserved_peer(<span class="self">self</span>, peer_id)
 	}
 
-	<span class="kw">fn</span> <span class="ident">set_reserved_peers</span>(
+	<span class="kw">fn </span>set_reserved_peers(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Multiaddr</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="ident">T::set_reserved_peers</span>(<span class="self">self</span>, <span class="ident">protocol</span>, <span class="ident">peers</span>)
+		protocol: ProtocolName,
+		peers: HashSet&lt;Multiaddr&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
+		T::set_reserved_peers(<span class="self">self</span>, protocol, peers)
 	}
 
-	<span class="kw">fn</span> <span class="ident">add_peers_to_reserved_set</span>(
+	<span class="kw">fn </span>add_peers_to_reserved_set(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Multiaddr</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="ident">T::add_peers_to_reserved_set</span>(<span class="self">self</span>, <span class="ident">protocol</span>, <span class="ident">peers</span>)
+		protocol: ProtocolName,
+		peers: HashSet&lt;Multiaddr&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
+		T::add_peers_to_reserved_set(<span class="self">self</span>, protocol, peers)
 	}
 
-	<span class="kw">fn</span> <span class="ident">remove_peers_from_reserved_set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">peers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>) {
-		<span class="ident">T::remove_peers_from_reserved_set</span>(<span class="self">self</span>, <span class="ident">protocol</span>, <span class="ident">peers</span>)
+	<span class="kw">fn </span>remove_peers_from_reserved_set(<span class="kw-2">&amp;</span><span class="self">self</span>, protocol: ProtocolName, peers: Vec&lt;PeerId&gt;) {
+		T::remove_peers_from_reserved_set(<span class="self">self</span>, protocol, peers)
 	}
 
-	<span class="kw">fn</span> <span class="ident">add_to_peers_set</span>(
+	<span class="kw">fn </span>add_to_peers_set(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">peers</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">Multiaddr</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="ident">T::add_to_peers_set</span>(<span class="self">self</span>, <span class="ident">protocol</span>, <span class="ident">peers</span>)
+		protocol: ProtocolName,
+		peers: HashSet&lt;Multiaddr&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
+		T::add_to_peers_set(<span class="self">self</span>, protocol, peers)
 	}
 
-	<span class="kw">fn</span> <span class="ident">remove_from_peers_set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">peers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>) {
-		<span class="ident">T::remove_from_peers_set</span>(<span class="self">self</span>, <span class="ident">protocol</span>, <span class="ident">peers</span>)
+	<span class="kw">fn </span>remove_from_peers_set(<span class="kw-2">&amp;</span><span class="self">self</span>, protocol: ProtocolName, peers: Vec&lt;PeerId&gt;) {
+		T::remove_from_peers_set(<span class="self">self</span>, protocol, peers)
 	}
 
-	<span class="kw">fn</span> <span class="ident">sync_num_connected</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-		<span class="ident">T::sync_num_connected</span>(<span class="self">self</span>)
+	<span class="kw">fn </span>sync_num_connected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+		T::sync_num_connected(<span class="self">self</span>)
 	}
 }
 
-<span class="doccomment">/// Provides access to network-level event stream.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkEventStream</span> {
-	<span class="doccomment">/// Returns a stream containing the events that happen on the network.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If this method is called multiple times, the events are duplicated.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The stream never ends (unless the `NetworkWorker` gets shut down).</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The name passed is used to identify the channel in the Prometheus metrics. Note that the</span>
-	<span class="doccomment">/// parameter is a `&amp;&#39;static str`, and not a `String`, in order to avoid accidentally having</span>
-	<span class="doccomment">/// an unbounded set of Prometheus metrics, which would be quite bad in terms of memory</span>
-	<span class="kw">fn</span> <span class="ident">event_stream</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Event</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Provides access to network-level event stream.
+</span><span class="kw">pub trait </span>NetworkEventStream {
+	<span class="doccomment">/// Returns a stream containing the events that happen on the network.
+	///
+	/// If this method is called multiple times, the events are duplicated.
+	///
+	/// The stream never ends (unless the `NetworkWorker` gets shut down).
+	///
+	/// The name passed is used to identify the channel in the Prometheus metrics. Note that the
+	/// parameter is a `&amp;&#39;static str`, and not a `String`, in order to avoid accidentally having
+	/// an unbounded set of Prometheus metrics, which would be quite bad in terms of memory
+	</span><span class="kw">fn </span>event_stream(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = Event&gt; + Send&gt;&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NetworkEventStream</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkEventStream</span>,
+<span class="kw">impl</span>&lt;T&gt; NetworkEventStream <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkEventStream,
 {
-	<span class="kw">fn</span> <span class="ident">event_stream</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Event</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="ident">T::event_stream</span>(<span class="self">self</span>, <span class="ident">name</span>)
+	<span class="kw">fn </span>event_stream(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) -&gt; Pin&lt;Box&lt;<span class="kw">dyn </span>Stream&lt;Item = Event&gt; + Send&gt;&gt; {
+		T::event_stream(<span class="self">self</span>, name)
 	}
 }
 
-<span class="doccomment">/// Trait for providing information about the local network state</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkStateInfo</span> {
-	<span class="doccomment">/// Returns the local external addresses.</span>
-	<span class="kw">fn</span> <span class="ident">external_addresses</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Multiaddr</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Trait for providing information about the local network state
+</span><span class="kw">pub trait </span>NetworkStateInfo {
+	<span class="doccomment">/// Returns the local external addresses.
+	</span><span class="kw">fn </span>external_addresses(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Multiaddr&gt;;
 
-	<span class="doccomment">/// Returns the local Peer ID.</span>
-	<span class="kw">fn</span> <span class="ident">local_peer_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PeerId</span>;
+	<span class="doccomment">/// Returns the local Peer ID.
+	</span><span class="kw">fn </span>local_peer_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PeerId;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NetworkStateInfo</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkStateInfo</span>,
+<span class="kw">impl</span>&lt;T&gt; NetworkStateInfo <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkStateInfo,
 {
-	<span class="kw">fn</span> <span class="ident">external_addresses</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Multiaddr</span><span class="op">&gt;</span> {
-		<span class="ident">T::external_addresses</span>(<span class="self">self</span>)
+	<span class="kw">fn </span>external_addresses(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Multiaddr&gt; {
+		T::external_addresses(<span class="self">self</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">local_peer_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PeerId</span> {
-		<span class="ident">T::local_peer_id</span>(<span class="self">self</span>)
+	<span class="kw">fn </span>local_peer_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PeerId {
+		T::local_peer_id(<span class="self">self</span>)
 	}
 }
 
-<span class="doccomment">/// Reserved slot in the notifications buffer, ready to accept data.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NotificationSenderReady</span> {
-	<span class="doccomment">/// Consumes this slots reservation and actually queues the notification.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// NOTE: Traits can&#39;t consume itself, but calling this method second time will return an error.</span>
-	<span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">notification</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">NotificationSenderError</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Reserved slot in the notifications buffer, ready to accept data.
+</span><span class="kw">pub trait </span>NotificationSenderReady {
+	<span class="doccomment">/// Consumes this slots reservation and actually queues the notification.
+	///
+	/// NOTE: Traits can&#39;t consume itself, but calling this method second time will return an error.
+	</span><span class="kw">fn </span>send(<span class="kw-2">&amp;mut </span><span class="self">self</span>, notification: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), NotificationSenderError&gt;;
 }
 
-<span class="doccomment">/// A `NotificationSender` allows for sending notifications to a peer with a chosen protocol.</span>
-<span class="attribute">#[<span class="ident">async_trait::async_trait</span>]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NotificationSender</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
-	<span class="doccomment">/// Returns a future that resolves when the `NotificationSender` is ready to send a</span>
-	<span class="doccomment">/// notification.</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>)
-		-&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">NotificationSenderReady</span> <span class="op">+</span> <span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">NotificationSenderError</span><span class="op">&gt;</span>;
+<span class="doccomment">/// A `NotificationSender` allows for sending notifications to a peer with a chosen protocol.
+</span><span class="attribute">#[async_trait::async_trait]
+</span><span class="kw">pub trait </span>NotificationSender: Send + Sync + <span class="lifetime">&#39;static </span>{
+	<span class="doccomment">/// Returns a future that resolves when the `NotificationSender` is ready to send a
+	/// notification.
+	</span><span class="kw">async fn </span>ready(<span class="kw-2">&amp;</span><span class="self">self</span>)
+		-&gt; <span class="prelude-ty">Result</span>&lt;Box&lt;<span class="kw">dyn </span>NotificationSenderReady + <span class="lifetime">&#39;_</span>&gt;, NotificationSenderError&gt;;
 }
 
-<span class="doccomment">/// Error returned by [`NetworkNotification::notification_sender`].</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">thiserror::Error</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NotificationSenderError</span> {
-	<span class="doccomment">/// The notification receiver has been closed, usually because the underlying connection</span>
-	<span class="doccomment">/// closed.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Some of the notifications most recently sent may not have been received. However,</span>
-	<span class="doccomment">/// the peer may still be connected and a new `NotificationSender` for the same</span>
-	<span class="doccomment">/// protocol obtained from [`NetworkNotification::notification_sender`].</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The notification receiver has been closed&quot;</span>)]</span>
-	<span class="ident">Closed</span>,
-	<span class="doccomment">/// Protocol name hasn&#39;t been registered.</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Protocol name hasn&#39;t been registered&quot;</span>)]</span>
-	<span class="ident">BadProtocol</span>,
+<span class="doccomment">/// Error returned by [`NetworkNotification::notification_sender`].
+</span><span class="attribute">#[derive(Debug, thiserror::Error)]
+</span><span class="kw">pub enum </span>NotificationSenderError {
+	<span class="doccomment">/// The notification receiver has been closed, usually because the underlying connection
+	/// closed.
+	///
+	/// Some of the notifications most recently sent may not have been received. However,
+	/// the peer may still be connected and a new `NotificationSender` for the same
+	/// protocol obtained from [`NetworkNotification::notification_sender`].
+	</span><span class="attribute">#[error(<span class="string">&quot;The notification receiver has been closed&quot;</span>)]
+	</span>Closed,
+	<span class="doccomment">/// Protocol name hasn&#39;t been registered.
+	</span><span class="attribute">#[error(<span class="string">&quot;Protocol name hasn&#39;t been registered&quot;</span>)]
+	</span>BadProtocol,
 }
 
-<span class="doccomment">/// Provides ability to send network notifications.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkNotification</span> {
-	<span class="doccomment">/// Appends a notification to the buffer of pending outgoing notifications with the given peer.</span>
-	<span class="doccomment">/// Has no effect if the notifications channel with this protocol name is not open.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If the buffer of pending outgoing notifications with that peer is full, the notification</span>
-	<span class="doccomment">/// is silently dropped and the connection to the remote will start being shut down. This</span>
-	<span class="doccomment">/// happens if you call this method at a higher rate than the rate at which the peer processes</span>
-	<span class="doccomment">/// these notifications, or if the available network bandwidth is too low.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// For this reason, this method is considered soft-deprecated. You are encouraged to use</span>
-	<span class="doccomment">/// [`NetworkNotification::notification_sender`] instead.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// &gt; **Note**: The reason why this is a no-op in the situation where we have no channel is</span>
-	<span class="doccomment">/// &gt;			that we don&#39;t guarantee message delivery anyway. Networking issues can cause</span>
-	<span class="doccomment">/// &gt;			connections to drop at any time, and higher-level logic shouldn&#39;t differentiate</span>
-	<span class="doccomment">/// &gt;			between the remote voluntarily closing a substream or a network error</span>
-	<span class="doccomment">/// &gt;			preventing the message from being delivered.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The protocol must have been registered with</span>
-	<span class="doccomment">/// `crate::config::NetworkConfiguration::notifications_protocols`.</span>
-	<span class="kw">fn</span> <span class="ident">write_notification</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">PeerId</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">message</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Provides ability to send network notifications.
+</span><span class="kw">pub trait </span>NetworkNotification {
+	<span class="doccomment">/// Appends a notification to the buffer of pending outgoing notifications with the given peer.
+	/// Has no effect if the notifications channel with this protocol name is not open.
+	///
+	/// If the buffer of pending outgoing notifications with that peer is full, the notification
+	/// is silently dropped and the connection to the remote will start being shut down. This
+	/// happens if you call this method at a higher rate than the rate at which the peer processes
+	/// these notifications, or if the available network bandwidth is too low.
+	///
+	/// For this reason, this method is considered soft-deprecated. You are encouraged to use
+	/// [`NetworkNotification::notification_sender`] instead.
+	///
+	/// &gt; **Note**: The reason why this is a no-op in the situation where we have no channel is
+	/// &gt;			that we don&#39;t guarantee message delivery anyway. Networking issues can cause
+	/// &gt;			connections to drop at any time, and higher-level logic shouldn&#39;t differentiate
+	/// &gt;			between the remote voluntarily closing a substream or a network error
+	/// &gt;			preventing the message from being delivered.
+	///
+	/// The protocol must have been registered with
+	/// `crate::config::NetworkConfiguration::notifications_protocols`.
+	</span><span class="kw">fn </span>write_notification(<span class="kw-2">&amp;</span><span class="self">self</span>, target: PeerId, protocol: ProtocolName, message: Vec&lt;u8&gt;);
 
-	<span class="doccomment">/// Obtains a [`NotificationSender`] for a connected peer, if it exists.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// A `NotificationSender` is scoped to a particular connection to the peer that holds</span>
-	<span class="doccomment">/// a receiver. With a `NotificationSender` at hand, sending a notification is done in two</span>
-	<span class="doccomment">/// steps:</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// 1.  [`NotificationSender::ready`] is used to wait for the sender to become ready</span>
-	<span class="doccomment">/// for another notification, yielding a [`NotificationSenderReady`] token.</span>
-	<span class="doccomment">/// 2.  [`NotificationSenderReady::send`] enqueues the notification for sending. This operation</span>
-	<span class="doccomment">/// can only fail if the underlying notification substream or connection has suddenly closed.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// An error is returned by [`NotificationSenderReady::send`] if there exists no open</span>
-	<span class="doccomment">/// notifications substream with that combination of peer and protocol, or if the remote</span>
-	<span class="doccomment">/// has asked to close the notifications substream. If that happens, it is guaranteed that an</span>
-	<span class="doccomment">/// [`Event::NotificationStreamClosed`] has been generated on the stream returned by</span>
-	<span class="doccomment">/// [`NetworkEventStream::event_stream`].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If the remote requests to close the notifications substream, all notifications successfully</span>
-	<span class="doccomment">/// enqueued using [`NotificationSenderReady::send`] will finish being sent out before the</span>
-	<span class="doccomment">/// substream actually gets closed, but attempting to enqueue more notifications will now</span>
-	<span class="doccomment">/// return an error. It is however possible for the entire connection to be abruptly closed,</span>
-	<span class="doccomment">/// in which case enqueued notifications will be lost.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The protocol must have been registered with</span>
-	<span class="doccomment">/// `crate::config::NetworkConfiguration::notifications_protocols`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Usage</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This method returns a struct that allows waiting until there is space available in the</span>
-	<span class="doccomment">/// buffer of messages towards the given peer. If the peer processes notifications at a slower</span>
-	<span class="doccomment">/// rate than we send them, this buffer will quickly fill up.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// As such, you should never do something like this:</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// ```ignore</span>
-	<span class="doccomment">/// // Do NOT do this</span>
-	<span class="doccomment">/// for peer in peers {</span>
-	<span class="doccomment">/// 	if let Ok(n) = network.notification_sender(peer, ...) {</span>
-	<span class="doccomment">/// 			if let Ok(s) = n.ready().await {</span>
-	<span class="doccomment">/// 				let _ = s.send(...);</span>
-	<span class="doccomment">/// 			}</span>
-	<span class="doccomment">/// 	}</span>
-	<span class="doccomment">/// }</span>
-	<span class="doccomment">/// ```</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Doing so would slow down all peers to the rate of the slowest one. A malicious or</span>
-	<span class="doccomment">/// malfunctioning peer could intentionally process notifications at a very slow rate.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Instead, you are encouraged to maintain your own buffer of notifications on top of the one</span>
-	<span class="doccomment">/// maintained by `sc-network`, and use `notification_sender` to progressively send out</span>
-	<span class="doccomment">/// elements from your buffer. If this additional buffer is full (which will happen at some</span>
-	<span class="doccomment">/// point if the peer is too slow to process notifications), appropriate measures can be taken,</span>
-	<span class="doccomment">/// such as removing non-critical notifications from the buffer or disconnecting the peer</span>
-	<span class="doccomment">/// using [`NetworkPeers::disconnect_peer`].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Notifications              Per-peer buffer</span>
-	<span class="doccomment">///   broadcast    +-------&gt;   of notifications   +--&gt;  `notification_sender`  +--&gt;  Internet</span>
-	<span class="doccomment">///                    ^       (not covered by</span>
-	<span class="doccomment">///                    |         sc-network)</span>
-	<span class="doccomment">///                    +</span>
-	<span class="doccomment">///      Notifications should be dropped</span>
-	<span class="doccomment">///             if buffer is full</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// See also the `sc-network-gossip` crate for a higher-level way to send notifications.</span>
-	<span class="kw">fn</span> <span class="ident">notification_sender</span>(
+	<span class="doccomment">/// Obtains a [`NotificationSender`] for a connected peer, if it exists.
+	///
+	/// A `NotificationSender` is scoped to a particular connection to the peer that holds
+	/// a receiver. With a `NotificationSender` at hand, sending a notification is done in two
+	/// steps:
+	///
+	/// 1.  [`NotificationSender::ready`] is used to wait for the sender to become ready
+	/// for another notification, yielding a [`NotificationSenderReady`] token.
+	/// 2.  [`NotificationSenderReady::send`] enqueues the notification for sending. This operation
+	/// can only fail if the underlying notification substream or connection has suddenly closed.
+	///
+	/// An error is returned by [`NotificationSenderReady::send`] if there exists no open
+	/// notifications substream with that combination of peer and protocol, or if the remote
+	/// has asked to close the notifications substream. If that happens, it is guaranteed that an
+	/// [`Event::NotificationStreamClosed`] has been generated on the stream returned by
+	/// [`NetworkEventStream::event_stream`].
+	///
+	/// If the remote requests to close the notifications substream, all notifications successfully
+	/// enqueued using [`NotificationSenderReady::send`] will finish being sent out before the
+	/// substream actually gets closed, but attempting to enqueue more notifications will now
+	/// return an error. It is however possible for the entire connection to be abruptly closed,
+	/// in which case enqueued notifications will be lost.
+	///
+	/// The protocol must have been registered with
+	/// `crate::config::NetworkConfiguration::notifications_protocols`.
+	///
+	/// # Usage
+	///
+	/// This method returns a struct that allows waiting until there is space available in the
+	/// buffer of messages towards the given peer. If the peer processes notifications at a slower
+	/// rate than we send them, this buffer will quickly fill up.
+	///
+	/// As such, you should never do something like this:
+	///
+	/// ```ignore
+	/// // Do NOT do this
+	/// for peer in peers {
+	/// 	if let Ok(n) = network.notification_sender(peer, ...) {
+	/// 			if let Ok(s) = n.ready().await {
+	/// 				let _ = s.send(...);
+	/// 			}
+	/// 	}
+	/// }
+	/// ```
+	///
+	/// Doing so would slow down all peers to the rate of the slowest one. A malicious or
+	/// malfunctioning peer could intentionally process notifications at a very slow rate.
+	///
+	/// Instead, you are encouraged to maintain your own buffer of notifications on top of the one
+	/// maintained by `sc-network`, and use `notification_sender` to progressively send out
+	/// elements from your buffer. If this additional buffer is full (which will happen at some
+	/// point if the peer is too slow to process notifications), appropriate measures can be taken,
+	/// such as removing non-critical notifications from the buffer or disconnecting the peer
+	/// using [`NetworkPeers::disconnect_peer`].
+	///
+	///
+	/// Notifications              Per-peer buffer
+	///   broadcast    +-------&gt;   of notifications   +--&gt;  `notification_sender`  +--&gt;  Internet
+	///                    ^       (not covered by
+	///                    |         sc-network)
+	///                    +
+	///      Notifications should be dropped
+	///             if buffer is full
+	///
+	///
+	/// See also the `sc-network-gossip` crate for a higher-level way to send notifications.
+	</span><span class="kw">fn </span>notification_sender(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">target</span>: <span class="ident">PeerId</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">NotificationSender</span><span class="op">&gt;</span>, <span class="ident">NotificationSenderError</span><span class="op">&gt;</span>;
+		target: PeerId,
+		protocol: ProtocolName,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;Box&lt;<span class="kw">dyn </span>NotificationSender&gt;, NotificationSenderError&gt;;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NetworkNotification</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkNotification</span>,
+<span class="kw">impl</span>&lt;T&gt; NetworkNotification <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkNotification,
 {
-	<span class="kw">fn</span> <span class="ident">write_notification</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">target</span>: <span class="ident">PeerId</span>, <span class="ident">protocol</span>: <span class="ident">ProtocolName</span>, <span class="ident">message</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
-		<span class="ident">T::write_notification</span>(<span class="self">self</span>, <span class="ident">target</span>, <span class="ident">protocol</span>, <span class="ident">message</span>)
+	<span class="kw">fn </span>write_notification(<span class="kw-2">&amp;</span><span class="self">self</span>, target: PeerId, protocol: ProtocolName, message: Vec&lt;u8&gt;) {
+		T::write_notification(<span class="self">self</span>, target, protocol, message)
 	}
 
-	<span class="kw">fn</span> <span class="ident">notification_sender</span>(
+	<span class="kw">fn </span>notification_sender(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">target</span>: <span class="ident">PeerId</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">NotificationSender</span><span class="op">&gt;</span>, <span class="ident">NotificationSenderError</span><span class="op">&gt;</span> {
-		<span class="ident">T::notification_sender</span>(<span class="self">self</span>, <span class="ident">target</span>, <span class="ident">protocol</span>)
+		target: PeerId,
+		protocol: ProtocolName,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;Box&lt;<span class="kw">dyn </span>NotificationSender&gt;, NotificationSenderError&gt; {
+		T::notification_sender(<span class="self">self</span>, target, protocol)
 	}
 }
 
-<span class="doccomment">/// Provides ability to send network requests.</span>
-<span class="attribute">#[<span class="ident">async_trait::async_trait</span>]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkRequest</span> {
-	<span class="doccomment">/// Sends a single targeted request to a specific peer. On success, returns the response of</span>
-	<span class="doccomment">/// the peer.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Request-response protocols are a way to complement notifications protocols, but</span>
-	<span class="doccomment">/// notifications should remain the default ways of communicating information. For example, a</span>
-	<span class="doccomment">/// peer can announce something through a notification, after which the recipient can obtain</span>
-	<span class="doccomment">/// more information by performing a request.</span>
-	<span class="doccomment">/// As such, call this function with `IfDisconnected::ImmediateError` for `connect`. This way</span>
-	<span class="doccomment">/// you will get an error immediately for disconnected peers, instead of waiting for a</span>
-	<span class="doccomment">/// potentially very long connection attempt, which would suggest that something is wrong</span>
-	<span class="doccomment">/// anyway, as you are supposed to be connected because of the notification protocol.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// No limit or throttling of concurrent outbound requests per peer and protocol are enforced.</span>
-	<span class="doccomment">/// Such restrictions, if desired, need to be enforced at the call site(s).</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The protocol must have been registered through</span>
-	<span class="doccomment">/// `NetworkConfiguration::request_response_protocols`.</span>
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">request</span>(
+<span class="doccomment">/// Provides ability to send network requests.
+</span><span class="attribute">#[async_trait::async_trait]
+</span><span class="kw">pub trait </span>NetworkRequest {
+	<span class="doccomment">/// Sends a single targeted request to a specific peer. On success, returns the response of
+	/// the peer.
+	///
+	/// Request-response protocols are a way to complement notifications protocols, but
+	/// notifications should remain the default ways of communicating information. For example, a
+	/// peer can announce something through a notification, after which the recipient can obtain
+	/// more information by performing a request.
+	/// As such, call this function with `IfDisconnected::ImmediateError` for `connect`. This way
+	/// you will get an error immediately for disconnected peers, instead of waiting for a
+	/// potentially very long connection attempt, which would suggest that something is wrong
+	/// anyway, as you are supposed to be connected because of the notification protocol.
+	///
+	/// No limit or throttling of concurrent outbound requests per peer and protocol are enforced.
+	/// Such restrictions, if desired, need to be enforced at the call site(s).
+	///
+	/// The protocol must have been registered through
+	/// `NetworkConfiguration::request_response_protocols`.
+	</span><span class="kw">async fn </span>request(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">target</span>: <span class="ident">PeerId</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">request</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">connect</span>: <span class="ident">IfDisconnected</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">RequestFailure</span><span class="op">&gt;</span>;
+		target: PeerId,
+		protocol: ProtocolName,
+		request: Vec&lt;u8&gt;,
+		connect: IfDisconnected,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, RequestFailure&gt;;
 
-	<span class="doccomment">/// Variation of `request` which starts a request whose response is delivered on a provided</span>
-	<span class="doccomment">/// channel.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Instead of blocking and waiting for a reply, this function returns immediately, sending</span>
-	<span class="doccomment">/// responses via the passed in sender. This alternative API exists to make it easier to</span>
-	<span class="doccomment">/// integrate with message passing APIs.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Keep in mind that the connected receiver might receive a `Canceled` event in case of a</span>
-	<span class="doccomment">/// closing connection. This is expected behaviour. With `request` you would get a</span>
-	<span class="doccomment">/// `RequestFailure::Network(OutboundFailure::ConnectionClosed)` in that case.</span>
-	<span class="kw">fn</span> <span class="ident">start_request</span>(
+	<span class="doccomment">/// Variation of `request` which starts a request whose response is delivered on a provided
+	/// channel.
+	///
+	/// Instead of blocking and waiting for a reply, this function returns immediately, sending
+	/// responses via the passed in sender. This alternative API exists to make it easier to
+	/// integrate with message passing APIs.
+	///
+	/// Keep in mind that the connected receiver might receive a `Canceled` event in case of a
+	/// closing connection. This is expected behaviour. With `request` you would get a
+	/// `RequestFailure::Network(OutboundFailure::ConnectionClosed)` in that case.
+	</span><span class="kw">fn </span>start_request(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">target</span>: <span class="ident">PeerId</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">request</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">tx</span>: <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">RequestFailure</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-		<span class="ident">connect</span>: <span class="ident">IfDisconnected</span>,
+		target: PeerId,
+		protocol: ProtocolName,
+		request: Vec&lt;u8&gt;,
+		tx: oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, RequestFailure&gt;&gt;,
+		connect: IfDisconnected,
 	);
 }
 
-<span class="comment">// Manual implementation to avoid extra boxing here</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">NetworkRequest</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkRequest</span>,
+<span class="comment">// Manual implementation to avoid extra boxing here
+</span><span class="kw">impl</span>&lt;T&gt; NetworkRequest <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkRequest,
 {
-	<span class="kw">fn</span> <span class="ident">request</span><span class="op">&lt;</span><span class="lifetime">&#39;life0</span>, <span class="lifetime">&#39;async_trait</span><span class="op">&gt;</span>(
-		<span class="kw-2">&amp;</span><span class="lifetime">&#39;life0</span> <span class="self">self</span>,
-		<span class="ident">target</span>: <span class="ident">PeerId</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">request</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">connect</span>: <span class="ident">IfDisconnected</span>,
-	) -&gt; <span class="ident">Pin</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">RequestFailure</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;async_trait</span><span class="op">&gt;</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="lifetime">&#39;life0</span>: <span class="lifetime">&#39;async_trait</span>,
+	<span class="kw">fn </span>request&lt;<span class="lifetime">&#39;life0</span>, <span class="lifetime">&#39;async_trait</span>&gt;(
+		<span class="kw-2">&amp;</span><span class="lifetime">&#39;life0 </span><span class="self">self</span>,
+		target: PeerId,
+		protocol: ProtocolName,
+		request: Vec&lt;u8&gt;,
+		connect: IfDisconnected,
+	) -&gt; Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, RequestFailure&gt;&gt; + Send + <span class="lifetime">&#39;async_trait</span>&gt;&gt;
+	<span class="kw">where
+		</span><span class="lifetime">&#39;life0</span>: <span class="lifetime">&#39;async_trait</span>,
 		<span class="self">Self</span>: <span class="lifetime">&#39;async_trait</span>,
 	{
-		<span class="ident">T::request</span>(<span class="self">self</span>, <span class="ident">target</span>, <span class="ident">protocol</span>, <span class="ident">request</span>, <span class="ident">connect</span>)
+		T::request(<span class="self">self</span>, target, protocol, request, connect)
 	}
 
-	<span class="kw">fn</span> <span class="ident">start_request</span>(
+	<span class="kw">fn </span>start_request(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">target</span>: <span class="ident">PeerId</span>,
-		<span class="ident">protocol</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">request</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-		<span class="ident">tx</span>: <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">RequestFailure</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-		<span class="ident">connect</span>: <span class="ident">IfDisconnected</span>,
+		target: PeerId,
+		protocol: ProtocolName,
+		request: Vec&lt;u8&gt;,
+		tx: oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, RequestFailure&gt;&gt;,
+		connect: IfDisconnected,
 	) {
-		<span class="ident">T::start_request</span>(<span class="self">self</span>, <span class="ident">target</span>, <span class="ident">protocol</span>, <span class="ident">request</span>, <span class="ident">tx</span>, <span class="ident">connect</span>)
+		T::start_request(<span class="self">self</span>, target, protocol, request, tx, connect)
 	}
 }
 
-<span class="doccomment">/// Provides ability to announce blocks to the network.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NetworkBlock</span><span class="op">&lt;</span><span class="ident">BlockHash</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Make sure an important block is propagated to peers.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// In chain-based consensus, we often need to make sure non-best forks are</span>
-	<span class="doccomment">/// at least temporarily synced. This function forces such an announcement.</span>
-	<span class="kw">fn</span> <span class="ident">announce_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">BlockHash</span>, <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Provides ability to announce blocks to the network.
+</span><span class="kw">pub trait </span>NetworkBlock&lt;BlockHash, BlockNumber&gt; {
+	<span class="doccomment">/// Make sure an important block is propagated to peers.
+	///
+	/// In chain-based consensus, we often need to make sure non-best forks are
+	/// at least temporarily synced. This function forces such an announcement.
+	</span><span class="kw">fn </span>announce_block(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: BlockHash, data: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;);
 
-	<span class="doccomment">/// Inform the network service about new best imported block.</span>
-	<span class="kw">fn</span> <span class="ident">new_best_block_imported</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">BlockHash</span>, <span class="ident">number</span>: <span class="ident">BlockNumber</span>);
+	<span class="doccomment">/// Inform the network service about new best imported block.
+	</span><span class="kw">fn </span>new_best_block_imported(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: BlockHash, number: BlockNumber);
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">BlockHash</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> <span class="ident">NetworkBlock</span><span class="op">&lt;</span><span class="ident">BlockHash</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span>,
-	<span class="ident">T</span>: <span class="ident">NetworkBlock</span><span class="op">&lt;</span><span class="ident">BlockHash</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;T, BlockHash, BlockNumber&gt; NetworkBlock&lt;BlockHash, BlockNumber&gt; <span class="kw">for </span>Arc&lt;T&gt;
+<span class="kw">where
+	</span>T: <span class="question-mark">?</span>Sized,
+	T: NetworkBlock&lt;BlockHash, BlockNumber&gt;,
 {
-	<span class="kw">fn</span> <span class="ident">announce_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">BlockHash</span>, <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-		<span class="ident">T::announce_block</span>(<span class="self">self</span>, <span class="ident">hash</span>, <span class="ident">data</span>)
+	<span class="kw">fn </span>announce_block(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: BlockHash, data: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;) {
+		T::announce_block(<span class="self">self</span>, hash, data)
 	}
 
-	<span class="kw">fn</span> <span class="ident">new_best_block_imported</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">hash</span>: <span class="ident">BlockHash</span>, <span class="ident">number</span>: <span class="ident">BlockNumber</span>) {
-		<span class="ident">T::new_best_block_imported</span>(<span class="self">self</span>, <span class="ident">hash</span>, <span class="ident">number</span>)
+	<span class="kw">fn </span>new_best_block_imported(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: BlockHash, number: BlockNumber) {
+		T::new_best_block_imported(<span class="self">self</span>, hash, number)
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_network_common" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_network_common" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

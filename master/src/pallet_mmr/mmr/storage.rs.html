@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/merkle-mountain-range/src/mmr/storage.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>storage.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../pallet_mmr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../pallet_mmr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../pallet_mmr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/merkle-mountain-range/src/mmr/storage.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>storage.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../pallet_mmr/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../pallet_mmr/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -392,394 +386,393 @@
 <span id="386">386</span>
 <span id="387">387</span>
 <span id="388">388</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! A MMR storage implementations.</span>
+</span><span class="doccomment">//! A MMR storage implementations.
 
-<span class="kw">use</span> <span class="ident">codec::Encode</span>;
-<span class="kw">use</span> <span class="ident">frame_support::log</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">trace</span>};
-<span class="kw">use</span> <span class="ident">mmr_lib::helper</span>;
-<span class="kw">use</span> <span class="ident">sp_core::offchain::StorageKind</span>;
-<span class="kw">use</span> <span class="ident">sp_io</span>::{<span class="ident">offchain</span>, <span class="ident">offchain_index</span>};
-<span class="kw">use</span> <span class="ident">sp_std::iter::Peekable</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">use</span> <span class="ident">sp_std::prelude</span>::<span class="kw-2">*</span>;
+</span><span class="kw">use </span>codec::Encode;
+<span class="kw">use </span>frame_support::log::{debug, error, trace};
+<span class="kw">use </span>mmr_lib::helper;
+<span class="kw">use </span>sp_core::offchain::StorageKind;
+<span class="kw">use </span>sp_io::{offchain, offchain_index};
+<span class="kw">use </span>sp_std::iter::Peekable;
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+</span><span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">mmr</span>::{<span class="ident">utils::NodesUtils</span>, <span class="ident">Node</span>, <span class="ident">NodeOf</span>},
-	<span class="ident">primitives</span>::{<span class="self">self</span>, <span class="ident">NodeIndex</span>},
-	<span class="ident">Config</span>, <span class="ident">Nodes</span>, <span class="ident">NumberOfLeaves</span>, <span class="ident">Pallet</span>,
+<span class="kw">use crate</span>::{
+	mmr::{utils::NodesUtils, Node, NodeOf},
+	primitives::{<span class="self">self</span>, NodeIndex},
+	Config, Nodes, NumberOfLeaves, Pallet,
 };
 
-<span class="doccomment">/// A marker type for runtime-specific storage implementation.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Allows appending new items to the MMR and proof verification.</span>
-<span class="doccomment">/// MMR nodes are appended to two different storages:</span>
-<span class="doccomment">/// 1. We add nodes (leaves) hashes to the on-chain storage (see [crate::Nodes]).</span>
-<span class="doccomment">/// 2. We add full leaves (and all inner nodes as well) into the `IndexingAPI` during block</span>
-<span class="doccomment">///    processing, so the values end up in the Offchain DB if indexing is enabled.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RuntimeStorage</span>;
+<span class="doccomment">/// A marker type for runtime-specific storage implementation.
+///
+/// Allows appending new items to the MMR and proof verification.
+/// MMR nodes are appended to two different storages:
+/// 1. We add nodes (leaves) hashes to the on-chain storage (see [crate::Nodes]).
+/// 2. We add full leaves (and all inner nodes as well) into the `IndexingAPI` during block
+///    processing, so the values end up in the Offchain DB if indexing is enabled.
+</span><span class="kw">pub struct </span>RuntimeStorage;
 
-<span class="doccomment">/// A marker type for offchain-specific storage implementation.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Allows proof generation and verification, but does not support appending new items.</span>
-<span class="doccomment">/// MMR nodes are assumed to be stored in the Off-Chain DB. Note this storage type</span>
-<span class="doccomment">/// DOES NOT support adding new items to the MMR.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OffchainStorage</span>;
+<span class="doccomment">/// A marker type for offchain-specific storage implementation.
+///
+/// Allows proof generation and verification, but does not support appending new items.
+/// MMR nodes are assumed to be stored in the Off-Chain DB. Note this storage type
+/// DOES NOT support adding new items to the MMR.
+</span><span class="kw">pub struct </span>OffchainStorage;
 
-<span class="doccomment">/// Suffix of key for the &#39;pruning_map&#39;.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Nodes and leaves are initially saved under fork-specific keys in offchain db,</span>
-<span class="doccomment">/// eventually they are &quot;canonicalized&quot; and this map is used to prune non-canon entries.</span>
-<span class="kw">const</span> <span class="ident">OFFCHAIN_PRUNING_MAP_KEY_SUFFIX</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;pruning_map&quot;</span>;
+<span class="doccomment">/// Suffix of key for the &#39;pruning_map&#39;.
+///
+/// Nodes and leaves are initially saved under fork-specific keys in offchain db,
+/// eventually they are &quot;canonicalized&quot; and this map is used to prune non-canon entries.
+</span><span class="kw">const </span>OFFCHAIN_PRUNING_MAP_KEY_SUFFIX: <span class="kw-2">&amp;</span>str = <span class="string">&quot;pruning_map&quot;</span>;
 
-<span class="doccomment">/// Used to store offchain mappings of `BlockNumber -&gt; Vec[Hash]` to track all forks.</span>
-<span class="doccomment">/// Size of this offchain map is at most `frame_system::BlockHashCount`, its entries are pruned</span>
-<span class="doccomment">/// as part of the mechanism that prunes the forks this map tracks.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">PruningMap</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">I</span>)<span class="op">&gt;</span>);
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span> <span class="ident">PruningMap</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="lifetime">&#39;static</span>,
+<span class="doccomment">/// Used to store offchain mappings of `BlockNumber -&gt; Vec[Hash]` to track all forks.
+/// Size of this offchain map is at most `frame_system::BlockHashCount`, its entries are pruned
+/// as part of the mechanism that prunes the forks this map tracks.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>PruningMap&lt;T, I&gt;(sp_std::marker::PhantomData&lt;(T, I)&gt;);
+<span class="kw">impl</span>&lt;T, I&gt; PruningMap&lt;T, I&gt;
+<span class="kw">where
+	</span>T: Config&lt;I&gt;,
+	I: <span class="lifetime">&#39;static</span>,
 {
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">pruning_map_offchain_key</span>(<span class="ident">block</span>: <span class="ident">T::BlockNumber</span>) -&gt; <span class="ident">sp_std::prelude::Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-		(<span class="ident">T::INDEXING_PREFIX</span>, <span class="ident">block</span>, <span class="ident">OFFCHAIN_PRUNING_MAP_KEY_SUFFIX</span>).<span class="ident">encode</span>()
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>pruning_map_offchain_key(block: T::BlockNumber) -&gt; sp_std::prelude::Vec&lt;u8&gt; {
+		(T::INDEXING_PREFIX, block, OFFCHAIN_PRUNING_MAP_KEY_SUFFIX).encode()
 	}
 
-	<span class="doccomment">/// Append `hash` to the list of parent hashes for `block` in offchain db.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">append</span>(<span class="ident">block</span>: <span class="ident">T::BlockNumber</span>, <span class="ident">hash</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span>) {
-		<span class="kw">let</span> <span class="ident">map_key</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::pruning_map_offchain_key</span>(<span class="ident">block</span>);
-		<span class="ident">offchain::local_storage_get</span>(<span class="ident">StorageKind::PERSISTENT</span>, <span class="kw-2">&amp;</span><span class="ident">map_key</span>)
-			.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">codec::Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">v</span>).<span class="ident">ok</span>())
-			.<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">Vec</span>::<span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span><span class="ident">::new</span>()))
-			.<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">parents</span><span class="op">|</span> {
-				<span class="ident">parents</span>.<span class="ident">push</span>(<span class="ident">hash</span>);
-				<span class="ident">offchain::local_storage_set</span>(
-					<span class="ident">StorageKind::PERSISTENT</span>,
-					<span class="kw-2">&amp;</span><span class="ident">map_key</span>,
-					<span class="kw-2">&amp;</span><span class="ident">Encode::encode</span>(<span class="kw-2">&amp;</span><span class="ident">parents</span>),
+	<span class="doccomment">/// Append `hash` to the list of parent hashes for `block` in offchain db.
+	</span><span class="kw">pub fn </span>append(block: T::BlockNumber, hash: &lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash) {
+		<span class="kw">let </span>map_key = <span class="self">Self</span>::pruning_map_offchain_key(block);
+		offchain::local_storage_get(StorageKind::PERSISTENT, <span class="kw-2">&amp;</span>map_key)
+			.and_then(|v| codec::Decode::decode(<span class="kw-2">&amp;mut &amp;*</span>v).ok())
+			.or_else(|| <span class="prelude-val">Some</span>(Vec::&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash&gt;::new()))
+			.map(|<span class="kw-2">mut </span>parents| {
+				parents.push(hash);
+				offchain::local_storage_set(
+					StorageKind::PERSISTENT,
+					<span class="kw-2">&amp;</span>map_key,
+					<span class="kw-2">&amp;</span>Encode::encode(<span class="kw-2">&amp;</span>parents),
 				);
 			});
 	}
 
-	<span class="doccomment">/// Remove list of parent hashes for `block` from offchain db and return it.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">remove</span>(<span class="ident">block</span>: <span class="ident">T::BlockNumber</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">map_key</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::pruning_map_offchain_key</span>(<span class="ident">block</span>);
-		<span class="ident">offchain::local_storage_get</span>(<span class="ident">StorageKind::PERSISTENT</span>, <span class="kw-2">&amp;</span><span class="ident">map_key</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> {
-			<span class="ident">offchain::local_storage_clear</span>(<span class="ident">StorageKind::PERSISTENT</span>, <span class="kw-2">&amp;</span><span class="ident">map_key</span>);
-			<span class="ident">codec::Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">v</span>).<span class="ident">ok</span>()
+	<span class="doccomment">/// Remove list of parent hashes for `block` from offchain db and return it.
+	</span><span class="kw">pub fn </span>remove(block: T::BlockNumber) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash&gt;&gt; {
+		<span class="kw">let </span>map_key = <span class="self">Self</span>::pruning_map_offchain_key(block);
+		offchain::local_storage_get(StorageKind::PERSISTENT, <span class="kw-2">&amp;</span>map_key).and_then(|v| {
+			offchain::local_storage_clear(StorageKind::PERSISTENT, <span class="kw-2">&amp;</span>map_key);
+			codec::Decode::decode(<span class="kw-2">&amp;mut &amp;*</span>v).ok()
 		})
 	}
 }
 
-<span class="doccomment">/// A storage layer for MMR.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// There are two different implementations depending on the use case.</span>
-<span class="doccomment">/// See docs for [RuntimeStorage] and [OffchainStorage].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>(<span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span>(<span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span>)<span class="op">&gt;</span>);
+<span class="doccomment">/// A storage layer for MMR.
+///
+/// There are two different implementations depending on the use case.
+/// See docs for [RuntimeStorage] and [OffchainStorage].
+</span><span class="kw">pub struct </span>Storage&lt;StorageType, T, I, L&gt;(sp_std::marker::PhantomData&lt;(StorageType, T, I, L)&gt;);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">StorageType</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span>(<span class="ident">Default::default</span>())
+<span class="kw">impl</span>&lt;StorageType, T, I, L&gt; Default <span class="kw">for </span>Storage&lt;StorageType, T, I, L&gt; {
+	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(Default::default())
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">OffchainStorage</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="lifetime">&#39;static</span>,
-	<span class="ident">L</span>: <span class="ident">primitives::FullLeaf</span>,
+<span class="kw">impl</span>&lt;T, I, L&gt; Storage&lt;OffchainStorage, T, I, L&gt;
+<span class="kw">where
+	</span>T: Config&lt;I&gt;,
+	I: <span class="lifetime">&#39;static</span>,
+	L: primitives::FullLeaf,
 {
-	<span class="doccomment">/// Move nodes and leaves added by block `N` in offchain db from _fork-aware key_ to</span>
-	<span class="doccomment">/// _canonical key_,</span>
-	<span class="doccomment">/// where `N` is `frame_system::BlockHashCount` blocks behind current block number.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This &quot;canonicalization&quot; process is required because the _fork-aware key_ value depends</span>
-	<span class="doccomment">/// on `frame_system::block_hash(block_num)` map which only holds the last</span>
-	<span class="doccomment">/// `frame_system::BlockHashCount` blocks.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// For the canonicalized block, prune all nodes pertaining to other forks from offchain db.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Should only be called from offchain context, because it requires both read and write</span>
-	<span class="doccomment">/// access to offchain db.</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">canonicalize_and_prune</span>(<span class="ident">block</span>: <span class="ident">T::BlockNumber</span>) {
-		<span class="comment">// Add &quot;block_num -&gt; hash&quot; mapping to offchain db,</span>
-		<span class="comment">// with all forks pushing hashes to same entry (same block number).</span>
-		<span class="kw">let</span> <span class="ident">parent_hash</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">frame_system::Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::parent_hash</span>();
-		<span class="ident">PruningMap</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::append</span>(<span class="ident">block</span>, <span class="ident">parent_hash</span>);
+	<span class="doccomment">/// Move nodes and leaves added by block `N` in offchain db from _fork-aware key_ to
+	/// _canonical key_,
+	/// where `N` is `frame_system::BlockHashCount` blocks behind current block number.
+	///
+	/// This &quot;canonicalization&quot; process is required because the _fork-aware key_ value depends
+	/// on `frame_system::block_hash(block_num)` map which only holds the last
+	/// `frame_system::BlockHashCount` blocks.
+	///
+	/// For the canonicalized block, prune all nodes pertaining to other forks from offchain db.
+	///
+	/// Should only be called from offchain context, because it requires both read and write
+	/// access to offchain db.
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>canonicalize_and_prune(block: T::BlockNumber) {
+		<span class="comment">// Add &quot;block_num -&gt; hash&quot; mapping to offchain db,
+		// with all forks pushing hashes to same entry (same block number).
+		</span><span class="kw">let </span>parent_hash = &lt;frame_system::Pallet&lt;T&gt;&gt;::parent_hash();
+		PruningMap::&lt;T, I&gt;::append(block, parent_hash);
 
-		<span class="comment">// Effectively move a rolling window of fork-unique leaves. Once out of the window, leaves</span>
-		<span class="comment">// are &quot;canonicalized&quot; in offchain by moving them under `Pallet::node_canon_offchain_key`.</span>
-		<span class="kw">let</span> <span class="ident">leaves</span> <span class="op">=</span> <span class="ident">NumberOfLeaves</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>();
-		<span class="kw">let</span> <span class="ident">window_size</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::offchain_canonicalization_window</span>();
-		<span class="kw">if</span> <span class="ident">leaves</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">window_size</span> {
-			<span class="comment">// Move the rolling window towards the end of `block_num-&gt;hash` mappings available</span>
-			<span class="comment">// in the runtime: we &quot;canonicalize&quot; the leaf at the end,</span>
-			<span class="kw">let</span> <span class="ident">to_canon_leaf</span> <span class="op">=</span> <span class="ident">leaves</span>.<span class="ident">saturating_sub</span>(<span class="ident">window_size</span>);
-			<span class="comment">// and all the nodes added by that leaf.</span>
-			<span class="kw">let</span> <span class="ident">to_canon_nodes</span> <span class="op">=</span> <span class="ident">NodesUtils::right_branch_ending_in_leaf</span>(<span class="ident">to_canon_leaf</span>);
+		<span class="comment">// Effectively move a rolling window of fork-unique leaves. Once out of the window, leaves
+		// are &quot;canonicalized&quot; in offchain by moving them under `Pallet::node_canon_offchain_key`.
+		</span><span class="kw">let </span>leaves = NumberOfLeaves::&lt;T, I&gt;::get();
+		<span class="kw">let </span>window_size = Pallet::&lt;T, I&gt;::offchain_canonicalization_window();
+		<span class="kw">if </span>leaves &gt;= window_size {
+			<span class="comment">// Move the rolling window towards the end of `block_num-&gt;hash` mappings available
+			// in the runtime: we &quot;canonicalize&quot; the leaf at the end,
+			</span><span class="kw">let </span>to_canon_leaf = leaves.saturating_sub(window_size);
+			<span class="comment">// and all the nodes added by that leaf.
+			</span><span class="kw">let </span>to_canon_nodes = NodesUtils::right_branch_ending_in_leaf(to_canon_leaf);
 			<span class="macro">debug!</span>(
-				<span class="ident">target</span>: <span class="string">&quot;runtime::mmr::offchain&quot;</span>, <span class="string">&quot;Nodes to canon for leaf {}: {:?}&quot;</span>,
-				<span class="ident">to_canon_leaf</span>, <span class="ident">to_canon_nodes</span>
+				target: <span class="string">&quot;runtime::mmr::offchain&quot;</span>, <span class="string">&quot;Nodes to canon for leaf {}: {:?}&quot;</span>,
+				to_canon_leaf, to_canon_nodes
 			);
-			<span class="comment">// For this block number there may be node entries saved from multiple forks.</span>
-			<span class="kw">let</span> <span class="ident">to_canon_block_num</span> <span class="op">=</span>
-				<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::leaf_index_to_parent_block_num</span>(<span class="ident">to_canon_leaf</span>, <span class="ident">leaves</span>);
-			<span class="comment">// Only entries under this hash (retrieved from state on current canon fork) are to be</span>
-			<span class="comment">// persisted. All entries added by same block number on other forks will be cleared.</span>
-			<span class="kw">let</span> <span class="ident">to_canon_hash</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">frame_system::Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::block_hash</span>(<span class="ident">to_canon_block_num</span>);
+			<span class="comment">// For this block number there may be node entries saved from multiple forks.
+			</span><span class="kw">let </span>to_canon_block_num =
+				Pallet::&lt;T, I&gt;::leaf_index_to_parent_block_num(to_canon_leaf, leaves);
+			<span class="comment">// Only entries under this hash (retrieved from state on current canon fork) are to be
+			// persisted. All entries added by same block number on other forks will be cleared.
+			</span><span class="kw">let </span>to_canon_hash = &lt;frame_system::Pallet&lt;T&gt;&gt;::block_hash(to_canon_block_num);
 
-			<span class="ident"><span class="self">Self</span>::canonicalize_nodes_for_hash</span>(<span class="kw-2">&amp;</span><span class="ident">to_canon_nodes</span>, <span class="ident">to_canon_hash</span>);
-			<span class="comment">// Get all the forks to prune, also remove them from the offchain pruning_map.</span>
-			<span class="ident">PruningMap</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::remove</span>(<span class="ident">to_canon_block_num</span>)
-				.<span class="ident">map</span>(<span class="op">|</span><span class="ident">forks</span><span class="op">|</span> {
-					<span class="ident"><span class="self">Self</span>::prune_nodes_for_forks</span>(<span class="kw-2">&amp;</span><span class="ident">to_canon_nodes</span>, <span class="ident">forks</span>);
+			<span class="self">Self</span>::canonicalize_nodes_for_hash(<span class="kw-2">&amp;</span>to_canon_nodes, to_canon_hash);
+			<span class="comment">// Get all the forks to prune, also remove them from the offchain pruning_map.
+			</span>PruningMap::&lt;T, I&gt;::remove(to_canon_block_num)
+				.map(|forks| {
+					<span class="self">Self</span>::prune_nodes_for_forks(<span class="kw-2">&amp;</span>to_canon_nodes, forks);
 				})
-				.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+				.unwrap_or_else(|| {
 					<span class="macro">error!</span>(
-						<span class="ident">target</span>: <span class="string">&quot;runtime::mmr::offchain&quot;</span>,
+						target: <span class="string">&quot;runtime::mmr::offchain&quot;</span>,
 						<span class="string">&quot;Offchain: could not prune: no entry in pruning map for block {:?}&quot;</span>,
-						<span class="ident">to_canon_block_num</span>
+						to_canon_block_num
 					);
 				})
 		}
 	}
 
-	<span class="kw">fn</span> <span class="ident">prune_nodes_for_forks</span>(<span class="ident">nodes</span>: <span class="kw-2">&amp;</span>[<span class="ident">NodeIndex</span>], <span class="ident">forks</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span>) {
-		<span class="kw">for</span> <span class="ident">hash</span> <span class="kw">in</span> <span class="ident">forks</span> {
-			<span class="kw">for</span> <span class="ident">pos</span> <span class="kw">in</span> <span class="ident">nodes</span> {
-				<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::node_offchain_key</span>(<span class="kw-2">*</span><span class="ident">pos</span>, <span class="ident">hash</span>);
+	<span class="kw">fn </span>prune_nodes_for_forks(nodes: <span class="kw-2">&amp;</span>[NodeIndex], forks: Vec&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash&gt;) {
+		<span class="kw">for </span>hash <span class="kw">in </span>forks {
+			<span class="kw">for </span>pos <span class="kw">in </span>nodes {
+				<span class="kw">let </span>key = Pallet::&lt;T, I&gt;::node_offchain_key(<span class="kw-2">*</span>pos, hash);
 				<span class="macro">debug!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;runtime::mmr::offchain&quot;</span>,
+					target: <span class="string">&quot;runtime::mmr::offchain&quot;</span>,
 					<span class="string">&quot;Clear elem at pos {} with key {:?}&quot;</span>,
-					<span class="ident">pos</span>, <span class="ident">key</span>
+					pos, key
 				);
-				<span class="ident">offchain::local_storage_clear</span>(<span class="ident">StorageKind::PERSISTENT</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>);
+				offchain::local_storage_clear(StorageKind::PERSISTENT, <span class="kw-2">&amp;</span>key);
 			}
 		}
 	}
 
-	<span class="kw">fn</span> <span class="ident">canonicalize_nodes_for_hash</span>(
-		<span class="ident">to_canon_nodes</span>: <span class="kw-2">&amp;</span>[<span class="ident">NodeIndex</span>],
-		<span class="ident">to_canon_hash</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span>,
+	<span class="kw">fn </span>canonicalize_nodes_for_hash(
+		to_canon_nodes: <span class="kw-2">&amp;</span>[NodeIndex],
+		to_canon_hash: &lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash,
 	) {
-		<span class="kw">for</span> <span class="ident">pos</span> <span class="kw">in</span> <span class="ident">to_canon_nodes</span> {
-			<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::node_offchain_key</span>(<span class="kw-2">*</span><span class="ident">pos</span>, <span class="ident">to_canon_hash</span>);
-			<span class="comment">// Retrieve the element from Off-chain DB under fork-aware key.</span>
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">elem</span>) <span class="op">=</span> <span class="ident">offchain::local_storage_get</span>(<span class="ident">StorageKind::PERSISTENT</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>) {
-				<span class="kw">let</span> <span class="ident">canon_key</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::node_canon_offchain_key</span>(<span class="kw-2">*</span><span class="ident">pos</span>);
-				<span class="comment">// Add under new canon key.</span>
-				<span class="ident">offchain::local_storage_set</span>(<span class="ident">StorageKind::PERSISTENT</span>, <span class="kw-2">&amp;</span><span class="ident">canon_key</span>, <span class="kw-2">&amp;</span><span class="ident">elem</span>);
+		<span class="kw">for </span>pos <span class="kw">in </span>to_canon_nodes {
+			<span class="kw">let </span>key = Pallet::&lt;T, I&gt;::node_offchain_key(<span class="kw-2">*</span>pos, to_canon_hash);
+			<span class="comment">// Retrieve the element from Off-chain DB under fork-aware key.
+			</span><span class="kw">if let </span><span class="prelude-val">Some</span>(elem) = offchain::local_storage_get(StorageKind::PERSISTENT, <span class="kw-2">&amp;</span>key) {
+				<span class="kw">let </span>canon_key = Pallet::&lt;T, I&gt;::node_canon_offchain_key(<span class="kw-2">*</span>pos);
+				<span class="comment">// Add under new canon key.
+				</span>offchain::local_storage_set(StorageKind::PERSISTENT, <span class="kw-2">&amp;</span>canon_key, <span class="kw-2">&amp;</span>elem);
 				<span class="macro">debug!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;runtime::mmr::offchain&quot;</span>,
+					target: <span class="string">&quot;runtime::mmr::offchain&quot;</span>,
 					<span class="string">&quot;Moved elem at pos {} from key {:?} to canon key {:?}&quot;</span>,
-					<span class="ident">pos</span>, <span class="ident">key</span>, <span class="ident">canon_key</span>
+					pos, key, canon_key
 				);
-			} <span class="kw">else</span> {
+			} <span class="kw">else </span>{
 				<span class="macro">error!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;runtime::mmr::offchain&quot;</span>,
+					target: <span class="string">&quot;runtime::mmr::offchain&quot;</span>,
 					<span class="string">&quot;Could not canonicalize elem at pos {} using key {:?}&quot;</span>,
-					<span class="ident">pos</span>, <span class="ident">key</span>
+					pos, key
 				);
 			}
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">mmr_lib::MMRStore</span><span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">OffchainStorage</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="lifetime">&#39;static</span>,
-	<span class="ident">L</span>: <span class="ident">primitives::FullLeaf</span> <span class="op">+</span> <span class="ident">codec::Decode</span>,
+<span class="kw">impl</span>&lt;T, I, L&gt; mmr_lib::MMRStore&lt;NodeOf&lt;T, I, L&gt;&gt; <span class="kw">for </span>Storage&lt;OffchainStorage, T, I, L&gt;
+<span class="kw">where
+	</span>T: Config&lt;I&gt;,
+	I: <span class="lifetime">&#39;static</span>,
+	L: primitives::FullLeaf + codec::Decode,
 {
-	<span class="kw">fn</span> <span class="ident">get_elem</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pos</span>: <span class="ident">NodeIndex</span>) -&gt; <span class="ident">mmr_lib::Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">leaves</span> <span class="op">=</span> <span class="ident">NumberOfLeaves</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>();
-		<span class="comment">// Find out which leaf added node `pos` in the MMR.</span>
-		<span class="kw">let</span> <span class="ident">ancestor_leaf_idx</span> <span class="op">=</span> <span class="ident">NodesUtils::leaf_index_that_added_node</span>(<span class="ident">pos</span>);
+	<span class="kw">fn </span>get_elem(<span class="kw-2">&amp;</span><span class="self">self</span>, pos: NodeIndex) -&gt; mmr_lib::Result&lt;<span class="prelude-ty">Option</span>&lt;NodeOf&lt;T, I, L&gt;&gt;&gt; {
+		<span class="kw">let </span>leaves = NumberOfLeaves::&lt;T, I&gt;::get();
+		<span class="comment">// Find out which leaf added node `pos` in the MMR.
+		</span><span class="kw">let </span>ancestor_leaf_idx = NodesUtils::leaf_index_that_added_node(pos);
 
-		<span class="kw">let</span> <span class="ident">window_size</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::offchain_canonicalization_window</span>();
-		<span class="comment">// Leaves older than this window should have been canonicalized.</span>
-		<span class="kw">if</span> <span class="ident">leaves</span>.<span class="ident">saturating_sub</span>(<span class="ident">ancestor_leaf_idx</span>) <span class="op">&gt;</span> <span class="ident">window_size</span> {
-			<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::node_canon_offchain_key</span>(<span class="ident">pos</span>);
+		<span class="kw">let </span>window_size = Pallet::&lt;T, I&gt;::offchain_canonicalization_window();
+		<span class="comment">// Leaves older than this window should have been canonicalized.
+		</span><span class="kw">if </span>leaves.saturating_sub(ancestor_leaf_idx) &gt; window_size {
+			<span class="kw">let </span>key = Pallet::&lt;T, I&gt;::node_canon_offchain_key(pos);
 			<span class="macro">debug!</span>(
-				<span class="ident">target</span>: <span class="string">&quot;runtime::mmr::offchain&quot;</span>, <span class="string">&quot;offchain db get {}: leaf idx {:?}, key {:?}&quot;</span>,
-				<span class="ident">pos</span>, <span class="ident">ancestor_leaf_idx</span>, <span class="ident">key</span>
+				target: <span class="string">&quot;runtime::mmr::offchain&quot;</span>, <span class="string">&quot;offchain db get {}: leaf idx {:?}, key {:?}&quot;</span>,
+				pos, ancestor_leaf_idx, key
 			);
-			<span class="comment">// Just for safety, to easily handle runtime upgrades where any of the window params</span>
-			<span class="comment">// change and maybe we mess up storage migration,</span>
-			<span class="comment">// return _if and only if_ node is found (in normal conditions it&#39;s always found),</span>
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">elem</span>) <span class="op">=</span> <span class="ident">sp_io::offchain::local_storage_get</span>(<span class="ident">StorageKind::PERSISTENT</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>) {
-				<span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">codec::Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">elem</span>).<span class="ident">ok</span>())
+			<span class="comment">// Just for safety, to easily handle runtime upgrades where any of the window params
+			// change and maybe we mess up storage migration,
+			// return _if and only if_ node is found (in normal conditions it&#39;s always found),
+			</span><span class="kw">if let </span><span class="prelude-val">Some</span>(elem) = sp_io::offchain::local_storage_get(StorageKind::PERSISTENT, <span class="kw-2">&amp;</span>key) {
+				<span class="kw">return </span><span class="prelude-val">Ok</span>(codec::Decode::decode(<span class="kw-2">&amp;mut &amp;*</span>elem).ok())
 			}
-			<span class="comment">// BUT if we DID MESS UP, fall through to searching node using fork-specific key.</span>
-		}
+			<span class="comment">// BUT if we DID MESS UP, fall through to searching node using fork-specific key.
+		</span>}
 
-		<span class="comment">// Leaves still within the window will be found in offchain db under fork-aware keys.</span>
-		<span class="kw">let</span> <span class="ident">ancestor_parent_block_num</span> <span class="op">=</span>
-			<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::leaf_index_to_parent_block_num</span>(<span class="ident">ancestor_leaf_idx</span>, <span class="ident">leaves</span>);
-		<span class="kw">let</span> <span class="ident">ancestor_parent_hash</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">frame_system::Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::block_hash</span>(<span class="ident">ancestor_parent_block_num</span>);
-		<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::node_offchain_key</span>(<span class="ident">pos</span>, <span class="ident">ancestor_parent_hash</span>);
+		<span class="comment">// Leaves still within the window will be found in offchain db under fork-aware keys.
+		</span><span class="kw">let </span>ancestor_parent_block_num =
+			Pallet::&lt;T, I&gt;::leaf_index_to_parent_block_num(ancestor_leaf_idx, leaves);
+		<span class="kw">let </span>ancestor_parent_hash = &lt;frame_system::Pallet&lt;T&gt;&gt;::block_hash(ancestor_parent_block_num);
+		<span class="kw">let </span>key = Pallet::&lt;T, I&gt;::node_offchain_key(pos, ancestor_parent_hash);
 		<span class="macro">debug!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;runtime::mmr::offchain&quot;</span>, <span class="string">&quot;offchain db get {}: leaf idx {:?}, hash {:?}, key {:?}&quot;</span>,
-			<span class="ident">pos</span>, <span class="ident">ancestor_leaf_idx</span>, <span class="ident">ancestor_parent_hash</span>, <span class="ident">key</span>
+			target: <span class="string">&quot;runtime::mmr::offchain&quot;</span>, <span class="string">&quot;offchain db get {}: leaf idx {:?}, hash {:?}, key {:?}&quot;</span>,
+			pos, ancestor_leaf_idx, ancestor_parent_hash, key
 		);
-		<span class="comment">// Retrieve the element from Off-chain DB.</span>
-		<span class="prelude-val">Ok</span>(<span class="ident">sp_io::offchain::local_storage_get</span>(<span class="ident">StorageKind::PERSISTENT</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>)
-			.<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> {
-				<span class="comment">// Again, this is just us being extra paranoid.</span>
-				<span class="comment">// We get here only if we mess up a storage migration for a runtime upgrades where</span>
-				<span class="comment">// say the window is increased, and for a little while following the upgrade there&#39;s</span>
-				<span class="comment">// leaves inside new &#39;window&#39; that had been already canonicalized before upgrade.</span>
-				<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::node_canon_offchain_key</span>(<span class="ident">pos</span>);
-				<span class="ident">sp_io::offchain::local_storage_get</span>(<span class="ident">StorageKind::PERSISTENT</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>)
+		<span class="comment">// Retrieve the element from Off-chain DB.
+		</span><span class="prelude-val">Ok</span>(sp_io::offchain::local_storage_get(StorageKind::PERSISTENT, <span class="kw-2">&amp;</span>key)
+			.or_else(|| {
+				<span class="comment">// Again, this is just us being extra paranoid.
+				// We get here only if we mess up a storage migration for a runtime upgrades where
+				// say the window is increased, and for a little while following the upgrade there&#39;s
+				// leaves inside new &#39;window&#39; that had been already canonicalized before upgrade.
+				</span><span class="kw">let </span>key = Pallet::&lt;T, I&gt;::node_canon_offchain_key(pos);
+				sp_io::offchain::local_storage_get(StorageKind::PERSISTENT, <span class="kw-2">&amp;</span>key)
 			})
-			.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">codec::Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">v</span>).<span class="ident">ok</span>()))
+			.and_then(|v| codec::Decode::decode(<span class="kw-2">&amp;mut &amp;*</span>v).ok()))
 	}
 
-	<span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="ident">NodeIndex</span>, <span class="kw">_</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="ident">mmr_lib::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+	<span class="kw">fn </span>append(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: NodeIndex, <span class="kw">_</span>: Vec&lt;NodeOf&lt;T, I, L&gt;&gt;) -&gt; mmr_lib::Result&lt;()&gt; {
 		<span class="macro">panic!</span>(<span class="string">&quot;MMR must not be altered in the off-chain context.&quot;</span>)
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">mmr_lib::MMRStore</span><span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">RuntimeStorage</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="lifetime">&#39;static</span>,
-	<span class="ident">L</span>: <span class="ident">primitives::FullLeaf</span>,
+<span class="kw">impl</span>&lt;T, I, L&gt; mmr_lib::MMRStore&lt;NodeOf&lt;T, I, L&gt;&gt; <span class="kw">for </span>Storage&lt;RuntimeStorage, T, I, L&gt;
+<span class="kw">where
+	</span>T: Config&lt;I&gt;,
+	I: <span class="lifetime">&#39;static</span>,
+	L: primitives::FullLeaf,
 {
-	<span class="kw">fn</span> <span class="ident">get_elem</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pos</span>: <span class="ident">NodeIndex</span>) -&gt; <span class="ident">mmr_lib::Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="op">&lt;</span><span class="ident">Nodes</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">pos</span>).<span class="ident">map</span>(<span class="ident">Node::Hash</span>))
+	<span class="kw">fn </span>get_elem(<span class="kw-2">&amp;</span><span class="self">self</span>, pos: NodeIndex) -&gt; mmr_lib::Result&lt;<span class="prelude-ty">Option</span>&lt;NodeOf&lt;T, I, L&gt;&gt;&gt; {
+		<span class="prelude-val">Ok</span>(&lt;Nodes&lt;T, I&gt;&gt;::get(pos).map(Node::Hash))
 	}
 
-	<span class="kw">fn</span> <span class="ident">append</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">pos</span>: <span class="ident">NodeIndex</span>, <span class="ident">elems</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="ident">mmr_lib::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="ident">elems</span>.<span class="ident">is_empty</span>() {
-			<span class="kw">return</span> <span class="prelude-val">Ok</span>(())
+	<span class="kw">fn </span>append(<span class="kw-2">&amp;mut </span><span class="self">self</span>, pos: NodeIndex, elems: Vec&lt;NodeOf&lt;T, I, L&gt;&gt;) -&gt; mmr_lib::Result&lt;()&gt; {
+		<span class="kw">if </span>elems.is_empty() {
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(())
 		}
 
 		<span class="macro">trace!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;runtime::mmr&quot;</span>, <span class="string">&quot;elems: {:?}&quot;</span>,
-			<span class="ident">elems</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">elem</span><span class="op">|</span> <span class="ident">elem</span>.<span class="ident">hash</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+			target: <span class="string">&quot;runtime::mmr&quot;</span>, <span class="string">&quot;elems: {:?}&quot;</span>,
+			elems.iter().map(|elem| elem.hash()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
 		);
 
-		<span class="kw">let</span> <span class="ident">leaves</span> <span class="op">=</span> <span class="ident">NumberOfLeaves</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>();
-		<span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">NodesUtils::new</span>(<span class="ident">leaves</span>).<span class="ident">size</span>();
+		<span class="kw">let </span>leaves = NumberOfLeaves::&lt;T, I&gt;::get();
+		<span class="kw">let </span>size = NodesUtils::new(leaves).size();
 
-		<span class="kw">if</span> <span class="ident">pos</span> <span class="op">!</span><span class="op">=</span> <span class="ident">size</span> {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">mmr_lib::Error::InconsistentStore</span>)
+		<span class="kw">if </span>pos != size {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(mmr_lib::Error::InconsistentStore)
 		}
 
-		<span class="kw">let</span> <span class="ident">new_size</span> <span class="op">=</span> <span class="ident">size</span> <span class="op">+</span> <span class="ident">elems</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">NodeIndex</span>;
+		<span class="kw">let </span>new_size = size + elems.len() <span class="kw">as </span>NodeIndex;
 
-		<span class="comment">// A sorted (ascending) iterator over peak indices to prune and persist.</span>
-		<span class="kw">let</span> (<span class="ident">peaks_to_prune</span>, <span class="kw-2">mut</span> <span class="ident">peaks_to_store</span>) <span class="op">=</span> <span class="ident">peaks_to_prune_and_store</span>(<span class="ident">size</span>, <span class="ident">new_size</span>);
+		<span class="comment">// A sorted (ascending) iterator over peak indices to prune and persist.
+		</span><span class="kw">let </span>(peaks_to_prune, <span class="kw-2">mut </span>peaks_to_store) = peaks_to_prune_and_store(size, new_size);
 
-		<span class="comment">// Now we are going to iterate over elements to insert</span>
-		<span class="comment">// and keep track of the current `node_index` and `leaf_index`.</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">leaf_index</span> <span class="op">=</span> <span class="ident">leaves</span>;
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">node_index</span> <span class="op">=</span> <span class="ident">size</span>;
+		<span class="comment">// Now we are going to iterate over elements to insert
+		// and keep track of the current `node_index` and `leaf_index`.
+		</span><span class="kw">let </span><span class="kw-2">mut </span>leaf_index = leaves;
+		<span class="kw">let </span><span class="kw-2">mut </span>node_index = size;
 
-		<span class="comment">// Use parent hash of block adding new nodes (this block) as extra identifier</span>
-		<span class="comment">// in offchain DB to avoid DB collisions and overwrites in case of forks.</span>
-		<span class="kw">let</span> <span class="ident">parent_hash</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">frame_system::Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::parent_hash</span>();
-		<span class="kw">for</span> <span class="ident">elem</span> <span class="kw">in</span> <span class="ident">elems</span> {
-			<span class="comment">// On-chain we are going to only store new peaks.</span>
-			<span class="kw">if</span> <span class="ident">peaks_to_store</span>.<span class="ident">next_if_eq</span>(<span class="kw-2">&amp;</span><span class="ident">node_index</span>).<span class="ident">is_some</span>() {
-				<span class="op">&lt;</span><span class="ident">Nodes</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="ident">node_index</span>, <span class="ident">elem</span>.<span class="ident">hash</span>());
+		<span class="comment">// Use parent hash of block adding new nodes (this block) as extra identifier
+		// in offchain DB to avoid DB collisions and overwrites in case of forks.
+		</span><span class="kw">let </span>parent_hash = &lt;frame_system::Pallet&lt;T&gt;&gt;::parent_hash();
+		<span class="kw">for </span>elem <span class="kw">in </span>elems {
+			<span class="comment">// On-chain we are going to only store new peaks.
+			</span><span class="kw">if </span>peaks_to_store.next_if_eq(<span class="kw-2">&amp;</span>node_index).is_some() {
+				&lt;Nodes&lt;T, I&gt;&gt;::insert(node_index, elem.hash());
 			}
-			<span class="comment">// We are storing full node off-chain (using indexing API).</span>
-			<span class="ident"><span class="self">Self</span>::store_to_offchain</span>(<span class="ident">node_index</span>, <span class="ident">parent_hash</span>, <span class="kw-2">&amp;</span><span class="ident">elem</span>);
+			<span class="comment">// We are storing full node off-chain (using indexing API).
+			</span><span class="self">Self</span>::store_to_offchain(node_index, parent_hash, <span class="kw-2">&amp;</span>elem);
 
-			<span class="comment">// Increase the indices.</span>
-			<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Node::Data</span>(..) <span class="op">=</span> <span class="ident">elem</span> {
-				<span class="ident">leaf_index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+			<span class="comment">// Increase the indices.
+			</span><span class="kw">if let </span>Node::Data(..) = elem {
+				leaf_index += <span class="number">1</span>;
 			}
-			<span class="ident">node_index</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+			node_index += <span class="number">1</span>;
 		}
 
-		<span class="comment">// Update current number of leaves.</span>
-		<span class="ident">NumberOfLeaves</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">leaf_index</span>);
+		<span class="comment">// Update current number of leaves.
+		</span>NumberOfLeaves::&lt;T, I&gt;::put(leaf_index);
 
-		<span class="comment">// And remove all remaining items from `peaks_before` collection.</span>
-		<span class="kw">for</span> <span class="ident">pos</span> <span class="kw">in</span> <span class="ident">peaks_to_prune</span> {
-			<span class="op">&lt;</span><span class="ident">Nodes</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::remove</span>(<span class="ident">pos</span>);
+		<span class="comment">// And remove all remaining items from `peaks_before` collection.
+		</span><span class="kw">for </span>pos <span class="kw">in </span>peaks_to_prune {
+			&lt;Nodes&lt;T, I&gt;&gt;::remove(pos);
 		}
 
 		<span class="prelude-val">Ok</span>(())
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">RuntimeStorage</span>, <span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="lifetime">&#39;static</span>,
-	<span class="ident">L</span>: <span class="ident">primitives::FullLeaf</span>,
+<span class="kw">impl</span>&lt;T, I, L&gt; Storage&lt;RuntimeStorage, T, I, L&gt;
+<span class="kw">where
+	</span>T: Config&lt;I&gt;,
+	I: <span class="lifetime">&#39;static</span>,
+	L: primitives::FullLeaf,
 {
-	<span class="kw">fn</span> <span class="ident">store_to_offchain</span>(
-		<span class="ident">pos</span>: <span class="ident">NodeIndex</span>,
-		<span class="ident">parent_hash</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span>,
-		<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="ident">NodeOf</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span>, <span class="ident">L</span><span class="op">&gt;</span>,
+	<span class="kw">fn </span>store_to_offchain(
+		pos: NodeIndex,
+		parent_hash: &lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash,
+		node: <span class="kw-2">&amp;</span>NodeOf&lt;T, I, L&gt;,
 	) {
-		<span class="kw">let</span> <span class="ident">encoded_node</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">encode</span>();
-		<span class="comment">// We store this leaf offchain keyed by `(parent_hash, node_index)` to make it</span>
-		<span class="comment">// fork-resistant. Offchain worker task will &quot;canonicalize&quot; it</span>
-		<span class="comment">// `frame_system::BlockHashCount` blocks later, when we are not worried about forks anymore</span>
-		<span class="comment">// (multi-era-deep forks should not happen).</span>
-		<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::node_offchain_key</span>(<span class="ident">pos</span>, <span class="ident">parent_hash</span>);
+		<span class="kw">let </span>encoded_node = node.encode();
+		<span class="comment">// We store this leaf offchain keyed by `(parent_hash, node_index)` to make it
+		// fork-resistant. Offchain worker task will &quot;canonicalize&quot; it
+		// `frame_system::BlockHashCount` blocks later, when we are not worried about forks anymore
+		// (multi-era-deep forks should not happen).
+		</span><span class="kw">let </span>key = Pallet::&lt;T, I&gt;::node_offchain_key(pos, parent_hash);
 		<span class="macro">debug!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;runtime::mmr::offchain&quot;</span>, <span class="string">&quot;offchain db set: pos {} parent_hash {:?} key {:?}&quot;</span>,
-			<span class="ident">pos</span>, <span class="ident">parent_hash</span>, <span class="ident">key</span>
+			target: <span class="string">&quot;runtime::mmr::offchain&quot;</span>, <span class="string">&quot;offchain db set: pos {} parent_hash {:?} key {:?}&quot;</span>,
+			pos, parent_hash, key
 		);
-		<span class="comment">// Indexing API is used to store the full node content.</span>
-		<span class="ident">offchain_index::set</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">encoded_node</span>);
-		<span class="comment">// We also directly save the full node under the &quot;canonical&quot; key.</span>
-		<span class="comment">// This is superfluous for the normal case - this entry will possibly be overwritten</span>
-		<span class="comment">// by forks, and will also be overwritten by &quot;offchain_worker canonicalization&quot;.</span>
-		<span class="comment">// But it is required for blocks imported during initial sync where none of the above apply</span>
-		<span class="comment">// (`offchain_worker` doesn&#39;t run for initial sync blocks).</span>
-		<span class="ident">offchain_index::set</span>(<span class="kw-2">&amp;</span><span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::node_canon_offchain_key</span>(<span class="ident">pos</span>), <span class="kw-2">&amp;</span><span class="ident">encoded_node</span>);
+		<span class="comment">// Indexing API is used to store the full node content.
+		</span>offchain_index::set(<span class="kw-2">&amp;</span>key, <span class="kw-2">&amp;</span>encoded_node);
+		<span class="comment">// We also directly save the full node under the &quot;canonical&quot; key.
+		// This is superfluous for the normal case - this entry will possibly be overwritten
+		// by forks, and will also be overwritten by &quot;offchain_worker canonicalization&quot;.
+		// But it is required for blocks imported during initial sync where none of the above apply
+		// (`offchain_worker` doesn&#39;t run for initial sync blocks).
+		</span>offchain_index::set(<span class="kw-2">&amp;</span>Pallet::&lt;T, I&gt;::node_canon_offchain_key(pos), <span class="kw-2">&amp;</span>encoded_node);
 	}
 }
 
-<span class="kw">fn</span> <span class="ident">peaks_to_prune_and_store</span>(
-	<span class="ident">old_size</span>: <span class="ident">NodeIndex</span>,
-	<span class="ident">new_size</span>: <span class="ident">NodeIndex</span>,
-) -&gt; (<span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">NodeIndex</span><span class="op">&gt;</span>, <span class="ident">Peekable</span><span class="op">&lt;</span><span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">NodeIndex</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-	<span class="comment">// A sorted (ascending) collection of peak indices before and after insertion.</span>
-	<span class="comment">// both collections may share a common prefix.</span>
-	<span class="kw">let</span> <span class="ident">peaks_before</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">old_size</span> <span class="op">==</span> <span class="number">0</span> { <span class="macro">vec!</span>[] } <span class="kw">else</span> { <span class="ident">helper::get_peaks</span>(<span class="ident">old_size</span>) };
-	<span class="kw">let</span> <span class="ident">peaks_after</span> <span class="op">=</span> <span class="ident">helper::get_peaks</span>(<span class="ident">new_size</span>);
-	<span class="macro">trace!</span>(<span class="ident">target</span>: <span class="string">&quot;runtime::mmr&quot;</span>, <span class="string">&quot;peaks_before: {:?}&quot;</span>, <span class="ident">peaks_before</span>);
-	<span class="macro">trace!</span>(<span class="ident">target</span>: <span class="string">&quot;runtime::mmr&quot;</span>, <span class="string">&quot;peaks_after: {:?}&quot;</span>, <span class="ident">peaks_after</span>);
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">peaks_before</span> <span class="op">=</span> <span class="ident">peaks_before</span>.<span class="ident">into_iter</span>().<span class="ident">peekable</span>();
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">peaks_after</span> <span class="op">=</span> <span class="ident">peaks_after</span>.<span class="ident">into_iter</span>().<span class="ident">peekable</span>();
+<span class="kw">fn </span>peaks_to_prune_and_store(
+	old_size: NodeIndex,
+	new_size: NodeIndex,
+) -&gt; (<span class="kw">impl </span>Iterator&lt;Item = NodeIndex&gt;, Peekable&lt;<span class="kw">impl </span>Iterator&lt;Item = NodeIndex&gt;&gt;) {
+	<span class="comment">// A sorted (ascending) collection of peak indices before and after insertion.
+	// both collections may share a common prefix.
+	</span><span class="kw">let </span>peaks_before = <span class="kw">if </span>old_size == <span class="number">0 </span>{ <span class="macro">vec!</span>[] } <span class="kw">else </span>{ helper::get_peaks(old_size) };
+	<span class="kw">let </span>peaks_after = helper::get_peaks(new_size);
+	<span class="macro">trace!</span>(target: <span class="string">&quot;runtime::mmr&quot;</span>, <span class="string">&quot;peaks_before: {:?}&quot;</span>, peaks_before);
+	<span class="macro">trace!</span>(target: <span class="string">&quot;runtime::mmr&quot;</span>, <span class="string">&quot;peaks_after: {:?}&quot;</span>, peaks_after);
+	<span class="kw">let </span><span class="kw-2">mut </span>peaks_before = peaks_before.into_iter().peekable();
+	<span class="kw">let </span><span class="kw-2">mut </span>peaks_after = peaks_after.into_iter().peekable();
 
-	<span class="comment">// Consume a common prefix between `peaks_before` and `peaks_after`,</span>
-	<span class="comment">// since that&#39;s something we will not be touching anyway.</span>
-	<span class="kw">while</span> <span class="ident">peaks_before</span>.<span class="ident">peek</span>() <span class="op">==</span> <span class="ident">peaks_after</span>.<span class="ident">peek</span>() {
-		<span class="ident">peaks_before</span>.<span class="ident">next</span>();
-		<span class="ident">peaks_after</span>.<span class="ident">next</span>();
+	<span class="comment">// Consume a common prefix between `peaks_before` and `peaks_after`,
+	// since that&#39;s something we will not be touching anyway.
+	</span><span class="kw">while </span>peaks_before.peek() == peaks_after.peek() {
+		peaks_before.next();
+		peaks_after.next();
 	}
 
-	<span class="comment">// what&#39;s left in both collections is:</span>
-	<span class="comment">// 1. Old peaks to remove from storage</span>
-	<span class="comment">// 2. New peaks to persist in storage</span>
-	(<span class="ident">peaks_before</span>, <span class="ident">peaks_after</span>)
+	<span class="comment">// what&#39;s left in both collections is:
+	// 1. Old peaks to remove from storage
+	// 2. New peaks to persist in storage
+	</span>(peaks_before, peaks_after)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pallet_mmr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pallet_mmr" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

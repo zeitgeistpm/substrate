@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/lottery/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_lottery/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_lottery/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_lottery/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/lottery/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_lottery/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_lottery/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -522,524 +516,523 @@
 <span id="516">516</span>
 <span id="517">517</span>
 <span id="518">518</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! A lottery pallet that uses participation in the network to purchase tickets.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! With this pallet, you can configure a lottery, which is a pot of money that</span>
-<span class="doccomment">//! users contribute to, and that is reallocated to a single user at the end of</span>
-<span class="doccomment">//! the lottery period. Just like a normal lottery system, to participate, you</span>
-<span class="doccomment">//! need to &quot;buy a ticket&quot;, which is used to fund the pot.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The unique feature of this lottery system is that tickets can only be</span>
-<span class="doccomment">//! purchased by making a &quot;valid call&quot; dispatched through this pallet.</span>
-<span class="doccomment">//! By configuring certain calls to be valid for the lottery, you can encourage</span>
-<span class="doccomment">//! users to make those calls on your network. An example of how this could be</span>
-<span class="doccomment">//! used is to set validator nominations as a valid lottery call. If the lottery</span>
-<span class="doccomment">//! is set to repeat every month, then users would be encouraged to re-nominate</span>
-<span class="doccomment">//! validators every month. A user can only purchase one ticket per valid call</span>
-<span class="doccomment">//! per lottery.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This pallet can be configured to use dynamically set calls or statically set</span>
-<span class="doccomment">//! calls. Call validation happens through the `ValidateCall` implementation.</span>
-<span class="doccomment">//! This pallet provides one implementation of this using the `CallIndices`</span>
-<span class="doccomment">//! storage item. You can also make your own implementation at the runtime level</span>
-<span class="doccomment">//! which can contain much more complex logic, such as validation of the</span>
-<span class="doccomment">//! parameters, which this pallet alone cannot do.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! This pallet uses the modulus operator to pick a random winner. It is known</span>
-<span class="doccomment">//! that this might introduce a bias if the random number chosen in a range that</span>
-<span class="doccomment">//! is not perfectly divisible by the total number of participants. The</span>
-<span class="doccomment">//! `MaxGenerateRandom` configuration can help mitigate this by generating new</span>
-<span class="doccomment">//! numbers until we hit the limit or we find a &quot;fair&quot; number. This is best</span>
-<span class="doccomment">//! effort only.</span>
+</span><span class="doccomment">//! A lottery pallet that uses participation in the network to purchase tickets.
+//!
+//! With this pallet, you can configure a lottery, which is a pot of money that
+//! users contribute to, and that is reallocated to a single user at the end of
+//! the lottery period. Just like a normal lottery system, to participate, you
+//! need to &quot;buy a ticket&quot;, which is used to fund the pot.
+//!
+//! The unique feature of this lottery system is that tickets can only be
+//! purchased by making a &quot;valid call&quot; dispatched through this pallet.
+//! By configuring certain calls to be valid for the lottery, you can encourage
+//! users to make those calls on your network. An example of how this could be
+//! used is to set validator nominations as a valid lottery call. If the lottery
+//! is set to repeat every month, then users would be encouraged to re-nominate
+//! validators every month. A user can only purchase one ticket per valid call
+//! per lottery.
+//!
+//! This pallet can be configured to use dynamically set calls or statically set
+//! calls. Call validation happens through the `ValidateCall` implementation.
+//! This pallet provides one implementation of this using the `CallIndices`
+//! storage item. You can also make your own implementation at the runtime level
+//! which can contain much more complex logic, such as validation of the
+//! parameters, which this pallet alone cannot do.
+//!
+//! This pallet uses the modulus operator to pick a random winner. It is known
+//! that this might introduce a bias if the random number chosen in a range that
+//! is not perfectly divisible by the total number of participants. The
+//! `MaxGenerateRandom` configuration can help mitigate this by generating new
+//! numbers until we hit the limit or we find a &quot;fair&quot; number. This is best
+//! effort only.
 
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-<span class="kw">mod</span> <span class="ident">benchmarking</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">mock</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">weights</span>;
+</span><span class="kw">mod </span>benchmarking;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>mock;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests;
+<span class="kw">pub mod </span>weights;
 
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
-<span class="kw">use</span> <span class="ident">frame_support</span>::{
-	<span class="ident">dispatch</span>::{<span class="ident">DispatchResult</span>, <span class="ident">Dispatchable</span>, <span class="ident">GetDispatchInfo</span>},
-	<span class="ident">ensure</span>,
-	<span class="ident">pallet_prelude::MaxEncodedLen</span>,
-	<span class="ident">storage::bounded_vec::BoundedVec</span>,
-	<span class="ident">traits</span>::{<span class="ident">Currency</span>, <span class="ident">ExistenceRequirement::KeepAlive</span>, <span class="ident">Get</span>, <span class="ident">Randomness</span>, <span class="ident">ReservableCurrency</span>},
-	<span class="ident">PalletId</span>, <span class="ident">RuntimeDebug</span>,
+<span class="kw">use </span>codec::{Decode, Encode};
+<span class="kw">use </span>frame_support::{
+	dispatch::{DispatchResult, Dispatchable, GetDispatchInfo},
+	ensure,
+	pallet_prelude::MaxEncodedLen,
+	storage::bounded_vec::BoundedVec,
+	traits::{Currency, ExistenceRequirement::KeepAlive, Get, Randomness, ReservableCurrency},
+	PalletId, RuntimeDebug,
 };
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pallet</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">traits</span>::{<span class="ident">AccountIdConversion</span>, <span class="ident">Saturating</span>, <span class="ident">Zero</span>},
-	<span class="ident">ArithmeticError</span>, <span class="ident">DispatchError</span>,
+<span class="kw">pub use </span>pallet::<span class="kw-2">*</span>;
+<span class="kw">use </span>sp_runtime::{
+	traits::{AccountIdConversion, Saturating, Zero},
+	ArithmeticError, DispatchError,
 };
-<span class="kw">use</span> <span class="ident">sp_std::prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">weights::WeightInfo</span>;
+<span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
+<span class="kw">pub use </span>weights::WeightInfo;
 
-<span class="kw">type</span> <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span>
-	<span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::Currency</span> <span class="kw">as</span> <span class="ident">Currency</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Balance</span>;
+<span class="kw">type </span>BalanceOf&lt;T&gt; =
+	&lt;&lt;T <span class="kw">as </span>Config&gt;::Currency <span class="kw">as </span>Currency&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId&gt;&gt;::Balance;
 
-<span class="comment">// Any runtime call can be encoded into two bytes which represent the pallet and call index.</span>
-<span class="comment">// We use this to uniquely match someone&#39;s incoming call with the calls configured for the lottery.</span>
-<span class="kw">type</span> <span class="ident">CallIndex</span> <span class="op">=</span> (<span class="ident">u8</span>, <span class="ident">u8</span>);
+<span class="comment">// Any runtime call can be encoded into two bytes which represent the pallet and call index.
+// We use this to uniquely match someone&#39;s incoming call with the calls configured for the lottery.
+</span><span class="kw">type </span>CallIndex = (u8, u8);
 
-<span class="attribute">#[<span class="ident">derive</span>(
-	<span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">Default</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">scale_info::TypeInfo</span>, <span class="ident">MaxEncodedLen</span>,
-)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">LotteryConfig</span><span class="op">&lt;</span><span class="ident">BlockNumber</span>, <span class="ident">Balance</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Price per entry.</span>
-	<span class="ident">price</span>: <span class="ident">Balance</span>,
-	<span class="doccomment">/// Starting block of the lottery.</span>
-	<span class="ident">start</span>: <span class="ident">BlockNumber</span>,
-	<span class="doccomment">/// Length of the lottery (start + length = end).</span>
-	<span class="ident">length</span>: <span class="ident">BlockNumber</span>,
-	<span class="doccomment">/// Delay for choosing the winner of the lottery. (start + length + delay = payout).</span>
-	<span class="doccomment">/// Randomness in the &quot;payout&quot; block will be used to determine the winner.</span>
-	<span class="ident">delay</span>: <span class="ident">BlockNumber</span>,
-	<span class="doccomment">/// Whether this lottery will repeat after it completes.</span>
-	<span class="ident">repeat</span>: <span class="ident">bool</span>,
+<span class="attribute">#[derive(
+	Encode, Decode, Default, Eq, PartialEq, RuntimeDebug, scale_info::TypeInfo, MaxEncodedLen,
+)]
+</span><span class="kw">pub struct </span>LotteryConfig&lt;BlockNumber, Balance&gt; {
+	<span class="doccomment">/// Price per entry.
+	</span>price: Balance,
+	<span class="doccomment">/// Starting block of the lottery.
+	</span>start: BlockNumber,
+	<span class="doccomment">/// Length of the lottery (start + length = end).
+	</span>length: BlockNumber,
+	<span class="doccomment">/// Delay for choosing the winner of the lottery. (start + length + delay = payout).
+	/// Randomness in the &quot;payout&quot; block will be used to determine the winner.
+	</span>delay: BlockNumber,
+	<span class="doccomment">/// Whether this lottery will repeat after it completes.
+	</span>repeat: bool,
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ValidateCall</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">validate_call</span>(<span class="ident">call</span>: <span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span>) -&gt; <span class="ident">bool</span>;
+<span class="kw">pub trait </span>ValidateCall&lt;T: Config&gt; {
+	<span class="kw">fn </span>validate_call(call: <span class="kw-2">&amp;</span>&lt;T <span class="kw">as </span>Config&gt;::RuntimeCall) -&gt; bool;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">ValidateCall</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> () {
-	<span class="kw">fn</span> <span class="ident">validate_call</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span>) -&gt; <span class="ident">bool</span> {
-		<span class="bool-val">false</span>
-	}
+<span class="kw">impl</span>&lt;T: Config&gt; ValidateCall&lt;T&gt; <span class="kw">for </span>() {
+	<span class="kw">fn </span>validate_call(<span class="kw">_</span>: <span class="kw-2">&amp;</span>&lt;T <span class="kw">as </span>Config&gt;::RuntimeCall) -&gt; bool {
+		<span class="bool-val">false
+	</span>}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">ValidateCall</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">validate_call</span>(<span class="ident">call</span>: <span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span>) -&gt; <span class="ident">bool</span> {
-		<span class="kw">let</span> <span class="ident">valid_calls</span> <span class="op">=</span> <span class="ident">CallIndices</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>();
-		<span class="kw">let</span> <span class="ident">call_index</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident"><span class="self">Self</span>::call_to_index</span>(<span class="ident">call</span>) {
-			<span class="prelude-val">Ok</span>(<span class="ident">call_index</span>) =&gt; <span class="ident">call_index</span>,
-			<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return</span> <span class="bool-val">false</span>,
+<span class="kw">impl</span>&lt;T: Config&gt; ValidateCall&lt;T&gt; <span class="kw">for </span>Pallet&lt;T&gt; {
+	<span class="kw">fn </span>validate_call(call: <span class="kw-2">&amp;</span>&lt;T <span class="kw">as </span>Config&gt;::RuntimeCall) -&gt; bool {
+		<span class="kw">let </span>valid_calls = CallIndices::&lt;T&gt;::get();
+		<span class="kw">let </span>call_index = <span class="kw">match </span><span class="self">Self</span>::call_to_index(call) {
+			<span class="prelude-val">Ok</span>(call_index) =&gt; call_index,
+			<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="bool-val">false</span>,
 		};
-		<span class="ident">valid_calls</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">call_index</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">c</span>)
+		valid_calls.iter().any(|c| call_index == <span class="kw-2">*</span>c)
 	}
 }
 
-<span class="attribute">#[<span class="ident">frame_support::pallet</span>]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pallet</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::pallet_prelude</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_system::pallet_prelude</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[frame_support::pallet]
+</span><span class="kw">pub mod </span>pallet {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">pallet::pallet</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::generate_store</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait</span> <span class="ident">Store</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw">_</span>);
+	<span class="attribute">#[pallet::pallet]
+	#[pallet::generate_store(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait </span>Store)]
+	</span><span class="kw">pub struct </span>Pallet&lt;T&gt;(<span class="kw">_</span>);
 
-	<span class="doccomment">/// The pallet&#39;s config trait.</span>
-	<span class="attribute">#[<span class="ident">pallet::config</span>]</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Config</span>: <span class="ident">frame_system::Config</span> {
-		<span class="doccomment">/// The Lottery&#39;s pallet id</span>
-		<span class="attribute">#[<span class="ident">pallet::constant</span>]</span>
-		<span class="kw">type</span> <span class="ident">PalletId</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">PalletId</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// The pallet&#39;s config trait.
+	</span><span class="attribute">#[pallet::config]
+	</span><span class="kw">pub trait </span>Config: frame_system::Config {
+		<span class="doccomment">/// The Lottery&#39;s pallet id
+		</span><span class="attribute">#[pallet::constant]
+		</span><span class="kw">type </span>PalletId: Get&lt;PalletId&gt;;
 
-		<span class="doccomment">/// A dispatchable call.</span>
-		<span class="kw">type</span> <span class="ident">RuntimeCall</span>: <span class="ident">Parameter</span>
-			<span class="op">+</span> <span class="ident">Dispatchable</span><span class="op">&lt;</span><span class="ident">RuntimeOrigin</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::RuntimeOrigin</span><span class="op">&gt;</span>
-			<span class="op">+</span> <span class="ident">GetDispatchInfo</span>
-			<span class="op">+</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">frame_system::Call</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// A dispatchable call.
+		</span><span class="kw">type </span>RuntimeCall: Parameter
+			+ Dispatchable&lt;RuntimeOrigin = <span class="self">Self</span>::RuntimeOrigin&gt;
+			+ GetDispatchInfo
+			+ From&lt;frame_system::Call&lt;<span class="self">Self</span>&gt;&gt;;
 
-		<span class="doccomment">/// The currency trait.</span>
-		<span class="kw">type</span> <span class="ident">Currency</span>: <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// The currency trait.
+		</span><span class="kw">type </span>Currency: ReservableCurrency&lt;<span class="self">Self</span>::AccountId&gt;;
 
-		<span class="doccomment">/// Something that provides randomness in the runtime.</span>
-		<span class="kw">type</span> <span class="ident">Randomness</span>: <span class="ident">Randomness</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Hash</span>, <span class="ident"><span class="self">Self</span>::BlockNumber</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// Something that provides randomness in the runtime.
+		</span><span class="kw">type </span>Randomness: Randomness&lt;<span class="self">Self</span>::Hash, <span class="self">Self</span>::BlockNumber&gt;;
 
-		<span class="doccomment">/// The overarching event type.</span>
-		<span class="kw">type</span> <span class="ident">RuntimeEvent</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">IsType</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::RuntimeEvent</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// The overarching event type.
+		</span><span class="kw">type </span>RuntimeEvent: From&lt;Event&lt;<span class="self">Self</span>&gt;&gt; + IsType&lt;&lt;<span class="self">Self </span><span class="kw">as </span>frame_system::Config&gt;::RuntimeEvent&gt;;
 
-		<span class="doccomment">/// The manager origin.</span>
-		<span class="kw">type</span> <span class="ident">ManagerOrigin</span>: <span class="ident">EnsureOrigin</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::RuntimeOrigin</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// The manager origin.
+		</span><span class="kw">type </span>ManagerOrigin: EnsureOrigin&lt;<span class="self">Self</span>::RuntimeOrigin&gt;;
 
-		<span class="doccomment">/// The max number of calls available in a single lottery.</span>
-		<span class="attribute">#[<span class="ident">pallet::constant</span>]</span>
-		<span class="kw">type</span> <span class="ident">MaxCalls</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// The max number of calls available in a single lottery.
+		</span><span class="attribute">#[pallet::constant]
+		</span><span class="kw">type </span>MaxCalls: Get&lt;u32&gt;;
 
-		<span class="doccomment">/// Used to determine if a call would be valid for purchasing a ticket.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Be conscious of the implementation used here. We assume at worst that</span>
-		<span class="doccomment">/// a vector of `MaxCalls` indices are queried for any call validation.</span>
-		<span class="doccomment">/// You may need to provide a custom benchmark if this assumption is broken.</span>
-		<span class="kw">type</span> <span class="ident">ValidateCall</span>: <span class="ident">ValidateCall</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// Used to determine if a call would be valid for purchasing a ticket.
+		///
+		/// Be conscious of the implementation used here. We assume at worst that
+		/// a vector of `MaxCalls` indices are queried for any call validation.
+		/// You may need to provide a custom benchmark if this assumption is broken.
+		</span><span class="kw">type </span>ValidateCall: ValidateCall&lt;<span class="self">Self</span>&gt;;
 
-		<span class="doccomment">/// Number of time we should try to generate a random number that has no modulo bias.</span>
-		<span class="doccomment">/// The larger this number, the more potential computation is used for picking the winner,</span>
-		<span class="doccomment">/// but also the more likely that the chosen winner is done fairly.</span>
-		<span class="attribute">#[<span class="ident">pallet::constant</span>]</span>
-		<span class="kw">type</span> <span class="ident">MaxGenerateRandom</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>;
+		<span class="doccomment">/// Number of time we should try to generate a random number that has no modulo bias.
+		/// The larger this number, the more potential computation is used for picking the winner,
+		/// but also the more likely that the chosen winner is done fairly.
+		</span><span class="attribute">#[pallet::constant]
+		</span><span class="kw">type </span>MaxGenerateRandom: Get&lt;u32&gt;;
 
-		<span class="doccomment">/// Weight information for extrinsics in this pallet.</span>
-		<span class="kw">type</span> <span class="ident">WeightInfo</span>: <span class="ident">WeightInfo</span>;
+		<span class="doccomment">/// Weight information for extrinsics in this pallet.
+		</span><span class="kw">type </span>WeightInfo: WeightInfo;
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::event</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::generate_deposit</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">deposit_event</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// A lottery has been started!</span>
-		<span class="ident">LotteryStarted</span>,
-		<span class="doccomment">/// A new set of calls have been set!</span>
-		<span class="ident">CallsUpdated</span>,
-		<span class="doccomment">/// A winner has been chosen!</span>
-		<span class="ident">Winner</span> { <span class="ident">winner</span>: <span class="ident">T::AccountId</span>, <span class="ident">lottery_balance</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> },
-		<span class="doccomment">/// A ticket has been bought!</span>
-		<span class="ident">TicketBought</span> { <span class="ident">who</span>: <span class="ident">T::AccountId</span>, <span class="ident">call_index</span>: <span class="ident">CallIndex</span> },
+	<span class="attribute">#[pallet::event]
+	#[pallet::generate_deposit(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>deposit_event)]
+	</span><span class="kw">pub enum </span>Event&lt;T: Config&gt; {
+		<span class="doccomment">/// A lottery has been started!
+		</span>LotteryStarted,
+		<span class="doccomment">/// A new set of calls have been set!
+		</span>CallsUpdated,
+		<span class="doccomment">/// A winner has been chosen!
+		</span>Winner { winner: T::AccountId, lottery_balance: BalanceOf&lt;T&gt; },
+		<span class="doccomment">/// A ticket has been bought!
+		</span>TicketBought { who: T::AccountId, call_index: CallIndex },
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::error</span>]</span>
-	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// A lottery has not been configured.</span>
-		<span class="ident">NotConfigured</span>,
-		<span class="doccomment">/// A lottery is already in progress.</span>
-		<span class="ident">InProgress</span>,
-		<span class="doccomment">/// A lottery has already ended.</span>
-		<span class="ident">AlreadyEnded</span>,
-		<span class="doccomment">/// The call is not valid for an open lottery.</span>
-		<span class="ident">InvalidCall</span>,
-		<span class="doccomment">/// You are already participating in the lottery with this call.</span>
-		<span class="ident">AlreadyParticipating</span>,
-		<span class="doccomment">/// Too many calls for a single lottery.</span>
-		<span class="ident">TooManyCalls</span>,
-		<span class="doccomment">/// Failed to encode calls</span>
-		<span class="ident">EncodingFailed</span>,
+	<span class="attribute">#[pallet::error]
+	</span><span class="kw">pub enum </span>Error&lt;T&gt; {
+		<span class="doccomment">/// A lottery has not been configured.
+		</span>NotConfigured,
+		<span class="doccomment">/// A lottery is already in progress.
+		</span>InProgress,
+		<span class="doccomment">/// A lottery has already ended.
+		</span>AlreadyEnded,
+		<span class="doccomment">/// The call is not valid for an open lottery.
+		</span>InvalidCall,
+		<span class="doccomment">/// You are already participating in the lottery with this call.
+		</span>AlreadyParticipating,
+		<span class="doccomment">/// Too many calls for a single lottery.
+		</span>TooManyCalls,
+		<span class="doccomment">/// Failed to encode calls
+		</span>EncodingFailed,
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">LotteryIndex</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>LotteryIndex&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, u32, ValueQuery&gt;;
 
-	<span class="doccomment">/// The configuration for the current lottery.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Lottery</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span>
-		<span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">LotteryConfig</span><span class="op">&lt;</span><span class="ident">T::BlockNumber</span>, <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// The configuration for the current lottery.
+	</span><span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Lottery&lt;T: Config&gt; =
+		StorageValue&lt;<span class="kw">_</span>, LotteryConfig&lt;T::BlockNumber, BalanceOf&lt;T&gt;&gt;&gt;;
 
-	<span class="doccomment">/// Users who have purchased a ticket. (Lottery Index, Tickets Purchased)</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Participants</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span>
+	<span class="doccomment">/// Users who have purchased a ticket. (Lottery Index, Tickets Purchased)
+	</span><span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Participants&lt;T: Config&gt; = StorageMap&lt;
 		<span class="kw">_</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="ident">T::AccountId</span>,
-		(<span class="ident">u32</span>, <span class="ident">BoundedVec</span><span class="op">&lt;</span><span class="ident">CallIndex</span>, <span class="ident">T::MaxCalls</span><span class="op">&gt;</span>),
-		<span class="ident">ValueQuery</span>,
-	<span class="op">&gt;</span>;
+		Twox64Concat,
+		T::AccountId,
+		(u32, BoundedVec&lt;CallIndex, T::MaxCalls&gt;),
+		ValueQuery,
+	&gt;;
 
-	<span class="doccomment">/// Total number of tickets sold.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">TicketsCount</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">u32</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Total number of tickets sold.
+	</span><span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>TicketsCount&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, u32, ValueQuery&gt;;
 
-	<span class="doccomment">/// Each ticket&#39;s owner.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// May have residual storage from previous lotteries. Use `TicketsCount` to see which ones</span>
-	<span class="doccomment">/// are actually valid ticket mappings.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">Tickets</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Twox64Concat</span>, <span class="ident">u32</span>, <span class="ident">T::AccountId</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Each ticket&#39;s owner.
+	///
+	/// May have residual storage from previous lotteries. Use `TicketsCount` to see which ones
+	/// are actually valid ticket mappings.
+	</span><span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>Tickets&lt;T: Config&gt; = StorageMap&lt;<span class="kw">_</span>, Twox64Concat, u32, T::AccountId&gt;;
 
-	<span class="doccomment">/// The calls stored in this pallet to be used in an active lottery if configured</span>
-	<span class="doccomment">/// by `Config::ValidateCall`.</span>
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type</span> <span class="ident">CallIndices</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span>
-		<span class="ident">StorageValue</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">BoundedVec</span><span class="op">&lt;</span><span class="ident">CallIndex</span>, <span class="ident">T::MaxCalls</span><span class="op">&gt;</span>, <span class="ident">ValueQuery</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// The calls stored in this pallet to be used in an active lottery if configured
+	/// by `Config::ValidateCall`.
+	</span><span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>CallIndices&lt;T: Config&gt; =
+		StorageValue&lt;<span class="kw">_</span>, BoundedVec&lt;CallIndex, T::MaxCalls&gt;, ValueQuery&gt;;
 
-	<span class="attribute">#[<span class="ident">pallet::hooks</span>]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Hooks</span><span class="op">&lt;</span><span class="ident">BlockNumberFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">on_initialize</span>(<span class="ident">n</span>: <span class="ident">T::BlockNumber</span>) -&gt; <span class="ident">Weight</span> {
-			<span class="ident">Lottery</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::mutate</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">lottery</span><span class="op">|</span> -&gt; <span class="ident">Weight</span> {
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">lottery</span> {
-					<span class="kw">let</span> <span class="ident">payout_block</span> <span class="op">=</span>
-						<span class="ident">config</span>.<span class="ident">start</span>.<span class="ident">saturating_add</span>(<span class="ident">config</span>.<span class="ident">length</span>).<span class="ident">saturating_add</span>(<span class="ident">config</span>.<span class="ident">delay</span>);
-					<span class="kw">if</span> <span class="ident">payout_block</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">n</span> {
-						<span class="kw">let</span> (<span class="ident">lottery_account</span>, <span class="ident">lottery_balance</span>) <span class="op">=</span> <span class="ident"><span class="self">Self</span>::pot</span>();
+	<span class="attribute">#[pallet::hooks]
+	</span><span class="kw">impl</span>&lt;T: Config&gt; Hooks&lt;BlockNumberFor&lt;T&gt;&gt; <span class="kw">for </span>Pallet&lt;T&gt; {
+		<span class="kw">fn </span>on_initialize(n: T::BlockNumber) -&gt; Weight {
+			Lottery::&lt;T&gt;::mutate(|<span class="kw-2">mut </span>lottery| -&gt; Weight {
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(config) = <span class="kw-2">&amp;mut </span>lottery {
+					<span class="kw">let </span>payout_block =
+						config.start.saturating_add(config.length).saturating_add(config.delay);
+					<span class="kw">if </span>payout_block &lt;= n {
+						<span class="kw">let </span>(lottery_account, lottery_balance) = <span class="self">Self</span>::pot();
 
-						<span class="kw">let</span> <span class="ident">winner</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::choose_account</span>().<span class="ident">unwrap_or</span>(<span class="ident">lottery_account</span>);
-						<span class="comment">// Not much we can do if this fails...</span>
-						<span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">T::Currency::transfer</span>(
-							<span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::account_id</span>(),
-							<span class="kw-2">&amp;</span><span class="ident">winner</span>,
-							<span class="ident">lottery_balance</span>,
-							<span class="ident">KeepAlive</span>,
+						<span class="kw">let </span>winner = <span class="self">Self</span>::choose_account().unwrap_or(lottery_account);
+						<span class="comment">// Not much we can do if this fails...
+						</span><span class="kw">let </span>res = T::Currency::transfer(
+							<span class="kw-2">&amp;</span><span class="self">Self</span>::account_id(),
+							<span class="kw-2">&amp;</span>winner,
+							lottery_balance,
+							KeepAlive,
 						);
-						<span class="macro">debug_assert!</span>(<span class="ident">res</span>.<span class="ident">is_ok</span>());
+						<span class="macro">debug_assert!</span>(res.is_ok());
 
-						<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::Winner</span> { <span class="ident">winner</span>, <span class="ident">lottery_balance</span> });
+						<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Winner { winner, lottery_balance });
 
-						<span class="ident">TicketsCount</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
+						TicketsCount::&lt;T&gt;::kill();
 
-						<span class="kw">if</span> <span class="ident">config</span>.<span class="ident">repeat</span> {
-							<span class="comment">// If lottery should repeat, increment index by 1.</span>
-							<span class="ident">LotteryIndex</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::mutate</span>(<span class="op">|</span><span class="ident">index</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">index</span> <span class="op">=</span> <span class="ident">index</span>.<span class="ident">saturating_add</span>(<span class="number">1</span>));
-							<span class="comment">// Set a new start with the current block.</span>
-							<span class="ident">config</span>.<span class="ident">start</span> <span class="op">=</span> <span class="ident">n</span>;
-							<span class="kw">return</span> <span class="ident">T::WeightInfo::on_initialize_repeat</span>()
-						} <span class="kw">else</span> {
-							<span class="comment">// Else, kill the lottery storage.</span>
-							<span class="kw-2">*</span><span class="ident">lottery</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-							<span class="kw">return</span> <span class="ident">T::WeightInfo::on_initialize_end</span>()
+						<span class="kw">if </span>config.repeat {
+							<span class="comment">// If lottery should repeat, increment index by 1.
+							</span>LotteryIndex::&lt;T&gt;::mutate(|index| <span class="kw-2">*</span>index = index.saturating_add(<span class="number">1</span>));
+							<span class="comment">// Set a new start with the current block.
+							</span>config.start = n;
+							<span class="kw">return </span>T::WeightInfo::on_initialize_repeat()
+						} <span class="kw">else </span>{
+							<span class="comment">// Else, kill the lottery storage.
+							</span><span class="kw-2">*</span>lottery = <span class="prelude-val">None</span>;
+							<span class="kw">return </span>T::WeightInfo::on_initialize_end()
 						}
-						<span class="comment">// We choose not need to kill Participants and Tickets to avoid a large</span>
-						<span class="comment">// number of writes at one time. Instead, data persists between lotteries,</span>
-						<span class="comment">// but is not used if it is not relevant.</span>
-					}
+						<span class="comment">// We choose not need to kill Participants and Tickets to avoid a large
+						// number of writes at one time. Instead, data persists between lotteries,
+						// but is not used if it is not relevant.
+					</span>}
 				}
-				<span class="ident">T::DbWeight::get</span>().<span class="ident">reads</span>(<span class="number">1</span>)
+				T::DbWeight::get().reads(<span class="number">1</span>)
 			})
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::call</span>]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Buy a ticket to enter the lottery.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This extrinsic acts as a passthrough function for `call`. In all</span>
-		<span class="doccomment">/// situations where `call` alone would succeed, this extrinsic should</span>
-		<span class="doccomment">/// succeed.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// If `call` is successful, then we will attempt to purchase a ticket,</span>
-		<span class="doccomment">/// which may fail silently. To detect success of a ticket purchase, you</span>
-		<span class="doccomment">/// should listen for the `TicketBought` event.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This extrinsic must be called by a signed origin.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(
-			<span class="ident">T::WeightInfo::buy_ticket</span>()
-				.<span class="ident">saturating_add</span>(<span class="ident">call</span>.<span class="ident">get_dispatch_info</span>().<span class="ident">weight</span>)
-		)]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buy_ticket</span>(
-			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">call</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span><span class="op">&gt;</span>,
-		) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="kw">let</span> <span class="ident">caller</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>;
-			<span class="ident">call</span>.<span class="ident">clone</span>().<span class="ident">dispatch</span>(<span class="ident">origin</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">error</span>)<span class="question-mark">?</span>;
+	<span class="attribute">#[pallet::call]
+	</span><span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
+		<span class="doccomment">/// Buy a ticket to enter the lottery.
+		///
+		/// This extrinsic acts as a passthrough function for `call`. In all
+		/// situations where `call` alone would succeed, this extrinsic should
+		/// succeed.
+		///
+		/// If `call` is successful, then we will attempt to purchase a ticket,
+		/// which may fail silently. To detect success of a ticket purchase, you
+		/// should listen for the `TicketBought` event.
+		///
+		/// This extrinsic must be called by a signed origin.
+		</span><span class="attribute">#[pallet::weight(
+			T::WeightInfo::buy_ticket()
+				.saturating_add(call.get_dispatch_info().weight)
+		)]
+		</span><span class="kw">pub fn </span>buy_ticket(
+			origin: OriginFor&lt;T&gt;,
+			call: Box&lt;&lt;T <span class="kw">as </span>Config&gt;::RuntimeCall&gt;,
+		) -&gt; DispatchResult {
+			<span class="kw">let </span>caller = ensure_signed(origin.clone())<span class="question-mark">?</span>;
+			call.clone().dispatch(origin).map_err(|e| e.error)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::do_buy_ticket</span>(<span class="kw-2">&amp;</span><span class="ident">caller</span>, <span class="kw-2">&amp;</span><span class="ident">call</span>);
+			<span class="kw">let _ </span>= <span class="self">Self</span>::do_buy_ticket(<span class="kw-2">&amp;</span>caller, <span class="kw-2">&amp;</span>call);
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Set calls in storage which can be used to purchase a lottery ticket.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This function only matters if you use the `ValidateCall` implementation</span>
-		<span class="doccomment">/// provided by this pallet, which uses storage to determine the valid calls.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This extrinsic must be called by the Manager origin.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::set_calls</span>(<span class="ident">calls</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>))]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_calls</span>(
-			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">calls</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span><span class="op">&gt;</span>,
-		) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="ident">T::ManagerOrigin::ensure_origin</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
-			<span class="macro">ensure!</span>(<span class="ident">calls</span>.<span class="ident">len</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">T::MaxCalls::get</span>() <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::TooManyCalls</span>);
-			<span class="kw">if</span> <span class="ident">calls</span>.<span class="ident">is_empty</span>() {
-				<span class="ident">CallIndices</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::kill</span>();
-			} <span class="kw">else</span> {
-				<span class="kw">let</span> <span class="ident">indices</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::calls_to_indices</span>(<span class="kw-2">&amp;</span><span class="ident">calls</span>)<span class="question-mark">?</span>;
-				<span class="ident">CallIndices</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">indices</span>);
+		<span class="doccomment">/// Set calls in storage which can be used to purchase a lottery ticket.
+		///
+		/// This function only matters if you use the `ValidateCall` implementation
+		/// provided by this pallet, which uses storage to determine the valid calls.
+		///
+		/// This extrinsic must be called by the Manager origin.
+		</span><span class="attribute">#[pallet::weight(T::WeightInfo::set_calls(calls.len() <span class="kw">as </span>u32))]
+		</span><span class="kw">pub fn </span>set_calls(
+			origin: OriginFor&lt;T&gt;,
+			calls: Vec&lt;&lt;T <span class="kw">as </span>Config&gt;::RuntimeCall&gt;,
+		) -&gt; DispatchResult {
+			T::ManagerOrigin::ensure_origin(origin)<span class="question-mark">?</span>;
+			<span class="macro">ensure!</span>(calls.len() &lt;= T::MaxCalls::get() <span class="kw">as </span>usize, Error::&lt;T&gt;::TooManyCalls);
+			<span class="kw">if </span>calls.is_empty() {
+				CallIndices::&lt;T&gt;::kill();
+			} <span class="kw">else </span>{
+				<span class="kw">let </span>indices = <span class="self">Self</span>::calls_to_indices(<span class="kw-2">&amp;</span>calls)<span class="question-mark">?</span>;
+				CallIndices::&lt;T&gt;::put(indices);
 			}
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::CallsUpdated</span>);
+			<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::CallsUpdated);
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Start a lottery using the provided configuration.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This extrinsic must be called by the `ManagerOrigin`.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Parameters:</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// * `price`: The cost of a single ticket.</span>
-		<span class="doccomment">/// * `length`: How long the lottery should run for starting at the current block.</span>
-		<span class="doccomment">/// * `delay`: How long after the lottery end we should wait before picking a winner.</span>
-		<span class="doccomment">/// * `repeat`: If the lottery should repeat when completed.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::start_lottery</span>())]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">start_lottery</span>(
-			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">price</span>: <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">length</span>: <span class="ident">T::BlockNumber</span>,
-			<span class="ident">delay</span>: <span class="ident">T::BlockNumber</span>,
-			<span class="ident">repeat</span>: <span class="ident">bool</span>,
-		) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="ident">T::ManagerOrigin::ensure_origin</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
-			<span class="ident">Lottery</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::try_mutate</span>(<span class="op">|</span><span class="ident">lottery</span><span class="op">|</span> -&gt; <span class="ident">DispatchResult</span> {
-				<span class="macro">ensure!</span>(<span class="ident">lottery</span>.<span class="ident">is_none</span>(), <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::InProgress</span>);
-				<span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">LotteryIndex</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>();
-				<span class="kw">let</span> <span class="ident">new_index</span> <span class="op">=</span> <span class="ident">index</span>.<span class="ident">checked_add</span>(<span class="number">1</span>).<span class="ident">ok_or</span>(<span class="ident">ArithmeticError::Overflow</span>)<span class="question-mark">?</span>;
-				<span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">frame_system::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::block_number</span>();
-				<span class="comment">// Use new_index to more easily track everything with the current state.</span>
-				<span class="kw-2">*</span><span class="ident">lottery</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">LotteryConfig</span> { <span class="ident">price</span>, <span class="ident">start</span>, <span class="ident">length</span>, <span class="ident">delay</span>, <span class="ident">repeat</span> });
-				<span class="ident">LotteryIndex</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">new_index</span>);
+		<span class="doccomment">/// Start a lottery using the provided configuration.
+		///
+		/// This extrinsic must be called by the `ManagerOrigin`.
+		///
+		/// Parameters:
+		///
+		/// * `price`: The cost of a single ticket.
+		/// * `length`: How long the lottery should run for starting at the current block.
+		/// * `delay`: How long after the lottery end we should wait before picking a winner.
+		/// * `repeat`: If the lottery should repeat when completed.
+		</span><span class="attribute">#[pallet::weight(T::WeightInfo::start_lottery())]
+		</span><span class="kw">pub fn </span>start_lottery(
+			origin: OriginFor&lt;T&gt;,
+			price: BalanceOf&lt;T&gt;,
+			length: T::BlockNumber,
+			delay: T::BlockNumber,
+			repeat: bool,
+		) -&gt; DispatchResult {
+			T::ManagerOrigin::ensure_origin(origin)<span class="question-mark">?</span>;
+			Lottery::&lt;T&gt;::try_mutate(|lottery| -&gt; DispatchResult {
+				<span class="macro">ensure!</span>(lottery.is_none(), Error::&lt;T&gt;::InProgress);
+				<span class="kw">let </span>index = LotteryIndex::&lt;T&gt;::get();
+				<span class="kw">let </span>new_index = index.checked_add(<span class="number">1</span>).ok_or(ArithmeticError::Overflow)<span class="question-mark">?</span>;
+				<span class="kw">let </span>start = frame_system::Pallet::&lt;T&gt;::block_number();
+				<span class="comment">// Use new_index to more easily track everything with the current state.
+				</span><span class="kw-2">*</span>lottery = <span class="prelude-val">Some</span>(LotteryConfig { price, start, length, delay, repeat });
+				LotteryIndex::&lt;T&gt;::put(new_index);
 				<span class="prelude-val">Ok</span>(())
 			})<span class="question-mark">?</span>;
-			<span class="comment">// Make sure pot exists.</span>
-			<span class="kw">let</span> <span class="ident">lottery_account</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::account_id</span>();
-			<span class="kw">if</span> <span class="ident">T::Currency::total_balance</span>(<span class="kw-2">&amp;</span><span class="ident">lottery_account</span>).<span class="ident">is_zero</span>() {
-				<span class="ident">T::Currency::deposit_creating</span>(<span class="kw-2">&amp;</span><span class="ident">lottery_account</span>, <span class="ident">T::Currency::minimum_balance</span>());
+			<span class="comment">// Make sure pot exists.
+			</span><span class="kw">let </span>lottery_account = <span class="self">Self</span>::account_id();
+			<span class="kw">if </span>T::Currency::total_balance(<span class="kw-2">&amp;</span>lottery_account).is_zero() {
+				T::Currency::deposit_creating(<span class="kw-2">&amp;</span>lottery_account, T::Currency::minimum_balance());
 			}
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::LotteryStarted</span>);
+			<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::LotteryStarted);
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// If a lottery is repeating, you can use this to stop the repeat.</span>
-		<span class="doccomment">/// The lottery will continue to run to completion.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This extrinsic must be called by the `ManagerOrigin`.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::WeightInfo::stop_repeat</span>())]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stop_repeat</span>(<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="ident">T::ManagerOrigin::ensure_origin</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
-			<span class="ident">Lottery</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::mutate</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">lottery</span><span class="op">|</span> {
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="kw-2">&amp;mut</span> <span class="ident">lottery</span> {
-					<span class="ident">config</span>.<span class="ident">repeat</span> <span class="op">=</span> <span class="bool-val">false</span>
-				}
+		<span class="doccomment">/// If a lottery is repeating, you can use this to stop the repeat.
+		/// The lottery will continue to run to completion.
+		///
+		/// This extrinsic must be called by the `ManagerOrigin`.
+		</span><span class="attribute">#[pallet::weight(T::WeightInfo::stop_repeat())]
+		</span><span class="kw">pub fn </span>stop_repeat(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
+			T::ManagerOrigin::ensure_origin(origin)<span class="question-mark">?</span>;
+			Lottery::&lt;T&gt;::mutate(|<span class="kw-2">mut </span>lottery| {
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(config) = <span class="kw-2">&amp;mut </span>lottery {
+					config.repeat = <span class="bool-val">false
+				</span>}
 			});
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The account ID of the lottery pot.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This actually does computation. If you need to keep using it, then make sure you cache the</span>
-	<span class="doccomment">/// value and only call this once.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">account_id</span>() -&gt; <span class="ident">T::AccountId</span> {
-		<span class="ident">T::PalletId::get</span>().<span class="ident">into_account_truncating</span>()
+<span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
+	<span class="doccomment">/// The account ID of the lottery pot.
+	///
+	/// This actually does computation. If you need to keep using it, then make sure you cache the
+	/// value and only call this once.
+	</span><span class="kw">pub fn </span>account_id() -&gt; T::AccountId {
+		T::PalletId::get().into_account_truncating()
 	}
 
-	<span class="doccomment">/// Return the pot account and amount of money in the pot.</span>
-	<span class="doccomment">/// The existential deposit is not part of the pot so lottery account never gets deleted.</span>
-	<span class="kw">fn</span> <span class="ident">pot</span>() -&gt; (<span class="ident">T::AccountId</span>, <span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
-		<span class="kw">let</span> <span class="ident">account_id</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::account_id</span>();
-		<span class="kw">let</span> <span class="ident">balance</span> <span class="op">=</span>
-			<span class="ident">T::Currency::free_balance</span>(<span class="kw-2">&amp;</span><span class="ident">account_id</span>).<span class="ident">saturating_sub</span>(<span class="ident">T::Currency::minimum_balance</span>());
+	<span class="doccomment">/// Return the pot account and amount of money in the pot.
+	/// The existential deposit is not part of the pot so lottery account never gets deleted.
+	</span><span class="kw">fn </span>pot() -&gt; (T::AccountId, BalanceOf&lt;T&gt;) {
+		<span class="kw">let </span>account_id = <span class="self">Self</span>::account_id();
+		<span class="kw">let </span>balance =
+			T::Currency::free_balance(<span class="kw-2">&amp;</span>account_id).saturating_sub(T::Currency::minimum_balance());
 
-		(<span class="ident">account_id</span>, <span class="ident">balance</span>)
+		(account_id, balance)
 	}
 
-	<span class="doccomment">/// Converts a vector of calls into a vector of call indices.</span>
-	<span class="kw">fn</span> <span class="ident">calls_to_indices</span>(
-		<span class="ident">calls</span>: <span class="kw-2">&amp;</span>[<span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span>],
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BoundedVec</span><span class="op">&lt;</span><span class="ident">CallIndex</span>, <span class="ident">T::MaxCalls</span><span class="op">&gt;</span>, <span class="ident">DispatchError</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">indices</span> <span class="op">=</span> <span class="ident">BoundedVec</span>::<span class="op">&lt;</span><span class="ident">CallIndex</span>, <span class="ident">T::MaxCalls</span><span class="op">&gt;</span><span class="ident">::with_bounded_capacity</span>(<span class="ident">calls</span>.<span class="ident">len</span>());
-		<span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="ident">calls</span>.<span class="ident">iter</span>() {
-			<span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::call_to_index</span>(<span class="ident">c</span>)<span class="question-mark">?</span>;
-			<span class="ident">indices</span>.<span class="ident">try_push</span>(<span class="ident">index</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::TooManyCalls</span>)<span class="question-mark">?</span>;
+	<span class="doccomment">/// Converts a vector of calls into a vector of call indices.
+	</span><span class="kw">fn </span>calls_to_indices(
+		calls: <span class="kw-2">&amp;</span>[&lt;T <span class="kw">as </span>Config&gt;::RuntimeCall],
+	) -&gt; <span class="prelude-ty">Result</span>&lt;BoundedVec&lt;CallIndex, T::MaxCalls&gt;, DispatchError&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>indices = BoundedVec::&lt;CallIndex, T::MaxCalls&gt;::with_bounded_capacity(calls.len());
+		<span class="kw">for </span>c <span class="kw">in </span>calls.iter() {
+			<span class="kw">let </span>index = <span class="self">Self</span>::call_to_index(c)<span class="question-mark">?</span>;
+			indices.try_push(index).map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::TooManyCalls)<span class="question-mark">?</span>;
 		}
-		<span class="prelude-val">Ok</span>(<span class="ident">indices</span>)
+		<span class="prelude-val">Ok</span>(indices)
 	}
 
-	<span class="doccomment">/// Convert a call to it&#39;s call index by encoding the call and taking the first two bytes.</span>
-	<span class="kw">fn</span> <span class="ident">call_to_index</span>(<span class="ident">call</span>: <span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CallIndex</span>, <span class="ident">DispatchError</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">encoded_call</span> <span class="op">=</span> <span class="ident">call</span>.<span class="ident">encode</span>();
-		<span class="kw">if</span> <span class="ident">encoded_call</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="number">2</span> {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::EncodingFailed</span>.<span class="ident">into</span>())
+	<span class="doccomment">/// Convert a call to it&#39;s call index by encoding the call and taking the first two bytes.
+	</span><span class="kw">fn </span>call_to_index(call: <span class="kw-2">&amp;</span>&lt;T <span class="kw">as </span>Config&gt;::RuntimeCall) -&gt; <span class="prelude-ty">Result</span>&lt;CallIndex, DispatchError&gt; {
+		<span class="kw">let </span>encoded_call = call.encode();
+		<span class="kw">if </span>encoded_call.len() &lt; <span class="number">2 </span>{
+			<span class="kw">return </span><span class="prelude-val">Err</span>(Error::&lt;T&gt;::EncodingFailed.into())
 		}
-		<span class="prelude-val">Ok</span>((<span class="ident">encoded_call</span>[<span class="number">0</span>], <span class="ident">encoded_call</span>[<span class="number">1</span>]))
+		<span class="prelude-val">Ok</span>((encoded_call[<span class="number">0</span>], encoded_call[<span class="number">1</span>]))
 	}
 
-	<span class="doccomment">/// Logic for buying a ticket.</span>
-	<span class="kw">fn</span> <span class="ident">do_buy_ticket</span>(<span class="ident">caller</span>: <span class="kw-2">&amp;</span><span class="ident">T::AccountId</span>, <span class="ident">call</span>: <span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&gt;</span><span class="ident">::RuntimeCall</span>) -&gt; <span class="ident">DispatchResult</span> {
-		<span class="comment">// Check the call is valid lottery</span>
-		<span class="kw">let</span> <span class="ident">config</span> <span class="op">=</span> <span class="ident">Lottery</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>().<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::NotConfigured</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">block_number</span> <span class="op">=</span> <span class="ident">frame_system::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::block_number</span>();
+	<span class="doccomment">/// Logic for buying a ticket.
+	</span><span class="kw">fn </span>do_buy_ticket(caller: <span class="kw-2">&amp;</span>T::AccountId, call: <span class="kw-2">&amp;</span>&lt;T <span class="kw">as </span>Config&gt;::RuntimeCall) -&gt; DispatchResult {
+		<span class="comment">// Check the call is valid lottery
+		</span><span class="kw">let </span>config = Lottery::&lt;T&gt;::get().ok_or(Error::&lt;T&gt;::NotConfigured)<span class="question-mark">?</span>;
+		<span class="kw">let </span>block_number = frame_system::Pallet::&lt;T&gt;::block_number();
 		<span class="macro">ensure!</span>(
-			<span class="ident">block_number</span> <span class="op">&lt;</span> <span class="ident">config</span>.<span class="ident">start</span>.<span class="ident">saturating_add</span>(<span class="ident">config</span>.<span class="ident">length</span>),
-			<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::AlreadyEnded</span>
+			block_number &lt; config.start.saturating_add(config.length),
+			Error::&lt;T&gt;::AlreadyEnded
 		);
-		<span class="macro">ensure!</span>(<span class="ident">T::ValidateCall::validate_call</span>(<span class="ident">call</span>), <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::InvalidCall</span>);
-		<span class="kw">let</span> <span class="ident">call_index</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::call_to_index</span>(<span class="ident">call</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">ticket_count</span> <span class="op">=</span> <span class="ident">TicketsCount</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>();
-		<span class="kw">let</span> <span class="ident">new_ticket_count</span> <span class="op">=</span> <span class="ident">ticket_count</span>.<span class="ident">checked_add</span>(<span class="number">1</span>).<span class="ident">ok_or</span>(<span class="ident">ArithmeticError::Overflow</span>)<span class="question-mark">?</span>;
-		<span class="comment">// Try to update the participant status</span>
-		<span class="ident">Participants</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::try_mutate</span>(
-			<span class="kw-2">&amp;</span><span class="ident">caller</span>,
-			<span class="op">|</span>(<span class="ident">lottery_index</span>, <span class="ident">participating_calls</span>)<span class="op">|</span> -&gt; <span class="ident">DispatchResult</span> {
-				<span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">LotteryIndex</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>();
-				<span class="comment">// If lottery index doesn&#39;t match, then reset participating calls and index.</span>
-				<span class="kw">if</span> <span class="kw-2">*</span><span class="ident">lottery_index</span> <span class="op">!</span><span class="op">=</span> <span class="ident">index</span> {
-					<span class="kw-2">*</span><span class="ident">participating_calls</span> <span class="op">=</span> <span class="ident">Default::default</span>();
-					<span class="kw-2">*</span><span class="ident">lottery_index</span> <span class="op">=</span> <span class="ident">index</span>;
-				} <span class="kw">else</span> {
-					<span class="comment">// Check that user is not already participating under this call.</span>
-					<span class="macro">ensure!</span>(
-						<span class="op">!</span><span class="ident">participating_calls</span>.<span class="ident">iter</span>().<span class="ident">any</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">call_index</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">c</span>),
-						<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::AlreadyParticipating</span>
+		<span class="macro">ensure!</span>(T::ValidateCall::validate_call(call), Error::&lt;T&gt;::InvalidCall);
+		<span class="kw">let </span>call_index = <span class="self">Self</span>::call_to_index(call)<span class="question-mark">?</span>;
+		<span class="kw">let </span>ticket_count = TicketsCount::&lt;T&gt;::get();
+		<span class="kw">let </span>new_ticket_count = ticket_count.checked_add(<span class="number">1</span>).ok_or(ArithmeticError::Overflow)<span class="question-mark">?</span>;
+		<span class="comment">// Try to update the participant status
+		</span>Participants::&lt;T&gt;::try_mutate(
+			<span class="kw-2">&amp;</span>caller,
+			|(lottery_index, participating_calls)| -&gt; DispatchResult {
+				<span class="kw">let </span>index = LotteryIndex::&lt;T&gt;::get();
+				<span class="comment">// If lottery index doesn&#39;t match, then reset participating calls and index.
+				</span><span class="kw">if </span><span class="kw-2">*</span>lottery_index != index {
+					<span class="kw-2">*</span>participating_calls = Default::default();
+					<span class="kw-2">*</span>lottery_index = index;
+				} <span class="kw">else </span>{
+					<span class="comment">// Check that user is not already participating under this call.
+					</span><span class="macro">ensure!</span>(
+						!participating_calls.iter().any(|c| call_index == <span class="kw-2">*</span>c),
+						Error::&lt;T&gt;::AlreadyParticipating
 					);
 				}
-				<span class="ident">participating_calls</span>.<span class="ident">try_push</span>(<span class="ident">call_index</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::TooManyCalls</span>)<span class="question-mark">?</span>;
-				<span class="comment">// Check user has enough funds and send it to the Lottery account.</span>
-				<span class="ident">T::Currency::transfer</span>(<span class="ident">caller</span>, <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::account_id</span>(), <span class="ident">config</span>.<span class="ident">price</span>, <span class="ident">KeepAlive</span>)<span class="question-mark">?</span>;
-				<span class="comment">// Create a new ticket.</span>
-				<span class="ident">TicketsCount</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">new_ticket_count</span>);
-				<span class="ident">Tickets</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="ident">ticket_count</span>, <span class="ident">caller</span>.<span class="ident">clone</span>());
+				participating_calls.try_push(call_index).map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::TooManyCalls)<span class="question-mark">?</span>;
+				<span class="comment">// Check user has enough funds and send it to the Lottery account.
+				</span>T::Currency::transfer(caller, <span class="kw-2">&amp;</span><span class="self">Self</span>::account_id(), config.price, KeepAlive)<span class="question-mark">?</span>;
+				<span class="comment">// Create a new ticket.
+				</span>TicketsCount::&lt;T&gt;::put(new_ticket_count);
+				Tickets::&lt;T&gt;::insert(ticket_count, caller.clone());
 				<span class="prelude-val">Ok</span>(())
 			},
 		)<span class="question-mark">?</span>;
 
-		<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::TicketBought</span> { <span class="ident">who</span>: <span class="ident">caller</span>.<span class="ident">clone</span>(), <span class="ident">call_index</span> });
+		<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::TicketBought { who: caller.clone(), call_index });
 
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Randomly choose a winning ticket and return the account that purchased it.</span>
-	<span class="doccomment">/// The more tickets an account bought, the higher are its chances of winning.</span>
-	<span class="doccomment">/// Returns `None` if there is no winner.</span>
-	<span class="kw">fn</span> <span class="ident">choose_account</span>() -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span> {
-		<span class="kw">match</span> <span class="ident"><span class="self">Self</span>::choose_ticket</span>(<span class="ident">TicketsCount</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>()) {
-			<span class="prelude-val">None</span> =&gt; <span class="prelude-val">None</span>,
-			<span class="prelude-val">Some</span>(<span class="ident">ticket</span>) =&gt; <span class="ident">Tickets</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">ticket</span>),
+	<span class="doccomment">/// Randomly choose a winning ticket and return the account that purchased it.
+	/// The more tickets an account bought, the higher are its chances of winning.
+	/// Returns `None` if there is no winner.
+	</span><span class="kw">fn </span>choose_account() -&gt; <span class="prelude-ty">Option</span>&lt;T::AccountId&gt; {
+		<span class="kw">match </span><span class="self">Self</span>::choose_ticket(TicketsCount::&lt;T&gt;::get()) {
+			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
+			<span class="prelude-val">Some</span>(ticket) =&gt; Tickets::&lt;T&gt;::get(ticket),
 		}
 	}
 
-	<span class="doccomment">/// Randomly choose a winning ticket from among the total number of tickets.</span>
-	<span class="doccomment">/// Returns `None` if there are no tickets.</span>
-	<span class="kw">fn</span> <span class="ident">choose_ticket</span>(<span class="ident">total</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="ident">total</span> <span class="op">==</span> <span class="number">0</span> {
-			<span class="kw">return</span> <span class="prelude-val">None</span>
+	<span class="doccomment">/// Randomly choose a winning ticket from among the total number of tickets.
+	/// Returns `None` if there are no tickets.
+	</span><span class="kw">fn </span>choose_ticket(total: u32) -&gt; <span class="prelude-ty">Option</span>&lt;u32&gt; {
+		<span class="kw">if </span>total == <span class="number">0 </span>{
+			<span class="kw">return </span><span class="prelude-val">None
+		</span>}
+		<span class="kw">let </span><span class="kw-2">mut </span>random_number = <span class="self">Self</span>::generate_random_number(<span class="number">0</span>);
+
+		<span class="comment">// Best effort attempt to remove bias from modulus operator.
+		</span><span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..T::MaxGenerateRandom::get() {
+			<span class="kw">if </span>random_number &lt; u32::MAX - u32::MAX % total {
+				<span class="kw">break
+			</span>}
+
+			random_number = <span class="self">Self</span>::generate_random_number(i);
 		}
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">random_number</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::generate_random_number</span>(<span class="number">0</span>);
 
-		<span class="comment">// Best effort attempt to remove bias from modulus operator.</span>
-		<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">1</span>..<span class="ident">T::MaxGenerateRandom::get</span>() {
-			<span class="kw">if</span> <span class="ident">random_number</span> <span class="op">&lt;</span> <span class="ident">u32::MAX</span> <span class="op">-</span> <span class="ident">u32::MAX</span> <span class="op">%</span> <span class="ident">total</span> {
-				<span class="kw">break</span>
-			}
-
-			<span class="ident">random_number</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::generate_random_number</span>(<span class="ident">i</span>);
-		}
-
-		<span class="prelude-val">Some</span>(<span class="ident">random_number</span> <span class="op">%</span> <span class="ident">total</span>)
+		<span class="prelude-val">Some</span>(random_number % total)
 	}
 
-	<span class="doccomment">/// Generate a random number from a given seed.</span>
-	<span class="doccomment">/// Note that there is potential bias introduced by using modulus operator.</span>
-	<span class="doccomment">/// You should call this function with different seed values until the random</span>
-	<span class="doccomment">/// number lies within `u32::MAX - u32::MAX % n`.</span>
-	<span class="doccomment">/// TODO: deal with randomness freshness</span>
-	<span class="doccomment">/// https://github.com/paritytech/substrate/issues/8311</span>
-	<span class="kw">fn</span> <span class="ident">generate_random_number</span>(<span class="ident">seed</span>: <span class="ident">u32</span>) -&gt; <span class="ident">u32</span> {
-		<span class="kw">let</span> (<span class="ident">random_seed</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">T::Randomness::random</span>(<span class="kw-2">&amp;</span>(<span class="ident">T::PalletId::get</span>(), <span class="ident">seed</span>).<span class="ident">encode</span>());
-		<span class="kw">let</span> <span class="ident">random_number</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span><span class="ident">::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">random_seed</span>.<span class="ident">as_ref</span>())
-			.<span class="ident">expect</span>(<span class="string">&quot;secure hashes should always be bigger than u32; qed&quot;</span>);
-		<span class="ident">random_number</span>
+	<span class="doccomment">/// Generate a random number from a given seed.
+	/// Note that there is potential bias introduced by using modulus operator.
+	/// You should call this function with different seed values until the random
+	/// number lies within `u32::MAX - u32::MAX % n`.
+	/// TODO: deal with randomness freshness
+	/// https://github.com/paritytech/substrate/issues/8311
+	</span><span class="kw">fn </span>generate_random_number(seed: u32) -&gt; u32 {
+		<span class="kw">let </span>(random_seed, <span class="kw">_</span>) = T::Randomness::random(<span class="kw-2">&amp;</span>(T::PalletId::get(), seed).encode());
+		<span class="kw">let </span>random_number = &lt;u32&gt;::decode(<span class="kw-2">&amp;mut </span>random_seed.as_ref())
+			.expect(<span class="string">&quot;secure hashes should always be bigger than u32; qed&quot;</span>);
+		random_number
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_lottery" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_lottery" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

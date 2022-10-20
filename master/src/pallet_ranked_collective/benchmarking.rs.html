@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/ranked-collective/src/benchmarking.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>benchmarking.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_ranked_collective/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_ranked_collective/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_ranked_collective/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/ranked-collective/src/benchmarking.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>benchmarking.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_ranked_collective/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_ranked_collective/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -168,170 +162,169 @@
 <span id="162">162</span>
 <span id="163">163</span>
 <span id="164">164</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Staking pallet benchmarking.</span>
+</span><span class="doccomment">//! Staking pallet benchmarking.
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_imports</span>)]</span>
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Pallet</span> <span class="kw">as</span> <span class="ident">RankedCollective</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[allow(unused_imports)]
+</span><span class="kw">use </span><span class="kw">crate</span>::Pallet <span class="kw">as </span>RankedCollective;
 
-<span class="kw">use</span> <span class="ident">frame_benchmarking</span>::{<span class="ident">account</span>, <span class="ident">benchmarks_instance_pallet</span>, <span class="ident">whitelisted_caller</span>};
-<span class="kw">use</span> <span class="ident">frame_support</span>::{<span class="ident">assert_ok</span>, <span class="ident">dispatch::UnfilteredDispatchable</span>};
-<span class="kw">use</span> <span class="ident">frame_system::RawOrigin</span> <span class="kw">as</span> <span class="ident">SystemOrigin</span>;
+<span class="kw">use </span>frame_benchmarking::{account, benchmarks_instance_pallet, whitelisted_caller};
+<span class="kw">use </span>frame_support::{assert_ok, dispatch::UnfilteredDispatchable};
+<span class="kw">use </span>frame_system::RawOrigin <span class="kw">as </span>SystemOrigin;
 
-<span class="kw">const</span> <span class="ident">SEED</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>;
+<span class="kw">const </span>SEED: u32 = <span class="number">0</span>;
 
-<span class="kw">fn</span> <span class="ident">assert_last_event</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">generic_event</span>: <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::RuntimeEvent</span>) {
-	<span class="ident">frame_system::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::assert_last_event</span>(<span class="ident">generic_event</span>.<span class="ident">into</span>());
+<span class="kw">fn </span>assert_last_event&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;(generic_event: &lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::RuntimeEvent) {
+	frame_system::Pallet::&lt;T&gt;::assert_last_event(generic_event.into());
 }
 
-<span class="kw">fn</span> <span class="ident">make_member</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">rank</span>: <span class="ident">Rank</span>) -&gt; <span class="ident">T::AccountId</span> {
-	<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">account</span>::<span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span>(<span class="string">&quot;member&quot;</span>, <span class="ident">MemberCount</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">0</span>), <span class="ident">SEED</span>);
-	<span class="kw">let</span> <span class="ident">who_lookup</span> <span class="op">=</span> <span class="ident">T::Lookup::unlookup</span>(<span class="ident">who</span>.<span class="ident">clone</span>());
-	<span class="macro">assert_ok!</span>(<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::add_member</span>(
-		<span class="ident">T::PromoteOrigin::successful_origin</span>(),
-		<span class="ident">who_lookup</span>.<span class="ident">clone</span>()
+<span class="kw">fn </span>make_member&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;(rank: Rank) -&gt; T::AccountId {
+	<span class="kw">let </span>who = account::&lt;T::AccountId&gt;(<span class="string">&quot;member&quot;</span>, MemberCount::&lt;T, I&gt;::get(<span class="number">0</span>), SEED);
+	<span class="kw">let </span>who_lookup = T::Lookup::unlookup(who.clone());
+	<span class="macro">assert_ok!</span>(Pallet::&lt;T, I&gt;::add_member(
+		T::PromoteOrigin::successful_origin(),
+		who_lookup.clone()
 	));
-	<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">rank</span> {
-		<span class="macro">assert_ok!</span>(<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::promote_member</span>(
-			<span class="ident">T::PromoteOrigin::successful_origin</span>(),
-			<span class="ident">who_lookup</span>.<span class="ident">clone</span>()
+	<span class="kw">for _ in </span><span class="number">0</span>..rank {
+		<span class="macro">assert_ok!</span>(Pallet::&lt;T, I&gt;::promote_member(
+			T::PromoteOrigin::successful_origin(),
+			who_lookup.clone()
 		));
 	}
-	<span class="ident">who</span>
+	who
 }
 
-<span class="macro">benchmarks_instance_pallet!</span> {
-	<span class="ident">add_member</span> {
-		<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">account</span>::<span class="op">&lt;</span><span class="ident">T::AccountId</span><span class="op">&gt;</span>(<span class="string">&quot;member&quot;</span>, <span class="number">0</span>, <span class="ident">SEED</span>);
-		<span class="kw">let</span> <span class="ident">who_lookup</span> <span class="op">=</span> <span class="ident">T::Lookup::unlookup</span>(<span class="ident">who</span>.<span class="ident">clone</span>());
-		<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">T::PromoteOrigin::successful_origin</span>();
-		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Call</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::add_member</span> { <span class="ident">who</span>: <span class="ident">who_lookup</span> };
-	}: { <span class="ident">call</span>.<span class="ident">dispatch_bypass_filter</span>(<span class="ident">origin</span>)<span class="question-mark">?</span> }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">MemberCount</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="number">0</span>), <span class="number">1</span>);
-		<span class="ident">assert_last_event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">Event::MemberAdded</span> { <span class="ident">who</span> }.<span class="ident">into</span>());
+<span class="macro">benchmarks_instance_pallet! </span>{
+	add_member {
+		<span class="kw">let </span>who = account::&lt;T::AccountId&gt;(<span class="string">&quot;member&quot;</span>, <span class="number">0</span>, SEED);
+		<span class="kw">let </span>who_lookup = T::Lookup::unlookup(who.clone());
+		<span class="kw">let </span>origin = T::PromoteOrigin::successful_origin();
+		<span class="kw">let </span>call = Call::&lt;T, I&gt;::add_member { who: who_lookup };
+	}: { call.dispatch_bypass_filter(origin)<span class="question-mark">? </span>}
+	verify {
+		<span class="macro">assert_eq!</span>(MemberCount::&lt;T, I&gt;::get(<span class="number">0</span>), <span class="number">1</span>);
+		assert_last_event::&lt;T, I&gt;(Event::MemberAdded { who }.into());
 	}
 
-	<span class="ident">remove_member</span> {
-		<span class="kw">let</span> <span class="ident">r</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">10</span>;
-		<span class="kw">let</span> <span class="ident">rank</span> <span class="op">=</span> <span class="ident">r</span> <span class="kw">as</span> <span class="ident">u16</span>;
-		<span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">make_member</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">rank</span>);
-		<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">make_member</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">rank</span>);
-		<span class="kw">let</span> <span class="ident">who_lookup</span> <span class="op">=</span> <span class="ident">T::Lookup::unlookup</span>(<span class="ident">who</span>.<span class="ident">clone</span>());
-		<span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="ident">make_member</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">rank</span>);
-		<span class="kw">let</span> <span class="ident">last_index</span> <span class="op">=</span> (<span class="number">0</span>..<span class="op">=</span><span class="ident">rank</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">IdToIndex</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">r</span>, <span class="kw-2">&amp;</span><span class="ident">last</span>).<span class="ident">unwrap</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-		<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">T::DemoteOrigin::successful_origin</span>();
-		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Call</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::remove_member</span> { <span class="ident">who</span>: <span class="ident">who_lookup</span>, <span class="ident">min_rank</span>: <span class="ident">rank</span> };
-	}: { <span class="ident">call</span>.<span class="ident">dispatch_bypass_filter</span>(<span class="ident">origin</span>)<span class="question-mark">?</span> }
-	<span class="ident">verify</span> {
-		<span class="kw">for</span> <span class="ident">r</span> <span class="kw">in</span> <span class="number">0</span>..<span class="op">=</span><span class="ident">rank</span> {
-			<span class="macro">assert_eq!</span>(<span class="ident">MemberCount</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">r</span>), <span class="number">2</span>);
-			<span class="macro">assert_ne!</span>(<span class="ident">last_index</span>[<span class="ident">r</span> <span class="kw">as</span> <span class="ident">usize</span>], <span class="ident">IdToIndex</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">r</span>, <span class="kw-2">&amp;</span><span class="ident">last</span>).<span class="ident">unwrap</span>());
+	remove_member {
+		<span class="kw">let </span>r <span class="kw">in </span><span class="number">0 </span>.. <span class="number">10</span>;
+		<span class="kw">let </span>rank = r <span class="kw">as </span>u16;
+		<span class="kw">let </span>first = make_member::&lt;T, I&gt;(rank);
+		<span class="kw">let </span>who = make_member::&lt;T, I&gt;(rank);
+		<span class="kw">let </span>who_lookup = T::Lookup::unlookup(who.clone());
+		<span class="kw">let </span>last = make_member::&lt;T, I&gt;(rank);
+		<span class="kw">let </span>last_index = (<span class="number">0</span>..=rank).map(|r| IdToIndex::&lt;T, I&gt;::get(r, <span class="kw-2">&amp;</span>last).unwrap()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+		<span class="kw">let </span>origin = T::DemoteOrigin::successful_origin();
+		<span class="kw">let </span>call = Call::&lt;T, I&gt;::remove_member { who: who_lookup, min_rank: rank };
+	}: { call.dispatch_bypass_filter(origin)<span class="question-mark">? </span>}
+	verify {
+		<span class="kw">for </span>r <span class="kw">in </span><span class="number">0</span>..=rank {
+			<span class="macro">assert_eq!</span>(MemberCount::&lt;T, I&gt;::get(r), <span class="number">2</span>);
+			<span class="macro">assert_ne!</span>(last_index[r <span class="kw">as </span>usize], IdToIndex::&lt;T, I&gt;::get(r, <span class="kw-2">&amp;</span>last).unwrap());
 		}
-		<span class="ident">assert_last_event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">Event::MemberRemoved</span> { <span class="ident">who</span>, <span class="ident">rank</span> }.<span class="ident">into</span>());
+		assert_last_event::&lt;T, I&gt;(Event::MemberRemoved { who, rank }.into());
 	}
 
-	<span class="ident">promote_member</span> {
-		<span class="kw">let</span> <span class="ident">r</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">10</span>;
-		<span class="kw">let</span> <span class="ident">rank</span> <span class="op">=</span> <span class="ident">r</span> <span class="kw">as</span> <span class="ident">u16</span>;
-		<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">make_member</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">rank</span>);
-		<span class="kw">let</span> <span class="ident">who_lookup</span> <span class="op">=</span> <span class="ident">T::Lookup::unlookup</span>(<span class="ident">who</span>.<span class="ident">clone</span>());
-		<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">T::PromoteOrigin::successful_origin</span>();
-		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Call</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::promote_member</span> { <span class="ident">who</span>: <span class="ident">who_lookup</span> };
-	}: { <span class="ident">call</span>.<span class="ident">dispatch_bypass_filter</span>(<span class="ident">origin</span>)<span class="question-mark">?</span> }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">Members</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>).<span class="ident">unwrap</span>().<span class="ident">rank</span>, <span class="ident">rank</span> <span class="op">+</span> <span class="number">1</span>);
-		<span class="ident">assert_last_event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">Event::RankChanged</span> { <span class="ident">who</span>, <span class="ident">rank</span>: <span class="ident">rank</span> <span class="op">+</span> <span class="number">1</span> }.<span class="ident">into</span>());
+	promote_member {
+		<span class="kw">let </span>r <span class="kw">in </span><span class="number">0 </span>.. <span class="number">10</span>;
+		<span class="kw">let </span>rank = r <span class="kw">as </span>u16;
+		<span class="kw">let </span>who = make_member::&lt;T, I&gt;(rank);
+		<span class="kw">let </span>who_lookup = T::Lookup::unlookup(who.clone());
+		<span class="kw">let </span>origin = T::PromoteOrigin::successful_origin();
+		<span class="kw">let </span>call = Call::&lt;T, I&gt;::promote_member { who: who_lookup };
+	}: { call.dispatch_bypass_filter(origin)<span class="question-mark">? </span>}
+	verify {
+		<span class="macro">assert_eq!</span>(Members::&lt;T, I&gt;::get(<span class="kw-2">&amp;</span>who).unwrap().rank, rank + <span class="number">1</span>);
+		assert_last_event::&lt;T, I&gt;(Event::RankChanged { who, rank: rank + <span class="number">1 </span>}.into());
 	}
 
-	<span class="ident">demote_member</span> {
-		<span class="kw">let</span> <span class="ident">r</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">10</span>;
-		<span class="kw">let</span> <span class="ident">rank</span> <span class="op">=</span> <span class="ident">r</span> <span class="kw">as</span> <span class="ident">u16</span>;
-		<span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">make_member</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">rank</span>);
-		<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">make_member</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">rank</span>);
-		<span class="kw">let</span> <span class="ident">who_lookup</span> <span class="op">=</span> <span class="ident">T::Lookup::unlookup</span>(<span class="ident">who</span>.<span class="ident">clone</span>());
-		<span class="kw">let</span> <span class="ident">last</span> <span class="op">=</span> <span class="ident">make_member</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">rank</span>);
-		<span class="kw">let</span> <span class="ident">last_index</span> <span class="op">=</span> <span class="ident">IdToIndex</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">rank</span>, <span class="kw-2">&amp;</span><span class="ident">last</span>).<span class="ident">unwrap</span>();
-		<span class="kw">let</span> <span class="ident">origin</span> <span class="op">=</span> <span class="ident">T::DemoteOrigin::successful_origin</span>();
-		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Call</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::demote_member</span> { <span class="ident">who</span>: <span class="ident">who_lookup</span> };
-	}: { <span class="ident">call</span>.<span class="ident">dispatch_bypass_filter</span>(<span class="ident">origin</span>)<span class="question-mark">?</span> }
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">Members</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="kw-2">&amp;</span><span class="ident">who</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">rank</span>), <span class="ident">rank</span>.<span class="ident">checked_sub</span>(<span class="number">1</span>));
-		<span class="macro">assert_eq!</span>(<span class="ident">MemberCount</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">rank</span>), <span class="number">2</span>);
-		<span class="macro">assert_ne!</span>(<span class="ident">last_index</span>, <span class="ident">IdToIndex</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="ident">rank</span>, <span class="kw-2">&amp;</span><span class="ident">last</span>).<span class="ident">unwrap</span>());
-		<span class="ident">assert_last_event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw">match</span> <span class="ident">rank</span> {
-			<span class="number">0</span> =&gt; <span class="ident">Event::MemberRemoved</span> { <span class="ident">who</span>, <span class="ident">rank</span>: <span class="number">0</span> },
-			<span class="ident">r</span> =&gt; <span class="ident">Event::RankChanged</span> { <span class="ident">who</span>, <span class="ident">rank</span>: <span class="ident">r</span> <span class="op">-</span> <span class="number">1</span> },
-		}.<span class="ident">into</span>());
+	demote_member {
+		<span class="kw">let </span>r <span class="kw">in </span><span class="number">0 </span>.. <span class="number">10</span>;
+		<span class="kw">let </span>rank = r <span class="kw">as </span>u16;
+		<span class="kw">let </span>first = make_member::&lt;T, I&gt;(rank);
+		<span class="kw">let </span>who = make_member::&lt;T, I&gt;(rank);
+		<span class="kw">let </span>who_lookup = T::Lookup::unlookup(who.clone());
+		<span class="kw">let </span>last = make_member::&lt;T, I&gt;(rank);
+		<span class="kw">let </span>last_index = IdToIndex::&lt;T, I&gt;::get(rank, <span class="kw-2">&amp;</span>last).unwrap();
+		<span class="kw">let </span>origin = T::DemoteOrigin::successful_origin();
+		<span class="kw">let </span>call = Call::&lt;T, I&gt;::demote_member { who: who_lookup };
+	}: { call.dispatch_bypass_filter(origin)<span class="question-mark">? </span>}
+	verify {
+		<span class="macro">assert_eq!</span>(Members::&lt;T, I&gt;::get(<span class="kw-2">&amp;</span>who).map(|x| x.rank), rank.checked_sub(<span class="number">1</span>));
+		<span class="macro">assert_eq!</span>(MemberCount::&lt;T, I&gt;::get(rank), <span class="number">2</span>);
+		<span class="macro">assert_ne!</span>(last_index, IdToIndex::&lt;T, I&gt;::get(rank, <span class="kw-2">&amp;</span>last).unwrap());
+		assert_last_event::&lt;T, I&gt;(<span class="kw">match </span>rank {
+			<span class="number">0 </span>=&gt; Event::MemberRemoved { who, rank: <span class="number">0 </span>},
+			r =&gt; Event::RankChanged { who, rank: r - <span class="number">1 </span>},
+		}.into());
 	}
 
-	<span class="ident">vote</span> {
-		<span class="kw">let</span> <span class="ident">caller</span>: <span class="ident">T::AccountId</span> <span class="op">=</span> <span class="ident">whitelisted_caller</span>();
-		<span class="kw">let</span> <span class="ident">caller_lookup</span> <span class="op">=</span> <span class="ident">T::Lookup::unlookup</span>(<span class="ident">caller</span>.<span class="ident">clone</span>());
-		<span class="macro">assert_ok!</span>(<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::add_member</span>(<span class="ident">T::PromoteOrigin::successful_origin</span>(), <span class="ident">caller_lookup</span>.<span class="ident">clone</span>()));
-		<span class="comment">// Create a poll</span>
-		<span class="kw">let</span> <span class="ident">class</span> <span class="op">=</span> <span class="ident">T::Polls::classes</span>().<span class="ident">into_iter</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
-		<span class="kw">let</span> <span class="ident">rank</span> <span class="op">=</span> <span class="ident">T::MinRankOfClass::convert</span>(<span class="ident">class</span>.<span class="ident">clone</span>());
-		<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">rank</span> {
-			<span class="macro">assert_ok!</span>(<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::promote_member</span>(
-				<span class="ident">T::PromoteOrigin::successful_origin</span>(),
-				<span class="ident">caller_lookup</span>.<span class="ident">clone</span>()
+	vote {
+		<span class="kw">let </span>caller: T::AccountId = whitelisted_caller();
+		<span class="kw">let </span>caller_lookup = T::Lookup::unlookup(caller.clone());
+		<span class="macro">assert_ok!</span>(Pallet::&lt;T, I&gt;::add_member(T::PromoteOrigin::successful_origin(), caller_lookup.clone()));
+		<span class="comment">// Create a poll
+		</span><span class="kw">let </span>class = T::Polls::classes().into_iter().next().unwrap();
+		<span class="kw">let </span>rank = T::MinRankOfClass::convert(class.clone());
+		<span class="kw">for _ in </span><span class="number">0</span>..rank {
+			<span class="macro">assert_ok!</span>(Pallet::&lt;T, I&gt;::promote_member(
+				T::PromoteOrigin::successful_origin(),
+				caller_lookup.clone()
 			));
 		}
 
-		<span class="kw">let</span> <span class="ident">poll</span> <span class="op">=</span> <span class="ident">T::Polls::create_ongoing</span>(<span class="ident">class</span>).<span class="ident">expect</span>(<span class="string">&quot;Must always be able to create a poll for rank 0&quot;</span>);
+		<span class="kw">let </span>poll = T::Polls::create_ongoing(class).expect(<span class="string">&quot;Must always be able to create a poll for rank 0&quot;</span>);
 
-		<span class="comment">// Vote once.</span>
-		<span class="macro">assert_ok!</span>(<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::vote</span>(<span class="ident">SystemOrigin::Signed</span>(<span class="ident">caller</span>.<span class="ident">clone</span>()).<span class="ident">into</span>(), <span class="ident">poll</span>, <span class="bool-val">true</span>));
-	}: <span class="kw">_</span>(<span class="ident">SystemOrigin::Signed</span>(<span class="ident">caller</span>.<span class="ident">clone</span>()), <span class="ident">poll</span>, <span class="bool-val">false</span>)
-	<span class="ident">verify</span> {
-		<span class="kw">let</span> <span class="ident">tally</span> <span class="op">=</span> <span class="ident">Tally::from_parts</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>);
-		<span class="kw">let</span> <span class="ident">ev</span> <span class="op">=</span> <span class="ident">Event::Voted</span> { <span class="ident">who</span>: <span class="ident">caller</span>, <span class="ident">poll</span>, <span class="ident">vote</span>: <span class="ident">VoteRecord::Nay</span>(<span class="number">1</span>), <span class="ident">tally</span> };
-		<span class="ident">assert_last_event</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">ev</span>.<span class="ident">into</span>());
+		<span class="comment">// Vote once.
+		</span><span class="macro">assert_ok!</span>(Pallet::&lt;T, I&gt;::vote(SystemOrigin::Signed(caller.clone()).into(), poll, <span class="bool-val">true</span>));
+	}: <span class="kw">_</span>(SystemOrigin::Signed(caller.clone()), poll, <span class="bool-val">false</span>)
+	verify {
+		<span class="kw">let </span>tally = Tally::from_parts(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>);
+		<span class="kw">let </span>ev = Event::Voted { who: caller, poll, vote: VoteRecord::Nay(<span class="number">1</span>), tally };
+		assert_last_event::&lt;T, I&gt;(ev.into());
 	}
 
-	<span class="ident">cleanup_poll</span> {
-		<span class="kw">let</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">0</span> .. <span class="number">100</span>;
+	cleanup_poll {
+		<span class="kw">let </span>n <span class="kw">in </span><span class="number">0 </span>.. <span class="number">100</span>;
 
-		<span class="comment">// Create a poll</span>
-		<span class="kw">let</span> <span class="ident">class</span> <span class="op">=</span> <span class="ident">T::Polls::classes</span>().<span class="ident">into_iter</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>();
-		<span class="kw">let</span> <span class="ident">rank</span> <span class="op">=</span> <span class="ident">T::MinRankOfClass::convert</span>(<span class="ident">class</span>.<span class="ident">clone</span>());
-		<span class="kw">let</span> <span class="ident">poll</span> <span class="op">=</span> <span class="ident">T::Polls::create_ongoing</span>(<span class="ident">class</span>).<span class="ident">expect</span>(<span class="string">&quot;Must always be able to create a poll&quot;</span>);
+		<span class="comment">// Create a poll
+		</span><span class="kw">let </span>class = T::Polls::classes().into_iter().next().unwrap();
+		<span class="kw">let </span>rank = T::MinRankOfClass::convert(class.clone());
+		<span class="kw">let </span>poll = T::Polls::create_ongoing(class).expect(<span class="string">&quot;Must always be able to create a poll&quot;</span>);
 
-		<span class="comment">// Vote in the poll by each of `n` members</span>
-		<span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">n</span> {
-			<span class="kw">let</span> <span class="ident">who</span> <span class="op">=</span> <span class="ident">make_member</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">rank</span>);
-			<span class="macro">assert_ok!</span>(<span class="ident">Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::vote</span>(<span class="ident">SystemOrigin::Signed</span>(<span class="ident">who</span>).<span class="ident">into</span>(), <span class="ident">poll</span>, <span class="bool-val">true</span>));
+		<span class="comment">// Vote in the poll by each of `n` members
+		</span><span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..n {
+			<span class="kw">let </span>who = make_member::&lt;T, I&gt;(rank);
+			<span class="macro">assert_ok!</span>(Pallet::&lt;T, I&gt;::vote(SystemOrigin::Signed(who).into(), poll, <span class="bool-val">true</span>));
 		}
 
-		<span class="comment">// End the poll.</span>
-		<span class="ident">T::Polls::end_ongoing</span>(<span class="ident">poll</span>, <span class="bool-val">false</span>).<span class="ident">expect</span>(<span class="string">&quot;Must always be able to end a poll&quot;</span>);
+		<span class="comment">// End the poll.
+		</span>T::Polls::end_ongoing(poll, <span class="bool-val">false</span>).expect(<span class="string">&quot;Must always be able to end a poll&quot;</span>);
 
-		<span class="macro">assert_eq!</span>(<span class="ident">Voting</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::iter_prefix</span>(<span class="ident">poll</span>).<span class="ident">count</span>(), <span class="ident">n</span> <span class="kw">as</span> <span class="ident">usize</span>);
-	}: <span class="kw">_</span>(<span class="ident">SystemOrigin::Signed</span>(<span class="ident">whitelisted_caller</span>()), <span class="ident">poll</span>, <span class="ident">n</span>)
-	<span class="ident">verify</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">Voting</span>::<span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">I</span><span class="op">&gt;</span><span class="ident">::iter</span>().<span class="ident">count</span>(), <span class="number">0</span>);
+		<span class="macro">assert_eq!</span>(Voting::&lt;T, I&gt;::iter_prefix(poll).count(), n <span class="kw">as </span>usize);
+	}: <span class="kw">_</span>(SystemOrigin::Signed(whitelisted_caller()), poll, n)
+	verify {
+		<span class="macro">assert_eq!</span>(Voting::&lt;T, I&gt;::iter().count(), <span class="number">0</span>);
 	}
 
-	<span class="macro">impl_benchmark_test_suite!</span>(<span class="ident">RankedCollective</span>, <span class="ident"><span class="kw">crate</span>::tests::new_test_ext</span>(), <span class="ident"><span class="kw">crate</span>::tests::Test</span>);
+	<span class="macro">impl_benchmark_test_suite!</span>(RankedCollective, <span class="kw">crate</span>::tests::new_test_ext(), <span class="kw">crate</span>::tests::Test);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_ranked_collective" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_ranked_collective" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

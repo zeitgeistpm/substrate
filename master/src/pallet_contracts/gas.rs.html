@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/gas.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>gas.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/gas.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>gas.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -331,333 +325,332 @@
 <span id="325">325</span>
 <span id="326">326</span>
 <span id="327">327</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">exec::ExecError</span>, <span class="ident">Config</span>, <span class="ident">Error</span>};
-<span class="kw">use</span> <span class="ident">frame_support</span>::{
-	<span class="ident">dispatch</span>::{
-		<span class="ident">DispatchError</span>, <span class="ident">DispatchErrorWithPostInfo</span>, <span class="ident">DispatchResultWithPostInfo</span>, <span class="ident">PostDispatchInfo</span>,
+</span><span class="kw">use crate</span>::{exec::ExecError, Config, Error};
+<span class="kw">use </span>frame_support::{
+	dispatch::{
+		DispatchError, DispatchErrorWithPostInfo, DispatchResultWithPostInfo, PostDispatchInfo,
 	},
-	<span class="ident">weights::Weight</span>,
-	<span class="ident">DefaultNoBound</span>,
+	weights::Weight,
+	DefaultNoBound,
 };
-<span class="kw">use</span> <span class="ident">sp_core::crypto::UncheckedFrom</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::traits::Zero</span>;
-<span class="kw">use</span> <span class="ident">sp_std::marker::PhantomData</span>;
+<span class="kw">use </span>sp_core::crypto::UncheckedFrom;
+<span class="kw">use </span>sp_runtime::traits::Zero;
+<span class="kw">use </span>sp_std::marker::PhantomData;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any::Any</span>, <span class="ident">fmt::Debug</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">use </span>std::{any::Any, fmt::Debug};
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChargedAmount</span>(<span class="ident">Weight</span>);
+<span class="attribute">#[derive(Debug, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>ChargedAmount(Weight);
 
-<span class="kw">impl</span> <span class="ident">ChargedAmount</span> {
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">amount</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="self">self</span>.<span class="number">0</span>
-	}
+<span class="kw">impl </span>ChargedAmount {
+	<span class="kw">pub fn </span>amount(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight {
+		<span class="self">self</span>.<span class="number">0
+	</span>}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">test</span>))]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TestAuxiliaries</span> {}
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">test</span>))]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">TestAuxiliaries</span> <span class="kw">for</span> <span class="ident">T</span> {}
+<span class="attribute">#[cfg(not(test))]
+</span><span class="kw">pub trait </span>TestAuxiliaries {}
+<span class="attribute">#[cfg(not(test))]
+</span><span class="kw">impl</span>&lt;T&gt; TestAuxiliaries <span class="kw">for </span>T {}
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TestAuxiliaries</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Eq</span> {}
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Eq</span><span class="op">&gt;</span> <span class="ident">TestAuxiliaries</span> <span class="kw">for</span> <span class="ident">T</span> {}
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">pub trait </span>TestAuxiliaries: Any + Debug + PartialEq + Eq {}
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">impl</span>&lt;T: Any + Debug + PartialEq + Eq&gt; TestAuxiliaries <span class="kw">for </span>T {}
 
-<span class="doccomment">/// This trait represents a token that can be used for charging `GasMeter`.</span>
-<span class="doccomment">/// There is no other way of charging it.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Implementing type is expected to be super lightweight hence `Copy` (`Clone` is added</span>
-<span class="doccomment">/// for consistency). If inlined there should be no observable difference compared</span>
-<span class="doccomment">/// to a hand-written code.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Token</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">TestAuxiliaries</span> {
-	<span class="doccomment">/// Return the amount of gas that should be taken by this token.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This function should be really lightweight and must not fail. It is not</span>
-	<span class="doccomment">/// expected that implementors will query the storage or do any kinds of heavy operations.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// That said, implementors of this function still can run into overflows</span>
-	<span class="doccomment">/// while calculating the amount. In this case it is ok to use saturating operations</span>
-	<span class="doccomment">/// since on overflow they will return `max_value` which should consume all gas.</span>
-	<span class="kw">fn</span> <span class="ident">weight</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Weight</span>;
+<span class="doccomment">/// This trait represents a token that can be used for charging `GasMeter`.
+/// There is no other way of charging it.
+///
+/// Implementing type is expected to be super lightweight hence `Copy` (`Clone` is added
+/// for consistency). If inlined there should be no observable difference compared
+/// to a hand-written code.
+</span><span class="kw">pub trait </span>Token&lt;T: Config&gt;: Copy + Clone + TestAuxiliaries {
+	<span class="doccomment">/// Return the amount of gas that should be taken by this token.
+	///
+	/// This function should be really lightweight and must not fail. It is not
+	/// expected that implementors will query the storage or do any kinds of heavy operations.
+	///
+	/// That said, implementors of this function still can run into overflows
+	/// while calculating the amount. In this case it is ok to use saturating operations
+	/// since on overflow they will return `max_value` which should consume all gas.
+	</span><span class="kw">fn </span>weight(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight;
 }
 
-<span class="doccomment">/// A wrapper around a type-erased trait object of what used to be a `Token`.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ErasedToken</span> {
-	<span class="kw">pub</span> <span class="ident">description</span>: <span class="ident">String</span>,
-	<span class="kw">pub</span> <span class="ident">token</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A wrapper around a type-erased trait object of what used to be a `Token`.
+</span><span class="attribute">#[cfg(test)]
+</span><span class="kw">pub struct </span>ErasedToken {
+	<span class="kw">pub </span>description: String,
+	<span class="kw">pub </span>token: Box&lt;<span class="kw">dyn </span>Any&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">DefaultNoBound</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GasMeter</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="ident">gas_limit</span>: <span class="ident">Weight</span>,
-	<span class="doccomment">/// Amount of gas left from initial gas limit. Can reach zero.</span>
-	<span class="ident">gas_left</span>: <span class="ident">Weight</span>,
-	<span class="doccomment">/// Due to `adjust_gas` and `nested` the `gas_left` can temporarily dip below its final value.</span>
-	<span class="ident">gas_left_lowest</span>: <span class="ident">Weight</span>,
-	<span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-	<span class="ident">tokens</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ErasedToken</span><span class="op">&gt;</span>,
+<span class="attribute">#[derive(DefaultNoBound)]
+</span><span class="kw">pub struct </span>GasMeter&lt;T: Config&gt; {
+	gas_limit: Weight,
+	<span class="doccomment">/// Amount of gas left from initial gas limit. Can reach zero.
+	</span>gas_left: Weight,
+	<span class="doccomment">/// Due to `adjust_gas` and `nested` the `gas_left` can temporarily dip below its final value.
+	</span>gas_left_lowest: Weight,
+	_phantom: PhantomData&lt;T&gt;,
+	<span class="attribute">#[cfg(test)]
+	</span>tokens: Vec&lt;ErasedToken&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">GasMeter</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">T::AccountId</span>: <span class="ident">UncheckedFrom</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;T: Config&gt; GasMeter&lt;T&gt;
+<span class="kw">where
+	</span>T::AccountId: UncheckedFrom&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash&gt; + AsRef&lt;[u8]&gt;,
 {
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">gas_limit</span>: <span class="ident">Weight</span>) -&gt; <span class="self">Self</span> {
-		<span class="ident">GasMeter</span> {
-			<span class="ident">gas_limit</span>,
-			<span class="ident">gas_left</span>: <span class="ident">gas_limit</span>,
-			<span class="ident">gas_left_lowest</span>: <span class="ident">gas_limit</span>,
-			<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>,
-			<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-			<span class="ident">tokens</span>: <span class="ident">Vec::new</span>(),
+	<span class="kw">pub fn </span>new(gas_limit: Weight) -&gt; <span class="self">Self </span>{
+		GasMeter {
+			gas_limit,
+			gas_left: gas_limit,
+			gas_left_lowest: gas_limit,
+			_phantom: PhantomData,
+			<span class="attribute">#[cfg(test)]
+			</span>tokens: Vec::new(),
 		}
 	}
 
-	<span class="doccomment">/// Create a new gas meter by removing gas from the current meter.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Note</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Passing `0` as amount is interpreted as &quot;all remaining gas&quot;.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">nested</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">amount</span>: <span class="ident">Weight</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">DispatchError</span><span class="op">&gt;</span> {
-		<span class="comment">// NOTE that it is ok to allocate all available gas since it still ensured</span>
-		<span class="comment">// by `charge` that it doesn&#39;t reach zero.</span>
-		<span class="kw">let</span> <span class="ident">amount</span> <span class="op">=</span> <span class="ident">Weight::from_parts</span>(
-			<span class="kw">if</span> <span class="ident">amount</span>.<span class="ident">ref_time</span>().<span class="ident">is_zero</span>() {
-				<span class="self">self</span>.<span class="ident">gas_left</span>().<span class="ident">ref_time</span>()
-			} <span class="kw">else</span> {
-				<span class="ident">amount</span>.<span class="ident">ref_time</span>()
+	<span class="doccomment">/// Create a new gas meter by removing gas from the current meter.
+	///
+	/// # Note
+	///
+	/// Passing `0` as amount is interpreted as &quot;all remaining gas&quot;.
+	</span><span class="kw">pub fn </span>nested(<span class="kw-2">&amp;mut </span><span class="self">self</span>, amount: Weight) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, DispatchError&gt; {
+		<span class="comment">// NOTE that it is ok to allocate all available gas since it still ensured
+		// by `charge` that it doesn&#39;t reach zero.
+		</span><span class="kw">let </span>amount = Weight::from_parts(
+			<span class="kw">if </span>amount.ref_time().is_zero() {
+				<span class="self">self</span>.gas_left().ref_time()
+			} <span class="kw">else </span>{
+				amount.ref_time()
 			},
-			<span class="kw">if</span> <span class="ident">amount</span>.<span class="ident">proof_size</span>().<span class="ident">is_zero</span>() {
-				<span class="self">self</span>.<span class="ident">gas_left</span>().<span class="ident">proof_size</span>()
-			} <span class="kw">else</span> {
-				<span class="ident">amount</span>.<span class="ident">proof_size</span>()
+			<span class="kw">if </span>amount.proof_size().is_zero() {
+				<span class="self">self</span>.gas_left().proof_size()
+			} <span class="kw">else </span>{
+				amount.proof_size()
 			},
 		);
-		<span class="self">self</span>.<span class="ident">gas_left</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">gas_left</span>.<span class="ident">checked_sub</span>(<span class="kw-2">&amp;</span><span class="ident">amount</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="op">&lt;</span><span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::OutOfGas</span>)<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(<span class="ident">GasMeter::new</span>(<span class="ident">amount</span>))
+		<span class="self">self</span>.gas_left = <span class="self">self</span>.gas_left.checked_sub(<span class="kw-2">&amp;</span>amount).ok_or_else(|| &lt;Error&lt;T&gt;&gt;::OutOfGas)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(GasMeter::new(amount))
 	}
 
-	<span class="doccomment">/// Absorb the remaining gas of a nested meter after we are done using it.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">absorb_nested</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">nested</span>: <span class="self">Self</span>) {
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">gas_left</span>.<span class="ident">ref_time</span>().<span class="ident">is_zero</span>() {
-			<span class="comment">// All of the remaining gas was inherited by the nested gas meter. When absorbing</span>
-			<span class="comment">// we can therefore safely inherit the lowest gas that the nested gas meter experienced</span>
-			<span class="comment">// as long as it is lower than the lowest gas that was experienced by the parent.</span>
-			<span class="comment">// We cannot call `self.gas_left_lowest()` here because in the state that this</span>
-			<span class="comment">// code is run the parent gas meter has `0` gas left.</span>
-			<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">gas_left_lowest</span>.<span class="ident">ref_time_mut</span>() <span class="op">=</span>
-				<span class="ident">nested</span>.<span class="ident">gas_left_lowest</span>().<span class="ident">ref_time</span>().<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">gas_left_lowest</span>.<span class="ident">ref_time</span>());
-		} <span class="kw">else</span> {
-			<span class="comment">// The nested gas meter was created with a fixed amount that did not consume all of the</span>
-			<span class="comment">// parents (self) gas. The lowest gas that self will experience is when the nested</span>
-			<span class="comment">// gas was pre charged with the fixed amount.</span>
-			<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">gas_left_lowest</span>.<span class="ident">ref_time_mut</span>() <span class="op">=</span> <span class="self">self</span>.<span class="ident">gas_left_lowest</span>().<span class="ident">ref_time</span>();
+	<span class="doccomment">/// Absorb the remaining gas of a nested meter after we are done using it.
+	</span><span class="kw">pub fn </span>absorb_nested(<span class="kw-2">&amp;mut </span><span class="self">self</span>, nested: <span class="self">Self</span>) {
+		<span class="kw">if </span><span class="self">self</span>.gas_left.ref_time().is_zero() {
+			<span class="comment">// All of the remaining gas was inherited by the nested gas meter. When absorbing
+			// we can therefore safely inherit the lowest gas that the nested gas meter experienced
+			// as long as it is lower than the lowest gas that was experienced by the parent.
+			// We cannot call `self.gas_left_lowest()` here because in the state that this
+			// code is run the parent gas meter has `0` gas left.
+			</span><span class="kw-2">*</span><span class="self">self</span>.gas_left_lowest.ref_time_mut() =
+				nested.gas_left_lowest().ref_time().min(<span class="self">self</span>.gas_left_lowest.ref_time());
+		} <span class="kw">else </span>{
+			<span class="comment">// The nested gas meter was created with a fixed amount that did not consume all of the
+			// parents (self) gas. The lowest gas that self will experience is when the nested
+			// gas was pre charged with the fixed amount.
+			</span><span class="kw-2">*</span><span class="self">self</span>.gas_left_lowest.ref_time_mut() = <span class="self">self</span>.gas_left_lowest().ref_time();
 		}
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">gas_left</span>.<span class="ident">proof_size</span>().<span class="ident">is_zero</span>() {
-			<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">gas_left_lowest</span>.<span class="ident">proof_size_mut</span>() <span class="op">=</span>
-				<span class="ident">nested</span>.<span class="ident">gas_left_lowest</span>().<span class="ident">proof_size</span>().<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">gas_left_lowest</span>.<span class="ident">proof_size</span>());
-		} <span class="kw">else</span> {
-			<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">gas_left_lowest</span>.<span class="ident">proof_size_mut</span>() <span class="op">=</span> <span class="self">self</span>.<span class="ident">gas_left_lowest</span>().<span class="ident">proof_size</span>();
+		<span class="kw">if </span><span class="self">self</span>.gas_left.proof_size().is_zero() {
+			<span class="kw-2">*</span><span class="self">self</span>.gas_left_lowest.proof_size_mut() =
+				nested.gas_left_lowest().proof_size().min(<span class="self">self</span>.gas_left_lowest.proof_size());
+		} <span class="kw">else </span>{
+			<span class="kw-2">*</span><span class="self">self</span>.gas_left_lowest.proof_size_mut() = <span class="self">self</span>.gas_left_lowest().proof_size();
 		}
-		<span class="self">self</span>.<span class="ident">gas_left</span> <span class="op">+</span><span class="op">=</span> <span class="ident">nested</span>.<span class="ident">gas_left</span>;
+		<span class="self">self</span>.gas_left += nested.gas_left;
 	}
 
-	<span class="doccomment">/// Account for used gas.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Amount is calculated by the given `token`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Returns `OutOfGas` if there is not enough gas or addition of the specified</span>
-	<span class="doccomment">/// amount of gas has lead to overflow. On success returns `Proceed`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// NOTE that amount is always consumed, i.e. if there is not enough gas</span>
-	<span class="doccomment">/// then the counter will be set to zero.</span>
-	<span class="attribute">#[<span class="ident">inline</span>]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">charge</span><span class="op">&lt;</span><span class="ident">Tok</span>: <span class="ident">Token</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">token</span>: <span class="ident">Tok</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ChargedAmount</span>, <span class="ident">DispatchError</span><span class="op">&gt;</span> {
-		<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-		{
-			<span class="comment">// Unconditionally add the token to the storage.</span>
-			<span class="kw">let</span> <span class="ident">erased_tok</span> <span class="op">=</span>
-				<span class="ident">ErasedToken</span> { <span class="ident">description</span>: <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">token</span>), <span class="ident">token</span>: <span class="ident">Box::new</span>(<span class="ident">token</span>) };
-			<span class="self">self</span>.<span class="ident">tokens</span>.<span class="ident">push</span>(<span class="ident">erased_tok</span>);
+	<span class="doccomment">/// Account for used gas.
+	///
+	/// Amount is calculated by the given `token`.
+	///
+	/// Returns `OutOfGas` if there is not enough gas or addition of the specified
+	/// amount of gas has lead to overflow. On success returns `Proceed`.
+	///
+	/// NOTE that amount is always consumed, i.e. if there is not enough gas
+	/// then the counter will be set to zero.
+	</span><span class="attribute">#[inline]
+	</span><span class="kw">pub fn </span>charge&lt;Tok: Token&lt;T&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, token: Tok) -&gt; <span class="prelude-ty">Result</span>&lt;ChargedAmount, DispatchError&gt; {
+		<span class="attribute">#[cfg(test)]
+		</span>{
+			<span class="comment">// Unconditionally add the token to the storage.
+			</span><span class="kw">let </span>erased_tok =
+				ErasedToken { description: <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, token), token: Box::new(token) };
+			<span class="self">self</span>.tokens.push(erased_tok);
 		}
-		<span class="kw">let</span> <span class="ident">amount</span> <span class="op">=</span> <span class="ident">token</span>.<span class="ident">weight</span>();
-		<span class="comment">// It is OK to not charge anything on failure because we always charge _before_ we perform</span>
-		<span class="comment">// any action</span>
-		<span class="self">self</span>.<span class="ident">gas_left</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">gas_left</span>.<span class="ident">checked_sub</span>(<span class="kw-2">&amp;</span><span class="ident">amount</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::OutOfGas</span>)<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(<span class="ident">ChargedAmount</span>(<span class="ident">amount</span>))
+		<span class="kw">let </span>amount = token.weight();
+		<span class="comment">// It is OK to not charge anything on failure because we always charge _before_ we perform
+		// any action
+		</span><span class="self">self</span>.gas_left = <span class="self">self</span>.gas_left.checked_sub(<span class="kw-2">&amp;</span>amount).ok_or_else(|| Error::&lt;T&gt;::OutOfGas)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(ChargedAmount(amount))
 	}
 
-	<span class="doccomment">/// Adjust a previously charged amount down to its actual amount.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This is when a maximum a priori amount was charged and then should be partially</span>
-	<span class="doccomment">/// refunded to match the actual amount.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">adjust_gas</span><span class="op">&lt;</span><span class="ident">Tok</span>: <span class="ident">Token</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">charged_amount</span>: <span class="ident">ChargedAmount</span>, <span class="ident">token</span>: <span class="ident">Tok</span>) {
-		<span class="self">self</span>.<span class="ident">gas_left_lowest</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">gas_left_lowest</span>();
-		<span class="kw">let</span> <span class="ident">adjustment</span> <span class="op">=</span> <span class="ident">charged_amount</span>.<span class="number">0</span>.<span class="ident">saturating_sub</span>(<span class="ident">token</span>.<span class="ident">weight</span>());
-		<span class="self">self</span>.<span class="ident">gas_left</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">gas_left</span>.<span class="ident">saturating_add</span>(<span class="ident">adjustment</span>).<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">gas_limit</span>);
+	<span class="doccomment">/// Adjust a previously charged amount down to its actual amount.
+	///
+	/// This is when a maximum a priori amount was charged and then should be partially
+	/// refunded to match the actual amount.
+	</span><span class="kw">pub fn </span>adjust_gas&lt;Tok: Token&lt;T&gt;&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, charged_amount: ChargedAmount, token: Tok) {
+		<span class="self">self</span>.gas_left_lowest = <span class="self">self</span>.gas_left_lowest();
+		<span class="kw">let </span>adjustment = charged_amount.<span class="number">0</span>.saturating_sub(token.weight());
+		<span class="self">self</span>.gas_left = <span class="self">self</span>.gas_left.saturating_add(adjustment).min(<span class="self">self</span>.gas_limit);
 	}
 
-	<span class="doccomment">/// Returns the amount of gas that is required to run the same call.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This can be different from `gas_spent` because due to `adjust_gas` the amount of</span>
-	<span class="doccomment">/// spent gas can temporarily drop and be refunded later.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gas_required</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="self">self</span>.<span class="ident">gas_limit</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">gas_left_lowest</span>()
+	<span class="doccomment">/// Returns the amount of gas that is required to run the same call.
+	///
+	/// This can be different from `gas_spent` because due to `adjust_gas` the amount of
+	/// spent gas can temporarily drop and be refunded later.
+	</span><span class="kw">pub fn </span>gas_required(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight {
+		<span class="self">self</span>.gas_limit - <span class="self">self</span>.gas_left_lowest()
 	}
 
-	<span class="doccomment">/// Returns how much gas was spent</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gas_consumed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="self">self</span>.<span class="ident">gas_limit</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">gas_left</span>
+	<span class="doccomment">/// Returns how much gas was spent
+	</span><span class="kw">pub fn </span>gas_consumed(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight {
+		<span class="self">self</span>.gas_limit - <span class="self">self</span>.gas_left
 	}
 
-	<span class="doccomment">/// Returns how much gas left from the initial budget.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gas_left</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="self">self</span>.<span class="ident">gas_left</span>
+	<span class="doccomment">/// Returns how much gas left from the initial budget.
+	</span><span class="kw">pub fn </span>gas_left(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight {
+		<span class="self">self</span>.gas_left
 	}
 
-	<span class="doccomment">/// Turn this GasMeter into a DispatchResult that contains the actually used gas.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_dispatch_result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">E</span><span class="op">&gt;</span>(
+	<span class="doccomment">/// Turn this GasMeter into a DispatchResult that contains the actually used gas.
+	</span><span class="kw">pub fn </span>into_dispatch_result&lt;R, E&gt;(
 		<span class="self">self</span>,
-		<span class="ident">result</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">E</span><span class="op">&gt;</span>,
-		<span class="ident">base_weight</span>: <span class="ident">Weight</span>,
-	) -&gt; <span class="ident">DispatchResultWithPostInfo</span>
-	<span class="kw">where</span>
-		<span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">ExecError</span><span class="op">&gt;</span>,
+		result: <span class="prelude-ty">Result</span>&lt;R, E&gt;,
+		base_weight: Weight,
+	) -&gt; DispatchResultWithPostInfo
+	<span class="kw">where
+		</span>E: Into&lt;ExecError&gt;,
 	{
-		<span class="kw">let</span> <span class="ident">post_info</span> <span class="op">=</span> <span class="ident">PostDispatchInfo</span> {
-			<span class="ident">actual_weight</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">gas_consumed</span>().<span class="ident">saturating_add</span>(<span class="ident">base_weight</span>)),
-			<span class="ident">pays_fee</span>: <span class="ident">Default::default</span>(),
+		<span class="kw">let </span>post_info = PostDispatchInfo {
+			actual_weight: <span class="prelude-val">Some</span>(<span class="self">self</span>.gas_consumed().saturating_add(base_weight)),
+			pays_fee: Default::default(),
 		};
 
-		<span class="ident">result</span>
-			.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">post_info</span>)
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">DispatchErrorWithPostInfo</span> { <span class="ident">post_info</span>, <span class="ident">error</span>: <span class="ident">e</span>.<span class="ident">into</span>().<span class="ident">error</span> })
+		result
+			.map(|<span class="kw">_</span>| post_info)
+			.map_err(|e| DispatchErrorWithPostInfo { post_info, error: e.into().error })
 	}
 
-	<span class="kw">fn</span> <span class="ident">gas_left_lowest</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="self">self</span>.<span class="ident">gas_left_lowest</span>.<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">gas_left</span>)
+	<span class="kw">fn </span>gas_left_lowest(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight {
+		<span class="self">self</span>.gas_left_lowest.min(<span class="self">self</span>.gas_left)
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tokens</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[<span class="ident">ErasedToken</span>] {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tokens</span>
+	<span class="attribute">#[cfg(test)]
+	</span><span class="kw">pub fn </span>tokens(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[ErasedToken] {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.tokens
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">GasMeter</span>, <span class="ident">Token</span>, <span class="ident">Weight</span>};
-	<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tests::Test</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::{GasMeter, Token, Weight};
+	<span class="kw">use </span><span class="kw">crate</span>::tests::Test;
 
-	<span class="doccomment">/// A simple utility macro that helps to match against a</span>
-	<span class="doccomment">/// list of tokens.</span>
-	<span class="macro">macro_rules!</span> <span class="ident">match_tokens</span> {
-		(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">tokens_iter</span>:<span class="ident">ident</span>,) =&gt; {
+	<span class="doccomment">/// A simple utility macro that helps to match against a
+	/// list of tokens.
+	</span><span class="macro">macro_rules! </span>match_tokens {
+		(<span class="macro-nonterminal">$tokens_iter</span>:ident,) =&gt; {
 		};
-		(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">tokens_iter</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">expr</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">rest</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) =&gt; {
+		(<span class="macro-nonterminal">$tokens_iter</span>:ident, <span class="macro-nonterminal">$x</span>:expr, $(<span class="macro-nonterminal">$rest</span>:tt)<span class="kw-2">*</span>) =&gt; {
 			{
-				<span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">tokens_iter</span>).<span class="ident">next</span>().<span class="ident">unwrap</span>();
-				<span class="kw">let</span> <span class="ident">pattern</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>;
+				<span class="kw">let </span>next = (<span class="macro-nonterminal">$tokens_iter</span>).next().unwrap();
+				<span class="kw">let </span>pattern = <span class="macro-nonterminal">$x</span>;
 
-				<span class="comment">// Note that we don&#39;t specify the type name directly in this macro,</span>
-				<span class="comment">// we only have some expression $x of some type. At the same time, we</span>
-				<span class="comment">// have an iterator of Box&lt;dyn Any&gt; and to downcast we need to specify</span>
-				<span class="comment">// the type which we want downcast to.</span>
-				<span class="comment">//</span>
-				<span class="comment">// So what we do is we assign `_pattern_typed_next_ref` to a variable which has</span>
-				<span class="comment">// the required type.</span>
-				<span class="comment">//</span>
-				<span class="comment">// Then we make `_pattern_typed_next_ref = token.downcast_ref()`. This makes</span>
-				<span class="comment">// rustc infer the type `T` (in `downcast_ref&lt;T: Any&gt;`) to be the same as in $x.</span>
+				<span class="comment">// Note that we don&#39;t specify the type name directly in this macro,
+				// we only have some expression $x of some type. At the same time, we
+				// have an iterator of Box&lt;dyn Any&gt; and to downcast we need to specify
+				// the type which we want downcast to.
+				//
+				// So what we do is we assign `_pattern_typed_next_ref` to a variable which has
+				// the required type.
+				//
+				// Then we make `_pattern_typed_next_ref = token.downcast_ref()`. This makes
+				// rustc infer the type `T` (in `downcast_ref&lt;T: Any&gt;`) to be the same as in $x.
 
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">_pattern_typed_next_ref</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">pattern</span>;
-				<span class="ident">_pattern_typed_next_ref</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">next</span>.<span class="ident">token</span>.<span class="ident">downcast_ref</span>() {
-					<span class="prelude-val">Some</span>(<span class="ident">p</span>) =&gt; {
-						<span class="macro">assert_eq!</span>(<span class="ident">p</span>, <span class="kw-2">&amp;</span><span class="ident">pattern</span>);
-						<span class="ident">p</span>
+				</span><span class="kw">let </span><span class="kw-2">mut </span>_pattern_typed_next_ref = <span class="kw-2">&amp;</span>pattern;
+				_pattern_typed_next_ref = <span class="kw">match </span>next.token.downcast_ref() {
+					<span class="prelude-val">Some</span>(p) =&gt; {
+						<span class="macro">assert_eq!</span>(p, <span class="kw-2">&amp;</span>pattern);
+						p
 					}
-					<span class="prelude-val">None</span> =&gt; {
-						<span class="macro">panic!</span>(<span class="string">&quot;expected type {} got {}&quot;</span>, <span class="macro">stringify!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>), <span class="ident">next</span>.<span class="ident">description</span>);
+					<span class="prelude-val">None </span>=&gt; {
+						<span class="macro">panic!</span>(<span class="string">&quot;expected type {} got {}&quot;</span>, <span class="macro">stringify!</span>(<span class="macro-nonterminal">$x</span>), next.description);
 					}
 				};
 			}
 
-			<span class="macro">match_tokens!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">tokens_iter</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">rest</span>)<span class="kw-2">*</span>);
+			<span class="macro">match_tokens!</span>(<span class="macro-nonterminal">$tokens_iter</span>, $(<span class="macro-nonterminal">$rest</span>)<span class="kw-2">*</span>);
 		};
 	}
 
-	<span class="doccomment">/// A trivial token that charges the specified number of gas units.</span>
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Debug</span>)]</span>
-	<span class="kw">struct</span> <span class="ident">SimpleToken</span>(<span class="ident">u64</span>);
-	<span class="kw">impl</span> <span class="ident">Token</span><span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SimpleToken</span> {
-		<span class="kw">fn</span> <span class="ident">weight</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Weight</span> {
-			<span class="ident">Weight::from_ref_time</span>(<span class="self">self</span>.<span class="number">0</span>)
+	<span class="doccomment">/// A trivial token that charges the specified number of gas units.
+	</span><span class="attribute">#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+	</span><span class="kw">struct </span>SimpleToken(u64);
+	<span class="kw">impl </span>Token&lt;Test&gt; <span class="kw">for </span>SimpleToken {
+		<span class="kw">fn </span>weight(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight {
+			Weight::from_ref_time(<span class="self">self</span>.<span class="number">0</span>)
 		}
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">it_works</span>() {
-		<span class="kw">let</span> <span class="ident">gas_meter</span> <span class="op">=</span> <span class="ident">GasMeter</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">50000</span>));
-		<span class="macro">assert_eq!</span>(<span class="ident">gas_meter</span>.<span class="ident">gas_left</span>(), <span class="ident">Weight::from_ref_time</span>(<span class="number">50000</span>));
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>it_works() {
+		<span class="kw">let </span>gas_meter = GasMeter::&lt;Test&gt;::new(Weight::from_ref_time(<span class="number">50000</span>));
+		<span class="macro">assert_eq!</span>(gas_meter.gas_left(), Weight::from_ref_time(<span class="number">50000</span>));
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">tracing</span>() {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">gas_meter</span> <span class="op">=</span> <span class="ident">GasMeter</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">50000</span>));
-		<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">gas_meter</span>.<span class="ident">charge</span>(<span class="ident">SimpleToken</span>(<span class="number">1</span>)).<span class="ident">is_err</span>());
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>tracing() {
+		<span class="kw">let </span><span class="kw-2">mut </span>gas_meter = GasMeter::&lt;Test&gt;::new(Weight::from_ref_time(<span class="number">50000</span>));
+		<span class="macro">assert!</span>(!gas_meter.charge(SimpleToken(<span class="number">1</span>)).is_err());
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tokens</span> <span class="op">=</span> <span class="ident">gas_meter</span>.<span class="ident">tokens</span>().<span class="ident">iter</span>();
-		<span class="macro">match_tokens!</span>(<span class="ident">tokens</span>, <span class="ident">SimpleToken</span>(<span class="number">1</span>),);
+		<span class="kw">let </span><span class="kw-2">mut </span>tokens = gas_meter.tokens().iter();
+		<span class="macro">match_tokens!</span>(tokens, SimpleToken(<span class="number">1</span>),);
 	}
 
-	<span class="comment">// This test makes sure that nothing can be executed if there is no gas.</span>
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">refuse_to_execute_anything_if_zero</span>() {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">gas_meter</span> <span class="op">=</span> <span class="ident">GasMeter</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">Weight::zero</span>());
-		<span class="macro">assert!</span>(<span class="ident">gas_meter</span>.<span class="ident">charge</span>(<span class="ident">SimpleToken</span>(<span class="number">1</span>)).<span class="ident">is_err</span>());
+	<span class="comment">// This test makes sure that nothing can be executed if there is no gas.
+	</span><span class="attribute">#[test]
+	</span><span class="kw">fn </span>refuse_to_execute_anything_if_zero() {
+		<span class="kw">let </span><span class="kw-2">mut </span>gas_meter = GasMeter::&lt;Test&gt;::new(Weight::zero());
+		<span class="macro">assert!</span>(gas_meter.charge(SimpleToken(<span class="number">1</span>)).is_err());
 	}
 
-	<span class="comment">// Make sure that the gas meter does not charge in case of overcharger</span>
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">overcharge_does_not_charge</span>() {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">gas_meter</span> <span class="op">=</span> <span class="ident">GasMeter</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">200</span>));
+	<span class="comment">// Make sure that the gas meter does not charge in case of overcharger
+	</span><span class="attribute">#[test]
+	</span><span class="kw">fn </span>overcharge_does_not_charge() {
+		<span class="kw">let </span><span class="kw-2">mut </span>gas_meter = GasMeter::&lt;Test&gt;::new(Weight::from_ref_time(<span class="number">200</span>));
 
-		<span class="comment">// The first charge is should lead to OOG.</span>
-		<span class="macro">assert!</span>(<span class="ident">gas_meter</span>.<span class="ident">charge</span>(<span class="ident">SimpleToken</span>(<span class="number">300</span>)).<span class="ident">is_err</span>());
+		<span class="comment">// The first charge is should lead to OOG.
+		</span><span class="macro">assert!</span>(gas_meter.charge(SimpleToken(<span class="number">300</span>)).is_err());
 
-		<span class="comment">// The gas meter should still contain the full 200.</span>
-		<span class="macro">assert!</span>(<span class="ident">gas_meter</span>.<span class="ident">charge</span>(<span class="ident">SimpleToken</span>(<span class="number">200</span>)).<span class="ident">is_ok</span>());
+		<span class="comment">// The gas meter should still contain the full 200.
+		</span><span class="macro">assert!</span>(gas_meter.charge(SimpleToken(<span class="number">200</span>)).is_ok());
 	}
 
-	<span class="comment">// Charging the exact amount that the user paid for should be</span>
-	<span class="comment">// possible.</span>
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">charge_exact_amount</span>() {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">gas_meter</span> <span class="op">=</span> <span class="ident">GasMeter</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">Weight::from_ref_time</span>(<span class="number">25</span>));
-		<span class="macro">assert!</span>(<span class="op">!</span><span class="ident">gas_meter</span>.<span class="ident">charge</span>(<span class="ident">SimpleToken</span>(<span class="number">25</span>)).<span class="ident">is_err</span>());
+	<span class="comment">// Charging the exact amount that the user paid for should be
+	// possible.
+	</span><span class="attribute">#[test]
+	</span><span class="kw">fn </span>charge_exact_amount() {
+		<span class="kw">let </span><span class="kw-2">mut </span>gas_meter = GasMeter::&lt;Test&gt;::new(Weight::from_ref_time(<span class="number">25</span>));
+		<span class="macro">assert!</span>(!gas_meter.charge(SimpleToken(<span class="number">25</span>)).is_err());
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

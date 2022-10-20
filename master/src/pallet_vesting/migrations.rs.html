@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/vesting/src/migrations.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migrations.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_vesting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_vesting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_vesting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/vesting/src/migrations.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>migrations.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_vesting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_vesting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -99,88 +93,88 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Storage migrations for the vesting pallet.</span>
+</span><span class="doccomment">//! Storage migrations for the vesting pallet.
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-<span class="comment">// Migration from single schedule to multiple schedules.</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">v1</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="comment">// Migration from single schedule to multiple schedules.
+</span><span class="kw">pub mod </span>v1 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pre_migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="macro">assert!</span>(<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>() <span class="op">==</span> <span class="ident">Releases::V0</span>, <span class="string">&quot;Storage version too high.&quot;</span>);
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">pub fn </span>pre_migrate&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="macro">assert!</span>(StorageVersion::&lt;T&gt;::get() == Releases::V0, <span class="string">&quot;Storage version too high.&quot;</span>);
 
 		<span class="macro">log::debug!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;runtime::vesting&quot;</span>,
-			<span class="string">&quot;migration: Vesting storage version v1 PRE migration checks succesful!&quot;</span>
-		);
+			target: <span class="string">&quot;runtime::vesting&quot;</span>,
+			<span class="string">&quot;migration: Vesting storage version v1 PRE migration checks succesful!&quot;
+		</span>);
 
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Migrate from single schedule to multi schedule storage.</span>
-	<span class="doccomment">/// WARNING: This migration will delete schedules if `MaxVestingSchedules &lt; 1`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="ident">Weight</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">reads_writes</span> <span class="op">=</span> <span class="number">0</span>;
+	<span class="doccomment">/// Migrate from single schedule to multi schedule storage.
+	/// WARNING: This migration will delete schedules if `MaxVestingSchedules &lt; 1`.
+	</span><span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+		<span class="kw">let </span><span class="kw-2">mut </span>reads_writes = <span class="number">0</span>;
 
-		<span class="ident">Vesting</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::translate</span>::<span class="op">&lt;</span><span class="ident">VestingInfo</span><span class="op">&lt;</span><span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">T::BlockNumber</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-			<span class="op">|</span><span class="ident">_key</span>, <span class="ident">vesting_info</span><span class="op">|</span> {
-				<span class="ident">reads_writes</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-				<span class="kw">let</span> <span class="ident">v</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>
-					<span class="ident">BoundedVec</span><span class="op">&lt;</span>
-						<span class="ident">VestingInfo</span><span class="op">&lt;</span><span class="ident">BalanceOf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">T::BlockNumber</span><span class="op">&gt;</span>,
-						<span class="ident">MaxVestingSchedulesGet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-					<span class="op">&gt;</span>,
-				<span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">vesting_info</span>].<span class="ident">try_into</span>().<span class="ident">ok</span>();
+		Vesting::&lt;T&gt;::translate::&lt;VestingInfo&lt;BalanceOf&lt;T&gt;, T::BlockNumber&gt;, <span class="kw">_</span>&gt;(
+			|_key, vesting_info| {
+				reads_writes += <span class="number">1</span>;
+				<span class="kw">let </span>v: <span class="prelude-ty">Option</span>&lt;
+					BoundedVec&lt;
+						VestingInfo&lt;BalanceOf&lt;T&gt;, T::BlockNumber&gt;,
+						MaxVestingSchedulesGet&lt;T&gt;,
+					&gt;,
+				&gt; = <span class="macro">vec!</span>[vesting_info].try_into().ok();
 
-				<span class="kw">if</span> <span class="ident">v</span>.<span class="ident">is_none</span>() {
+				<span class="kw">if </span>v.is_none() {
 					<span class="macro">log::warn!</span>(
-						<span class="ident">target</span>: <span class="string">&quot;runtime::vesting&quot;</span>,
-						<span class="string">&quot;migration: Failed to move a vesting schedule into a BoundedVec&quot;</span>
-					);
+						target: <span class="string">&quot;runtime::vesting&quot;</span>,
+						<span class="string">&quot;migration: Failed to move a vesting schedule into a BoundedVec&quot;
+					</span>);
 				}
 
-				<span class="ident">v</span>
+				v
 			},
 		);
 
-		<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="ident">reads_writes</span>, <span class="ident">reads_writes</span>)
+		T::DbWeight::get().reads_writes(reads_writes, reads_writes)
 	}
 
-	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;try-runtime&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">post_migrate</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
-		<span class="macro">assert_eq!</span>(<span class="ident">StorageVersion</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(), <span class="ident">Releases::V1</span>);
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+	</span><span class="kw">pub fn </span>post_migrate&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="macro">assert_eq!</span>(StorageVersion::&lt;T&gt;::get(), Releases::V1);
 
-		<span class="kw">for</span> (<span class="ident">_key</span>, <span class="ident">schedules</span>) <span class="kw">in</span> <span class="ident">Vesting</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::iter</span>() {
+		<span class="kw">for </span>(_key, schedules) <span class="kw">in </span>Vesting::&lt;T&gt;::iter() {
 			<span class="macro">assert!</span>(
-				<span class="ident">schedules</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">1</span>,
-				<span class="string">&quot;A bounded vec with incorrect count of items was created.&quot;</span>
-			);
+				schedules.len() &gt;= <span class="number">1</span>,
+				<span class="string">&quot;A bounded vec with incorrect count of items was created.&quot;
+			</span>);
 
-			<span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="ident">schedules</span> {
-				<span class="comment">// It is ok if this does not pass, but ideally pre-existing schedules would pass</span>
-				<span class="comment">// this validation logic so we can be more confident about edge cases.</span>
-				<span class="kw">if</span> <span class="op">!</span><span class="ident">s</span>.<span class="ident">is_valid</span>() {
+			<span class="kw">for </span>s <span class="kw">in </span>schedules {
+				<span class="comment">// It is ok if this does not pass, but ideally pre-existing schedules would pass
+				// this validation logic so we can be more confident about edge cases.
+				</span><span class="kw">if </span>!s.is_valid() {
 					<span class="macro">log::warn!</span>(
-						<span class="ident">target</span>: <span class="string">&quot;runtime::vesting&quot;</span>,
+						target: <span class="string">&quot;runtime::vesting&quot;</span>,
 						<span class="string">&quot;migration: A schedule does not pass new validation logic.&quot;</span>,
 					)
 				}
@@ -188,12 +182,11 @@
 		}
 
 		<span class="macro">log::debug!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;runtime::vesting&quot;</span>,
-			<span class="string">&quot;migration: Vesting storage version v1 POST migration checks successful!&quot;</span>
-		);
+			target: <span class="string">&quot;runtime::vesting&quot;</span>,
+			<span class="string">&quot;migration: Vesting storage version v1 POST migration checks successful!&quot;
+		</span>);
 		<span class="prelude-val">Ok</span>(())
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_vesting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_vesting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

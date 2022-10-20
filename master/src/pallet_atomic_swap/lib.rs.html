@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/atomic-swap/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_atomic_swap/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_atomic_swap/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_atomic_swap/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/atomic-swap/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_atomic_swap/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_atomic_swap/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -348,350 +342,349 @@
 <span id="342">342</span>
 <span id="343">343</span>
 <span id="344">344</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! # Atomic Swap</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! A pallet for atomically sending funds.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! - [`Config`]</span>
-<span class="doccomment">//! - [`Call`]</span>
-<span class="doccomment">//! - [`Pallet`]</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Overview</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! A pallet for atomically sending funds from an origin to a target. A proof</span>
-<span class="doccomment">//! is used to allow the target to approve (claim) the swap. If the swap is not</span>
-<span class="doccomment">//! claimed within a specified duration of time, the sender may cancel it.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ## Interface</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ### Dispatchable Functions</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! * [`create_swap`](Call::create_swap) - called by a sender to register a new atomic swap</span>
-<span class="doccomment">//! * [`claim_swap`](Call::claim_swap) - called by the target to approve a swap</span>
-<span class="doccomment">//! * [`cancel_swap`](Call::cancel_swap) - may be called by a sender after a specified duration</span>
+</span><span class="doccomment">//! # Atomic Swap
+//!
+//! A pallet for atomically sending funds.
+//!
+//! - [`Config`]
+//! - [`Call`]
+//! - [`Pallet`]
+//!
+//! ## Overview
+//!
+//! A pallet for atomically sending funds from an origin to a target. A proof
+//! is used to allow the target to approve (claim) the swap. If the swap is not
+//! claimed within a specified duration of time, the sender may cancel it.
+//!
+//! ## Interface
+//!
+//! ### Dispatchable Functions
+//!
+//! * [`create_swap`](Call::create_swap) - called by a sender to register a new atomic swap
+//! * [`claim_swap`](Call::claim_swap) - called by the target to approve a swap
+//! * [`cancel_swap`](Call::cancel_swap) - may be called by a sender after a specified duration
 
-<span class="comment">// Ensure we&#39;re `no_std` when compiling for Wasm.</span>
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
+</span><span class="comment">// Ensure we&#39;re `no_std` when compiling for Wasm.
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-<span class="kw">mod</span> <span class="ident">tests</span>;
+</span><span class="kw">mod </span>tests;
 
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
-<span class="kw">use</span> <span class="ident">frame_support</span>::{
-	<span class="ident">dispatch::DispatchResult</span>,
-	<span class="ident">pallet_prelude::MaxEncodedLen</span>,
-	<span class="ident">traits</span>::{<span class="ident">BalanceStatus</span>, <span class="ident">Currency</span>, <span class="ident">Get</span>, <span class="ident">ReservableCurrency</span>},
-	<span class="ident">weights::Weight</span>,
-	<span class="ident">RuntimeDebugNoBound</span>,
+<span class="kw">use </span>codec::{Decode, Encode};
+<span class="kw">use </span>frame_support::{
+	dispatch::DispatchResult,
+	pallet_prelude::MaxEncodedLen,
+	traits::{BalanceStatus, Currency, Get, ReservableCurrency},
+	weights::Weight,
+	RuntimeDebugNoBound,
 };
-<span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
-<span class="kw">use</span> <span class="ident">sp_io::hashing::blake2_256</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::RuntimeDebug</span>;
-<span class="kw">use</span> <span class="ident">sp_std</span>::{
-	<span class="ident">marker::PhantomData</span>,
-	<span class="ident">ops</span>::{<span class="ident">Deref</span>, <span class="ident">DerefMut</span>},
-	<span class="ident">prelude</span>::<span class="kw-2">*</span>,
+<span class="kw">use </span>scale_info::TypeInfo;
+<span class="kw">use </span>sp_io::hashing::blake2_256;
+<span class="kw">use </span>sp_runtime::RuntimeDebug;
+<span class="kw">use </span>sp_std::{
+	marker::PhantomData,
+	ops::{Deref, DerefMut},
+	prelude::<span class="kw-2">*</span>,
 };
 
-<span class="doccomment">/// Pending atomic swap operation.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">RuntimeDebugNoBound</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">TypeInfo</span>, <span class="ident">MaxEncodedLen</span>)]</span>
-<span class="attribute">#[<span class="ident">scale_info</span>(<span class="ident">skip_type_params</span>(<span class="ident">T</span>))]</span>
-<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">mel_bound</span>())]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PendingSwap</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Source of the swap.</span>
-	<span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">T::AccountId</span>,
-	<span class="doccomment">/// Action of this swap.</span>
-	<span class="kw">pub</span> <span class="ident">action</span>: <span class="ident">T::SwapAction</span>,
-	<span class="doccomment">/// End block of the lock.</span>
-	<span class="kw">pub</span> <span class="ident">end_block</span>: <span class="ident">T::BlockNumber</span>,
+<span class="doccomment">/// Pending atomic swap operation.
+</span><span class="attribute">#[derive(Clone, Eq, PartialEq, RuntimeDebugNoBound, Encode, Decode, TypeInfo, MaxEncodedLen)]
+#[scale_info(skip_type_params(T))]
+#[codec(mel_bound())]
+</span><span class="kw">pub struct </span>PendingSwap&lt;T: Config&gt; {
+	<span class="doccomment">/// Source of the swap.
+	</span><span class="kw">pub </span>source: T::AccountId,
+	<span class="doccomment">/// Action of this swap.
+	</span><span class="kw">pub </span>action: T::SwapAction,
+	<span class="doccomment">/// End block of the lock.
+	</span><span class="kw">pub </span>end_block: T::BlockNumber,
 }
 
-<span class="doccomment">/// Hashed proof type.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">HashedProof</span> <span class="op">=</span> [<span class="ident">u8</span>; <span class="number">32</span>];
+<span class="doccomment">/// Hashed proof type.
+</span><span class="kw">pub type </span>HashedProof = [u8; <span class="number">32</span>];
 
-<span class="doccomment">/// Definition of a pending atomic swap action. It contains the following three phrases:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// - **Reserve**: reserve the resources needed for a swap. This is to make sure that **Claim**</span>
-<span class="doccomment">/// succeeds with best efforts.</span>
-<span class="doccomment">/// - **Claim**: claim any resources reserved in the first phrase.</span>
-<span class="doccomment">/// - **Cancel**: cancel any resources reserved in the first phrase.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SwapAction</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Reserve the resources needed for the swap, from the given `source`. The reservation is</span>
-	<span class="doccomment">/// allowed to fail. If that is the case, the the full swap creation operation is cancelled.</span>
-	<span class="kw">fn</span> <span class="ident">reserve</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">AccountId</span>) -&gt; <span class="ident">DispatchResult</span>;
-	<span class="doccomment">/// Claim the reserved resources, with `source` and `target`. Returns whether the claim</span>
-	<span class="doccomment">/// succeeds.</span>
-	<span class="kw">fn</span> <span class="ident">claim</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">AccountId</span>, <span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">AccountId</span>) -&gt; <span class="ident">bool</span>;
-	<span class="doccomment">/// Weight for executing the operation.</span>
-	<span class="kw">fn</span> <span class="ident">weight</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Weight</span>;
-	<span class="doccomment">/// Cancel the resources reserved in `source`.</span>
-	<span class="kw">fn</span> <span class="ident">cancel</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">AccountId</span>);
+<span class="doccomment">/// Definition of a pending atomic swap action. It contains the following three phrases:
+///
+/// - **Reserve**: reserve the resources needed for a swap. This is to make sure that **Claim**
+/// succeeds with best efforts.
+/// - **Claim**: claim any resources reserved in the first phrase.
+/// - **Cancel**: cancel any resources reserved in the first phrase.
+</span><span class="kw">pub trait </span>SwapAction&lt;AccountId, T: Config&gt; {
+	<span class="doccomment">/// Reserve the resources needed for the swap, from the given `source`. The reservation is
+	/// allowed to fail. If that is the case, the the full swap creation operation is cancelled.
+	</span><span class="kw">fn </span>reserve(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>AccountId) -&gt; DispatchResult;
+	<span class="doccomment">/// Claim the reserved resources, with `source` and `target`. Returns whether the claim
+	/// succeeds.
+	</span><span class="kw">fn </span>claim(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>AccountId, target: <span class="kw-2">&amp;</span>AccountId) -&gt; bool;
+	<span class="doccomment">/// Weight for executing the operation.
+	</span><span class="kw">fn </span>weight(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight;
+	<span class="doccomment">/// Cancel the resources reserved in `source`.
+	</span><span class="kw">fn </span>cancel(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>AccountId);
 }
 
-<span class="doccomment">/// A swap action that only allows transferring balances.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">TypeInfo</span>, <span class="ident">MaxEncodedLen</span>)]</span>
-<span class="attribute">#[<span class="ident">scale_info</span>(<span class="ident">skip_type_params</span>(<span class="ident">C</span>))]</span>
-<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">mel_bound</span>())]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BalanceSwapAction</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">C</span>: <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-	<span class="ident">value</span>: <span class="op">&lt;</span><span class="ident">C</span> <span class="kw">as</span> <span class="ident">Currency</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Balance</span>,
-	<span class="ident">_marker</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A swap action that only allows transferring balances.
+</span><span class="attribute">#[derive(Clone, RuntimeDebug, Eq, PartialEq, Encode, Decode, TypeInfo, MaxEncodedLen)]
+#[scale_info(skip_type_params(C))]
+#[codec(mel_bound())]
+</span><span class="kw">pub struct </span>BalanceSwapAction&lt;AccountId, C: ReservableCurrency&lt;AccountId&gt;&gt; {
+	value: &lt;C <span class="kw">as </span>Currency&lt;AccountId&gt;&gt;::Balance,
+	_marker: PhantomData&lt;C&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">BalanceSwapAction</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">C</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">C</span>: <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;AccountId, C&gt; BalanceSwapAction&lt;AccountId, C&gt;
+<span class="kw">where
+	</span>C: ReservableCurrency&lt;AccountId&gt;,
 {
-	<span class="doccomment">/// Create a new swap action value of balance.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="op">&lt;</span><span class="ident">C</span> <span class="kw">as</span> <span class="ident">Currency</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Balance</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">value</span>, <span class="ident">_marker</span>: <span class="ident">PhantomData</span> }
+	<span class="doccomment">/// Create a new swap action value of balance.
+	</span><span class="kw">pub fn </span>new(value: &lt;C <span class="kw">as </span>Currency&lt;AccountId&gt;&gt;::Balance) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ value, _marker: PhantomData }
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">BalanceSwapAction</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">C</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">C</span>: <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;AccountId, C&gt; Deref <span class="kw">for </span>BalanceSwapAction&lt;AccountId, C&gt;
+<span class="kw">where
+	</span>C: ReservableCurrency&lt;AccountId&gt;,
 {
-	<span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">C</span> <span class="kw">as</span> <span class="ident">Currency</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::Balance</span>;
+	<span class="kw">type </span>Target = &lt;C <span class="kw">as </span>Currency&lt;AccountId&gt;&gt;::Balance;
 
-	<span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>
+	<span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.value
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">DerefMut</span> <span class="kw">for</span> <span class="ident">BalanceSwapAction</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">C</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">C</span>: <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;AccountId, C&gt; DerefMut <span class="kw">for </span>BalanceSwapAction&lt;AccountId, C&gt;
+<span class="kw">where
+	</span>C: ReservableCurrency&lt;AccountId&gt;,
 {
-	<span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident"><span class="self">Self</span>::Target</span> {
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">value</span>
+	<span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.value
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span>, <span class="ident">AccountId</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">SwapAction</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BalanceSwapAction</span><span class="op">&lt;</span><span class="ident">AccountId</span>, <span class="ident">C</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">C</span>: <span class="ident">ReservableCurrency</span><span class="op">&lt;</span><span class="ident">AccountId</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;T: Config, AccountId, C&gt; SwapAction&lt;AccountId, T&gt; <span class="kw">for </span>BalanceSwapAction&lt;AccountId, C&gt;
+<span class="kw">where
+	</span>C: ReservableCurrency&lt;AccountId&gt;,
 {
-	<span class="kw">fn</span> <span class="ident">reserve</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">AccountId</span>) -&gt; <span class="ident">DispatchResult</span> {
-		<span class="ident">C::reserve</span>(<span class="ident">source</span>, <span class="self">self</span>.<span class="ident">value</span>)
+	<span class="kw">fn </span>reserve(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>AccountId) -&gt; DispatchResult {
+		C::reserve(source, <span class="self">self</span>.value)
 	}
 
-	<span class="kw">fn</span> <span class="ident">claim</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">AccountId</span>, <span class="ident">target</span>: <span class="kw-2">&amp;</span><span class="ident">AccountId</span>) -&gt; <span class="ident">bool</span> {
-		<span class="ident">C::repatriate_reserved</span>(<span class="ident">source</span>, <span class="ident">target</span>, <span class="self">self</span>.<span class="ident">value</span>, <span class="ident">BalanceStatus::Free</span>).<span class="ident">is_ok</span>()
+	<span class="kw">fn </span>claim(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>AccountId, target: <span class="kw-2">&amp;</span>AccountId) -&gt; bool {
+		C::repatriate_reserved(source, target, <span class="self">self</span>.value, BalanceStatus::Free).is_ok()
 	}
 
-	<span class="kw">fn</span> <span class="ident">weight</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Weight</span> {
-		<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">1</span>)
+	<span class="kw">fn </span>weight(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight {
+		T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>)
 	}
 
-	<span class="kw">fn</span> <span class="ident">cancel</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">source</span>: <span class="kw-2">&amp;</span><span class="ident">AccountId</span>) {
-		<span class="ident">C::unreserve</span>(<span class="ident">source</span>, <span class="self">self</span>.<span class="ident">value</span>);
+	<span class="kw">fn </span>cancel(<span class="kw-2">&amp;</span><span class="self">self</span>, source: <span class="kw-2">&amp;</span>AccountId) {
+		C::unreserve(source, <span class="self">self</span>.value);
 	}
 }
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pallet</span>::<span class="kw-2">*</span>;
+<span class="kw">pub use </span>pallet::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">frame_support::pallet</span>]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pallet</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_support::pallet_prelude</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">frame_system::pallet_prelude</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[frame_support::pallet]
+</span><span class="kw">pub mod </span>pallet {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
 
-	<span class="doccomment">/// Atomic swap&#39;s pallet configuration trait.</span>
-	<span class="attribute">#[<span class="ident">pallet::config</span>]</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Config</span>: <span class="ident">frame_system::Config</span> {
-		<span class="doccomment">/// The overarching event type.</span>
-		<span class="kw">type</span> <span class="ident">RuntimeEvent</span>: <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">IsType</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">frame_system::Config</span><span class="op">&gt;</span><span class="ident">::RuntimeEvent</span><span class="op">&gt;</span>;
-		<span class="doccomment">/// Swap action.</span>
-		<span class="kw">type</span> <span class="ident">SwapAction</span>: <span class="ident">SwapAction</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::AccountId</span>, <span class="self">Self</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Parameter</span> <span class="op">+</span> <span class="ident">MaxEncodedLen</span>;
-		<span class="doccomment">/// Limit of proof size.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Atomic swap is only atomic if once the proof is revealed, both parties can submit the</span>
-		<span class="doccomment">/// proofs on-chain. If A is the one that generates the proof, then it requires that either:</span>
-		<span class="doccomment">/// - A&#39;s blockchain has the same proof length limit as B&#39;s blockchain.</span>
-		<span class="doccomment">/// - Or A&#39;s blockchain has shorter proof length limit as B&#39;s blockchain.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// If B sees A is on a blockchain with larger proof length limit, then it should kindly</span>
-		<span class="doccomment">/// refuse to accept the atomic swap request if A generates the proof, and asks that B</span>
-		<span class="doccomment">/// generates the proof instead.</span>
-		<span class="attribute">#[<span class="ident">pallet::constant</span>]</span>
-		<span class="kw">type</span> <span class="ident">ProofLimit</span>: <span class="ident">Get</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>;
+	<span class="doccomment">/// Atomic swap&#39;s pallet configuration trait.
+	</span><span class="attribute">#[pallet::config]
+	</span><span class="kw">pub trait </span>Config: frame_system::Config {
+		<span class="doccomment">/// The overarching event type.
+		</span><span class="kw">type </span>RuntimeEvent: From&lt;Event&lt;<span class="self">Self</span>&gt;&gt; + IsType&lt;&lt;<span class="self">Self </span><span class="kw">as </span>frame_system::Config&gt;::RuntimeEvent&gt;;
+		<span class="doccomment">/// Swap action.
+		</span><span class="kw">type </span>SwapAction: SwapAction&lt;<span class="self">Self</span>::AccountId, <span class="self">Self</span>&gt; + Parameter + MaxEncodedLen;
+		<span class="doccomment">/// Limit of proof size.
+		///
+		/// Atomic swap is only atomic if once the proof is revealed, both parties can submit the
+		/// proofs on-chain. If A is the one that generates the proof, then it requires that either:
+		/// - A&#39;s blockchain has the same proof length limit as B&#39;s blockchain.
+		/// - Or A&#39;s blockchain has shorter proof length limit as B&#39;s blockchain.
+		///
+		/// If B sees A is on a blockchain with larger proof length limit, then it should kindly
+		/// refuse to accept the atomic swap request if A generates the proof, and asks that B
+		/// generates the proof instead.
+		</span><span class="attribute">#[pallet::constant]
+		</span><span class="kw">type </span>ProofLimit: Get&lt;u32&gt;;
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::pallet</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::generate_store</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait</span> <span class="ident">Store</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
+	<span class="attribute">#[pallet::pallet]
+	#[pallet::generate_store(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait </span>Store)]
+	</span><span class="kw">pub struct </span>Pallet&lt;T&gt;(PhantomData&lt;T&gt;);
 
-	<span class="attribute">#[<span class="ident">pallet::storage</span>]</span>
-	<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">PendingSwaps</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">StorageDoubleMap</span><span class="op">&lt;</span>
+	<span class="attribute">#[pallet::storage]
+	</span><span class="kw">pub type </span>PendingSwaps&lt;T: Config&gt; = StorageDoubleMap&lt;
 		<span class="kw">_</span>,
-		<span class="ident">Twox64Concat</span>,
-		<span class="ident">T::AccountId</span>,
-		<span class="ident">Blake2_128Concat</span>,
-		<span class="ident">HashedProof</span>,
-		<span class="ident">PendingSwap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="op">&gt;</span>;
+		Twox64Concat,
+		T::AccountId,
+		Blake2_128Concat,
+		HashedProof,
+		PendingSwap&lt;T&gt;,
+	&gt;;
 
-	<span class="attribute">#[<span class="ident">pallet::error</span>]</span>
-	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Swap already exists.</span>
-		<span class="ident">AlreadyExist</span>,
-		<span class="doccomment">/// Swap proof is invalid.</span>
-		<span class="ident">InvalidProof</span>,
-		<span class="doccomment">/// Proof is too large.</span>
-		<span class="ident">ProofTooLarge</span>,
-		<span class="doccomment">/// Source does not match.</span>
-		<span class="ident">SourceMismatch</span>,
-		<span class="doccomment">/// Swap has already been claimed.</span>
-		<span class="ident">AlreadyClaimed</span>,
-		<span class="doccomment">/// Swap does not exist.</span>
-		<span class="ident">NotExist</span>,
-		<span class="doccomment">/// Claim action mismatch.</span>
-		<span class="ident">ClaimActionMismatch</span>,
-		<span class="doccomment">/// Duration has not yet passed for the swap to be cancelled.</span>
-		<span class="ident">DurationNotPassed</span>,
+	<span class="attribute">#[pallet::error]
+	</span><span class="kw">pub enum </span>Error&lt;T&gt; {
+		<span class="doccomment">/// Swap already exists.
+		</span>AlreadyExist,
+		<span class="doccomment">/// Swap proof is invalid.
+		</span>InvalidProof,
+		<span class="doccomment">/// Proof is too large.
+		</span>ProofTooLarge,
+		<span class="doccomment">/// Source does not match.
+		</span>SourceMismatch,
+		<span class="doccomment">/// Swap has already been claimed.
+		</span>AlreadyClaimed,
+		<span class="doccomment">/// Swap does not exist.
+		</span>NotExist,
+		<span class="doccomment">/// Claim action mismatch.
+		</span>ClaimActionMismatch,
+		<span class="doccomment">/// Duration has not yet passed for the swap to be cancelled.
+		</span>DurationNotPassed,
 	}
 
-	<span class="doccomment">/// Event of atomic swap pallet.</span>
-	<span class="attribute">#[<span class="ident">pallet::event</span>]</span>
-	<span class="attribute">#[<span class="ident">pallet::generate_deposit</span>(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">deposit_event</span>)]</span>
-	<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Event</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Swap created.</span>
-		<span class="ident">NewSwap</span> { <span class="ident">account</span>: <span class="ident">T::AccountId</span>, <span class="ident">proof</span>: <span class="ident">HashedProof</span>, <span class="ident">swap</span>: <span class="ident">PendingSwap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> },
-		<span class="doccomment">/// Swap claimed. The last parameter indicates whether the execution succeeds.</span>
-		<span class="ident">SwapClaimed</span> { <span class="ident">account</span>: <span class="ident">T::AccountId</span>, <span class="ident">proof</span>: <span class="ident">HashedProof</span>, <span class="ident">success</span>: <span class="ident">bool</span> },
-		<span class="doccomment">/// Swap cancelled.</span>
-		<span class="ident">SwapCancelled</span> { <span class="ident">account</span>: <span class="ident">T::AccountId</span>, <span class="ident">proof</span>: <span class="ident">HashedProof</span> },
+	<span class="doccomment">/// Event of atomic swap pallet.
+	</span><span class="attribute">#[pallet::event]
+	#[pallet::generate_deposit(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>deposit_event)]
+	</span><span class="kw">pub enum </span>Event&lt;T: Config&gt; {
+		<span class="doccomment">/// Swap created.
+		</span>NewSwap { account: T::AccountId, proof: HashedProof, swap: PendingSwap&lt;T&gt; },
+		<span class="doccomment">/// Swap claimed. The last parameter indicates whether the execution succeeds.
+		</span>SwapClaimed { account: T::AccountId, proof: HashedProof, success: bool },
+		<span class="doccomment">/// Swap cancelled.
+		</span>SwapCancelled { account: T::AccountId, proof: HashedProof },
 	}
 
-	<span class="attribute">#[<span class="ident">pallet::call</span>]</span>
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Pallet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Register a new atomic swap, declaring an intention to send funds from origin to target</span>
-		<span class="doccomment">/// on the current blockchain. The target can claim the fund using the revealed proof. If</span>
-		<span class="doccomment">/// the fund is not claimed after `duration` blocks, then the sender can cancel the swap.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The dispatch origin for this call must be _Signed_.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// - `target`: Receiver of the atomic swap.</span>
-		<span class="doccomment">/// - `hashed_proof`: The blake2_256 hash of the secret proof.</span>
-		<span class="doccomment">/// - `balance`: Funds to be sent from origin.</span>
-		<span class="doccomment">/// - `duration`: Locked duration of the atomic swap. For safety reasons, it is recommended</span>
-		<span class="doccomment">///   that the revealer uses a shorter duration than the counterparty, to prevent the</span>
-		<span class="doccomment">///   situation where the revealer reveals the proof too late around the end block.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">1</span>).<span class="ident">ref_time</span>().<span class="ident">saturating_add</span>(<span class="number">40_000_000</span>))]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_swap</span>(
-			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">target</span>: <span class="ident">T::AccountId</span>,
-			<span class="ident">hashed_proof</span>: <span class="ident">HashedProof</span>,
-			<span class="ident">action</span>: <span class="ident">T::SwapAction</span>,
-			<span class="ident">duration</span>: <span class="ident">T::BlockNumber</span>,
-		) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
+	<span class="attribute">#[pallet::call]
+	</span><span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
+		<span class="doccomment">/// Register a new atomic swap, declaring an intention to send funds from origin to target
+		/// on the current blockchain. The target can claim the fund using the revealed proof. If
+		/// the fund is not claimed after `duration` blocks, then the sender can cancel the swap.
+		///
+		/// The dispatch origin for this call must be _Signed_.
+		///
+		/// - `target`: Receiver of the atomic swap.
+		/// - `hashed_proof`: The blake2_256 hash of the secret proof.
+		/// - `balance`: Funds to be sent from origin.
+		/// - `duration`: Locked duration of the atomic swap. For safety reasons, it is recommended
+		///   that the revealer uses a shorter duration than the counterparty, to prevent the
+		///   situation where the revealer reveals the proof too late around the end block.
+		</span><span class="attribute">#[pallet::weight(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>).ref_time().saturating_add(<span class="number">40_000_000</span>))]
+		</span><span class="kw">pub fn </span>create_swap(
+			origin: OriginFor&lt;T&gt;,
+			target: T::AccountId,
+			hashed_proof: HashedProof,
+			action: T::SwapAction,
+			duration: T::BlockNumber,
+		) -&gt; DispatchResult {
+			<span class="kw">let </span>source = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="macro">ensure!</span>(
-				<span class="op">!</span><span class="ident">PendingSwaps</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">target</span>, <span class="ident">hashed_proof</span>),
-				<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::AlreadyExist</span>
+				!PendingSwaps::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>target, hashed_proof),
+				Error::&lt;T&gt;::AlreadyExist
 			);
 
-			<span class="ident">action</span>.<span class="ident">reserve</span>(<span class="kw-2">&amp;</span><span class="ident">source</span>)<span class="question-mark">?</span>;
+			action.reserve(<span class="kw-2">&amp;</span>source)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="ident">swap</span> <span class="op">=</span> <span class="ident">PendingSwap</span> {
-				<span class="ident">source</span>,
-				<span class="ident">action</span>,
-				<span class="ident">end_block</span>: <span class="ident">frame_system::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::block_number</span>() <span class="op">+</span> <span class="ident">duration</span>,
+			<span class="kw">let </span>swap = PendingSwap {
+				source,
+				action,
+				end_block: frame_system::Pallet::&lt;T&gt;::block_number() + duration,
 			};
-			<span class="ident">PendingSwaps</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::insert</span>(<span class="ident">target</span>.<span class="ident">clone</span>(), <span class="ident">hashed_proof</span>, <span class="ident">swap</span>.<span class="ident">clone</span>());
+			PendingSwaps::&lt;T&gt;::insert(target.clone(), hashed_proof, swap.clone());
 
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event::NewSwap</span> { <span class="ident">account</span>: <span class="ident">target</span>, <span class="ident">proof</span>: <span class="ident">hashed_proof</span>, <span class="ident">swap</span> });
+			<span class="self">Self</span>::deposit_event(Event::NewSwap { account: target, proof: hashed_proof, swap });
 
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Claim an atomic swap.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The dispatch origin for this call must be _Signed_.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// - `proof`: Revealed proof of the claim.</span>
-		<span class="doccomment">/// - `action`: Action defined in the swap, it must match the entry in blockchain. Otherwise</span>
-		<span class="doccomment">///   the operation fails. This is used for weight calculation.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(
-			<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">1</span>)
-				.<span class="ident">saturating_add</span>(<span class="ident">action</span>.<span class="ident">weight</span>())
-				.<span class="ident">ref_time</span>()
-				.<span class="ident">saturating_add</span>(<span class="number">40_000_000</span>)
-				.<span class="ident">saturating_add</span>((<span class="ident">proof</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>).<span class="ident">saturating_mul</span>(<span class="number">100</span>))
-		)]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">claim_swap</span>(
-			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">proof</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-			<span class="ident">action</span>: <span class="ident">T::SwapAction</span>,
-		) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="macro">ensure!</span>(<span class="ident">proof</span>.<span class="ident">len</span>() <span class="op">&lt;</span><span class="op">=</span> <span class="ident">T::ProofLimit::get</span>() <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::ProofTooLarge</span>);
+		<span class="doccomment">/// Claim an atomic swap.
+		///
+		/// The dispatch origin for this call must be _Signed_.
+		///
+		/// - `proof`: Revealed proof of the claim.
+		/// - `action`: Action defined in the swap, it must match the entry in blockchain. Otherwise
+		///   the operation fails. This is used for weight calculation.
+		</span><span class="attribute">#[pallet::weight(
+			T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>)
+				.saturating_add(action.weight())
+				.ref_time()
+				.saturating_add(<span class="number">40_000_000</span>)
+				.saturating_add((proof.len() <span class="kw">as </span>u64).saturating_mul(<span class="number">100</span>))
+		)]
+		</span><span class="kw">pub fn </span>claim_swap(
+			origin: OriginFor&lt;T&gt;,
+			proof: Vec&lt;u8&gt;,
+			action: T::SwapAction,
+		) -&gt; DispatchResult {
+			<span class="macro">ensure!</span>(proof.len() &lt;= T::ProofLimit::get() <span class="kw">as </span>usize, Error::&lt;T&gt;::ProofTooLarge);
 
-			<span class="kw">let</span> <span class="ident">target</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
-			<span class="kw">let</span> <span class="ident">hashed_proof</span> <span class="op">=</span> <span class="ident">blake2_256</span>(<span class="kw-2">&amp;</span><span class="ident">proof</span>);
+			<span class="kw">let </span>target = ensure_signed(origin)<span class="question-mark">?</span>;
+			<span class="kw">let </span>hashed_proof = blake2_256(<span class="kw-2">&amp;</span>proof);
 
-			<span class="kw">let</span> <span class="ident">swap</span> <span class="op">=</span>
-				<span class="ident">PendingSwaps</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="kw-2">&amp;</span><span class="ident">target</span>, <span class="ident">hashed_proof</span>).<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::InvalidProof</span>)<span class="question-mark">?</span>;
-			<span class="macro">ensure!</span>(<span class="ident">swap</span>.<span class="ident">action</span> <span class="op">==</span> <span class="ident">action</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::ClaimActionMismatch</span>);
+			<span class="kw">let </span>swap =
+				PendingSwaps::&lt;T&gt;::get(<span class="kw-2">&amp;</span>target, hashed_proof).ok_or(Error::&lt;T&gt;::InvalidProof)<span class="question-mark">?</span>;
+			<span class="macro">ensure!</span>(swap.action == action, Error::&lt;T&gt;::ClaimActionMismatch);
 
-			<span class="kw">let</span> <span class="ident">succeeded</span> <span class="op">=</span> <span class="ident">swap</span>.<span class="ident">action</span>.<span class="ident">claim</span>(<span class="kw-2">&amp;</span><span class="ident">swap</span>.<span class="ident">source</span>, <span class="kw-2">&amp;</span><span class="ident">target</span>);
+			<span class="kw">let </span>succeeded = swap.action.claim(<span class="kw-2">&amp;</span>swap.source, <span class="kw-2">&amp;</span>target);
 
-			<span class="ident">PendingSwaps</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::remove</span>(<span class="ident">target</span>.<span class="ident">clone</span>(), <span class="ident">hashed_proof</span>);
+			PendingSwaps::&lt;T&gt;::remove(target.clone(), hashed_proof);
 
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event::SwapClaimed</span> {
-				<span class="ident">account</span>: <span class="ident">target</span>,
-				<span class="ident">proof</span>: <span class="ident">hashed_proof</span>,
-				<span class="ident">success</span>: <span class="ident">succeeded</span>,
+			<span class="self">Self</span>::deposit_event(Event::SwapClaimed {
+				account: target,
+				proof: hashed_proof,
+				success: succeeded,
 			});
 
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Cancel an atomic swap. Only possible after the originally set duration has passed.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The dispatch origin for this call must be _Signed_.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// - `target`: Target of the original atomic swap.</span>
-		<span class="doccomment">/// - `hashed_proof`: Hashed proof of the original atomic swap.</span>
-		<span class="attribute">#[<span class="ident">pallet::weight</span>(<span class="ident">T::DbWeight::get</span>().<span class="ident">reads_writes</span>(<span class="number">1</span>, <span class="number">1</span>).<span class="ident">ref_time</span>().<span class="ident">saturating_add</span>(<span class="number">40_000_000</span>))]</span>
-		<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cancel_swap</span>(
-			<span class="ident">origin</span>: <span class="ident">OriginFor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-			<span class="ident">target</span>: <span class="ident">T::AccountId</span>,
-			<span class="ident">hashed_proof</span>: <span class="ident">HashedProof</span>,
-		) -&gt; <span class="ident">DispatchResult</span> {
-			<span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">ensure_signed</span>(<span class="ident">origin</span>)<span class="question-mark">?</span>;
+		<span class="doccomment">/// Cancel an atomic swap. Only possible after the originally set duration has passed.
+		///
+		/// The dispatch origin for this call must be _Signed_.
+		///
+		/// - `target`: Target of the original atomic swap.
+		/// - `hashed_proof`: Hashed proof of the original atomic swap.
+		</span><span class="attribute">#[pallet::weight(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>).ref_time().saturating_add(<span class="number">40_000_000</span>))]
+		</span><span class="kw">pub fn </span>cancel_swap(
+			origin: OriginFor&lt;T&gt;,
+			target: T::AccountId,
+			hashed_proof: HashedProof,
+		) -&gt; DispatchResult {
+			<span class="kw">let </span>source = ensure_signed(origin)<span class="question-mark">?</span>;
 
-			<span class="kw">let</span> <span class="ident">swap</span> <span class="op">=</span> <span class="ident">PendingSwaps</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::get</span>(<span class="kw-2">&amp;</span><span class="ident">target</span>, <span class="ident">hashed_proof</span>).<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::NotExist</span>)<span class="question-mark">?</span>;
-			<span class="macro">ensure!</span>(<span class="ident">swap</span>.<span class="ident">source</span> <span class="op">==</span> <span class="ident">source</span>, <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::SourceMismatch</span>);
+			<span class="kw">let </span>swap = PendingSwaps::&lt;T&gt;::get(<span class="kw-2">&amp;</span>target, hashed_proof).ok_or(Error::&lt;T&gt;::NotExist)<span class="question-mark">?</span>;
+			<span class="macro">ensure!</span>(swap.source == source, Error::&lt;T&gt;::SourceMismatch);
 			<span class="macro">ensure!</span>(
-				<span class="ident">frame_system::Pallet</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::block_number</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">swap</span>.<span class="ident">end_block</span>,
-				<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::DurationNotPassed</span>,
+				frame_system::Pallet::&lt;T&gt;::block_number() &gt;= swap.end_block,
+				Error::&lt;T&gt;::DurationNotPassed,
 			);
 
-			<span class="ident">swap</span>.<span class="ident">action</span>.<span class="ident">cancel</span>(<span class="kw-2">&amp;</span><span class="ident">swap</span>.<span class="ident">source</span>);
-			<span class="ident">PendingSwaps</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::remove</span>(<span class="kw-2">&amp;</span><span class="ident">target</span>, <span class="ident">hashed_proof</span>);
+			swap.action.cancel(<span class="kw-2">&amp;</span>swap.source);
+			PendingSwaps::&lt;T&gt;::remove(<span class="kw-2">&amp;</span>target, hashed_proof);
 
-			<span class="ident"><span class="self">Self</span>::deposit_event</span>(<span class="ident">Event::SwapCancelled</span> { <span class="ident">account</span>: <span class="ident">target</span>, <span class="ident">proof</span>: <span class="ident">hashed_proof</span> });
+			<span class="self">Self</span>::deposit_event(Event::SwapCancelled { account: target, proof: hashed_proof });
 
 			<span class="prelude-val">Ok</span>(())
 		}
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_atomic_swap" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_atomic_swap" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

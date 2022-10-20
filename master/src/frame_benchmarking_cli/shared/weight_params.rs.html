@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/shared/weight_params.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>weight_params.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/shared/weight_params.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>weight_params.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -99,101 +93,100 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Calculates a weight from the [`super::Stats`] of a benchmark result.</span>
+</span><span class="doccomment">//! Calculates a weight from the [`super::Stats`] of a benchmark result.
 
-<span class="kw">use</span> <span class="ident">sc_cli::Result</span>;
+</span><span class="kw">use </span>sc_cli::Result;
 
-<span class="kw">use</span> <span class="ident">clap::Args</span>;
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
+<span class="kw">use </span>clap::Args;
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>std::path::PathBuf;
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">StatSelect</span>, <span class="ident">Stats</span>};
+<span class="kw">use super</span>::{StatSelect, Stats};
 
-<span class="doccomment">/// Configures the weight generation.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Serialize</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Args</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WeightParams</span> {
-	<span class="doccomment">/// File or directory to write the *weight* files to.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// For Substrate this should be `frame/support/src/weights`.</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">weight_path</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Configures the weight generation.
+</span><span class="attribute">#[derive(Debug, Default, Serialize, Clone, PartialEq, Args)]
+</span><span class="kw">pub struct </span>WeightParams {
+	<span class="doccomment">/// File or directory to write the *weight* files to.
+	///
+	/// For Substrate this should be `frame/support/src/weights`.
+	</span><span class="attribute">#[arg(long)]
+	</span><span class="kw">pub </span>weight_path: <span class="prelude-ty">Option</span>&lt;PathBuf&gt;,
 
-	<span class="doccomment">/// Select a specific metric to calculate the final weight output.</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;metric&quot;</span>, <span class="ident">default_value</span> <span class="op">=</span> <span class="string">&quot;average&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">weight_metric</span>: <span class="ident">StatSelect</span>,
+	<span class="doccomment">/// Select a specific metric to calculate the final weight output.
+	</span><span class="attribute">#[arg(long = <span class="string">&quot;metric&quot;</span>, default_value = <span class="string">&quot;average&quot;</span>)]
+	</span><span class="kw">pub </span>weight_metric: StatSelect,
 
-	<span class="doccomment">/// Multiply the resulting weight with the given factor. Must be positive.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Is applied before `weight_add`.</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;mul&quot;</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="number">1.0</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">weight_mul</span>: <span class="ident">f64</span>,
+	<span class="doccomment">/// Multiply the resulting weight with the given factor. Must be positive.
+	///
+	/// Is applied before `weight_add`.
+	</span><span class="attribute">#[arg(long = <span class="string">&quot;mul&quot;</span>, default_value_t = <span class="number">1.0</span>)]
+	</span><span class="kw">pub </span>weight_mul: f64,
 
-	<span class="doccomment">/// Add the given offset to the resulting weight.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Is applied after `weight_mul`.</span>
-	<span class="attribute">#[<span class="ident">arg</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;add&quot;</span>, <span class="ident">default_value_t</span> <span class="op">=</span> <span class="number">0</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">weight_add</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Add the given offset to the resulting weight.
+	///
+	/// Is applied after `weight_mul`.
+	</span><span class="attribute">#[arg(long = <span class="string">&quot;add&quot;</span>, default_value_t = <span class="number">0</span>)]
+	</span><span class="kw">pub </span>weight_add: u64,
 }
 
-<span class="doccomment">/// Calculates the final weight by multiplying the selected metric with</span>
-<span class="doccomment">/// `weight_mul` and adding `weight_add`.</span>
-<span class="doccomment">/// Does not use safe casts and can overflow.</span>
-<span class="kw">impl</span> <span class="ident">WeightParams</span> {
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">calc_weight</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">stat</span>: <span class="kw-2">&amp;</span><span class="ident">Stats</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">weight_mul</span>.<span class="ident">is_sign_negative</span>() <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">weight_mul</span>.<span class="ident">is_normal</span>() {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;invalid floating number for `weight_mul`&quot;</span>.<span class="ident">into</span>())
+<span class="doccomment">/// Calculates the final weight by multiplying the selected metric with
+/// `weight_mul` and adding `weight_add`.
+/// Does not use safe casts and can overflow.
+</span><span class="kw">impl </span>WeightParams {
+	<span class="kw">pub fn </span>calc_weight(<span class="kw-2">&amp;</span><span class="self">self</span>, stat: <span class="kw-2">&amp;</span>Stats) -&gt; <span class="prelude-ty">Result</span>&lt;u64&gt; {
+		<span class="kw">if </span><span class="self">self</span>.weight_mul.is_sign_negative() || !<span class="self">self</span>.weight_mul.is_normal() {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;invalid floating number for `weight_mul`&quot;</span>.into())
 		}
-		<span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">stat</span>.<span class="ident">select</span>(<span class="self">self</span>.<span class="ident">weight_metric</span>) <span class="kw">as</span> <span class="ident">f64</span>;
-		<span class="kw">let</span> <span class="ident">w</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">mul_add</span>(<span class="self">self</span>.<span class="ident">weight_mul</span>, <span class="self">self</span>.<span class="ident">weight_add</span> <span class="kw">as</span> <span class="ident">f64</span>).<span class="ident">ceil</span>();
-		<span class="prelude-val">Ok</span>(<span class="ident">w</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="comment">// No safe cast here since there is no `From&lt;f64&gt;` for `u64`.</span>
-	}
+		<span class="kw">let </span>s = stat.select(<span class="self">self</span>.weight_metric) <span class="kw">as </span>f64;
+		<span class="kw">let </span>w = s.mul_add(<span class="self">self</span>.weight_mul, <span class="self">self</span>.weight_add <span class="kw">as </span>f64).ceil();
+		<span class="prelude-val">Ok</span>(w <span class="kw">as </span>u64) <span class="comment">// No safe cast here since there is no `From&lt;f64&gt;` for `u64`.
+	</span>}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test_weight_params</span> {
-	<span class="kw">use</span> <span class="ident"><span class="kw">super</span>::WeightParams</span>;
-	<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::shared</span>::{<span class="ident">StatSelect</span>, <span class="ident">Stats</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test_weight_params {
+	<span class="kw">use </span><span class="kw">super</span>::WeightParams;
+	<span class="kw">use </span><span class="kw">crate</span>::shared::{StatSelect, Stats};
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">calc_weight_works</span>() {
-		<span class="kw">let</span> <span class="ident">stats</span> <span class="op">=</span> <span class="ident">Stats</span> { <span class="ident">avg</span>: <span class="number">113</span>, ..<span class="ident">Default::default</span>() };
-		<span class="kw">let</span> <span class="ident">params</span> <span class="op">=</span> <span class="ident">WeightParams</span> {
-			<span class="ident">weight_metric</span>: <span class="ident">StatSelect::Average</span>,
-			<span class="ident">weight_mul</span>: <span class="number">0.75</span>,
-			<span class="ident">weight_add</span>: <span class="number">3</span>,
-			..<span class="ident">Default::default</span>()
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>calc_weight_works() {
+		<span class="kw">let </span>stats = Stats { avg: <span class="number">113</span>, ..Default::default() };
+		<span class="kw">let </span>params = WeightParams {
+			weight_metric: StatSelect::Average,
+			weight_mul: <span class="number">0.75</span>,
+			weight_add: <span class="number">3</span>,
+			..Default::default()
 		};
 
-		<span class="kw">let</span> <span class="ident">want</span> <span class="op">=</span> (<span class="number">113.0f64</span> <span class="op">*</span> <span class="number">0.75</span> <span class="op">+</span> <span class="number">3.0</span>).<span class="ident">ceil</span>() <span class="kw">as</span> <span class="ident">u64</span>; <span class="comment">// Ceil for overestimation.</span>
-		<span class="kw">let</span> <span class="ident">got</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">calc_weight</span>(<span class="kw-2">&amp;</span><span class="ident">stats</span>).<span class="ident">unwrap</span>();
-		<span class="macro">assert_eq!</span>(<span class="ident">want</span>, <span class="ident">got</span>);
+		<span class="kw">let </span>want = (<span class="number">113.0f64 </span>* <span class="number">0.75 </span>+ <span class="number">3.0</span>).ceil() <span class="kw">as </span>u64; <span class="comment">// Ceil for overestimation.
+		</span><span class="kw">let </span>got = params.calc_weight(<span class="kw-2">&amp;</span>stats).unwrap();
+		<span class="macro">assert_eq!</span>(want, got);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">calc_weight_detects_negative_mul</span>() {
-		<span class="kw">let</span> <span class="ident">stats</span> <span class="op">=</span> <span class="ident">Stats::default</span>();
-		<span class="kw">let</span> <span class="ident">params</span> <span class="op">=</span> <span class="ident">WeightParams</span> { <span class="ident">weight_mul</span>: <span class="op">-</span><span class="number">0.75</span>, ..<span class="ident">Default::default</span>() };
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>calc_weight_detects_negative_mul() {
+		<span class="kw">let </span>stats = Stats::default();
+		<span class="kw">let </span>params = WeightParams { weight_mul: -<span class="number">0.75</span>, ..Default::default() };
 
-		<span class="macro">assert!</span>(<span class="ident">params</span>.<span class="ident">calc_weight</span>(<span class="kw-2">&amp;</span><span class="ident">stats</span>).<span class="ident">is_err</span>());
+		<span class="macro">assert!</span>(params.calc_weight(<span class="kw-2">&amp;</span>stats).is_err());
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

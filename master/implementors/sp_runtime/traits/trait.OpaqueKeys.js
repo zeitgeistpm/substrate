@@ -1,6 +1,6 @@
-(function() {var implementors = {};
-implementors["kitchensink_runtime"] = [{"text":"impl <a class=\"trait\" href=\"sp_runtime/traits/trait.OpaqueKeys.html\" title=\"trait sp_runtime::traits::OpaqueKeys\">OpaqueKeys</a> for <a class=\"struct\" href=\"kitchensink_runtime/struct.SessionKeys.html\" title=\"struct kitchensink_runtime::SessionKeys\">SessionKeys</a>","synthetic":false,"types":["kitchensink_runtime::SessionKeys"]}];
-implementors["node_template_runtime"] = [{"text":"impl <a class=\"trait\" href=\"sp_runtime/traits/trait.OpaqueKeys.html\" title=\"trait sp_runtime::traits::OpaqueKeys\">OpaqueKeys</a> for <a class=\"struct\" href=\"node_template_runtime/opaque/struct.SessionKeys.html\" title=\"struct node_template_runtime::opaque::SessionKeys\">SessionKeys</a>","synthetic":false,"types":["node_template_runtime::opaque::SessionKeys"]}];
-implementors["sp_runtime"] = [];
-implementors["substrate_test_runtime"] = [{"text":"impl <a class=\"trait\" href=\"sp_runtime/traits/trait.OpaqueKeys.html\" title=\"trait sp_runtime::traits::OpaqueKeys\">OpaqueKeys</a> for <a class=\"struct\" href=\"substrate_test_runtime/struct.SessionKeys.html\" title=\"struct substrate_test_runtime::SessionKeys\">SessionKeys</a>","synthetic":false,"types":["substrate_test_runtime::SessionKeys"]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
+(function() {var implementors = {
+"kitchensink_runtime":[["impl <a class=\"trait\" href=\"sp_runtime/traits/trait.OpaqueKeys.html\" title=\"trait sp_runtime::traits::OpaqueKeys\">OpaqueKeys</a> for <a class=\"struct\" href=\"kitchensink_runtime/struct.SessionKeys.html\" title=\"struct kitchensink_runtime::SessionKeys\">SessionKeys</a>"]],
+"node_template_runtime":[["impl <a class=\"trait\" href=\"sp_runtime/traits/trait.OpaqueKeys.html\" title=\"trait sp_runtime::traits::OpaqueKeys\">OpaqueKeys</a> for <a class=\"struct\" href=\"node_template_runtime/opaque/struct.SessionKeys.html\" title=\"struct node_template_runtime::opaque::SessionKeys\">SessionKeys</a>"]],
+"sp_runtime":[],
+"substrate_test_runtime":[["impl <a class=\"trait\" href=\"sp_runtime/traits/trait.OpaqueKeys.html\" title=\"trait sp_runtime::traits::OpaqueKeys\">OpaqueKeys</a> for <a class=\"struct\" href=\"substrate_test_runtime/struct.SessionKeys.html\" title=\"struct substrate_test_runtime::SessionKeys\">SessionKeys</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

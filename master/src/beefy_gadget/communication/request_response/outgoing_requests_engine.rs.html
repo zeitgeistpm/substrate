@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/beefy/src/communication/request_response/outgoing_requests_engine.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>outgoing_requests_engine.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../beefy_gadget/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/beefy/src/communication/request_response/outgoing_requests_engine.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>outgoing_requests_engine.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../beefy_gadget/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -245,247 +239,246 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Generating request logic for request/response protocol for syncing BEEFY justifications.</span>
+</span><span class="doccomment">//! Generating request logic for request/response protocol for syncing BEEFY justifications.
 
-<span class="kw">use</span> <span class="ident">beefy_primitives</span>::{<span class="ident">crypto::AuthorityId</span>, <span class="ident">BeefyApi</span>, <span class="ident">ValidatorSet</span>};
-<span class="kw">use</span> <span class="ident">codec::Encode</span>;
-<span class="kw">use</span> <span class="ident">futures::channel</span>::{<span class="ident">oneshot</span>, <span class="ident">oneshot::Canceled</span>};
-<span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">debug</span>, <span class="ident">error</span>, <span class="ident">warn</span>};
-<span class="kw">use</span> <span class="ident">parking_lot::Mutex</span>;
-<span class="kw">use</span> <span class="ident">sc_network</span>::{<span class="ident">PeerId</span>, <span class="ident">ProtocolName</span>};
-<span class="kw">use</span> <span class="ident">sc_network_common</span>::{
-	<span class="ident">request_responses</span>::{<span class="ident">IfDisconnected</span>, <span class="ident">RequestFailure</span>},
-	<span class="ident">service::NetworkRequest</span>,
+</span><span class="kw">use </span>beefy_primitives::{crypto::AuthorityId, BeefyApi, ValidatorSet};
+<span class="kw">use </span>codec::Encode;
+<span class="kw">use </span>futures::channel::{oneshot, oneshot::Canceled};
+<span class="kw">use </span>log::{debug, error, warn};
+<span class="kw">use </span>parking_lot::Mutex;
+<span class="kw">use </span>sc_network::{PeerId, ProtocolName};
+<span class="kw">use </span>sc_network_common::{
+	request_responses::{IfDisconnected, RequestFailure},
+	service::NetworkRequest,
 };
-<span class="kw">use</span> <span class="ident">sp_api::ProvideRuntimeApi</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">generic::BlockId</span>,
-	<span class="ident">traits</span>::{<span class="ident">Block</span>, <span class="ident">NumberFor</span>},
+<span class="kw">use </span>sp_api::ProvideRuntimeApi;
+<span class="kw">use </span>sp_runtime::{
+	generic::BlockId,
+	traits::{Block, NumberFor},
 };
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::VecDeque</span>, <span class="ident">result::Result</span>, <span class="ident">sync::Arc</span>};
+<span class="kw">use </span>std::{collections::VecDeque, result::Result, sync::Arc};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">communication::request_response</span>::{<span class="ident">Error</span>, <span class="ident">JustificationRequest</span>},
-	<span class="ident">justification</span>::{<span class="ident">decode_and_verify_finality_proof</span>, <span class="ident">BeefyVersionedFinalityProof</span>},
-	<span class="ident">KnownPeers</span>,
+<span class="kw">use crate</span>::{
+	communication::request_response::{Error, JustificationRequest},
+	justification::{decode_and_verify_finality_proof, BeefyVersionedFinalityProof},
+	KnownPeers,
 };
 
-<span class="doccomment">/// Response type received from network.</span>
-<span class="kw">type</span> <span class="ident">Response</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">RequestFailure</span><span class="op">&gt;</span>;
-<span class="doccomment">/// Used to receive a response from the network.</span>
-<span class="kw">type</span> <span class="ident">ResponseReceiver</span> <span class="op">=</span> <span class="ident">oneshot::Receiver</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Response type received from network.
+</span><span class="kw">type </span>Response = <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, RequestFailure&gt;;
+<span class="doccomment">/// Used to receive a response from the network.
+</span><span class="kw">type </span>ResponseReceiver = oneshot::Receiver&lt;Response&gt;;
 
-<span class="kw">enum</span> <span class="ident">State</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Block</span><span class="op">&gt;</span> {
-	<span class="ident">Idle</span>,
-	<span class="ident">AwaitingResponse</span>(<span class="ident">PeerId</span>, <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">ResponseReceiver</span>),
+<span class="kw">enum </span>State&lt;B: Block&gt; {
+	Idle,
+	AwaitingResponse(PeerId, NumberFor&lt;B&gt;, ResponseReceiver),
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OnDemandJustificationsEngine</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Block</span>, <span class="ident">R</span><span class="op">&gt;</span> {
-	<span class="ident">network</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">NetworkRequest</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>,
-	<span class="ident">runtime</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-	<span class="ident">protocol_name</span>: <span class="ident">ProtocolName</span>,
+<span class="kw">pub struct </span>OnDemandJustificationsEngine&lt;B: Block, R&gt; {
+	network: Arc&lt;<span class="kw">dyn </span>NetworkRequest + Send + Sync&gt;,
+	runtime: Arc&lt;R&gt;,
+	protocol_name: ProtocolName,
 
-	<span class="ident">live_peers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">KnownPeers</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">peers_cache</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span>,
+	live_peers: Arc&lt;Mutex&lt;KnownPeers&lt;B&gt;&gt;&gt;,
+	peers_cache: VecDeque&lt;PeerId&gt;,
 
-	<span class="ident">state</span>: <span class="ident">State</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+	state: State&lt;B&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">R</span><span class="op">&gt;</span> <span class="ident">OnDemandJustificationsEngine</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">R</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">B</span>: <span class="ident">Block</span>,
-	<span class="ident">R</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="ident">R::Api</span>: <span class="ident">BeefyApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;B, R&gt; OnDemandJustificationsEngine&lt;B, R&gt;
+<span class="kw">where
+	</span>B: Block,
+	R: ProvideRuntimeApi&lt;B&gt;,
+	R::Api: BeefyApi&lt;B&gt;,
 {
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-		<span class="ident">network</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">NetworkRequest</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>,
-		<span class="ident">runtime</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
-		<span class="ident">protocol_name</span>: <span class="ident">ProtocolName</span>,
-		<span class="ident">live_peers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">KnownPeers</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> {
-			<span class="ident">network</span>,
-			<span class="ident">runtime</span>,
-			<span class="ident">protocol_name</span>,
-			<span class="ident">live_peers</span>,
-			<span class="ident">peers_cache</span>: <span class="ident">VecDeque::new</span>(),
-			<span class="ident">state</span>: <span class="ident">State::Idle</span>,
+	<span class="kw">pub fn </span>new(
+		network: Arc&lt;<span class="kw">dyn </span>NetworkRequest + Send + Sync&gt;,
+		runtime: Arc&lt;R&gt;,
+		protocol_name: ProtocolName,
+		live_peers: Arc&lt;Mutex&lt;KnownPeers&lt;B&gt;&gt;&gt;,
+	) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			network,
+			runtime,
+			protocol_name,
+			live_peers,
+			peers_cache: VecDeque::new(),
+			state: State::Idle,
 		}
 	}
 
-	<span class="kw">fn</span> <span class="ident">reset_peers_cache_for_block</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">block</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) {
-		<span class="comment">// TODO (issue #12296): replace peer selection with generic one that involves all protocols.</span>
-		<span class="self">self</span>.<span class="ident">peers_cache</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">live_peers</span>.<span class="ident">lock</span>().<span class="ident">at_least_at_block</span>(<span class="ident">block</span>);
+	<span class="kw">fn </span>reset_peers_cache_for_block(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: NumberFor&lt;B&gt;) {
+		<span class="comment">// TODO (issue #12296): replace peer selection with generic one that involves all protocols.
+		</span><span class="self">self</span>.peers_cache = <span class="self">self</span>.live_peers.lock().at_least_at_block(block);
 	}
 
-	<span class="kw">fn</span> <span class="ident">try_next_peer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PeerId</span><span class="op">&gt;</span> {
-		<span class="comment">// TODO (issue #12296): replace peer selection with generic one that involves all protocols.</span>
-		<span class="kw">let</span> <span class="ident">live</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">live_peers</span>.<span class="ident">lock</span>();
-		<span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">peer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">peers_cache</span>.<span class="ident">pop_front</span>() {
-			<span class="kw">if</span> <span class="ident">live</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">peer</span>) {
-				<span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">peer</span>)
+	<span class="kw">fn </span>try_next_peer(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;PeerId&gt; {
+		<span class="comment">// TODO (issue #12296): replace peer selection with generic one that involves all protocols.
+		</span><span class="kw">let </span>live = <span class="self">self</span>.live_peers.lock();
+		<span class="kw">while let </span><span class="prelude-val">Some</span>(peer) = <span class="self">self</span>.peers_cache.pop_front() {
+			<span class="kw">if </span>live.contains(<span class="kw-2">&amp;</span>peer) {
+				<span class="kw">return </span><span class="prelude-val">Some</span>(peer)
 			}
 		}
-		<span class="prelude-val">None</span>
-	}
+		<span class="prelude-val">None
+	</span>}
 
-	<span class="kw">fn</span> <span class="ident">request_from_peer</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">peer</span>: <span class="ident">PeerId</span>, <span class="ident">block</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) {
-		<span class="macro">debug!</span>(<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 requesting justif #{:?} from peer {:?}&quot;</span>, <span class="ident">block</span>, <span class="ident">peer</span>);
+	<span class="kw">fn </span>request_from_peer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, peer: PeerId, block: NumberFor&lt;B&gt;) {
+		<span class="macro">debug!</span>(target: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 requesting justif #{:?} from peer {:?}&quot;</span>, block, peer);
 
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">JustificationRequest</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> { <span class="ident">begin</span>: <span class="ident">block</span> }.<span class="ident">encode</span>();
+		<span class="kw">let </span>payload = JustificationRequest::&lt;B&gt; { begin: block }.encode();
 
-		<span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
+		<span class="kw">let </span>(tx, rx) = oneshot::channel();
 
-		<span class="self">self</span>.<span class="ident">network</span>.<span class="ident">start_request</span>(
-			<span class="ident">peer</span>,
-			<span class="self">self</span>.<span class="ident">protocol_name</span>.<span class="ident">clone</span>(),
-			<span class="ident">payload</span>,
-			<span class="ident">tx</span>,
-			<span class="ident">IfDisconnected::ImmediateError</span>,
+		<span class="self">self</span>.network.start_request(
+			peer,
+			<span class="self">self</span>.protocol_name.clone(),
+			payload,
+			tx,
+			IfDisconnected::ImmediateError,
 		);
 
-		<span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">State::AwaitingResponse</span>(<span class="ident">peer</span>, <span class="ident">block</span>, <span class="ident">rx</span>);
+		<span class="self">self</span>.state = State::AwaitingResponse(peer, block, rx);
 	}
 
-	<span class="doccomment">/// If no other request is in progress, start new justification request for `block`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">block</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) {
-		<span class="comment">// ignore new requests while there&#39;s already one pending</span>
-		<span class="kw">if</span> <span class="macro">matches!</span>(<span class="self">self</span>.<span class="ident">state</span>, <span class="ident">State::AwaitingResponse</span>(<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)) {
-			<span class="kw">return</span>
-		}
-		<span class="self">self</span>.<span class="ident">reset_peers_cache_for_block</span>(<span class="ident">block</span>);
+	<span class="doccomment">/// If no other request is in progress, start new justification request for `block`.
+	</span><span class="kw">pub fn </span>request(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: NumberFor&lt;B&gt;) {
+		<span class="comment">// ignore new requests while there&#39;s already one pending
+		</span><span class="kw">if </span><span class="macro">matches!</span>(<span class="self">self</span>.state, State::AwaitingResponse(<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)) {
+			<span class="kw">return
+		</span>}
+		<span class="self">self</span>.reset_peers_cache_for_block(block);
 
-		<span class="comment">// Start the requests engine - each unsuccessful received response will automatically</span>
-		<span class="comment">// trigger a new request to the next peer in the `peers_cache` until there are none left.</span>
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">peer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">try_next_peer</span>() {
-			<span class="self">self</span>.<span class="ident">request_from_peer</span>(<span class="ident">peer</span>, <span class="ident">block</span>);
-		} <span class="kw">else</span> {
-			<span class="macro">debug!</span>(<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 no good peers to request justif #{:?} from&quot;</span>, <span class="ident">block</span>);
+		<span class="comment">// Start the requests engine - each unsuccessful received response will automatically
+		// trigger a new request to the next peer in the `peers_cache` until there are none left.
+		</span><span class="kw">if let </span><span class="prelude-val">Some</span>(peer) = <span class="self">self</span>.try_next_peer() {
+			<span class="self">self</span>.request_from_peer(peer, block);
+		} <span class="kw">else </span>{
+			<span class="macro">debug!</span>(target: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 no good peers to request justif #{:?} from&quot;</span>, block);
 		}
 	}
 
-	<span class="doccomment">/// Cancel any pending request for block numbers smaller or equal to `block`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cancel_requests_older_than</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">block</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) {
-		<span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">state</span> {
-			<span class="ident">State::AwaitingResponse</span>(<span class="kw">_</span>, <span class="ident">number</span>, <span class="kw">_</span>) <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">number</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">block</span> =&gt; {
+	<span class="doccomment">/// Cancel any pending request for block numbers smaller or equal to `block`.
+	</span><span class="kw">pub fn </span>cancel_requests_older_than(<span class="kw-2">&amp;mut </span><span class="self">self</span>, block: NumberFor&lt;B&gt;) {
+		<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.state {
+			State::AwaitingResponse(<span class="kw">_</span>, number, <span class="kw">_</span>) <span class="kw">if </span><span class="kw-2">*</span>number &lt;= block =&gt; {
 				<span class="macro">debug!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>,
+					target: <span class="string">&quot;beefy::sync&quot;</span>,
 					<span class="string">&quot;🥩 cancel pending request for justification #{:?}&quot;</span>,
-					<span class="ident">number</span>
+					number
 				);
-				<span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">State::Idle</span>;
+				<span class="self">self</span>.state = State::Idle;
 			},
-			<span class="kw">_</span> =&gt; (),
+			<span class="kw">_ </span>=&gt; (),
 		}
 	}
 
-	<span class="kw">fn</span> <span class="ident">process_response</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">peer</span>: <span class="ident">PeerId</span>,
-		<span class="ident">block</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">validator_set</span>: <span class="kw-2">&amp;</span><span class="ident">ValidatorSet</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&gt;</span>,
-		<span class="ident">response</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">Canceled</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BeefyVersionedFinalityProof</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="ident">response</span>
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+	<span class="kw">fn </span>process_response(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		peer: PeerId,
+		block: NumberFor&lt;B&gt;,
+		validator_set: <span class="kw-2">&amp;</span>ValidatorSet&lt;AuthorityId&gt;,
+		response: <span class="prelude-ty">Result</span>&lt;Response, Canceled&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;BeefyVersionedFinalityProof&lt;B&gt;, Error&gt; {
+		response
+			.map_err(|e| {
 				<span class="macro">debug!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>,
+					target: <span class="string">&quot;beefy::sync&quot;</span>,
 					<span class="string">&quot;🥩 for on demand justification #{:?}, peer {:?} hung up: {:?}&quot;</span>,
-					<span class="ident">block</span>, <span class="ident">peer</span>, <span class="ident">e</span>
+					block, peer, e
 				);
-				<span class="ident">Error::InvalidResponse</span>
-			})<span class="question-mark">?</span>
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+				Error::InvalidResponse
+			})<span class="question-mark">?
+			</span>.map_err(|e| {
 				<span class="macro">debug!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>,
+					target: <span class="string">&quot;beefy::sync&quot;</span>,
 					<span class="string">&quot;🥩 for on demand justification #{:?}, peer {:?} error: {:?}&quot;</span>,
-					<span class="ident">block</span>, <span class="ident">peer</span>, <span class="ident">e</span>
+					block, peer, e
 				);
-				<span class="ident">Error::InvalidResponse</span>
+				Error::InvalidResponse
 			})
-			.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">encoded</span><span class="op">|</span> {
-				<span class="ident">decode_and_verify_finality_proof</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>[..], <span class="ident">block</span>, <span class="kw-2">&amp;</span><span class="ident">validator_set</span>).<span class="ident">map_err</span>(
-					<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+			.and_then(|encoded| {
+				decode_and_verify_finality_proof::&lt;B&gt;(<span class="kw-2">&amp;</span>encoded[..], block, <span class="kw-2">&amp;</span>validator_set).map_err(
+					|e| {
 						<span class="macro">debug!</span>(
-							<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>,
+							target: <span class="string">&quot;beefy::sync&quot;</span>,
 							<span class="string">&quot;🥩 for on demand justification #{:?}, peer {:?} responded with invalid proof: {:?}&quot;</span>,
-							<span class="ident">block</span>, <span class="ident">peer</span>, <span class="ident">e</span>
+							block, peer, e
 						);
-						<span class="ident">Error::InvalidResponse</span>
+						Error::InvalidResponse
 					},
 				)
 			})
 	}
 
-	<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BeefyVersionedFinalityProof</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> (<span class="ident">peer</span>, <span class="ident">block</span>, <span class="ident">resp</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">state</span> {
-			<span class="ident">State::Idle</span> =&gt; {
+	<span class="kw">pub async fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;BeefyVersionedFinalityProof&lt;B&gt;&gt; {
+		<span class="kw">let </span>(peer, block, resp) = <span class="kw">match </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.state {
+			State::Idle =&gt; {
 				<span class="macro">futures::pending!</span>();
-				<span class="comment">// Doesn&#39;t happen as &#39;futures::pending!()&#39; is an &#39;await&#39; barrier that never passes.</span>
-				<span class="kw">return</span> <span class="prelude-val">None</span>
-			},
-			<span class="ident">State::AwaitingResponse</span>(<span class="ident">peer</span>, <span class="ident">block</span>, <span class="ident">receiver</span>) =&gt; {
-				<span class="kw">let</span> <span class="ident">resp</span> <span class="op">=</span> <span class="ident">receiver</span>.<span class="kw">await</span>;
-				(<span class="kw-2">*</span><span class="ident">peer</span>, <span class="kw-2">*</span><span class="ident">block</span>, <span class="ident">resp</span>)
+				<span class="comment">// Doesn&#39;t happen as &#39;futures::pending!()&#39; is an &#39;await&#39; barrier that never passes.
+				</span><span class="kw">return </span><span class="prelude-val">None
+			</span>},
+			State::AwaitingResponse(peer, block, receiver) =&gt; {
+				<span class="kw">let </span>resp = receiver.<span class="kw">await</span>;
+				(<span class="kw-2">*</span>peer, <span class="kw-2">*</span>block, resp)
 			},
 		};
-		<span class="comment">// We received the awaited response. Our &#39;receiver&#39; will never generate any other response,</span>
-		<span class="comment">// meaning we&#39;re done with current state. Move the engine to `State::Idle`.</span>
-		<span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">State::Idle</span>;
+		<span class="comment">// We received the awaited response. Our &#39;receiver&#39; will never generate any other response,
+		// meaning we&#39;re done with current state. Move the engine to `State::Idle`.
+		</span><span class="self">self</span>.state = State::Idle;
 
-		<span class="kw">let</span> <span class="ident">block_id</span> <span class="op">=</span> <span class="ident">BlockId::number</span>(<span class="ident">block</span>);
-		<span class="kw">let</span> <span class="ident">validator_set</span> <span class="op">=</span> <span class="self">self</span>
-			.<span class="ident">runtime</span>
-			.<span class="ident">runtime_api</span>()
-			.<span class="ident">validator_set</span>(<span class="kw-2">&amp;</span><span class="ident">block_id</span>)
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-				<span class="macro">error!</span>(<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 Runtime API error {:?} in on-demand justif engine.&quot;</span>, <span class="ident">e</span>);
-				<span class="ident">e</span>
+		<span class="kw">let </span>block_id = BlockId::number(block);
+		<span class="kw">let </span>validator_set = <span class="self">self
+			</span>.runtime
+			.runtime_api()
+			.validator_set(<span class="kw-2">&amp;</span>block_id)
+			.map_err(|e| {
+				<span class="macro">error!</span>(target: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 Runtime API error {:?} in on-demand justif engine.&quot;</span>, e);
+				e
 			})
-			.<span class="ident">ok</span>()<span class="question-mark">?</span>
-			.<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> {
-				<span class="macro">error!</span>(<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 BEEFY pallet not available for block {:?}.&quot;</span>, <span class="ident">block</span>);
-				<span class="prelude-val">None</span>
-			})<span class="question-mark">?</span>;
+			.ok()<span class="question-mark">?
+			</span>.or_else(|| {
+				<span class="macro">error!</span>(target: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 BEEFY pallet not available for block {:?}.&quot;</span>, block);
+				<span class="prelude-val">None
+			</span>})<span class="question-mark">?</span>;
 
-		<span class="self">self</span>.<span class="ident">process_response</span>(<span class="ident">peer</span>, <span class="ident">block</span>, <span class="kw-2">&amp;</span><span class="ident">validator_set</span>, <span class="ident">resp</span>)
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
-				<span class="comment">// No valid justification received, try next peer in our set.</span>
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">peer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">try_next_peer</span>() {
-					<span class="self">self</span>.<span class="ident">request_from_peer</span>(<span class="ident">peer</span>, <span class="ident">block</span>);
-				} <span class="kw">else</span> {
-					<span class="macro">warn!</span>(<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 ran out of peers to request justif #{:?} from&quot;</span>, <span class="ident">block</span>);
+		<span class="self">self</span>.process_response(peer, block, <span class="kw-2">&amp;</span>validator_set, resp)
+			.map_err(|<span class="kw">_</span>| {
+				<span class="comment">// No valid justification received, try next peer in our set.
+				</span><span class="kw">if let </span><span class="prelude-val">Some</span>(peer) = <span class="self">self</span>.try_next_peer() {
+					<span class="self">self</span>.request_from_peer(peer, block);
+				} <span class="kw">else </span>{
+					<span class="macro">warn!</span>(target: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 ran out of peers to request justif #{:?} from&quot;</span>, block);
 				}
 			})
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">proof</span><span class="op">|</span> {
+			.map(|proof| {
 				<span class="macro">debug!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>,
+					target: <span class="string">&quot;beefy::sync&quot;</span>,
 					<span class="string">&quot;🥩 received valid on-demand justif #{:?} from {:?}&quot;</span>,
-					<span class="ident">block</span>, <span class="ident">peer</span>
+					block, peer
 				);
-				<span class="ident">proof</span>
+				proof
 			})
-			.<span class="ident">ok</span>()
+			.ok()
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="beefy_gadget" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="beefy_gadget" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

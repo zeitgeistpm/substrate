@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/bags-list/remote-tests/src/try_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>try_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_bags_list_remote_tests/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_bags_list_remote_tests/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_bags_list_remote_tests/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/bags-list/remote-tests/src/try_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>try_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_bags_list_remote_tests/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_bags_list_remote_tests/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -61,63 +55,62 @@
 <span id="55">55</span>
 <span id="56">56</span>
 <span id="57">57</span>
-</pre><pre class="rust"><code><span class="comment">// Copyright 2021 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// This file is part of Polkadot.</span>
+</pre><pre class="rust"><code><span class="comment">// Copyright 2021 Parity Technologies (UK) Ltd.
+// This file is part of Polkadot.
 
-<span class="comment">// Polkadot is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// Polkadot is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// Polkadot is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// Polkadot is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with Polkadot.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with Polkadot.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Test to execute the sanity-check of the voter bag.</span>
+</span><span class="doccomment">//! Test to execute the sanity-check of the voter bag.
 
-<span class="kw">use</span> <span class="ident">frame_election_provider_support::SortedListProvider</span>;
-<span class="kw">use</span> <span class="ident">frame_support</span>::{
-	<span class="ident">storage::generator::StorageMap</span>,
-	<span class="ident">traits</span>::{<span class="ident">Get</span>, <span class="ident">PalletInfoAccess</span>},
+</span><span class="kw">use </span>frame_election_provider_support::SortedListProvider;
+<span class="kw">use </span>frame_support::{
+	storage::generator::StorageMap,
+	traits::{Get, PalletInfoAccess},
 };
-<span class="kw">use</span> <span class="ident">remote_externalities</span>::{<span class="ident">Builder</span>, <span class="ident">Mode</span>, <span class="ident">OnlineConfig</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">traits::Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">DeserializeOwned</span>};
+<span class="kw">use </span>remote_externalities::{Builder, Mode, OnlineConfig};
+<span class="kw">use </span>sp_runtime::{traits::Block <span class="kw">as </span>BlockT, DeserializeOwned};
 
-<span class="doccomment">/// Execute the sanity check of the bags-list.</span>
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span><span class="op">&lt;</span><span class="ident">Runtime</span>, <span class="ident">Block</span><span class="op">&gt;</span>(
-	<span class="ident">currency_unit</span>: <span class="ident">u64</span>,
-	<span class="ident">currency_name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
-	<span class="ident">ws_url</span>: <span class="ident">String</span>,
-) <span class="kw">where</span>
-	<span class="ident">Runtime</span>: <span class="ident"><span class="kw">crate</span>::RuntimeT</span><span class="op">&lt;</span><span class="ident">pallet_bags_list::Instance1</span><span class="op">&gt;</span>,
-	<span class="ident">Block</span>: <span class="ident">BlockT</span>,
-	<span class="ident">Block::Header</span>: <span class="ident">DeserializeOwned</span>,
+<span class="doccomment">/// Execute the sanity check of the bags-list.
+</span><span class="kw">pub async fn </span>execute&lt;Runtime, Block&gt;(
+	currency_unit: u64,
+	currency_name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
+	ws_url: String,
+) <span class="kw">where
+	</span>Runtime: <span class="kw">crate</span>::RuntimeT&lt;pallet_bags_list::Instance1&gt;,
+	Block: BlockT,
+	Block::Header: DeserializeOwned,
 {
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident">Builder</span>::<span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="ident">::new</span>()
-		.<span class="ident">mode</span>(<span class="ident">Mode::Online</span>(<span class="ident">OnlineConfig</span> {
-			<span class="ident">transport</span>: <span class="ident">ws_url</span>.<span class="ident">to_string</span>().<span class="ident">into</span>(),
-			<span class="ident">pallets</span>: <span class="macro">vec!</span>[<span class="ident">pallet_bags_list::Pallet</span>::<span class="op">&lt;</span><span class="ident">Runtime</span>, <span class="ident">pallet_bags_list::Instance1</span><span class="op">&gt;</span><span class="ident">::name</span>()
-				.<span class="ident">to_string</span>()],
-			..<span class="ident">Default::default</span>()
+	<span class="kw">let </span><span class="kw-2">mut </span>ext = Builder::&lt;Block&gt;::new()
+		.mode(Mode::Online(OnlineConfig {
+			transport: ws_url.to_string().into(),
+			pallets: <span class="macro">vec!</span>[pallet_bags_list::Pallet::&lt;Runtime, pallet_bags_list::Instance1&gt;::name()
+				.to_string()],
+			..Default::default()
 		}))
-		.<span class="ident">inject_hashed_prefix</span>(<span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">pallet_staking::Bonded</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::prefix_hash</span>())
-		.<span class="ident">inject_hashed_prefix</span>(<span class="kw-2">&amp;</span><span class="op">&lt;</span><span class="ident">pallet_staking::Ledger</span><span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::prefix_hash</span>())
-		.<span class="ident">build</span>()
-		.<span class="kw">await</span>
-		.<span class="ident">unwrap</span>();
+		.inject_hashed_prefix(<span class="kw-2">&amp;</span>&lt;pallet_staking::Bonded&lt;Runtime&gt;&gt;::prefix_hash())
+		.inject_hashed_prefix(<span class="kw-2">&amp;</span>&lt;pallet_staking::Ledger&lt;Runtime&gt;&gt;::prefix_hash())
+		.build()
+		.<span class="kw">await
+		</span>.unwrap();
 
-	<span class="ident">ext</span>.<span class="ident">execute_with</span>(<span class="op">|</span><span class="op">|</span> {
-		<span class="ident">sp_core::crypto::set_default_ss58_version</span>(<span class="ident">Runtime::SS58Prefix::get</span>().<span class="ident">try_into</span>().<span class="ident">unwrap</span>());
-		<span class="ident">pallet_bags_list::Pallet</span>::<span class="op">&lt;</span><span class="ident">Runtime</span>, <span class="ident">pallet_bags_list::Instance1</span><span class="op">&gt;</span><span class="ident">::try_state</span>().<span class="ident">unwrap</span>();
-		<span class="macro">log::info!</span>(<span class="ident">target</span>: <span class="ident"><span class="kw">crate</span>::LOG_TARGET</span>, <span class="string">&quot;executed bags-list sanity check with no errors.&quot;</span>);
+	ext.execute_with(|| {
+		sp_core::crypto::set_default_ss58_version(Runtime::SS58Prefix::get().try_into().unwrap());
+		pallet_bags_list::Pallet::&lt;Runtime, pallet_bags_list::Instance1&gt;::try_state().unwrap();
+		<span class="macro">log::info!</span>(target: <span class="kw">crate</span>::LOG_TARGET, <span class="string">&quot;executed bags-list sanity check with no errors.&quot;</span>);
 
-		<span class="ident"><span class="kw">crate</span>::display_and_check_bags</span>::<span class="op">&lt;</span><span class="ident">Runtime</span><span class="op">&gt;</span>(<span class="ident">currency_unit</span>, <span class="ident">currency_name</span>);
+		<span class="kw">crate</span>::display_and_check_bags::&lt;Runtime&gt;(currency_unit, currency_name);
 	});
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_bags_list_remote_tests" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_bags_list_remote_tests" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

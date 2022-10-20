@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/aura/src/import_queue.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>import_queue.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sc_consensus_aura/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sc_consensus_aura/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_consensus_aura/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/aura/src/import_queue.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>import_queue.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sc_consensus_aura/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_consensus_aura/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -421,171 +415,171 @@
 <span id="415">415</span>
 <span id="416">416</span>
 <span id="417">417</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Module implementing the logic for verifying and importing AuRa blocks.</span>
+</span><span class="doccomment">//! Module implementing the logic for verifying and importing AuRa blocks.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">aura_err</span>, <span class="ident">authorities</span>, <span class="ident">find_pre_digest</span>, <span class="ident">slot_author</span>, <span class="ident">AuthorityId</span>, <span class="ident">Error</span>};
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Codec</span>, <span class="ident">Decode</span>, <span class="ident">Encode</span>};
-<span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">debug</span>, <span class="ident">info</span>, <span class="ident">trace</span>};
-<span class="kw">use</span> <span class="ident">prometheus_endpoint::Registry</span>;
-<span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">backend::AuxStore</span>, <span class="ident">BlockOf</span>, <span class="ident">UsageProvider</span>};
-<span class="kw">use</span> <span class="ident">sc_consensus</span>::{
-	<span class="ident">block_import</span>::{<span class="ident">BlockImport</span>, <span class="ident">BlockImportParams</span>, <span class="ident">ForkChoiceStrategy</span>},
-	<span class="ident">import_queue</span>::{<span class="ident">BasicQueue</span>, <span class="ident">BoxJustificationImport</span>, <span class="ident">DefaultImportQueue</span>, <span class="ident">Verifier</span>},
+</span><span class="kw">use crate</span>::{aura_err, authorities, find_pre_digest, slot_author, AuthorityId, Error};
+<span class="kw">use </span>codec::{Codec, Decode, Encode};
+<span class="kw">use </span>log::{debug, info, trace};
+<span class="kw">use </span>prometheus_endpoint::Registry;
+<span class="kw">use </span>sc_client_api::{backend::AuxStore, BlockOf, UsageProvider};
+<span class="kw">use </span>sc_consensus::{
+	block_import::{BlockImport, BlockImportParams, ForkChoiceStrategy},
+	import_queue::{BasicQueue, BoxJustificationImport, DefaultImportQueue, Verifier},
 };
-<span class="kw">use</span> <span class="ident">sc_consensus_slots</span>::{<span class="ident">check_equivocation</span>, <span class="ident">CheckedHeader</span>, <span class="ident">InherentDataProviderExt</span>};
-<span class="kw">use</span> <span class="ident">sc_telemetry</span>::{<span class="ident">telemetry</span>, <span class="ident">TelemetryHandle</span>, <span class="ident">CONSENSUS_DEBUG</span>, <span class="ident">CONSENSUS_TRACE</span>};
-<span class="kw">use</span> <span class="ident">sp_api</span>::{<span class="ident">ApiExt</span>, <span class="ident">ProvideRuntimeApi</span>};
-<span class="kw">use</span> <span class="ident">sp_block_builder::BlockBuilder</span> <span class="kw">as</span> <span class="ident">BlockBuilderApi</span>;
-<span class="kw">use</span> <span class="ident">sp_blockchain</span>::{
-	<span class="ident">well_known_cache_keys</span>::{<span class="self">self</span>, <span class="ident">Id</span> <span class="kw">as</span> <span class="ident">CacheKeyId</span>},
-	<span class="ident">HeaderBackend</span>,
+<span class="kw">use </span>sc_consensus_slots::{check_equivocation, CheckedHeader, InherentDataProviderExt};
+<span class="kw">use </span>sc_telemetry::{telemetry, TelemetryHandle, CONSENSUS_DEBUG, CONSENSUS_TRACE};
+<span class="kw">use </span>sp_api::{ApiExt, ProvideRuntimeApi};
+<span class="kw">use </span>sp_block_builder::BlockBuilder <span class="kw">as </span>BlockBuilderApi;
+<span class="kw">use </span>sp_blockchain::{
+	well_known_cache_keys::{<span class="self">self</span>, Id <span class="kw">as </span>CacheKeyId},
+	HeaderBackend,
 };
-<span class="kw">use</span> <span class="ident">sp_consensus::Error</span> <span class="kw">as</span> <span class="ident">ConsensusError</span>;
-<span class="kw">use</span> <span class="ident">sp_consensus_aura</span>::{
-	<span class="ident">digests::CompatibleDigestItem</span>, <span class="ident">inherents::AuraInherentData</span>, <span class="ident">AuraApi</span>, <span class="ident">ConsensusLog</span>,
-	<span class="ident">AURA_ENGINE_ID</span>,
+<span class="kw">use </span>sp_consensus::Error <span class="kw">as </span>ConsensusError;
+<span class="kw">use </span>sp_consensus_aura::{
+	digests::CompatibleDigestItem, inherents::AuraInherentData, AuraApi, ConsensusLog,
+	AURA_ENGINE_ID,
 };
-<span class="kw">use</span> <span class="ident">sp_consensus_slots::Slot</span>;
-<span class="kw">use</span> <span class="ident">sp_core</span>::{<span class="ident">crypto::Pair</span>, <span class="ident">ExecutionContext</span>};
-<span class="kw">use</span> <span class="ident">sp_inherents</span>::{<span class="ident">CreateInherentDataProviders</span>, <span class="ident">InherentDataProvider</span> <span class="kw">as</span> <span class="kw">_</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">generic</span>::{<span class="ident">BlockId</span>, <span class="ident">OpaqueDigestItemId</span>},
-	<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">Header</span>},
-	<span class="ident">DigestItem</span>,
+<span class="kw">use </span>sp_consensus_slots::Slot;
+<span class="kw">use </span>sp_core::{crypto::Pair, ExecutionContext};
+<span class="kw">use </span>sp_inherents::{CreateInherentDataProviders, InherentDataProvider <span class="kw">as _</span>};
+<span class="kw">use </span>sp_runtime::{
+	generic::{BlockId, OpaqueDigestItemId},
+	traits::{Block <span class="kw">as </span>BlockT, Header},
+	DigestItem,
 };
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt::Debug</span>, <span class="ident">hash::Hash</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">sync::Arc</span>};
+<span class="kw">use </span>std::{fmt::Debug, hash::Hash, marker::PhantomData, sync::Arc};
 
-<span class="doccomment">/// check a header has been signed by the right key. If the slot is too far in the future, an error</span>
-<span class="doccomment">/// will be returned. If it&#39;s successful, returns the pre-header and the digest item</span>
-<span class="doccomment">/// containing the seal.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This digest item will always return `Some` when used with `as_aura_seal`.</span>
-<span class="kw">fn</span> <span class="ident">check_header</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span>: <span class="ident">BlockT</span>, <span class="ident">P</span>: <span class="ident">Pair</span><span class="op">&gt;</span>(
-	<span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>,
-	<span class="ident">slot_now</span>: <span class="ident">Slot</span>,
-	<span class="kw-2">mut</span> <span class="ident">header</span>: <span class="ident">B::Header</span>,
-	<span class="ident">hash</span>: <span class="ident">B::Hash</span>,
-	<span class="ident">authorities</span>: <span class="kw-2">&amp;</span>[<span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>],
-	<span class="ident">check_for_equivocation</span>: <span class="ident">CheckForEquivocation</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CheckedHeader</span><span class="op">&lt;</span><span class="ident">B::Header</span>, (<span class="ident">Slot</span>, <span class="ident">DigestItem</span>)<span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">P::Signature</span>: <span class="ident">Codec</span>,
-	<span class="ident">C</span>: <span class="ident">sc_client_api::backend::AuxStore</span>,
-	<span class="ident">P::Public</span>: <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Clone</span>,
+<span class="doccomment">/// check a header has been signed by the right key. If the slot is too far in the future, an error
+/// will be returned. If it&#39;s successful, returns the pre-header and the digest item
+/// containing the seal.
+///
+/// This digest item will always return `Some` when used with `as_aura_seal`.
+</span><span class="kw">fn </span>check_header&lt;C, B: BlockT, P: Pair&gt;(
+	client: <span class="kw-2">&amp;</span>C,
+	slot_now: Slot,
+	<span class="kw-2">mut </span>header: B::Header,
+	hash: B::Hash,
+	authorities: <span class="kw-2">&amp;</span>[AuthorityId&lt;P&gt;],
+	check_for_equivocation: CheckForEquivocation,
+) -&gt; <span class="prelude-ty">Result</span>&lt;CheckedHeader&lt;B::Header, (Slot, DigestItem)&gt;, Error&lt;B&gt;&gt;
+<span class="kw">where
+	</span>P::Signature: Codec,
+	C: sc_client_api::backend::AuxStore,
+	P::Public: Encode + Decode + PartialEq + Clone,
 {
-	<span class="kw">let</span> <span class="ident">seal</span> <span class="op">=</span> <span class="ident">header</span>.<span class="ident">digest_mut</span>().<span class="ident">pop</span>().<span class="ident">ok_or</span>(<span class="ident">Error::HeaderUnsealed</span>(<span class="ident">hash</span>))<span class="question-mark">?</span>;
+	<span class="kw">let </span>seal = header.digest_mut().pop().ok_or(Error::HeaderUnsealed(hash))<span class="question-mark">?</span>;
 
-	<span class="kw">let</span> <span class="ident">sig</span> <span class="op">=</span> <span class="ident">seal</span>.<span class="ident">as_aura_seal</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">aura_err</span>(<span class="ident">Error::HeaderBadSeal</span>(<span class="ident">hash</span>)))<span class="question-mark">?</span>;
+	<span class="kw">let </span>sig = seal.as_aura_seal().ok_or_else(|| aura_err(Error::HeaderBadSeal(hash)))<span class="question-mark">?</span>;
 
-	<span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="ident">find_pre_digest</span>::<span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">P::Signature</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>)<span class="question-mark">?</span>;
+	<span class="kw">let </span>slot = find_pre_digest::&lt;B, P::Signature&gt;(<span class="kw-2">&amp;</span>header)<span class="question-mark">?</span>;
 
-	<span class="kw">if</span> <span class="ident">slot</span> <span class="op">&gt;</span> <span class="ident">slot_now</span> {
-		<span class="ident">header</span>.<span class="ident">digest_mut</span>().<span class="ident">push</span>(<span class="ident">seal</span>);
-		<span class="prelude-val">Ok</span>(<span class="ident">CheckedHeader::Deferred</span>(<span class="ident">header</span>, <span class="ident">slot</span>))
-	} <span class="kw">else</span> {
-		<span class="comment">// check the signature is valid under the expected authority and</span>
-		<span class="comment">// chain state.</span>
-		<span class="kw">let</span> <span class="ident">expected_author</span> <span class="op">=</span>
-			<span class="ident">slot_author</span>::<span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>(<span class="ident">slot</span>, <span class="ident">authorities</span>).<span class="ident">ok_or</span>(<span class="ident">Error::SlotAuthorNotFound</span>)<span class="question-mark">?</span>;
+	<span class="kw">if </span>slot &gt; slot_now {
+		header.digest_mut().push(seal);
+		<span class="prelude-val">Ok</span>(CheckedHeader::Deferred(header, slot))
+	} <span class="kw">else </span>{
+		<span class="comment">// check the signature is valid under the expected authority and
+		// chain state.
+		</span><span class="kw">let </span>expected_author =
+			slot_author::&lt;P&gt;(slot, authorities).ok_or(Error::SlotAuthorNotFound)<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="ident">pre_hash</span> <span class="op">=</span> <span class="ident">header</span>.<span class="ident">hash</span>();
+		<span class="kw">let </span>pre_hash = header.hash();
 
-		<span class="kw">if</span> <span class="ident">P::verify</span>(<span class="kw-2">&amp;</span><span class="ident">sig</span>, <span class="ident">pre_hash</span>.<span class="ident">as_ref</span>(), <span class="ident">expected_author</span>) {
-			<span class="kw">if</span> <span class="ident">check_for_equivocation</span>.<span class="ident">check_for_equivocation</span>() {
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">equivocation_proof</span>) <span class="op">=</span>
-					<span class="ident">check_equivocation</span>(<span class="ident">client</span>, <span class="ident">slot_now</span>, <span class="ident">slot</span>, <span class="kw-2">&amp;</span><span class="ident">header</span>, <span class="ident">expected_author</span>)
-						.<span class="ident">map_err</span>(<span class="ident">Error::Client</span>)<span class="question-mark">?</span>
-				{
+		<span class="kw">if </span>P::verify(<span class="kw-2">&amp;</span>sig, pre_hash.as_ref(), expected_author) {
+			<span class="kw">if </span>check_for_equivocation.check_for_equivocation() {
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(equivocation_proof) =
+					check_equivocation(client, slot_now, slot, <span class="kw-2">&amp;</span>header, expected_author)
+						.map_err(Error::Client)<span class="question-mark">?
+				</span>{
 					<span class="macro">info!</span>(
-						<span class="ident">target</span>: <span class="string">&quot;aura&quot;</span>,
+						target: <span class="string">&quot;aura&quot;</span>,
 						<span class="string">&quot;Slot author is equivocating at slot {} with headers {:?} and {:?}&quot;</span>,
-						<span class="ident">slot</span>,
-						<span class="ident">equivocation_proof</span>.<span class="ident">first_header</span>.<span class="ident">hash</span>(),
-						<span class="ident">equivocation_proof</span>.<span class="ident">second_header</span>.<span class="ident">hash</span>(),
+						slot,
+						equivocation_proof.first_header.hash(),
+						equivocation_proof.second_header.hash(),
 					);
 				}
 			}
 
-			<span class="prelude-val">Ok</span>(<span class="ident">CheckedHeader::Checked</span>(<span class="ident">header</span>, (<span class="ident">slot</span>, <span class="ident">seal</span>)))
-		} <span class="kw">else</span> {
-			<span class="prelude-val">Err</span>(<span class="ident">Error::BadSignature</span>(<span class="ident">hash</span>))
+			<span class="prelude-val">Ok</span>(CheckedHeader::Checked(header, (slot, seal)))
+		} <span class="kw">else </span>{
+			<span class="prelude-val">Err</span>(Error::BadSignature(hash))
 		}
 	}
 }
 
-<span class="doccomment">/// A verifier for Aura blocks.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AuraVerifier</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">P</span>, <span class="ident">CIDP</span><span class="op">&gt;</span> {
-	<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-	<span class="ident">phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span>,
-	<span class="ident">create_inherent_data_providers</span>: <span class="ident">CIDP</span>,
-	<span class="ident">check_for_equivocation</span>: <span class="ident">CheckForEquivocation</span>,
-	<span class="ident">telemetry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TelemetryHandle</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A verifier for Aura blocks.
+</span><span class="kw">pub struct </span>AuraVerifier&lt;C, P, CIDP&gt; {
+	client: Arc&lt;C&gt;,
+	phantom: PhantomData&lt;P&gt;,
+	create_inherent_data_providers: CIDP,
+	check_for_equivocation: CheckForEquivocation,
+	telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">P</span>, <span class="ident">CIDP</span><span class="op">&gt;</span> <span class="ident">AuraVerifier</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">P</span>, <span class="ident">CIDP</span><span class="op">&gt;</span> {
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(
-		<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-		<span class="ident">create_inherent_data_providers</span>: <span class="ident">CIDP</span>,
-		<span class="ident">check_for_equivocation</span>: <span class="ident">CheckForEquivocation</span>,
-		<span class="ident">telemetry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TelemetryHandle</span><span class="op">&gt;</span>,
-	) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> {
-			<span class="ident">client</span>,
-			<span class="ident">create_inherent_data_providers</span>,
-			<span class="ident">check_for_equivocation</span>,
-			<span class="ident">telemetry</span>,
-			<span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;C, P, CIDP&gt; AuraVerifier&lt;C, P, CIDP&gt; {
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
+		client: Arc&lt;C&gt;,
+		create_inherent_data_providers: CIDP,
+		check_for_equivocation: CheckForEquivocation,
+		telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+	) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			client,
+			create_inherent_data_providers,
+			check_for_equivocation,
+			telemetry,
+			phantom: PhantomData,
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">P</span>, <span class="ident">CIDP</span><span class="op">&gt;</span> <span class="ident">AuraVerifier</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">P</span>, <span class="ident">CIDP</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">P</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">CIDP</span>: <span class="ident">Send</span>,
+<span class="kw">impl</span>&lt;C, P, CIDP&gt; AuraVerifier&lt;C, P, CIDP&gt;
+<span class="kw">where
+	</span>P: Send + Sync + <span class="lifetime">&#39;static</span>,
+	CIDP: Send,
 {
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">check_inherents</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span>(
+	<span class="kw">async fn </span>check_inherents&lt;B: BlockT&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">block</span>: <span class="ident">B</span>,
-		<span class="ident">block_id</span>: <span class="ident">BlockId</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">inherent_data</span>: <span class="ident">sp_inherents::InherentData</span>,
-		<span class="ident">create_inherent_data_providers</span>: <span class="ident">CIDP::InherentDataProviders</span>,
-		<span class="ident">execution_context</span>: <span class="ident">ExecutionContext</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">C</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">C::Api</span>: <span class="ident">BlockBuilderApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">CIDP</span>: <span class="ident">CreateInherentDataProviders</span><span class="op">&lt;</span><span class="ident">B</span>, ()<span class="op">&gt;</span>,
+		block: B,
+		block_id: BlockId&lt;B&gt;,
+		inherent_data: sp_inherents::InherentData,
+		create_inherent_data_providers: CIDP::InherentDataProviders,
+		execution_context: ExecutionContext,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&lt;B&gt;&gt;
+	<span class="kw">where
+		</span>C: ProvideRuntimeApi&lt;B&gt;,
+		C::Api: BlockBuilderApi&lt;B&gt;,
+		CIDP: CreateInherentDataProviders&lt;B, ()&gt;,
 	{
-		<span class="kw">let</span> <span class="ident">inherent_res</span> <span class="op">=</span> <span class="self">self</span>
-			.<span class="ident">client</span>
-			.<span class="ident">runtime_api</span>()
-			.<span class="ident">check_inherents_with_context</span>(<span class="kw-2">&amp;</span><span class="ident">block_id</span>, <span class="ident">execution_context</span>, <span class="ident">block</span>, <span class="ident">inherent_data</span>)
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error::Client</span>(<span class="ident">e</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+		<span class="kw">let </span>inherent_res = <span class="self">self
+			</span>.client
+			.runtime_api()
+			.check_inherents_with_context(<span class="kw-2">&amp;</span>block_id, execution_context, block, inherent_data)
+			.map_err(|e| Error::Client(e.into()))<span class="question-mark">?</span>;
 
-		<span class="kw">if</span> <span class="op">!</span><span class="ident">inherent_res</span>.<span class="ident">ok</span>() {
-			<span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">e</span>) <span class="kw">in</span> <span class="ident">inherent_res</span>.<span class="ident">into_errors</span>() {
-				<span class="kw">match</span> <span class="ident">create_inherent_data_providers</span>.<span class="ident">try_handle_error</span>(<span class="kw-2">&amp;</span><span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">e</span>).<span class="kw">await</span> {
-					<span class="prelude-val">Some</span>(<span class="ident">res</span>) =&gt; <span class="ident">res</span>.<span class="ident">map_err</span>(<span class="ident">Error::Inherent</span>)<span class="question-mark">?</span>,
-					<span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::UnknownInherentError</span>(<span class="ident">i</span>)),
+		<span class="kw">if </span>!inherent_res.ok() {
+			<span class="kw">for </span>(i, e) <span class="kw">in </span>inherent_res.into_errors() {
+				<span class="kw">match </span>create_inherent_data_providers.try_handle_error(<span class="kw-2">&amp;</span>i, <span class="kw-2">&amp;</span>e).<span class="kw">await </span>{
+					<span class="prelude-val">Some</span>(res) =&gt; res.map_err(Error::Inherent)<span class="question-mark">?</span>,
+					<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::UnknownInherentError(i)),
 				}
 			}
 		}
@@ -594,250 +588,249 @@
 	}
 }
 
-<span class="attribute">#[<span class="ident">async_trait::async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">BlockT</span>, <span class="ident">C</span>, <span class="ident">P</span>, <span class="ident">CIDP</span><span class="op">&gt;</span> <span class="ident">Verifier</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AuraVerifier</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">P</span>, <span class="ident">CIDP</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">C</span>: <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">sc_client_api::backend::AuxStore</span> <span class="op">+</span> <span class="ident">BlockOf</span>,
-	<span class="ident">C::Api</span>: <span class="ident">BlockBuilderApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AuraApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">ApiExt</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="ident">P</span>: <span class="ident">Pair</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">P::Public</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Decode</span> <span class="op">+</span> <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">P::Signature</span>: <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span>,
-	<span class="ident">CIDP</span>: <span class="ident">CreateInherentDataProviders</span><span class="op">&lt;</span><span class="ident">B</span>, ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
-	<span class="ident">CIDP::InherentDataProviders</span>: <span class="ident">InherentDataProviderExt</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+<span class="attribute">#[async_trait::async_trait]
+</span><span class="kw">impl</span>&lt;B: BlockT, C, P, CIDP&gt; Verifier&lt;B&gt; <span class="kw">for </span>AuraVerifier&lt;C, P, CIDP&gt;
+<span class="kw">where
+	</span>C: ProvideRuntimeApi&lt;B&gt; + Send + Sync + sc_client_api::backend::AuxStore + BlockOf,
+	C::Api: BlockBuilderApi&lt;B&gt; + AuraApi&lt;B, AuthorityId&lt;P&gt;&gt; + ApiExt&lt;B&gt;,
+	P: Pair + Send + Sync + <span class="lifetime">&#39;static</span>,
+	P::Public: Send + Sync + Hash + Eq + Clone + Decode + Encode + Debug + <span class="lifetime">&#39;static</span>,
+	P::Signature: Encode + Decode,
+	CIDP: CreateInherentDataProviders&lt;B, ()&gt; + Send + Sync,
+	CIDP::InherentDataProviders: InherentDataProviderExt + Send + Sync,
 {
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">verify</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="kw-2">mut</span> <span class="ident">block</span>: <span class="ident">BlockImportParams</span><span class="op">&lt;</span><span class="ident">B</span>, ()<span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">BlockImportParams</span><span class="op">&lt;</span><span class="ident">B</span>, ()<span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">CacheKeyId</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;</span><span class="op">&gt;</span>), <span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">hash</span> <span class="op">=</span> <span class="ident">block</span>.<span class="ident">header</span>.<span class="ident">hash</span>();
-		<span class="kw">let</span> <span class="ident">parent_hash</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">block</span>.<span class="ident">header</span>.<span class="ident">parent_hash</span>();
-		<span class="kw">let</span> <span class="ident">authorities</span> <span class="op">=</span> <span class="ident">authorities</span>(<span class="self">self</span>.<span class="ident">client</span>.<span class="ident">as_ref</span>(), <span class="kw-2">&amp;</span><span class="ident">BlockId::Hash</span>(<span class="ident">parent_hash</span>))
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Could not fetch authorities at {:?}: {}&quot;</span>, <span class="ident">parent_hash</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
+	<span class="kw">async fn </span>verify(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		<span class="kw-2">mut </span>block: BlockImportParams&lt;B, ()&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(BlockImportParams&lt;B, ()&gt;, <span class="prelude-ty">Option</span>&lt;Vec&lt;(CacheKeyId, Vec&lt;u8&gt;)&gt;&gt;), String&gt; {
+		<span class="kw">let </span>hash = block.header.hash();
+		<span class="kw">let </span>parent_hash = <span class="kw-2">*</span>block.header.parent_hash();
+		<span class="kw">let </span>authorities = authorities(<span class="self">self</span>.client.as_ref(), <span class="kw-2">&amp;</span>BlockId::Hash(parent_hash))
+			.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Could not fetch authorities at {:?}: {}&quot;</span>, parent_hash, e))<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="ident">create_inherent_data_providers</span> <span class="op">=</span> <span class="self">self</span>
-			.<span class="ident">create_inherent_data_providers</span>
-			.<span class="ident">create_inherent_data_providers</span>(<span class="ident">parent_hash</span>, ())
-			.<span class="kw">await</span>
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::Client</span>(<span class="ident">sp_blockchain::Error::Application</span>(<span class="ident">e</span>)))<span class="question-mark">?</span>;
+		<span class="kw">let </span>create_inherent_data_providers = <span class="self">self
+			</span>.create_inherent_data_providers
+			.create_inherent_data_providers(parent_hash, ())
+			.<span class="kw">await
+			</span>.map_err(|e| Error::&lt;B&gt;::Client(sp_blockchain::Error::Application(e)))<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">inherent_data</span> <span class="op">=</span> <span class="ident">create_inherent_data_providers</span>
-			.<span class="ident">create_inherent_data</span>()
-			.<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::Inherent</span>)<span class="question-mark">?</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>inherent_data = create_inherent_data_providers
+			.create_inherent_data()
+			.map_err(Error::&lt;B&gt;::Inherent)<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="ident">slot_now</span> <span class="op">=</span> <span class="ident">create_inherent_data_providers</span>.<span class="ident">slot</span>();
+		<span class="kw">let </span>slot_now = create_inherent_data_providers.slot();
 
-		<span class="comment">// we add one to allow for some small drift.</span>
-		<span class="comment">// FIXME #1019 in the future, alter this queue to allow deferring of</span>
-		<span class="comment">// headers</span>
-		<span class="kw">let</span> <span class="ident">checked_header</span> <span class="op">=</span> <span class="ident">check_header</span>::<span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span>, <span class="ident">P</span><span class="op">&gt;</span>(
-			<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>,
-			<span class="ident">slot_now</span> <span class="op">+</span> <span class="number">1</span>,
-			<span class="ident">block</span>.<span class="ident">header</span>,
-			<span class="ident">hash</span>,
-			<span class="kw-2">&amp;</span><span class="ident">authorities</span>[..],
-			<span class="self">self</span>.<span class="ident">check_for_equivocation</span>,
+		<span class="comment">// we add one to allow for some small drift.
+		// FIXME #1019 in the future, alter this queue to allow deferring of
+		// headers
+		</span><span class="kw">let </span>checked_header = check_header::&lt;C, B, P&gt;(
+			<span class="kw-2">&amp;</span><span class="self">self</span>.client,
+			slot_now + <span class="number">1</span>,
+			block.header,
+			hash,
+			<span class="kw-2">&amp;</span>authorities[..],
+			<span class="self">self</span>.check_for_equivocation,
 		)
-		.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>())<span class="question-mark">?</span>;
-		<span class="kw">match</span> <span class="ident">checked_header</span> {
-			<span class="ident">CheckedHeader::Checked</span>(<span class="ident">pre_header</span>, (<span class="ident">slot</span>, <span class="ident">seal</span>)) =&gt; {
-				<span class="comment">// if the body is passed through, we need to use the runtime</span>
-				<span class="comment">// to check that the internally-set timestamp in the inherents</span>
-				<span class="comment">// actually matches the slot set in the seal.</span>
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">inner_body</span>) <span class="op">=</span> <span class="ident">block</span>.<span class="ident">body</span>.<span class="ident">take</span>() {
-					<span class="kw">let</span> <span class="ident">new_block</span> <span class="op">=</span> <span class="ident">B::new</span>(<span class="ident">pre_header</span>.<span class="ident">clone</span>(), <span class="ident">inner_body</span>);
+		.map_err(|e| e.to_string())<span class="question-mark">?</span>;
+		<span class="kw">match </span>checked_header {
+			CheckedHeader::Checked(pre_header, (slot, seal)) =&gt; {
+				<span class="comment">// if the body is passed through, we need to use the runtime
+				// to check that the internally-set timestamp in the inherents
+				// actually matches the slot set in the seal.
+				</span><span class="kw">if let </span><span class="prelude-val">Some</span>(inner_body) = block.body.take() {
+					<span class="kw">let </span>new_block = B::new(pre_header.clone(), inner_body);
 
-					<span class="ident">inherent_data</span>.<span class="ident">aura_replace_inherent_data</span>(<span class="ident">slot</span>);
+					inherent_data.aura_replace_inherent_data(slot);
 
-					<span class="comment">// skip the inherents verification if the runtime API is old or not expected to</span>
-					<span class="comment">// exist.</span>
-					<span class="kw">if</span> <span class="op">!</span><span class="ident">block</span>.<span class="ident">state_action</span>.<span class="ident">skip_execution_checks</span>() <span class="op">&amp;&amp;</span>
-						<span class="self">self</span>.<span class="ident">client</span>
-							.<span class="ident">runtime_api</span>()
-							.<span class="ident">has_api_with</span>::<span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">BlockBuilderApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-								<span class="kw-2">&amp;</span><span class="ident">BlockId::Hash</span>(<span class="ident">parent_hash</span>),
-								<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">2</span>,
+					<span class="comment">// skip the inherents verification if the runtime API is old or not expected to
+					// exist.
+					</span><span class="kw">if </span>!block.state_action.skip_execution_checks() &amp;&amp;
+						<span class="self">self</span>.client
+							.runtime_api()
+							.has_api_with::&lt;<span class="kw">dyn </span>BlockBuilderApi&lt;B&gt;, <span class="kw">_</span>&gt;(
+								<span class="kw-2">&amp;</span>BlockId::Hash(parent_hash),
+								|v| v &gt;= <span class="number">2</span>,
 							)
-							.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>())<span class="question-mark">?</span>
-					{
-						<span class="self">self</span>.<span class="ident">check_inherents</span>(
-							<span class="ident">new_block</span>.<span class="ident">clone</span>(),
-							<span class="ident">BlockId::Hash</span>(<span class="ident">parent_hash</span>),
-							<span class="ident">inherent_data</span>,
-							<span class="ident">create_inherent_data_providers</span>,
-							<span class="ident">block</span>.<span class="ident">origin</span>.<span class="ident">into</span>(),
+							.map_err(|e| e.to_string())<span class="question-mark">?
+					</span>{
+						<span class="self">self</span>.check_inherents(
+							new_block.clone(),
+							BlockId::Hash(parent_hash),
+							inherent_data,
+							create_inherent_data_providers,
+							block.origin.into(),
 						)
-						.<span class="kw">await</span>
-						.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>())<span class="question-mark">?</span>;
+						.<span class="kw">await
+						</span>.map_err(|e| e.to_string())<span class="question-mark">?</span>;
 					}
 
-					<span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">inner_body</span>) <span class="op">=</span> <span class="ident">new_block</span>.<span class="ident">deconstruct</span>();
-					<span class="ident">block</span>.<span class="ident">body</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">inner_body</span>);
+					<span class="kw">let </span>(<span class="kw">_</span>, inner_body) = new_block.deconstruct();
+					block.body = <span class="prelude-val">Some</span>(inner_body);
 				}
 
-				<span class="macro">trace!</span>(<span class="ident">target</span>: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;Checked {:?}; importing.&quot;</span>, <span class="ident">pre_header</span>);
+				<span class="macro">trace!</span>(target: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;Checked {:?}; importing.&quot;</span>, pre_header);
 				<span class="macro">telemetry!</span>(
-					<span class="self">self</span>.<span class="ident">telemetry</span>;
-					<span class="ident">CONSENSUS_TRACE</span>;
+					<span class="self">self</span>.telemetry;
+					CONSENSUS_TRACE;
 					<span class="string">&quot;aura.checked_and_importing&quot;</span>;
-					<span class="string">&quot;pre_header&quot;</span> =&gt; <span class="question-mark">?</span><span class="ident">pre_header</span>,
+					<span class="string">&quot;pre_header&quot; </span>=&gt; <span class="question-mark">?</span>pre_header,
 				);
 
-				<span class="comment">// Look for an authorities-change log.</span>
-				<span class="kw">let</span> <span class="ident">maybe_keys</span> <span class="op">=</span> <span class="ident">pre_header</span>
-					.<span class="ident">digest</span>()
-					.<span class="ident">logs</span>()
-					.<span class="ident">iter</span>()
-					.<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> {
-						<span class="ident">l</span>.<span class="ident">try_to</span>::<span class="op">&lt;</span><span class="ident">ConsensusLog</span><span class="op">&lt;</span><span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">OpaqueDigestItemId::Consensus</span>(
-							<span class="kw-2">&amp;</span><span class="ident">AURA_ENGINE_ID</span>,
+				<span class="comment">// Look for an authorities-change log.
+				</span><span class="kw">let </span>maybe_keys = pre_header
+					.digest()
+					.logs()
+					.iter()
+					.filter_map(|l| {
+						l.try_to::&lt;ConsensusLog&lt;AuthorityId&lt;P&gt;&gt;&gt;(OpaqueDigestItemId::Consensus(
+							<span class="kw-2">&amp;</span>AURA_ENGINE_ID,
 						))
 					})
-					.<span class="ident">find_map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">l</span> {
-						<span class="ident">ConsensusLog::AuthoritiesChange</span>(<span class="ident">a</span>) =&gt;
-							<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[(<span class="ident">well_known_cache_keys::AUTHORITIES</span>, <span class="ident">a</span>.<span class="ident">encode</span>())]),
-						<span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
+					.find_map(|l| <span class="kw">match </span>l {
+						ConsensusLog::AuthoritiesChange(a) =&gt;
+							<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[(well_known_cache_keys::AUTHORITIES, a.encode())]),
+						<span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
 					});
 
-				<span class="ident">block</span>.<span class="ident">header</span> <span class="op">=</span> <span class="ident">pre_header</span>;
-				<span class="ident">block</span>.<span class="ident">post_digests</span>.<span class="ident">push</span>(<span class="ident">seal</span>);
-				<span class="ident">block</span>.<span class="ident">fork_choice</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ForkChoiceStrategy::LongestChain</span>);
-				<span class="ident">block</span>.<span class="ident">post_hash</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">hash</span>);
+				block.header = pre_header;
+				block.post_digests.push(seal);
+				block.fork_choice = <span class="prelude-val">Some</span>(ForkChoiceStrategy::LongestChain);
+				block.post_hash = <span class="prelude-val">Some</span>(hash);
 
-				<span class="prelude-val">Ok</span>((<span class="ident">block</span>, <span class="ident">maybe_keys</span>))
+				<span class="prelude-val">Ok</span>((block, maybe_keys))
 			},
-			<span class="ident">CheckedHeader::Deferred</span>(<span class="ident">a</span>, <span class="ident">b</span>) =&gt; {
-				<span class="macro">debug!</span>(<span class="ident">target</span>: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;Checking {:?} failed; {:?}, {:?}.&quot;</span>, <span class="ident">hash</span>, <span class="ident">a</span>, <span class="ident">b</span>);
+			CheckedHeader::Deferred(a, b) =&gt; {
+				<span class="macro">debug!</span>(target: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;Checking {:?} failed; {:?}, {:?}.&quot;</span>, hash, a, b);
 				<span class="macro">telemetry!</span>(
-					<span class="self">self</span>.<span class="ident">telemetry</span>;
-					<span class="ident">CONSENSUS_DEBUG</span>;
+					<span class="self">self</span>.telemetry;
+					CONSENSUS_DEBUG;
 					<span class="string">&quot;aura.header_too_far_in_future&quot;</span>;
-					<span class="string">&quot;hash&quot;</span> =&gt; <span class="question-mark">?</span><span class="ident">hash</span>,
-					<span class="string">&quot;a&quot;</span> =&gt; <span class="question-mark">?</span><span class="ident">a</span>,
-					<span class="string">&quot;b&quot;</span> =&gt; <span class="question-mark">?</span><span class="ident">b</span>,
+					<span class="string">&quot;hash&quot; </span>=&gt; <span class="question-mark">?</span>hash,
+					<span class="string">&quot;a&quot; </span>=&gt; <span class="question-mark">?</span>a,
+					<span class="string">&quot;b&quot; </span>=&gt; <span class="question-mark">?</span>b,
 				);
-				<span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">&quot;Header {:?} rejected: too far in the future&quot;</span>, <span class="ident">hash</span>))
+				<span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">&quot;Header {:?} rejected: too far in the future&quot;</span>, hash))
 			},
 		}
 	}
 }
 
-<span class="doccomment">/// Should we check for equivocation of a block author?</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CheckForEquivocation</span> {
-	<span class="doccomment">/// Yes, check for equivocation.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This is the default setting for this.</span>
-	<span class="ident">Yes</span>,
-	<span class="doccomment">/// No, don&#39;t check for equivocation.</span>
-	<span class="ident">No</span>,
+<span class="doccomment">/// Should we check for equivocation of a block author?
+</span><span class="attribute">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">pub enum </span>CheckForEquivocation {
+	<span class="doccomment">/// Yes, check for equivocation.
+	///
+	/// This is the default setting for this.
+	</span>Yes,
+	<span class="doccomment">/// No, don&#39;t check for equivocation.
+	</span>No,
 }
 
-<span class="kw">impl</span> <span class="ident">CheckForEquivocation</span> {
-	<span class="doccomment">/// Should we check for equivocation?</span>
-	<span class="kw">fn</span> <span class="ident">check_for_equivocation</span>(<span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-		<span class="macro">matches!</span>(<span class="self">self</span>, <span class="ident"><span class="self">Self</span>::Yes</span>)
+<span class="kw">impl </span>CheckForEquivocation {
+	<span class="doccomment">/// Should we check for equivocation?
+	</span><span class="kw">fn </span>check_for_equivocation(<span class="self">self</span>) -&gt; bool {
+		<span class="macro">matches!</span>(<span class="self">self</span>, <span class="self">Self</span>::Yes)
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">CheckForEquivocation</span> {
-	<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-		<span class="ident"><span class="self">Self</span>::Yes</span>
+<span class="kw">impl </span>Default <span class="kw">for </span>CheckForEquivocation {
+	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>::Yes
 	}
 }
 
-<span class="doccomment">/// Parameters of [`import_queue`].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ImportQueueParams</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Block</span>, <span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">S</span>, <span class="ident">CIDP</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The block import to use.</span>
-	<span class="kw">pub</span> <span class="ident">block_import</span>: <span class="ident">I</span>,
-	<span class="doccomment">/// The justification import.</span>
-	<span class="kw">pub</span> <span class="ident">justification_import</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BoxJustificationImport</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// The client to interact with the chain.</span>
-	<span class="kw">pub</span> <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Something that can create the inherent data providers.</span>
-	<span class="kw">pub</span> <span class="ident">create_inherent_data_providers</span>: <span class="ident">CIDP</span>,
-	<span class="doccomment">/// The spawner to spawn background tasks.</span>
-	<span class="kw">pub</span> <span class="ident">spawner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">S</span>,
-	<span class="doccomment">/// The prometheus registry.</span>
-	<span class="kw">pub</span> <span class="ident">registry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Registry</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Should we check for equivocation?</span>
-	<span class="kw">pub</span> <span class="ident">check_for_equivocation</span>: <span class="ident">CheckForEquivocation</span>,
-	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.</span>
-	<span class="kw">pub</span> <span class="ident">telemetry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TelemetryHandle</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Parameters of [`import_queue`].
+</span><span class="kw">pub struct </span>ImportQueueParams&lt;<span class="lifetime">&#39;a</span>, Block, I, C, S, CIDP&gt; {
+	<span class="doccomment">/// The block import to use.
+	</span><span class="kw">pub </span>block_import: I,
+	<span class="doccomment">/// The justification import.
+	</span><span class="kw">pub </span>justification_import: <span class="prelude-ty">Option</span>&lt;BoxJustificationImport&lt;Block&gt;&gt;,
+	<span class="doccomment">/// The client to interact with the chain.
+	</span><span class="kw">pub </span>client: Arc&lt;C&gt;,
+	<span class="doccomment">/// Something that can create the inherent data providers.
+	</span><span class="kw">pub </span>create_inherent_data_providers: CIDP,
+	<span class="doccomment">/// The spawner to spawn background tasks.
+	</span><span class="kw">pub </span>spawner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>S,
+	<span class="doccomment">/// The prometheus registry.
+	</span><span class="kw">pub </span>registry: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Registry&gt;,
+	<span class="doccomment">/// Should we check for equivocation?
+	</span><span class="kw">pub </span>check_for_equivocation: CheckForEquivocation,
+	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.
+	</span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
 }
 
-<span class="doccomment">/// Start an import queue for the Aura consensus algorithm.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">import_queue</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">Block</span>, <span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">S</span>, <span class="ident">CIDP</span><span class="op">&gt;</span>(
-	<span class="ident">ImportQueueParams</span> {
-		<span class="ident">block_import</span>,
-		<span class="ident">justification_import</span>,
-		<span class="ident">client</span>,
-		<span class="ident">create_inherent_data_providers</span>,
-		<span class="ident">spawner</span>,
-		<span class="ident">registry</span>,
-		<span class="ident">check_for_equivocation</span>,
-		<span class="ident">telemetry</span>,
-	}: <span class="ident">ImportQueueParams</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">I</span>, <span class="ident">C</span>, <span class="ident">S</span>, <span class="ident">CIDP</span><span class="op">&gt;</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DefaultImportQueue</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">C</span><span class="op">&gt;</span>, <span class="ident">sp_consensus::Error</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Block</span>: <span class="ident">BlockT</span>,
-	<span class="ident">C::Api</span>: <span class="ident">BlockBuilderApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AuraApi</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">AuthorityId</span><span class="op">&lt;</span><span class="ident">P</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">ApiExt</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">C</span>: <span class="lifetime">&#39;static</span>
-		<span class="op">+</span> <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">BlockOf</span>
-		<span class="op">+</span> <span class="ident">Send</span>
-		<span class="op">+</span> <span class="ident">Sync</span>
-		<span class="op">+</span> <span class="ident">AuxStore</span>
-		<span class="op">+</span> <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">I</span>: <span class="ident">BlockImport</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ConsensusError</span>, <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>
-		<span class="op">+</span> <span class="ident">Send</span>
-		<span class="op">+</span> <span class="ident">Sync</span>
-		<span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">P</span>: <span class="ident">Pair</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">P::Public</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span>,
-	<span class="ident">P::Signature</span>: <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Decode</span>,
-	<span class="ident">S</span>: <span class="ident">sp_core::traits::SpawnEssentialNamed</span>,
-	<span class="ident">CIDP</span>: <span class="ident">CreateInherentDataProviders</span><span class="op">&lt;</span><span class="ident">Block</span>, ()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-	<span class="ident">CIDP::InherentDataProviders</span>: <span class="ident">InherentDataProviderExt</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+<span class="doccomment">/// Start an import queue for the Aura consensus algorithm.
+</span><span class="kw">pub fn </span>import_queue&lt;P, Block, I, C, S, CIDP&gt;(
+	ImportQueueParams {
+		block_import,
+		justification_import,
+		client,
+		create_inherent_data_providers,
+		spawner,
+		registry,
+		check_for_equivocation,
+		telemetry,
+	}: ImportQueueParams&lt;Block, I, C, S, CIDP&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;DefaultImportQueue&lt;Block, C&gt;, sp_consensus::Error&gt;
+<span class="kw">where
+	</span>Block: BlockT,
+	C::Api: BlockBuilderApi&lt;Block&gt; + AuraApi&lt;Block, AuthorityId&lt;P&gt;&gt; + ApiExt&lt;Block&gt;,
+	C: <span class="lifetime">&#39;static
+		</span>+ ProvideRuntimeApi&lt;Block&gt;
+		+ BlockOf
+		+ Send
+		+ Sync
+		+ AuxStore
+		+ UsageProvider&lt;Block&gt;
+		+ HeaderBackend&lt;Block&gt;,
+	I: BlockImport&lt;Block, Error = ConsensusError, Transaction = sp_api::TransactionFor&lt;C, Block&gt;&gt;
+		+ Send
+		+ Sync
+		+ <span class="lifetime">&#39;static</span>,
+	P: Pair + Send + Sync + <span class="lifetime">&#39;static</span>,
+	P::Public: Clone + Eq + Send + Sync + Hash + Debug + Encode + Decode,
+	P::Signature: Encode + Decode,
+	S: sp_core::traits::SpawnEssentialNamed,
+	CIDP: CreateInherentDataProviders&lt;Block, ()&gt; + Sync + Send + <span class="lifetime">&#39;static</span>,
+	CIDP::InherentDataProviders: InherentDataProviderExt + Send + Sync,
 {
-	<span class="kw">let</span> <span class="ident">verifier</span> <span class="op">=</span> <span class="ident">build_verifier</span>::<span class="op">&lt;</span><span class="ident">P</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">BuildVerifierParams</span> {
-		<span class="ident">client</span>,
-		<span class="ident">create_inherent_data_providers</span>,
-		<span class="ident">check_for_equivocation</span>,
-		<span class="ident">telemetry</span>,
+	<span class="kw">let </span>verifier = build_verifier::&lt;P, <span class="kw">_</span>, <span class="kw">_</span>&gt;(BuildVerifierParams {
+		client,
+		create_inherent_data_providers,
+		check_for_equivocation,
+		telemetry,
 	});
 
-	<span class="prelude-val">Ok</span>(<span class="ident">BasicQueue::new</span>(<span class="ident">verifier</span>, <span class="ident">Box::new</span>(<span class="ident">block_import</span>), <span class="ident">justification_import</span>, <span class="ident">spawner</span>, <span class="ident">registry</span>))
+	<span class="prelude-val">Ok</span>(BasicQueue::new(verifier, Box::new(block_import), justification_import, spawner, registry))
 }
 
-<span class="doccomment">/// Parameters of [`build_verifier`].</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BuildVerifierParams</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">CIDP</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The client to interact with the chain.</span>
-	<span class="kw">pub</span> <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Something that can create the inherent data providers.</span>
-	<span class="kw">pub</span> <span class="ident">create_inherent_data_providers</span>: <span class="ident">CIDP</span>,
-	<span class="doccomment">/// Should we check for equivocation?</span>
-	<span class="kw">pub</span> <span class="ident">check_for_equivocation</span>: <span class="ident">CheckForEquivocation</span>,
-	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.</span>
-	<span class="kw">pub</span> <span class="ident">telemetry</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TelemetryHandle</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Parameters of [`build_verifier`].
+</span><span class="kw">pub struct </span>BuildVerifierParams&lt;C, CIDP&gt; {
+	<span class="doccomment">/// The client to interact with the chain.
+	</span><span class="kw">pub </span>client: Arc&lt;C&gt;,
+	<span class="doccomment">/// Something that can create the inherent data providers.
+	</span><span class="kw">pub </span>create_inherent_data_providers: CIDP,
+	<span class="doccomment">/// Should we check for equivocation?
+	</span><span class="kw">pub </span>check_for_equivocation: CheckForEquivocation,
+	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.
+	</span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
 }
 
-<span class="doccomment">/// Build the [`AuraVerifier`]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build_verifier</span><span class="op">&lt;</span><span class="ident">P</span>, <span class="ident">C</span>, <span class="ident">CIDP</span><span class="op">&gt;</span>(
-	<span class="ident">BuildVerifierParams</span> {
-		<span class="ident">client</span>,
-		<span class="ident">create_inherent_data_providers</span>,
-		<span class="ident">check_for_equivocation</span>,
-		<span class="ident">telemetry</span>,
-	}: <span class="ident">BuildVerifierParams</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">CIDP</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">AuraVerifier</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">P</span>, <span class="ident">CIDP</span><span class="op">&gt;</span> {
-	<span class="ident">AuraVerifier</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">P</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="ident">::new</span>(
-		<span class="ident">client</span>,
-		<span class="ident">create_inherent_data_providers</span>,
-		<span class="ident">check_for_equivocation</span>,
-		<span class="ident">telemetry</span>,
+<span class="doccomment">/// Build the [`AuraVerifier`]
+</span><span class="kw">pub fn </span>build_verifier&lt;P, C, CIDP&gt;(
+	BuildVerifierParams {
+		client,
+		create_inherent_data_providers,
+		check_for_equivocation,
+		telemetry,
+	}: BuildVerifierParams&lt;C, CIDP&gt;,
+) -&gt; AuraVerifier&lt;C, P, CIDP&gt; {
+	AuraVerifier::&lt;<span class="kw">_</span>, P, <span class="kw">_</span>&gt;::new(
+		client,
+		create_inherent_data_providers,
+		check_for_equivocation,
+		telemetry,
 	)
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_consensus_aura" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_consensus_aura" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

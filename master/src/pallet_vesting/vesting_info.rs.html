@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/vesting/src/vesting_info.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>vesting_info.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_vesting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_vesting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_vesting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/vesting/src/vesting_info.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>vesting_info.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_vesting/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_vesting/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -118,120 +112,119 @@
 <span id="112">112</span>
 <span id="113">113</span>
 <span id="114">114</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Module to enforce private fields on `VestingInfo`.</span>
+</span><span class="doccomment">//! Module to enforce private fields on `VestingInfo`.
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// Struct to encode the vesting schedule of an individual account.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">MaxEncodedLen</span>, <span class="ident">TypeInfo</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">VestingInfo</span><span class="op">&lt;</span><span class="ident">Balance</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Locked amount at genesis.</span>
-	<span class="ident">locked</span>: <span class="ident">Balance</span>,
-	<span class="doccomment">/// Amount that gets unlocked every block after `starting_block`.</span>
-	<span class="ident">per_block</span>: <span class="ident">Balance</span>,
-	<span class="doccomment">/// Starting block for unlocking(vesting).</span>
-	<span class="ident">starting_block</span>: <span class="ident">BlockNumber</span>,
+<span class="doccomment">/// Struct to encode the vesting schedule of an individual account.
+</span><span class="attribute">#[derive(Encode, Decode, Copy, Clone, PartialEq, Eq, RuntimeDebug, MaxEncodedLen, TypeInfo)]
+</span><span class="kw">pub struct </span>VestingInfo&lt;Balance, BlockNumber&gt; {
+	<span class="doccomment">/// Locked amount at genesis.
+	</span>locked: Balance,
+	<span class="doccomment">/// Amount that gets unlocked every block after `starting_block`.
+	</span>per_block: Balance,
+	<span class="doccomment">/// Starting block for unlocking(vesting).
+	</span>starting_block: BlockNumber,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Balance</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> <span class="ident">VestingInfo</span><span class="op">&lt;</span><span class="ident">Balance</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Balance</span>: <span class="ident">AtLeast32BitUnsigned</span> <span class="op">+</span> <span class="ident">Copy</span>,
-	<span class="ident">BlockNumber</span>: <span class="ident">AtLeast32BitUnsigned</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Bounded</span>,
+<span class="kw">impl</span>&lt;Balance, BlockNumber&gt; VestingInfo&lt;Balance, BlockNumber&gt;
+<span class="kw">where
+	</span>Balance: AtLeast32BitUnsigned + Copy,
+	BlockNumber: AtLeast32BitUnsigned + Copy + Bounded,
 {
-	<span class="doccomment">/// Instantiate a new `VestingInfo`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-		<span class="ident">locked</span>: <span class="ident">Balance</span>,
-		<span class="ident">per_block</span>: <span class="ident">Balance</span>,
-		<span class="ident">starting_block</span>: <span class="ident">BlockNumber</span>,
-	) -&gt; <span class="ident">VestingInfo</span><span class="op">&lt;</span><span class="ident">Balance</span>, <span class="ident">BlockNumber</span><span class="op">&gt;</span> {
-		<span class="ident">VestingInfo</span> { <span class="ident">locked</span>, <span class="ident">per_block</span>, <span class="ident">starting_block</span> }
+	<span class="doccomment">/// Instantiate a new `VestingInfo`.
+	</span><span class="kw">pub fn </span>new(
+		locked: Balance,
+		per_block: Balance,
+		starting_block: BlockNumber,
+	) -&gt; VestingInfo&lt;Balance, BlockNumber&gt; {
+		VestingInfo { locked, per_block, starting_block }
 	}
 
-	<span class="doccomment">/// Validate parameters for `VestingInfo`. Note that this does not check</span>
-	<span class="doccomment">/// against `MinVestedTransfer`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_valid</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
-		<span class="op">!</span><span class="self">self</span>.<span class="ident">locked</span>.<span class="ident">is_zero</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">raw_per_block</span>().<span class="ident">is_zero</span>()
+	<span class="doccomment">/// Validate parameters for `VestingInfo`. Note that this does not check
+	/// against `MinVestedTransfer`.
+	</span><span class="kw">pub fn </span>is_valid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+		!<span class="self">self</span>.locked.is_zero() &amp;&amp; !<span class="self">self</span>.raw_per_block().is_zero()
 	}
 
-	<span class="doccomment">/// Locked amount at schedule creation.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">locked</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Balance</span> {
-		<span class="self">self</span>.<span class="ident">locked</span>
+	<span class="doccomment">/// Locked amount at schedule creation.
+	</span><span class="kw">pub fn </span>locked(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Balance {
+		<span class="self">self</span>.locked
 	}
 
-	<span class="doccomment">/// Amount that gets unlocked every block after `starting_block`. Corrects for `per_block` of 0.</span>
-	<span class="doccomment">/// We don&#39;t let `per_block` be less than 1, or else the vesting will never end.</span>
-	<span class="doccomment">/// This should be used whenever accessing `per_block` unless explicitly checking for 0 values.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">per_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Balance</span> {
-		<span class="self">self</span>.<span class="ident">per_block</span>.<span class="ident">max</span>(<span class="ident">One::one</span>())
+	<span class="doccomment">/// Amount that gets unlocked every block after `starting_block`. Corrects for `per_block` of 0.
+	/// We don&#39;t let `per_block` be less than 1, or else the vesting will never end.
+	/// This should be used whenever accessing `per_block` unless explicitly checking for 0 values.
+	</span><span class="kw">pub fn </span>per_block(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Balance {
+		<span class="self">self</span>.per_block.max(One::one())
 	}
 
-	<span class="doccomment">/// Get the unmodified `per_block`. Generally should not be used, but is useful for</span>
-	<span class="doccomment">/// validating `per_block`.</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">raw_per_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Balance</span> {
-		<span class="self">self</span>.<span class="ident">per_block</span>
+	<span class="doccomment">/// Get the unmodified `per_block`. Generally should not be used, but is useful for
+	/// validating `per_block`.
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>raw_per_block(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Balance {
+		<span class="self">self</span>.per_block
 	}
 
-	<span class="doccomment">/// Starting block for unlocking(vesting).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">starting_block</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">BlockNumber</span> {
-		<span class="self">self</span>.<span class="ident">starting_block</span>
+	<span class="doccomment">/// Starting block for unlocking(vesting).
+	</span><span class="kw">pub fn </span>starting_block(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BlockNumber {
+		<span class="self">self</span>.starting_block
 	}
 
-	<span class="doccomment">/// Amount locked at block `n`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">locked_at</span><span class="op">&lt;</span><span class="ident">BlockNumberToBalance</span>: <span class="ident">Convert</span><span class="op">&lt;</span><span class="ident">BlockNumber</span>, <span class="ident">Balance</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+	<span class="doccomment">/// Amount locked at block `n`.
+	</span><span class="kw">pub fn </span>locked_at&lt;BlockNumberToBalance: Convert&lt;BlockNumber, Balance&gt;&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">n</span>: <span class="ident">BlockNumber</span>,
-	) -&gt; <span class="ident">Balance</span> {
-		<span class="comment">// Number of blocks that count toward vesting;</span>
-		<span class="comment">// saturating to 0 when n &lt; starting_block.</span>
-		<span class="kw">let</span> <span class="ident">vested_block_count</span> <span class="op">=</span> <span class="ident">n</span>.<span class="ident">saturating_sub</span>(<span class="self">self</span>.<span class="ident">starting_block</span>);
-		<span class="kw">let</span> <span class="ident">vested_block_count</span> <span class="op">=</span> <span class="ident">BlockNumberToBalance::convert</span>(<span class="ident">vested_block_count</span>);
-		<span class="comment">// Return amount that is still locked in vesting.</span>
-		<span class="ident">vested_block_count</span>
-			.<span class="ident">checked_mul</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">per_block</span>()) <span class="comment">// `per_block` accessor guarantees at least 1.</span>
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">to_unlock</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">locked</span>.<span class="ident">saturating_sub</span>(<span class="ident">to_unlock</span>))
-			.<span class="ident">unwrap_or</span>(<span class="ident">Zero::zero</span>())
+		n: BlockNumber,
+	) -&gt; Balance {
+		<span class="comment">// Number of blocks that count toward vesting;
+		// saturating to 0 when n &lt; starting_block.
+		</span><span class="kw">let </span>vested_block_count = n.saturating_sub(<span class="self">self</span>.starting_block);
+		<span class="kw">let </span>vested_block_count = BlockNumberToBalance::convert(vested_block_count);
+		<span class="comment">// Return amount that is still locked in vesting.
+		</span>vested_block_count
+			.checked_mul(<span class="kw-2">&amp;</span><span class="self">self</span>.per_block()) <span class="comment">// `per_block` accessor guarantees at least 1.
+			</span>.map(|to_unlock| <span class="self">self</span>.locked.saturating_sub(to_unlock))
+			.unwrap_or(Zero::zero())
 	}
 
-	<span class="doccomment">/// Block number at which the schedule ends (as type `Balance`).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ending_block_as_balance</span><span class="op">&lt;</span><span class="ident">BlockNumberToBalance</span>: <span class="ident">Convert</span><span class="op">&lt;</span><span class="ident">BlockNumber</span>, <span class="ident">Balance</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+	<span class="doccomment">/// Block number at which the schedule ends (as type `Balance`).
+	</span><span class="kw">pub fn </span>ending_block_as_balance&lt;BlockNumberToBalance: Convert&lt;BlockNumber, Balance&gt;&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-	) -&gt; <span class="ident">Balance</span> {
-		<span class="kw">let</span> <span class="ident">starting_block</span> <span class="op">=</span> <span class="ident">BlockNumberToBalance::convert</span>(<span class="self">self</span>.<span class="ident">starting_block</span>);
-		<span class="kw">let</span> <span class="ident">duration</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">per_block</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">locked</span> {
-			<span class="comment">// If `per_block` is bigger than `locked`, the schedule will end</span>
-			<span class="comment">// the block after starting.</span>
-			<span class="ident">One::one</span>()
-		} <span class="kw">else</span> {
-			<span class="self">self</span>.<span class="ident">locked</span> <span class="op">/</span> <span class="self">self</span>.<span class="ident">per_block</span>() <span class="op">+</span>
-				<span class="kw">if</span> (<span class="self">self</span>.<span class="ident">locked</span> <span class="op">%</span> <span class="self">self</span>.<span class="ident">per_block</span>()).<span class="ident">is_zero</span>() {
-					<span class="ident">Zero::zero</span>()
-				} <span class="kw">else</span> {
-					<span class="comment">// `per_block` does not perfectly divide `locked`, so we need an extra block to</span>
-					<span class="comment">// unlock some amount less than `per_block`.</span>
-					<span class="ident">One::one</span>()
+	) -&gt; Balance {
+		<span class="kw">let </span>starting_block = BlockNumberToBalance::convert(<span class="self">self</span>.starting_block);
+		<span class="kw">let </span>duration = <span class="kw">if </span><span class="self">self</span>.per_block() &gt;= <span class="self">self</span>.locked {
+			<span class="comment">// If `per_block` is bigger than `locked`, the schedule will end
+			// the block after starting.
+			</span>One::one()
+		} <span class="kw">else </span>{
+			<span class="self">self</span>.locked / <span class="self">self</span>.per_block() +
+				<span class="kw">if </span>(<span class="self">self</span>.locked % <span class="self">self</span>.per_block()).is_zero() {
+					Zero::zero()
+				} <span class="kw">else </span>{
+					<span class="comment">// `per_block` does not perfectly divide `locked`, so we need an extra block to
+					// unlock some amount less than `per_block`.
+					</span>One::one()
 				}
 		};
 
-		<span class="ident">starting_block</span>.<span class="ident">saturating_add</span>(<span class="ident">duration</span>)
+		starting_block.saturating_add(duration)
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_vesting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_vesting" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

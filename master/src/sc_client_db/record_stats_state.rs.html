@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/db/src/record_stats_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>record_stats_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sc_client_db/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sc_client_db/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_client_db/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/db/src/record_stats_state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>record_stats_state.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sc_client_db/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_client_db/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -234,236 +228,235 @@
 <span id="228">228</span>
 <span id="229">229</span>
 <span id="230">230</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Provides [`RecordStatsState`] for recording stats about state access.</span>
+</span><span class="doccomment">//! Provides [`RecordStatsState`] for recording stats about state access.
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::stats::StateUsageStats</span>;
-<span class="kw">use</span> <span class="ident">sp_core::storage::ChildInfo</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">HashFor</span>},
-	<span class="ident">StateVersion</span>,
+</span><span class="kw">use </span><span class="kw">crate</span>::stats::StateUsageStats;
+<span class="kw">use </span>sp_core::storage::ChildInfo;
+<span class="kw">use </span>sp_runtime::{
+	traits::{Block <span class="kw">as </span>BlockT, HashFor},
+	StateVersion,
 };
-<span class="kw">use</span> <span class="ident">sp_state_machine</span>::{
-	<span class="ident">backend</span>::{<span class="ident">AsTrieBackend</span>, <span class="ident">Backend</span> <span class="kw">as</span> <span class="ident">StateBackend</span>},
-	<span class="ident">TrieBackend</span>,
+<span class="kw">use </span>sp_state_machine::{
+	backend::{AsTrieBackend, Backend <span class="kw">as </span>StateBackend},
+	TrieBackend,
 };
-<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
+<span class="kw">use </span>std::sync::Arc;
 
-<span class="doccomment">/// State abstraction for recording stats about state access.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RecordStatsState</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Usage statistics</span>
-	<span class="ident">usage</span>: <span class="ident">StateUsageStats</span>,
-	<span class="doccomment">/// State machine registered stats</span>
-	<span class="ident">overlay_stats</span>: <span class="ident">sp_state_machine::StateMachineStats</span>,
-	<span class="doccomment">/// Backing state.</span>
-	<span class="ident">state</span>: <span class="ident">S</span>,
-	<span class="doccomment">/// The hash of the block is state belongs to.</span>
-	<span class="ident">block_hash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B::Hash</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// The usage statistics of the backend. These will be updated on drop.</span>
-	<span class="ident">state_usage</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">StateUsageStats</span><span class="op">&gt;</span>,
+<span class="doccomment">/// State abstraction for recording stats about state access.
+</span><span class="kw">pub struct </span>RecordStatsState&lt;S, B: BlockT&gt; {
+	<span class="doccomment">/// Usage statistics
+	</span>usage: StateUsageStats,
+	<span class="doccomment">/// State machine registered stats
+	</span>overlay_stats: sp_state_machine::StateMachineStats,
+	<span class="doccomment">/// Backing state.
+	</span>state: S,
+	<span class="doccomment">/// The hash of the block is state belongs to.
+	</span>block_hash: <span class="prelude-ty">Option</span>&lt;B::Hash&gt;,
+	<span class="doccomment">/// The usage statistics of the backend. These will be updated on drop.
+	</span>state_usage: Arc&lt;StateUsageStats&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">std::fmt::Debug</span> <span class="kw">for</span> <span class="ident">RecordStatsState</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
-		<span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;Block {:?}&quot;</span>, <span class="self">self</span>.<span class="ident">block_hash</span>)
+<span class="kw">impl</span>&lt;S, B: BlockT&gt; std::fmt::Debug <span class="kw">for </span>RecordStatsState&lt;S, B&gt; {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+		<span class="macro">write!</span>(f, <span class="string">&quot;Block {:?}&quot;</span>, <span class="self">self</span>.block_hash)
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">RecordStatsState</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
-		<span class="self">self</span>.<span class="ident">state_usage</span>.<span class="ident">merge_sm</span>(<span class="self">self</span>.<span class="ident">usage</span>.<span class="ident">take</span>());
+<span class="kw">impl</span>&lt;S, B: BlockT&gt; Drop <span class="kw">for </span>RecordStatsState&lt;S, B&gt; {
+	<span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+		<span class="self">self</span>.state_usage.merge_sm(<span class="self">self</span>.usage.take());
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">StateBackend</span><span class="op">&lt;</span><span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">RecordStatsState</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Create a new instance wrapping generic State and shared cache.</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(
-		<span class="ident">state</span>: <span class="ident">S</span>,
-		<span class="ident">block_hash</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B::Hash</span><span class="op">&gt;</span>,
-		<span class="ident">state_usage</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">StateUsageStats</span><span class="op">&gt;</span>,
-	) -&gt; <span class="self">Self</span> {
-		<span class="ident">RecordStatsState</span> {
-			<span class="ident">usage</span>: <span class="ident">StateUsageStats::new</span>(),
-			<span class="ident">overlay_stats</span>: <span class="ident">sp_state_machine::StateMachineStats::default</span>(),
-			<span class="ident">state</span>,
-			<span class="ident">block_hash</span>,
-			<span class="ident">state_usage</span>,
+<span class="kw">impl</span>&lt;S: StateBackend&lt;HashFor&lt;B&gt;&gt;, B: BlockT&gt; RecordStatsState&lt;S, B&gt; {
+	<span class="doccomment">/// Create a new instance wrapping generic State and shared cache.
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
+		state: S,
+		block_hash: <span class="prelude-ty">Option</span>&lt;B::Hash&gt;,
+		state_usage: Arc&lt;StateUsageStats&gt;,
+	) -&gt; <span class="self">Self </span>{
+		RecordStatsState {
+			usage: StateUsageStats::new(),
+			overlay_stats: sp_state_machine::StateMachineStats::default(),
+			state,
+			block_hash,
+			state_usage,
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">StateBackend</span><span class="op">&lt;</span><span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">StateBackend</span><span class="op">&lt;</span><span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">RecordStatsState</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">S::Error</span>;
-	<span class="kw">type</span> <span class="ident">Transaction</span> <span class="op">=</span> <span class="ident">S::Transaction</span>;
-	<span class="kw">type</span> <span class="ident">TrieBackendStorage</span> <span class="op">=</span> <span class="ident">S::TrieBackendStorage</span>;
+<span class="kw">impl</span>&lt;S: StateBackend&lt;HashFor&lt;B&gt;&gt;, B: BlockT&gt; StateBackend&lt;HashFor&lt;B&gt;&gt; <span class="kw">for </span>RecordStatsState&lt;S, B&gt; {
+	<span class="kw">type </span>Error = S::Error;
+	<span class="kw">type </span>Transaction = S::Transaction;
+	<span class="kw">type </span>TrieBackendStorage = S::TrieBackendStorage;
 
-	<span class="kw">fn</span> <span class="ident">storage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">storage</span>(<span class="ident">key</span>)<span class="question-mark">?</span>;
-		<span class="self">self</span>.<span class="ident">usage</span>.<span class="ident">tally_key_read</span>(<span class="ident">key</span>, <span class="ident">value</span>.<span class="ident">as_ref</span>(), <span class="bool-val">false</span>);
-		<span class="prelude-val">Ok</span>(<span class="ident">value</span>)
+	<span class="kw">fn </span>storage(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="kw">let </span>value = <span class="self">self</span>.state.storage(key)<span class="question-mark">?</span>;
+		<span class="self">self</span>.usage.tally_key_read(key, value.as_ref(), <span class="bool-val">false</span>);
+		<span class="prelude-val">Ok</span>(value)
 	}
 
-	<span class="kw">fn</span> <span class="ident">storage_hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B::Hash</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">storage_hash</span>(<span class="ident">key</span>)
+	<span class="kw">fn </span>storage_hash(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;B::Hash&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="self">self</span>.state.storage_hash(key)
 	}
 
-	<span class="kw">fn</span> <span class="ident">child_storage</span>(
+	<span class="kw">fn </span>child_storage(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> (<span class="ident">child_info</span>.<span class="ident">storage_key</span>().<span class="ident">to_vec</span>(), <span class="ident">key</span>.<span class="ident">to_vec</span>());
-		<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">child_storage</span>(<span class="ident">child_info</span>, <span class="kw-2">&amp;</span><span class="ident">key</span>.<span class="number">1</span>)<span class="question-mark">?</span>;
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		key: <span class="kw-2">&amp;</span>[u8],
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="kw">let </span>key = (child_info.storage_key().to_vec(), key.to_vec());
+		<span class="kw">let </span>value = <span class="self">self</span>.state.child_storage(child_info, <span class="kw-2">&amp;</span>key.<span class="number">1</span>)<span class="question-mark">?</span>;
 
-		<span class="comment">// just pass it through the usage counter</span>
-		<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">usage</span>.<span class="ident">tally_child_key_read</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="ident">value</span>, <span class="bool-val">false</span>);
+		<span class="comment">// just pass it through the usage counter
+		</span><span class="kw">let </span>value = <span class="self">self</span>.usage.tally_child_key_read(<span class="kw-2">&amp;</span>key, value, <span class="bool-val">false</span>);
 
-		<span class="prelude-val">Ok</span>(<span class="ident">value</span>)
+		<span class="prelude-val">Ok</span>(value)
 	}
 
-	<span class="kw">fn</span> <span class="ident">child_storage_hash</span>(
+	<span class="kw">fn </span>child_storage_hash(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B::Hash</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">child_storage_hash</span>(<span class="ident">child_info</span>, <span class="ident">key</span>)
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		key: <span class="kw-2">&amp;</span>[u8],
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;B::Hash&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="self">self</span>.state.child_storage_hash(child_info, key)
 	}
 
-	<span class="kw">fn</span> <span class="ident">exists_storage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">exists_storage</span>(<span class="ident">key</span>)
+	<span class="kw">fn </span>exists_storage(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;bool, <span class="self">Self</span>::Error&gt; {
+		<span class="self">self</span>.state.exists_storage(key)
 	}
 
-	<span class="kw">fn</span> <span class="ident">exists_child_storage</span>(
+	<span class="kw">fn </span>exists_child_storage(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">exists_child_storage</span>(<span class="ident">child_info</span>, <span class="ident">key</span>)
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		key: <span class="kw-2">&amp;</span>[u8],
+	) -&gt; <span class="prelude-ty">Result</span>&lt;bool, <span class="self">Self</span>::Error&gt; {
+		<span class="self">self</span>.state.exists_child_storage(child_info, key)
 	}
 
-	<span class="kw">fn</span> <span class="ident">apply_to_key_values_while</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="ident">bool</span><span class="op">&gt;</span>(
+	<span class="kw">fn </span>apply_to_key_values_while&lt;F: FnMut(Vec&lt;u8&gt;, Vec&lt;u8&gt;) -&gt; bool&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ChildInfo</span><span class="op">&gt;</span>,
-		<span class="ident">prefix</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-		<span class="ident">start_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-		<span class="ident">f</span>: <span class="ident">F</span>,
-		<span class="ident">allow_missing</span>: <span class="ident">bool</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>
-			.<span class="ident">apply_to_key_values_while</span>(<span class="ident">child_info</span>, <span class="ident">prefix</span>, <span class="ident">start_at</span>, <span class="ident">f</span>, <span class="ident">allow_missing</span>)
+		child_info: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>ChildInfo&gt;,
+		prefix: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;,
+		start_at: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;,
+		f: F,
+		allow_missing: bool,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;bool, <span class="self">Self</span>::Error&gt; {
+		<span class="self">self</span>.state
+			.apply_to_key_values_while(child_info, prefix, start_at, f, allow_missing)
 	}
 
-	<span class="kw">fn</span> <span class="ident">apply_to_keys_while</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">bool</span><span class="op">&gt;</span>(
+	<span class="kw">fn </span>apply_to_keys_while&lt;F: FnMut(<span class="kw-2">&amp;</span>[u8]) -&gt; bool&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">ChildInfo</span><span class="op">&gt;</span>,
-		<span class="ident">prefix</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-		<span class="ident">start_at</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-		<span class="ident">f</span>: <span class="ident">F</span>,
+		child_info: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>ChildInfo&gt;,
+		prefix: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;,
+		start_at: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;,
+		f: F,
 	) {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">apply_to_keys_while</span>(<span class="ident">child_info</span>, <span class="ident">prefix</span>, <span class="ident">start_at</span>, <span class="ident">f</span>)
+		<span class="self">self</span>.state.apply_to_keys_while(child_info, prefix, start_at, f)
 	}
 
-	<span class="kw">fn</span> <span class="ident">next_storage_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">next_storage_key</span>(<span class="ident">key</span>)
+	<span class="kw">fn </span>next_storage_key(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="self">self</span>.state.next_storage_key(key)
 	}
 
-	<span class="kw">fn</span> <span class="ident">next_child_storage_key</span>(
+	<span class="kw">fn </span>next_child_storage_key(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">next_child_storage_key</span>(<span class="ident">child_info</span>, <span class="ident">key</span>)
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		key: <span class="kw-2">&amp;</span>[u8],
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="self">self</span>.state.next_child_storage_key(child_info, key)
 	}
 
-	<span class="kw">fn</span> <span class="ident">for_keys_with_prefix</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>])<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">prefix</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">f</span>: <span class="ident">F</span>) {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">for_keys_with_prefix</span>(<span class="ident">prefix</span>, <span class="ident">f</span>)
+	<span class="kw">fn </span>for_keys_with_prefix&lt;F: FnMut(<span class="kw-2">&amp;</span>[u8])&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, prefix: <span class="kw-2">&amp;</span>[u8], f: F) {
+		<span class="self">self</span>.state.for_keys_with_prefix(prefix, f)
 	}
 
-	<span class="kw">fn</span> <span class="ident">for_key_values_with_prefix</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>])<span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">prefix</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">f</span>: <span class="ident">F</span>) {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">for_key_values_with_prefix</span>(<span class="ident">prefix</span>, <span class="ident">f</span>)
+	<span class="kw">fn </span>for_key_values_with_prefix&lt;F: FnMut(<span class="kw-2">&amp;</span>[u8], <span class="kw-2">&amp;</span>[u8])&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, prefix: <span class="kw-2">&amp;</span>[u8], f: F) {
+		<span class="self">self</span>.state.for_key_values_with_prefix(prefix, f)
 	}
 
-	<span class="kw">fn</span> <span class="ident">for_child_keys_with_prefix</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>])<span class="op">&gt;</span>(
+	<span class="kw">fn </span>for_child_keys_with_prefix&lt;F: FnMut(<span class="kw-2">&amp;</span>[u8])&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">prefix</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-		<span class="ident">f</span>: <span class="ident">F</span>,
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		prefix: <span class="kw-2">&amp;</span>[u8],
+		f: F,
 	) {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">for_child_keys_with_prefix</span>(<span class="ident">child_info</span>, <span class="ident">prefix</span>, <span class="ident">f</span>)
+		<span class="self">self</span>.state.for_child_keys_with_prefix(child_info, prefix, f)
 	}
 
-	<span class="kw">fn</span> <span class="ident">storage_root</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
+	<span class="kw">fn </span>storage_root&lt;<span class="lifetime">&#39;a</span>&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">delta</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>)<span class="op">&gt;</span>,
-		<span class="ident">state_version</span>: <span class="ident">StateVersion</span>,
-	) -&gt; (<span class="ident">B::Hash</span>, <span class="ident"><span class="self">Self</span>::Transaction</span>)
-	<span class="kw">where</span>
-		<span class="ident">B::Hash</span>: <span class="ident">Ord</span>,
+		delta: <span class="kw">impl </span>Iterator&lt;Item = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]&gt;)&gt;,
+		state_version: StateVersion,
+	) -&gt; (B::Hash, <span class="self">Self</span>::Transaction)
+	<span class="kw">where
+		</span>B::Hash: Ord,
 	{
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">storage_root</span>(<span class="ident">delta</span>, <span class="ident">state_version</span>)
+		<span class="self">self</span>.state.storage_root(delta, state_version)
 	}
 
-	<span class="kw">fn</span> <span class="ident">child_storage_root</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
+	<span class="kw">fn </span>child_storage_root&lt;<span class="lifetime">&#39;a</span>&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>,
-		<span class="ident">delta</span>: <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>], <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>)<span class="op">&gt;</span>,
-		<span class="ident">state_version</span>: <span class="ident">StateVersion</span>,
-	) -&gt; (<span class="ident">B::Hash</span>, <span class="ident">bool</span>, <span class="ident"><span class="self">Self</span>::Transaction</span>)
-	<span class="kw">where</span>
-		<span class="ident">B::Hash</span>: <span class="ident">Ord</span>,
+		child_info: <span class="kw-2">&amp;</span>ChildInfo,
+		delta: <span class="kw">impl </span>Iterator&lt;Item = (<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8], <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]&gt;)&gt;,
+		state_version: StateVersion,
+	) -&gt; (B::Hash, bool, <span class="self">Self</span>::Transaction)
+	<span class="kw">where
+		</span>B::Hash: Ord,
 	{
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">child_storage_root</span>(<span class="ident">child_info</span>, <span class="ident">delta</span>, <span class="ident">state_version</span>)
+		<span class="self">self</span>.state.child_storage_root(child_info, delta, state_version)
 	}
 
-	<span class="kw">fn</span> <span class="ident">pairs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">pairs</span>()
+	<span class="kw">fn </span>pairs(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;(Vec&lt;u8&gt;, Vec&lt;u8&gt;)&gt; {
+		<span class="self">self</span>.state.pairs()
 	}
 
-	<span class="kw">fn</span> <span class="ident">keys</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">prefix</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">keys</span>(<span class="ident">prefix</span>)
+	<span class="kw">fn </span>keys(<span class="kw-2">&amp;</span><span class="self">self</span>, prefix: <span class="kw-2">&amp;</span>[u8]) -&gt; Vec&lt;Vec&lt;u8&gt;&gt; {
+		<span class="self">self</span>.state.keys(prefix)
 	}
 
-	<span class="kw">fn</span> <span class="ident">child_keys</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">child_info</span>: <span class="kw-2">&amp;</span><span class="ident">ChildInfo</span>, <span class="ident">prefix</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">child_keys</span>(<span class="ident">child_info</span>, <span class="ident">prefix</span>)
+	<span class="kw">fn </span>child_keys(<span class="kw-2">&amp;</span><span class="self">self</span>, child_info: <span class="kw-2">&amp;</span>ChildInfo, prefix: <span class="kw-2">&amp;</span>[u8]) -&gt; Vec&lt;Vec&lt;u8&gt;&gt; {
+		<span class="self">self</span>.state.child_keys(child_info, prefix)
 	}
 
-	<span class="kw">fn</span> <span class="ident">register_overlay_stats</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">stats</span>: <span class="kw-2">&amp;</span><span class="ident">sp_state_machine::StateMachineStats</span>) {
-		<span class="self">self</span>.<span class="ident">overlay_stats</span>.<span class="ident">add</span>(<span class="ident">stats</span>);
+	<span class="kw">fn </span>register_overlay_stats(<span class="kw-2">&amp;</span><span class="self">self</span>, stats: <span class="kw-2">&amp;</span>sp_state_machine::StateMachineStats) {
+		<span class="self">self</span>.overlay_stats.add(stats);
 	}
 
-	<span class="kw">fn</span> <span class="ident">usage_info</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">sp_state_machine::UsageInfo</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">info</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">usage</span>.<span class="ident">take</span>();
-		<span class="ident">info</span>.<span class="ident">include_state_machine_states</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">overlay_stats</span>);
-		<span class="ident">info</span>
+	<span class="kw">fn </span>usage_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; sp_state_machine::UsageInfo {
+		<span class="kw">let </span><span class="kw-2">mut </span>info = <span class="self">self</span>.usage.take();
+		info.include_state_machine_states(<span class="kw-2">&amp;</span><span class="self">self</span>.overlay_stats);
+		info
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">StateBackend</span><span class="op">&lt;</span><span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsTrieBackend</span><span class="op">&lt;</span><span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">B</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">AsTrieBackend</span><span class="op">&lt;</span><span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>
-	<span class="kw">for</span> <span class="ident">RecordStatsState</span><span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">B</span><span class="op">&gt;</span>
+<span class="kw">impl</span>&lt;S: StateBackend&lt;HashFor&lt;B&gt;&gt; + AsTrieBackend&lt;HashFor&lt;B&gt;&gt;, B: BlockT&gt; AsTrieBackend&lt;HashFor&lt;B&gt;&gt;
+	<span class="kw">for </span>RecordStatsState&lt;S, B&gt;
 {
-	<span class="kw">type</span> <span class="ident">TrieBackendStorage</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">S</span> <span class="kw">as</span> <span class="ident">AsTrieBackend</span><span class="op">&lt;</span><span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::TrieBackendStorage</span>;
+	<span class="kw">type </span>TrieBackendStorage = &lt;S <span class="kw">as </span>AsTrieBackend&lt;HashFor&lt;B&gt;&gt;&gt;::TrieBackendStorage;
 
-	<span class="kw">fn</span> <span class="ident">as_trie_backend</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">TrieBackend</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::TrieBackendStorage</span>, <span class="ident">HashFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">state</span>.<span class="ident">as_trie_backend</span>()
+	<span class="kw">fn </span>as_trie_backend(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>TrieBackend&lt;<span class="self">Self</span>::TrieBackendStorage, HashFor&lt;B&gt;&gt; {
+		<span class="self">self</span>.state.as_trie_backend()
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_client_db" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_client_db" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

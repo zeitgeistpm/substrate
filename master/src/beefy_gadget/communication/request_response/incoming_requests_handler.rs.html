@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/beefy/src/communication/request_response/incoming_requests_handler.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>incoming_requests_handler.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../beefy_gadget/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/beefy/src/communication/request_response/incoming_requests_handler.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>incoming_requests_handler.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../beefy_gadget/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -197,193 +191,193 @@
 <span id="191">191</span>
 <span id="192">192</span>
 <span id="193">193</span>
-</pre><pre class="rust"><code><span class="comment">// Copyright 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// Copyright 2022 Parity Technologies (UK) Ltd.
+// This file is part of Substrate.
 
-<span class="comment">// Substrate is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// Substrate is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// Substrate is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// Substrate is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with Substrate.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with Substrate.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Helper for handling (i.e. answering) BEEFY justifications requests from a remote peer.</span>
+</span><span class="doccomment">//! Helper for handling (i.e. answering) BEEFY justifications requests from a remote peer.
 
-<span class="kw">use</span> <span class="ident">beefy_primitives::BEEFY_ENGINE_ID</span>;
-<span class="kw">use</span> <span class="ident">codec::Decode</span>;
-<span class="kw">use</span> <span class="ident">futures</span>::{
-	<span class="ident">channel</span>::{<span class="ident">mpsc</span>, <span class="ident">oneshot</span>},
-	<span class="ident">StreamExt</span>,
+</span><span class="kw">use </span>beefy_primitives::BEEFY_ENGINE_ID;
+<span class="kw">use </span>codec::Decode;
+<span class="kw">use </span>futures::{
+	channel::{mpsc, oneshot},
+	StreamExt,
 };
-<span class="kw">use</span> <span class="ident">log</span>::{<span class="ident">debug</span>, <span class="ident">trace</span>};
-<span class="kw">use</span> <span class="ident">sc_client_api::BlockBackend</span>;
-<span class="kw">use</span> <span class="ident">sc_network</span>::{<span class="ident">config</span> <span class="kw">as</span> <span class="ident">netconfig</span>, <span class="ident">config::RequestResponseConfig</span>, <span class="ident">PeerId</span>, <span class="ident">ReputationChange</span>};
-<span class="kw">use</span> <span class="ident">sc_network_common::protocol::ProtocolName</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{<span class="ident">generic::BlockId</span>, <span class="ident">traits::Block</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">sync::Arc</span>};
+<span class="kw">use </span>log::{debug, trace};
+<span class="kw">use </span>sc_client_api::BlockBackend;
+<span class="kw">use </span>sc_network::{config <span class="kw">as </span>netconfig, config::RequestResponseConfig, PeerId, ReputationChange};
+<span class="kw">use </span>sc_network_common::protocol::ProtocolName;
+<span class="kw">use </span>sp_runtime::{generic::BlockId, traits::Block};
+<span class="kw">use </span>std::{marker::PhantomData, sync::Arc};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::communication::request_response</span>::{
-	<span class="ident">on_demand_justifications_protocol_config</span>, <span class="ident">Error</span>, <span class="ident">JustificationRequest</span>,
+<span class="kw">use </span><span class="kw">crate</span>::communication::request_response::{
+	on_demand_justifications_protocol_config, Error, JustificationRequest,
 };
 
-<span class="doccomment">/// A request coming in, including a sender for sending responses.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">IncomingRequest</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Block</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// `PeerId` of sending peer.</span>
-	<span class="kw">pub</span> <span class="ident">peer</span>: <span class="ident">PeerId</span>,
-	<span class="doccomment">/// The sent request.</span>
-	<span class="kw">pub</span> <span class="ident">payload</span>: <span class="ident">JustificationRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Sender for sending response back.</span>
-	<span class="kw">pub</span> <span class="ident">pending_response</span>: <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="ident">netconfig::OutgoingResponse</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A request coming in, including a sender for sending responses.
+</span><span class="attribute">#[derive(Debug)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>IncomingRequest&lt;B: Block&gt; {
+	<span class="doccomment">/// `PeerId` of sending peer.
+	</span><span class="kw">pub </span>peer: PeerId,
+	<span class="doccomment">/// The sent request.
+	</span><span class="kw">pub </span>payload: JustificationRequest&lt;B&gt;,
+	<span class="doccomment">/// Sender for sending response back.
+	</span><span class="kw">pub </span>pending_response: oneshot::Sender&lt;netconfig::OutgoingResponse&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Block</span><span class="op">&gt;</span> <span class="ident">IncomingRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Create new `IncomingRequest`.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
-		<span class="ident">peer</span>: <span class="ident">PeerId</span>,
-		<span class="ident">payload</span>: <span class="ident">JustificationRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">pending_response</span>: <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="ident">netconfig::OutgoingResponse</span><span class="op">&gt;</span>,
-	) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">peer</span>, <span class="ident">payload</span>, <span class="ident">pending_response</span> }
+<span class="kw">impl</span>&lt;B: Block&gt; IncomingRequest&lt;B&gt; {
+	<span class="doccomment">/// Create new `IncomingRequest`.
+	</span><span class="kw">pub fn </span>new(
+		peer: PeerId,
+		payload: JustificationRequest&lt;B&gt;,
+		pending_response: oneshot::Sender&lt;netconfig::OutgoingResponse&gt;,
+	) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ peer, payload, pending_response }
 	}
 
-	<span class="doccomment">/// Try building from raw network request.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This function will fail if the request cannot be decoded and will apply passed in</span>
-	<span class="doccomment">/// reputation changes in that case.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Params:</span>
-	<span class="doccomment">/// 	- The raw request to decode</span>
-	<span class="doccomment">/// 	- Reputation changes to apply for the peer in case decoding fails.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from_raw</span>(
-		<span class="ident">raw</span>: <span class="ident">netconfig::IncomingRequest</span>,
-		<span class="ident">reputation_changes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ReputationChange</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">netconfig::IncomingRequest</span> { <span class="ident">payload</span>, <span class="ident">peer</span>, <span class="ident">pending_response</span> } <span class="op">=</span> <span class="ident">raw</span>;
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">JustificationRequest::decode</span>(<span class="kw-2">&amp;mut</span> <span class="ident">payload</span>.<span class="ident">as_ref</span>()) {
-			<span class="prelude-val">Ok</span>(<span class="ident">payload</span>) =&gt; <span class="ident">payload</span>,
-			<span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
-				<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="ident">netconfig::OutgoingResponse</span> {
-					<span class="ident">result</span>: <span class="prelude-val">Err</span>(()),
-					<span class="ident">reputation_changes</span>,
-					<span class="ident">sent_feedback</span>: <span class="prelude-val">None</span>,
+	<span class="doccomment">/// Try building from raw network request.
+	///
+	/// This function will fail if the request cannot be decoded and will apply passed in
+	/// reputation changes in that case.
+	///
+	/// Params:
+	/// 	- The raw request to decode
+	/// 	- Reputation changes to apply for the peer in case decoding fails.
+	</span><span class="kw">pub fn </span>try_from_raw(
+		raw: netconfig::IncomingRequest,
+		reputation_changes: Vec&lt;ReputationChange&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Error&gt; {
+		<span class="kw">let </span>netconfig::IncomingRequest { payload, peer, pending_response } = raw;
+		<span class="kw">let </span>payload = <span class="kw">match </span>JustificationRequest::decode(<span class="kw-2">&amp;mut </span>payload.as_ref()) {
+			<span class="prelude-val">Ok</span>(payload) =&gt; payload,
+			<span class="prelude-val">Err</span>(err) =&gt; {
+				<span class="kw">let </span>response = netconfig::OutgoingResponse {
+					result: <span class="prelude-val">Err</span>(()),
+					reputation_changes,
+					sent_feedback: <span class="prelude-val">None</span>,
 				};
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">pending_response</span>.<span class="ident">send</span>(<span class="ident">response</span>) {
-					<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::DecodingErrorNoReputationChange</span>(<span class="ident">peer</span>, <span class="ident">err</span>))
+				<span class="kw">if let </span><span class="prelude-val">Err</span>(<span class="kw">_</span>) = pending_response.send(response) {
+					<span class="kw">return </span><span class="prelude-val">Err</span>(Error::DecodingErrorNoReputationChange(peer, err))
 				}
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::DecodingError</span>(<span class="ident">peer</span>, <span class="ident">err</span>))
+				<span class="kw">return </span><span class="prelude-val">Err</span>(Error::DecodingError(peer, err))
 			},
 		};
-		<span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::new</span>(<span class="ident">peer</span>, <span class="ident">payload</span>, <span class="ident">pending_response</span>))
+		<span class="prelude-val">Ok</span>(<span class="self">Self</span>::new(peer, payload, pending_response))
 	}
 }
 
-<span class="doccomment">/// Receiver for incoming BEEFY justifications requests.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Takes care of decoding and handling of invalid encoded requests.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">IncomingRequestReceiver</span> {
-	<span class="ident">raw</span>: <span class="ident">mpsc::Receiver</span><span class="op">&lt;</span><span class="ident">netconfig::IncomingRequest</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Receiver for incoming BEEFY justifications requests.
+///
+/// Takes care of decoding and handling of invalid encoded requests.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>IncomingRequestReceiver {
+	raw: mpsc::Receiver&lt;netconfig::IncomingRequest&gt;,
 }
 
-<span class="kw">impl</span> <span class="ident">IncomingRequestReceiver</span> {
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="ident">mpsc::Receiver</span><span class="op">&lt;</span><span class="ident">netconfig::IncomingRequest</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">raw</span>: <span class="ident">inner</span> }
+<span class="kw">impl </span>IncomingRequestReceiver {
+	<span class="kw">pub fn </span>new(inner: mpsc::Receiver&lt;netconfig::IncomingRequest&gt;) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ raw: inner }
 	}
 
-	<span class="doccomment">/// Try to receive the next incoming request.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Any received request will be decoded, on decoding errors the provided reputation changes</span>
-	<span class="doccomment">/// will be applied and an error will be reported.</span>
-	<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">recv</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">reputation_changes</span>: <span class="ident">F</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">IncomingRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">B</span>: <span class="ident">Block</span>,
-		<span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ReputationChange</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Try to receive the next incoming request.
+	///
+	/// Any received request will be decoded, on decoding errors the provided reputation changes
+	/// will be applied and an error will be reported.
+	</span><span class="kw">pub async fn </span>recv&lt;B, F&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, reputation_changes: F) -&gt; <span class="prelude-ty">Result</span>&lt;IncomingRequest&lt;B&gt;, Error&gt;
+	<span class="kw">where
+		</span>B: Block,
+		F: FnOnce() -&gt; Vec&lt;ReputationChange&gt;,
 	{
-		<span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">raw</span>.<span class="ident">next</span>().<span class="kw">await</span> {
-			<span class="prelude-val">None</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::RequestChannelExhausted</span>),
-			<span class="prelude-val">Some</span>(<span class="ident">raw</span>) =&gt; <span class="ident">IncomingRequest</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::try_from_raw</span>(<span class="ident">raw</span>, <span class="ident">reputation_changes</span>())<span class="question-mark">?</span>,
+		<span class="kw">let </span>req = <span class="kw">match </span><span class="self">self</span>.raw.next().<span class="kw">await </span>{
+			<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::RequestChannelExhausted),
+			<span class="prelude-val">Some</span>(raw) =&gt; IncomingRequest::&lt;B&gt;::try_from_raw(raw, reputation_changes())<span class="question-mark">?</span>,
 		};
-		<span class="prelude-val">Ok</span>(<span class="ident">req</span>)
+		<span class="prelude-val">Ok</span>(req)
 	}
 }
 
-<span class="doccomment">/// Handler for incoming BEEFY justifications requests from a remote peer.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BeefyJustifsRequestHandler</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span> {
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">request_receiver</span>: <span class="ident">IncomingRequestReceiver</span>,
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">justif_protocol_name</span>: <span class="ident">ProtocolName</span>,
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>,
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">_block</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Handler for incoming BEEFY justifications requests from a remote peer.
+</span><span class="kw">pub struct </span>BeefyJustifsRequestHandler&lt;B, Client&gt; {
+	<span class="kw">pub</span>(<span class="kw">crate</span>) request_receiver: IncomingRequestReceiver,
+	<span class="kw">pub</span>(<span class="kw">crate</span>) justif_protocol_name: ProtocolName,
+	<span class="kw">pub</span>(<span class="kw">crate</span>) client: Arc&lt;Client&gt;,
+	<span class="kw">pub</span>(<span class="kw">crate</span>) _block: PhantomData&lt;B&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span> <span class="ident">BeefyJustifsRequestHandler</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">Client</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">B</span>: <span class="ident">Block</span>,
-	<span class="ident">Client</span>: <span class="ident">BlockBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+<span class="kw">impl</span>&lt;B, Client&gt; BeefyJustifsRequestHandler&lt;B, Client&gt;
+<span class="kw">where
+	</span>B: Block,
+	Client: BlockBackend&lt;B&gt; + Send + Sync,
 {
-	<span class="doccomment">/// Create a new [`BeefyJustifsRequestHandler`].</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">Hash</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(
-		<span class="ident">genesis_hash</span>: <span class="ident">Hash</span>,
-		<span class="ident">fork_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
-		<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>,
-	) -&gt; (<span class="self">Self</span>, <span class="ident">RequestResponseConfig</span>) {
-		<span class="kw">let</span> (<span class="ident">request_receiver</span>, <span class="ident">config</span>) <span class="op">=</span>
-			<span class="ident">on_demand_justifications_protocol_config</span>(<span class="ident">genesis_hash</span>, <span class="ident">fork_id</span>);
-		<span class="kw">let</span> <span class="ident">justif_protocol_name</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">name</span>.<span class="ident">clone</span>();
+	<span class="doccomment">/// Create a new [`BeefyJustifsRequestHandler`].
+	</span><span class="kw">pub fn </span>new&lt;Hash: AsRef&lt;[u8]&gt;&gt;(
+		genesis_hash: Hash,
+		fork_id: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
+		client: Arc&lt;Client&gt;,
+	) -&gt; (<span class="self">Self</span>, RequestResponseConfig) {
+		<span class="kw">let </span>(request_receiver, config) =
+			on_demand_justifications_protocol_config(genesis_hash, fork_id);
+		<span class="kw">let </span>justif_protocol_name = config.name.clone();
 
-		(<span class="self">Self</span> { <span class="ident">request_receiver</span>, <span class="ident">justif_protocol_name</span>, <span class="ident">client</span>, <span class="ident">_block</span>: <span class="ident">PhantomData</span> }, <span class="ident">config</span>)
+		(<span class="self">Self </span>{ request_receiver, justif_protocol_name, client, _block: PhantomData }, config)
 	}
 
-	<span class="doccomment">/// Network request-response protocol name used by this handler.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">protocol_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ProtocolName</span> {
-		<span class="self">self</span>.<span class="ident">justif_protocol_name</span>.<span class="ident">clone</span>()
+	<span class="doccomment">/// Network request-response protocol name used by this handler.
+	</span><span class="kw">pub fn </span>protocol_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ProtocolName {
+		<span class="self">self</span>.justif_protocol_name.clone()
 	}
 
-	<span class="comment">// Sends back justification response if justification found in client backend.</span>
-	<span class="kw">fn</span> <span class="ident">handle_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">request</span>: <span class="ident">IncomingRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="comment">// TODO (issue #12293): validate `request` and change peer reputation for invalid requests.</span>
+	<span class="comment">// Sends back justification response if justification found in client backend.
+	</span><span class="kw">fn </span>handle_request(<span class="kw-2">&amp;</span><span class="self">self</span>, request: IncomingRequest&lt;B&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
+		<span class="comment">// TODO (issue #12293): validate `request` and change peer reputation for invalid requests.
 
-		<span class="kw">let</span> <span class="ident">maybe_encoded_proof</span> <span class="op">=</span> <span class="self">self</span>
-			.<span class="ident">client</span>
-			.<span class="ident">justifications</span>(<span class="kw-2">&amp;</span><span class="ident">BlockId::Number</span>(<span class="ident">request</span>.<span class="ident">payload</span>.<span class="ident">begin</span>))
-			.<span class="ident">map_err</span>(<span class="ident">Error::Client</span>)<span class="question-mark">?</span>
-			.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">justifs</span><span class="op">|</span> <span class="ident">justifs</span>.<span class="ident">get</span>(<span class="ident">BEEFY_ENGINE_ID</span>).<span class="ident">cloned</span>())
-			<span class="comment">// No BEEFY justification present.</span>
-			.<span class="ident">ok_or</span>(());
+		</span><span class="kw">let </span>maybe_encoded_proof = <span class="self">self
+			</span>.client
+			.justifications(<span class="kw-2">&amp;</span>BlockId::Number(request.payload.begin))
+			.map_err(Error::Client)<span class="question-mark">?
+			</span>.and_then(|justifs| justifs.get(BEEFY_ENGINE_ID).cloned())
+			<span class="comment">// No BEEFY justification present.
+			</span>.ok_or(());
 
-		<span class="ident">request</span>
-			.<span class="ident">pending_response</span>
-			.<span class="ident">send</span>(<span class="ident">netconfig::OutgoingResponse</span> {
-				<span class="ident">result</span>: <span class="ident">maybe_encoded_proof</span>,
-				<span class="ident">reputation_changes</span>: <span class="ident">Vec::new</span>(),
-				<span class="ident">sent_feedback</span>: <span class="prelude-val">None</span>,
+		request
+			.pending_response
+			.send(netconfig::OutgoingResponse {
+				result: maybe_encoded_proof,
+				reputation_changes: Vec::new(),
+				sent_feedback: <span class="prelude-val">None</span>,
 			})
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error::SendResponse</span>)
+			.map_err(|<span class="kw">_</span>| Error::SendResponse)
 	}
 
-	<span class="doccomment">/// Run [`BeefyJustifsRequestHandler`].</span>
-	<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">run</span>(<span class="kw-2">mut</span> <span class="self">self</span>) {
-		<span class="macro">trace!</span>(<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 Running BeefyJustifsRequestHandler&quot;</span>);
+	<span class="doccomment">/// Run [`BeefyJustifsRequestHandler`].
+	</span><span class="kw">pub async fn </span>run(<span class="kw-2">mut </span><span class="self">self</span>) {
+		<span class="macro">trace!</span>(target: <span class="string">&quot;beefy::sync&quot;</span>, <span class="string">&quot;🥩 Running BeefyJustifsRequestHandler&quot;</span>);
 
-		<span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">request</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">request_receiver</span>.<span class="ident">recv</span>(<span class="op">|</span><span class="op">|</span> <span class="macro">vec!</span>[]).<span class="kw">await</span> {
-			<span class="kw">let</span> <span class="ident">peer</span> <span class="op">=</span> <span class="ident">request</span>.<span class="ident">peer</span>;
-			<span class="kw">match</span> <span class="self">self</span>.<span class="ident">handle_request</span>(<span class="ident">request</span>) {
+		<span class="kw">while let </span><span class="prelude-val">Ok</span>(request) = <span class="self">self</span>.request_receiver.recv(|| <span class="macro">vec!</span>[]).<span class="kw">await </span>{
+			<span class="kw">let </span>peer = request.peer;
+			<span class="kw">match </span><span class="self">self</span>.handle_request(request) {
 				<span class="prelude-val">Ok</span>(()) =&gt; {
 					<span class="macro">debug!</span>(
-						<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>,
-						<span class="string">&quot;🥩 Handled BEEFY justification request from {:?}.&quot;</span>, <span class="ident">peer</span>
+						target: <span class="string">&quot;beefy::sync&quot;</span>,
+						<span class="string">&quot;🥩 Handled BEEFY justification request from {:?}.&quot;</span>, peer
 					)
 				},
-				<span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; {
-					<span class="comment">// TODO (issue #12293): apply reputation changes here based on error type.</span>
-					<span class="macro">debug!</span>(
-						<span class="ident">target</span>: <span class="string">&quot;beefy::sync&quot;</span>,
-						<span class="string">&quot;🥩 Failed to handle BEEFY justification request from {:?}: {}&quot;</span>, <span class="ident">peer</span>, <span class="ident">e</span>,
+				<span class="prelude-val">Err</span>(e) =&gt; {
+					<span class="comment">// TODO (issue #12293): apply reputation changes here based on error type.
+					</span><span class="macro">debug!</span>(
+						target: <span class="string">&quot;beefy::sync&quot;</span>,
+						<span class="string">&quot;🥩 Failed to handle BEEFY justification request from {:?}: {}&quot;</span>, peer, e,
 					)
 				},
 			}
@@ -391,5 +385,4 @@
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="beefy_gadget" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="beefy_gadget" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

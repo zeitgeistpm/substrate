@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/pow/src/worker.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>worker.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sc_consensus_pow/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sc_consensus_pow/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_consensus_pow/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/pow/src/worker.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>worker.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sc_consensus_pow/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sc_consensus_pow/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -315,317 +309,316 @@
 <span id="309">309</span>
 <span id="310">310</span>
 <span id="311">311</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="kw">use</span> <span class="ident">futures</span>::{
-	<span class="ident">prelude</span>::<span class="kw-2">*</span>,
-	<span class="ident">task</span>::{<span class="ident">Context</span>, <span class="ident">Poll</span>},
+</span><span class="kw">use </span>futures::{
+	prelude::<span class="kw-2">*</span>,
+	task::{Context, Poll},
 };
-<span class="kw">use</span> <span class="ident">futures_timer::Delay</span>;
-<span class="kw">use</span> <span class="ident">log</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">parking_lot::Mutex</span>;
-<span class="kw">use</span> <span class="ident">sc_client_api::ImportNotifications</span>;
-<span class="kw">use</span> <span class="ident">sc_consensus</span>::{<span class="ident">BlockImportParams</span>, <span class="ident">BoxBlockImport</span>, <span class="ident">StateAction</span>, <span class="ident">StorageChanges</span>};
-<span class="kw">use</span> <span class="ident">sp_consensus</span>::{<span class="ident">BlockOrigin</span>, <span class="ident">Proposal</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">generic::BlockId</span>,
-	<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">Header</span> <span class="kw">as</span> <span class="ident">HeaderT</span>},
-	<span class="ident">DigestItem</span>,
+<span class="kw">use </span>futures_timer::Delay;
+<span class="kw">use </span>log::<span class="kw-2">*</span>;
+<span class="kw">use </span>parking_lot::Mutex;
+<span class="kw">use </span>sc_client_api::ImportNotifications;
+<span class="kw">use </span>sc_consensus::{BlockImportParams, BoxBlockImport, StateAction, StorageChanges};
+<span class="kw">use </span>sp_consensus::{BlockOrigin, Proposal};
+<span class="kw">use </span>sp_runtime::{
+	generic::BlockId,
+	traits::{Block <span class="kw">as </span>BlockT, Header <span class="kw">as </span>HeaderT},
+	DigestItem,
 };
-<span class="kw">use</span> <span class="ident">std</span>::{
-	<span class="ident">collections::HashMap</span>,
-	<span class="ident">pin::Pin</span>,
-	<span class="ident">sync</span>::{
-		<span class="ident">atomic</span>::{<span class="ident">AtomicUsize</span>, <span class="ident">Ordering</span>},
-		<span class="ident">Arc</span>,
+<span class="kw">use </span>std::{
+	collections::HashMap,
+	pin::Pin,
+	sync::{
+		atomic::{AtomicUsize, Ordering},
+		Arc,
 	},
-	<span class="ident">time::Duration</span>,
+	time::Duration,
 };
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">PowAlgorithm</span>, <span class="ident">PowIntermediate</span>, <span class="ident">Seal</span>, <span class="ident">INTERMEDIATE_KEY</span>, <span class="ident">POW_ENGINE_ID</span>};
+<span class="kw">use crate</span>::{PowAlgorithm, PowIntermediate, Seal, INTERMEDIATE_KEY, POW_ENGINE_ID};
 
-<span class="doccomment">/// Mining metadata. This is the information needed to start an actual mining loop.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MiningMetadata</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">D</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Currently known best hash which the pre-hash is built on.</span>
-	<span class="kw">pub</span> <span class="ident">best_hash</span>: <span class="ident">H</span>,
-	<span class="doccomment">/// Mining pre-hash.</span>
-	<span class="kw">pub</span> <span class="ident">pre_hash</span>: <span class="ident">H</span>,
-	<span class="doccomment">/// Pre-runtime digest item.</span>
-	<span class="kw">pub</span> <span class="ident">pre_runtime</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Mining target difficulty.</span>
-	<span class="kw">pub</span> <span class="ident">difficulty</span>: <span class="ident">D</span>,
+<span class="doccomment">/// Mining metadata. This is the information needed to start an actual mining loop.
+</span><span class="attribute">#[derive(Clone, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>MiningMetadata&lt;H, D&gt; {
+	<span class="doccomment">/// Currently known best hash which the pre-hash is built on.
+	</span><span class="kw">pub </span>best_hash: H,
+	<span class="doccomment">/// Mining pre-hash.
+	</span><span class="kw">pub </span>pre_hash: H,
+	<span class="doccomment">/// Pre-runtime digest item.
+	</span><span class="kw">pub </span>pre_runtime: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
+	<span class="doccomment">/// Mining target difficulty.
+	</span><span class="kw">pub </span>difficulty: D,
 }
 
-<span class="doccomment">/// A build of mining, containing the metadata and the block proposal.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MiningBuild</span><span class="op">&lt;</span>
-	<span class="ident">Block</span>: <span class="ident">BlockT</span>,
-	<span class="ident">Algorithm</span>: <span class="ident">PowAlgorithm</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">C</span>: <span class="ident">sp_api::ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">Proof</span>,
-<span class="op">&gt;</span> {
-	<span class="doccomment">/// Mining metadata.</span>
-	<span class="kw">pub</span> <span class="ident">metadata</span>: <span class="ident">MiningMetadata</span><span class="op">&lt;</span><span class="ident">Block::Hash</span>, <span class="ident">Algorithm::Difficulty</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Mining proposal.</span>
-	<span class="kw">pub</span> <span class="ident">proposal</span>: <span class="ident">Proposal</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">Proof</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A build of mining, containing the metadata and the block proposal.
+</span><span class="kw">pub struct </span>MiningBuild&lt;
+	Block: BlockT,
+	Algorithm: PowAlgorithm&lt;Block&gt;,
+	C: sp_api::ProvideRuntimeApi&lt;Block&gt;,
+	Proof,
+&gt; {
+	<span class="doccomment">/// Mining metadata.
+	</span><span class="kw">pub </span>metadata: MiningMetadata&lt;Block::Hash, Algorithm::Difficulty&gt;,
+	<span class="doccomment">/// Mining proposal.
+	</span><span class="kw">pub </span>proposal: Proposal&lt;Block, sp_api::TransactionFor&lt;C, Block&gt;, Proof&gt;,
 }
 
-<span class="doccomment">/// Version of the mining worker.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Version</span>(<span class="ident">usize</span>);
+<span class="doccomment">/// Version of the mining worker.
+</span><span class="attribute">#[derive(Eq, PartialEq, Clone, Copy)]
+</span><span class="kw">pub struct </span>Version(usize);
 
-<span class="doccomment">/// Mining worker that exposes structs to query the current mining build and submit mined blocks.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MiningHandle</span><span class="op">&lt;</span>
-	<span class="ident">Block</span>: <span class="ident">BlockT</span>,
-	<span class="ident">Algorithm</span>: <span class="ident">PowAlgorithm</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">C</span>: <span class="ident">sp_api::ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">L</span>: <span class="ident">sc_consensus::JustificationSyncLink</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">Proof</span>,
-<span class="op">&gt;</span> {
-	<span class="ident">version</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">AtomicUsize</span><span class="op">&gt;</span>,
-	<span class="ident">algorithm</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Algorithm</span><span class="op">&gt;</span>,
-	<span class="ident">justification_sync_link</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span>,
-	<span class="ident">build</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MiningBuild</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">Algorithm</span>, <span class="ident">C</span>, <span class="ident">Proof</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	<span class="ident">block_import</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">BoxBlockImport</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Mining worker that exposes structs to query the current mining build and submit mined blocks.
+</span><span class="kw">pub struct </span>MiningHandle&lt;
+	Block: BlockT,
+	Algorithm: PowAlgorithm&lt;Block&gt;,
+	C: sp_api::ProvideRuntimeApi&lt;Block&gt;,
+	L: sc_consensus::JustificationSyncLink&lt;Block&gt;,
+	Proof,
+&gt; {
+	version: Arc&lt;AtomicUsize&gt;,
+	algorithm: Arc&lt;Algorithm&gt;,
+	justification_sync_link: Arc&lt;L&gt;,
+	build: Arc&lt;Mutex&lt;<span class="prelude-ty">Option</span>&lt;MiningBuild&lt;Block, Algorithm, C, Proof&gt;&gt;&gt;&gt;,
+	block_import: Arc&lt;Mutex&lt;BoxBlockImport&lt;Block, sp_api::TransactionFor&lt;C, Block&gt;&gt;&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">Algorithm</span>, <span class="ident">C</span>, <span class="ident">L</span>, <span class="ident">Proof</span><span class="op">&gt;</span> <span class="ident">MiningHandle</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">Algorithm</span>, <span class="ident">C</span>, <span class="ident">L</span>, <span class="ident">Proof</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Block</span>: <span class="ident">BlockT</span>,
-	<span class="ident">C</span>: <span class="ident">sp_api::ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">Algorithm</span>: <span class="ident">PowAlgorithm</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">Algorithm::Difficulty</span>: <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Send</span>,
-	<span class="ident">L</span>: <span class="ident">sc_consensus::JustificationSyncLink</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">Block</span><span class="op">&gt;</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="kw">impl</span>&lt;Block, Algorithm, C, L, Proof&gt; MiningHandle&lt;Block, Algorithm, C, L, Proof&gt;
+<span class="kw">where
+	</span>Block: BlockT,
+	C: sp_api::ProvideRuntimeApi&lt;Block&gt;,
+	Algorithm: PowAlgorithm&lt;Block&gt;,
+	Algorithm::Difficulty: <span class="lifetime">&#39;static </span>+ Send,
+	L: sc_consensus::JustificationSyncLink&lt;Block&gt;,
+	sp_api::TransactionFor&lt;C, Block&gt;: Send + <span class="lifetime">&#39;static</span>,
 {
-	<span class="kw">fn</span> <span class="ident">increment_version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.<span class="ident">version</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::SeqCst</span>);
+	<span class="kw">fn </span>increment_version(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+		<span class="self">self</span>.version.fetch_add(<span class="number">1</span>, Ordering::SeqCst);
 	}
 
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(
-		<span class="ident">algorithm</span>: <span class="ident">Algorithm</span>,
-		<span class="ident">block_import</span>: <span class="ident">BoxBlockImport</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">sp_api::TransactionFor</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">Block</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-		<span class="ident">justification_sync_link</span>: <span class="ident">L</span>,
-	) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> {
-			<span class="ident">version</span>: <span class="ident">Arc::new</span>(<span class="ident">AtomicUsize::new</span>(<span class="number">0</span>)),
-			<span class="ident">algorithm</span>: <span class="ident">Arc::new</span>(<span class="ident">algorithm</span>),
-			<span class="ident">justification_sync_link</span>: <span class="ident">Arc::new</span>(<span class="ident">justification_sync_link</span>),
-			<span class="ident">build</span>: <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="prelude-val">None</span>)),
-			<span class="ident">block_import</span>: <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">block_import</span>)),
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
+		algorithm: Algorithm,
+		block_import: BoxBlockImport&lt;Block, sp_api::TransactionFor&lt;C, Block&gt;&gt;,
+		justification_sync_link: L,
+	) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			version: Arc::new(AtomicUsize::new(<span class="number">0</span>)),
+			algorithm: Arc::new(algorithm),
+			justification_sync_link: Arc::new(justification_sync_link),
+			build: Arc::new(Mutex::new(<span class="prelude-val">None</span>)),
+			block_import: Arc::new(Mutex::new(block_import)),
 		}
 	}
 
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">on_major_syncing</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">build</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build</span>.<span class="ident">lock</span>();
-		<span class="kw-2">*</span><span class="ident">build</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-		<span class="self">self</span>.<span class="ident">increment_version</span>();
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>on_major_syncing(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+		<span class="kw">let </span><span class="kw-2">mut </span>build = <span class="self">self</span>.build.lock();
+		<span class="kw-2">*</span>build = <span class="prelude-val">None</span>;
+		<span class="self">self</span>.increment_version();
 	}
 
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">on_build</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">MiningBuild</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">Algorithm</span>, <span class="ident">C</span>, <span class="ident">Proof</span><span class="op">&gt;</span>) {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">build</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build</span>.<span class="ident">lock</span>();
-		<span class="kw-2">*</span><span class="ident">build</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>);
-		<span class="self">self</span>.<span class="ident">increment_version</span>();
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>on_build(<span class="kw-2">&amp;</span><span class="self">self</span>, value: MiningBuild&lt;Block, Algorithm, C, Proof&gt;) {
+		<span class="kw">let </span><span class="kw-2">mut </span>build = <span class="self">self</span>.build.lock();
+		<span class="kw-2">*</span>build = <span class="prelude-val">Some</span>(value);
+		<span class="self">self</span>.increment_version();
 	}
 
-	<span class="doccomment">/// Get the version of the mining worker.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This returns type `Version` which can only compare equality. If `Version` is unchanged, then</span>
-	<span class="doccomment">/// it can be certain that `best_hash` and `metadata` were not changed.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Version</span> {
-		<span class="ident">Version</span>(<span class="self">self</span>.<span class="ident">version</span>.<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>))
+	<span class="doccomment">/// Get the version of the mining worker.
+	///
+	/// This returns type `Version` which can only compare equality. If `Version` is unchanged, then
+	/// it can be certain that `best_hash` and `metadata` were not changed.
+	</span><span class="kw">pub fn </span>version(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Version {
+		Version(<span class="self">self</span>.version.load(Ordering::SeqCst))
 	}
 
-	<span class="doccomment">/// Get the current best hash. `None` if the worker has just started or the client is doing</span>
-	<span class="doccomment">/// major syncing.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">best_hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Block::Hash</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">build</span>.<span class="ident">lock</span>().<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="ident">metadata</span>.<span class="ident">best_hash</span>)
+	<span class="doccomment">/// Get the current best hash. `None` if the worker has just started or the client is doing
+	/// major syncing.
+	</span><span class="kw">pub fn </span>best_hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Block::Hash&gt; {
+		<span class="self">self</span>.build.lock().as_ref().map(|b| b.metadata.best_hash)
 	}
 
-	<span class="doccomment">/// Get a copy of the current mining metadata, if available.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MiningMetadata</span><span class="op">&lt;</span><span class="ident">Block::Hash</span>, <span class="ident">Algorithm::Difficulty</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">build</span>.<span class="ident">lock</span>().<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="ident">metadata</span>.<span class="ident">clone</span>())
+	<span class="doccomment">/// Get a copy of the current mining metadata, if available.
+	</span><span class="kw">pub fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;MiningMetadata&lt;Block::Hash, Algorithm::Difficulty&gt;&gt; {
+		<span class="self">self</span>.build.lock().as_ref().map(|b| b.metadata.clone())
 	}
 
-	<span class="doccomment">/// Submit a mined seal. The seal will be validated again. Returns true if the submission is</span>
-	<span class="doccomment">/// successful.</span>
-	<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">submit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">seal</span>: <span class="ident">Seal</span>) -&gt; <span class="ident">bool</span> {
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">metadata</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">metadata</span>() {
-			<span class="kw">match</span> <span class="self">self</span>.<span class="ident">algorithm</span>.<span class="ident">verify</span>(
-				<span class="kw-2">&amp;</span><span class="ident">BlockId::Hash</span>(<span class="ident">metadata</span>.<span class="ident">best_hash</span>),
-				<span class="kw-2">&amp;</span><span class="ident">metadata</span>.<span class="ident">pre_hash</span>,
-				<span class="ident">metadata</span>.<span class="ident">pre_runtime</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">v</span>[..]),
-				<span class="kw-2">&amp;</span><span class="ident">seal</span>,
-				<span class="ident">metadata</span>.<span class="ident">difficulty</span>,
+	<span class="doccomment">/// Submit a mined seal. The seal will be validated again. Returns true if the submission is
+	/// successful.
+	</span><span class="kw">pub async fn </span>submit(<span class="kw-2">&amp;</span><span class="self">self</span>, seal: Seal) -&gt; bool {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(metadata) = <span class="self">self</span>.metadata() {
+			<span class="kw">match </span><span class="self">self</span>.algorithm.verify(
+				<span class="kw-2">&amp;</span>BlockId::Hash(metadata.best_hash),
+				<span class="kw-2">&amp;</span>metadata.pre_hash,
+				metadata.pre_runtime.as_ref().map(|v| <span class="kw-2">&amp;</span>v[..]),
+				<span class="kw-2">&amp;</span>seal,
+				metadata.difficulty,
 			) {
 				<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) =&gt; (),
 				<span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) =&gt; {
 					<span class="macro">warn!</span>(
-						<span class="ident">target</span>: <span class="string">&quot;pow&quot;</span>,
+						target: <span class="string">&quot;pow&quot;</span>,
 						<span class="string">&quot;Unable to import mined block: seal is invalid&quot;</span>,
 					);
-					<span class="kw">return</span> <span class="bool-val">false</span>
-				},
-				<span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
+					<span class="kw">return </span><span class="bool-val">false
+				</span>},
+				<span class="prelude-val">Err</span>(err) =&gt; {
 					<span class="macro">warn!</span>(
-						<span class="ident">target</span>: <span class="string">&quot;pow&quot;</span>,
+						target: <span class="string">&quot;pow&quot;</span>,
 						<span class="string">&quot;Unable to import mined block: {}&quot;</span>,
-						<span class="ident">err</span>,
+						err,
 					);
-					<span class="kw">return</span> <span class="bool-val">false</span>
-				},
+					<span class="kw">return </span><span class="bool-val">false
+				</span>},
 			}
-		} <span class="kw">else</span> {
+		} <span class="kw">else </span>{
 			<span class="macro">warn!</span>(
-				<span class="ident">target</span>: <span class="string">&quot;pow&quot;</span>,
+				target: <span class="string">&quot;pow&quot;</span>,
 				<span class="string">&quot;Unable to import mined block: metadata does not exist&quot;</span>,
 			);
-			<span class="kw">return</span> <span class="bool-val">false</span>
-		}
+			<span class="kw">return </span><span class="bool-val">false
+		</span>}
 
-		<span class="kw">let</span> <span class="ident">build</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">build</span>) <span class="op">=</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">build</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">build</span>.<span class="ident">lock</span>();
-			<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">build</span>.<span class="ident">take</span>();
-			<span class="kw">if</span> <span class="ident">value</span>.<span class="ident">is_some</span>() {
-				<span class="self">self</span>.<span class="ident">increment_version</span>();
+		<span class="kw">let </span>build = <span class="kw">if let </span><span class="prelude-val">Some</span>(build) = {
+			<span class="kw">let </span><span class="kw-2">mut </span>build = <span class="self">self</span>.build.lock();
+			<span class="kw">let </span>value = build.take();
+			<span class="kw">if </span>value.is_some() {
+				<span class="self">self</span>.increment_version();
 			}
-			<span class="ident">value</span>
+			value
 		} {
-			<span class="ident">build</span>
-		} <span class="kw">else</span> {
+			build
+		} <span class="kw">else </span>{
 			<span class="macro">warn!</span>(
-				<span class="ident">target</span>: <span class="string">&quot;pow&quot;</span>,
+				target: <span class="string">&quot;pow&quot;</span>,
 				<span class="string">&quot;Unable to import mined block: build does not exist&quot;</span>,
 			);
-			<span class="kw">return</span> <span class="bool-val">false</span>
+			<span class="kw">return </span><span class="bool-val">false
+		</span>};
+
+		<span class="kw">let </span>seal = DigestItem::Seal(POW_ENGINE_ID, seal);
+		<span class="kw">let </span>(header, body) = build.proposal.block.deconstruct();
+
+		<span class="kw">let </span><span class="kw-2">mut </span>import_block = BlockImportParams::new(BlockOrigin::Own, header);
+		import_block.post_digests.push(seal);
+		import_block.body = <span class="prelude-val">Some</span>(body);
+		import_block.state_action =
+			StateAction::ApplyChanges(StorageChanges::Changes(build.proposal.storage_changes));
+
+		<span class="kw">let </span>intermediate = PowIntermediate::&lt;Algorithm::Difficulty&gt; {
+			difficulty: <span class="prelude-val">Some</span>(build.metadata.difficulty),
 		};
+		import_block.insert_intermediate(INTERMEDIATE_KEY, intermediate);
 
-		<span class="kw">let</span> <span class="ident">seal</span> <span class="op">=</span> <span class="ident">DigestItem::Seal</span>(<span class="ident">POW_ENGINE_ID</span>, <span class="ident">seal</span>);
-		<span class="kw">let</span> (<span class="ident">header</span>, <span class="ident">body</span>) <span class="op">=</span> <span class="ident">build</span>.<span class="ident">proposal</span>.<span class="ident">block</span>.<span class="ident">deconstruct</span>();
+		<span class="kw">let </span>header = import_block.post_header();
+		<span class="kw">let </span><span class="kw-2">mut </span>block_import = <span class="self">self</span>.block_import.lock();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">import_block</span> <span class="op">=</span> <span class="ident">BlockImportParams::new</span>(<span class="ident">BlockOrigin::Own</span>, <span class="ident">header</span>);
-		<span class="ident">import_block</span>.<span class="ident">post_digests</span>.<span class="ident">push</span>(<span class="ident">seal</span>);
-		<span class="ident">import_block</span>.<span class="ident">body</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">body</span>);
-		<span class="ident">import_block</span>.<span class="ident">state_action</span> <span class="op">=</span>
-			<span class="ident">StateAction::ApplyChanges</span>(<span class="ident">StorageChanges::Changes</span>(<span class="ident">build</span>.<span class="ident">proposal</span>.<span class="ident">storage_changes</span>));
-
-		<span class="kw">let</span> <span class="ident">intermediate</span> <span class="op">=</span> <span class="ident">PowIntermediate</span>::<span class="op">&lt;</span><span class="ident">Algorithm::Difficulty</span><span class="op">&gt;</span> {
-			<span class="ident">difficulty</span>: <span class="prelude-val">Some</span>(<span class="ident">build</span>.<span class="ident">metadata</span>.<span class="ident">difficulty</span>),
-		};
-		<span class="ident">import_block</span>.<span class="ident">insert_intermediate</span>(<span class="ident">INTERMEDIATE_KEY</span>, <span class="ident">intermediate</span>);
-
-		<span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">import_block</span>.<span class="ident">post_header</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">block_import</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">block_import</span>.<span class="ident">lock</span>();
-
-		<span class="kw">match</span> <span class="ident">block_import</span>.<span class="ident">import_block</span>(<span class="ident">import_block</span>, <span class="ident">HashMap::default</span>()).<span class="kw">await</span> {
-			<span class="prelude-val">Ok</span>(<span class="ident">res</span>) =&gt; {
-				<span class="ident">res</span>.<span class="ident">handle_justification</span>(
-					<span class="kw-2">&amp;</span><span class="ident">header</span>.<span class="ident">hash</span>(),
-					<span class="kw-2">*</span><span class="ident">header</span>.<span class="ident">number</span>(),
-					<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">justification_sync_link</span>,
+		<span class="kw">match </span>block_import.import_block(import_block, HashMap::default()).<span class="kw">await </span>{
+			<span class="prelude-val">Ok</span>(res) =&gt; {
+				res.handle_justification(
+					<span class="kw-2">&amp;</span>header.hash(),
+					<span class="kw-2">*</span>header.number(),
+					<span class="kw-2">&amp;</span><span class="self">self</span>.justification_sync_link,
 				);
 
 				<span class="macro">info!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;pow&quot;</span>,
+					target: <span class="string">&quot;pow&quot;</span>,
 					<span class="string">&quot;✅ Successfully mined block on top of: {}&quot;</span>,
-					<span class="ident">build</span>.<span class="ident">metadata</span>.<span class="ident">best_hash</span>
+					build.metadata.best_hash
 				);
-				<span class="bool-val">true</span>
-			},
-			<span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
+				<span class="bool-val">true
+			</span>},
+			<span class="prelude-val">Err</span>(err) =&gt; {
 				<span class="macro">warn!</span>(
-					<span class="ident">target</span>: <span class="string">&quot;pow&quot;</span>,
+					target: <span class="string">&quot;pow&quot;</span>,
 					<span class="string">&quot;Unable to import mined block: {}&quot;</span>,
-					<span class="ident">err</span>,
+					err,
 				);
-				<span class="bool-val">false</span>
-			},
+				<span class="bool-val">false
+			</span>},
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">Algorithm</span>, <span class="ident">C</span>, <span class="ident">L</span>, <span class="ident">Proof</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">MiningHandle</span><span class="op">&lt;</span><span class="ident">Block</span>, <span class="ident">Algorithm</span>, <span class="ident">C</span>, <span class="ident">L</span>, <span class="ident">Proof</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">Block</span>: <span class="ident">BlockT</span>,
-	<span class="ident">Algorithm</span>: <span class="ident">PowAlgorithm</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">C</span>: <span class="ident">sp_api::ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">L</span>: <span class="ident">sc_consensus::JustificationSyncLink</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
+<span class="kw">impl</span>&lt;Block, Algorithm, C, L, Proof&gt; Clone <span class="kw">for </span>MiningHandle&lt;Block, Algorithm, C, L, Proof&gt;
+<span class="kw">where
+	</span>Block: BlockT,
+	Algorithm: PowAlgorithm&lt;Block&gt;,
+	C: sp_api::ProvideRuntimeApi&lt;Block&gt;,
+	L: sc_consensus::JustificationSyncLink&lt;Block&gt;,
 {
-	<span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> {
-			<span class="ident">version</span>: <span class="self">self</span>.<span class="ident">version</span>.<span class="ident">clone</span>(),
-			<span class="ident">algorithm</span>: <span class="self">self</span>.<span class="ident">algorithm</span>.<span class="ident">clone</span>(),
-			<span class="ident">justification_sync_link</span>: <span class="self">self</span>.<span class="ident">justification_sync_link</span>.<span class="ident">clone</span>(),
-			<span class="ident">build</span>: <span class="self">self</span>.<span class="ident">build</span>.<span class="ident">clone</span>(),
-			<span class="ident">block_import</span>: <span class="self">self</span>.<span class="ident">block_import</span>.<span class="ident">clone</span>(),
+	<span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			version: <span class="self">self</span>.version.clone(),
+			algorithm: <span class="self">self</span>.algorithm.clone(),
+			justification_sync_link: <span class="self">self</span>.justification_sync_link.clone(),
+			build: <span class="self">self</span>.build.clone(),
+			block_import: <span class="self">self</span>.block_import.clone(),
 		}
 	}
 }
 
-<span class="doccomment">/// A stream that waits for a block import or timeout.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UntilImportedOrTimeout</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> {
-	<span class="ident">import_notifications</span>: <span class="ident">ImportNotifications</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>,
-	<span class="ident">timeout</span>: <span class="ident">Duration</span>,
-	<span class="ident">inner_delay</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Delay</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A stream that waits for a block import or timeout.
+</span><span class="kw">pub struct </span>UntilImportedOrTimeout&lt;Block: BlockT&gt; {
+	import_notifications: ImportNotifications&lt;Block&gt;,
+	timeout: Duration,
+	inner_delay: <span class="prelude-ty">Option</span>&lt;Delay&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">UntilImportedOrTimeout</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Create a new stream using the given import notification and timeout duration.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">import_notifications</span>: <span class="ident">ImportNotifications</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">import_notifications</span>, <span class="ident">timeout</span>, <span class="ident">inner_delay</span>: <span class="prelude-val">None</span> }
+<span class="kw">impl</span>&lt;Block: BlockT&gt; UntilImportedOrTimeout&lt;Block&gt; {
+	<span class="doccomment">/// Create a new stream using the given import notification and timeout duration.
+	</span><span class="kw">pub fn </span>new(import_notifications: ImportNotifications&lt;Block&gt;, timeout: Duration) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ import_notifications, timeout, inner_delay: <span class="prelude-val">None </span>}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Block</span>: <span class="ident">BlockT</span><span class="op">&gt;</span> <span class="ident">Stream</span> <span class="kw">for</span> <span class="ident">UntilImportedOrTimeout</span><span class="op">&lt;</span><span class="ident">Block</span><span class="op">&gt;</span> {
-	<span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> ();
+<span class="kw">impl</span>&lt;Block: BlockT&gt; Stream <span class="kw">for </span>UntilImportedOrTimeout&lt;Block&gt; {
+	<span class="kw">type </span>Item = ();
 
-	<span class="kw">fn</span> <span class="ident">poll_next</span>(<span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;mut</span> <span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">cx</span>: <span class="kw-2">&amp;mut</span> <span class="ident">Context</span>) -&gt; <span class="ident">Poll</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fire</span> <span class="op">=</span> <span class="bool-val">false</span>;
+	<span class="kw">fn </span>poll_next(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context) -&gt; Poll&lt;<span class="prelude-ty">Option</span>&lt;()&gt;&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>fire = <span class="bool-val">false</span>;
 
-		<span class="kw">loop</span> {
-			<span class="kw">match</span> <span class="ident">Stream::poll_next</span>(<span class="ident">Pin::new</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">import_notifications</span>), <span class="ident">cx</span>) {
-				<span class="ident">Poll::Pending</span> =&gt; <span class="kw">break</span>,
-				<span class="ident">Poll::Ready</span>(<span class="prelude-val">Some</span>(<span class="kw">_</span>)) =&gt; {
-					<span class="ident">fire</span> <span class="op">=</span> <span class="bool-val">true</span>;
+		<span class="kw">loop </span>{
+			<span class="kw">match </span>Stream::poll_next(Pin::new(<span class="kw-2">&amp;mut </span><span class="self">self</span>.import_notifications), cx) {
+				Poll::Pending =&gt; <span class="kw">break</span>,
+				Poll::Ready(<span class="prelude-val">Some</span>(<span class="kw">_</span>)) =&gt; {
+					fire = <span class="bool-val">true</span>;
 				},
-				<span class="ident">Poll::Ready</span>(<span class="prelude-val">None</span>) =&gt; <span class="kw">return</span> <span class="ident">Poll::Ready</span>(<span class="prelude-val">None</span>),
+				Poll::Ready(<span class="prelude-val">None</span>) =&gt; <span class="kw">return </span>Poll::Ready(<span class="prelude-val">None</span>),
 			}
 		}
 
-		<span class="kw">let</span> <span class="ident">timeout</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">timeout</span>;
-		<span class="kw">let</span> <span class="ident">inner_delay</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner_delay</span>.<span class="ident">get_or_insert_with</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Delay::new</span>(<span class="ident">timeout</span>));
+		<span class="kw">let </span>timeout = <span class="self">self</span>.timeout;
+		<span class="kw">let </span>inner_delay = <span class="self">self</span>.inner_delay.get_or_insert_with(|| Delay::new(timeout));
 
-		<span class="kw">match</span> <span class="ident">Future::poll</span>(<span class="ident">Pin::new</span>(<span class="ident">inner_delay</span>), <span class="ident">cx</span>) {
-			<span class="ident">Poll::Pending</span> =&gt; (),
-			<span class="ident">Poll::Ready</span>(()) =&gt; {
-				<span class="ident">fire</span> <span class="op">=</span> <span class="bool-val">true</span>;
+		<span class="kw">match </span>Future::poll(Pin::new(inner_delay), cx) {
+			Poll::Pending =&gt; (),
+			Poll::Ready(()) =&gt; {
+				fire = <span class="bool-val">true</span>;
 			},
 		}
 
-		<span class="kw">if</span> <span class="ident">fire</span> {
-			<span class="self">self</span>.<span class="ident">inner_delay</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-			<span class="ident">Poll::Ready</span>(<span class="prelude-val">Some</span>(()))
-		} <span class="kw">else</span> {
-			<span class="ident">Poll::Pending</span>
+		<span class="kw">if </span>fire {
+			<span class="self">self</span>.inner_delay = <span class="prelude-val">None</span>;
+			Poll::Ready(<span class="prelude-val">Some</span>(()))
+		} <span class="kw">else </span>{
+			Poll::Pending
 		}
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_consensus_pow" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sc_consensus_pow" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

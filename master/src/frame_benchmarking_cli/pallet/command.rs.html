@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/pallet/command.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>command.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/pallet/command.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>command.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -598,421 +592,421 @@
 <span id="592">592</span>
 <span id="593">593</span>
 <span id="594">594</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">writer</span>, <span class="ident">PalletCmd</span>};
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
-<span class="kw">use</span> <span class="ident">frame_benchmarking</span>::{
-	<span class="ident">Analysis</span>, <span class="ident">BenchmarkBatch</span>, <span class="ident">BenchmarkBatchSplitResults</span>, <span class="ident">BenchmarkList</span>, <span class="ident">BenchmarkParameter</span>,
-	<span class="ident">BenchmarkResult</span>, <span class="ident">BenchmarkSelector</span>,
+</span><span class="kw">use super</span>::{writer, PalletCmd};
+<span class="kw">use </span>codec::{Decode, Encode};
+<span class="kw">use </span>frame_benchmarking::{
+	Analysis, BenchmarkBatch, BenchmarkBatchSplitResults, BenchmarkList, BenchmarkParameter,
+	BenchmarkResult, BenchmarkSelector,
 };
-<span class="kw">use</span> <span class="ident">frame_support::traits::StorageInfo</span>;
-<span class="kw">use</span> <span class="ident">linked_hash_map::LinkedHashMap</span>;
-<span class="kw">use</span> <span class="ident">sc_cli</span>::{
-	<span class="ident">execution_method_from_cli</span>, <span class="ident">CliConfiguration</span>, <span class="ident">ExecutionStrategy</span>, <span class="prelude-ty">Result</span>, <span class="ident">SharedParams</span>,
+<span class="kw">use </span>frame_support::traits::StorageInfo;
+<span class="kw">use </span>linked_hash_map::LinkedHashMap;
+<span class="kw">use </span>sc_cli::{
+	execution_method_from_cli, CliConfiguration, ExecutionStrategy, <span class="prelude-ty">Result</span>, SharedParams,
 };
-<span class="kw">use</span> <span class="ident">sc_client_db::BenchmarkingState</span>;
-<span class="kw">use</span> <span class="ident">sc_executor::NativeElseWasmExecutor</span>;
-<span class="kw">use</span> <span class="ident">sc_service</span>::{<span class="ident">Configuration</span>, <span class="ident">NativeExecutionDispatch</span>};
-<span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">sp_core::offchain</span>::{
-	<span class="ident">testing</span>::{<span class="ident">TestOffchainExt</span>, <span class="ident">TestTransactionPoolExt</span>},
-	<span class="ident">OffchainDbExt</span>, <span class="ident">OffchainWorkerExt</span>, <span class="ident">TransactionPoolExt</span>,
+<span class="kw">use </span>sc_client_db::BenchmarkingState;
+<span class="kw">use </span>sc_executor::NativeElseWasmExecutor;
+<span class="kw">use </span>sc_service::{Configuration, NativeExecutionDispatch};
+<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span>sp_core::offchain::{
+	testing::{TestOffchainExt, TestTransactionPoolExt},
+	OffchainDbExt, OffchainWorkerExt, TransactionPoolExt,
 };
-<span class="kw">use</span> <span class="ident">sp_externalities::Extensions</span>;
-<span class="kw">use</span> <span class="ident">sp_keystore</span>::{<span class="ident">testing::KeyStore</span>, <span class="ident">KeystoreExt</span>, <span class="ident">SyncCryptoStorePtr</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">Header</span> <span class="kw">as</span> <span class="ident">HeaderT</span>};
-<span class="kw">use</span> <span class="ident">sp_state_machine::StateMachine</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections::HashMap</span>, <span class="ident">fmt::Debug</span>, <span class="ident">fs</span>, <span class="ident">sync::Arc</span>, <span class="ident">time</span>};
+<span class="kw">use </span>sp_externalities::Extensions;
+<span class="kw">use </span>sp_keystore::{testing::KeyStore, KeystoreExt, SyncCryptoStorePtr};
+<span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, Header <span class="kw">as </span>HeaderT};
+<span class="kw">use </span>sp_state_machine::StateMachine;
+<span class="kw">use </span>std::{collections::HashMap, fmt::Debug, fs, sync::Arc, time};
 
-<span class="doccomment">/// The inclusive range of a component.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">ComponentRange</span> {
-	<span class="doccomment">/// Name of the component.</span>
-	<span class="ident">name</span>: <span class="ident">String</span>,
-	<span class="doccomment">/// Minimal valid value of the component.</span>
-	<span class="ident">min</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// Maximal valid value of the component.</span>
-	<span class="ident">max</span>: <span class="ident">u32</span>,
+<span class="doccomment">/// The inclusive range of a component.
+</span><span class="attribute">#[derive(Serialize, Debug, Clone, Eq, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ComponentRange {
+	<span class="doccomment">/// Name of the component.
+	</span>name: String,
+	<span class="doccomment">/// Minimal valid value of the component.
+	</span>min: u32,
+	<span class="doccomment">/// Maximal valid value of the component.
+	</span>max: u32,
 }
 
-<span class="comment">// This takes multiple benchmark batches and combines all the results where the pallet, instance,</span>
-<span class="comment">// and benchmark are the same.</span>
-<span class="kw">fn</span> <span class="ident">combine_batches</span>(
-	<span class="ident">time_batches</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkBatch</span><span class="op">&gt;</span>,
-	<span class="ident">db_batches</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkBatch</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkBatchSplitResults</span><span class="op">&gt;</span> {
-	<span class="kw">if</span> <span class="ident">time_batches</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="ident">db_batches</span>.<span class="ident">is_empty</span>() {
-		<span class="kw">return</span> <span class="ident">Default::default</span>()
+<span class="comment">// This takes multiple benchmark batches and combines all the results where the pallet, instance,
+// and benchmark are the same.
+</span><span class="kw">fn </span>combine_batches(
+	time_batches: Vec&lt;BenchmarkBatch&gt;,
+	db_batches: Vec&lt;BenchmarkBatch&gt;,
+) -&gt; Vec&lt;BenchmarkBatchSplitResults&gt; {
+	<span class="kw">if </span>time_batches.is_empty() &amp;&amp; db_batches.is_empty() {
+		<span class="kw">return </span>Default::default()
 	}
 
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">all_benchmarks</span> <span class="op">=</span>
-		<span class="ident">LinkedHashMap</span>::<span class="op">&lt;</span><span class="kw">_</span>, (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkResult</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkResult</span><span class="op">&gt;</span>)<span class="op">&gt;</span><span class="ident">::new</span>();
+	<span class="kw">let </span><span class="kw-2">mut </span>all_benchmarks =
+		LinkedHashMap::&lt;<span class="kw">_</span>, (Vec&lt;BenchmarkResult&gt;, Vec&lt;BenchmarkResult&gt;)&gt;::new();
 
-	<span class="ident">db_batches</span>
-		.<span class="ident">into_iter</span>()
-		.<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">BenchmarkBatch</span> { <span class="ident">pallet</span>, <span class="ident">instance</span>, <span class="ident">benchmark</span>, <span class="ident">results</span> }<span class="op">|</span> {
-			<span class="comment">// We use this key to uniquely identify a benchmark among batches.</span>
-			<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> (<span class="ident">pallet</span>, <span class="ident">instance</span>, <span class="ident">benchmark</span>);
+	db_batches
+		.into_iter()
+		.for_each(|BenchmarkBatch { pallet, instance, benchmark, results }| {
+			<span class="comment">// We use this key to uniquely identify a benchmark among batches.
+			</span><span class="kw">let </span>key = (pallet, instance, benchmark);
 
-			<span class="kw">match</span> <span class="ident">all_benchmarks</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>) {
-				<span class="comment">// We already have this benchmark, so we extend the results.</span>
-				<span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>.<span class="number">1</span>.<span class="ident">extend</span>(<span class="ident">results</span>),
-				<span class="comment">// New benchmark, so we add a new entry with the initial results.</span>
-				<span class="prelude-val">None</span> =&gt; {
-					<span class="ident">all_benchmarks</span>.<span class="ident">insert</span>(<span class="ident">key</span>, (<span class="ident">Vec::new</span>(), <span class="ident">results</span>));
+			<span class="kw">match </span>all_benchmarks.get_mut(<span class="kw-2">&amp;</span>key) {
+				<span class="comment">// We already have this benchmark, so we extend the results.
+				</span><span class="prelude-val">Some</span>(x) =&gt; x.<span class="number">1</span>.extend(results),
+				<span class="comment">// New benchmark, so we add a new entry with the initial results.
+				</span><span class="prelude-val">None </span>=&gt; {
+					all_benchmarks.insert(key, (Vec::new(), results));
 				},
 			}
 		});
 
-	<span class="ident">time_batches</span>
-		.<span class="ident">into_iter</span>()
-		.<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">BenchmarkBatch</span> { <span class="ident">pallet</span>, <span class="ident">instance</span>, <span class="ident">benchmark</span>, <span class="ident">results</span> }<span class="op">|</span> {
-			<span class="comment">// We use this key to uniquely identify a benchmark among batches.</span>
-			<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> (<span class="ident">pallet</span>, <span class="ident">instance</span>, <span class="ident">benchmark</span>);
+	time_batches
+		.into_iter()
+		.for_each(|BenchmarkBatch { pallet, instance, benchmark, results }| {
+			<span class="comment">// We use this key to uniquely identify a benchmark among batches.
+			</span><span class="kw">let </span>key = (pallet, instance, benchmark);
 
-			<span class="kw">match</span> <span class="ident">all_benchmarks</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>) {
-				<span class="comment">// We already have this benchmark, so we extend the results.</span>
-				<span class="prelude-val">Some</span>(<span class="ident">x</span>) =&gt; <span class="ident">x</span>.<span class="number">0</span>.<span class="ident">extend</span>(<span class="ident">results</span>),
-				<span class="prelude-val">None</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;all benchmark keys should have been populated by db batches&quot;</span>),
+			<span class="kw">match </span>all_benchmarks.get_mut(<span class="kw-2">&amp;</span>key) {
+				<span class="comment">// We already have this benchmark, so we extend the results.
+				</span><span class="prelude-val">Some</span>(x) =&gt; x.<span class="number">0</span>.extend(results),
+				<span class="prelude-val">None </span>=&gt; <span class="macro">panic!</span>(<span class="string">&quot;all benchmark keys should have been populated by db batches&quot;</span>),
 			}
 		});
 
-	<span class="ident">all_benchmarks</span>
-		.<span class="ident">into_iter</span>()
-		.<span class="ident">map</span>(<span class="op">|</span>((<span class="ident">pallet</span>, <span class="ident">instance</span>, <span class="ident">benchmark</span>), (<span class="ident">time_results</span>, <span class="ident">db_results</span>))<span class="op">|</span> {
-			<span class="ident">BenchmarkBatchSplitResults</span> { <span class="ident">pallet</span>, <span class="ident">instance</span>, <span class="ident">benchmark</span>, <span class="ident">time_results</span>, <span class="ident">db_results</span> }
+	all_benchmarks
+		.into_iter()
+		.map(|((pallet, instance, benchmark), (time_results, db_results))| {
+			BenchmarkBatchSplitResults { pallet, instance, benchmark, time_results, db_results }
 		})
-		.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+		.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
 }
 
-<span class="doccomment">/// Explains possible reasons why the metadata for the benchmarking could not be found.</span>
-<span class="kw">const</span> <span class="ident">ERROR_METADATA_NOT_FOUND</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;Did not find the benchmarking metadata. \
+<span class="doccomment">/// Explains possible reasons why the metadata for the benchmarking could not be found.
+</span><span class="kw">const </span>ERROR_METADATA_NOT_FOUND: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;Did not find the benchmarking metadata. \
 This could mean that you either did not build the node correctly with the \
 `--features runtime-benchmarks` flag, or the chain spec that you are using was \
 not created by a node that was compiled with the flag&quot;</span>;
 
-<span class="kw">impl</span> <span class="ident">PalletCmd</span> {
-	<span class="doccomment">/// Runs the command and benchmarks the chain.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">run</span><span class="op">&lt;</span><span class="ident">BB</span>, <span class="ident">ExecDispatch</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">config</span>: <span class="ident">Configuration</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">BB</span>: <span class="ident">BlockT</span> <span class="op">+</span> <span class="ident">Debug</span>,
-		<span class="op">&lt;</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">BB</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Header</span> <span class="kw">as</span> <span class="ident">HeaderT</span><span class="op">&gt;</span><span class="ident">::Number</span> <span class="kw">as</span> <span class="ident">std::str::FromStr</span><span class="op">&gt;</span><span class="ident">::Err</span>: <span class="ident">std::fmt::Debug</span>,
-		<span class="op">&lt;</span><span class="ident">BB</span> <span class="kw">as</span> <span class="ident">BlockT</span><span class="op">&gt;</span><span class="ident">::Hash</span>: <span class="ident">std::str::FromStr</span>,
-		<span class="ident">ExecDispatch</span>: <span class="ident">NativeExecutionDispatch</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+<span class="kw">impl </span>PalletCmd {
+	<span class="doccomment">/// Runs the command and benchmarks the chain.
+	</span><span class="kw">pub fn </span>run&lt;BB, ExecDispatch&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, config: Configuration) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;
+	<span class="kw">where
+		</span>BB: BlockT + Debug,
+		&lt;&lt;&lt;BB <span class="kw">as </span>BlockT&gt;::Header <span class="kw">as </span>HeaderT&gt;::Number <span class="kw">as </span>std::str::FromStr&gt;::Err: std::fmt::Debug,
+		&lt;BB <span class="kw">as </span>BlockT&gt;::Hash: std::str::FromStr,
+		ExecDispatch: NativeExecutionDispatch + <span class="lifetime">&#39;static</span>,
 	{
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">output_path</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">output</span> {
-			<span class="kw">if</span> <span class="op">!</span><span class="ident">output_path</span>.<span class="ident">is_dir</span>() <span class="op">&amp;&amp;</span> <span class="ident">output_path</span>.<span class="ident">file_name</span>().<span class="ident">is_none</span>() {
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Output file or path is invalid!&quot;</span>.<span class="ident">into</span>())
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(output_path) = <span class="kw-2">&amp;</span><span class="self">self</span>.output {
+			<span class="kw">if </span>!output_path.is_dir() &amp;&amp; output_path.file_name().is_none() {
+				<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Output file or path is invalid!&quot;</span>.into())
 			}
 		}
 
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">header_file</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">header</span> {
-			<span class="kw">if</span> <span class="op">!</span><span class="ident">header_file</span>.<span class="ident">is_file</span>() {
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Header file is invalid!&quot;</span>.<span class="ident">into</span>())
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(header_file) = <span class="kw-2">&amp;</span><span class="self">self</span>.header {
+			<span class="kw">if </span>!header_file.is_file() {
+				<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Header file is invalid!&quot;</span>.into())
 			};
 		}
 
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">handlebars_template_file</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">template</span> {
-			<span class="kw">if</span> <span class="op">!</span><span class="ident">handlebars_template_file</span>.<span class="ident">is_file</span>() {
-				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;Handlebars template file is invalid!&quot;</span>.<span class="ident">into</span>())
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(handlebars_template_file) = <span class="kw-2">&amp;</span><span class="self">self</span>.template {
+			<span class="kw">if </span>!handlebars_template_file.is_file() {
+				<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;Handlebars template file is invalid!&quot;</span>.into())
 			};
 		}
 
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">json_input</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">json_input</span> {
-			<span class="kw">let</span> <span class="ident">raw_data</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">std::fs::read</span>(<span class="ident">json_input</span>) {
-				<span class="prelude-val">Ok</span>(<span class="ident">raw_data</span>) =&gt; <span class="ident">raw_data</span>,
-				<span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt;
-					<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">&quot;Failed to read {:?}: {}&quot;</span>, <span class="ident">json_input</span>, <span class="ident">error</span>).<span class="ident">into</span>()),
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(json_input) = <span class="kw-2">&amp;</span><span class="self">self</span>.json_input {
+			<span class="kw">let </span>raw_data = <span class="kw">match </span>std::fs::read(json_input) {
+				<span class="prelude-val">Ok</span>(raw_data) =&gt; raw_data,
+				<span class="prelude-val">Err</span>(error) =&gt;
+					<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">&quot;Failed to read {:?}: {}&quot;</span>, json_input, error).into()),
 			};
-			<span class="kw">let</span> <span class="ident">batches</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkBatchSplitResults</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">serde_json::from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">raw_data</span>) {
-				<span class="prelude-val">Ok</span>(<span class="ident">batches</span>) =&gt; <span class="ident">batches</span>,
-				<span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt;
-					<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">&quot;Failed to deserialize {:?}: {}&quot;</span>, <span class="ident">json_input</span>, <span class="ident">error</span>).<span class="ident">into</span>()),
+			<span class="kw">let </span>batches: Vec&lt;BenchmarkBatchSplitResults&gt; = <span class="kw">match </span>serde_json::from_slice(<span class="kw-2">&amp;</span>raw_data) {
+				<span class="prelude-val">Ok</span>(batches) =&gt; batches,
+				<span class="prelude-val">Err</span>(error) =&gt;
+					<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">&quot;Failed to deserialize {:?}: {}&quot;</span>, json_input, error).into()),
 			};
-			<span class="kw">return</span> <span class="self">self</span>.<span class="ident">output_from_results</span>(<span class="kw-2">&amp;</span><span class="ident">batches</span>)
+			<span class="kw">return </span><span class="self">self</span>.output_from_results(<span class="kw-2">&amp;</span>batches)
 		}
 
-		<span class="kw">let</span> <span class="ident">spec</span> <span class="op">=</span> <span class="ident">config</span>.<span class="ident">chain_spec</span>;
-		<span class="kw">let</span> <span class="ident">strategy</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">execution</span>.<span class="ident">unwrap_or</span>(<span class="ident">ExecutionStrategy::Native</span>);
-		<span class="kw">let</span> <span class="ident">pallet</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pallet</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_default</span>();
-		<span class="kw">let</span> <span class="ident">pallet</span> <span class="op">=</span> <span class="ident">pallet</span>.<span class="ident">as_bytes</span>();
-		<span class="kw">let</span> <span class="ident">extrinsic</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extrinsic</span>.<span class="ident">clone</span>().<span class="ident">unwrap_or_default</span>();
-		<span class="kw">let</span> <span class="ident">extrinsic_split</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">extrinsic</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>).<span class="ident">collect</span>();
-		<span class="kw">let</span> <span class="ident">extrinsics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">extrinsic_split</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">trim</span>().<span class="ident">as_bytes</span>()).<span class="ident">collect</span>();
+		<span class="kw">let </span>spec = config.chain_spec;
+		<span class="kw">let </span>strategy = <span class="self">self</span>.execution.unwrap_or(ExecutionStrategy::Native);
+		<span class="kw">let </span>pallet = <span class="self">self</span>.pallet.clone().unwrap_or_default();
+		<span class="kw">let </span>pallet = pallet.as_bytes();
+		<span class="kw">let </span>extrinsic = <span class="self">self</span>.extrinsic.clone().unwrap_or_default();
+		<span class="kw">let </span>extrinsic_split: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = extrinsic.split(<span class="string">&#39;,&#39;</span>).collect();
+		<span class="kw">let </span>extrinsics: Vec&lt;<span class="kw">_</span>&gt; = extrinsic_split.iter().map(|x| x.trim().as_bytes()).collect();
 
-		<span class="kw">let</span> <span class="ident">genesis_storage</span> <span class="op">=</span> <span class="ident">spec</span>.<span class="ident">build_storage</span>()<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">changes</span> <span class="op">=</span> <span class="ident">Default::default</span>();
-		<span class="kw">let</span> <span class="ident">cache_size</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">database_cache_size</span> <span class="kw">as</span> <span class="ident">usize</span>);
-		<span class="kw">let</span> <span class="ident">state_with_tracking</span> <span class="op">=</span> <span class="ident">BenchmarkingState</span>::<span class="op">&lt;</span><span class="ident">BB</span><span class="op">&gt;</span><span class="ident">::new</span>(
-			<span class="ident">genesis_storage</span>.<span class="ident">clone</span>(),
-			<span class="ident">cache_size</span>,
-			<span class="self">self</span>.<span class="ident">record_proof</span>,
+		<span class="kw">let </span>genesis_storage = spec.build_storage()<span class="question-mark">?</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>changes = Default::default();
+		<span class="kw">let </span>cache_size = <span class="prelude-val">Some</span>(<span class="self">self</span>.database_cache_size <span class="kw">as </span>usize);
+		<span class="kw">let </span>state_with_tracking = BenchmarkingState::&lt;BB&gt;::new(
+			genesis_storage.clone(),
+			cache_size,
+			<span class="self">self</span>.record_proof,
 			<span class="bool-val">true</span>,
 		)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">state_without_tracking</span> <span class="op">=</span>
-			<span class="ident">BenchmarkingState</span>::<span class="op">&lt;</span><span class="ident">BB</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">genesis_storage</span>, <span class="ident">cache_size</span>, <span class="self">self</span>.<span class="ident">record_proof</span>, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">executor</span> <span class="op">=</span> <span class="ident">NativeElseWasmExecutor</span>::<span class="op">&lt;</span><span class="ident">ExecDispatch</span><span class="op">&gt;</span><span class="ident">::new</span>(
-			<span class="ident">execution_method_from_cli</span>(<span class="self">self</span>.<span class="ident">wasm_method</span>, <span class="self">self</span>.<span class="ident">wasmtime_instantiation_strategy</span>),
-			<span class="self">self</span>.<span class="ident">heap_pages</span>,
-			<span class="number">2</span>, <span class="comment">// The runtime instances cache size.</span>
-			<span class="number">2</span>, <span class="comment">// The runtime cache size</span>
-		);
+		<span class="kw">let </span>state_without_tracking =
+			BenchmarkingState::&lt;BB&gt;::new(genesis_storage, cache_size, <span class="self">self</span>.record_proof, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
+		<span class="kw">let </span>executor = NativeElseWasmExecutor::&lt;ExecDispatch&gt;::new(
+			execution_method_from_cli(<span class="self">self</span>.wasm_method, <span class="self">self</span>.wasmtime_instantiation_strategy),
+			<span class="self">self</span>.heap_pages,
+			<span class="number">2</span>, <span class="comment">// The runtime instances cache size.
+			</span><span class="number">2</span>, <span class="comment">// The runtime cache size
+		</span>);
 
-		<span class="kw">let</span> <span class="ident">extensions</span> <span class="op">=</span> <span class="op">|</span><span class="op">|</span> -&gt; <span class="ident">Extensions</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">extensions</span> <span class="op">=</span> <span class="ident">Extensions::default</span>();
-			<span class="ident">extensions</span>.<span class="ident">register</span>(<span class="ident">KeystoreExt</span>(<span class="ident">Arc::new</span>(<span class="ident">KeyStore::new</span>()) <span class="kw">as</span> <span class="ident">SyncCryptoStorePtr</span>));
-			<span class="kw">let</span> (<span class="ident">offchain</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">TestOffchainExt::new</span>();
-			<span class="kw">let</span> (<span class="ident">pool</span>, <span class="kw">_</span>) <span class="op">=</span> <span class="ident">TestTransactionPoolExt::new</span>();
-			<span class="ident">extensions</span>.<span class="ident">register</span>(<span class="ident">OffchainWorkerExt::new</span>(<span class="ident">offchain</span>.<span class="ident">clone</span>()));
-			<span class="ident">extensions</span>.<span class="ident">register</span>(<span class="ident">OffchainDbExt::new</span>(<span class="ident">offchain</span>));
-			<span class="ident">extensions</span>.<span class="ident">register</span>(<span class="ident">TransactionPoolExt::new</span>(<span class="ident">pool</span>));
-			<span class="ident">extensions</span>
+		<span class="kw">let </span>extensions = || -&gt; Extensions {
+			<span class="kw">let </span><span class="kw-2">mut </span>extensions = Extensions::default();
+			extensions.register(KeystoreExt(Arc::new(KeyStore::new()) <span class="kw">as </span>SyncCryptoStorePtr));
+			<span class="kw">let </span>(offchain, <span class="kw">_</span>) = TestOffchainExt::new();
+			<span class="kw">let </span>(pool, <span class="kw">_</span>) = TestTransactionPoolExt::new();
+			extensions.register(OffchainWorkerExt::new(offchain.clone()));
+			extensions.register(OffchainDbExt::new(offchain));
+			extensions.register(TransactionPoolExt::new(pool));
+			extensions
 		};
 
-		<span class="comment">// Get Benchmark List</span>
-		<span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">state_without_tracking</span>;
-		<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">StateMachine::new</span>(
-			<span class="ident">state</span>,
-			<span class="kw-2">&amp;mut</span> <span class="ident">changes</span>,
-			<span class="kw-2">&amp;</span><span class="ident">executor</span>,
+		<span class="comment">// Get Benchmark List
+		</span><span class="kw">let </span>state = <span class="kw-2">&amp;</span>state_without_tracking;
+		<span class="kw">let </span>result = StateMachine::new(
+			state,
+			<span class="kw-2">&amp;mut </span>changes,
+			<span class="kw-2">&amp;</span>executor,
 			<span class="string">&quot;Benchmark_benchmark_metadata&quot;</span>,
-			<span class="kw-2">&amp;</span>(<span class="self">self</span>.<span class="ident">extra</span>).<span class="ident">encode</span>(),
-			<span class="ident">extensions</span>(),
-			<span class="kw-2">&amp;</span><span class="ident">sp_state_machine::backend::BackendRuntimeCode::new</span>(<span class="ident">state</span>).<span class="ident">runtime_code</span>()<span class="question-mark">?</span>,
-			<span class="ident">sp_core::testing::TaskExecutor::new</span>(),
+			<span class="kw-2">&amp;</span>(<span class="self">self</span>.extra).encode(),
+			extensions(),
+			<span class="kw-2">&amp;</span>sp_state_machine::backend::BackendRuntimeCode::new(state).runtime_code()<span class="question-mark">?</span>,
+			sp_core::testing::TaskExecutor::new(),
 		)
-		.<span class="ident">execute</span>(<span class="ident">strategy</span>.<span class="ident">into</span>())
-		.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;{}: {}&quot;</span>, <span class="ident">ERROR_METADATA_NOT_FOUND</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
+		.execute(strategy.into())
+		.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;{}: {}&quot;</span>, ERROR_METADATA_NOT_FOUND, e))<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> (<span class="ident">list</span>, <span class="ident">storage_info</span>) <span class="op">=</span>
-			<span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkList</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StorageInfo</span><span class="op">&gt;</span>) <span class="kw">as</span> <span class="ident">Decode</span><span class="op">&gt;</span><span class="ident">::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="ident">result</span>[..])
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Failed to decode benchmark metadata: {:?}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
+		<span class="kw">let </span>(list, storage_info) =
+			&lt;(Vec&lt;BenchmarkList&gt;, Vec&lt;StorageInfo&gt;) <span class="kw">as </span>Decode&gt;::decode(<span class="kw-2">&amp;mut &amp;</span>result[..])
+				.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Failed to decode benchmark metadata: {:?}&quot;</span>, e))<span class="question-mark">?</span>;
 
-		<span class="comment">// Use the benchmark list and the user input to determine the set of benchmarks to run.</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">benchmarks_to_run</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-		<span class="ident">list</span>.<span class="ident">iter</span>()
-			.<span class="ident">filter</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> <span class="ident">pallet</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">pallet</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="string">b&quot;*&quot;</span>[..] <span class="op">|</span><span class="op">|</span> <span class="ident">pallet</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">item</span>.<span class="ident">pallet</span>[..])
-			.<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
-				<span class="kw">for</span> <span class="ident">benchmark</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">item</span>.<span class="ident">benchmarks</span> {
-					<span class="kw">let</span> <span class="ident">benchmark_name</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">benchmark</span>.<span class="ident">name</span>;
-					<span class="kw">if</span> <span class="ident">extrinsic</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span>
-						<span class="ident">extrinsic</span>.<span class="ident">as_bytes</span>() <span class="op">==</span> <span class="kw-2">&amp;</span><span class="string">b&quot;*&quot;</span>[..] <span class="op">|</span><span class="op">|</span>
-						<span class="ident">extrinsics</span>.<span class="ident">contains</span>(<span class="op">&amp;&amp;</span><span class="ident">benchmark_name</span>[..])
+		<span class="comment">// Use the benchmark list and the user input to determine the set of benchmarks to run.
+		</span><span class="kw">let </span><span class="kw-2">mut </span>benchmarks_to_run = Vec::new();
+		list.iter()
+			.filter(|item| pallet.is_empty() || pallet == <span class="kw-2">&amp;</span><span class="string">b&quot;*&quot;</span>[..] || pallet == <span class="kw-2">&amp;</span>item.pallet[..])
+			.for_each(|item| {
+				<span class="kw">for </span>benchmark <span class="kw">in </span><span class="kw-2">&amp;</span>item.benchmarks {
+					<span class="kw">let </span>benchmark_name = <span class="kw-2">&amp;</span>benchmark.name;
+					<span class="kw">if </span>extrinsic.is_empty() ||
+						extrinsic.as_bytes() == <span class="kw-2">&amp;</span><span class="string">b&quot;*&quot;</span>[..] ||
+						extrinsics.contains(&amp;&amp;benchmark_name[..])
 					{
-						<span class="ident">benchmarks_to_run</span>.<span class="ident">push</span>((
-							<span class="ident">item</span>.<span class="ident">pallet</span>.<span class="ident">clone</span>(),
-							<span class="ident">benchmark</span>.<span class="ident">name</span>.<span class="ident">clone</span>(),
-							<span class="ident">benchmark</span>.<span class="ident">components</span>.<span class="ident">clone</span>(),
+						benchmarks_to_run.push((
+							item.pallet.clone(),
+							benchmark.name.clone(),
+							benchmark.components.clone(),
 						))
 					}
 				}
 			});
 
-		<span class="kw">if</span> <span class="ident">benchmarks_to_run</span>.<span class="ident">is_empty</span>() {
-			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;No benchmarks found which match your input.&quot;</span>.<span class="ident">into</span>())
+		<span class="kw">if </span>benchmarks_to_run.is_empty() {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;No benchmarks found which match your input.&quot;</span>.into())
 		}
 
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">list</span> {
-			<span class="comment">// List benchmarks instead of running them</span>
-			<span class="ident">list_benchmark</span>(<span class="ident">benchmarks_to_run</span>);
-			<span class="kw">return</span> <span class="prelude-val">Ok</span>(())
+		<span class="kw">if </span><span class="self">self</span>.list {
+			<span class="comment">// List benchmarks instead of running them
+			</span>list_benchmark(benchmarks_to_run);
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="comment">// Run the benchmarks</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">batches</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">batches_db</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">timer</span> <span class="op">=</span> <span class="ident">time::SystemTime::now</span>();
-		<span class="comment">// Maps (pallet, extrinsic) to its component ranges.</span>
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">component_ranges</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>), <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ComponentRange</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::new</span>();
+		<span class="comment">// Run the benchmarks
+		</span><span class="kw">let </span><span class="kw-2">mut </span>batches = Vec::new();
+		<span class="kw">let </span><span class="kw-2">mut </span>batches_db = Vec::new();
+		<span class="kw">let </span><span class="kw-2">mut </span>timer = time::SystemTime::now();
+		<span class="comment">// Maps (pallet, extrinsic) to its component ranges.
+		</span><span class="kw">let </span><span class="kw-2">mut </span>component_ranges = HashMap::&lt;(Vec&lt;u8&gt;, Vec&lt;u8&gt;), Vec&lt;ComponentRange&gt;&gt;::new();
 
-		<span class="kw">for</span> (<span class="ident">pallet</span>, <span class="ident">extrinsic</span>, <span class="ident">components</span>) <span class="kw">in</span> <span class="ident">benchmarks_to_run</span> {
+		<span class="kw">for </span>(pallet, extrinsic, components) <span class="kw">in </span>benchmarks_to_run {
 			<span class="macro">println!</span>(
 				<span class="string">&quot;Starting benchmark: {}::{}&quot;</span>,
-				<span class="ident">String::from_utf8</span>(<span class="ident">pallet</span>.<span class="ident">clone</span>()).<span class="ident">expect</span>(<span class="string">&quot;Encoded from String; qed&quot;</span>),
-				<span class="ident">String::from_utf8</span>(<span class="ident">extrinsic</span>.<span class="ident">clone</span>()).<span class="ident">expect</span>(<span class="string">&quot;Encoded from String; qed&quot;</span>),
+				String::from_utf8(pallet.clone()).expect(<span class="string">&quot;Encoded from String; qed&quot;</span>),
+				String::from_utf8(extrinsic.clone()).expect(<span class="string">&quot;Encoded from String; qed&quot;</span>),
 			);
-			<span class="kw">let</span> <span class="ident">all_components</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">components</span>.<span class="ident">is_empty</span>() {
-				<span class="macro">vec!</span>[<span class="ident">Default::default</span>()]
-			} <span class="kw">else</span> {
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">all_components</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-				<span class="kw">for</span> (<span class="ident">idx</span>, (<span class="ident">name</span>, <span class="ident">low</span>, <span class="ident">high</span>)) <span class="kw">in</span> <span class="ident">components</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-					<span class="kw">let</span> <span class="ident">lowest</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lowest_range_values</span>.<span class="ident">get</span>(<span class="ident">idx</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or</span>(<span class="kw-2">*</span><span class="ident">low</span>);
-					<span class="kw">let</span> <span class="ident">highest</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">highest_range_values</span>.<span class="ident">get</span>(<span class="ident">idx</span>).<span class="ident">cloned</span>().<span class="ident">unwrap_or</span>(<span class="kw-2">*</span><span class="ident">high</span>);
+			<span class="kw">let </span>all_components = <span class="kw">if </span>components.is_empty() {
+				<span class="macro">vec!</span>[Default::default()]
+			} <span class="kw">else </span>{
+				<span class="kw">let </span><span class="kw-2">mut </span>all_components = Vec::new();
+				<span class="kw">for </span>(idx, (name, low, high)) <span class="kw">in </span>components.iter().enumerate() {
+					<span class="kw">let </span>lowest = <span class="self">self</span>.lowest_range_values.get(idx).cloned().unwrap_or(<span class="kw-2">*</span>low);
+					<span class="kw">let </span>highest = <span class="self">self</span>.highest_range_values.get(idx).cloned().unwrap_or(<span class="kw-2">*</span>high);
 
-					<span class="kw">let</span> <span class="ident">diff</span> <span class="op">=</span>
-						<span class="ident">highest</span>.<span class="ident">checked_sub</span>(<span class="ident">lowest</span>).<span class="ident">ok_or</span>(<span class="string">&quot;`low` cannot be higher than `high`&quot;</span>)<span class="question-mark">?</span>;
+					<span class="kw">let </span>diff =
+						highest.checked_sub(lowest).ok_or(<span class="string">&quot;`low` cannot be higher than `high`&quot;</span>)<span class="question-mark">?</span>;
 
-					<span class="comment">// The slope logic needs at least two points</span>
-					<span class="comment">// to compute a slope.</span>
-					<span class="kw">if</span> <span class="self">self</span>.<span class="ident">steps</span> <span class="op">&lt;</span> <span class="number">2</span> {
-						<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="string">&quot;`steps` must be at least 2.&quot;</span>.<span class="ident">into</span>())
+					<span class="comment">// The slope logic needs at least two points
+					// to compute a slope.
+					</span><span class="kw">if </span><span class="self">self</span>.steps &lt; <span class="number">2 </span>{
+						<span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">&quot;`steps` must be at least 2.&quot;</span>.into())
 					}
 
-					<span class="kw">let</span> <span class="ident">step_size</span> <span class="op">=</span> (<span class="ident">diff</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">/</span> (<span class="self">self</span>.<span class="ident">steps</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f32</span>).<span class="ident">max</span>(<span class="number">0.0</span>);
+					<span class="kw">let </span>step_size = (diff <span class="kw">as </span>f32 / (<span class="self">self</span>.steps - <span class="number">1</span>) <span class="kw">as </span>f32).max(<span class="number">0.0</span>);
 
-					<span class="kw">for</span> <span class="ident">s</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">steps</span> {
-						<span class="comment">// This is the value we will be testing for component `name`</span>
-						<span class="kw">let</span> <span class="ident">component_value</span> <span class="op">=</span>
-							((<span class="ident">lowest</span> <span class="kw">as</span> <span class="ident">f32</span> <span class="op">+</span> <span class="ident">step_size</span> <span class="op">*</span> <span class="ident">s</span> <span class="kw">as</span> <span class="ident">f32</span>) <span class="kw">as</span> <span class="ident">u32</span>).<span class="ident">clamp</span>(<span class="ident">lowest</span>, <span class="ident">highest</span>);
+					<span class="kw">for </span>s <span class="kw">in </span><span class="number">0</span>..<span class="self">self</span>.steps {
+						<span class="comment">// This is the value we will be testing for component `name`
+						</span><span class="kw">let </span>component_value =
+							((lowest <span class="kw">as </span>f32 + step_size * s <span class="kw">as </span>f32) <span class="kw">as </span>u32).clamp(lowest, highest);
 
-						<span class="comment">// Select the max value for all the other components.</span>
-						<span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">BenchmarkParameter</span>, <span class="ident">u32</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">components</span>
-							.<span class="ident">iter</span>()
-							.<span class="ident">enumerate</span>()
-							.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">idx</span>, (<span class="ident">n</span>, <span class="kw">_</span>, <span class="ident">h</span>))<span class="op">|</span> {
-								<span class="kw">if</span> <span class="ident">n</span> <span class="op">==</span> <span class="ident">name</span> {
-									(<span class="kw-2">*</span><span class="ident">n</span>, <span class="ident">component_value</span>)
-								} <span class="kw">else</span> {
-									(<span class="kw-2">*</span><span class="ident">n</span>, <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">highest_range_values</span>.<span class="ident">get</span>(<span class="ident">idx</span>).<span class="ident">unwrap_or</span>(<span class="ident">h</span>))
+						<span class="comment">// Select the max value for all the other components.
+						</span><span class="kw">let </span>c: Vec&lt;(BenchmarkParameter, u32)&gt; = components
+							.iter()
+							.enumerate()
+							.map(|(idx, (n, <span class="kw">_</span>, h))| {
+								<span class="kw">if </span>n == name {
+									(<span class="kw-2">*</span>n, component_value)
+								} <span class="kw">else </span>{
+									(<span class="kw-2">*</span>n, <span class="kw-2">*</span><span class="self">self</span>.highest_range_values.get(idx).unwrap_or(h))
 								}
 							})
-							.<span class="ident">collect</span>();
-						<span class="ident">all_components</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+							.collect();
+						all_components.push(c);
 					}
 
-					<span class="ident">component_ranges</span>
-						.<span class="ident">entry</span>((<span class="ident">pallet</span>.<span class="ident">clone</span>(), <span class="ident">extrinsic</span>.<span class="ident">clone</span>()))
-						.<span class="ident">or_default</span>()
-						.<span class="ident">push</span>(<span class="ident">ComponentRange</span> { <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="ident">min</span>: <span class="ident">lowest</span>, <span class="ident">max</span>: <span class="ident">highest</span> });
+					component_ranges
+						.entry((pallet.clone(), extrinsic.clone()))
+						.or_default()
+						.push(ComponentRange { name: name.to_string(), min: lowest, max: highest });
 				}
-				<span class="ident">all_components</span>
+				all_components
 			};
-			<span class="kw">for</span> (<span class="ident">s</span>, <span class="ident">selected_components</span>) <span class="kw">in</span> <span class="ident">all_components</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-				<span class="comment">// First we run a verification</span>
-				<span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">no_verify</span> {
-					<span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">state_without_tracking</span>;
-					<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">StateMachine::new</span>(
-						<span class="ident">state</span>,
-						<span class="kw-2">&amp;mut</span> <span class="ident">changes</span>,
-						<span class="kw-2">&amp;</span><span class="ident">executor</span>,
+			<span class="kw">for </span>(s, selected_components) <span class="kw">in </span>all_components.iter().enumerate() {
+				<span class="comment">// First we run a verification
+				</span><span class="kw">if </span>!<span class="self">self</span>.no_verify {
+					<span class="kw">let </span>state = <span class="kw-2">&amp;</span>state_without_tracking;
+					<span class="kw">let </span>result = StateMachine::new(
+						state,
+						<span class="kw-2">&amp;mut </span>changes,
+						<span class="kw-2">&amp;</span>executor,
 						<span class="string">&quot;Benchmark_dispatch_benchmark&quot;</span>,
 						<span class="kw-2">&amp;</span>(
-							<span class="kw-2">&amp;</span><span class="ident">pallet</span>,
-							<span class="kw-2">&amp;</span><span class="ident">extrinsic</span>,
-							<span class="kw-2">&amp;</span><span class="ident">selected_components</span>.<span class="ident">clone</span>(),
-							<span class="bool-val">true</span>, <span class="comment">// run verification code</span>
-							<span class="number">1</span>,    <span class="comment">// no need to do internal repeats</span>
-						)
-							.<span class="ident">encode</span>(),
-						<span class="ident">extensions</span>(),
-						<span class="kw-2">&amp;</span><span class="ident">sp_state_machine::backend::BackendRuntimeCode::new</span>(<span class="ident">state</span>)
-							.<span class="ident">runtime_code</span>()<span class="question-mark">?</span>,
-						<span class="ident">sp_core::testing::TaskExecutor::new</span>(),
+							<span class="kw-2">&amp;</span>pallet,
+							<span class="kw-2">&amp;</span>extrinsic,
+							<span class="kw-2">&amp;</span>selected_components.clone(),
+							<span class="bool-val">true</span>, <span class="comment">// run verification code
+							</span><span class="number">1</span>,    <span class="comment">// no need to do internal repeats
+						</span>)
+							.encode(),
+						extensions(),
+						<span class="kw-2">&amp;</span>sp_state_machine::backend::BackendRuntimeCode::new(state)
+							.runtime_code()<span class="question-mark">?</span>,
+						sp_core::testing::TaskExecutor::new(),
 					)
-					.<span class="ident">execute</span>(<span class="ident">strategy</span>.<span class="ident">into</span>())
-					.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-						<span class="macro">format!</span>(<span class="string">&quot;Error executing and verifying runtime benchmark: {}&quot;</span>, <span class="ident">e</span>)
+					.execute(strategy.into())
+					.map_err(|e| {
+						<span class="macro">format!</span>(<span class="string">&quot;Error executing and verifying runtime benchmark: {}&quot;</span>, e)
 					})<span class="question-mark">?</span>;
-					<span class="comment">// Dont use these results since verification code will add overhead.</span>
-					<span class="kw">let</span> <span class="ident">_batch</span> <span class="op">=</span>
-						<span class="op">&lt;</span><span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkBatch</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">Decode</span><span class="op">&gt;</span><span class="ident">::decode</span>(
-							<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="ident">result</span>[..],
+					<span class="comment">// Dont use these results since verification code will add overhead.
+					</span><span class="kw">let </span>_batch =
+						&lt;std::result::Result&lt;Vec&lt;BenchmarkBatch&gt;, String&gt; <span class="kw">as </span>Decode&gt;::decode(
+							<span class="kw-2">&amp;mut &amp;</span>result[..],
 						)
-						.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Failed to decode benchmark results: {:?}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span>
-						.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+						.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Failed to decode benchmark results: {:?}&quot;</span>, e))<span class="question-mark">?
+						</span>.map_err(|e| {
 							<span class="macro">format!</span>(
 								<span class="string">&quot;Benchmark {}::{} failed: {}&quot;</span>,
-								<span class="ident">String::from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">pallet</span>),
-								<span class="ident">String::from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">extrinsic</span>),
-								<span class="ident">e</span>
+								String::from_utf8_lossy(<span class="kw-2">&amp;</span>pallet),
+								String::from_utf8_lossy(<span class="kw-2">&amp;</span>extrinsic),
+								e
 							)
 						})<span class="question-mark">?</span>;
 				}
-				<span class="comment">// Do one loop of DB tracking.</span>
-				{
-					<span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">state_with_tracking</span>;
-					<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">StateMachine::new</span>(
-						<span class="ident">state</span>, <span class="comment">// todo remove tracking</span>
-						<span class="kw-2">&amp;mut</span> <span class="ident">changes</span>,
-						<span class="kw-2">&amp;</span><span class="ident">executor</span>,
+				<span class="comment">// Do one loop of DB tracking.
+				</span>{
+					<span class="kw">let </span>state = <span class="kw-2">&amp;</span>state_with_tracking;
+					<span class="kw">let </span>result = StateMachine::new(
+						state, <span class="comment">// todo remove tracking
+						</span><span class="kw-2">&amp;mut </span>changes,
+						<span class="kw-2">&amp;</span>executor,
 						<span class="string">&quot;Benchmark_dispatch_benchmark&quot;</span>,
 						<span class="kw-2">&amp;</span>(
-							<span class="kw-2">&amp;</span><span class="ident">pallet</span>.<span class="ident">clone</span>(),
-							<span class="kw-2">&amp;</span><span class="ident">extrinsic</span>.<span class="ident">clone</span>(),
-							<span class="kw-2">&amp;</span><span class="ident">selected_components</span>.<span class="ident">clone</span>(),
-							<span class="bool-val">false</span>, <span class="comment">// dont run verification code for final values</span>
-							<span class="self">self</span>.<span class="ident">repeat</span>,
+							<span class="kw-2">&amp;</span>pallet.clone(),
+							<span class="kw-2">&amp;</span>extrinsic.clone(),
+							<span class="kw-2">&amp;</span>selected_components.clone(),
+							<span class="bool-val">false</span>, <span class="comment">// dont run verification code for final values
+							</span><span class="self">self</span>.repeat,
 						)
-							.<span class="ident">encode</span>(),
-						<span class="ident">extensions</span>(),
-						<span class="kw-2">&amp;</span><span class="ident">sp_state_machine::backend::BackendRuntimeCode::new</span>(<span class="ident">state</span>)
-							.<span class="ident">runtime_code</span>()<span class="question-mark">?</span>,
-						<span class="ident">sp_core::testing::TaskExecutor::new</span>(),
+							.encode(),
+						extensions(),
+						<span class="kw-2">&amp;</span>sp_state_machine::backend::BackendRuntimeCode::new(state)
+							.runtime_code()<span class="question-mark">?</span>,
+						sp_core::testing::TaskExecutor::new(),
 					)
-					.<span class="ident">execute</span>(<span class="ident">strategy</span>.<span class="ident">into</span>())
-					.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Error executing runtime benchmark: {}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
+					.execute(strategy.into())
+					.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Error executing runtime benchmark: {}&quot;</span>, e))<span class="question-mark">?</span>;
 
-					<span class="kw">let</span> <span class="ident">batch</span> <span class="op">=</span>
-						<span class="op">&lt;</span><span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkBatch</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">Decode</span><span class="op">&gt;</span><span class="ident">::decode</span>(
-							<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="ident">result</span>[..],
+					<span class="kw">let </span>batch =
+						&lt;std::result::Result&lt;Vec&lt;BenchmarkBatch&gt;, String&gt; <span class="kw">as </span>Decode&gt;::decode(
+							<span class="kw-2">&amp;mut &amp;</span>result[..],
 						)
-						.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Failed to decode benchmark results: {:?}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span><span class="question-mark">?</span>;
+						.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Failed to decode benchmark results: {:?}&quot;</span>, e))<span class="question-mark">??</span>;
 
-					<span class="ident">batches_db</span>.<span class="ident">extend</span>(<span class="ident">batch</span>);
+					batches_db.extend(batch);
 				}
-				<span class="comment">// Finally run a bunch of loops to get extrinsic timing information.</span>
-				<span class="kw">for</span> <span class="ident">r</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">external_repeat</span> {
-					<span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">state_without_tracking</span>;
-					<span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">StateMachine::new</span>(
-						<span class="ident">state</span>, <span class="comment">// todo remove tracking</span>
-						<span class="kw-2">&amp;mut</span> <span class="ident">changes</span>,
-						<span class="kw-2">&amp;</span><span class="ident">executor</span>,
+				<span class="comment">// Finally run a bunch of loops to get extrinsic timing information.
+				</span><span class="kw">for </span>r <span class="kw">in </span><span class="number">0</span>..<span class="self">self</span>.external_repeat {
+					<span class="kw">let </span>state = <span class="kw-2">&amp;</span>state_without_tracking;
+					<span class="kw">let </span>result = StateMachine::new(
+						state, <span class="comment">// todo remove tracking
+						</span><span class="kw-2">&amp;mut </span>changes,
+						<span class="kw-2">&amp;</span>executor,
 						<span class="string">&quot;Benchmark_dispatch_benchmark&quot;</span>,
 						<span class="kw-2">&amp;</span>(
-							<span class="kw-2">&amp;</span><span class="ident">pallet</span>.<span class="ident">clone</span>(),
-							<span class="kw-2">&amp;</span><span class="ident">extrinsic</span>.<span class="ident">clone</span>(),
-							<span class="kw-2">&amp;</span><span class="ident">selected_components</span>.<span class="ident">clone</span>(),
-							<span class="bool-val">false</span>, <span class="comment">// dont run verification code for final values</span>
-							<span class="self">self</span>.<span class="ident">repeat</span>,
+							<span class="kw-2">&amp;</span>pallet.clone(),
+							<span class="kw-2">&amp;</span>extrinsic.clone(),
+							<span class="kw-2">&amp;</span>selected_components.clone(),
+							<span class="bool-val">false</span>, <span class="comment">// dont run verification code for final values
+							</span><span class="self">self</span>.repeat,
 						)
-							.<span class="ident">encode</span>(),
-						<span class="ident">extensions</span>(),
-						<span class="kw-2">&amp;</span><span class="ident">sp_state_machine::backend::BackendRuntimeCode::new</span>(<span class="ident">state</span>)
-							.<span class="ident">runtime_code</span>()<span class="question-mark">?</span>,
-						<span class="ident">sp_core::testing::TaskExecutor::new</span>(),
+							.encode(),
+						extensions(),
+						<span class="kw-2">&amp;</span>sp_state_machine::backend::BackendRuntimeCode::new(state)
+							.runtime_code()<span class="question-mark">?</span>,
+						sp_core::testing::TaskExecutor::new(),
 					)
-					.<span class="ident">execute</span>(<span class="ident">strategy</span>.<span class="ident">into</span>())
-					.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Error executing runtime benchmark: {}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
+					.execute(strategy.into())
+					.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Error executing runtime benchmark: {}&quot;</span>, e))<span class="question-mark">?</span>;
 
-					<span class="kw">let</span> <span class="ident">batch</span> <span class="op">=</span>
-						<span class="op">&lt;</span><span class="ident">std::result::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BenchmarkBatch</span><span class="op">&gt;</span>, <span class="ident">String</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">Decode</span><span class="op">&gt;</span><span class="ident">::decode</span>(
-							<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="ident">result</span>[..],
+					<span class="kw">let </span>batch =
+						&lt;std::result::Result&lt;Vec&lt;BenchmarkBatch&gt;, String&gt; <span class="kw">as </span>Decode&gt;::decode(
+							<span class="kw-2">&amp;mut &amp;</span>result[..],
 						)
-						.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Failed to decode benchmark results: {:?}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span><span class="question-mark">?</span>;
+						.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Failed to decode benchmark results: {:?}&quot;</span>, e))<span class="question-mark">??</span>;
 
-					<span class="ident">batches</span>.<span class="ident">extend</span>(<span class="ident">batch</span>);
+					batches.extend(batch);
 
-					<span class="comment">// Show progress information</span>
-					<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">elapsed</span>) <span class="op">=</span> <span class="ident">timer</span>.<span class="ident">elapsed</span>() {
-						<span class="kw">if</span> <span class="ident">elapsed</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">time::Duration::from_secs</span>(<span class="number">5</span>) {
-							<span class="ident">timer</span> <span class="op">=</span> <span class="ident">time::SystemTime::now</span>();
+					<span class="comment">// Show progress information
+					</span><span class="kw">if let </span><span class="prelude-val">Ok</span>(elapsed) = timer.elapsed() {
+						<span class="kw">if </span>elapsed &gt;= time::Duration::from_secs(<span class="number">5</span>) {
+							timer = time::SystemTime::now();
 							<span class="macro">println!</span>(
 								<span class="string">&quot;Running Benchmark: {}.{}({} args) {}/{} {}/{}&quot;</span>,
-								<span class="ident">String::from_utf8</span>(<span class="ident">pallet</span>.<span class="ident">clone</span>())
-									.<span class="ident">expect</span>(<span class="string">&quot;Encoded from String; qed&quot;</span>),
-								<span class="ident">String::from_utf8</span>(<span class="ident">extrinsic</span>.<span class="ident">clone</span>())
-									.<span class="ident">expect</span>(<span class="string">&quot;Encoded from String; qed&quot;</span>),
-								<span class="ident">components</span>.<span class="ident">len</span>(),
-								<span class="ident">s</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// s starts at 0.</span>
-								<span class="ident">all_components</span>.<span class="ident">len</span>(),
-								<span class="ident">r</span> <span class="op">+</span> <span class="number">1</span>,
-								<span class="self">self</span>.<span class="ident">external_repeat</span>,
+								String::from_utf8(pallet.clone())
+									.expect(<span class="string">&quot;Encoded from String; qed&quot;</span>),
+								String::from_utf8(extrinsic.clone())
+									.expect(<span class="string">&quot;Encoded from String; qed&quot;</span>),
+								components.len(),
+								s + <span class="number">1</span>, <span class="comment">// s starts at 0.
+								</span>all_components.len(),
+								r + <span class="number">1</span>,
+								<span class="self">self</span>.external_repeat,
 							);
 						}
 					}
@@ -1020,151 +1014,151 @@ not created by a node that was compiled with the flag&quot;</span>;
 			}
 		}
 
-		<span class="comment">// Combine all of the benchmark results, so that benchmarks of the same pallet/function</span>
-		<span class="comment">// are together.</span>
-		<span class="kw">let</span> <span class="ident">batches</span> <span class="op">=</span> <span class="ident">combine_batches</span>(<span class="ident">batches</span>, <span class="ident">batches_db</span>);
-		<span class="self">self</span>.<span class="ident">output</span>(<span class="kw-2">&amp;</span><span class="ident">batches</span>, <span class="kw-2">&amp;</span><span class="ident">storage_info</span>, <span class="kw-2">&amp;</span><span class="ident">component_ranges</span>)
+		<span class="comment">// Combine all of the benchmark results, so that benchmarks of the same pallet/function
+		// are together.
+		</span><span class="kw">let </span>batches = combine_batches(batches, batches_db);
+		<span class="self">self</span>.output(<span class="kw-2">&amp;</span>batches, <span class="kw-2">&amp;</span>storage_info, <span class="kw-2">&amp;</span>component_ranges)
 	}
 
-	<span class="kw">fn</span> <span class="ident">output</span>(
+	<span class="kw">fn </span>output(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">batches</span>: <span class="kw-2">&amp;</span>[<span class="ident">BenchmarkBatchSplitResults</span>],
-		<span class="ident">storage_info</span>: <span class="kw-2">&amp;</span>[<span class="ident">StorageInfo</span>],
-		<span class="ident">component_ranges</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>), <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ComponentRange</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-		<span class="comment">// Jsonify the result and write it to a file or stdout if desired.</span>
-		<span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">jsonify</span>(<span class="kw-2">&amp;</span><span class="ident">batches</span>)<span class="question-mark">?</span> {
-			<span class="comment">// Print the summary only if `jsonify` did not write to stdout.</span>
-			<span class="self">self</span>.<span class="ident">print_summary</span>(<span class="kw-2">&amp;</span><span class="ident">batches</span>, <span class="kw-2">&amp;</span><span class="ident">storage_info</span>)
+		batches: <span class="kw-2">&amp;</span>[BenchmarkBatchSplitResults],
+		storage_info: <span class="kw-2">&amp;</span>[StorageInfo],
+		component_ranges: <span class="kw-2">&amp;</span>HashMap&lt;(Vec&lt;u8&gt;, Vec&lt;u8&gt;), Vec&lt;ComponentRange&gt;&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+		<span class="comment">// Jsonify the result and write it to a file or stdout if desired.
+		</span><span class="kw">if </span>!<span class="self">self</span>.jsonify(<span class="kw-2">&amp;</span>batches)<span class="question-mark">? </span>{
+			<span class="comment">// Print the summary only if `jsonify` did not write to stdout.
+			</span><span class="self">self</span>.print_summary(<span class="kw-2">&amp;</span>batches, <span class="kw-2">&amp;</span>storage_info)
 		}
 
-		<span class="comment">// Create the weights.rs file.</span>
-		<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">output_path</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">output</span> {
-			<span class="ident">writer::write_results</span>(<span class="kw-2">&amp;</span><span class="ident">batches</span>, <span class="kw-2">&amp;</span><span class="ident">storage_info</span>, <span class="kw-2">&amp;</span><span class="ident">component_ranges</span>, <span class="ident">output_path</span>, <span class="self">self</span>)<span class="question-mark">?</span>;
+		<span class="comment">// Create the weights.rs file.
+		</span><span class="kw">if let </span><span class="prelude-val">Some</span>(output_path) = <span class="kw-2">&amp;</span><span class="self">self</span>.output {
+			writer::write_results(<span class="kw-2">&amp;</span>batches, <span class="kw-2">&amp;</span>storage_info, <span class="kw-2">&amp;</span>component_ranges, output_path, <span class="self">self</span>)<span class="question-mark">?</span>;
 		}
 
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="kw">fn</span> <span class="ident">output_from_results</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">batches</span>: <span class="kw-2">&amp;</span>[<span class="ident">BenchmarkBatchSplitResults</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">component_ranges</span> <span class="op">=</span>
-			<span class="ident">HashMap</span>::<span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>), <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, (<span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::new</span>();
-		<span class="kw">for</span> <span class="ident">batch</span> <span class="kw">in</span> <span class="ident">batches</span> {
-			<span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">component_ranges</span>
-				.<span class="ident">entry</span>((<span class="ident">batch</span>.<span class="ident">pallet</span>.<span class="ident">clone</span>(), <span class="ident">batch</span>.<span class="ident">benchmark</span>.<span class="ident">clone</span>()))
-				.<span class="ident">or_default</span>();
-			<span class="kw">for</span> <span class="ident">result</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">batch</span>.<span class="ident">time_results</span> {
-				<span class="kw">for</span> (<span class="ident">param</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">result</span>.<span class="ident">components</span> {
-					<span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">param</span>.<span class="ident">to_string</span>();
-					<span class="kw">let</span> (<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">min</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">max</span>) <span class="op">=</span> <span class="ident">range</span>.<span class="ident">entry</span>(<span class="ident">name</span>).<span class="ident">or_insert</span>((<span class="kw-2">*</span><span class="ident">value</span>, <span class="kw-2">*</span><span class="ident">value</span>));
-					<span class="kw">if</span> <span class="kw-2">*</span><span class="ident">value</span> <span class="op">&lt;</span> <span class="kw-2">*</span><span class="ident">min</span> {
-						<span class="kw-2">*</span><span class="ident">min</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">value</span>;
+	<span class="kw">fn </span>output_from_results(<span class="kw-2">&amp;</span><span class="self">self</span>, batches: <span class="kw-2">&amp;</span>[BenchmarkBatchSplitResults]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>component_ranges =
+			HashMap::&lt;(Vec&lt;u8&gt;, Vec&lt;u8&gt;), HashMap&lt;String, (u32, u32)&gt;&gt;::new();
+		<span class="kw">for </span>batch <span class="kw">in </span>batches {
+			<span class="kw">let </span>range = component_ranges
+				.entry((batch.pallet.clone(), batch.benchmark.clone()))
+				.or_default();
+			<span class="kw">for </span>result <span class="kw">in </span><span class="kw-2">&amp;</span>batch.time_results {
+				<span class="kw">for </span>(param, value) <span class="kw">in </span><span class="kw-2">&amp;</span>result.components {
+					<span class="kw">let </span>name = param.to_string();
+					<span class="kw">let </span>(<span class="kw-2">ref mut </span>min, <span class="kw-2">ref mut </span>max) = range.entry(name).or_insert((<span class="kw-2">*</span>value, <span class="kw-2">*</span>value));
+					<span class="kw">if </span><span class="kw-2">*</span>value &lt; <span class="kw-2">*</span>min {
+						<span class="kw-2">*</span>min = <span class="kw-2">*</span>value;
 					}
-					<span class="kw">if</span> <span class="kw-2">*</span><span class="ident">value</span> <span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">max</span> {
-						<span class="kw-2">*</span><span class="ident">max</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">value</span>;
+					<span class="kw">if </span><span class="kw-2">*</span>value &gt; <span class="kw-2">*</span>max {
+						<span class="kw-2">*</span>max = <span class="kw-2">*</span>value;
 					}
 				}
 			}
 		}
 
-		<span class="kw">let</span> <span class="ident">component_ranges</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">component_ranges</span>
-			.<span class="ident">into_iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">key</span>, <span class="ident">ranges</span>)<span class="op">|</span> {
-				<span class="kw">let</span> <span class="ident">ranges</span> <span class="op">=</span> <span class="ident">ranges</span>
-					.<span class="ident">into_iter</span>()
-					.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">name</span>, (<span class="ident">min</span>, <span class="ident">max</span>))<span class="op">|</span> <span class="ident">ComponentRange</span> { <span class="ident">name</span>, <span class="ident">min</span>, <span class="ident">max</span> })
-					.<span class="ident">collect</span>();
-				(<span class="ident">key</span>, <span class="ident">ranges</span>)
+		<span class="kw">let </span>component_ranges: HashMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = component_ranges
+			.into_iter()
+			.map(|(key, ranges)| {
+				<span class="kw">let </span>ranges = ranges
+					.into_iter()
+					.map(|(name, (min, max))| ComponentRange { name, min, max })
+					.collect();
+				(key, ranges)
 			})
-			.<span class="ident">collect</span>();
+			.collect();
 
-		<span class="self">self</span>.<span class="ident">output</span>(<span class="ident">batches</span>, <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span><span class="ident">component_ranges</span>)
+		<span class="self">self</span>.output(batches, <span class="kw-2">&amp;</span>[], <span class="kw-2">&amp;</span>component_ranges)
 	}
 
-	<span class="doccomment">/// Jsonifies the passed batches and writes them to stdout or into a file.</span>
-	<span class="doccomment">/// Can be configured via `--json` and `--json-file`.</span>
-	<span class="doccomment">/// Returns whether it wrote to stdout.</span>
-	<span class="kw">fn</span> <span class="ident">jsonify</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">batches</span>: <span class="kw-2">&amp;</span>[<span class="ident">BenchmarkBatchSplitResults</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">json_output</span> <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">json_file</span>.<span class="ident">is_some</span>() {
-			<span class="kw">let</span> <span class="ident">json</span> <span class="op">=</span> <span class="ident">serde_json::to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">batches</span>)
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;Serializing into JSON: {:?}&quot;</span>, <span class="ident">e</span>))<span class="question-mark">?</span>;
+	<span class="doccomment">/// Jsonifies the passed batches and writes them to stdout or into a file.
+	/// Can be configured via `--json` and `--json-file`.
+	/// Returns whether it wrote to stdout.
+	</span><span class="kw">fn </span>jsonify(<span class="kw-2">&amp;</span><span class="self">self</span>, batches: <span class="kw-2">&amp;</span>[BenchmarkBatchSplitResults]) -&gt; <span class="prelude-ty">Result</span>&lt;bool&gt; {
+		<span class="kw">if </span><span class="self">self</span>.json_output || <span class="self">self</span>.json_file.is_some() {
+			<span class="kw">let </span>json = serde_json::to_string_pretty(<span class="kw-2">&amp;</span>batches)
+				.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Serializing into JSON: {:?}&quot;</span>, e))<span class="question-mark">?</span>;
 
-			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">json_file</span> {
-				<span class="ident">fs::write</span>(<span class="ident">path</span>, <span class="ident">json</span>)<span class="question-mark">?</span>;
-			} <span class="kw">else</span> {
-				<span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">json</span>);
-				<span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
+			<span class="kw">if let </span><span class="prelude-val">Some</span>(path) = <span class="kw-2">&amp;</span><span class="self">self</span>.json_file {
+				fs::write(path, json)<span class="question-mark">?</span>;
+			} <span class="kw">else </span>{
+				<span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, json);
+				<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
 			}
 		}
 
 		<span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
 	}
 
-	<span class="doccomment">/// Prints the results as human-readable summary without raw timing data.</span>
-	<span class="kw">fn</span> <span class="ident">print_summary</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">batches</span>: <span class="kw-2">&amp;</span>[<span class="ident">BenchmarkBatchSplitResults</span>], <span class="ident">storage_info</span>: <span class="kw-2">&amp;</span>[<span class="ident">StorageInfo</span>]) {
-		<span class="kw">for</span> <span class="ident">batch</span> <span class="kw">in</span> <span class="ident">batches</span>.<span class="ident">iter</span>() {
-			<span class="comment">// Print benchmark metadata</span>
-			<span class="macro">println!</span>(
+	<span class="doccomment">/// Prints the results as human-readable summary without raw timing data.
+	</span><span class="kw">fn </span>print_summary(<span class="kw-2">&amp;</span><span class="self">self</span>, batches: <span class="kw-2">&amp;</span>[BenchmarkBatchSplitResults], storage_info: <span class="kw-2">&amp;</span>[StorageInfo]) {
+		<span class="kw">for </span>batch <span class="kw">in </span>batches.iter() {
+			<span class="comment">// Print benchmark metadata
+			</span><span class="macro">println!</span>(
 					<span class="string">&quot;Pallet: {:?}, Extrinsic: {:?}, Lowest values: {:?}, Highest values: {:?}, Steps: {:?}, Repeat: {:?}&quot;</span>,
-					<span class="ident">String::from_utf8</span>(<span class="ident">batch</span>.<span class="ident">pallet</span>.<span class="ident">clone</span>()).<span class="ident">expect</span>(<span class="string">&quot;Encoded from String; qed&quot;</span>),
-					<span class="ident">String::from_utf8</span>(<span class="ident">batch</span>.<span class="ident">benchmark</span>.<span class="ident">clone</span>()).<span class="ident">expect</span>(<span class="string">&quot;Encoded from String; qed&quot;</span>),
-					<span class="self">self</span>.<span class="ident">lowest_range_values</span>,
-					<span class="self">self</span>.<span class="ident">highest_range_values</span>,
-					<span class="self">self</span>.<span class="ident">steps</span>,
-					<span class="self">self</span>.<span class="ident">repeat</span>,
+					String::from_utf8(batch.pallet.clone()).expect(<span class="string">&quot;Encoded from String; qed&quot;</span>),
+					String::from_utf8(batch.benchmark.clone()).expect(<span class="string">&quot;Encoded from String; qed&quot;</span>),
+					<span class="self">self</span>.lowest_range_values,
+					<span class="self">self</span>.highest_range_values,
+					<span class="self">self</span>.steps,
+					<span class="self">self</span>.repeat,
 				);
 
-			<span class="comment">// Skip raw data + analysis if there are no results</span>
-			<span class="kw">if</span> <span class="ident">batch</span>.<span class="ident">time_results</span>.<span class="ident">is_empty</span>() {
-				<span class="kw">continue</span>
-			}
+			<span class="comment">// Skip raw data + analysis if there are no results
+			</span><span class="kw">if </span>batch.time_results.is_empty() {
+				<span class="kw">continue
+			</span>}
 
-			<span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">no_storage_info</span> {
-				<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">comments</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Default::default</span>();
-				<span class="ident">writer::add_storage_comments</span>(<span class="kw-2">&amp;mut</span> <span class="ident">comments</span>, <span class="kw-2">&amp;</span><span class="ident">batch</span>.<span class="ident">db_results</span>, <span class="ident">storage_info</span>);
+			<span class="kw">if </span>!<span class="self">self</span>.no_storage_info {
+				<span class="kw">let </span><span class="kw-2">mut </span>comments: Vec&lt;String&gt; = Default::default();
+				writer::add_storage_comments(<span class="kw-2">&amp;mut </span>comments, <span class="kw-2">&amp;</span>batch.db_results, storage_info);
 				<span class="macro">println!</span>(<span class="string">&quot;Raw Storage Info\n========&quot;</span>);
-				<span class="kw">for</span> <span class="ident">comment</span> <span class="kw">in</span> <span class="ident">comments</span> {
-					<span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">comment</span>);
+				<span class="kw">for </span>comment <span class="kw">in </span>comments {
+					<span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, comment);
 				}
 				<span class="macro">println!</span>();
 			}
 
-			<span class="comment">// Conduct analysis.</span>
-			<span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">no_median_slopes</span> {
+			<span class="comment">// Conduct analysis.
+			</span><span class="kw">if </span>!<span class="self">self</span>.no_median_slopes {
 				<span class="macro">println!</span>(<span class="string">&quot;Median Slopes Analysis\n========&quot;</span>);
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">analysis</span>) <span class="op">=</span>
-					<span class="ident">Analysis::median_slopes</span>(<span class="kw-2">&amp;</span><span class="ident">batch</span>.<span class="ident">time_results</span>, <span class="ident">BenchmarkSelector::ExtrinsicTime</span>)
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(analysis) =
+					Analysis::median_slopes(<span class="kw-2">&amp;</span>batch.time_results, BenchmarkSelector::ExtrinsicTime)
 				{
-					<span class="macro">println!</span>(<span class="string">&quot;-- Extrinsic Time --\n{}&quot;</span>, <span class="ident">analysis</span>);
+					<span class="macro">println!</span>(<span class="string">&quot;-- Extrinsic Time --\n{}&quot;</span>, analysis);
 				}
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">analysis</span>) <span class="op">=</span>
-					<span class="ident">Analysis::median_slopes</span>(<span class="kw-2">&amp;</span><span class="ident">batch</span>.<span class="ident">db_results</span>, <span class="ident">BenchmarkSelector::Reads</span>)
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(analysis) =
+					Analysis::median_slopes(<span class="kw-2">&amp;</span>batch.db_results, BenchmarkSelector::Reads)
 				{
-					<span class="macro">println!</span>(<span class="string">&quot;Reads = {:?}&quot;</span>, <span class="ident">analysis</span>);
+					<span class="macro">println!</span>(<span class="string">&quot;Reads = {:?}&quot;</span>, analysis);
 				}
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">analysis</span>) <span class="op">=</span>
-					<span class="ident">Analysis::median_slopes</span>(<span class="kw-2">&amp;</span><span class="ident">batch</span>.<span class="ident">db_results</span>, <span class="ident">BenchmarkSelector::Writes</span>)
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(analysis) =
+					Analysis::median_slopes(<span class="kw-2">&amp;</span>batch.db_results, BenchmarkSelector::Writes)
 				{
-					<span class="macro">println!</span>(<span class="string">&quot;Writes = {:?}&quot;</span>, <span class="ident">analysis</span>);
+					<span class="macro">println!</span>(<span class="string">&quot;Writes = {:?}&quot;</span>, analysis);
 				}
 				<span class="macro">println!</span>();
 			}
-			<span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">no_min_squares</span> {
+			<span class="kw">if </span>!<span class="self">self</span>.no_min_squares {
 				<span class="macro">println!</span>(<span class="string">&quot;Min Squares Analysis\n========&quot;</span>);
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">analysis</span>) <span class="op">=</span>
-					<span class="ident">Analysis::min_squares_iqr</span>(<span class="kw-2">&amp;</span><span class="ident">batch</span>.<span class="ident">time_results</span>, <span class="ident">BenchmarkSelector::ExtrinsicTime</span>)
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(analysis) =
+					Analysis::min_squares_iqr(<span class="kw-2">&amp;</span>batch.time_results, BenchmarkSelector::ExtrinsicTime)
 				{
-					<span class="macro">println!</span>(<span class="string">&quot;-- Extrinsic Time --\n{}&quot;</span>, <span class="ident">analysis</span>);
+					<span class="macro">println!</span>(<span class="string">&quot;-- Extrinsic Time --\n{}&quot;</span>, analysis);
 				}
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">analysis</span>) <span class="op">=</span>
-					<span class="ident">Analysis::min_squares_iqr</span>(<span class="kw-2">&amp;</span><span class="ident">batch</span>.<span class="ident">db_results</span>, <span class="ident">BenchmarkSelector::Reads</span>)
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(analysis) =
+					Analysis::min_squares_iqr(<span class="kw-2">&amp;</span>batch.db_results, BenchmarkSelector::Reads)
 				{
-					<span class="macro">println!</span>(<span class="string">&quot;Reads = {:?}&quot;</span>, <span class="ident">analysis</span>);
+					<span class="macro">println!</span>(<span class="string">&quot;Reads = {:?}&quot;</span>, analysis);
 				}
-				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">analysis</span>) <span class="op">=</span>
-					<span class="ident">Analysis::min_squares_iqr</span>(<span class="kw-2">&amp;</span><span class="ident">batch</span>.<span class="ident">db_results</span>, <span class="ident">BenchmarkSelector::Writes</span>)
+				<span class="kw">if let </span><span class="prelude-val">Some</span>(analysis) =
+					Analysis::min_squares_iqr(<span class="kw-2">&amp;</span>batch.db_results, BenchmarkSelector::Writes)
 				{
-					<span class="macro">println!</span>(<span class="string">&quot;Writes = {:?}&quot;</span>, <span class="ident">analysis</span>);
+					<span class="macro">println!</span>(<span class="string">&quot;Writes = {:?}&quot;</span>, analysis);
 				}
 				<span class="macro">println!</span>();
 			}
@@ -1172,26 +1166,25 @@ not created by a node that was compiled with the flag&quot;</span>;
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">CliConfiguration</span> <span class="kw">for</span> <span class="ident">PalletCmd</span> {
-	<span class="kw">fn</span> <span class="ident">shared_params</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SharedParams</span> {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">shared_params</span>
+<span class="kw">impl </span>CliConfiguration <span class="kw">for </span>PalletCmd {
+	<span class="kw">fn </span>shared_params(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SharedParams {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.shared_params
 	}
 
-	<span class="kw">fn</span> <span class="ident">chain_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_is_dev</span>: <span class="ident">bool</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">shared_params</span>.<span class="ident">chain</span> {
-			<span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">chain</span>) =&gt; <span class="ident">chain</span>.<span class="ident">clone</span>(),
-			<span class="prelude-val">None</span> =&gt; <span class="string">&quot;dev&quot;</span>.<span class="ident">into</span>(),
+	<span class="kw">fn </span>chain_id(<span class="kw-2">&amp;</span><span class="self">self</span>, _is_dev: bool) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
+		<span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.shared_params.chain {
+			<span class="prelude-val">Some</span>(<span class="kw-2">ref </span>chain) =&gt; chain.clone(),
+			<span class="prelude-val">None </span>=&gt; <span class="string">&quot;dev&quot;</span>.into(),
 		})
 	}
 }
 
-<span class="doccomment">/// List the benchmarks available in the runtime, in a CSV friendly format.</span>
-<span class="kw">fn</span> <span class="ident">list_benchmark</span>(<span class="ident">benchmarks_to_run</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">BenchmarkParameter</span>, <span class="ident">u32</span>, <span class="ident">u32</span>)<span class="op">&gt;</span>)<span class="op">&gt;</span>) {
+<span class="doccomment">/// List the benchmarks available in the runtime, in a CSV friendly format.
+</span><span class="kw">fn </span>list_benchmark(benchmarks_to_run: Vec&lt;(Vec&lt;u8&gt;, Vec&lt;u8&gt;, Vec&lt;(BenchmarkParameter, u32, u32)&gt;)&gt;) {
 	<span class="macro">println!</span>(<span class="string">&quot;pallet, benchmark&quot;</span>);
-	<span class="kw">for</span> (<span class="ident">pallet</span>, <span class="ident">extrinsic</span>, <span class="ident">_components</span>) <span class="kw">in</span> <span class="ident">benchmarks_to_run</span> {
-		<span class="macro">println!</span>(<span class="string">&quot;{}, {}&quot;</span>, <span class="ident">String::from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">pallet</span>), <span class="ident">String::from_utf8_lossy</span>(<span class="kw-2">&amp;</span><span class="ident">extrinsic</span>));
+	<span class="kw">for </span>(pallet, extrinsic, _components) <span class="kw">in </span>benchmarks_to_run {
+		<span class="macro">println!</span>(<span class="string">&quot;{}, {}&quot;</span>, String::from_utf8_lossy(<span class="kw-2">&amp;</span>pallet), String::from_utf8_lossy(<span class="kw-2">&amp;</span>extrinsic));
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

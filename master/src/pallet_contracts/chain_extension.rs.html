@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/chain_extension.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>chain_extension.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/chain_extension.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>chain_extension.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -495,497 +489,496 @@
 <span id="489">489</span>
 <span id="490">490</span>
 <span id="491">491</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! A mechanism for runtime authors to augment the functionality of contracts.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The runtime is able to call into any contract and retrieve the result using</span>
-<span class="doccomment">//! [`bare_call`](crate::Pallet::bare_call). This already allows customization of runtime</span>
-<span class="doccomment">//! behaviour by user generated code (contracts). However, often it is more straightforward</span>
-<span class="doccomment">//! to allow the reverse behaviour: The contract calls into the runtime. We call the latter</span>
-<span class="doccomment">//! one a &quot;chain extension&quot; because it allows the chain to extend the set of functions that are</span>
-<span class="doccomment">//! callable by a contract.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! In order to create a chain extension the runtime author implements the [`ChainExtension`]</span>
-<span class="doccomment">//! trait and declares it in this pallet&#39;s [configuration Trait](crate::Config). All types</span>
-<span class="doccomment">//! required for this endeavour are defined or re-exported in this module. There is an</span>
-<span class="doccomment">//! implementation on `()` which can be used to signal that no chain extension is available.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Using multiple chain extensions</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! Often there is a need for having multiple chain extensions. This is often the case when</span>
-<span class="doccomment">//! some generally useful off-the-shelf extensions should be included. To have multiple chain</span>
-<span class="doccomment">//! extensions they can be put into a tuple which is then passed to [`Config::ChainExtension`] like</span>
-<span class="doccomment">//! this `type Extensions = (ExtensionA, ExtensionB)`.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! However, only extensions implementing [`RegisteredChainExtension`] can be put into a tuple.</span>
-<span class="doccomment">//! This is because the [`RegisteredChainExtension::ID`] is used to decide which of those extensions</span>
-<span class="doccomment">//! should be used when the contract calls a chain extensions. Extensions which are generally</span>
-<span class="doccomment">//! useful should claim their `ID` with [the registry](https://github.com/paritytech/chainextension-registry)</span>
-<span class="doccomment">//! so that no collisions with other vendors will occur.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! **Chain specific extensions must use the reserved `ID = 0` so that they can&#39;t be registered with</span>
-<span class="doccomment">//! the registry.**</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Security</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The chain author alone is responsible for the security of the chain extension.</span>
-<span class="doccomment">//! This includes avoiding the exposure of exploitable functions and charging the</span>
-<span class="doccomment">//! appropriate amount of weight. In order to do so benchmarks must be written and the</span>
-<span class="doccomment">//! [`charge_weight`](Environment::charge_weight) function must be called **before**</span>
-<span class="doccomment">//! carrying out any action that causes the consumption of the chargeable weight.</span>
-<span class="doccomment">//! It cannot be overstated how delicate of a process the creation of a chain extension</span>
-<span class="doccomment">//! is. Check whether using [`bare_call`](crate::Pallet::bare_call) suffices for the</span>
-<span class="doccomment">//! use case at hand.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Benchmarking</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The builtin contract callable functions that pallet-contracts provides all have</span>
-<span class="doccomment">//! benchmarks that determine the correct weight that an invocation of these functions</span>
-<span class="doccomment">//! induces. In order to be able to charge the correct weight for the functions defined</span>
-<span class="doccomment">//! by a chain extension benchmarks must be written, too. In the near future this crate</span>
-<span class="doccomment">//! will provide the means for easier creation of those specialized benchmarks.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Example</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! The ink! repository maintains an</span>
-<span class="doccomment">//! [end-to-end example](https://github.com/paritytech/ink/tree/master/examples/rand-extension)</span>
-<span class="doccomment">//! on how to use a chain extension in order to provide new features to ink! contracts.</span>
+</span><span class="doccomment">//! A mechanism for runtime authors to augment the functionality of contracts.
+//!
+//! The runtime is able to call into any contract and retrieve the result using
+//! [`bare_call`](crate::Pallet::bare_call). This already allows customization of runtime
+//! behaviour by user generated code (contracts). However, often it is more straightforward
+//! to allow the reverse behaviour: The contract calls into the runtime. We call the latter
+//! one a &quot;chain extension&quot; because it allows the chain to extend the set of functions that are
+//! callable by a contract.
+//!
+//! In order to create a chain extension the runtime author implements the [`ChainExtension`]
+//! trait and declares it in this pallet&#39;s [configuration Trait](crate::Config). All types
+//! required for this endeavour are defined or re-exported in this module. There is an
+//! implementation on `()` which can be used to signal that no chain extension is available.
+//!
+//! # Using multiple chain extensions
+//!
+//! Often there is a need for having multiple chain extensions. This is often the case when
+//! some generally useful off-the-shelf extensions should be included. To have multiple chain
+//! extensions they can be put into a tuple which is then passed to [`Config::ChainExtension`] like
+//! this `type Extensions = (ExtensionA, ExtensionB)`.
+//!
+//! However, only extensions implementing [`RegisteredChainExtension`] can be put into a tuple.
+//! This is because the [`RegisteredChainExtension::ID`] is used to decide which of those extensions
+//! should be used when the contract calls a chain extensions. Extensions which are generally
+//! useful should claim their `ID` with [the registry](https://github.com/paritytech/chainextension-registry)
+//! so that no collisions with other vendors will occur.
+//!
+//! **Chain specific extensions must use the reserved `ID = 0` so that they can&#39;t be registered with
+//! the registry.**
+//!
+//! # Security
+//!
+//! The chain author alone is responsible for the security of the chain extension.
+//! This includes avoiding the exposure of exploitable functions and charging the
+//! appropriate amount of weight. In order to do so benchmarks must be written and the
+//! [`charge_weight`](Environment::charge_weight) function must be called **before**
+//! carrying out any action that causes the consumption of the chargeable weight.
+//! It cannot be overstated how delicate of a process the creation of a chain extension
+//! is. Check whether using [`bare_call`](crate::Pallet::bare_call) suffices for the
+//! use case at hand.
+//!
+//! # Benchmarking
+//!
+//! The builtin contract callable functions that pallet-contracts provides all have
+//! benchmarks that determine the correct weight that an invocation of these functions
+//! induces. In order to be able to charge the correct weight for the functions defined
+//! by a chain extension benchmarks must be written, too. In the near future this crate
+//! will provide the means for easier creation of those specialized benchmarks.
+//!
+//! # Example
+//!
+//! The ink! repository maintains an
+//! [end-to-end example](https://github.com/paritytech/ink/tree/master/examples/rand-extension)
+//! on how to use a chain extension in order to provide new features to ink! contracts.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-	<span class="ident">gas::ChargedAmount</span>,
-	<span class="ident">wasm</span>::{<span class="ident">Runtime</span>, <span class="ident">RuntimeCosts</span>},
-	<span class="ident">Error</span>,
+</span><span class="kw">use crate</span>::{
+	gas::ChargedAmount,
+	wasm::{Runtime, RuntimeCosts},
+	Error,
 };
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">MaxEncodedLen</span>};
-<span class="kw">use</span> <span class="ident">frame_support::weights::Weight</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::DispatchError</span>;
-<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">vec::Vec</span>};
+<span class="kw">use </span>codec::{Decode, MaxEncodedLen};
+<span class="kw">use </span>frame_support::weights::Weight;
+<span class="kw">use </span>sp_runtime::DispatchError;
+<span class="kw">use </span>sp_std::{marker::PhantomData, vec::Vec};
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">exec::Ext</span>, <span class="ident">Config</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">frame_system::Config</span> <span class="kw">as</span> <span class="ident">SysConfig</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pallet_contracts_primitives::ReturnFlags</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sp_core::crypto::UncheckedFrom</span>;
+<span class="kw">pub use crate</span>::{exec::Ext, Config};
+<span class="kw">pub use </span>frame_system::Config <span class="kw">as </span>SysConfig;
+<span class="kw">pub use </span>pallet_contracts_primitives::ReturnFlags;
+<span class="kw">pub use </span>sp_core::crypto::UncheckedFrom;
 
-<span class="doccomment">/// Result that returns a [`DispatchError`] on error.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">sp_std::result::Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">DispatchError</span><span class="op">&gt;</span>;
+<span class="doccomment">/// Result that returns a [`DispatchError`] on error.
+</span><span class="kw">pub type </span><span class="prelude-ty">Result</span>&lt;T&gt; = sp_std::result::Result&lt;T, DispatchError&gt;;
 
-<span class="doccomment">/// A trait used to extend the set of contract callable functions.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// In order to create a custom chain extension this trait must be implemented and supplied</span>
-<span class="doccomment">/// to the pallet contracts configuration trait as the associated type of the same name.</span>
-<span class="doccomment">/// Consult the [module documentation](self) for a general explanation of chain extensions.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Lifetime</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The extension will be [`Default`] initialized at the beginning of each call</span>
-<span class="doccomment">/// (**not** per call stack) and dropped afterwards. Hence any value held inside the extension</span>
-<span class="doccomment">/// can be used as a per-call scratch buffer.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ChainExtension</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Call the chain extension logic.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This is the only function that needs to be implemented in order to write a</span>
-	<span class="doccomment">/// chain extensions. It is called whenever a contract calls the `seal_call_chain_extension`</span>
-	<span class="doccomment">/// imported wasm function.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Parameters</span>
-	<span class="doccomment">/// - `env`: Access to the remaining arguments and the execution environment.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Return</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// In case of `Err` the contract execution is immediately suspended and the passed error</span>
-	<span class="doccomment">/// is returned to the caller. Otherwise the value of [`RetVal`] determines the exit</span>
-	<span class="doccomment">/// behaviour.</span>
-	<span class="kw">fn</span> <span class="ident">call</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">env</span>: <span class="ident">Environment</span><span class="op">&lt;</span><span class="ident">E</span>, <span class="ident">InitState</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RetVal</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">E</span>: <span class="ident">Ext</span><span class="op">&lt;</span><span class="ident">T</span> <span class="op">=</span> <span class="ident">C</span><span class="op">&gt;</span>,
-		<span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::AccountId</span>: <span class="ident">UncheckedFrom</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>;
+<span class="doccomment">/// A trait used to extend the set of contract callable functions.
+///
+/// In order to create a custom chain extension this trait must be implemented and supplied
+/// to the pallet contracts configuration trait as the associated type of the same name.
+/// Consult the [module documentation](self) for a general explanation of chain extensions.
+///
+/// # Lifetime
+///
+/// The extension will be [`Default`] initialized at the beginning of each call
+/// (**not** per call stack) and dropped afterwards. Hence any value held inside the extension
+/// can be used as a per-call scratch buffer.
+</span><span class="kw">pub trait </span>ChainExtension&lt;C: Config&gt; {
+	<span class="doccomment">/// Call the chain extension logic.
+	///
+	/// This is the only function that needs to be implemented in order to write a
+	/// chain extensions. It is called whenever a contract calls the `seal_call_chain_extension`
+	/// imported wasm function.
+	///
+	/// # Parameters
+	/// - `env`: Access to the remaining arguments and the execution environment.
+	///
+	/// # Return
+	///
+	/// In case of `Err` the contract execution is immediately suspended and the passed error
+	/// is returned to the caller. Otherwise the value of [`RetVal`] determines the exit
+	/// behaviour.
+	</span><span class="kw">fn </span>call&lt;E&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, env: Environment&lt;E, InitState&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;RetVal&gt;
+	<span class="kw">where
+		</span>E: Ext&lt;T = C&gt;,
+		&lt;E::T <span class="kw">as </span>SysConfig&gt;::AccountId: UncheckedFrom&lt;&lt;E::T <span class="kw">as </span>SysConfig&gt;::Hash&gt; + AsRef&lt;[u8]&gt;;
 
-	<span class="doccomment">/// Determines whether chain extensions are enabled for this chain.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The default implementation returns `true`. Therefore it is not necessary to overwrite</span>
-	<span class="doccomment">/// this function when implementing a chain extension. In case of `false` the deployment of</span>
-	<span class="doccomment">/// a contract that references `seal_call_chain_extension` will be denied and calling this</span>
-	<span class="doccomment">/// function will return [`NoChainExtension`](Error::NoChainExtension) without first calling</span>
-	<span class="doccomment">/// into [`call`](Self::call).</span>
-	<span class="kw">fn</span> <span class="ident">enabled</span>() -&gt; <span class="ident">bool</span> {
-		<span class="bool-val">true</span>
-	}
+	<span class="doccomment">/// Determines whether chain extensions are enabled for this chain.
+	///
+	/// The default implementation returns `true`. Therefore it is not necessary to overwrite
+	/// this function when implementing a chain extension. In case of `false` the deployment of
+	/// a contract that references `seal_call_chain_extension` will be denied and calling this
+	/// function will return [`NoChainExtension`](Error::NoChainExtension) without first calling
+	/// into [`call`](Self::call).
+	</span><span class="kw">fn </span>enabled() -&gt; bool {
+		<span class="bool-val">true
+	</span>}
 }
 
-<span class="doccomment">/// A [`ChainExtension`] that can be composed with other extensions using a tuple.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// An extension that implements this trait can be put in a tuple in order to have multiple</span>
-<span class="doccomment">/// extensions available. The tuple implementation routes requests based on the first two</span>
-<span class="doccomment">/// most significant bytes of the `id` passed to `call`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// If this extensions is to be used by multiple runtimes consider</span>
-<span class="doccomment">/// [registering it](https://github.com/paritytech/chainextension-registry) to ensure that there</span>
-<span class="doccomment">/// are no collisions with other vendors.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Note</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Currently, we support tuples of up to ten registred chain extensions. If more chain extensions</span>
-<span class="doccomment">/// are needed consider opening an issue.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RegisteredChainExtension</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Config</span><span class="op">&gt;</span>: <span class="ident">ChainExtension</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The extensions globally unique identifier.</span>
-	<span class="kw">const</span> <span class="ident">ID</span>: <span class="ident">u16</span>;
+<span class="doccomment">/// A [`ChainExtension`] that can be composed with other extensions using a tuple.
+///
+/// An extension that implements this trait can be put in a tuple in order to have multiple
+/// extensions available. The tuple implementation routes requests based on the first two
+/// most significant bytes of the `id` passed to `call`.
+///
+/// If this extensions is to be used by multiple runtimes consider
+/// [registering it](https://github.com/paritytech/chainextension-registry) to ensure that there
+/// are no collisions with other vendors.
+///
+/// # Note
+///
+/// Currently, we support tuples of up to ten registred chain extensions. If more chain extensions
+/// are needed consider opening an issue.
+</span><span class="kw">pub trait </span>RegisteredChainExtension&lt;C: Config&gt;: ChainExtension&lt;C&gt; {
+	<span class="doccomment">/// The extensions globally unique identifier.
+	</span><span class="kw">const </span>ID: u16;
 }
 
-<span class="attribute">#[<span class="ident">impl_trait_for_tuples::impl_for_tuples</span>(<span class="number">10</span>)]</span>
-<span class="attribute">#[<span class="ident">tuple_types_custom_trait_bound</span>(<span class="ident">RegisteredChainExtension</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>)]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">ChainExtension</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Tuple</span> {
-	<span class="kw">fn</span> <span class="ident">call</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">env</span>: <span class="ident">Environment</span><span class="op">&lt;</span><span class="ident">E</span>, <span class="ident">InitState</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RetVal</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">E</span>: <span class="ident">Ext</span><span class="op">&lt;</span><span class="ident">T</span> <span class="op">=</span> <span class="ident">C</span><span class="op">&gt;</span>,
-		<span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::AccountId</span>: <span class="ident">UncheckedFrom</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+<span class="attribute">#[impl_trait_for_tuples::impl_for_tuples(<span class="number">10</span>)]
+#[tuple_types_custom_trait_bound(RegisteredChainExtension&lt;C&gt;)]
+</span><span class="kw">impl</span>&lt;C: Config&gt; ChainExtension&lt;C&gt; <span class="kw">for </span>Tuple {
+	<span class="kw">fn </span>call&lt;E&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>env: Environment&lt;E, InitState&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;RetVal&gt;
+	<span class="kw">where
+		</span>E: Ext&lt;T = C&gt;,
+		&lt;E::T <span class="kw">as </span>SysConfig&gt;::AccountId: UncheckedFrom&lt;&lt;E::T <span class="kw">as </span>SysConfig&gt;::Hash&gt; + AsRef&lt;[u8]&gt;,
 	{
 		<span class="macro">for_tuples!</span>(
 			#(
-				<span class="kw">if</span> (<span class="ident">Tuple::ID</span> <span class="op">==</span> <span class="ident">env</span>.<span class="ident">ext_id</span>()) <span class="op">&amp;&amp;</span> <span class="ident">Tuple::enabled</span>() {
-					<span class="kw">return</span> <span class="ident">Tuple</span>.<span class="ident">call</span>(<span class="ident">env</span>);
+				<span class="kw">if </span>(Tuple::ID == env.ext_id()) &amp;&amp; Tuple::enabled() {
+					<span class="kw">return </span>Tuple.call(env);
 				}
-			)<span class="op">*</span>
+			)*
 		);
-		<span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="op">&lt;</span><span class="ident">E::T</span><span class="op">&gt;</span><span class="ident">::NoChainExtension</span>.<span class="ident">into</span>())
+		<span class="prelude-val">Err</span>(Error::&lt;E::T&gt;::NoChainExtension.into())
 	}
 
-	<span class="kw">fn</span> <span class="ident">enabled</span>() -&gt; <span class="ident">bool</span> {
+	<span class="kw">fn </span>enabled() -&gt; bool {
 		<span class="macro">for_tuples!</span>(
 			#(
-				<span class="kw">if</span> <span class="ident">Tuple::enabled</span>() {
-					<span class="kw">return</span> <span class="bool-val">true</span>;
+				<span class="kw">if </span>Tuple::enabled() {
+					<span class="kw">return </span><span class="bool-val">true</span>;
 				}
-			)<span class="op">*</span>
+			)*
 		);
-		<span class="bool-val">false</span>
-	}
+		<span class="bool-val">false
+	</span>}
 }
 
-<span class="doccomment">/// Determines the exit behaviour and return value of a chain extension.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">RetVal</span> {
-	<span class="doccomment">/// The chain extensions returns the supplied value to its calling contract.</span>
-	<span class="ident">Converging</span>(<span class="ident">u32</span>),
-	<span class="doccomment">/// The control does **not** return to the calling contract.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Use this to stop the execution of the contract when the chain extension returns.</span>
-	<span class="doccomment">/// The semantic is the same as for calling `seal_return`: The control returns to</span>
-	<span class="doccomment">/// the caller of the currently executing contract yielding the supplied buffer and</span>
-	<span class="doccomment">/// flags.</span>
-	<span class="ident">Diverging</span> { <span class="ident">flags</span>: <span class="ident">ReturnFlags</span>, <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> },
+<span class="doccomment">/// Determines the exit behaviour and return value of a chain extension.
+</span><span class="kw">pub enum </span>RetVal {
+	<span class="doccomment">/// The chain extensions returns the supplied value to its calling contract.
+	</span>Converging(u32),
+	<span class="doccomment">/// The control does **not** return to the calling contract.
+	///
+	/// Use this to stop the execution of the contract when the chain extension returns.
+	/// The semantic is the same as for calling `seal_return`: The control returns to
+	/// the caller of the currently executing contract yielding the supplied buffer and
+	/// flags.
+	</span>Diverging { flags: ReturnFlags, data: Vec&lt;u8&gt; },
 }
 
-<span class="doccomment">/// Grants the chain extension access to its parameters and execution environment.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It uses [typestate programming](https://docs.rust-embedded.org/book/static-guarantees/typestate-programming.html)</span>
-<span class="doccomment">/// to enforce the correct usage of the parameters passed to the chain extension.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>: <span class="ident">Ext</span>, <span class="ident">S</span>: <span class="ident">State</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The actual data of this type.</span>
-	<span class="ident">inner</span>: <span class="ident">Inner</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// `S` is only used in the type system but never as value.</span>
-	<span class="ident">phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Grants the chain extension access to its parameters and execution environment.
+///
+/// It uses [typestate programming](https://docs.rust-embedded.org/book/static-guarantees/typestate-programming.html)
+/// to enforce the correct usage of the parameters passed to the chain extension.
+</span><span class="kw">pub struct </span>Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E: Ext, S: State&gt; {
+	<span class="doccomment">/// The actual data of this type.
+	</span>inner: Inner&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E&gt;,
+	<span class="doccomment">/// `S` is only used in the type system but never as value.
+	</span>phantom: PhantomData&lt;S&gt;,
 }
 
-<span class="doccomment">/// Functions that are available in every state of this type.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>: <span class="ident">Ext</span>, <span class="ident">S</span>: <span class="ident">State</span><span class="op">&gt;</span> <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>, <span class="ident">S</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::AccountId</span>: <span class="ident">UncheckedFrom</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+<span class="doccomment">/// Functions that are available in every state of this type.
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E: Ext, S: State&gt; Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E, S&gt;
+<span class="kw">where
+	</span>&lt;E::T <span class="kw">as </span>SysConfig&gt;::AccountId: UncheckedFrom&lt;&lt;E::T <span class="kw">as </span>SysConfig&gt;::Hash&gt; + AsRef&lt;[u8]&gt;,
 {
-	<span class="doccomment">/// The function id within the `id` passed by a contract.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// It returns the two least significant bytes of the `id` passed by a contract as the other</span>
-	<span class="doccomment">/// two bytes represent the chain extension itself (the code which is calling this function).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">func_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u16</span> {
-		(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">id</span> <span class="op">&amp;</span> <span class="number">0x0000FFFF</span>) <span class="kw">as</span> <span class="ident">u16</span>
+	<span class="doccomment">/// The function id within the `id` passed by a contract.
+	///
+	/// It returns the two least significant bytes of the `id` passed by a contract as the other
+	/// two bytes represent the chain extension itself (the code which is calling this function).
+	</span><span class="kw">pub fn </span>func_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
+		(<span class="self">self</span>.inner.id &amp; <span class="number">0x0000FFFF</span>) <span class="kw">as </span>u16
 	}
 
-	<span class="doccomment">/// The chain extension id within the `id` passed by a contract.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// It returns the two most significant bytes of the `id` passed by a contract which represent</span>
-	<span class="doccomment">/// the chain extension itself (the code which is calling this function).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ext_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u16</span> {
-		(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">id</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">16</span>) <span class="kw">as</span> <span class="ident">u16</span>
+	<span class="doccomment">/// The chain extension id within the `id` passed by a contract.
+	///
+	/// It returns the two most significant bytes of the `id` passed by a contract which represent
+	/// the chain extension itself (the code which is calling this function).
+	</span><span class="kw">pub fn </span>ext_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
+		(<span class="self">self</span>.inner.id &gt;&gt; <span class="number">16</span>) <span class="kw">as </span>u16
 	}
 
-	<span class="doccomment">/// Charge the passed `amount` of weight from the overall limit.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// It returns `Ok` when there the remaining weight budget is larger than the passed</span>
-	<span class="doccomment">/// `weight`. It returns `Err` otherwise. In this case the chain extension should</span>
-	<span class="doccomment">/// abort the execution and pass through the error.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The returned value can be used to with [`Self::adjust_weight`]. Other than that</span>
-	<span class="doccomment">/// it has no purpose.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Note</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Weight is synonymous with gas in substrate.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">charge_weight</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">amount</span>: <span class="ident">Weight</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ChargedAmount</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">runtime</span>.<span class="ident">charge_gas</span>(<span class="ident">RuntimeCosts::ChainExtension</span>(<span class="ident">amount</span>.<span class="ident">ref_time</span>()))
+	<span class="doccomment">/// Charge the passed `amount` of weight from the overall limit.
+	///
+	/// It returns `Ok` when there the remaining weight budget is larger than the passed
+	/// `weight`. It returns `Err` otherwise. In this case the chain extension should
+	/// abort the execution and pass through the error.
+	///
+	/// The returned value can be used to with [`Self::adjust_weight`]. Other than that
+	/// it has no purpose.
+	///
+	/// # Note
+	///
+	/// Weight is synonymous with gas in substrate.
+	</span><span class="kw">pub fn </span>charge_weight(<span class="kw-2">&amp;mut </span><span class="self">self</span>, amount: Weight) -&gt; <span class="prelude-ty">Result</span>&lt;ChargedAmount&gt; {
+		<span class="self">self</span>.inner.runtime.charge_gas(RuntimeCosts::ChainExtension(amount.ref_time()))
 	}
 
-	<span class="doccomment">/// Adjust a previously charged amount down to its actual amount.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This is when a maximum a priori amount was charged and then should be partially</span>
-	<span class="doccomment">/// refunded to match the actual amount.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">adjust_weight</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">charged</span>: <span class="ident">ChargedAmount</span>, <span class="ident">actual_weight</span>: <span class="ident">Weight</span>) {
-		<span class="self">self</span>.<span class="ident">inner</span>
-			.<span class="ident">runtime</span>
-			.<span class="ident">adjust_gas</span>(<span class="ident">charged</span>, <span class="ident">RuntimeCosts::ChainExtension</span>(<span class="ident">actual_weight</span>.<span class="ident">ref_time</span>()))
+	<span class="doccomment">/// Adjust a previously charged amount down to its actual amount.
+	///
+	/// This is when a maximum a priori amount was charged and then should be partially
+	/// refunded to match the actual amount.
+	</span><span class="kw">pub fn </span>adjust_weight(<span class="kw-2">&amp;mut </span><span class="self">self</span>, charged: ChargedAmount, actual_weight: Weight) {
+		<span class="self">self</span>.inner
+			.runtime
+			.adjust_gas(charged, RuntimeCosts::ChainExtension(actual_weight.ref_time()))
 	}
 
-	<span class="doccomment">/// Grants access to the execution environment of the current contract call.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Consult the functions on the returned type before re-implementing those functions.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ext</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">E</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">runtime</span>.<span class="ident">ext</span>()
+	<span class="doccomment">/// Grants access to the execution environment of the current contract call.
+	///
+	/// Consult the functions on the returned type before re-implementing those functions.
+	</span><span class="kw">pub fn </span>ext(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>E {
+		<span class="self">self</span>.inner.runtime.ext()
 	}
 }
 
-<span class="doccomment">/// Functions that are only available in the initial state of this type.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Those are the functions that determine how the arguments to the chain extensions</span>
-<span class="doccomment">/// should be consumed.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>: <span class="ident">Ext</span><span class="op">&gt;</span> <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>, <span class="ident">InitState</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Creates a new environment for consumption by a chain extension.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// It is only available to this crate because only the wasm runtime module needs to</span>
-	<span class="doccomment">/// ever create this type. Chain extensions merely consume it.</span>
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(
-		<span class="ident">runtime</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Runtime</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span>, <span class="ident">E</span><span class="op">&gt;</span>,
-		<span class="ident">id</span>: <span class="ident">u32</span>,
-		<span class="ident">input_ptr</span>: <span class="ident">u32</span>,
-		<span class="ident">input_len</span>: <span class="ident">u32</span>,
-		<span class="ident">output_ptr</span>: <span class="ident">u32</span>,
-		<span class="ident">output_len_ptr</span>: <span class="ident">u32</span>,
-	) -&gt; <span class="self">Self</span> {
-		<span class="ident">Environment</span> {
-			<span class="ident">inner</span>: <span class="ident">Inner</span> { <span class="ident">runtime</span>, <span class="ident">id</span>, <span class="ident">input_ptr</span>, <span class="ident">input_len</span>, <span class="ident">output_ptr</span>, <span class="ident">output_len_ptr</span> },
-			<span class="ident">phantom</span>: <span class="ident">PhantomData</span>,
+<span class="doccomment">/// Functions that are only available in the initial state of this type.
+///
+/// Those are the functions that determine how the arguments to the chain extensions
+/// should be consumed.
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E: Ext&gt; Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E, InitState&gt; {
+	<span class="doccomment">/// Creates a new environment for consumption by a chain extension.
+	///
+	/// It is only available to this crate because only the wasm runtime module needs to
+	/// ever create this type. Chain extensions merely consume it.
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
+		runtime: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Runtime&lt;<span class="lifetime">&#39;b</span>, E&gt;,
+		id: u32,
+		input_ptr: u32,
+		input_len: u32,
+		output_ptr: u32,
+		output_len_ptr: u32,
+	) -&gt; <span class="self">Self </span>{
+		Environment {
+			inner: Inner { runtime, id, input_ptr, input_len, output_ptr, output_len_ptr },
+			phantom: PhantomData,
 		}
 	}
 
-	<span class="doccomment">/// Use all arguments as integer values.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">only_in</span>(<span class="self">self</span>) -&gt; <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>, <span class="ident">OnlyInState</span><span class="op">&gt;</span> {
-		<span class="ident">Environment</span> { <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">inner</span>, <span class="ident">phantom</span>: <span class="ident">PhantomData</span> }
+	<span class="doccomment">/// Use all arguments as integer values.
+	</span><span class="kw">pub fn </span>only_in(<span class="self">self</span>) -&gt; Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E, OnlyInState&gt; {
+		Environment { inner: <span class="self">self</span>.inner, phantom: PhantomData }
 	}
 
-	<span class="doccomment">/// Use input arguments as integer and output arguments as pointer to a buffer.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prim_in_buf_out</span>(<span class="self">self</span>) -&gt; <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>, <span class="ident">PrimInBufOutState</span><span class="op">&gt;</span> {
-		<span class="ident">Environment</span> { <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">inner</span>, <span class="ident">phantom</span>: <span class="ident">PhantomData</span> }
+	<span class="doccomment">/// Use input arguments as integer and output arguments as pointer to a buffer.
+	</span><span class="kw">pub fn </span>prim_in_buf_out(<span class="self">self</span>) -&gt; Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E, PrimInBufOutState&gt; {
+		Environment { inner: <span class="self">self</span>.inner, phantom: PhantomData }
 	}
 
-	<span class="doccomment">/// Use input and output arguments as pointers to a buffer.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buf_in_buf_out</span>(<span class="self">self</span>) -&gt; <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>, <span class="ident">BufInBufOutState</span><span class="op">&gt;</span> {
-		<span class="ident">Environment</span> { <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">inner</span>, <span class="ident">phantom</span>: <span class="ident">PhantomData</span> }
-	}
-}
-
-<span class="doccomment">/// Functions to use the input arguments as integers.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>: <span class="ident">Ext</span>, <span class="ident">S</span>: <span class="ident">PrimIn</span><span class="op">&gt;</span> <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The `input_ptr` argument.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">val0</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">input_ptr</span>
-	}
-
-	<span class="doccomment">/// The `input_len` argument.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">val1</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">input_len</span>
+	<span class="doccomment">/// Use input and output arguments as pointers to a buffer.
+	</span><span class="kw">pub fn </span>buf_in_buf_out(<span class="self">self</span>) -&gt; Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E, BufInBufOutState&gt; {
+		Environment { inner: <span class="self">self</span>.inner, phantom: PhantomData }
 	}
 }
 
-<span class="doccomment">/// Functions to use the output arguments as integers.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>: <span class="ident">Ext</span>, <span class="ident">S</span>: <span class="ident">PrimOut</span><span class="op">&gt;</span> <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The `output_ptr` argument.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">val2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">output_ptr</span>
+<span class="doccomment">/// Functions to use the input arguments as integers.
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E: Ext, S: PrimIn&gt; Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E, S&gt; {
+	<span class="doccomment">/// The `input_ptr` argument.
+	</span><span class="kw">pub fn </span>val0(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+		<span class="self">self</span>.inner.input_ptr
 	}
 
-	<span class="doccomment">/// The `output_len_ptr` argument.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">val3</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">output_len_ptr</span>
+	<span class="doccomment">/// The `input_len` argument.
+	</span><span class="kw">pub fn </span>val1(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+		<span class="self">self</span>.inner.input_len
 	}
 }
 
-<span class="doccomment">/// Functions to use the input arguments as pointer to a buffer.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>: <span class="ident">Ext</span>, <span class="ident">S</span>: <span class="ident">BufIn</span><span class="op">&gt;</span> <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>, <span class="ident">S</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::AccountId</span>: <span class="ident">UncheckedFrom</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+<span class="doccomment">/// Functions to use the output arguments as integers.
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E: Ext, S: PrimOut&gt; Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E, S&gt; {
+	<span class="doccomment">/// The `output_ptr` argument.
+	</span><span class="kw">pub fn </span>val2(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+		<span class="self">self</span>.inner.output_ptr
+	}
+
+	<span class="doccomment">/// The `output_len_ptr` argument.
+	</span><span class="kw">pub fn </span>val3(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+		<span class="self">self</span>.inner.output_len_ptr
+	}
+}
+
+<span class="doccomment">/// Functions to use the input arguments as pointer to a buffer.
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E: Ext, S: BufIn&gt; Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E, S&gt;
+<span class="kw">where
+	</span>&lt;E::T <span class="kw">as </span>SysConfig&gt;::AccountId: UncheckedFrom&lt;&lt;E::T <span class="kw">as </span>SysConfig&gt;::Hash&gt; + AsRef&lt;[u8]&gt;,
 {
-	<span class="doccomment">/// Reads `min(max_len, in_len)` from contract memory.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This does **not** charge any weight. The caller must make sure that the an</span>
-	<span class="doccomment">/// appropriate amount of weight is charged **before** reading from contract memory.</span>
-	<span class="doccomment">/// The reason for that is that usually the costs for reading data and processing</span>
-	<span class="doccomment">/// said data cannot be separated in a benchmark. Therefore a chain extension would</span>
-	<span class="doccomment">/// charge the overall costs either using `max_len` (worst case approximation) or using</span>
-	<span class="doccomment">/// [`in_len()`](Self::in_len).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">max_len</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>
-			.<span class="ident">runtime</span>
-			.<span class="ident">read_sandbox_memory</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">input_ptr</span>, <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">input_len</span>.<span class="ident">min</span>(<span class="ident">max_len</span>))
+	<span class="doccomment">/// Reads `min(max_len, in_len)` from contract memory.
+	///
+	/// This does **not** charge any weight. The caller must make sure that the an
+	/// appropriate amount of weight is charged **before** reading from contract memory.
+	/// The reason for that is that usually the costs for reading data and processing
+	/// said data cannot be separated in a benchmark. Therefore a chain extension would
+	/// charge the overall costs either using `max_len` (worst case approximation) or using
+	/// [`in_len()`](Self::in_len).
+	</span><span class="kw">pub fn </span>read(<span class="kw-2">&amp;</span><span class="self">self</span>, max_len: u32) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;&gt; {
+		<span class="self">self</span>.inner
+			.runtime
+			.read_sandbox_memory(<span class="self">self</span>.inner.input_ptr, <span class="self">self</span>.inner.input_len.min(max_len))
 	}
 
-	<span class="doccomment">/// Reads `min(buffer.len(), in_len) from contract memory.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This takes a mutable pointer to a buffer fills it with data and shrinks it to</span>
-	<span class="doccomment">/// the size of the actual data. Apart from supporting pre-allocated buffers it is</span>
-	<span class="doccomment">/// equivalent to to [`read()`](Self::read).</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_into</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">buffer</span>: <span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">len</span>();
-		<span class="kw">let</span> <span class="ident">sliced</span> <span class="op">=</span> {
-			<span class="kw">let</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="ident">core::mem::take</span>(<span class="ident">buffer</span>);
-			<span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>[..<span class="ident">len</span>.<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">input_len</span> <span class="kw">as</span> <span class="ident">usize</span>)]
+	<span class="doccomment">/// Reads `min(buffer.len(), in_len) from contract memory.
+	///
+	/// This takes a mutable pointer to a buffer fills it with data and shrinks it to
+	/// the size of the actual data. Apart from supporting pre-allocated buffers it is
+	/// equivalent to to [`read()`](Self::read).
+	</span><span class="kw">pub fn </span>read_into(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut &amp;mut </span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+		<span class="kw">let </span>len = buffer.len();
+		<span class="kw">let </span>sliced = {
+			<span class="kw">let </span>buffer = core::mem::take(buffer);
+			<span class="kw-2">&amp;mut </span>buffer[..len.min(<span class="self">self</span>.inner.input_len <span class="kw">as </span>usize)]
 		};
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">runtime</span>.<span class="ident">read_sandbox_memory_into_buf</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">input_ptr</span>, <span class="ident">sliced</span>)<span class="question-mark">?</span>;
-		<span class="kw-2">*</span><span class="ident">buffer</span> <span class="op">=</span> <span class="ident">sliced</span>;
+		<span class="self">self</span>.inner.runtime.read_sandbox_memory_into_buf(<span class="self">self</span>.inner.input_ptr, sliced)<span class="question-mark">?</span>;
+		<span class="kw-2">*</span>buffer = sliced;
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="doccomment">/// Reads and decodes a type with a size fixed at compile time from contract memory.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This function is secure and recommended for all input types of fixed size</span>
-	<span class="doccomment">/// as long as the cost of reading the memory is included in the overall already charged</span>
-	<span class="doccomment">/// weight of the chain extension. This should usually be the case when fixed input types</span>
-	<span class="doccomment">/// are used.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_as</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Decode</span> <span class="op">+</span> <span class="ident">MaxEncodedLen</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">runtime</span>.<span class="ident">read_sandbox_memory_as</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">input_ptr</span>)
+	<span class="doccomment">/// Reads and decodes a type with a size fixed at compile time from contract memory.
+	///
+	/// This function is secure and recommended for all input types of fixed size
+	/// as long as the cost of reading the memory is included in the overall already charged
+	/// weight of the chain extension. This should usually be the case when fixed input types
+	/// are used.
+	</span><span class="kw">pub fn </span>read_as&lt;T: Decode + MaxEncodedLen&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;T&gt; {
+		<span class="self">self</span>.inner.runtime.read_sandbox_memory_as(<span class="self">self</span>.inner.input_ptr)
 	}
 
-	<span class="doccomment">/// Reads and decodes a type with a dynamic size from contract memory.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Make sure to include `len` in your weight calculations.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_as_unbounded</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Decode</span><span class="op">&gt;</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">len</span>: <span class="ident">u32</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">runtime</span>.<span class="ident">read_sandbox_memory_as_unbounded</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">input_ptr</span>, <span class="ident">len</span>)
+	<span class="doccomment">/// Reads and decodes a type with a dynamic size from contract memory.
+	///
+	/// Make sure to include `len` in your weight calculations.
+	</span><span class="kw">pub fn </span>read_as_unbounded&lt;T: Decode&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, len: u32) -&gt; <span class="prelude-ty">Result</span>&lt;T&gt; {
+		<span class="self">self</span>.inner.runtime.read_sandbox_memory_as_unbounded(<span class="self">self</span>.inner.input_ptr, len)
 	}
 
-	<span class="doccomment">/// The length of the input as passed in as `input_len`.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// A chain extension would use this value to calculate the dynamic part of its</span>
-	<span class="doccomment">/// weight. For example a chain extension that calculates the hash of some passed in</span>
-	<span class="doccomment">/// bytes would use `in_len` to charge the costs of hashing that amount of bytes.</span>
-	<span class="doccomment">/// This also subsumes the act of copying those bytes as a benchmarks measures both.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">in_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">input_len</span>
+	<span class="doccomment">/// The length of the input as passed in as `input_len`.
+	///
+	/// A chain extension would use this value to calculate the dynamic part of its
+	/// weight. For example a chain extension that calculates the hash of some passed in
+	/// bytes would use `in_len` to charge the costs of hashing that amount of bytes.
+	/// This also subsumes the act of copying those bytes as a benchmarks measures both.
+	</span><span class="kw">pub fn </span>in_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+		<span class="self">self</span>.inner.input_len
 	}
 }
 
-<span class="doccomment">/// Functions to use the output arguments as pointer to a buffer.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>: <span class="ident">Ext</span>, <span class="ident">S</span>: <span class="ident">BufOut</span><span class="op">&gt;</span> <span class="ident">Environment</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>, <span class="ident">S</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::AccountId</span>: <span class="ident">UncheckedFrom</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">E::T</span> <span class="kw">as</span> <span class="ident">SysConfig</span><span class="op">&gt;</span><span class="ident">::Hash</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+<span class="doccomment">/// Functions to use the output arguments as pointer to a buffer.
+</span><span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E: Ext, S: BufOut&gt; Environment&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E, S&gt;
+<span class="kw">where
+	</span>&lt;E::T <span class="kw">as </span>SysConfig&gt;::AccountId: UncheckedFrom&lt;&lt;E::T <span class="kw">as </span>SysConfig&gt;::Hash&gt; + AsRef&lt;[u8]&gt;,
 {
-	<span class="doccomment">/// Write the supplied buffer to contract memory.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// If the contract supplied buffer is smaller than the passed `buffer` an `Err` is returned.</span>
-	<span class="doccomment">/// If `allow_skip` is set to true the contract is allowed to skip the copying of the buffer</span>
-	<span class="doccomment">/// by supplying the guard value of `pallet-contracts::SENTINEL` as `out_ptr`. The</span>
-	<span class="doccomment">/// `weight_per_byte` is only charged when the write actually happens and is not skipped or</span>
-	<span class="doccomment">/// failed due to a too small output buffer.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write</span>(
-		<span class="kw-2">&amp;mut</span> <span class="self">self</span>,
-		<span class="ident">buffer</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-		<span class="ident">allow_skip</span>: <span class="ident">bool</span>,
-		<span class="ident">weight_per_byte</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Weight</span><span class="op">&gt;</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">runtime</span>.<span class="ident">write_sandbox_output</span>(
-			<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">output_ptr</span>,
-			<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">output_len_ptr</span>,
-			<span class="ident">buffer</span>,
-			<span class="ident">allow_skip</span>,
-			<span class="op">|</span><span class="ident">len</span><span class="op">|</span> {
-				<span class="ident">weight_per_byte</span>
-					.<span class="ident">map</span>(<span class="op">|</span><span class="ident">w</span><span class="op">|</span> <span class="ident">RuntimeCosts::ChainExtension</span>(<span class="ident">w</span>.<span class="ident">ref_time</span>().<span class="ident">saturating_mul</span>(<span class="ident">len</span>.<span class="ident">into</span>())))
+	<span class="doccomment">/// Write the supplied buffer to contract memory.
+	///
+	/// If the contract supplied buffer is smaller than the passed `buffer` an `Err` is returned.
+	/// If `allow_skip` is set to true the contract is allowed to skip the copying of the buffer
+	/// by supplying the guard value of `pallet-contracts::SENTINEL` as `out_ptr`. The
+	/// `weight_per_byte` is only charged when the write actually happens and is not skipped or
+	/// failed due to a too small output buffer.
+	</span><span class="kw">pub fn </span>write(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		buffer: <span class="kw-2">&amp;</span>[u8],
+		allow_skip: bool,
+		weight_per_byte: <span class="prelude-ty">Option</span>&lt;Weight&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+		<span class="self">self</span>.inner.runtime.write_sandbox_output(
+			<span class="self">self</span>.inner.output_ptr,
+			<span class="self">self</span>.inner.output_len_ptr,
+			buffer,
+			allow_skip,
+			|len| {
+				weight_per_byte
+					.map(|w| RuntimeCosts::ChainExtension(w.ref_time().saturating_mul(len.into())))
 			},
 		)
 	}
 }
 
-<span class="doccomment">/// The actual data of an `Environment`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// All data is put into this struct to easily pass it around as part of the typestate</span>
-<span class="doccomment">/// pattern. Also it creates the opportunity to box this struct in the future in case it</span>
-<span class="doccomment">/// gets too large.</span>
-<span class="kw">struct</span> <span class="ident">Inner</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">E</span>: <span class="ident">Ext</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The runtime contains all necessary functions to interact with the running contract.</span>
-	<span class="ident">runtime</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Runtime</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span>, <span class="ident">E</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.</span>
-	<span class="ident">id</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.</span>
-	<span class="ident">input_ptr</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.</span>
-	<span class="ident">input_len</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.</span>
-	<span class="ident">output_ptr</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.</span>
-	<span class="ident">output_len_ptr</span>: <span class="ident">u32</span>,
+<span class="doccomment">/// The actual data of an `Environment`.
+///
+/// All data is put into this struct to easily pass it around as part of the typestate
+/// pattern. Also it creates the opportunity to box this struct in the future in case it
+/// gets too large.
+</span><span class="kw">struct </span>Inner&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, E: Ext&gt; {
+	<span class="doccomment">/// The runtime contains all necessary functions to interact with the running contract.
+	</span>runtime: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Runtime&lt;<span class="lifetime">&#39;b</span>, E&gt;,
+	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.
+	</span>id: u32,
+	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.
+	</span>input_ptr: u32,
+	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.
+	</span>input_len: u32,
+	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.
+	</span>output_ptr: u32,
+	<span class="doccomment">/// Verbatim argument passed to `seal_call_chain_extension`.
+	</span>output_len_ptr: u32,
 }
 
-<span class="doccomment">/// Any state of an [`Environment`] implements this trait.</span>
-<span class="doccomment">/// See [typestate programming](https://docs.rust-embedded.org/book/static-guarantees/typestate-programming.html).</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">State</span>: <span class="ident">sealed::Sealed</span> {}
+<span class="doccomment">/// Any state of an [`Environment`] implements this trait.
+/// See [typestate programming](https://docs.rust-embedded.org/book/static-guarantees/typestate-programming.html).
+</span><span class="kw">pub trait </span>State: sealed::Sealed {}
 
-<span class="doccomment">/// A state that uses primitive inputs.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PrimIn</span>: <span class="ident">State</span> {}
+<span class="doccomment">/// A state that uses primitive inputs.
+</span><span class="kw">pub trait </span>PrimIn: State {}
 
-<span class="doccomment">/// A state that uses primitive outputs.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PrimOut</span>: <span class="ident">State</span> {}
+<span class="doccomment">/// A state that uses primitive outputs.
+</span><span class="kw">pub trait </span>PrimOut: State {}
 
-<span class="doccomment">/// A state that uses a buffer as input.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">BufIn</span>: <span class="ident">State</span> {}
+<span class="doccomment">/// A state that uses a buffer as input.
+</span><span class="kw">pub trait </span>BufIn: State {}
 
-<span class="doccomment">/// A state that uses a buffer as output.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">BufOut</span>: <span class="ident">State</span> {}
+<span class="doccomment">/// A state that uses a buffer as output.
+</span><span class="kw">pub trait </span>BufOut: State {}
 
-<span class="doccomment">/// The initial state of an [`Environment`].</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">InitState</span> {}
+<span class="doccomment">/// The initial state of an [`Environment`].
+</span><span class="kw">pub enum </span>InitState {}
 
-<span class="doccomment">/// A state that uses all arguments as primitive inputs.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">OnlyInState</span> {}
+<span class="doccomment">/// A state that uses all arguments as primitive inputs.
+</span><span class="kw">pub enum </span>OnlyInState {}
 
-<span class="doccomment">/// A state that uses two arguments as primitive inputs and the other two as buffer output.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PrimInBufOutState</span> {}
+<span class="doccomment">/// A state that uses two arguments as primitive inputs and the other two as buffer output.
+</span><span class="kw">pub enum </span>PrimInBufOutState {}
 
-<span class="doccomment">/// Uses a buffer for input and a buffer for output.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BufInBufOutState</span> {}
+<span class="doccomment">/// Uses a buffer for input and a buffer for output.
+</span><span class="kw">pub enum </span>BufInBufOutState {}
 
-<span class="kw">mod</span> <span class="ident">sealed</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="kw">mod </span>sealed {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="doccomment">/// Trait to prevent users from implementing `State` for anything else.</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Sealed</span> {}
+	<span class="doccomment">/// Trait to prevent users from implementing `State` for anything else.
+	</span><span class="kw">pub trait </span>Sealed {}
 
-	<span class="kw">impl</span> <span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">InitState</span> {}
-	<span class="kw">impl</span> <span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">OnlyInState</span> {}
-	<span class="kw">impl</span> <span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">PrimInBufOutState</span> {}
-	<span class="kw">impl</span> <span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">BufInBufOutState</span> {}
+	<span class="kw">impl </span>Sealed <span class="kw">for </span>InitState {}
+	<span class="kw">impl </span>Sealed <span class="kw">for </span>OnlyInState {}
+	<span class="kw">impl </span>Sealed <span class="kw">for </span>PrimInBufOutState {}
+	<span class="kw">impl </span>Sealed <span class="kw">for </span>BufInBufOutState {}
 
-	<span class="kw">impl</span> <span class="ident">State</span> <span class="kw">for</span> <span class="ident">InitState</span> {}
-	<span class="kw">impl</span> <span class="ident">State</span> <span class="kw">for</span> <span class="ident">OnlyInState</span> {}
-	<span class="kw">impl</span> <span class="ident">State</span> <span class="kw">for</span> <span class="ident">PrimInBufOutState</span> {}
-	<span class="kw">impl</span> <span class="ident">State</span> <span class="kw">for</span> <span class="ident">BufInBufOutState</span> {}
+	<span class="kw">impl </span>State <span class="kw">for </span>InitState {}
+	<span class="kw">impl </span>State <span class="kw">for </span>OnlyInState {}
+	<span class="kw">impl </span>State <span class="kw">for </span>PrimInBufOutState {}
+	<span class="kw">impl </span>State <span class="kw">for </span>BufInBufOutState {}
 
-	<span class="kw">impl</span> <span class="ident">PrimIn</span> <span class="kw">for</span> <span class="ident">OnlyInState</span> {}
-	<span class="kw">impl</span> <span class="ident">PrimOut</span> <span class="kw">for</span> <span class="ident">OnlyInState</span> {}
-	<span class="kw">impl</span> <span class="ident">PrimIn</span> <span class="kw">for</span> <span class="ident">PrimInBufOutState</span> {}
-	<span class="kw">impl</span> <span class="ident">BufOut</span> <span class="kw">for</span> <span class="ident">PrimInBufOutState</span> {}
-	<span class="kw">impl</span> <span class="ident">BufIn</span> <span class="kw">for</span> <span class="ident">BufInBufOutState</span> {}
-	<span class="kw">impl</span> <span class="ident">BufOut</span> <span class="kw">for</span> <span class="ident">BufInBufOutState</span> {}
+	<span class="kw">impl </span>PrimIn <span class="kw">for </span>OnlyInState {}
+	<span class="kw">impl </span>PrimOut <span class="kw">for </span>OnlyInState {}
+	<span class="kw">impl </span>PrimIn <span class="kw">for </span>PrimInBufOutState {}
+	<span class="kw">impl </span>BufOut <span class="kw">for </span>PrimInBufOutState {}
+	<span class="kw">impl </span>BufIn <span class="kw">for </span>BufInBufOutState {}
+	<span class="kw">impl </span>BufOut <span class="kw">for </span>BufInBufOutState {}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/rpc-spec-v2/src/transaction/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../sc_rpc_spec_v2/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../sc_rpc_spec_v2/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../sc_rpc_spec_v2/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/rpc-spec-v2/src/transaction/event.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>event.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../sc_rpc_spec_v2/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../sc_rpc_spec_v2/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -357,359 +351,358 @@
 <span id="351">351</span>
 <span id="352">352</span>
 <span id="353">353</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! The transaction&#39;s event returned as json compatible object.</span>
+</span><span class="doccomment">//! The transaction&#39;s event returned as json compatible object.
 
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</span><span class="kw">use </span>serde::{Deserialize, Serialize};
 
-<span class="doccomment">/// The transaction was broadcasted to a number of peers.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Note</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The RPC does not guarantee that the peers have received the</span>
-<span class="doccomment">/// transaction.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// When the number of peers is zero, the event guarantees that</span>
-<span class="doccomment">/// shutting down the local node will lead to the transaction</span>
-<span class="doccomment">/// not being included in the chain.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TransactionBroadcasted</span> {
-	<span class="doccomment">/// The number of peers the transaction was broadcasted to.</span>
-	<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;as_string&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">num_peers</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// The transaction was broadcasted to a number of peers.
+///
+/// # Note
+///
+/// The RPC does not guarantee that the peers have received the
+/// transaction.
+///
+/// When the number of peers is zero, the event guarantees that
+/// shutting down the local node will lead to the transaction
+/// not being included in the chain.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>TransactionBroadcasted {
+	<span class="doccomment">/// The number of peers the transaction was broadcasted to.
+	</span><span class="attribute">#[serde(with = <span class="string">&quot;as_string&quot;</span>)]
+	</span><span class="kw">pub </span>num_peers: usize,
 }
 
-<span class="doccomment">/// The transaction was included in a block of the chain.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TransactionBlock</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The hash of the block the transaction was included into.</span>
-	<span class="kw">pub</span> <span class="ident">hash</span>: <span class="ident">Hash</span>,
-	<span class="doccomment">/// The index (zero-based) of the transaction within the body of the block.</span>
-	<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;as_string&quot;</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">index</span>: <span class="ident">usize</span>,
+<span class="doccomment">/// The transaction was included in a block of the chain.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>TransactionBlock&lt;Hash&gt; {
+	<span class="doccomment">/// The hash of the block the transaction was included into.
+	</span><span class="kw">pub </span>hash: Hash,
+	<span class="doccomment">/// The index (zero-based) of the transaction within the body of the block.
+	</span><span class="attribute">#[serde(with = <span class="string">&quot;as_string&quot;</span>)]
+	</span><span class="kw">pub </span>index: usize,
 }
 
-<span class="doccomment">/// The transaction could not be processed due to an error.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TransactionError</span> {
-	<span class="doccomment">/// Reason of the error.</span>
-	<span class="kw">pub</span> <span class="ident">error</span>: <span class="ident">String</span>,
+<span class="doccomment">/// The transaction could not be processed due to an error.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>TransactionError {
+	<span class="doccomment">/// Reason of the error.
+	</span><span class="kw">pub </span>error: String,
 }
 
-<span class="doccomment">/// The transaction was dropped because of exceeding limits.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TransactionDropped</span> {
-	<span class="doccomment">/// True if the transaction was broadcasted to other peers and</span>
-	<span class="doccomment">/// may still be included in the block.</span>
-	<span class="kw">pub</span> <span class="ident">broadcasted</span>: <span class="ident">bool</span>,
-	<span class="doccomment">/// Reason of the event.</span>
-	<span class="kw">pub</span> <span class="ident">error</span>: <span class="ident">String</span>,
+<span class="doccomment">/// The transaction was dropped because of exceeding limits.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+</span><span class="kw">pub struct </span>TransactionDropped {
+	<span class="doccomment">/// True if the transaction was broadcasted to other peers and
+	/// may still be included in the block.
+	</span><span class="kw">pub </span>broadcasted: bool,
+	<span class="doccomment">/// Reason of the event.
+	</span><span class="kw">pub </span>error: String,
 }
 
-<span class="doccomment">/// Possible transaction status events.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The status events can be grouped based on their kinds as:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// 1. Runtime validated the transaction:</span>
-<span class="doccomment">/// 		- `Validated`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// 2. Inside the `Ready` queue:</span>
-<span class="doccomment">/// 		- `Broadcast`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// 3. Leaving the pool:</span>
-<span class="doccomment">/// 		- `BestChainBlockIncluded`</span>
-<span class="doccomment">/// 		- `Invalid`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// 4. Block finalized:</span>
-<span class="doccomment">/// 		- `Finalized`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// 5. At any time:</span>
-<span class="doccomment">/// 		- `Dropped`</span>
-<span class="doccomment">/// 		- `Error`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The subscription&#39;s stream is considered finished whenever the following events are</span>
-<span class="doccomment">/// received: `Finalized`, `Error`, `Invalid` or `Dropped`. However, the user is allowed</span>
-<span class="doccomment">/// to unsubscribe at any moment.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="comment">// We need to manually specify the trait bounds for the `Hash` trait to ensure `into` and</span>
-<span class="comment">// `from` still work.</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">bound</span>(
-	<span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;Hash: Serialize + Clone&quot;</span>,
-	<span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;Hash: Deserialize&lt;&#39;de&gt; + Clone&quot;</span>
-))]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">into</span> <span class="op">=</span> <span class="string">&quot;TransactionEventIR&lt;Hash&gt;&quot;</span>, <span class="ident">from</span> <span class="op">=</span> <span class="string">&quot;TransactionEventIR&lt;Hash&gt;&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TransactionEvent</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The transaction was validated by the runtime.</span>
-	<span class="ident">Validated</span>,
-	<span class="doccomment">/// The transaction was broadcasted to a number of peers.</span>
-	<span class="ident">Broadcasted</span>(<span class="ident">TransactionBroadcasted</span>),
-	<span class="doccomment">/// The transaction was included in a best block of the chain.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Note</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This may contain `None` if the block is no longer a best</span>
-	<span class="doccomment">/// block of the chain.</span>
-	<span class="ident">BestChainBlockIncluded</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TransactionBlock</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>),
-	<span class="doccomment">/// The transaction was included in a finalized block.</span>
-	<span class="ident">Finalized</span>(<span class="ident">TransactionBlock</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>),
-	<span class="doccomment">/// The transaction could not be processed due to an error.</span>
-	<span class="ident">Error</span>(<span class="ident">TransactionError</span>),
-	<span class="doccomment">/// The transaction is marked as invalid.</span>
-	<span class="ident">Invalid</span>(<span class="ident">TransactionError</span>),
-	<span class="doccomment">/// The client was not capable of keeping track of this transaction.</span>
-	<span class="ident">Dropped</span>(<span class="ident">TransactionDropped</span>),
+<span class="doccomment">/// Possible transaction status events.
+///
+/// The status events can be grouped based on their kinds as:
+///
+/// 1. Runtime validated the transaction:
+/// 		- `Validated`
+///
+/// 2. Inside the `Ready` queue:
+/// 		- `Broadcast`
+///
+/// 3. Leaving the pool:
+/// 		- `BestChainBlockIncluded`
+/// 		- `Invalid`
+///
+/// 4. Block finalized:
+/// 		- `Finalized`
+///
+/// 5. At any time:
+/// 		- `Dropped`
+/// 		- `Error`
+///
+/// The subscription&#39;s stream is considered finished whenever the following events are
+/// received: `Finalized`, `Error`, `Invalid` or `Dropped`. However, the user is allowed
+/// to unsubscribe at any moment.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+</span><span class="comment">// We need to manually specify the trait bounds for the `Hash` trait to ensure `into` and
+// `from` still work.
+</span><span class="attribute">#[serde(bound(
+	serialize = <span class="string">&quot;Hash: Serialize + Clone&quot;</span>,
+	deserialize = <span class="string">&quot;Hash: Deserialize&lt;&#39;de&gt; + Clone&quot;
+</span>))]
+#[serde(into = <span class="string">&quot;TransactionEventIR&lt;Hash&gt;&quot;</span>, from = <span class="string">&quot;TransactionEventIR&lt;Hash&gt;&quot;</span>)]
+</span><span class="kw">pub enum </span>TransactionEvent&lt;Hash&gt; {
+	<span class="doccomment">/// The transaction was validated by the runtime.
+	</span>Validated,
+	<span class="doccomment">/// The transaction was broadcasted to a number of peers.
+	</span>Broadcasted(TransactionBroadcasted),
+	<span class="doccomment">/// The transaction was included in a best block of the chain.
+	///
+	/// # Note
+	///
+	/// This may contain `None` if the block is no longer a best
+	/// block of the chain.
+	</span>BestChainBlockIncluded(<span class="prelude-ty">Option</span>&lt;TransactionBlock&lt;Hash&gt;&gt;),
+	<span class="doccomment">/// The transaction was included in a finalized block.
+	</span>Finalized(TransactionBlock&lt;Hash&gt;),
+	<span class="doccomment">/// The transaction could not be processed due to an error.
+	</span>Error(TransactionError),
+	<span class="doccomment">/// The transaction is marked as invalid.
+	</span>Invalid(TransactionError),
+	<span class="doccomment">/// The client was not capable of keeping track of this transaction.
+	</span>Dropped(TransactionDropped),
 }
 
-<span class="doccomment">/// Intermediate representation (IR) for the transaction events</span>
-<span class="doccomment">/// that handles block events only.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The block events require a JSON compatible interpretation similar to:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```json</span>
-<span class="doccomment">/// { event: &quot;EVENT&quot;, block: { hash: &quot;0xFF&quot;, index: 0 } }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This IR is introduced to circumvent that the block events need to</span>
-<span class="doccomment">/// be serialized/deserialized with &quot;tag&quot; and &quot;content&quot;, while other</span>
-<span class="doccomment">/// events only require &quot;tag&quot;.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;event&quot;</span>, <span class="ident">content</span> <span class="op">=</span> <span class="string">&quot;block&quot;</span>)]</span>
-<span class="kw">enum</span> <span class="ident">TransactionEventBlockIR</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The transaction was included in the best block of the chain.</span>
-	<span class="ident">BestChainBlockIncluded</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TransactionBlock</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span>),
-	<span class="doccomment">/// The transaction was included in a finalized block of the chain.</span>
-	<span class="ident">Finalized</span>(<span class="ident">TransactionBlock</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>),
+<span class="doccomment">/// Intermediate representation (IR) for the transaction events
+/// that handles block events only.
+///
+/// The block events require a JSON compatible interpretation similar to:
+///
+/// ```json
+/// { event: &quot;EVENT&quot;, block: { hash: &quot;0xFF&quot;, index: 0 } }
+/// ```
+///
+/// This IR is introduced to circumvent that the block events need to
+/// be serialized/deserialized with &quot;tag&quot; and &quot;content&quot;, while other
+/// events only require &quot;tag&quot;.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[serde(tag = <span class="string">&quot;event&quot;</span>, content = <span class="string">&quot;block&quot;</span>)]
+</span><span class="kw">enum </span>TransactionEventBlockIR&lt;Hash&gt; {
+	<span class="doccomment">/// The transaction was included in the best block of the chain.
+	</span>BestChainBlockIncluded(<span class="prelude-ty">Option</span>&lt;TransactionBlock&lt;Hash&gt;&gt;),
+	<span class="doccomment">/// The transaction was included in a finalized block of the chain.
+	</span>Finalized(TransactionBlock&lt;Hash&gt;),
 }
 
-<span class="doccomment">/// Intermediate representation (IR) for the transaction events</span>
-<span class="doccomment">/// that handles non-block events only.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The non-block events require a JSON compatible interpretation similar to:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// ```json</span>
-<span class="doccomment">/// { event: &quot;EVENT&quot;, num_peers: 0 }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This IR is introduced to circumvent that the block events need to</span>
-<span class="doccomment">/// be serialized/deserialized with &quot;tag&quot; and &quot;content&quot;, while other</span>
-<span class="doccomment">/// events only require &quot;tag&quot;.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;event&quot;</span>)]</span>
-<span class="kw">enum</span> <span class="ident">TransactionEventNonBlockIR</span> {
-	<span class="ident">Validated</span>,
-	<span class="ident">Broadcasted</span>(<span class="ident">TransactionBroadcasted</span>),
-	<span class="ident">Error</span>(<span class="ident">TransactionError</span>),
-	<span class="ident">Invalid</span>(<span class="ident">TransactionError</span>),
-	<span class="ident">Dropped</span>(<span class="ident">TransactionDropped</span>),
+<span class="doccomment">/// Intermediate representation (IR) for the transaction events
+/// that handles non-block events only.
+///
+/// The non-block events require a JSON compatible interpretation similar to:
+///
+/// ```json
+/// { event: &quot;EVENT&quot;, num_peers: 0 }
+/// ```
+///
+/// This IR is introduced to circumvent that the block events need to
+/// be serialized/deserialized with &quot;tag&quot; and &quot;content&quot;, while other
+/// events only require &quot;tag&quot;.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[serde(tag = <span class="string">&quot;event&quot;</span>)]
+</span><span class="kw">enum </span>TransactionEventNonBlockIR {
+	Validated,
+	Broadcasted(TransactionBroadcasted),
+	Error(TransactionError),
+	Invalid(TransactionError),
+	Dropped(TransactionDropped),
 }
 
-<span class="doccomment">/// Intermediate representation (IR) used for serialization/deserialization of the</span>
-<span class="doccomment">/// [`TransactionEvent`] in a JSON compatible format.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Serde cannot mix `#[serde(tag = &quot;event&quot;)]` with `#[serde(tag = &quot;event&quot;, content = &quot;block&quot;)]`</span>
-<span class="doccomment">/// for specific enum variants. Therefore, this IR is introduced to circumvent this</span>
-<span class="doccomment">/// restriction, while exposing a simplified [`TransactionEvent`] for users of the</span>
-<span class="doccomment">/// rust ecosystem.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">bound</span>(<span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;Hash: Serialize&quot;</span>, <span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;Hash: Deserialize&lt;&#39;de&gt;&quot;</span>))]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;camelCase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">untagged</span>)]</span>
-<span class="kw">enum</span> <span class="ident">TransactionEventIR</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="ident">Block</span>(<span class="ident">TransactionEventBlockIR</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>),
-	<span class="ident">NonBlock</span>(<span class="ident">TransactionEventNonBlockIR</span>),
+<span class="doccomment">/// Intermediate representation (IR) used for serialization/deserialization of the
+/// [`TransactionEvent`] in a JSON compatible format.
+///
+/// Serde cannot mix `#[serde(tag = &quot;event&quot;)]` with `#[serde(tag = &quot;event&quot;, content = &quot;block&quot;)]`
+/// for specific enum variants. Therefore, this IR is introduced to circumvent this
+/// restriction, while exposing a simplified [`TransactionEvent`] for users of the
+/// rust ecosystem.
+</span><span class="attribute">#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = <span class="string">&quot;Hash: Serialize&quot;</span>, deserialize = <span class="string">&quot;Hash: Deserialize&lt;&#39;de&gt;&quot;</span>))]
+#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
+#[serde(untagged)]
+</span><span class="kw">enum </span>TransactionEventIR&lt;Hash&gt; {
+	Block(TransactionEventBlockIR&lt;Hash&gt;),
+	NonBlock(TransactionEventNonBlockIR),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">TransactionEvent</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TransactionEventIR</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">match</span> <span class="ident">value</span> {
-			<span class="ident">TransactionEvent::Validated</span> =&gt;
-				<span class="ident">TransactionEventIR::NonBlock</span>(<span class="ident">TransactionEventNonBlockIR::Validated</span>),
-			<span class="ident">TransactionEvent::Broadcasted</span>(<span class="ident">event</span>) =&gt;
-				<span class="ident">TransactionEventIR::NonBlock</span>(<span class="ident">TransactionEventNonBlockIR::Broadcasted</span>(<span class="ident">event</span>)),
-			<span class="ident">TransactionEvent::BestChainBlockIncluded</span>(<span class="ident">event</span>) =&gt;
-				<span class="ident">TransactionEventIR::Block</span>(<span class="ident">TransactionEventBlockIR::BestChainBlockIncluded</span>(<span class="ident">event</span>)),
-			<span class="ident">TransactionEvent::Finalized</span>(<span class="ident">event</span>) =&gt;
-				<span class="ident">TransactionEventIR::Block</span>(<span class="ident">TransactionEventBlockIR::Finalized</span>(<span class="ident">event</span>)),
-			<span class="ident">TransactionEvent::Error</span>(<span class="ident">event</span>) =&gt;
-				<span class="ident">TransactionEventIR::NonBlock</span>(<span class="ident">TransactionEventNonBlockIR::Error</span>(<span class="ident">event</span>)),
-			<span class="ident">TransactionEvent::Invalid</span>(<span class="ident">event</span>) =&gt;
-				<span class="ident">TransactionEventIR::NonBlock</span>(<span class="ident">TransactionEventNonBlockIR::Invalid</span>(<span class="ident">event</span>)),
-			<span class="ident">TransactionEvent::Dropped</span>(<span class="ident">event</span>) =&gt;
-				<span class="ident">TransactionEventIR::NonBlock</span>(<span class="ident">TransactionEventNonBlockIR::Dropped</span>(<span class="ident">event</span>)),
+<span class="kw">impl</span>&lt;Hash&gt; From&lt;TransactionEvent&lt;Hash&gt;&gt; <span class="kw">for </span>TransactionEventIR&lt;Hash&gt; {
+	<span class="kw">fn </span>from(value: TransactionEvent&lt;Hash&gt;) -&gt; <span class="self">Self </span>{
+		<span class="kw">match </span>value {
+			TransactionEvent::Validated =&gt;
+				TransactionEventIR::NonBlock(TransactionEventNonBlockIR::Validated),
+			TransactionEvent::Broadcasted(event) =&gt;
+				TransactionEventIR::NonBlock(TransactionEventNonBlockIR::Broadcasted(event)),
+			TransactionEvent::BestChainBlockIncluded(event) =&gt;
+				TransactionEventIR::Block(TransactionEventBlockIR::BestChainBlockIncluded(event)),
+			TransactionEvent::Finalized(event) =&gt;
+				TransactionEventIR::Block(TransactionEventBlockIR::Finalized(event)),
+			TransactionEvent::Error(event) =&gt;
+				TransactionEventIR::NonBlock(TransactionEventNonBlockIR::Error(event)),
+			TransactionEvent::Invalid(event) =&gt;
+				TransactionEventIR::NonBlock(TransactionEventNonBlockIR::Invalid(event)),
+			TransactionEvent::Dropped(event) =&gt;
+				TransactionEventIR::NonBlock(TransactionEventNonBlockIR::Dropped(event)),
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">TransactionEventIR</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TransactionEvent</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">TransactionEventIR</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">match</span> <span class="ident">value</span> {
-			<span class="ident">TransactionEventIR::NonBlock</span>(<span class="ident">status</span>) =&gt; <span class="kw">match</span> <span class="ident">status</span> {
-				<span class="ident">TransactionEventNonBlockIR::Validated</span> =&gt; <span class="ident">TransactionEvent::Validated</span>,
-				<span class="ident">TransactionEventNonBlockIR::Broadcasted</span>(<span class="ident">event</span>) =&gt;
-					<span class="ident">TransactionEvent::Broadcasted</span>(<span class="ident">event</span>),
-				<span class="ident">TransactionEventNonBlockIR::Error</span>(<span class="ident">event</span>) =&gt; <span class="ident">TransactionEvent::Error</span>(<span class="ident">event</span>),
-				<span class="ident">TransactionEventNonBlockIR::Invalid</span>(<span class="ident">event</span>) =&gt; <span class="ident">TransactionEvent::Invalid</span>(<span class="ident">event</span>),
-				<span class="ident">TransactionEventNonBlockIR::Dropped</span>(<span class="ident">event</span>) =&gt; <span class="ident">TransactionEvent::Dropped</span>(<span class="ident">event</span>),
+<span class="kw">impl</span>&lt;Hash&gt; From&lt;TransactionEventIR&lt;Hash&gt;&gt; <span class="kw">for </span>TransactionEvent&lt;Hash&gt; {
+	<span class="kw">fn </span>from(value: TransactionEventIR&lt;Hash&gt;) -&gt; <span class="self">Self </span>{
+		<span class="kw">match </span>value {
+			TransactionEventIR::NonBlock(status) =&gt; <span class="kw">match </span>status {
+				TransactionEventNonBlockIR::Validated =&gt; TransactionEvent::Validated,
+				TransactionEventNonBlockIR::Broadcasted(event) =&gt;
+					TransactionEvent::Broadcasted(event),
+				TransactionEventNonBlockIR::Error(event) =&gt; TransactionEvent::Error(event),
+				TransactionEventNonBlockIR::Invalid(event) =&gt; TransactionEvent::Invalid(event),
+				TransactionEventNonBlockIR::Dropped(event) =&gt; TransactionEvent::Dropped(event),
 			},
-			<span class="ident">TransactionEventIR::Block</span>(<span class="ident">block</span>) =&gt; <span class="kw">match</span> <span class="ident">block</span> {
-				<span class="ident">TransactionEventBlockIR::Finalized</span>(<span class="ident">event</span>) =&gt; <span class="ident">TransactionEvent::Finalized</span>(<span class="ident">event</span>),
-				<span class="ident">TransactionEventBlockIR::BestChainBlockIncluded</span>(<span class="ident">event</span>) =&gt;
-					<span class="ident">TransactionEvent::BestChainBlockIncluded</span>(<span class="ident">event</span>),
+			TransactionEventIR::Block(block) =&gt; <span class="kw">match </span>block {
+				TransactionEventBlockIR::Finalized(event) =&gt; TransactionEvent::Finalized(event),
+				TransactionEventBlockIR::BestChainBlockIncluded(event) =&gt;
+					TransactionEvent::BestChainBlockIncluded(event),
 			},
 		}
 	}
 }
 
-<span class="doccomment">/// Serialize and deserialize helper as string.</span>
-<span class="kw">mod</span> <span class="ident">as_string</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserializer</span>, <span class="ident">Serializer</span>};
+<span class="doccomment">/// Serialize and deserialize helper as string.
+</span><span class="kw">mod </span>as_string {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>serde::{Deserializer, Serializer};
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serializer</span><span class="op">&gt;</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">usize</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S::Ok</span>, <span class="ident">S::Error</span><span class="op">&gt;</span> {
-		<span class="ident">data</span>.<span class="ident">to_string</span>().<span class="ident">serialize</span>(<span class="ident">serializer</span>)
+	<span class="kw">pub fn </span>serialize&lt;S: Serializer&gt;(data: <span class="kw-2">&amp;</span>usize, serializer: S) -&gt; <span class="prelude-ty">Result</span>&lt;S::Ok, S::Error&gt; {
+		data.to_string().serialize(serializer)
 	}
 
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">D</span>: <span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span>, <span class="ident">D::Error</span><span class="op">&gt;</span> {
-		<span class="ident">String::deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>
-			.<span class="ident">parse</span>()
-			.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">serde::de::Error::custom</span>(<span class="macro">format!</span>(<span class="string">&quot;Parsing failed: {}&quot;</span>, <span class="ident">e</span>)))
+	<span class="kw">pub fn </span>deserialize&lt;<span class="lifetime">&#39;de</span>, D: Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;&gt;(deserializer: D) -&gt; <span class="prelude-ty">Result</span>&lt;usize, D::Error&gt; {
+		String::deserialize(deserializer)<span class="question-mark">?
+			</span>.parse()
+			.map_err(|e| serde::de::Error::custom(<span class="macro">format!</span>(<span class="string">&quot;Parsing failed: {}&quot;</span>, e)))
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">sp_core::H256</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>sp_core::H256;
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">validated_event</span>() {
-		<span class="kw">let</span> <span class="ident">event</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">TransactionEvent::Validated</span>;
-		<span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>).<span class="ident">unwrap</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>validated_event() {
+		<span class="kw">let </span>event: TransactionEvent&lt;()&gt; = TransactionEvent::Validated;
+		<span class="kw">let </span>ser = serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap();
 
-		<span class="kw">let</span> <span class="ident">exp</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;event&quot;:&quot;validated&quot;}&quot;#</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">ser</span>, <span class="ident">exp</span>);
+		<span class="kw">let </span>exp = <span class="string">r#&quot;{&quot;event&quot;:&quot;validated&quot;}&quot;#</span>;
+		<span class="macro">assert_eq!</span>(ser, exp);
 
-		<span class="kw">let</span> <span class="ident">event_dec</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">exp</span>).<span class="ident">unwrap</span>();
-		<span class="macro">assert_eq!</span>(<span class="ident">event_dec</span>, <span class="ident">event</span>);
+		<span class="kw">let </span>event_dec: TransactionEvent&lt;()&gt; = serde_json::from_str(exp).unwrap();
+		<span class="macro">assert_eq!</span>(event_dec, event);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">broadcasted_event</span>() {
-		<span class="kw">let</span> <span class="ident">event</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span>
-			<span class="ident">TransactionEvent::Broadcasted</span>(<span class="ident">TransactionBroadcasted</span> { <span class="ident">num_peers</span>: <span class="number">2</span> });
-		<span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>).<span class="ident">unwrap</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>broadcasted_event() {
+		<span class="kw">let </span>event: TransactionEvent&lt;()&gt; =
+			TransactionEvent::Broadcasted(TransactionBroadcasted { num_peers: <span class="number">2 </span>});
+		<span class="kw">let </span>ser = serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap();
 
-		<span class="kw">let</span> <span class="ident">exp</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;event&quot;:&quot;broadcasted&quot;,&quot;numPeers&quot;:&quot;2&quot;}&quot;#</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">ser</span>, <span class="ident">exp</span>);
+		<span class="kw">let </span>exp = <span class="string">r#&quot;{&quot;event&quot;:&quot;broadcasted&quot;,&quot;numPeers&quot;:&quot;2&quot;}&quot;#</span>;
+		<span class="macro">assert_eq!</span>(ser, exp);
 
-		<span class="kw">let</span> <span class="ident">event_dec</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">exp</span>).<span class="ident">unwrap</span>();
-		<span class="macro">assert_eq!</span>(<span class="ident">event_dec</span>, <span class="ident">event</span>);
+		<span class="kw">let </span>event_dec: TransactionEvent&lt;()&gt; = serde_json::from_str(exp).unwrap();
+		<span class="macro">assert_eq!</span>(event_dec, event);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">best_chain_event</span>() {
-		<span class="kw">let</span> <span class="ident">event</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">TransactionEvent::BestChainBlockIncluded</span>(<span class="prelude-val">None</span>);
-		<span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>).<span class="ident">unwrap</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>best_chain_event() {
+		<span class="kw">let </span>event: TransactionEvent&lt;()&gt; = TransactionEvent::BestChainBlockIncluded(<span class="prelude-val">None</span>);
+		<span class="kw">let </span>ser = serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap();
 
-		<span class="kw">let</span> <span class="ident">exp</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;event&quot;:&quot;bestChainBlockIncluded&quot;,&quot;block&quot;:null}&quot;#</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">ser</span>, <span class="ident">exp</span>);
+		<span class="kw">let </span>exp = <span class="string">r#&quot;{&quot;event&quot;:&quot;bestChainBlockIncluded&quot;,&quot;block&quot;:null}&quot;#</span>;
+		<span class="macro">assert_eq!</span>(ser, exp);
 
-		<span class="kw">let</span> <span class="ident">event_dec</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">exp</span>).<span class="ident">unwrap</span>();
-		<span class="macro">assert_eq!</span>(<span class="ident">event_dec</span>, <span class="ident">event</span>);
+		<span class="kw">let </span>event_dec: TransactionEvent&lt;()&gt; = serde_json::from_str(exp).unwrap();
+		<span class="macro">assert_eq!</span>(event_dec, event);
 
-		<span class="kw">let</span> <span class="ident">event</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span><span class="ident">H256</span><span class="op">&gt;</span> <span class="op">=</span>
-			<span class="ident">TransactionEvent::BestChainBlockIncluded</span>(<span class="prelude-val">Some</span>(<span class="ident">TransactionBlock</span> {
-				<span class="ident">hash</span>: <span class="ident">H256::from_low_u64_be</span>(<span class="number">1</span>),
-				<span class="ident">index</span>: <span class="number">2</span>,
+		<span class="kw">let </span>event: TransactionEvent&lt;H256&gt; =
+			TransactionEvent::BestChainBlockIncluded(<span class="prelude-val">Some</span>(TransactionBlock {
+				hash: H256::from_low_u64_be(<span class="number">1</span>),
+				index: <span class="number">2</span>,
 			}));
-		<span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>).<span class="ident">unwrap</span>();
+		<span class="kw">let </span>ser = serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap();
 
-		<span class="kw">let</span> <span class="ident">exp</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;event&quot;:&quot;bestChainBlockIncluded&quot;,&quot;block&quot;:{&quot;hash&quot;:&quot;0x0000000000000000000000000000000000000000000000000000000000000001&quot;,&quot;index&quot;:&quot;2&quot;}}&quot;#</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">ser</span>, <span class="ident">exp</span>);
+		<span class="kw">let </span>exp = <span class="string">r#&quot;{&quot;event&quot;:&quot;bestChainBlockIncluded&quot;,&quot;block&quot;:{&quot;hash&quot;:&quot;0x0000000000000000000000000000000000000000000000000000000000000001&quot;,&quot;index&quot;:&quot;2&quot;}}&quot;#</span>;
+		<span class="macro">assert_eq!</span>(ser, exp);
 
-		<span class="kw">let</span> <span class="ident">event_dec</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span><span class="ident">H256</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">exp</span>).<span class="ident">unwrap</span>();
-		<span class="macro">assert_eq!</span>(<span class="ident">event_dec</span>, <span class="ident">event</span>);
+		<span class="kw">let </span>event_dec: TransactionEvent&lt;H256&gt; = serde_json::from_str(exp).unwrap();
+		<span class="macro">assert_eq!</span>(event_dec, event);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">finalized_event</span>() {
-		<span class="kw">let</span> <span class="ident">event</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span><span class="ident">H256</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">TransactionEvent::Finalized</span>(<span class="ident">TransactionBlock</span> {
-			<span class="ident">hash</span>: <span class="ident">H256::from_low_u64_be</span>(<span class="number">1</span>),
-			<span class="ident">index</span>: <span class="number">10</span>,
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>finalized_event() {
+		<span class="kw">let </span>event: TransactionEvent&lt;H256&gt; = TransactionEvent::Finalized(TransactionBlock {
+			hash: H256::from_low_u64_be(<span class="number">1</span>),
+			index: <span class="number">10</span>,
 		});
-		<span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>).<span class="ident">unwrap</span>();
+		<span class="kw">let </span>ser = serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap();
 
-		<span class="kw">let</span> <span class="ident">exp</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;event&quot;:&quot;finalized&quot;,&quot;block&quot;:{&quot;hash&quot;:&quot;0x0000000000000000000000000000000000000000000000000000000000000001&quot;,&quot;index&quot;:&quot;10&quot;}}&quot;#</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">ser</span>, <span class="ident">exp</span>);
+		<span class="kw">let </span>exp = <span class="string">r#&quot;{&quot;event&quot;:&quot;finalized&quot;,&quot;block&quot;:{&quot;hash&quot;:&quot;0x0000000000000000000000000000000000000000000000000000000000000001&quot;,&quot;index&quot;:&quot;10&quot;}}&quot;#</span>;
+		<span class="macro">assert_eq!</span>(ser, exp);
 
-		<span class="kw">let</span> <span class="ident">event_dec</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span><span class="ident">H256</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">exp</span>).<span class="ident">unwrap</span>();
-		<span class="macro">assert_eq!</span>(<span class="ident">event_dec</span>, <span class="ident">event</span>);
+		<span class="kw">let </span>event_dec: TransactionEvent&lt;H256&gt; = serde_json::from_str(exp).unwrap();
+		<span class="macro">assert_eq!</span>(event_dec, event);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">error_event</span>() {
-		<span class="kw">let</span> <span class="ident">event</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span>
-			<span class="ident">TransactionEvent::Error</span>(<span class="ident">TransactionError</span> { <span class="ident">error</span>: <span class="string">&quot;abc&quot;</span>.<span class="ident">to_string</span>() });
-		<span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>).<span class="ident">unwrap</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>error_event() {
+		<span class="kw">let </span>event: TransactionEvent&lt;()&gt; =
+			TransactionEvent::Error(TransactionError { error: <span class="string">&quot;abc&quot;</span>.to_string() });
+		<span class="kw">let </span>ser = serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap();
 
-		<span class="kw">let</span> <span class="ident">exp</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;event&quot;:&quot;error&quot;,&quot;error&quot;:&quot;abc&quot;}&quot;#</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">ser</span>, <span class="ident">exp</span>);
+		<span class="kw">let </span>exp = <span class="string">r#&quot;{&quot;event&quot;:&quot;error&quot;,&quot;error&quot;:&quot;abc&quot;}&quot;#</span>;
+		<span class="macro">assert_eq!</span>(ser, exp);
 
-		<span class="kw">let</span> <span class="ident">event_dec</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">exp</span>).<span class="ident">unwrap</span>();
-		<span class="macro">assert_eq!</span>(<span class="ident">event_dec</span>, <span class="ident">event</span>);
+		<span class="kw">let </span>event_dec: TransactionEvent&lt;()&gt; = serde_json::from_str(exp).unwrap();
+		<span class="macro">assert_eq!</span>(event_dec, event);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">invalid_event</span>() {
-		<span class="kw">let</span> <span class="ident">event</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span>
-			<span class="ident">TransactionEvent::Invalid</span>(<span class="ident">TransactionError</span> { <span class="ident">error</span>: <span class="string">&quot;abc&quot;</span>.<span class="ident">to_string</span>() });
-		<span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>).<span class="ident">unwrap</span>();
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>invalid_event() {
+		<span class="kw">let </span>event: TransactionEvent&lt;()&gt; =
+			TransactionEvent::Invalid(TransactionError { error: <span class="string">&quot;abc&quot;</span>.to_string() });
+		<span class="kw">let </span>ser = serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap();
 
-		<span class="kw">let</span> <span class="ident">exp</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;event&quot;:&quot;invalid&quot;,&quot;error&quot;:&quot;abc&quot;}&quot;#</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">ser</span>, <span class="ident">exp</span>);
+		<span class="kw">let </span>exp = <span class="string">r#&quot;{&quot;event&quot;:&quot;invalid&quot;,&quot;error&quot;:&quot;abc&quot;}&quot;#</span>;
+		<span class="macro">assert_eq!</span>(ser, exp);
 
-		<span class="kw">let</span> <span class="ident">event_dec</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">exp</span>).<span class="ident">unwrap</span>();
-		<span class="macro">assert_eq!</span>(<span class="ident">event_dec</span>, <span class="ident">event</span>);
+		<span class="kw">let </span>event_dec: TransactionEvent&lt;()&gt; = serde_json::from_str(exp).unwrap();
+		<span class="macro">assert_eq!</span>(event_dec, event);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">dropped_event</span>() {
-		<span class="kw">let</span> <span class="ident">event</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">TransactionEvent::Dropped</span>(<span class="ident">TransactionDropped</span> {
-			<span class="ident">broadcasted</span>: <span class="bool-val">true</span>,
-			<span class="ident">error</span>: <span class="string">&quot;abc&quot;</span>.<span class="ident">to_string</span>(),
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>dropped_event() {
+		<span class="kw">let </span>event: TransactionEvent&lt;()&gt; = TransactionEvent::Dropped(TransactionDropped {
+			broadcasted: <span class="bool-val">true</span>,
+			error: <span class="string">&quot;abc&quot;</span>.to_string(),
 		});
-		<span class="kw">let</span> <span class="ident">ser</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="ident">event</span>).<span class="ident">unwrap</span>();
+		<span class="kw">let </span>ser = serde_json::to_string(<span class="kw-2">&amp;</span>event).unwrap();
 
-		<span class="kw">let</span> <span class="ident">exp</span> <span class="op">=</span> <span class="string">r#&quot;{&quot;event&quot;:&quot;dropped&quot;,&quot;broadcasted&quot;:true,&quot;error&quot;:&quot;abc&quot;}&quot;#</span>;
-		<span class="macro">assert_eq!</span>(<span class="ident">ser</span>, <span class="ident">exp</span>);
+		<span class="kw">let </span>exp = <span class="string">r#&quot;{&quot;event&quot;:&quot;dropped&quot;,&quot;broadcasted&quot;:true,&quot;error&quot;:&quot;abc&quot;}&quot;#</span>;
+		<span class="macro">assert_eq!</span>(ser, exp);
 
-		<span class="kw">let</span> <span class="ident">event_dec</span>: <span class="ident">TransactionEvent</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="ident">exp</span>).<span class="ident">unwrap</span>();
-		<span class="macro">assert_eq!</span>(<span class="ident">event_dec</span>, <span class="ident">event</span>);
+		<span class="kw">let </span>event_dec: TransactionEvent&lt;()&gt; = serde_json::from_str(exp).unwrap();
+		<span class="macro">assert_eq!</span>(event_dec, event);
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="sc_rpc_spec_v2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="sc_rpc_spec_v2" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

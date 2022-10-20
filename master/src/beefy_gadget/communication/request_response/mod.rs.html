@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/beefy/src/communication/request_response/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../beefy_gadget/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/beefy/src/communication/request_response/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../../normalize.css"><link rel="stylesheet" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../../ayu.css" disabled><link rel="stylesheet" href="../../../../dark.css" disabled><link rel="stylesheet" href="../../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../../storage.js"></script><script defer src="../../../../source-script.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../main.js"></script><noscript><link rel="stylesheet" href="../../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../../beefy_gadget/index.html"><div class="logo-container"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../../beefy_gadget/index.html"><img class="rust-logo" src="../../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -105,107 +99,106 @@
 <span id="99">99</span>
 <span id="100">100</span>
 <span id="101">101</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Request/response protocol for syncing BEEFY justifications.</span>
+</span><span class="doccomment">//! Request/response protocol for syncing BEEFY justifications.
 
-<span class="kw">mod</span> <span class="ident">incoming_requests_handler</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">outgoing_requests_engine</span>;
+</span><span class="kw">mod </span>incoming_requests_handler;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>outgoing_requests_engine;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">incoming_requests_handler::BeefyJustifsRequestHandler</span>;
+<span class="kw">pub use </span>incoming_requests_handler::BeefyJustifsRequestHandler;
 
-<span class="kw">use</span> <span class="ident">futures::channel::mpsc</span>;
-<span class="kw">use</span> <span class="ident">std::time::Duration</span>;
+<span class="kw">use </span>futures::channel::mpsc;
+<span class="kw">use </span>std::time::Duration;
 
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">Error</span> <span class="kw">as</span> <span class="ident">CodecError</span>};
-<span class="kw">use</span> <span class="ident">sc_network</span>::{<span class="ident">config::RequestResponseConfig</span>, <span class="ident">PeerId</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime::traits</span>::{<span class="ident">Block</span>, <span class="ident">NumberFor</span>};
+<span class="kw">use </span>codec::{Decode, Encode, Error <span class="kw">as </span>CodecError};
+<span class="kw">use </span>sc_network::{config::RequestResponseConfig, PeerId};
+<span class="kw">use </span>sp_runtime::traits::{Block, NumberFor};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::communication::beefy_protocol_name::justifications_protocol_name</span>;
-<span class="kw">use</span> <span class="ident">incoming_requests_handler::IncomingRequestReceiver</span>;
+<span class="kw">use </span><span class="kw">crate</span>::communication::beefy_protocol_name::justifications_protocol_name;
+<span class="kw">use </span>incoming_requests_handler::IncomingRequestReceiver;
 
-<span class="comment">// 10 seems reasonable, considering justifs are explicitly requested only</span>
-<span class="comment">// for mandatory blocks, by nodes that are syncing/catching-up.</span>
-<span class="kw">const</span> <span class="ident">JUSTIF_CHANNEL_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">10</span>;
+<span class="comment">// 10 seems reasonable, considering justifs are explicitly requested only
+// for mandatory blocks, by nodes that are syncing/catching-up.
+</span><span class="kw">const </span>JUSTIF_CHANNEL_SIZE: usize = <span class="number">10</span>;
 
-<span class="kw">const</span> <span class="ident">MAX_RESPONSE_SIZE</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">1024</span> <span class="op">*</span> <span class="number">1024</span>;
-<span class="kw">const</span> <span class="ident">JUSTIF_REQUEST_TIMEOUT</span>: <span class="ident">Duration</span> <span class="op">=</span> <span class="ident">Duration::from_secs</span>(<span class="number">3</span>);
+<span class="kw">const </span>MAX_RESPONSE_SIZE: u64 = <span class="number">1024 </span>* <span class="number">1024</span>;
+<span class="kw">const </span>JUSTIF_REQUEST_TIMEOUT: Duration = Duration::from_secs(<span class="number">3</span>);
 
-<span class="doccomment">/// Get the configuration for the BEEFY justifications Request/response protocol.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Returns a receiver for messages received on this protocol and the requested</span>
-<span class="doccomment">/// `ProtocolConfig`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Consider using [`BeefyJustifsRequestHandler`] instead of this low-level function.</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">on_demand_justifications_protocol_config</span><span class="op">&lt;</span><span class="ident">Hash</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>(
-	<span class="ident">genesis_hash</span>: <span class="ident">Hash</span>,
-	<span class="ident">fork_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>,
-) -&gt; (<span class="ident">IncomingRequestReceiver</span>, <span class="ident">RequestResponseConfig</span>) {
-	<span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">justifications_protocol_name</span>(<span class="ident">genesis_hash</span>, <span class="ident">fork_id</span>);
-	<span class="kw">let</span> <span class="ident">fallback_names</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-	<span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc::channel</span>(<span class="ident">JUSTIF_CHANNEL_SIZE</span>);
-	<span class="kw">let</span> <span class="ident">rx</span> <span class="op">=</span> <span class="ident">IncomingRequestReceiver::new</span>(<span class="ident">rx</span>);
-	<span class="kw">let</span> <span class="ident">cfg</span> <span class="op">=</span> <span class="ident">RequestResponseConfig</span> {
-		<span class="ident">name</span>,
-		<span class="ident">fallback_names</span>,
-		<span class="ident">max_request_size</span>: <span class="number">32</span>,
-		<span class="ident">max_response_size</span>: <span class="ident">MAX_RESPONSE_SIZE</span>,
-		<span class="comment">// We are connected to all validators:</span>
-		<span class="ident">request_timeout</span>: <span class="ident">JUSTIF_REQUEST_TIMEOUT</span>,
-		<span class="ident">inbound_queue</span>: <span class="prelude-val">Some</span>(<span class="ident">tx</span>),
+<span class="doccomment">/// Get the configuration for the BEEFY justifications Request/response protocol.
+///
+/// Returns a receiver for messages received on this protocol and the requested
+/// `ProtocolConfig`.
+///
+/// Consider using [`BeefyJustifsRequestHandler`] instead of this low-level function.
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>on_demand_justifications_protocol_config&lt;Hash: AsRef&lt;[u8]&gt;&gt;(
+	genesis_hash: Hash,
+	fork_id: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
+) -&gt; (IncomingRequestReceiver, RequestResponseConfig) {
+	<span class="kw">let </span>name = justifications_protocol_name(genesis_hash, fork_id);
+	<span class="kw">let </span>fallback_names = <span class="macro">vec!</span>[];
+	<span class="kw">let </span>(tx, rx) = mpsc::channel(JUSTIF_CHANNEL_SIZE);
+	<span class="kw">let </span>rx = IncomingRequestReceiver::new(rx);
+	<span class="kw">let </span>cfg = RequestResponseConfig {
+		name,
+		fallback_names,
+		max_request_size: <span class="number">32</span>,
+		max_response_size: MAX_RESPONSE_SIZE,
+		<span class="comment">// We are connected to all validators:
+		</span>request_timeout: JUSTIF_REQUEST_TIMEOUT,
+		inbound_queue: <span class="prelude-val">Some</span>(tx),
 	};
-	(<span class="ident">rx</span>, <span class="ident">cfg</span>)
+	(rx, cfg)
 }
 
-<span class="doccomment">/// BEEFY justification request.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">JustificationRequest</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Block</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Start collecting proofs from this block.</span>
-	<span class="kw">pub</span> <span class="ident">begin</span>: <span class="ident">NumberFor</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+<span class="doccomment">/// BEEFY justification request.
+</span><span class="attribute">#[derive(Debug, Clone, Encode, Decode)]
+</span><span class="kw">pub struct </span>JustificationRequest&lt;B: Block&gt; {
+	<span class="doccomment">/// Start collecting proofs from this block.
+	</span><span class="kw">pub </span>begin: NumberFor&lt;B&gt;,
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">thiserror::Error</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
-	<span class="attribute">#[<span class="ident">error</span>(<span class="ident">transparent</span>)]</span>
-	<span class="ident">Client</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">sp_blockchain::Error</span>),
+<span class="attribute">#[derive(Debug, thiserror::Error)]
+</span><span class="kw">pub enum </span>Error {
+	<span class="attribute">#[error(transparent)]
+	</span>Client(<span class="attribute">#[from] </span>sp_blockchain::Error),
 
-	<span class="attribute">#[<span class="ident">error</span>(<span class="ident">transparent</span>)]</span>
-	<span class="ident">RuntimeApi</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">sp_api::ApiError</span>),
+	<span class="attribute">#[error(transparent)]
+	</span>RuntimeApi(<span class="attribute">#[from] </span>sp_api::ApiError),
 
-	<span class="doccomment">/// Decoding failed, we were able to change the peer&#39;s reputation accordingly.</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Decoding request failed for peer {0}.&quot;</span>)]</span>
-	<span class="ident">DecodingError</span>(<span class="ident">PeerId</span>, <span class="attribute">#[<span class="ident">source</span>]</span> <span class="ident">CodecError</span>),
+	<span class="doccomment">/// Decoding failed, we were able to change the peer&#39;s reputation accordingly.
+	</span><span class="attribute">#[error(<span class="string">&quot;Decoding request failed for peer {0}.&quot;</span>)]
+	</span>DecodingError(PeerId, <span class="attribute">#[source] </span>CodecError),
 
-	<span class="doccomment">/// Decoding failed, but sending reputation change failed.</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Decoding request failed for peer {0}, and changing reputation failed.&quot;</span>)]</span>
-	<span class="ident">DecodingErrorNoReputationChange</span>(<span class="ident">PeerId</span>, <span class="attribute">#[<span class="ident">source</span>]</span> <span class="ident">CodecError</span>),
+	<span class="doccomment">/// Decoding failed, but sending reputation change failed.
+	</span><span class="attribute">#[error(<span class="string">&quot;Decoding request failed for peer {0}, and changing reputation failed.&quot;</span>)]
+	</span>DecodingErrorNoReputationChange(PeerId, <span class="attribute">#[source] </span>CodecError),
 
-	<span class="doccomment">/// Incoming request stream exhausted. Should only happen on shutdown.</span>
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Incoming request channel got closed.&quot;</span>)]</span>
-	<span class="ident">RequestChannelExhausted</span>,
+	<span class="doccomment">/// Incoming request stream exhausted. Should only happen on shutdown.
+	</span><span class="attribute">#[error(<span class="string">&quot;Incoming request channel got closed.&quot;</span>)]
+	</span>RequestChannelExhausted,
 
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Failed to send response.&quot;</span>)]</span>
-	<span class="ident">SendResponse</span>,
+	<span class="attribute">#[error(<span class="string">&quot;Failed to send response.&quot;</span>)]
+	</span>SendResponse,
 
-	<span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Received invalid response.&quot;</span>)]</span>
-	<span class="ident">InvalidResponse</span>,
+	<span class="attribute">#[error(<span class="string">&quot;Received invalid response.&quot;</span>)]
+	</span>InvalidResponse,
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="beefy_gadget" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="beefy_gadget" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

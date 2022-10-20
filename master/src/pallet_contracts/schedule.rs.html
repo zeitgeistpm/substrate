@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/schedule.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>schedule.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/contracts/src/schedule.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>schedule.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_contracts/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_contracts/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -786,788 +780,787 @@
 <span id="780">780</span>
 <span id="781">781</span>
 <span id="782">782</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! This module contains the cost schedule and supporting code that constructs a</span>
-<span class="doccomment">//! sane default schedule from a `WeightInfo` implementation.</span>
+</span><span class="doccomment">//! This module contains the cost schedule and supporting code that constructs a
+//! sane default schedule from a `WeightInfo` implementation.
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">weights::WeightInfo</span>, <span class="ident">Config</span>};
+</span><span class="kw">use crate</span>::{weights::WeightInfo, Config};
 
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>};
-<span class="kw">use</span> <span class="ident">frame_support::DefaultNoBound</span>;
-<span class="kw">use</span> <span class="ident">pallet_contracts_proc_macro</span>::{<span class="ident">ScheduleDebug</span>, <span class="ident">WeightDebug</span>};
-<span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime::RuntimeDebug</span>;
-<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">vec::Vec</span>};
-<span class="kw">use</span> <span class="ident">wasm_instrument</span>::{<span class="ident">gas_metering</span>, <span class="ident">parity_wasm::elements</span>};
+<span class="kw">use </span>codec::{Decode, Encode};
+<span class="kw">use </span>frame_support::DefaultNoBound;
+<span class="kw">use </span>pallet_contracts_proc_macro::{ScheduleDebug, WeightDebug};
+<span class="kw">use </span>scale_info::TypeInfo;
+<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>sp_runtime::RuntimeDebug;
+<span class="kw">use </span>sp_std::{marker::PhantomData, vec::Vec};
+<span class="kw">use </span>wasm_instrument::{gas_metering, parity_wasm::elements};
 
-<span class="doccomment">/// How many API calls are executed in a single batch. The reason for increasing the amount</span>
-<span class="doccomment">/// of API calls in batches (per benchmark component increase) is so that the linear regression</span>
-<span class="doccomment">/// has an easier time determining the contribution of that component.</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">API_BENCHMARK_BATCH_SIZE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">80</span>;
+<span class="doccomment">/// How many API calls are executed in a single batch. The reason for increasing the amount
+/// of API calls in batches (per benchmark component increase) is so that the linear regression
+/// has an easier time determining the contribution of that component.
+</span><span class="kw">pub const </span>API_BENCHMARK_BATCH_SIZE: u32 = <span class="number">80</span>;
 
-<span class="doccomment">/// How many instructions are executed in a single batch. The reasoning is the same</span>
-<span class="doccomment">/// as for `API_BENCHMARK_BATCH_SIZE`.</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INSTR_BENCHMARK_BATCH_SIZE</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">100</span>;
+<span class="doccomment">/// How many instructions are executed in a single batch. The reasoning is the same
+/// as for `API_BENCHMARK_BATCH_SIZE`.
+</span><span class="kw">pub const </span>INSTR_BENCHMARK_BATCH_SIZE: u32 = <span class="number">100</span>;
 
-<span class="doccomment">/// Definition of the cost schedule and other parameterizations for the wasm vm.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Its [`Default`] implementation is the designated way to initialize this type. It uses</span>
-<span class="doccomment">/// the benchmarked information supplied by [`Config::WeightInfo`]. All of its fields are</span>
-<span class="doccomment">/// public and can therefore be modified. For example in order to change some of the limits</span>
-<span class="doccomment">/// and set a custom instruction weight version the following code could be used:</span>
-<span class="doccomment">/// ```rust</span>
-<span class="doccomment">/// use pallet_contracts::{Schedule, Limits, InstructionWeights, Config};</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// fn create_schedule&lt;T: Config&gt;() -&gt; Schedule&lt;T&gt; {</span>
-<span class="doccomment">///     Schedule {</span>
-<span class="doccomment">///         limits: Limits {</span>
-<span class="doccomment">/// 		        globals: 3,</span>
-<span class="doccomment">/// 		        parameters: 3,</span>
-<span class="doccomment">/// 		        memory_pages: 16,</span>
-<span class="doccomment">/// 		        table_size: 3,</span>
-<span class="doccomment">/// 		        br_table_size: 3,</span>
-<span class="doccomment">/// 		        .. Default::default()</span>
-<span class="doccomment">/// 	        },</span>
-<span class="doccomment">///         instruction_weights: InstructionWeights {</span>
-<span class="doccomment">/// 	            version: 5,</span>
-<span class="doccomment">///             .. Default::default()</span>
-<span class="doccomment">///         },</span>
-<span class="doccomment">/// 	        .. Default::default()</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Note</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Please make sure to bump the [`InstructionWeights::version`] whenever substantial</span>
-<span class="doccomment">/// changes are made to its values.</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">serde</span>(<span class="ident">bound</span>(<span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;&quot;</span>, <span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;&quot;</span>)))]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">ScheduleDebug</span>, <span class="ident">DefaultNoBound</span>, <span class="ident">TypeInfo</span>)]</span>
-<span class="attribute">#[<span class="ident">scale_info</span>(<span class="ident">skip_type_params</span>(<span class="ident">T</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Describes the upper limits on various metrics.</span>
-	<span class="kw">pub</span> <span class="ident">limits</span>: <span class="ident">Limits</span>,
+<span class="doccomment">/// Definition of the cost schedule and other parameterizations for the wasm vm.
+///
+/// Its [`Default`] implementation is the designated way to initialize this type. It uses
+/// the benchmarked information supplied by [`Config::WeightInfo`]. All of its fields are
+/// public and can therefore be modified. For example in order to change some of the limits
+/// and set a custom instruction weight version the following code could be used:
+/// ```rust
+/// use pallet_contracts::{Schedule, Limits, InstructionWeights, Config};
+///
+/// fn create_schedule&lt;T: Config&gt;() -&gt; Schedule&lt;T&gt; {
+///     Schedule {
+///         limits: Limits {
+/// 		        globals: 3,
+/// 		        parameters: 3,
+/// 		        memory_pages: 16,
+/// 		        table_size: 3,
+/// 		        br_table_size: 3,
+/// 		        .. Default::default()
+/// 	        },
+///         instruction_weights: InstructionWeights {
+/// 	            version: 5,
+///             .. Default::default()
+///         },
+/// 	        .. Default::default()
+///     }
+/// }
+/// ```
+///
+/// # Note
+///
+/// Please make sure to bump the [`InstructionWeights::version`] whenever substantial
+/// changes are made to its values.
+</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, derive(Serialize, Deserialize))]
+#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, serde(bound(serialize = <span class="string">&quot;&quot;</span>, deserialize = <span class="string">&quot;&quot;</span>)))]
+#[derive(Clone, Encode, Decode, PartialEq, Eq, ScheduleDebug, DefaultNoBound, TypeInfo)]
+#[scale_info(skip_type_params(T))]
+</span><span class="kw">pub struct </span>Schedule&lt;T: Config&gt; {
+	<span class="doccomment">/// Describes the upper limits on various metrics.
+	</span><span class="kw">pub </span>limits: Limits,
 
-	<span class="doccomment">/// The weights for individual wasm instructions.</span>
-	<span class="kw">pub</span> <span class="ident">instruction_weights</span>: <span class="ident">InstructionWeights</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// The weights for individual wasm instructions.
+	</span><span class="kw">pub </span>instruction_weights: InstructionWeights&lt;T&gt;,
 
-	<span class="doccomment">/// The weights for each imported function a contract is allowed to call.</span>
-	<span class="kw">pub</span> <span class="ident">host_fn_weights</span>: <span class="ident">HostFnWeights</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// The weights for each imported function a contract is allowed to call.
+	</span><span class="kw">pub </span>host_fn_weights: HostFnWeights&lt;T&gt;,
 }
 
-<span class="doccomment">/// Describes the upper limits on various metrics.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Note</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The values in this struct should never be decreased. The reason is that decreasing those</span>
-<span class="doccomment">/// values will break existing contracts which are above the new limits when a</span>
-<span class="doccomment">/// re-instrumentation is triggered.</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>))]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">TypeInfo</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Limits</span> {
-	<span class="doccomment">/// The maximum number of topics supported by an event.</span>
-	<span class="kw">pub</span> <span class="ident">event_topics</span>: <span class="ident">u32</span>,
+<span class="doccomment">/// Describes the upper limits on various metrics.
+///
+/// # Note
+///
+/// The values in this struct should never be decreased. The reason is that decreasing those
+/// values will break existing contracts which are above the new limits when a
+/// re-instrumentation is triggered.
+</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, derive(Serialize, Deserialize))]
+#[derive(Clone, Encode, Decode, PartialEq, Eq, RuntimeDebug, TypeInfo)]
+</span><span class="kw">pub struct </span>Limits {
+	<span class="doccomment">/// The maximum number of topics supported by an event.
+	</span><span class="kw">pub </span>event_topics: u32,
 
-	<span class="doccomment">/// Maximum allowed stack height in number of elements.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// See &lt;https://wiki.parity.io/WebAssembly-StackHeight&gt; to find out</span>
-	<span class="doccomment">/// how the stack frame cost is calculated. Each element can be of one of the</span>
-	<span class="doccomment">/// wasm value types. This means the maximum size per element is 64bit.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Note</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// It is safe to disable (pass `None`) the `stack_height` when the execution engine</span>
-	<span class="doccomment">/// is part of the runtime and hence there can be no indeterminism between different</span>
-	<span class="doccomment">/// client resident execution engines.</span>
-	<span class="kw">pub</span> <span class="ident">stack_height</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Maximum allowed stack height in number of elements.
+	///
+	/// See &lt;https://wiki.parity.io/WebAssembly-StackHeight&gt; to find out
+	/// how the stack frame cost is calculated. Each element can be of one of the
+	/// wasm value types. This means the maximum size per element is 64bit.
+	///
+	/// # Note
+	///
+	/// It is safe to disable (pass `None`) the `stack_height` when the execution engine
+	/// is part of the runtime and hence there can be no indeterminism between different
+	/// client resident execution engines.
+	</span><span class="kw">pub </span>stack_height: <span class="prelude-ty">Option</span>&lt;u32&gt;,
 
-	<span class="doccomment">/// Maximum number of globals a module is allowed to declare.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Globals are not limited through the `stack_height` as locals are. Neither does</span>
-	<span class="doccomment">/// the linear memory limit `memory_pages` applies to them.</span>
-	<span class="kw">pub</span> <span class="ident">globals</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// Maximum number of globals a module is allowed to declare.
+	///
+	/// Globals are not limited through the `stack_height` as locals are. Neither does
+	/// the linear memory limit `memory_pages` applies to them.
+	</span><span class="kw">pub </span>globals: u32,
 
-	<span class="doccomment">/// Maximum numbers of parameters a function can have.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Those need to be limited to prevent a potentially exploitable interaction with</span>
-	<span class="doccomment">/// the stack height instrumentation: The costs of executing the stack height</span>
-	<span class="doccomment">/// instrumentation for an indirectly called function scales linearly with the amount</span>
-	<span class="doccomment">/// of parameters of this function. Because the stack height instrumentation itself is</span>
-	<span class="doccomment">/// is not weight metered its costs must be static (via this limit) and included in</span>
-	<span class="doccomment">/// the costs of the instructions that cause them (call, call_indirect).</span>
-	<span class="kw">pub</span> <span class="ident">parameters</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// Maximum numbers of parameters a function can have.
+	///
+	/// Those need to be limited to prevent a potentially exploitable interaction with
+	/// the stack height instrumentation: The costs of executing the stack height
+	/// instrumentation for an indirectly called function scales linearly with the amount
+	/// of parameters of this function. Because the stack height instrumentation itself is
+	/// is not weight metered its costs must be static (via this limit) and included in
+	/// the costs of the instructions that cause them (call, call_indirect).
+	</span><span class="kw">pub </span>parameters: u32,
 
-	<span class="doccomment">/// Maximum number of memory pages allowed for a contract.</span>
-	<span class="kw">pub</span> <span class="ident">memory_pages</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// Maximum number of memory pages allowed for a contract.
+	</span><span class="kw">pub </span>memory_pages: u32,
 
-	<span class="doccomment">/// Maximum number of elements allowed in a table.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Currently, the only type of element that is allowed in a table is funcref.</span>
-	<span class="kw">pub</span> <span class="ident">table_size</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// Maximum number of elements allowed in a table.
+	///
+	/// Currently, the only type of element that is allowed in a table is funcref.
+	</span><span class="kw">pub </span>table_size: u32,
 
-	<span class="doccomment">/// Maximum number of elements that can appear as immediate value to the br_table instruction.</span>
-	<span class="kw">pub</span> <span class="ident">br_table_size</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// Maximum number of elements that can appear as immediate value to the br_table instruction.
+	</span><span class="kw">pub </span>br_table_size: u32,
 
-	<span class="doccomment">/// The maximum length of a subject in bytes used for PRNG generation.</span>
-	<span class="kw">pub</span> <span class="ident">subject_len</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// The maximum length of a subject in bytes used for PRNG generation.
+	</span><span class="kw">pub </span>subject_len: u32,
 
-	<span class="doccomment">/// The maximum nesting level of the call stack.</span>
-	<span class="kw">pub</span> <span class="ident">call_depth</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// The maximum nesting level of the call stack.
+	</span><span class="kw">pub </span>call_depth: u32,
 
-	<span class="doccomment">/// The maximum size of a storage value and event payload in bytes.</span>
-	<span class="kw">pub</span> <span class="ident">payload_len</span>: <span class="ident">u32</span>,
+	<span class="doccomment">/// The maximum size of a storage value and event payload in bytes.
+	</span><span class="kw">pub </span>payload_len: u32,
 }
 
-<span class="kw">impl</span> <span class="ident">Limits</span> {
-	<span class="doccomment">/// The maximum memory size in bytes that a contract can occupy.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_memory_size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u32</span> {
-		<span class="self">self</span>.<span class="ident">memory_pages</span> <span class="op">*</span> <span class="number">64</span> <span class="op">*</span> <span class="number">1024</span>
-	}
+<span class="kw">impl </span>Limits {
+	<span class="doccomment">/// The maximum memory size in bytes that a contract can occupy.
+	</span><span class="kw">pub fn </span>max_memory_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+		<span class="self">self</span>.memory_pages * <span class="number">64 </span>* <span class="number">1024
+	</span>}
 }
 
-<span class="doccomment">/// Describes the weight for all categories of supported wasm instructions.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// There there is one field for each wasm instruction that describes the weight to</span>
-<span class="doccomment">/// execute one instruction of that name. There are a few execptions:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// 1. If there is a i64 and a i32 variant of an instruction we use the weight</span>
-<span class="doccomment">///    of the former for both.</span>
-<span class="doccomment">/// 2. The following instructions are free of charge because they merely structure the</span>
-<span class="doccomment">///    wasm module and cannot be spammed without making the module invalid (and rejected):</span>
-<span class="doccomment">///    End, Unreachable, Return, Else</span>
-<span class="doccomment">/// 3. The following instructions cannot be benchmarked because they are removed by any</span>
-<span class="doccomment">///    real world execution engine as a preprocessing step and therefore don&#39;t yield a</span>
-<span class="doccomment">///    meaningful benchmark result. However, in contrast to the instructions mentioned</span>
-<span class="doccomment">///    in 2. they can be spammed. We price them with the same weight as the &quot;default&quot;</span>
-<span class="doccomment">///    instruction (i64.const): Block, Loop, Nop</span>
-<span class="doccomment">/// 4. We price both i64.const and drop as InstructionWeights.i64const / 2. The reason</span>
-<span class="doccomment">///    for that is that we cannot benchmark either of them on its own but we need their</span>
-<span class="doccomment">///    individual values to derive (by subtraction) the weight of all other instructions</span>
-<span class="doccomment">///    that use them as supporting instructions. Supporting means mainly pushing arguments</span>
-<span class="doccomment">///    and dropping return values in order to maintain a valid module.</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>))]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">WeightDebug</span>, <span class="ident">TypeInfo</span>)]</span>
-<span class="attribute">#[<span class="ident">scale_info</span>(<span class="ident">skip_type_params</span>(<span class="ident">T</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InstructionWeights</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Version of the instruction weights.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// # Note</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Should be incremented whenever any instruction weight is changed. The</span>
-	<span class="doccomment">/// reason is that changes to instruction weights require a re-instrumentation</span>
-	<span class="doccomment">/// in order to apply the changes to an already deployed code. The re-instrumentation</span>
-	<span class="doccomment">/// is triggered by comparing the version of the current schedule with the version the code was</span>
-	<span class="doccomment">/// instrumented with. Changes usually happen when pallet_contracts is re-benchmarked.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Changes to other parts of the schedule should not increment the version in</span>
-	<span class="doccomment">/// order to avoid unnecessary re-instrumentations.</span>
-	<span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64const</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64load</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64store</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">select</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">r#if</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">br</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">br_if</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">br_table</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">br_table_per_entry</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">call</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">call_indirect</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">call_indirect_per_param</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">local_get</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">local_set</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">local_tee</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">global_get</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">global_set</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">memory_current</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">memory_grow</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64clz</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64ctz</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64popcnt</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64eqz</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64extendsi32</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64extendui32</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i32wrapi64</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64eq</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64ne</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64lts</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64ltu</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64gts</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64gtu</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64les</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64leu</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64ges</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64geu</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64add</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64sub</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64mul</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64divs</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64divu</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64rems</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64remu</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64and</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64or</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64xor</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64shl</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64shrs</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64shru</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64rotl</span>: <span class="ident">u32</span>,
-	<span class="kw">pub</span> <span class="ident">i64rotr</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// The type parameter is used in the default implementation.</span>
-	<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">skip</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Describes the weight for all categories of supported wasm instructions.
+///
+/// There there is one field for each wasm instruction that describes the weight to
+/// execute one instruction of that name. There are a few execptions:
+///
+/// 1. If there is a i64 and a i32 variant of an instruction we use the weight
+///    of the former for both.
+/// 2. The following instructions are free of charge because they merely structure the
+///    wasm module and cannot be spammed without making the module invalid (and rejected):
+///    End, Unreachable, Return, Else
+/// 3. The following instructions cannot be benchmarked because they are removed by any
+///    real world execution engine as a preprocessing step and therefore don&#39;t yield a
+///    meaningful benchmark result. However, in contrast to the instructions mentioned
+///    in 2. they can be spammed. We price them with the same weight as the &quot;default&quot;
+///    instruction (i64.const): Block, Loop, Nop
+/// 4. We price both i64.const and drop as InstructionWeights.i64const / 2. The reason
+///    for that is that we cannot benchmark either of them on its own but we need their
+///    individual values to derive (by subtraction) the weight of all other instructions
+///    that use them as supporting instructions. Supporting means mainly pushing arguments
+///    and dropping return values in order to maintain a valid module.
+</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, derive(Serialize, Deserialize))]
+#[derive(Clone, Encode, Decode, PartialEq, Eq, WeightDebug, TypeInfo)]
+#[scale_info(skip_type_params(T))]
+</span><span class="kw">pub struct </span>InstructionWeights&lt;T: Config&gt; {
+	<span class="doccomment">/// Version of the instruction weights.
+	///
+	/// # Note
+	///
+	/// Should be incremented whenever any instruction weight is changed. The
+	/// reason is that changes to instruction weights require a re-instrumentation
+	/// in order to apply the changes to an already deployed code. The re-instrumentation
+	/// is triggered by comparing the version of the current schedule with the version the code was
+	/// instrumented with. Changes usually happen when pallet_contracts is re-benchmarked.
+	///
+	/// Changes to other parts of the schedule should not increment the version in
+	/// order to avoid unnecessary re-instrumentations.
+	</span><span class="kw">pub </span>version: u32,
+	<span class="kw">pub </span>i64const: u32,
+	<span class="kw">pub </span>i64load: u32,
+	<span class="kw">pub </span>i64store: u32,
+	<span class="kw">pub </span>select: u32,
+	<span class="kw">pub </span>r#if: u32,
+	<span class="kw">pub </span>br: u32,
+	<span class="kw">pub </span>br_if: u32,
+	<span class="kw">pub </span>br_table: u32,
+	<span class="kw">pub </span>br_table_per_entry: u32,
+	<span class="kw">pub </span>call: u32,
+	<span class="kw">pub </span>call_indirect: u32,
+	<span class="kw">pub </span>call_indirect_per_param: u32,
+	<span class="kw">pub </span>local_get: u32,
+	<span class="kw">pub </span>local_set: u32,
+	<span class="kw">pub </span>local_tee: u32,
+	<span class="kw">pub </span>global_get: u32,
+	<span class="kw">pub </span>global_set: u32,
+	<span class="kw">pub </span>memory_current: u32,
+	<span class="kw">pub </span>memory_grow: u32,
+	<span class="kw">pub </span>i64clz: u32,
+	<span class="kw">pub </span>i64ctz: u32,
+	<span class="kw">pub </span>i64popcnt: u32,
+	<span class="kw">pub </span>i64eqz: u32,
+	<span class="kw">pub </span>i64extendsi32: u32,
+	<span class="kw">pub </span>i64extendui32: u32,
+	<span class="kw">pub </span>i32wrapi64: u32,
+	<span class="kw">pub </span>i64eq: u32,
+	<span class="kw">pub </span>i64ne: u32,
+	<span class="kw">pub </span>i64lts: u32,
+	<span class="kw">pub </span>i64ltu: u32,
+	<span class="kw">pub </span>i64gts: u32,
+	<span class="kw">pub </span>i64gtu: u32,
+	<span class="kw">pub </span>i64les: u32,
+	<span class="kw">pub </span>i64leu: u32,
+	<span class="kw">pub </span>i64ges: u32,
+	<span class="kw">pub </span>i64geu: u32,
+	<span class="kw">pub </span>i64add: u32,
+	<span class="kw">pub </span>i64sub: u32,
+	<span class="kw">pub </span>i64mul: u32,
+	<span class="kw">pub </span>i64divs: u32,
+	<span class="kw">pub </span>i64divu: u32,
+	<span class="kw">pub </span>i64rems: u32,
+	<span class="kw">pub </span>i64remu: u32,
+	<span class="kw">pub </span>i64and: u32,
+	<span class="kw">pub </span>i64or: u32,
+	<span class="kw">pub </span>i64xor: u32,
+	<span class="kw">pub </span>i64shl: u32,
+	<span class="kw">pub </span>i64shrs: u32,
+	<span class="kw">pub </span>i64shru: u32,
+	<span class="kw">pub </span>i64rotl: u32,
+	<span class="kw">pub </span>i64rotr: u32,
+	<span class="doccomment">/// The type parameter is used in the default implementation.
+	</span><span class="attribute">#[codec(skip)]
+	</span><span class="kw">pub </span>_phantom: PhantomData&lt;T&gt;,
 }
 
-<span class="doccomment">/// Describes the weight for each imported function that a contract is allowed to call.</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>))]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">WeightDebug</span>, <span class="ident">TypeInfo</span>)]</span>
-<span class="attribute">#[<span class="ident">scale_info</span>(<span class="ident">skip_type_params</span>(<span class="ident">T</span>))]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">HostFnWeights</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Weight of calling `seal_caller`.</span>
-	<span class="kw">pub</span> <span class="ident">caller</span>: <span class="ident">u64</span>,
+<span class="doccomment">/// Describes the weight for each imported function that a contract is allowed to call.
+</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, derive(Serialize, Deserialize))]
+#[derive(Clone, Encode, Decode, PartialEq, Eq, WeightDebug, TypeInfo)]
+#[scale_info(skip_type_params(T))]
+</span><span class="kw">pub struct </span>HostFnWeights&lt;T: Config&gt; {
+	<span class="doccomment">/// Weight of calling `seal_caller`.
+	</span><span class="kw">pub </span>caller: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_is_contract`.</span>
-	<span class="kw">pub</span> <span class="ident">is_contract</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_is_contract`.
+	</span><span class="kw">pub </span>is_contract: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_code_hash`.</span>
-	<span class="kw">pub</span> <span class="ident">code_hash</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_code_hash`.
+	</span><span class="kw">pub </span>code_hash: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_own_code_hash`.</span>
-	<span class="kw">pub</span> <span class="ident">own_code_hash</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_own_code_hash`.
+	</span><span class="kw">pub </span>own_code_hash: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_caller_is_origin`.</span>
-	<span class="kw">pub</span> <span class="ident">caller_is_origin</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_caller_is_origin`.
+	</span><span class="kw">pub </span>caller_is_origin: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_address`.</span>
-	<span class="kw">pub</span> <span class="ident">address</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_address`.
+	</span><span class="kw">pub </span>address: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_gas_left`.</span>
-	<span class="kw">pub</span> <span class="ident">gas_left</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_gas_left`.
+	</span><span class="kw">pub </span>gas_left: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_balance`.</span>
-	<span class="kw">pub</span> <span class="ident">balance</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_balance`.
+	</span><span class="kw">pub </span>balance: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_value_transferred`.</span>
-	<span class="kw">pub</span> <span class="ident">value_transferred</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_value_transferred`.
+	</span><span class="kw">pub </span>value_transferred: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_minimum_balance`.</span>
-	<span class="kw">pub</span> <span class="ident">minimum_balance</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_minimum_balance`.
+	</span><span class="kw">pub </span>minimum_balance: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_block_number`.</span>
-	<span class="kw">pub</span> <span class="ident">block_number</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_block_number`.
+	</span><span class="kw">pub </span>block_number: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_now`.</span>
-	<span class="kw">pub</span> <span class="ident">now</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_now`.
+	</span><span class="kw">pub </span>now: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_weight_to_fee`.</span>
-	<span class="kw">pub</span> <span class="ident">weight_to_fee</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_weight_to_fee`.
+	</span><span class="kw">pub </span>weight_to_fee: u64,
 
-	<span class="doccomment">/// Weight of calling `gas`.</span>
-	<span class="kw">pub</span> <span class="ident">gas</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `gas`.
+	</span><span class="kw">pub </span>gas: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_input`.</span>
-	<span class="kw">pub</span> <span class="ident">input</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_input`.
+	</span><span class="kw">pub </span>input: u64,
 
-	<span class="doccomment">/// Weight per input byte copied to contract memory by `seal_input`.</span>
-	<span class="kw">pub</span> <span class="ident">input_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per input byte copied to contract memory by `seal_input`.
+	</span><span class="kw">pub </span>input_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_return`.</span>
-	<span class="kw">pub</span> <span class="ident">r#return</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_return`.
+	</span><span class="kw">pub </span>r#return: u64,
 
-	<span class="doccomment">/// Weight per byte returned through `seal_return`.</span>
-	<span class="kw">pub</span> <span class="ident">return_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per byte returned through `seal_return`.
+	</span><span class="kw">pub </span>return_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_terminate`.</span>
-	<span class="kw">pub</span> <span class="ident">terminate</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_terminate`.
+	</span><span class="kw">pub </span>terminate: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_random`.</span>
-	<span class="kw">pub</span> <span class="ident">random</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_random`.
+	</span><span class="kw">pub </span>random: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_reposit_event`.</span>
-	<span class="kw">pub</span> <span class="ident">deposit_event</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_reposit_event`.
+	</span><span class="kw">pub </span>deposit_event: u64,
 
-	<span class="doccomment">/// Weight per topic supplied to `seal_deposit_event`.</span>
-	<span class="kw">pub</span> <span class="ident">deposit_event_per_topic</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per topic supplied to `seal_deposit_event`.
+	</span><span class="kw">pub </span>deposit_event_per_topic: u64,
 
-	<span class="doccomment">/// Weight per byte of an event deposited through `seal_deposit_event`.</span>
-	<span class="kw">pub</span> <span class="ident">deposit_event_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per byte of an event deposited through `seal_deposit_event`.
+	</span><span class="kw">pub </span>deposit_event_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_debug_message`.</span>
-	<span class="kw">pub</span> <span class="ident">debug_message</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_debug_message`.
+	</span><span class="kw">pub </span>debug_message: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_set_storage`.</span>
-	<span class="kw">pub</span> <span class="ident">set_storage</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_set_storage`.
+	</span><span class="kw">pub </span>set_storage: u64,
 
-	<span class="doccomment">/// Weight per written byten of an item stored with `seal_set_storage`.</span>
-	<span class="kw">pub</span> <span class="ident">set_storage_per_new_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per written byten of an item stored with `seal_set_storage`.
+	</span><span class="kw">pub </span>set_storage_per_new_byte: u64,
 
-	<span class="doccomment">/// Weight per overwritten byte of an item stored with `seal_set_storage`.</span>
-	<span class="kw">pub</span> <span class="ident">set_storage_per_old_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per overwritten byte of an item stored with `seal_set_storage`.
+	</span><span class="kw">pub </span>set_storage_per_old_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_set_code_hash`.</span>
-	<span class="kw">pub</span> <span class="ident">set_code_hash</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_set_code_hash`.
+	</span><span class="kw">pub </span>set_code_hash: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_clear_storage`.</span>
-	<span class="kw">pub</span> <span class="ident">clear_storage</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_clear_storage`.
+	</span><span class="kw">pub </span>clear_storage: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_clear_storage` per byte of the stored item.</span>
-	<span class="kw">pub</span> <span class="ident">clear_storage_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_clear_storage` per byte of the stored item.
+	</span><span class="kw">pub </span>clear_storage_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_contains_storage`.</span>
-	<span class="kw">pub</span> <span class="ident">contains_storage</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_contains_storage`.
+	</span><span class="kw">pub </span>contains_storage: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_contains_storage` per byte of the stored item.</span>
-	<span class="kw">pub</span> <span class="ident">contains_storage_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_contains_storage` per byte of the stored item.
+	</span><span class="kw">pub </span>contains_storage_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_get_storage`.</span>
-	<span class="kw">pub</span> <span class="ident">get_storage</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_get_storage`.
+	</span><span class="kw">pub </span>get_storage: u64,
 
-	<span class="doccomment">/// Weight per byte of an item received via `seal_get_storage`.</span>
-	<span class="kw">pub</span> <span class="ident">get_storage_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per byte of an item received via `seal_get_storage`.
+	</span><span class="kw">pub </span>get_storage_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_take_storage`.</span>
-	<span class="kw">pub</span> <span class="ident">take_storage</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_take_storage`.
+	</span><span class="kw">pub </span>take_storage: u64,
 
-	<span class="doccomment">/// Weight per byte of an item received via `seal_take_storage`.</span>
-	<span class="kw">pub</span> <span class="ident">take_storage_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per byte of an item received via `seal_take_storage`.
+	</span><span class="kw">pub </span>take_storage_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_transfer`.</span>
-	<span class="kw">pub</span> <span class="ident">transfer</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_transfer`.
+	</span><span class="kw">pub </span>transfer: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_call`.</span>
-	<span class="kw">pub</span> <span class="ident">call</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_call`.
+	</span><span class="kw">pub </span>call: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_delegate_call`.</span>
-	<span class="kw">pub</span> <span class="ident">delegate_call</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_delegate_call`.
+	</span><span class="kw">pub </span>delegate_call: u64,
 
-	<span class="doccomment">/// Weight surcharge that is claimed if `seal_call` does a balance transfer.</span>
-	<span class="kw">pub</span> <span class="ident">call_transfer_surcharge</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight surcharge that is claimed if `seal_call` does a balance transfer.
+	</span><span class="kw">pub </span>call_transfer_surcharge: u64,
 
-	<span class="doccomment">/// Weight per byte that is cloned by supplying the `CLONE_INPUT` flag.</span>
-	<span class="kw">pub</span> <span class="ident">call_per_cloned_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per byte that is cloned by supplying the `CLONE_INPUT` flag.
+	</span><span class="kw">pub </span>call_per_cloned_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_instantiate`.</span>
-	<span class="kw">pub</span> <span class="ident">instantiate</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_instantiate`.
+	</span><span class="kw">pub </span>instantiate: u64,
 
-	<span class="doccomment">/// Weight surcharge that is claimed if `seal_instantiate` does a balance transfer.</span>
-	<span class="kw">pub</span> <span class="ident">instantiate_transfer_surcharge</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight surcharge that is claimed if `seal_instantiate` does a balance transfer.
+	</span><span class="kw">pub </span>instantiate_transfer_surcharge: u64,
 
-	<span class="doccomment">/// Weight per salt byte supplied to `seal_instantiate`.</span>
-	<span class="kw">pub</span> <span class="ident">instantiate_per_salt_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per salt byte supplied to `seal_instantiate`.
+	</span><span class="kw">pub </span>instantiate_per_salt_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_hash_sha_256`.</span>
-	<span class="kw">pub</span> <span class="ident">hash_sha2_256</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_hash_sha_256`.
+	</span><span class="kw">pub </span>hash_sha2_256: u64,
 
-	<span class="doccomment">/// Weight per byte hashed by `seal_hash_sha_256`.</span>
-	<span class="kw">pub</span> <span class="ident">hash_sha2_256_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per byte hashed by `seal_hash_sha_256`.
+	</span><span class="kw">pub </span>hash_sha2_256_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_hash_keccak_256`.</span>
-	<span class="kw">pub</span> <span class="ident">hash_keccak_256</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_hash_keccak_256`.
+	</span><span class="kw">pub </span>hash_keccak_256: u64,
 
-	<span class="doccomment">/// Weight per byte hashed by `seal_hash_keccak_256`.</span>
-	<span class="kw">pub</span> <span class="ident">hash_keccak_256_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per byte hashed by `seal_hash_keccak_256`.
+	</span><span class="kw">pub </span>hash_keccak_256_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_hash_blake2_256`.</span>
-	<span class="kw">pub</span> <span class="ident">hash_blake2_256</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_hash_blake2_256`.
+	</span><span class="kw">pub </span>hash_blake2_256: u64,
 
-	<span class="doccomment">/// Weight per byte hashed by `seal_hash_blake2_256`.</span>
-	<span class="kw">pub</span> <span class="ident">hash_blake2_256_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per byte hashed by `seal_hash_blake2_256`.
+	</span><span class="kw">pub </span>hash_blake2_256_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_hash_blake2_128`.</span>
-	<span class="kw">pub</span> <span class="ident">hash_blake2_128</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_hash_blake2_128`.
+	</span><span class="kw">pub </span>hash_blake2_128: u64,
 
-	<span class="doccomment">/// Weight per byte hashed by `seal_hash_blake2_128`.</span>
-	<span class="kw">pub</span> <span class="ident">hash_blake2_128_per_byte</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight per byte hashed by `seal_hash_blake2_128`.
+	</span><span class="kw">pub </span>hash_blake2_128_per_byte: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_ecdsa_recover`.</span>
-	<span class="kw">pub</span> <span class="ident">ecdsa_recover</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_ecdsa_recover`.
+	</span><span class="kw">pub </span>ecdsa_recover: u64,
 
-	<span class="doccomment">/// Weight of calling `seal_ecdsa_to_eth_address`.</span>
-	<span class="kw">pub</span> <span class="ident">ecdsa_to_eth_address</span>: <span class="ident">u64</span>,
+	<span class="doccomment">/// Weight of calling `seal_ecdsa_to_eth_address`.
+	</span><span class="kw">pub </span>ecdsa_to_eth_address: u64,
 
-	<span class="doccomment">/// The type parameter is used in the default implementation.</span>
-	<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">skip</span>)]</span>
-	<span class="kw">pub</span> <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// The type parameter is used in the default implementation.
+	</span><span class="attribute">#[codec(skip)]
+	</span><span class="kw">pub </span>_phantom: PhantomData&lt;T&gt;,
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">replace_token</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">_in</span>:<span class="ident">tt</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">replacement</span>:<span class="ident">tt</span>) =&gt; {
-		<span class="macro-nonterminal">$</span><span class="macro-nonterminal">replacement</span>
+<span class="macro">macro_rules! </span>replace_token {
+	(<span class="macro-nonterminal">$_in</span>:tt <span class="macro-nonterminal">$replacement</span>:tt) =&gt; {
+		<span class="macro-nonterminal">$replacement
+	</span>};
+}
+
+<span class="macro">macro_rules! </span>call_zero {
+	(<span class="macro-nonterminal">$name</span>:ident, $( <span class="macro-nonterminal">$arg</span>:expr ),<span class="kw-2">*</span>) =&gt; {
+		T::WeightInfo::<span class="macro-nonterminal">$name</span>($( <span class="macro">replace_token!</span>(<span class="macro-nonterminal">$arg </span><span class="number">0</span>) ),<span class="kw-2">*</span>)
 	};
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">call_zero</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>:<span class="ident">expr</span> ),<span class="kw-2">*</span>) =&gt; {
-		<span class="ident">T::WeightInfo</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>($( <span class="macro">replace_token!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span> <span class="number">0</span>) ),<span class="kw-2">*</span>)
-	};
-}
-
-<span class="macro">macro_rules!</span> <span class="ident">cost_args</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>: <span class="ident">expr</span> ),<span class="op">+</span>) =&gt; {
-		(<span class="ident">T::WeightInfo</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>($( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span> ),<span class="op">+</span>).<span class="ident">saturating_sub</span>(<span class="macro">call_zero!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span> ),<span class="op">+</span>))).<span class="ident">ref_time</span>()
+<span class="macro">macro_rules! </span>cost_args {
+	(<span class="macro-nonterminal">$name</span>:ident, $( <span class="macro-nonterminal">$arg</span>: expr ),+) =&gt; {
+		(T::WeightInfo::<span class="macro-nonterminal">$name</span>($( <span class="macro-nonterminal">$arg </span>),+).saturating_sub(<span class="macro">call_zero!</span>(<span class="macro-nonterminal">$name</span>, $( <span class="macro-nonterminal">$arg </span>),+))).ref_time()
 	}
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost_batched_args</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>: <span class="ident">expr</span> ),<span class="op">+</span>) =&gt; {
-		<span class="macro">cost_args!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span> ),<span class="op">+</span>) <span class="op">/</span> <span class="ident">u64::from</span>(<span class="ident">API_BENCHMARK_BATCH_SIZE</span>)
+<span class="macro">macro_rules! </span>cost_batched_args {
+	(<span class="macro-nonterminal">$name</span>:ident, $( <span class="macro-nonterminal">$arg</span>: expr ),+) =&gt; {
+		<span class="macro">cost_args!</span>(<span class="macro-nonterminal">$name</span>, $( <span class="macro-nonterminal">$arg </span>),+) / u64::from(API_BENCHMARK_BATCH_SIZE)
 	}
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost_instr_no_params_with_batch_size</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">batch_size</span>:<span class="ident">expr</span>) =&gt; {
-		(<span class="macro">cost_args!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="number">1</span>) <span class="op">/</span> <span class="ident">u64::from</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">batch_size</span>)) <span class="kw">as</span> <span class="ident">u32</span>
+<span class="macro">macro_rules! </span>cost_instr_no_params_with_batch_size {
+	(<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$batch_size</span>:expr) =&gt; {
+		(<span class="macro">cost_args!</span>(<span class="macro-nonterminal">$name</span>, <span class="number">1</span>) / u64::from(<span class="macro-nonterminal">$batch_size</span>)) <span class="kw">as </span>u32
 	};
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost_instr_with_batch_size</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">num_params</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">batch_size</span>:<span class="ident">expr</span>) =&gt; {
-		<span class="macro">cost_instr_no_params_with_batch_size!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">batch_size</span>).<span class="ident">saturating_sub</span>(
-			(<span class="macro">cost_instr_no_params_with_batch_size!</span>(<span class="ident">instr_i64const</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">batch_size</span>) <span class="op">/</span> <span class="number">2</span>)
-				.<span class="ident">saturating_mul</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">num_params</span>),
+<span class="macro">macro_rules! </span>cost_instr_with_batch_size {
+	(<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$num_params</span>:expr, <span class="macro-nonterminal">$batch_size</span>:expr) =&gt; {
+		<span class="macro">cost_instr_no_params_with_batch_size!</span>(<span class="macro-nonterminal">$name</span>, <span class="macro-nonterminal">$batch_size</span>).saturating_sub(
+			(<span class="macro">cost_instr_no_params_with_batch_size!</span>(instr_i64const, <span class="macro-nonterminal">$batch_size</span>) / <span class="number">2</span>)
+				.saturating_mul(<span class="macro-nonterminal">$num_params</span>),
 		)
 	};
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost_instr</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">num_params</span>:<span class="ident">expr</span>) =&gt; {
-		<span class="macro">cost_instr_with_batch_size!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">num_params</span>, <span class="ident">INSTR_BENCHMARK_BATCH_SIZE</span>)
+<span class="macro">macro_rules! </span>cost_instr {
+	(<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$num_params</span>:expr) =&gt; {
+		<span class="macro">cost_instr_with_batch_size!</span>(<span class="macro-nonterminal">$name</span>, <span class="macro-nonterminal">$num_params</span>, INSTR_BENCHMARK_BATCH_SIZE)
 	};
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost_byte_args</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>: <span class="ident">expr</span> ),<span class="op">+</span>) =&gt; {
-		<span class="macro">cost_args!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span> ),<span class="op">+</span>) <span class="op">/</span> <span class="number">1024</span>
-	}
+<span class="macro">macro_rules! </span>cost_byte_args {
+	(<span class="macro-nonterminal">$name</span>:ident, $( <span class="macro-nonterminal">$arg</span>: expr ),+) =&gt; {
+		<span class="macro">cost_args!</span>(<span class="macro-nonterminal">$name</span>, $( <span class="macro-nonterminal">$arg </span>),+) / <span class="number">1024
+	</span>}
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost_byte_batched_args</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>: <span class="ident">expr</span> ),<span class="op">+</span>) =&gt; {
-		<span class="macro">cost_batched_args!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span> ),<span class="op">+</span>) <span class="op">/</span> <span class="number">1024</span>
-	}
+<span class="macro">macro_rules! </span>cost_byte_batched_args {
+	(<span class="macro-nonterminal">$name</span>:ident, $( <span class="macro-nonterminal">$arg</span>: expr ),+) =&gt; {
+		<span class="macro">cost_batched_args!</span>(<span class="macro-nonterminal">$name</span>, $( <span class="macro-nonterminal">$arg </span>),+) / <span class="number">1024
+	</span>}
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>) =&gt; {
-		<span class="macro">cost_args!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="number">1</span>)
+<span class="macro">macro_rules! </span>cost {
+	(<span class="macro-nonterminal">$name</span>:ident) =&gt; {
+		<span class="macro">cost_args!</span>(<span class="macro-nonterminal">$name</span>, <span class="number">1</span>)
 	};
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost_batched</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>) =&gt; {
-		<span class="macro">cost_batched_args!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="number">1</span>)
+<span class="macro">macro_rules! </span>cost_batched {
+	(<span class="macro-nonterminal">$name</span>:ident) =&gt; {
+		<span class="macro">cost_batched_args!</span>(<span class="macro-nonterminal">$name</span>, <span class="number">1</span>)
 	};
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost_byte</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>) =&gt; {
-		<span class="macro">cost_byte_args!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="number">1</span>)
+<span class="macro">macro_rules! </span>cost_byte {
+	(<span class="macro-nonterminal">$name</span>:ident) =&gt; {
+		<span class="macro">cost_byte_args!</span>(<span class="macro-nonterminal">$name</span>, <span class="number">1</span>)
 	};
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">cost_byte_batched</span> {
-	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>) =&gt; {
-		<span class="macro">cost_byte_batched_args!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="number">1</span>)
+<span class="macro">macro_rules! </span>cost_byte_batched {
+	(<span class="macro-nonterminal">$name</span>:ident) =&gt; {
+		<span class="macro">cost_byte_batched_args!</span>(<span class="macro-nonterminal">$name</span>, <span class="number">1</span>)
 	};
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Limits</span> {
-	<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> {
-			<span class="ident">event_topics</span>: <span class="number">4</span>,
-			<span class="comment">// No stack limit required because we use a runtime resident execution engine.</span>
-			<span class="ident">stack_height</span>: <span class="prelude-val">None</span>,
-			<span class="ident">globals</span>: <span class="number">256</span>,
-			<span class="ident">parameters</span>: <span class="number">128</span>,
-			<span class="ident">memory_pages</span>: <span class="number">16</span>,
-			<span class="comment">// 4k function pointers (This is in count not bytes).</span>
-			<span class="ident">table_size</span>: <span class="number">4096</span>,
-			<span class="ident">br_table_size</span>: <span class="number">256</span>,
-			<span class="ident">subject_len</span>: <span class="number">32</span>,
-			<span class="ident">call_depth</span>: <span class="number">32</span>,
-			<span class="ident">payload_len</span>: <span class="number">16</span> <span class="op">*</span> <span class="number">1024</span>,
+<span class="kw">impl </span>Default <span class="kw">for </span>Limits {
+	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			event_topics: <span class="number">4</span>,
+			<span class="comment">// No stack limit required because we use a runtime resident execution engine.
+			</span>stack_height: <span class="prelude-val">None</span>,
+			globals: <span class="number">256</span>,
+			parameters: <span class="number">128</span>,
+			memory_pages: <span class="number">16</span>,
+			<span class="comment">// 4k function pointers (This is in count not bytes).
+			</span>table_size: <span class="number">4096</span>,
+			br_table_size: <span class="number">256</span>,
+			subject_len: <span class="number">32</span>,
+			call_depth: <span class="number">32</span>,
+			payload_len: <span class="number">16 </span>* <span class="number">1024</span>,
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">InstructionWeights</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">max_pages</span> <span class="op">=</span> <span class="ident">Limits::default</span>().<span class="ident">memory_pages</span>;
-		<span class="self">Self</span> {
-			<span class="ident">version</span>: <span class="number">3</span>,
-			<span class="ident">i64const</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64const</span>, <span class="number">1</span>),
-			<span class="ident">i64load</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64load</span>, <span class="number">2</span>),
-			<span class="ident">i64store</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64store</span>, <span class="number">2</span>),
-			<span class="ident">select</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_select</span>, <span class="number">4</span>),
-			<span class="ident">r#if</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_if</span>, <span class="number">3</span>),
-			<span class="ident">br</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_br</span>, <span class="number">2</span>),
-			<span class="ident">br_if</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_br_if</span>, <span class="number">3</span>),
-			<span class="ident">br_table</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_br_table</span>, <span class="number">3</span>),
-			<span class="ident">br_table_per_entry</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_br_table_per_entry</span>, <span class="number">0</span>),
-			<span class="ident">call</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_call</span>, <span class="number">2</span>),
-			<span class="ident">call_indirect</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_call_indirect</span>, <span class="number">3</span>),
-			<span class="ident">call_indirect_per_param</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_call_indirect_per_param</span>, <span class="number">1</span>),
-			<span class="ident">local_get</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_local_get</span>, <span class="number">1</span>),
-			<span class="ident">local_set</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_local_set</span>, <span class="number">1</span>),
-			<span class="ident">local_tee</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_local_tee</span>, <span class="number">2</span>),
-			<span class="ident">global_get</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_global_get</span>, <span class="number">1</span>),
-			<span class="ident">global_set</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_global_set</span>, <span class="number">1</span>),
-			<span class="ident">memory_current</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_memory_current</span>, <span class="number">1</span>),
-			<span class="ident">memory_grow</span>: <span class="macro">cost_instr_with_batch_size!</span>(<span class="ident">instr_memory_grow</span>, <span class="number">1</span>, <span class="ident">max_pages</span>),
-			<span class="ident">i64clz</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64clz</span>, <span class="number">2</span>),
-			<span class="ident">i64ctz</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64ctz</span>, <span class="number">2</span>),
-			<span class="ident">i64popcnt</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64popcnt</span>, <span class="number">2</span>),
-			<span class="ident">i64eqz</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64eqz</span>, <span class="number">2</span>),
-			<span class="ident">i64extendsi32</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64extendsi32</span>, <span class="number">2</span>),
-			<span class="ident">i64extendui32</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64extendui32</span>, <span class="number">2</span>),
-			<span class="ident">i32wrapi64</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i32wrapi64</span>, <span class="number">2</span>),
-			<span class="ident">i64eq</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64eq</span>, <span class="number">3</span>),
-			<span class="ident">i64ne</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64ne</span>, <span class="number">3</span>),
-			<span class="ident">i64lts</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64lts</span>, <span class="number">3</span>),
-			<span class="ident">i64ltu</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64ltu</span>, <span class="number">3</span>),
-			<span class="ident">i64gts</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64gts</span>, <span class="number">3</span>),
-			<span class="ident">i64gtu</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64gtu</span>, <span class="number">3</span>),
-			<span class="ident">i64les</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64les</span>, <span class="number">3</span>),
-			<span class="ident">i64leu</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64leu</span>, <span class="number">3</span>),
-			<span class="ident">i64ges</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64ges</span>, <span class="number">3</span>),
-			<span class="ident">i64geu</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64geu</span>, <span class="number">3</span>),
-			<span class="ident">i64add</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64add</span>, <span class="number">3</span>),
-			<span class="ident">i64sub</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64sub</span>, <span class="number">3</span>),
-			<span class="ident">i64mul</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64mul</span>, <span class="number">3</span>),
-			<span class="ident">i64divs</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64divs</span>, <span class="number">3</span>),
-			<span class="ident">i64divu</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64divu</span>, <span class="number">3</span>),
-			<span class="ident">i64rems</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64rems</span>, <span class="number">3</span>),
-			<span class="ident">i64remu</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64remu</span>, <span class="number">3</span>),
-			<span class="ident">i64and</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64and</span>, <span class="number">3</span>),
-			<span class="ident">i64or</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64or</span>, <span class="number">3</span>),
-			<span class="ident">i64xor</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64xor</span>, <span class="number">3</span>),
-			<span class="ident">i64shl</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64shl</span>, <span class="number">3</span>),
-			<span class="ident">i64shrs</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64shrs</span>, <span class="number">3</span>),
-			<span class="ident">i64shru</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64shru</span>, <span class="number">3</span>),
-			<span class="ident">i64rotl</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64rotl</span>, <span class="number">3</span>),
-			<span class="ident">i64rotr</span>: <span class="macro">cost_instr!</span>(<span class="ident">instr_i64rotr</span>, <span class="number">3</span>),
-			<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>,
+<span class="kw">impl</span>&lt;T: Config&gt; Default <span class="kw">for </span>InstructionWeights&lt;T&gt; {
+	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>max_pages = Limits::default().memory_pages;
+		<span class="self">Self </span>{
+			version: <span class="number">3</span>,
+			i64const: <span class="macro">cost_instr!</span>(instr_i64const, <span class="number">1</span>),
+			i64load: <span class="macro">cost_instr!</span>(instr_i64load, <span class="number">2</span>),
+			i64store: <span class="macro">cost_instr!</span>(instr_i64store, <span class="number">2</span>),
+			select: <span class="macro">cost_instr!</span>(instr_select, <span class="number">4</span>),
+			r#if: <span class="macro">cost_instr!</span>(instr_if, <span class="number">3</span>),
+			br: <span class="macro">cost_instr!</span>(instr_br, <span class="number">2</span>),
+			br_if: <span class="macro">cost_instr!</span>(instr_br_if, <span class="number">3</span>),
+			br_table: <span class="macro">cost_instr!</span>(instr_br_table, <span class="number">3</span>),
+			br_table_per_entry: <span class="macro">cost_instr!</span>(instr_br_table_per_entry, <span class="number">0</span>),
+			call: <span class="macro">cost_instr!</span>(instr_call, <span class="number">2</span>),
+			call_indirect: <span class="macro">cost_instr!</span>(instr_call_indirect, <span class="number">3</span>),
+			call_indirect_per_param: <span class="macro">cost_instr!</span>(instr_call_indirect_per_param, <span class="number">1</span>),
+			local_get: <span class="macro">cost_instr!</span>(instr_local_get, <span class="number">1</span>),
+			local_set: <span class="macro">cost_instr!</span>(instr_local_set, <span class="number">1</span>),
+			local_tee: <span class="macro">cost_instr!</span>(instr_local_tee, <span class="number">2</span>),
+			global_get: <span class="macro">cost_instr!</span>(instr_global_get, <span class="number">1</span>),
+			global_set: <span class="macro">cost_instr!</span>(instr_global_set, <span class="number">1</span>),
+			memory_current: <span class="macro">cost_instr!</span>(instr_memory_current, <span class="number">1</span>),
+			memory_grow: <span class="macro">cost_instr_with_batch_size!</span>(instr_memory_grow, <span class="number">1</span>, max_pages),
+			i64clz: <span class="macro">cost_instr!</span>(instr_i64clz, <span class="number">2</span>),
+			i64ctz: <span class="macro">cost_instr!</span>(instr_i64ctz, <span class="number">2</span>),
+			i64popcnt: <span class="macro">cost_instr!</span>(instr_i64popcnt, <span class="number">2</span>),
+			i64eqz: <span class="macro">cost_instr!</span>(instr_i64eqz, <span class="number">2</span>),
+			i64extendsi32: <span class="macro">cost_instr!</span>(instr_i64extendsi32, <span class="number">2</span>),
+			i64extendui32: <span class="macro">cost_instr!</span>(instr_i64extendui32, <span class="number">2</span>),
+			i32wrapi64: <span class="macro">cost_instr!</span>(instr_i32wrapi64, <span class="number">2</span>),
+			i64eq: <span class="macro">cost_instr!</span>(instr_i64eq, <span class="number">3</span>),
+			i64ne: <span class="macro">cost_instr!</span>(instr_i64ne, <span class="number">3</span>),
+			i64lts: <span class="macro">cost_instr!</span>(instr_i64lts, <span class="number">3</span>),
+			i64ltu: <span class="macro">cost_instr!</span>(instr_i64ltu, <span class="number">3</span>),
+			i64gts: <span class="macro">cost_instr!</span>(instr_i64gts, <span class="number">3</span>),
+			i64gtu: <span class="macro">cost_instr!</span>(instr_i64gtu, <span class="number">3</span>),
+			i64les: <span class="macro">cost_instr!</span>(instr_i64les, <span class="number">3</span>),
+			i64leu: <span class="macro">cost_instr!</span>(instr_i64leu, <span class="number">3</span>),
+			i64ges: <span class="macro">cost_instr!</span>(instr_i64ges, <span class="number">3</span>),
+			i64geu: <span class="macro">cost_instr!</span>(instr_i64geu, <span class="number">3</span>),
+			i64add: <span class="macro">cost_instr!</span>(instr_i64add, <span class="number">3</span>),
+			i64sub: <span class="macro">cost_instr!</span>(instr_i64sub, <span class="number">3</span>),
+			i64mul: <span class="macro">cost_instr!</span>(instr_i64mul, <span class="number">3</span>),
+			i64divs: <span class="macro">cost_instr!</span>(instr_i64divs, <span class="number">3</span>),
+			i64divu: <span class="macro">cost_instr!</span>(instr_i64divu, <span class="number">3</span>),
+			i64rems: <span class="macro">cost_instr!</span>(instr_i64rems, <span class="number">3</span>),
+			i64remu: <span class="macro">cost_instr!</span>(instr_i64remu, <span class="number">3</span>),
+			i64and: <span class="macro">cost_instr!</span>(instr_i64and, <span class="number">3</span>),
+			i64or: <span class="macro">cost_instr!</span>(instr_i64or, <span class="number">3</span>),
+			i64xor: <span class="macro">cost_instr!</span>(instr_i64xor, <span class="number">3</span>),
+			i64shl: <span class="macro">cost_instr!</span>(instr_i64shl, <span class="number">3</span>),
+			i64shrs: <span class="macro">cost_instr!</span>(instr_i64shrs, <span class="number">3</span>),
+			i64shru: <span class="macro">cost_instr!</span>(instr_i64shru, <span class="number">3</span>),
+			i64rotl: <span class="macro">cost_instr!</span>(instr_i64rotl, <span class="number">3</span>),
+			i64rotr: <span class="macro">cost_instr!</span>(instr_i64rotr, <span class="number">3</span>),
+			_phantom: PhantomData,
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">HostFnWeights</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> {
-			<span class="ident">caller</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_caller</span>),
-			<span class="ident">is_contract</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_is_contract</span>),
-			<span class="ident">code_hash</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_code_hash</span>),
-			<span class="ident">own_code_hash</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_own_code_hash</span>),
-			<span class="ident">caller_is_origin</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_caller_is_origin</span>),
-			<span class="ident">address</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_address</span>),
-			<span class="ident">gas_left</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_gas_left</span>),
-			<span class="ident">balance</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_balance</span>),
-			<span class="ident">value_transferred</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_value_transferred</span>),
-			<span class="ident">minimum_balance</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_minimum_balance</span>),
-			<span class="ident">block_number</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_block_number</span>),
-			<span class="ident">now</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_now</span>),
-			<span class="ident">weight_to_fee</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_weight_to_fee</span>),
-			<span class="ident">gas</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_gas</span>),
-			<span class="ident">input</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_input</span>),
-			<span class="ident">input_per_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_input_per_kb</span>),
-			<span class="ident">r#return</span>: <span class="macro">cost!</span>(<span class="ident">seal_return</span>),
-			<span class="ident">return_per_byte</span>: <span class="macro">cost_byte!</span>(<span class="ident">seal_return_per_kb</span>),
-			<span class="ident">terminate</span>: <span class="macro">cost!</span>(<span class="ident">seal_terminate</span>),
-			<span class="ident">random</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_random</span>),
-			<span class="ident">deposit_event</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_deposit_event</span>),
-			<span class="ident">deposit_event_per_topic</span>: <span class="macro">cost_batched_args!</span>(<span class="ident">seal_deposit_event_per_topic_and_kb</span>, <span class="number">1</span>, <span class="number">0</span>),
-			<span class="ident">deposit_event_per_byte</span>: <span class="macro">cost_byte_batched_args!</span>(
-				<span class="ident">seal_deposit_event_per_topic_and_kb</span>,
+<span class="kw">impl</span>&lt;T: Config&gt; Default <span class="kw">for </span>HostFnWeights&lt;T&gt; {
+	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			caller: <span class="macro">cost_batched!</span>(seal_caller),
+			is_contract: <span class="macro">cost_batched!</span>(seal_is_contract),
+			code_hash: <span class="macro">cost_batched!</span>(seal_code_hash),
+			own_code_hash: <span class="macro">cost_batched!</span>(seal_own_code_hash),
+			caller_is_origin: <span class="macro">cost_batched!</span>(seal_caller_is_origin),
+			address: <span class="macro">cost_batched!</span>(seal_address),
+			gas_left: <span class="macro">cost_batched!</span>(seal_gas_left),
+			balance: <span class="macro">cost_batched!</span>(seal_balance),
+			value_transferred: <span class="macro">cost_batched!</span>(seal_value_transferred),
+			minimum_balance: <span class="macro">cost_batched!</span>(seal_minimum_balance),
+			block_number: <span class="macro">cost_batched!</span>(seal_block_number),
+			now: <span class="macro">cost_batched!</span>(seal_now),
+			weight_to_fee: <span class="macro">cost_batched!</span>(seal_weight_to_fee),
+			gas: <span class="macro">cost_batched!</span>(seal_gas),
+			input: <span class="macro">cost_batched!</span>(seal_input),
+			input_per_byte: <span class="macro">cost_byte_batched!</span>(seal_input_per_kb),
+			r#return: <span class="macro">cost!</span>(seal_return),
+			return_per_byte: <span class="macro">cost_byte!</span>(seal_return_per_kb),
+			terminate: <span class="macro">cost!</span>(seal_terminate),
+			random: <span class="macro">cost_batched!</span>(seal_random),
+			deposit_event: <span class="macro">cost_batched!</span>(seal_deposit_event),
+			deposit_event_per_topic: <span class="macro">cost_batched_args!</span>(seal_deposit_event_per_topic_and_kb, <span class="number">1</span>, <span class="number">0</span>),
+			deposit_event_per_byte: <span class="macro">cost_byte_batched_args!</span>(
+				seal_deposit_event_per_topic_and_kb,
 				<span class="number">0</span>,
-				<span class="number">1</span>
-			),
-			<span class="ident">debug_message</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_debug_message</span>),
-			<span class="ident">set_storage</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_set_storage</span>),
-			<span class="ident">set_code_hash</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_set_code_hash</span>),
-			<span class="ident">set_storage_per_new_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_set_storage_per_new_kb</span>),
-			<span class="ident">set_storage_per_old_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_set_storage_per_old_kb</span>),
-			<span class="ident">clear_storage</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_clear_storage</span>),
-			<span class="ident">clear_storage_per_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_clear_storage_per_kb</span>),
-			<span class="ident">contains_storage</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_contains_storage</span>),
-			<span class="ident">contains_storage_per_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_contains_storage_per_kb</span>),
-			<span class="ident">get_storage</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_get_storage</span>),
-			<span class="ident">get_storage_per_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_get_storage_per_kb</span>),
-			<span class="ident">take_storage</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_take_storage</span>),
-			<span class="ident">take_storage_per_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_take_storage_per_kb</span>),
-			<span class="ident">transfer</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_transfer</span>),
-			<span class="ident">call</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_call</span>),
-			<span class="ident">delegate_call</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_delegate_call</span>),
-			<span class="ident">call_transfer_surcharge</span>: <span class="macro">cost_batched_args!</span>(<span class="ident">seal_call_per_transfer_clone_kb</span>, <span class="number">1</span>, <span class="number">0</span>),
-			<span class="ident">call_per_cloned_byte</span>: <span class="macro">cost_batched_args!</span>(<span class="ident">seal_call_per_transfer_clone_kb</span>, <span class="number">0</span>, <span class="number">1</span>),
-			<span class="ident">instantiate</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_instantiate</span>),
-			<span class="ident">instantiate_transfer_surcharge</span>: <span class="macro">cost_byte_batched_args!</span>(
-				<span class="ident">seal_instantiate_per_transfer_salt_kb</span>,
+				<span class="number">1
+			</span>),
+			debug_message: <span class="macro">cost_batched!</span>(seal_debug_message),
+			set_storage: <span class="macro">cost_batched!</span>(seal_set_storage),
+			set_code_hash: <span class="macro">cost_batched!</span>(seal_set_code_hash),
+			set_storage_per_new_byte: <span class="macro">cost_byte_batched!</span>(seal_set_storage_per_new_kb),
+			set_storage_per_old_byte: <span class="macro">cost_byte_batched!</span>(seal_set_storage_per_old_kb),
+			clear_storage: <span class="macro">cost_batched!</span>(seal_clear_storage),
+			clear_storage_per_byte: <span class="macro">cost_byte_batched!</span>(seal_clear_storage_per_kb),
+			contains_storage: <span class="macro">cost_batched!</span>(seal_contains_storage),
+			contains_storage_per_byte: <span class="macro">cost_byte_batched!</span>(seal_contains_storage_per_kb),
+			get_storage: <span class="macro">cost_batched!</span>(seal_get_storage),
+			get_storage_per_byte: <span class="macro">cost_byte_batched!</span>(seal_get_storage_per_kb),
+			take_storage: <span class="macro">cost_batched!</span>(seal_take_storage),
+			take_storage_per_byte: <span class="macro">cost_byte_batched!</span>(seal_take_storage_per_kb),
+			transfer: <span class="macro">cost_batched!</span>(seal_transfer),
+			call: <span class="macro">cost_batched!</span>(seal_call),
+			delegate_call: <span class="macro">cost_batched!</span>(seal_delegate_call),
+			call_transfer_surcharge: <span class="macro">cost_batched_args!</span>(seal_call_per_transfer_clone_kb, <span class="number">1</span>, <span class="number">0</span>),
+			call_per_cloned_byte: <span class="macro">cost_batched_args!</span>(seal_call_per_transfer_clone_kb, <span class="number">0</span>, <span class="number">1</span>),
+			instantiate: <span class="macro">cost_batched!</span>(seal_instantiate),
+			instantiate_transfer_surcharge: <span class="macro">cost_byte_batched_args!</span>(
+				seal_instantiate_per_transfer_salt_kb,
 				<span class="number">1</span>,
-				<span class="number">0</span>
-			),
-			<span class="ident">instantiate_per_salt_byte</span>: <span class="macro">cost_byte_batched_args!</span>(
-				<span class="ident">seal_instantiate_per_transfer_salt_kb</span>,
+				<span class="number">0
+			</span>),
+			instantiate_per_salt_byte: <span class="macro">cost_byte_batched_args!</span>(
+				seal_instantiate_per_transfer_salt_kb,
 				<span class="number">0</span>,
-				<span class="number">1</span>
-			),
-			<span class="ident">hash_sha2_256</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_hash_sha2_256</span>),
-			<span class="ident">hash_sha2_256_per_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_hash_sha2_256_per_kb</span>),
-			<span class="ident">hash_keccak_256</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_hash_keccak_256</span>),
-			<span class="ident">hash_keccak_256_per_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_hash_keccak_256_per_kb</span>),
-			<span class="ident">hash_blake2_256</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_hash_blake2_256</span>),
-			<span class="ident">hash_blake2_256_per_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_hash_blake2_256_per_kb</span>),
-			<span class="ident">hash_blake2_128</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_hash_blake2_128</span>),
-			<span class="ident">hash_blake2_128_per_byte</span>: <span class="macro">cost_byte_batched!</span>(<span class="ident">seal_hash_blake2_128_per_kb</span>),
-			<span class="ident">ecdsa_recover</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_ecdsa_recover</span>),
-			<span class="ident">ecdsa_to_eth_address</span>: <span class="macro">cost_batched!</span>(<span class="ident">seal_ecdsa_to_eth_address</span>),
-			<span class="ident">_phantom</span>: <span class="ident">PhantomData</span>,
+				<span class="number">1
+			</span>),
+			hash_sha2_256: <span class="macro">cost_batched!</span>(seal_hash_sha2_256),
+			hash_sha2_256_per_byte: <span class="macro">cost_byte_batched!</span>(seal_hash_sha2_256_per_kb),
+			hash_keccak_256: <span class="macro">cost_batched!</span>(seal_hash_keccak_256),
+			hash_keccak_256_per_byte: <span class="macro">cost_byte_batched!</span>(seal_hash_keccak_256_per_kb),
+			hash_blake2_256: <span class="macro">cost_batched!</span>(seal_hash_blake2_256),
+			hash_blake2_256_per_byte: <span class="macro">cost_byte_batched!</span>(seal_hash_blake2_256_per_kb),
+			hash_blake2_128: <span class="macro">cost_batched!</span>(seal_hash_blake2_128),
+			hash_blake2_128_per_byte: <span class="macro">cost_byte_batched!</span>(seal_hash_blake2_128_per_kb),
+			ecdsa_recover: <span class="macro">cost_batched!</span>(seal_ecdsa_recover),
+			ecdsa_to_eth_address: <span class="macro">cost_batched!</span>(seal_ecdsa_to_eth_address),
+			_phantom: PhantomData,
 		}
 	}
 }
 
-<span class="kw">struct</span> <span class="ident">ScheduleRules</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> {
-	<span class="ident">schedule</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-	<span class="ident">params</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+<span class="kw">struct </span>ScheduleRules&lt;<span class="lifetime">&#39;a</span>, T: Config&gt; {
+	schedule: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schedule&lt;T&gt;,
+	params: Vec&lt;u32&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">Schedule</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">rules</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">module</span>: <span class="kw-2">&amp;</span><span class="ident">elements::Module</span>) -&gt; <span class="kw">impl</span> <span class="ident">gas_metering::Rules</span> <span class="op">+</span> <span class="lifetime">&#39;_</span> {
-		<span class="ident">ScheduleRules</span> {
-			<span class="ident">schedule</span>: <span class="self">self</span>,
-			<span class="ident">params</span>: <span class="ident">module</span>
-				.<span class="ident">type_section</span>()
-				.<span class="ident">iter</span>()
-				.<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">section</span><span class="op">|</span> <span class="ident">section</span>.<span class="ident">types</span>())
-				.<span class="ident">map</span>(<span class="op">|</span><span class="ident">func</span><span class="op">|</span> {
-					<span class="kw">let</span> <span class="ident">elements::Type::Function</span>(<span class="ident">func</span>) <span class="op">=</span> <span class="ident">func</span>;
-					<span class="ident">func</span>.<span class="ident">params</span>().<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>
+<span class="kw">impl</span>&lt;T: Config&gt; Schedule&lt;T&gt; {
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>rules(<span class="kw-2">&amp;</span><span class="self">self</span>, module: <span class="kw-2">&amp;</span>elements::Module) -&gt; <span class="kw">impl </span>gas_metering::Rules + <span class="lifetime">&#39;_ </span>{
+		ScheduleRules {
+			schedule: <span class="self">self</span>,
+			params: module
+				.type_section()
+				.iter()
+				.flat_map(|section| section.types())
+				.map(|func| {
+					<span class="kw">let </span>elements::Type::Function(func) = func;
+					func.params().len() <span class="kw">as </span>u32
 				})
-				.<span class="ident">collect</span>(),
+				.collect(),
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span> <span class="ident">gas_metering::Rules</span> <span class="kw">for</span> <span class="ident">ScheduleRules</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">instruction_cost</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">instruction</span>: <span class="kw-2">&amp;</span><span class="ident">elements::Instruction</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> {
-		<span class="kw">use</span> <span class="ident"><span class="self">self</span>::elements::Instruction</span>::<span class="kw-2">*</span>;
-		<span class="kw">let</span> <span class="ident">w</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">schedule</span>.<span class="ident">instruction_weights</span>;
-		<span class="kw">let</span> <span class="ident">max_params</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">schedule</span>.<span class="ident">limits</span>.<span class="ident">parameters</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, T: Config&gt; gas_metering::Rules <span class="kw">for </span>ScheduleRules&lt;<span class="lifetime">&#39;a</span>, T&gt; {
+	<span class="kw">fn </span>instruction_cost(<span class="kw-2">&amp;</span><span class="self">self</span>, instruction: <span class="kw-2">&amp;</span>elements::Instruction) -&gt; <span class="prelude-ty">Option</span>&lt;u32&gt; {
+		<span class="kw">use </span><span class="self">self</span>::elements::Instruction::<span class="kw-2">*</span>;
+		<span class="kw">let </span>w = <span class="kw-2">&amp;</span><span class="self">self</span>.schedule.instruction_weights;
+		<span class="kw">let </span>max_params = <span class="self">self</span>.schedule.limits.parameters;
 
-		<span class="kw">let</span> <span class="ident">weight</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">instruction</span> {
-			<span class="ident">End</span> <span class="op">|</span> <span class="ident">Unreachable</span> <span class="op">|</span> <span class="ident">Return</span> <span class="op">|</span> <span class="ident">Else</span> =&gt; <span class="number">0</span>,
-			<span class="ident">I32Const</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">I64Const</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Block</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Loop</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Nop</span> <span class="op">|</span> <span class="ident">Drop</span> =&gt; <span class="ident">w</span>.<span class="ident">i64const</span>,
-			<span class="ident">I32Load</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I32Load8S</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I32Load8U</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I32Load16S</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I32Load16U</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Load</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Load8S</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Load8U</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Load16S</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Load16U</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Load32S</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Load32U</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">i64load</span>,
-			<span class="ident">I32Store</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I32Store8</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I32Store16</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Store</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Store8</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Store16</span>(<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">|</span>
-			<span class="ident">I64Store32</span>(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">i64store</span>,
-			<span class="ident">Select</span> =&gt; <span class="ident">w</span>.<span class="ident">select</span>,
-			<span class="ident">If</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">r#if</span>,
-			<span class="ident">Br</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">br</span>,
-			<span class="ident">BrIf</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">br_if</span>,
-			<span class="ident">Call</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">call</span>,
-			<span class="ident">GetLocal</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">local_get</span>,
-			<span class="ident">SetLocal</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">local_set</span>,
-			<span class="ident">TeeLocal</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">local_tee</span>,
-			<span class="ident">GetGlobal</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">global_get</span>,
-			<span class="ident">SetGlobal</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">global_set</span>,
-			<span class="ident">CurrentMemory</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">memory_current</span>,
-			<span class="ident">GrowMemory</span>(<span class="kw">_</span>) =&gt; <span class="ident">w</span>.<span class="ident">memory_grow</span>,
-			<span class="ident">CallIndirect</span>(<span class="ident">idx</span>, <span class="kw">_</span>) =&gt; <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">params</span>.<span class="ident">get</span>(<span class="ident">idx</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">unwrap_or</span>(<span class="kw-2">&amp;</span><span class="ident">max_params</span>),
-			<span class="ident">BrTable</span>(<span class="kw-2">ref</span> <span class="ident">data</span>) =&gt; <span class="ident">w</span>
-				.<span class="ident">br_table</span>
-				.<span class="ident">saturating_add</span>(<span class="ident">w</span>.<span class="ident">br_table_per_entry</span>.<span class="ident">saturating_mul</span>(<span class="ident">data</span>.<span class="ident">table</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>)),
-			<span class="ident">I32Clz</span> <span class="op">|</span> <span class="ident">I64Clz</span> =&gt; <span class="ident">w</span>.<span class="ident">i64clz</span>,
-			<span class="ident">I32Ctz</span> <span class="op">|</span> <span class="ident">I64Ctz</span> =&gt; <span class="ident">w</span>.<span class="ident">i64ctz</span>,
-			<span class="ident">I32Popcnt</span> <span class="op">|</span> <span class="ident">I64Popcnt</span> =&gt; <span class="ident">w</span>.<span class="ident">i64popcnt</span>,
-			<span class="ident">I32Eqz</span> <span class="op">|</span> <span class="ident">I64Eqz</span> =&gt; <span class="ident">w</span>.<span class="ident">i64eqz</span>,
-			<span class="ident">I64ExtendSI32</span> =&gt; <span class="ident">w</span>.<span class="ident">i64extendsi32</span>,
-			<span class="ident">I64ExtendUI32</span> =&gt; <span class="ident">w</span>.<span class="ident">i64extendui32</span>,
-			<span class="ident">I32WrapI64</span> =&gt; <span class="ident">w</span>.<span class="ident">i32wrapi64</span>,
-			<span class="ident">I32Eq</span> <span class="op">|</span> <span class="ident">I64Eq</span> =&gt; <span class="ident">w</span>.<span class="ident">i64eq</span>,
-			<span class="ident">I32Ne</span> <span class="op">|</span> <span class="ident">I64Ne</span> =&gt; <span class="ident">w</span>.<span class="ident">i64ne</span>,
-			<span class="ident">I32LtS</span> <span class="op">|</span> <span class="ident">I64LtS</span> =&gt; <span class="ident">w</span>.<span class="ident">i64lts</span>,
-			<span class="ident">I32LtU</span> <span class="op">|</span> <span class="ident">I64LtU</span> =&gt; <span class="ident">w</span>.<span class="ident">i64ltu</span>,
-			<span class="ident">I32GtS</span> <span class="op">|</span> <span class="ident">I64GtS</span> =&gt; <span class="ident">w</span>.<span class="ident">i64gts</span>,
-			<span class="ident">I32GtU</span> <span class="op">|</span> <span class="ident">I64GtU</span> =&gt; <span class="ident">w</span>.<span class="ident">i64gtu</span>,
-			<span class="ident">I32LeS</span> <span class="op">|</span> <span class="ident">I64LeS</span> =&gt; <span class="ident">w</span>.<span class="ident">i64les</span>,
-			<span class="ident">I32LeU</span> <span class="op">|</span> <span class="ident">I64LeU</span> =&gt; <span class="ident">w</span>.<span class="ident">i64leu</span>,
-			<span class="ident">I32GeS</span> <span class="op">|</span> <span class="ident">I64GeS</span> =&gt; <span class="ident">w</span>.<span class="ident">i64ges</span>,
-			<span class="ident">I32GeU</span> <span class="op">|</span> <span class="ident">I64GeU</span> =&gt; <span class="ident">w</span>.<span class="ident">i64geu</span>,
-			<span class="ident">I32Add</span> <span class="op">|</span> <span class="ident">I64Add</span> =&gt; <span class="ident">w</span>.<span class="ident">i64add</span>,
-			<span class="ident">I32Sub</span> <span class="op">|</span> <span class="ident">I64Sub</span> =&gt; <span class="ident">w</span>.<span class="ident">i64sub</span>,
-			<span class="ident">I32Mul</span> <span class="op">|</span> <span class="ident">I64Mul</span> =&gt; <span class="ident">w</span>.<span class="ident">i64mul</span>,
-			<span class="ident">I32DivS</span> <span class="op">|</span> <span class="ident">I64DivS</span> =&gt; <span class="ident">w</span>.<span class="ident">i64divs</span>,
-			<span class="ident">I32DivU</span> <span class="op">|</span> <span class="ident">I64DivU</span> =&gt; <span class="ident">w</span>.<span class="ident">i64divu</span>,
-			<span class="ident">I32RemS</span> <span class="op">|</span> <span class="ident">I64RemS</span> =&gt; <span class="ident">w</span>.<span class="ident">i64rems</span>,
-			<span class="ident">I32RemU</span> <span class="op">|</span> <span class="ident">I64RemU</span> =&gt; <span class="ident">w</span>.<span class="ident">i64remu</span>,
-			<span class="ident">I32And</span> <span class="op">|</span> <span class="ident">I64And</span> =&gt; <span class="ident">w</span>.<span class="ident">i64and</span>,
-			<span class="ident">I32Or</span> <span class="op">|</span> <span class="ident">I64Or</span> =&gt; <span class="ident">w</span>.<span class="ident">i64or</span>,
-			<span class="ident">I32Xor</span> <span class="op">|</span> <span class="ident">I64Xor</span> =&gt; <span class="ident">w</span>.<span class="ident">i64xor</span>,
-			<span class="ident">I32Shl</span> <span class="op">|</span> <span class="ident">I64Shl</span> =&gt; <span class="ident">w</span>.<span class="ident">i64shl</span>,
-			<span class="ident">I32ShrS</span> <span class="op">|</span> <span class="ident">I64ShrS</span> =&gt; <span class="ident">w</span>.<span class="ident">i64shrs</span>,
-			<span class="ident">I32ShrU</span> <span class="op">|</span> <span class="ident">I64ShrU</span> =&gt; <span class="ident">w</span>.<span class="ident">i64shru</span>,
-			<span class="ident">I32Rotl</span> <span class="op">|</span> <span class="ident">I64Rotl</span> =&gt; <span class="ident">w</span>.<span class="ident">i64rotl</span>,
-			<span class="ident">I32Rotr</span> <span class="op">|</span> <span class="ident">I64Rotr</span> =&gt; <span class="ident">w</span>.<span class="ident">i64rotr</span>,
+		<span class="kw">let </span>weight = <span class="kw">match </span><span class="kw-2">*</span>instruction {
+			End | Unreachable | Return | Else =&gt; <span class="number">0</span>,
+			I32Const(<span class="kw">_</span>) | I64Const(<span class="kw">_</span>) | Block(<span class="kw">_</span>) | Loop(<span class="kw">_</span>) | Nop | Drop =&gt; w.i64const,
+			I32Load(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I32Load8S(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I32Load8U(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I32Load16S(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I32Load16U(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Load(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Load8S(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Load8U(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Load16S(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Load16U(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Load32S(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Load32U(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; w.i64load,
+			I32Store(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I32Store8(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I32Store16(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Store(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Store8(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Store16(<span class="kw">_</span>, <span class="kw">_</span>) |
+			I64Store32(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; w.i64store,
+			Select =&gt; w.select,
+			If(<span class="kw">_</span>) =&gt; w.r#if,
+			Br(<span class="kw">_</span>) =&gt; w.br,
+			BrIf(<span class="kw">_</span>) =&gt; w.br_if,
+			Call(<span class="kw">_</span>) =&gt; w.call,
+			GetLocal(<span class="kw">_</span>) =&gt; w.local_get,
+			SetLocal(<span class="kw">_</span>) =&gt; w.local_set,
+			TeeLocal(<span class="kw">_</span>) =&gt; w.local_tee,
+			GetGlobal(<span class="kw">_</span>) =&gt; w.global_get,
+			SetGlobal(<span class="kw">_</span>) =&gt; w.global_set,
+			CurrentMemory(<span class="kw">_</span>) =&gt; w.memory_current,
+			GrowMemory(<span class="kw">_</span>) =&gt; w.memory_grow,
+			CallIndirect(idx, <span class="kw">_</span>) =&gt; <span class="kw-2">*</span><span class="self">self</span>.params.get(idx <span class="kw">as </span>usize).unwrap_or(<span class="kw-2">&amp;</span>max_params),
+			BrTable(<span class="kw-2">ref </span>data) =&gt; w
+				.br_table
+				.saturating_add(w.br_table_per_entry.saturating_mul(data.table.len() <span class="kw">as </span>u32)),
+			I32Clz | I64Clz =&gt; w.i64clz,
+			I32Ctz | I64Ctz =&gt; w.i64ctz,
+			I32Popcnt | I64Popcnt =&gt; w.i64popcnt,
+			I32Eqz | I64Eqz =&gt; w.i64eqz,
+			I64ExtendSI32 =&gt; w.i64extendsi32,
+			I64ExtendUI32 =&gt; w.i64extendui32,
+			I32WrapI64 =&gt; w.i32wrapi64,
+			I32Eq | I64Eq =&gt; w.i64eq,
+			I32Ne | I64Ne =&gt; w.i64ne,
+			I32LtS | I64LtS =&gt; w.i64lts,
+			I32LtU | I64LtU =&gt; w.i64ltu,
+			I32GtS | I64GtS =&gt; w.i64gts,
+			I32GtU | I64GtU =&gt; w.i64gtu,
+			I32LeS | I64LeS =&gt; w.i64les,
+			I32LeU | I64LeU =&gt; w.i64leu,
+			I32GeS | I64GeS =&gt; w.i64ges,
+			I32GeU | I64GeU =&gt; w.i64geu,
+			I32Add | I64Add =&gt; w.i64add,
+			I32Sub | I64Sub =&gt; w.i64sub,
+			I32Mul | I64Mul =&gt; w.i64mul,
+			I32DivS | I64DivS =&gt; w.i64divs,
+			I32DivU | I64DivU =&gt; w.i64divu,
+			I32RemS | I64RemS =&gt; w.i64rems,
+			I32RemU | I64RemU =&gt; w.i64remu,
+			I32And | I64And =&gt; w.i64and,
+			I32Or | I64Or =&gt; w.i64or,
+			I32Xor | I64Xor =&gt; w.i64xor,
+			I32Shl | I64Shl =&gt; w.i64shl,
+			I32ShrS | I64ShrS =&gt; w.i64shrs,
+			I32ShrU | I64ShrU =&gt; w.i64shru,
+			I32Rotl | I64Rotl =&gt; w.i64rotl,
+			I32Rotr | I64Rotr =&gt; w.i64rotr,
 
-			<span class="comment">// Returning None makes the gas instrumentation fail which we intend for</span>
-			<span class="comment">// unsupported or unknown instructions.</span>
-			<span class="kw">_</span> =&gt; <span class="kw">return</span> <span class="prelude-val">None</span>,
+			<span class="comment">// Returning None makes the gas instrumentation fail which we intend for
+			// unsupported or unknown instructions.
+			</span><span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
 		};
-		<span class="prelude-val">Some</span>(<span class="ident">weight</span>)
+		<span class="prelude-val">Some</span>(weight)
 	}
 
-	<span class="kw">fn</span> <span class="ident">memory_grow_cost</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">gas_metering::MemoryGrowCost</span> {
-		<span class="comment">// We benchmarked the memory.grow instruction with the maximum allowed pages.</span>
-		<span class="comment">// The cost for growing is therefore already included in the instruction cost.</span>
-		<span class="ident">gas_metering::MemoryGrowCost::Free</span>
+	<span class="kw">fn </span>memory_grow_cost(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; gas_metering::MemoryGrowCost {
+		<span class="comment">// We benchmarked the memory.grow instruction with the maximum allowed pages.
+		// The cost for growing is therefore already included in the instruction cost.
+		</span>gas_metering::MemoryGrowCost::Free
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::tests::Test</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>test {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span><span class="kw">crate</span>::tests::Test;
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">print_test_schedule</span>() {
-		<span class="kw">let</span> <span class="ident">schedule</span> <span class="op">=</span> <span class="ident">Schedule</span>::<span class="op">&lt;</span><span class="ident">Test</span><span class="op">&gt;</span><span class="ident">::default</span>();
-		<span class="macro">println!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">schedule</span>);
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>print_test_schedule() {
+		<span class="kw">let </span>schedule = Schedule::&lt;Test&gt;::default();
+		<span class="macro">println!</span>(<span class="string">&quot;{:#?}&quot;</span>, schedule);
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

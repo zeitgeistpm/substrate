@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/manual-seal/src/consensus/timestamp.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>timestamp.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../sc_consensus_manual_seal/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../sc_consensus_manual_seal/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../sc_consensus_manual_seal/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client/consensus/manual-seal/src/consensus/timestamp.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>timestamp.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../sc_consensus_manual_seal/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../sc_consensus_manual_seal/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -168,170 +162,169 @@
 <span id="162">162</span>
 <span id="163">163</span>
 <span id="164">164</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2021 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0</span>
+// Copyright (C) 2020-2021 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
-<span class="comment">// This program is free software: you can redistribute it and/or modify</span>
-<span class="comment">// it under the terms of the GNU General Public License as published by</span>
-<span class="comment">// the Free Software Foundation, either version 3 of the License, or</span>
-<span class="comment">// (at your option) any later version.</span>
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-<span class="comment">// This program is distributed in the hope that it will be useful,</span>
-<span class="comment">// but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="comment">// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
-<span class="comment">// GNU General Public License for more details.</span>
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
 
-<span class="comment">// You should have received a copy of the GNU General Public License</span>
-<span class="comment">// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-<span class="doccomment">//! Mocked timestamp inherent, allows for manual seal to create blocks for runtimes</span>
-<span class="doccomment">//! that expect this inherent.</span>
+</span><span class="doccomment">//! Mocked timestamp inherent, allows for manual seal to create blocks for runtimes
+//! that expect this inherent.
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Error</span>;
-<span class="kw">use</span> <span class="ident">sc_client_api</span>::{<span class="ident">AuxStore</span>, <span class="ident">UsageProvider</span>};
-<span class="kw">use</span> <span class="ident">sp_api::ProvideRuntimeApi</span>;
-<span class="kw">use</span> <span class="ident">sp_blockchain::HeaderBackend</span>;
-<span class="kw">use</span> <span class="ident">sp_consensus_aura</span>::{
-	<span class="ident">sr25519</span>::{<span class="ident">AuthorityId</span>, <span class="ident">AuthoritySignature</span>},
-	<span class="ident">AuraApi</span>,
+</span><span class="kw">use </span><span class="kw">crate</span>::Error;
+<span class="kw">use </span>sc_client_api::{AuxStore, UsageProvider};
+<span class="kw">use </span>sp_api::ProvideRuntimeApi;
+<span class="kw">use </span>sp_blockchain::HeaderBackend;
+<span class="kw">use </span>sp_consensus_aura::{
+	sr25519::{AuthorityId, AuthoritySignature},
+	AuraApi,
 };
-<span class="kw">use</span> <span class="ident">sp_consensus_babe::BabeApi</span>;
-<span class="kw">use</span> <span class="ident">sp_consensus_slots</span>::{<span class="ident">Slot</span>, <span class="ident">SlotDuration</span>};
-<span class="kw">use</span> <span class="ident">sp_inherents</span>::{<span class="ident">InherentData</span>, <span class="ident">InherentDataProvider</span>, <span class="ident">InherentIdentifier</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">generic::BlockId</span>,
-	<span class="ident">traits</span>::{<span class="ident">Block</span> <span class="kw">as</span> <span class="ident">BlockT</span>, <span class="ident">Zero</span>},
+<span class="kw">use </span>sp_consensus_babe::BabeApi;
+<span class="kw">use </span>sp_consensus_slots::{Slot, SlotDuration};
+<span class="kw">use </span>sp_inherents::{InherentData, InherentDataProvider, InherentIdentifier};
+<span class="kw">use </span>sp_runtime::{
+	generic::BlockId,
+	traits::{Block <span class="kw">as </span>BlockT, Zero},
 };
-<span class="kw">use</span> <span class="ident">sp_timestamp</span>::{<span class="ident">InherentType</span>, <span class="ident">INHERENT_IDENTIFIER</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-	<span class="ident">sync</span>::{<span class="ident">atomic</span>, <span class="ident">Arc</span>},
-	<span class="ident">time::SystemTime</span>,
+<span class="kw">use </span>sp_timestamp::{InherentType, INHERENT_IDENTIFIER};
+<span class="kw">use </span>std::{
+	sync::{atomic, Arc},
+	time::SystemTime,
 };
 
-<span class="doccomment">/// Provide duration since unix epoch in millisecond for timestamp inherent.</span>
-<span class="doccomment">/// Mocks the timestamp inherent to always produce a valid timestamp for the next slot.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This works by either fetching the `slot_number` from the most recent header and dividing</span>
-<span class="doccomment">/// that value by `slot_duration` in order to fork chains that expect this inherent.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It produces timestamp inherents that are increased by `slot_duration` whenever</span>
-<span class="doccomment">/// `provide_inherent_data` is called.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SlotTimestampProvider</span> {
-	<span class="comment">// holds the unix millisecond timestamp for the most recent block</span>
-	<span class="ident">unix_millis</span>: <span class="ident">atomic::AtomicU64</span>,
-	<span class="comment">// configured slot_duration in the runtime</span>
-	<span class="ident">slot_duration</span>: <span class="ident">SlotDuration</span>,
+<span class="doccomment">/// Provide duration since unix epoch in millisecond for timestamp inherent.
+/// Mocks the timestamp inherent to always produce a valid timestamp for the next slot.
+///
+/// This works by either fetching the `slot_number` from the most recent header and dividing
+/// that value by `slot_duration` in order to fork chains that expect this inherent.
+///
+/// It produces timestamp inherents that are increased by `slot_duration` whenever
+/// `provide_inherent_data` is called.
+</span><span class="kw">pub struct </span>SlotTimestampProvider {
+	<span class="comment">// holds the unix millisecond timestamp for the most recent block
+	</span>unix_millis: atomic::AtomicU64,
+	<span class="comment">// configured slot_duration in the runtime
+	</span>slot_duration: SlotDuration,
 }
 
-<span class="kw">impl</span> <span class="ident">SlotTimestampProvider</span> {
-	<span class="doccomment">/// Create a new mocked time stamp provider, for babe.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_babe</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">C</span><span class="op">&gt;</span>(<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">B</span>: <span class="ident">BlockT</span>,
-		<span class="ident">C</span>: <span class="ident">AuxStore</span> <span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">C::Api</span>: <span class="ident">BabeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+<span class="kw">impl </span>SlotTimestampProvider {
+	<span class="doccomment">/// Create a new mocked time stamp provider, for babe.
+	</span><span class="kw">pub fn </span>new_babe&lt;B, C&gt;(client: Arc&lt;C&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Error&gt;
+	<span class="kw">where
+		</span>B: BlockT,
+		C: AuxStore + HeaderBackend&lt;B&gt; + ProvideRuntimeApi&lt;B&gt; + UsageProvider&lt;B&gt;,
+		C::Api: BabeApi&lt;B&gt;,
 	{
-		<span class="kw">let</span> <span class="ident">slot_duration</span> <span class="op">=</span> <span class="ident">sc_consensus_babe::configuration</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">client</span>)<span class="question-mark">?</span>.<span class="ident">slot_duration</span>();
+		<span class="kw">let </span>slot_duration = sc_consensus_babe::configuration(<span class="kw-2">&amp;*</span>client)<span class="question-mark">?</span>.slot_duration();
 
-		<span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::with_header</span>(<span class="kw-2">&amp;</span><span class="ident">client</span>, <span class="ident">slot_duration</span>, <span class="op">|</span><span class="ident">header</span><span class="op">|</span> {
-			<span class="kw">let</span> <span class="ident">slot_number</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">sc_consensus_babe::find_pre_digest</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>)
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">err</span>))<span class="question-mark">?</span>
-				.<span class="ident">slot</span>();
-			<span class="prelude-val">Ok</span>(<span class="ident">slot_number</span>)
+		<span class="kw">let </span>time = <span class="self">Self</span>::with_header(<span class="kw-2">&amp;</span>client, slot_duration, |header| {
+			<span class="kw">let </span>slot_number = <span class="kw-2">*</span>sc_consensus_babe::find_pre_digest::&lt;B&gt;(<span class="kw-2">&amp;</span>header)
+				.map_err(|err| <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, err))<span class="question-mark">?
+				</span>.slot();
+			<span class="prelude-val">Ok</span>(slot_number)
 		})<span class="question-mark">?</span>;
 
-		<span class="prelude-val">Ok</span>(<span class="self">Self</span> { <span class="ident">unix_millis</span>: <span class="ident">atomic::AtomicU64::new</span>(<span class="ident">time</span>), <span class="ident">slot_duration</span> })
+		<span class="prelude-val">Ok</span>(<span class="self">Self </span>{ unix_millis: atomic::AtomicU64::new(time), slot_duration })
 	}
 
-	<span class="doccomment">/// Create a new mocked time stamp provider, for aura</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_aura</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">C</span><span class="op">&gt;</span>(<span class="ident">client</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">B</span>: <span class="ident">BlockT</span>,
-		<span class="ident">C</span>: <span class="ident">AuxStore</span> <span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">ProvideRuntimeApi</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">C::Api</span>: <span class="ident">AuraApi</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">AuthorityId</span><span class="op">&gt;</span>,
+	<span class="doccomment">/// Create a new mocked time stamp provider, for aura
+	</span><span class="kw">pub fn </span>new_aura&lt;B, C&gt;(client: Arc&lt;C&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Error&gt;
+	<span class="kw">where
+		</span>B: BlockT,
+		C: AuxStore + HeaderBackend&lt;B&gt; + ProvideRuntimeApi&lt;B&gt; + UsageProvider&lt;B&gt;,
+		C::Api: AuraApi&lt;B, AuthorityId&gt;,
 	{
-		<span class="kw">let</span> <span class="ident">slot_duration</span> <span class="op">=</span> <span class="ident">sc_consensus_aura::slot_duration</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">client</span>)<span class="question-mark">?</span>;
+		<span class="kw">let </span>slot_duration = sc_consensus_aura::slot_duration(<span class="kw-2">&amp;*</span>client)<span class="question-mark">?</span>;
 
-		<span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::with_header</span>(<span class="kw-2">&amp;</span><span class="ident">client</span>, <span class="ident">slot_duration</span>, <span class="op">|</span><span class="ident">header</span><span class="op">|</span> {
-			<span class="kw">let</span> <span class="ident">slot_number</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">sc_consensus_aura::find_pre_digest</span>::<span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">AuthoritySignature</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>)
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">err</span>))<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(<span class="ident">slot_number</span>)
+		<span class="kw">let </span>time = <span class="self">Self</span>::with_header(<span class="kw-2">&amp;</span>client, slot_duration, |header| {
+			<span class="kw">let </span>slot_number = <span class="kw-2">*</span>sc_consensus_aura::find_pre_digest::&lt;B, AuthoritySignature&gt;(<span class="kw-2">&amp;</span>header)
+				.map_err(|err| <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, err))<span class="question-mark">?</span>;
+			<span class="prelude-val">Ok</span>(slot_number)
 		})<span class="question-mark">?</span>;
 
-		<span class="prelude-val">Ok</span>(<span class="self">Self</span> { <span class="ident">unix_millis</span>: <span class="ident">atomic::AtomicU64::new</span>(<span class="ident">time</span>), <span class="ident">slot_duration</span> })
+		<span class="prelude-val">Ok</span>(<span class="self">Self </span>{ unix_millis: atomic::AtomicU64::new(time), slot_duration })
 	}
 
-	<span class="kw">fn</span> <span class="ident">with_header</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>(
-		<span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
-		<span class="ident">slot_duration</span>: <span class="ident">SlotDuration</span>,
-		<span class="ident">func</span>: <span class="ident">F</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Error</span><span class="op">&gt;</span>
-	<span class="kw">where</span>
-		<span class="ident">B</span>: <span class="ident">BlockT</span>,
-		<span class="ident">C</span>: <span class="ident">AuxStore</span> <span class="op">+</span> <span class="ident">HeaderBackend</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">UsageProvider</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-		<span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">B::Header</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Error</span><span class="op">&gt;</span>,
+	<span class="kw">fn </span>with_header&lt;F, C, B&gt;(
+		client: <span class="kw-2">&amp;</span>Arc&lt;C&gt;,
+		slot_duration: SlotDuration,
+		func: F,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;u64, Error&gt;
+	<span class="kw">where
+		</span>B: BlockT,
+		C: AuxStore + HeaderBackend&lt;B&gt; + UsageProvider&lt;B&gt;,
+		F: Fn(B::Header) -&gt; <span class="prelude-ty">Result</span>&lt;u64, Error&gt;,
 	{
-		<span class="kw">let</span> <span class="ident">info</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">info</span>();
+		<span class="kw">let </span>info = client.info();
 
-		<span class="comment">// looks like this isn&#39;t the first block, rehydrate the fake time.</span>
-		<span class="comment">// otherwise we&#39;d be producing blocks for older slots.</span>
-		<span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">info</span>.<span class="ident">best_number</span> <span class="op">!</span><span class="op">=</span> <span class="ident">Zero::zero</span>() {
-			<span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">client</span>
-				.<span class="ident">header</span>(<span class="ident">BlockId::Hash</span>(<span class="ident">info</span>.<span class="ident">best_hash</span>))<span class="question-mark">?</span>
-				.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;best header not found in the db!&quot;</span>.<span class="ident">to_string</span>())<span class="question-mark">?</span>;
-			<span class="kw">let</span> <span class="ident">slot</span> <span class="op">=</span> <span class="ident">func</span>(<span class="ident">header</span>)<span class="question-mark">?</span>;
-			<span class="comment">// add the slot duration so there&#39;s no collision of slots</span>
-			(<span class="ident">slot</span> <span class="op">*</span> <span class="ident">slot_duration</span>.<span class="ident">as_millis</span>() <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">+</span> <span class="ident">slot_duration</span>.<span class="ident">as_millis</span>() <span class="kw">as</span> <span class="ident">u64</span>
-		} <span class="kw">else</span> {
-			<span class="comment">// this is the first block, use the correct time.</span>
-			<span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">SystemTime::now</span>();
-			<span class="ident">now</span>.<span class="ident">duration_since</span>(<span class="ident">SystemTime::UNIX_EPOCH</span>)
-				.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::StringError</span>(<span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">err</span>)))<span class="question-mark">?</span>
-				.<span class="ident">as_millis</span>() <span class="kw">as</span> <span class="ident">u64</span>
+		<span class="comment">// looks like this isn&#39;t the first block, rehydrate the fake time.
+		// otherwise we&#39;d be producing blocks for older slots.
+		</span><span class="kw">let </span>time = <span class="kw">if </span>info.best_number != Zero::zero() {
+			<span class="kw">let </span>header = client
+				.header(BlockId::Hash(info.best_hash))<span class="question-mark">?
+				</span>.ok_or_else(|| <span class="string">&quot;best header not found in the db!&quot;</span>.to_string())<span class="question-mark">?</span>;
+			<span class="kw">let </span>slot = func(header)<span class="question-mark">?</span>;
+			<span class="comment">// add the slot duration so there&#39;s no collision of slots
+			</span>(slot * slot_duration.as_millis() <span class="kw">as </span>u64) + slot_duration.as_millis() <span class="kw">as </span>u64
+		} <span class="kw">else </span>{
+			<span class="comment">// this is the first block, use the correct time.
+			</span><span class="kw">let </span>now = SystemTime::now();
+			now.duration_since(SystemTime::UNIX_EPOCH)
+				.map_err(|err| Error::StringError(<span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, err)))<span class="question-mark">?
+				</span>.as_millis() <span class="kw">as </span>u64
 		};
 
-		<span class="prelude-val">Ok</span>(<span class="ident">time</span>)
+		<span class="prelude-val">Ok</span>(time)
 	}
 
-	<span class="doccomment">/// Get the current slot number</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">slot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Slot</span> {
-		<span class="ident">Slot::from_timestamp</span>(
-			<span class="self">self</span>.<span class="ident">unix_millis</span>.<span class="ident">load</span>(<span class="ident">atomic::Ordering::SeqCst</span>).<span class="ident">into</span>(),
-			<span class="self">self</span>.<span class="ident">slot_duration</span>,
+	<span class="doccomment">/// Get the current slot number
+	</span><span class="kw">pub fn </span>slot(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Slot {
+		Slot::from_timestamp(
+			<span class="self">self</span>.unix_millis.load(atomic::Ordering::SeqCst).into(),
+			<span class="self">self</span>.slot_duration,
 		)
 	}
 
-	<span class="doccomment">/// Gets the current time stamp.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">timestamp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">sp_timestamp::Timestamp</span> {
-		<span class="ident">sp_timestamp::Timestamp::new</span>(<span class="self">self</span>.<span class="ident">unix_millis</span>.<span class="ident">load</span>(<span class="ident">atomic::Ordering::SeqCst</span>))
+	<span class="doccomment">/// Gets the current time stamp.
+	</span><span class="kw">pub fn </span>timestamp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; sp_timestamp::Timestamp {
+		sp_timestamp::Timestamp::new(<span class="self">self</span>.unix_millis.load(atomic::Ordering::SeqCst))
 	}
 }
 
-<span class="attribute">#[<span class="ident">async_trait::async_trait</span>]</span>
-<span class="kw">impl</span> <span class="ident">InherentDataProvider</span> <span class="kw">for</span> <span class="ident">SlotTimestampProvider</span> {
-	<span class="kw">fn</span> <span class="ident">provide_inherent_data</span>(
+<span class="attribute">#[async_trait::async_trait]
+</span><span class="kw">impl </span>InherentDataProvider <span class="kw">for </span>SlotTimestampProvider {
+	<span class="kw">fn </span>provide_inherent_data(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="ident">inherent_data</span>: <span class="kw-2">&amp;mut</span> <span class="ident">InherentData</span>,
-	) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">sp_inherents::Error</span><span class="op">&gt;</span> {
-		<span class="comment">// we update the time here.</span>
-		<span class="kw">let</span> <span class="ident">new_time</span>: <span class="ident">InherentType</span> <span class="op">=</span> <span class="self">self</span>
-			.<span class="ident">unix_millis</span>
-			.<span class="ident">fetch_add</span>(<span class="self">self</span>.<span class="ident">slot_duration</span>.<span class="ident">as_millis</span>() <span class="kw">as</span> <span class="ident">u64</span>, <span class="ident">atomic::Ordering::SeqCst</span>)
-			.<span class="ident">into</span>();
-		<span class="ident">inherent_data</span>.<span class="ident">put_data</span>(<span class="ident">INHERENT_IDENTIFIER</span>, <span class="kw-2">&amp;</span><span class="ident">new_time</span>)<span class="question-mark">?</span>;
+		inherent_data: <span class="kw-2">&amp;mut </span>InherentData,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(), sp_inherents::Error&gt; {
+		<span class="comment">// we update the time here.
+		</span><span class="kw">let </span>new_time: InherentType = <span class="self">self
+			</span>.unix_millis
+			.fetch_add(<span class="self">self</span>.slot_duration.as_millis() <span class="kw">as </span>u64, atomic::Ordering::SeqCst)
+			.into();
+		inherent_data.put_data(INHERENT_IDENTIFIER, <span class="kw-2">&amp;</span>new_time)<span class="question-mark">?</span>;
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">try_handle_error</span>(
+	<span class="kw">async fn </span>try_handle_error(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">InherentIdentifier</span>,
-		<span class="kw">_</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-	) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">sp_inherents::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-		<span class="prelude-val">None</span>
-	}
+		<span class="kw">_</span>: <span class="kw-2">&amp;</span>InherentIdentifier,
+		<span class="kw">_</span>: <span class="kw-2">&amp;</span>[u8],
+	) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="prelude-ty">Result</span>&lt;(), sp_inherents::Error&gt;&gt; {
+		<span class="prelude-val">None
+	</span>}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="sc_consensus_manual_seal" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="sc_consensus_manual_seal" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/beefy/src/commitment.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>commitment.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../beefy_primitives/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../beefy_primitives/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../beefy_primitives/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/beefy/src/commitment.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>commitment.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../beefy_primitives/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../beefy_primitives/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -444,446 +438,445 @@
 <span id="438">438</span>
 <span id="439">439</span>
 <span id="440">440</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Decode</span>, <span class="ident">Encode</span>, <span class="ident">Error</span>, <span class="ident">Input</span>};
-<span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
-<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">cmp</span>, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
+</span><span class="kw">use </span>codec::{Decode, Encode, Error, Input};
+<span class="kw">use </span>scale_info::TypeInfo;
+<span class="kw">use </span>sp_std::{cmp, prelude::<span class="kw-2">*</span>};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Payload</span>, <span class="ident">ValidatorSetId</span>};
+<span class="kw">use crate</span>::{Payload, ValidatorSetId};
 
-<span class="doccomment">/// A commitment signed by GRANDPA validators as part of BEEFY protocol.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The commitment contains a [payload](Commitment::payload) extracted from the finalized block at</span>
-<span class="doccomment">/// height [block_number](Commitment::block_number).</span>
-<span class="doccomment">/// GRANDPA validators collect signatures on commitments and a stream of such signed commitments</span>
-<span class="doccomment">/// (see [SignedCommitment]) forms the BEEFY protocol.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>, <span class="ident">TypeInfo</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span> {
-	<span class="doccomment">///  A collection of payloads to be signed, see [`Payload`] for details.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// One of the payloads should be some form of cumulative representation of the chain (think</span>
-	<span class="doccomment">/// MMR root hash). Additionally one of the payloads should also contain some details that</span>
-	<span class="doccomment">/// allow the light client to verify next validator set. The protocol does not enforce any</span>
-	<span class="doccomment">/// particular format of this data, nor how often it should be present in commitments, however</span>
-	<span class="doccomment">/// the light client has to be provided with full validator set whenever it performs the</span>
-	<span class="doccomment">/// transition (i.e. importing first block with</span>
-	<span class="doccomment">/// [validator_set_id](Commitment::validator_set_id) incremented).</span>
-	<span class="kw">pub</span> <span class="ident">payload</span>: <span class="ident">Payload</span>,
+<span class="doccomment">/// A commitment signed by GRANDPA validators as part of BEEFY protocol.
+///
+/// The commitment contains a [payload](Commitment::payload) extracted from the finalized block at
+/// height [block_number](Commitment::block_number).
+/// GRANDPA validators collect signatures on commitments and a stream of such signed commitments
+/// (see [SignedCommitment]) forms the BEEFY protocol.
+</span><span class="attribute">#[derive(Clone, Debug, PartialEq, Eq, Encode, Decode, TypeInfo)]
+</span><span class="kw">pub struct </span>Commitment&lt;TBlockNumber&gt; {
+	<span class="doccomment">///  A collection of payloads to be signed, see [`Payload`] for details.
+	///
+	/// One of the payloads should be some form of cumulative representation of the chain (think
+	/// MMR root hash). Additionally one of the payloads should also contain some details that
+	/// allow the light client to verify next validator set. The protocol does not enforce any
+	/// particular format of this data, nor how often it should be present in commitments, however
+	/// the light client has to be provided with full validator set whenever it performs the
+	/// transition (i.e. importing first block with
+	/// [validator_set_id](Commitment::validator_set_id) incremented).
+	</span><span class="kw">pub </span>payload: Payload,
 
-	<span class="doccomment">/// Finalized block number this commitment is for.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// GRANDPA validators agree on a block they create a commitment for and start collecting</span>
-	<span class="doccomment">/// signatures. This process is called a round.</span>
-	<span class="doccomment">/// There might be multiple rounds in progress (depending on the block choice rule), however</span>
-	<span class="doccomment">/// since the payload is supposed to be cumulative, it is not required to import all</span>
-	<span class="doccomment">/// commitments.</span>
-	<span class="doccomment">/// BEEFY light client is expected to import at least one commitment per epoch,</span>
-	<span class="doccomment">/// but is free to import as many as it requires.</span>
-	<span class="kw">pub</span> <span class="ident">block_number</span>: <span class="ident">TBlockNumber</span>,
+	<span class="doccomment">/// Finalized block number this commitment is for.
+	///
+	/// GRANDPA validators agree on a block they create a commitment for and start collecting
+	/// signatures. This process is called a round.
+	/// There might be multiple rounds in progress (depending on the block choice rule), however
+	/// since the payload is supposed to be cumulative, it is not required to import all
+	/// commitments.
+	/// BEEFY light client is expected to import at least one commitment per epoch,
+	/// but is free to import as many as it requires.
+	</span><span class="kw">pub </span>block_number: TBlockNumber,
 
-	<span class="doccomment">/// BEEFY validator set supposed to sign this commitment.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Validator set is changing once per epoch. The Light Client must be provided by details</span>
-	<span class="doccomment">/// about the validator set whenever it&#39;s importing first commitment with a new</span>
-	<span class="doccomment">/// `validator_set_id`. Validator set data MUST be verifiable, for instance using</span>
-	<span class="doccomment">/// [payload](Commitment::payload) information.</span>
-	<span class="kw">pub</span> <span class="ident">validator_set_id</span>: <span class="ident">ValidatorSetId</span>,
+	<span class="doccomment">/// BEEFY validator set supposed to sign this commitment.
+	///
+	/// Validator set is changing once per epoch. The Light Client must be provided by details
+	/// about the validator set whenever it&#39;s importing first commitment with a new
+	/// `validator_set_id`. Validator set data MUST be verifiable, for instance using
+	/// [payload](Commitment::payload) information.
+	</span><span class="kw">pub </span>validator_set_id: ValidatorSetId,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span> <span class="ident">cmp::PartialOrd</span> <span class="kw">for</span> <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">TBlockNumber</span>: <span class="ident">cmp::Ord</span>,
+<span class="kw">impl</span>&lt;TBlockNumber&gt; cmp::PartialOrd <span class="kw">for </span>Commitment&lt;TBlockNumber&gt;
+<span class="kw">where
+	</span>TBlockNumber: cmp::Ord,
 {
-	<span class="kw">fn</span> <span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">cmp::Ordering</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">cmp</span>(<span class="ident">other</span>))
+	<span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;cmp::Ordering&gt; {
+		<span class="prelude-val">Some</span>(<span class="self">self</span>.cmp(other))
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span> <span class="ident">cmp::Ord</span> <span class="kw">for</span> <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">TBlockNumber</span>: <span class="ident">cmp::Ord</span>,
+<span class="kw">impl</span>&lt;TBlockNumber&gt; cmp::Ord <span class="kw">for </span>Commitment&lt;TBlockNumber&gt;
+<span class="kw">where
+	</span>TBlockNumber: cmp::Ord,
 {
-	<span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="ident">cmp::Ordering</span> {
-		<span class="self">self</span>.<span class="ident">validator_set_id</span>
-			.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">validator_set_id</span>)
-			.<span class="ident">then_with</span>(<span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">block_number</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">block_number</span>))
+	<span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; cmp::Ordering {
+		<span class="self">self</span>.validator_set_id
+			.cmp(<span class="kw-2">&amp;</span>other.validator_set_id)
+			.then_with(|| <span class="self">self</span>.block_number.cmp(<span class="kw-2">&amp;</span>other.block_number))
 	}
 }
 
-<span class="doccomment">/// A commitment with matching GRANDPA validators&#39; signatures.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Note that SCALE-encoding of the structure is optimized for size efficiency over the wire,</span>
-<span class="doccomment">/// please take a look at custom [`Encode`] and [`Decode`] implementations and</span>
-<span class="doccomment">/// `CompactSignedCommitment` struct.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">TypeInfo</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The commitment signatures are collected for.</span>
-	<span class="kw">pub</span> <span class="ident">commitment</span>: <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// GRANDPA validators&#39; signatures for the commitment.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The length of this `Vec` must match number of validators in the current set (see</span>
-	<span class="doccomment">/// [Commitment::validator_set_id]).</span>
-	<span class="kw">pub</span> <span class="ident">signatures</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TSignature</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A commitment with matching GRANDPA validators&#39; signatures.
+///
+/// Note that SCALE-encoding of the structure is optimized for size efficiency over the wire,
+/// please take a look at custom [`Encode`] and [`Decode`] implementations and
+/// `CompactSignedCommitment` struct.
+</span><span class="attribute">#[derive(Clone, Debug, PartialEq, Eq, TypeInfo)]
+</span><span class="kw">pub struct </span>SignedCommitment&lt;TBlockNumber, TSignature&gt; {
+	<span class="doccomment">/// The commitment signatures are collected for.
+	</span><span class="kw">pub </span>commitment: Commitment&lt;TBlockNumber&gt;,
+	<span class="doccomment">/// GRANDPA validators&#39; signatures for the commitment.
+	///
+	/// The length of this `Vec` must match number of validators in the current set (see
+	/// [Commitment::validator_set_id]).
+	</span><span class="kw">pub </span>signatures: Vec&lt;<span class="prelude-ty">Option</span>&lt;TSignature&gt;&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span> <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Return the number of collected signatures.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">no_of_signatures</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">usize</span> {
-		<span class="self">self</span>.<span class="ident">signatures</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">is_some</span>()).<span class="ident">count</span>()
+<span class="kw">impl</span>&lt;TBlockNumber, TSignature&gt; SignedCommitment&lt;TBlockNumber, TSignature&gt; {
+	<span class="doccomment">/// Return the number of collected signatures.
+	</span><span class="kw">pub fn </span>no_of_signatures(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+		<span class="self">self</span>.signatures.iter().filter(|x| x.is_some()).count()
 	}
 }
 
-<span class="doccomment">/// Type to be used to denote placement of signatures</span>
-<span class="kw">type</span> <span class="ident">BitField</span> <span class="op">=</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
-<span class="doccomment">/// Compress 8 bit values into a single u8 Byte</span>
-<span class="kw">const</span> <span class="ident">CONTAINER_BIT_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">8</span>;
+<span class="doccomment">/// Type to be used to denote placement of signatures
+</span><span class="kw">type </span>BitField = Vec&lt;u8&gt;;
+<span class="doccomment">/// Compress 8 bit values into a single u8 Byte
+</span><span class="kw">const </span>CONTAINER_BIT_SIZE: usize = <span class="number">8</span>;
 
-<span class="doccomment">/// Compressed representation of [`SignedCommitment`], used for encoding efficiency.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Encode</span>, <span class="ident">Decode</span>)]</span>
-<span class="kw">struct</span> <span class="ident">CompactSignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The commitment, unchanged compared to regular [`SignedCommitment`].</span>
-	<span class="ident">commitment</span>: <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// A bitfield representing presence of a signature coming from a validator at some index.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The bit at index `0` is set to `1` in case we have a signature coming from a validator at</span>
-	<span class="doccomment">/// index `0` in in the original validator set. In case the [`SignedCommitment`] does not</span>
-	<span class="doccomment">/// contain that signature the `bit` will be set to `0`. Bits are packed into `Vec&lt;u8&gt;`</span>
-	<span class="ident">signatures_from</span>: <span class="ident">BitField</span>,
-	<span class="doccomment">/// Number of validators in the Validator Set and hence number of significant bits in the</span>
-	<span class="doccomment">/// [`signatures_from`] collection.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Note this might be smaller than the size of `signatures_compact` in case some signatures</span>
-	<span class="doccomment">/// are missing.</span>
-	<span class="ident">validator_set_len</span>: <span class="ident">u32</span>,
-	<span class="doccomment">/// A `Vec` containing all `Signature`s present in the original [`SignedCommitment`].</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Note that in order to associate a `Signature` from this `Vec` with a validator, one needs</span>
-	<span class="doccomment">/// to look at the `signatures_from` bitfield, since some validators might have not produced a</span>
-	<span class="doccomment">/// signature.</span>
-	<span class="ident">signatures_compact</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TSignature</span><span class="op">&gt;</span>,
+<span class="doccomment">/// Compressed representation of [`SignedCommitment`], used for encoding efficiency.
+</span><span class="attribute">#[derive(Clone, Debug, PartialEq, Eq, Encode, Decode)]
+</span><span class="kw">struct </span>CompactSignedCommitment&lt;TBlockNumber, TSignature&gt; {
+	<span class="doccomment">/// The commitment, unchanged compared to regular [`SignedCommitment`].
+	</span>commitment: Commitment&lt;TBlockNumber&gt;,
+	<span class="doccomment">/// A bitfield representing presence of a signature coming from a validator at some index.
+	///
+	/// The bit at index `0` is set to `1` in case we have a signature coming from a validator at
+	/// index `0` in in the original validator set. In case the [`SignedCommitment`] does not
+	/// contain that signature the `bit` will be set to `0`. Bits are packed into `Vec&lt;u8&gt;`
+	</span>signatures_from: BitField,
+	<span class="doccomment">/// Number of validators in the Validator Set and hence number of significant bits in the
+	/// [`signatures_from`] collection.
+	///
+	/// Note this might be smaller than the size of `signatures_compact` in case some signatures
+	/// are missing.
+	</span>validator_set_len: u32,
+	<span class="doccomment">/// A `Vec` containing all `Signature`s present in the original [`SignedCommitment`].
+	///
+	/// Note that in order to associate a `Signature` from this `Vec` with a validator, one needs
+	/// to look at the `signatures_from` bitfield, since some validators might have not produced a
+	/// signature.
+	</span>signatures_compact: Vec&lt;TSignature&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">TBlockNumber</span>: <span class="ident">Clone</span>, <span class="ident">TSignature</span><span class="op">&gt;</span> <span class="ident">CompactSignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">TSignature</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Packs a `SignedCommitment` into the compressed `CompactSignedCommitment` format for</span>
-	<span class="doccomment">/// efficient network transport.</span>
-	<span class="kw">fn</span> <span class="ident">pack</span>(<span class="ident">signed_commitment</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">SignedCommitment</span> { <span class="ident">commitment</span>, <span class="ident">signatures</span> } <span class="op">=</span> <span class="ident">signed_commitment</span>;
-		<span class="kw">let</span> <span class="ident">validator_set_len</span> <span class="op">=</span> <span class="ident">signatures</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, TBlockNumber: Clone, TSignature&gt; CompactSignedCommitment&lt;TBlockNumber, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TSignature&gt; {
+	<span class="doccomment">/// Packs a `SignedCommitment` into the compressed `CompactSignedCommitment` format for
+	/// efficient network transport.
+	</span><span class="kw">fn </span>pack(signed_commitment: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SignedCommitment&lt;TBlockNumber, TSignature&gt;) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>SignedCommitment { commitment, signatures } = signed_commitment;
+		<span class="kw">let </span>validator_set_len = signatures.len() <span class="kw">as </span>u32;
 
-		<span class="kw">let</span> <span class="ident">signatures_compact</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">TSignature</span><span class="op">&gt;</span> <span class="op">=</span>
-			<span class="ident">signatures</span>.<span class="ident">iter</span>().<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">as_ref</span>()).<span class="ident">collect</span>();
-		<span class="kw">let</span> <span class="ident">bits</span> <span class="op">=</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bits</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span>
-				<span class="ident">signatures</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">x</span>.<span class="ident">is_some</span>() { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> }).<span class="ident">collect</span>();
-			<span class="comment">// Resize with excess bits for placement purposes</span>
-			<span class="kw">let</span> <span class="ident">excess_bits_len</span> <span class="op">=</span>
-				<span class="ident">CONTAINER_BIT_SIZE</span> <span class="op">-</span> (<span class="ident">validator_set_len</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">%</span> <span class="ident">CONTAINER_BIT_SIZE</span>);
-			<span class="ident">bits</span>.<span class="ident">resize</span>(<span class="ident">bits</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="ident">excess_bits_len</span>, <span class="number">0</span>);
-			<span class="ident">bits</span>
+		<span class="kw">let </span>signatures_compact: Vec&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>TSignature&gt; =
+			signatures.iter().filter_map(|x| x.as_ref()).collect();
+		<span class="kw">let </span>bits = {
+			<span class="kw">let </span><span class="kw-2">mut </span>bits: Vec&lt;u8&gt; =
+				signatures.iter().map(|x| <span class="kw">if </span>x.is_some() { <span class="number">1 </span>} <span class="kw">else </span>{ <span class="number">0 </span>}).collect();
+			<span class="comment">// Resize with excess bits for placement purposes
+			</span><span class="kw">let </span>excess_bits_len =
+				CONTAINER_BIT_SIZE - (validator_set_len <span class="kw">as </span>usize % CONTAINER_BIT_SIZE);
+			bits.resize(bits.len() + excess_bits_len, <span class="number">0</span>);
+			bits
 		};
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">signatures_from</span>: <span class="ident">BitField</span> <span class="op">=</span> <span class="macro">vec!</span>[];
-		<span class="kw">let</span> <span class="ident">chunks</span> <span class="op">=</span> <span class="ident">bits</span>.<span class="ident">chunks</span>(<span class="ident">CONTAINER_BIT_SIZE</span>);
-		<span class="kw">for</span> <span class="ident">chunk</span> <span class="kw">in</span> <span class="ident">chunks</span> {
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">chunk</span>.<span class="ident">iter</span>().<span class="ident">copied</span>();
-			<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>() <span class="kw">as</span> <span class="ident">u8</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>signatures_from: BitField = <span class="macro">vec!</span>[];
+		<span class="kw">let </span>chunks = bits.chunks(CONTAINER_BIT_SIZE);
+		<span class="kw">for </span>chunk <span class="kw">in </span>chunks {
+			<span class="kw">let </span><span class="kw-2">mut </span>iter = chunk.iter().copied();
+			<span class="kw">let </span><span class="kw-2">mut </span>v = iter.next().unwrap() <span class="kw">as </span>u8;
 
-			<span class="kw">for</span> <span class="ident">bit</span> <span class="kw">in</span> <span class="ident">iter</span> {
-				<span class="ident">v</span> <span class="op">&lt;</span><span class="op">&lt;</span><span class="op">=</span> <span class="number">1</span>;
-				<span class="ident">v</span> <span class="op">|</span><span class="op">=</span> <span class="ident">bit</span> <span class="kw">as</span> <span class="ident">u8</span>;
+			<span class="kw">for </span>bit <span class="kw">in </span>iter {
+				v &lt;&lt;= <span class="number">1</span>;
+				v |= bit <span class="kw">as </span>u8;
 			}
 
-			<span class="ident">signatures_from</span>.<span class="ident">push</span>(<span class="ident">v</span>);
+			signatures_from.push(v);
 		}
 
-		<span class="self">Self</span> {
-			<span class="ident">commitment</span>: <span class="ident">commitment</span>.<span class="ident">clone</span>(),
-			<span class="ident">signatures_from</span>,
-			<span class="ident">validator_set_len</span>,
-			<span class="ident">signatures_compact</span>,
+		<span class="self">Self </span>{
+			commitment: commitment.clone(),
+			signatures_from,
+			validator_set_len,
+			signatures_compact,
 		}
 	}
 
-	<span class="doccomment">/// Unpacks a `CompactSignedCommitment` into the uncompressed `SignedCommitment` form.</span>
-	<span class="kw">fn</span> <span class="ident">unpack</span>(
-		<span class="ident">temporary_signatures</span>: <span class="ident">CompactSignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span>,
-	) -&gt; <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">CompactSignedCommitment</span> {
-			<span class="ident">commitment</span>,
-			<span class="ident">signatures_from</span>,
-			<span class="ident">validator_set_len</span>,
-			<span class="ident">signatures_compact</span>,
-		} <span class="op">=</span> <span class="ident">temporary_signatures</span>;
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bits</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec!</span>[];
+	<span class="doccomment">/// Unpacks a `CompactSignedCommitment` into the uncompressed `SignedCommitment` form.
+	</span><span class="kw">fn </span>unpack(
+		temporary_signatures: CompactSignedCommitment&lt;TBlockNumber, TSignature&gt;,
+	) -&gt; SignedCommitment&lt;TBlockNumber, TSignature&gt; {
+		<span class="kw">let </span>CompactSignedCommitment {
+			commitment,
+			signatures_from,
+			validator_set_len,
+			signatures_compact,
+		} = temporary_signatures;
+		<span class="kw">let </span><span class="kw-2">mut </span>bits: Vec&lt;u8&gt; = <span class="macro">vec!</span>[];
 
-		<span class="kw">for</span> <span class="ident">block</span> <span class="kw">in</span> <span class="ident">signatures_from</span> {
-			<span class="kw">for</span> <span class="ident">bit</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">CONTAINER_BIT_SIZE</span> {
-				<span class="ident">bits</span>.<span class="ident">push</span>((<span class="ident">block</span> <span class="op">&gt;</span><span class="op">&gt;</span> (<span class="ident">CONTAINER_BIT_SIZE</span> <span class="op">-</span> <span class="ident">bit</span> <span class="op">-</span> <span class="number">1</span>)) <span class="op">&amp;</span> <span class="number">1</span>);
+		<span class="kw">for </span>block <span class="kw">in </span>signatures_from {
+			<span class="kw">for </span>bit <span class="kw">in </span><span class="number">0</span>..CONTAINER_BIT_SIZE {
+				bits.push((block &gt;&gt; (CONTAINER_BIT_SIZE - bit - <span class="number">1</span>)) &amp; <span class="number">1</span>);
 			}
 		}
 
-		<span class="ident">bits</span>.<span class="ident">truncate</span>(<span class="ident">validator_set_len</span> <span class="kw">as</span> <span class="ident">usize</span>);
+		bits.truncate(validator_set_len <span class="kw">as </span>usize);
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">next_signature</span> <span class="op">=</span> <span class="ident">signatures_compact</span>.<span class="ident">into_iter</span>();
-		<span class="kw">let</span> <span class="ident">signatures</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TSignature</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">bits</span>
-			.<span class="ident">iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">x</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">==</span> <span class="number">1</span> { <span class="ident">next_signature</span>.<span class="ident">next</span>() } <span class="kw">else</span> { <span class="prelude-val">None</span> })
-			.<span class="ident">collect</span>();
+		<span class="kw">let </span><span class="kw-2">mut </span>next_signature = signatures_compact.into_iter();
+		<span class="kw">let </span>signatures: Vec&lt;<span class="prelude-ty">Option</span>&lt;TSignature&gt;&gt; = bits
+			.iter()
+			.map(|<span class="kw-2">&amp;</span>x| <span class="kw">if </span>x == <span class="number">1 </span>{ next_signature.next() } <span class="kw">else </span>{ <span class="prelude-val">None </span>})
+			.collect();
 
-		<span class="ident">SignedCommitment</span> { <span class="ident">commitment</span>, <span class="ident">signatures</span> }
+		SignedCommitment { commitment, signatures }
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span> <span class="ident">Encode</span> <span class="kw">for</span> <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">TBlockNumber</span>: <span class="ident">Encode</span> <span class="op">+</span> <span class="ident">Clone</span>,
-	<span class="ident">TSignature</span>: <span class="ident">Encode</span>,
+<span class="kw">impl</span>&lt;TBlockNumber, TSignature&gt; Encode <span class="kw">for </span>SignedCommitment&lt;TBlockNumber, TSignature&gt;
+<span class="kw">where
+	</span>TBlockNumber: Encode + Clone,
+	TSignature: Encode,
 {
-	<span class="kw">fn</span> <span class="ident">using_encoded</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">R</span> {
-		<span class="kw">let</span> <span class="ident">temp</span> <span class="op">=</span> <span class="ident">CompactSignedCommitment::pack</span>(<span class="self">self</span>);
-		<span class="ident">temp</span>.<span class="ident">using_encoded</span>(<span class="ident">f</span>)
+	<span class="kw">fn </span>using_encoded&lt;R, F: FnOnce(<span class="kw-2">&amp;</span>[u8]) -&gt; R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, f: F) -&gt; R {
+		<span class="kw">let </span>temp = CompactSignedCommitment::pack(<span class="self">self</span>);
+		temp.using_encoded(f)
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span> <span class="ident">Decode</span> <span class="kw">for</span> <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">TBlockNumber</span>, <span class="ident">TSignature</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">TBlockNumber</span>: <span class="ident">Decode</span> <span class="op">+</span> <span class="ident">Clone</span>,
-	<span class="ident">TSignature</span>: <span class="ident">Decode</span>,
+<span class="kw">impl</span>&lt;TBlockNumber, TSignature&gt; Decode <span class="kw">for </span>SignedCommitment&lt;TBlockNumber, TSignature&gt;
+<span class="kw">where
+	</span>TBlockNumber: Decode + Clone,
+	TSignature: Decode,
 {
-	<span class="kw">fn</span> <span class="ident">decode</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Input</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;mut</span> <span class="ident">I</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="kw">let</span> <span class="ident">temp</span> <span class="op">=</span> <span class="ident">CompactSignedCommitment::decode</span>(<span class="ident">input</span>)<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(<span class="ident">CompactSignedCommitment::unpack</span>(<span class="ident">temp</span>))
+	<span class="kw">fn </span>decode&lt;I: Input&gt;(input: <span class="kw-2">&amp;mut </span>I) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Error&gt; {
+		<span class="kw">let </span>temp = CompactSignedCommitment::decode(input)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(CompactSignedCommitment::unpack(temp))
 	}
 }
 
-<span class="doccomment">/// A [SignedCommitment] with a version number.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This variant will be appended to the block justifications for the block</span>
-<span class="doccomment">/// for which the signed commitment has been generated.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Note that this enum is subject to change in the future with introduction</span>
-<span class="doccomment">/// of additional cryptographic primitives to BEEFY.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VersionedFinalityProof</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-	<span class="attribute">#[<span class="ident">codec</span>(<span class="ident">index</span> <span class="op">=</span> <span class="number">1</span>)]</span>
-	<span class="doccomment">/// Current active version</span>
-	<span class="ident">V1</span>(<span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">S</span><span class="op">&gt;</span>),
+<span class="doccomment">/// A [SignedCommitment] with a version number.
+///
+/// This variant will be appended to the block justifications for the block
+/// for which the signed commitment has been generated.
+///
+/// Note that this enum is subject to change in the future with introduction
+/// of additional cryptographic primitives to BEEFY.
+</span><span class="attribute">#[derive(Clone, Debug, PartialEq, codec::Encode, codec::Decode)]
+</span><span class="kw">pub enum </span>VersionedFinalityProof&lt;N, S&gt; {
+	<span class="attribute">#[codec(index = <span class="number">1</span>)]
+	</span><span class="doccomment">/// Current active version
+	</span>V1(SignedCommitment&lt;N, S&gt;),
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">S</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">S</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">VersionedFinalityProof</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">S</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">commitment</span>: <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">N</span>, <span class="ident">S</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-		<span class="ident">VersionedFinalityProof::V1</span>(<span class="ident">commitment</span>)
+<span class="kw">impl</span>&lt;N, S&gt; From&lt;SignedCommitment&lt;N, S&gt;&gt; <span class="kw">for </span>VersionedFinalityProof&lt;N, S&gt; {
+	<span class="kw">fn </span>from(commitment: SignedCommitment&lt;N, S&gt;) -&gt; <span class="self">Self </span>{
+		VersionedFinalityProof::V1(commitment)
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">crypto</span>, <span class="ident">known_payloads</span>, <span class="ident">KEY_TYPE</span>};
-	<span class="kw">use</span> <span class="ident">codec::Decode</span>;
-	<span class="kw">use</span> <span class="ident">sp_core</span>::{<span class="ident">keccak_256</span>, <span class="ident">Pair</span>};
-	<span class="kw">use</span> <span class="ident">sp_keystore</span>::{<span class="ident">testing::KeyStore</span>, <span class="ident">SyncCryptoStore</span>, <span class="ident">SyncCryptoStorePtr</span>};
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use crate</span>::{crypto, known_payloads, KEY_TYPE};
+	<span class="kw">use </span>codec::Decode;
+	<span class="kw">use </span>sp_core::{keccak_256, Pair};
+	<span class="kw">use </span>sp_keystore::{testing::KeyStore, SyncCryptoStore, SyncCryptoStorePtr};
 
-	<span class="kw">type</span> <span class="ident">TestCommitment</span> <span class="op">=</span> <span class="ident">Commitment</span><span class="op">&lt;</span><span class="ident">u128</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">TestSignedCommitment</span> <span class="op">=</span> <span class="ident">SignedCommitment</span><span class="op">&lt;</span><span class="ident">u128</span>, <span class="ident">crypto::Signature</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">TestVersionedFinalityProof</span> <span class="op">=</span> <span class="ident">VersionedFinalityProof</span><span class="op">&lt;</span><span class="ident">u128</span>, <span class="ident">crypto::Signature</span><span class="op">&gt;</span>;
+	<span class="kw">type </span>TestCommitment = Commitment&lt;u128&gt;;
+	<span class="kw">type </span>TestSignedCommitment = SignedCommitment&lt;u128, crypto::Signature&gt;;
+	<span class="kw">type </span>TestVersionedFinalityProof = VersionedFinalityProof&lt;u128, crypto::Signature&gt;;
 
-	<span class="kw">const</span> <span class="ident">LARGE_RAW_COMMITMENT</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="macro">include_bytes!</span>(<span class="string">&quot;../test-res/large-raw-commitment&quot;</span>);
+	<span class="kw">const </span>LARGE_RAW_COMMITMENT: <span class="kw-2">&amp;</span>[u8] = <span class="macro">include_bytes!</span>(<span class="string">&quot;../test-res/large-raw-commitment&quot;</span>);
 
-	<span class="comment">// The mock signatures are equivalent to the ones produced by the BEEFY keystore</span>
-	<span class="kw">fn</span> <span class="ident">mock_signatures</span>() -&gt; (<span class="ident">crypto::Signature</span>, <span class="ident">crypto::Signature</span>) {
-		<span class="kw">let</span> <span class="ident">store</span>: <span class="ident">SyncCryptoStorePtr</span> <span class="op">=</span> <span class="ident">KeyStore::new</span>().<span class="ident">into</span>();
+	<span class="comment">// The mock signatures are equivalent to the ones produced by the BEEFY keystore
+	</span><span class="kw">fn </span>mock_signatures() -&gt; (crypto::Signature, crypto::Signature) {
+		<span class="kw">let </span>store: SyncCryptoStorePtr = KeyStore::new().into();
 
-		<span class="kw">let</span> <span class="ident">alice</span> <span class="op">=</span> <span class="ident">sp_core::ecdsa::Pair::from_string</span>(<span class="string">&quot;//Alice&quot;</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
-		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span>
-			<span class="ident">SyncCryptoStore::insert_unknown</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">store</span>, <span class="ident">KEY_TYPE</span>, <span class="string">&quot;//Alice&quot;</span>, <span class="ident">alice</span>.<span class="ident">public</span>().<span class="ident">as_ref</span>())
-				.<span class="ident">unwrap</span>();
+		<span class="kw">let </span>alice = sp_core::ecdsa::Pair::from_string(<span class="string">&quot;//Alice&quot;</span>, <span class="prelude-val">None</span>).unwrap();
+		<span class="kw">let _ </span>=
+			SyncCryptoStore::insert_unknown(<span class="kw-2">&amp;*</span>store, KEY_TYPE, <span class="string">&quot;//Alice&quot;</span>, alice.public().as_ref())
+				.unwrap();
 
-		<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">keccak_256</span>(<span class="string">b&quot;This is the first message&quot;</span>);
-		<span class="kw">let</span> <span class="ident">sig1</span> <span class="op">=</span> <span class="ident">SyncCryptoStore::ecdsa_sign_prehashed</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">store</span>, <span class="ident">KEY_TYPE</span>, <span class="kw-2">&amp;</span><span class="ident">alice</span>.<span class="ident">public</span>(), <span class="kw-2">&amp;</span><span class="ident">msg</span>)
-			.<span class="ident">unwrap</span>()
-			.<span class="ident">unwrap</span>();
+		<span class="kw">let </span>msg = keccak_256(<span class="string">b&quot;This is the first message&quot;</span>);
+		<span class="kw">let </span>sig1 = SyncCryptoStore::ecdsa_sign_prehashed(<span class="kw-2">&amp;*</span>store, KEY_TYPE, <span class="kw-2">&amp;</span>alice.public(), <span class="kw-2">&amp;</span>msg)
+			.unwrap()
+			.unwrap();
 
-		<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">keccak_256</span>(<span class="string">b&quot;This is the second message&quot;</span>);
-		<span class="kw">let</span> <span class="ident">sig2</span> <span class="op">=</span> <span class="ident">SyncCryptoStore::ecdsa_sign_prehashed</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">store</span>, <span class="ident">KEY_TYPE</span>, <span class="kw-2">&amp;</span><span class="ident">alice</span>.<span class="ident">public</span>(), <span class="kw-2">&amp;</span><span class="ident">msg</span>)
-			.<span class="ident">unwrap</span>()
-			.<span class="ident">unwrap</span>();
+		<span class="kw">let </span>msg = keccak_256(<span class="string">b&quot;This is the second message&quot;</span>);
+		<span class="kw">let </span>sig2 = SyncCryptoStore::ecdsa_sign_prehashed(<span class="kw-2">&amp;*</span>store, KEY_TYPE, <span class="kw-2">&amp;</span>alice.public(), <span class="kw-2">&amp;</span>msg)
+			.unwrap()
+			.unwrap();
 
-		(<span class="ident">sig1</span>.<span class="ident">into</span>(), <span class="ident">sig2</span>.<span class="ident">into</span>())
+		(sig1.into(), sig2.into())
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">commitment_encode_decode</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span>
-			<span class="ident">Payload::from_single_entry</span>(<span class="ident">known_payloads::MMR_ROOT_ID</span>, <span class="string">&quot;Hello World!&quot;</span>.<span class="ident">encode</span>());
-		<span class="kw">let</span> <span class="ident">commitment</span>: <span class="ident">TestCommitment</span> <span class="op">=</span>
-			<span class="ident">Commitment</span> { <span class="ident">payload</span>, <span class="ident">block_number</span>: <span class="number">5</span>, <span class="ident">validator_set_id</span>: <span class="number">0</span> };
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>commitment_encode_decode() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>payload =
+			Payload::from_single_entry(known_payloads::MMR_ROOT_ID, <span class="string">&quot;Hello World!&quot;</span>.encode());
+		<span class="kw">let </span>commitment: TestCommitment =
+			Commitment { payload, block_number: <span class="number">5</span>, validator_set_id: <span class="number">0 </span>};
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">codec::Encode::encode</span>(<span class="kw-2">&amp;</span><span class="ident">commitment</span>);
-		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">TestCommitment::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>);
+		<span class="comment">// when
+		</span><span class="kw">let </span>encoded = codec::Encode::encode(<span class="kw-2">&amp;</span>commitment);
+		<span class="kw">let </span>decoded = TestCommitment::decode(<span class="kw-2">&amp;mut &amp;*</span>encoded);
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>, <span class="prelude-val">Ok</span>(<span class="ident">commitment</span>));
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(decoded, <span class="prelude-val">Ok</span>(commitment));
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">encoded</span>,
-			<span class="ident">array_bytes::hex2bytes_unchecked</span>(
-				<span class="string">&quot;046d68343048656c6c6f20576f726c6421050000000000000000000000000000000000000000000000&quot;</span>
-			)
+			encoded,
+			array_bytes::hex2bytes_unchecked(
+				<span class="string">&quot;046d68343048656c6c6f20576f726c6421050000000000000000000000000000000000000000000000&quot;
+			</span>)
 		);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">signed_commitment_encode_decode</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span>
-			<span class="ident">Payload::from_single_entry</span>(<span class="ident">known_payloads::MMR_ROOT_ID</span>, <span class="string">&quot;Hello World!&quot;</span>.<span class="ident">encode</span>());
-		<span class="kw">let</span> <span class="ident">commitment</span>: <span class="ident">TestCommitment</span> <span class="op">=</span>
-			<span class="ident">Commitment</span> { <span class="ident">payload</span>, <span class="ident">block_number</span>: <span class="number">5</span>, <span class="ident">validator_set_id</span>: <span class="number">0</span> };
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>signed_commitment_encode_decode() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>payload =
+			Payload::from_single_entry(known_payloads::MMR_ROOT_ID, <span class="string">&quot;Hello World!&quot;</span>.encode());
+		<span class="kw">let </span>commitment: TestCommitment =
+			Commitment { payload, block_number: <span class="number">5</span>, validator_set_id: <span class="number">0 </span>};
 
-		<span class="kw">let</span> <span class="ident">sigs</span> <span class="op">=</span> <span class="ident">mock_signatures</span>();
+		<span class="kw">let </span>sigs = mock_signatures();
 
-		<span class="kw">let</span> <span class="ident">signed</span> <span class="op">=</span> <span class="ident">SignedCommitment</span> {
-			<span class="ident">commitment</span>,
-			<span class="ident">signatures</span>: <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">sigs</span>.<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="ident">sigs</span>.<span class="number">1</span>)],
+		<span class="kw">let </span>signed = SignedCommitment {
+			commitment,
+			signatures: <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(sigs.<span class="number">0</span>), <span class="prelude-val">Some</span>(sigs.<span class="number">1</span>)],
 		};
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">codec::Encode::encode</span>(<span class="kw-2">&amp;</span><span class="ident">signed</span>);
-		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">TestSignedCommitment::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>);
+		<span class="comment">// when
+		</span><span class="kw">let </span>encoded = codec::Encode::encode(<span class="kw-2">&amp;</span>signed);
+		<span class="kw">let </span>decoded = TestSignedCommitment::decode(<span class="kw-2">&amp;mut &amp;*</span>encoded);
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>, <span class="prelude-val">Ok</span>(<span class="ident">signed</span>));
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(decoded, <span class="prelude-val">Ok</span>(signed));
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">encoded</span>,
-			<span class="ident">array_bytes::hex2bytes_unchecked</span>(
+			encoded,
+			array_bytes::hex2bytes_unchecked(
 				<span class="string">&quot;\
 				046d68343048656c6c6f20576f726c64210500000000000000000000000000000000000000000000000\
 				4300400000008558455ad81279df0795cc985580e4fb75d72d948d1107b2ac80a09abed4da8480c746c\
 				c321f2319a5e99a830e314d10dd3cd68ce3dc0c33c86e99bcb7816f9ba012d6e1f8105c337a86cdd9aa\
 				acdc496577f3db8c55ef9e6fd48f2c5c05a2274707491635d8ba3df64f324575b7b2a34487bca2324b6\
 				a0046395a71681be3d0c2a00\
-			&quot;</span>
-			)
+			&quot;
+			</span>)
 		);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">signed_commitment_count_signatures</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span>
-			<span class="ident">Payload::from_single_entry</span>(<span class="ident">known_payloads::MMR_ROOT_ID</span>, <span class="string">&quot;Hello World!&quot;</span>.<span class="ident">encode</span>());
-		<span class="kw">let</span> <span class="ident">commitment</span>: <span class="ident">TestCommitment</span> <span class="op">=</span>
-			<span class="ident">Commitment</span> { <span class="ident">payload</span>, <span class="ident">block_number</span>: <span class="number">5</span>, <span class="ident">validator_set_id</span>: <span class="number">0</span> };
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>signed_commitment_count_signatures() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>payload =
+			Payload::from_single_entry(known_payloads::MMR_ROOT_ID, <span class="string">&quot;Hello World!&quot;</span>.encode());
+		<span class="kw">let </span>commitment: TestCommitment =
+			Commitment { payload, block_number: <span class="number">5</span>, validator_set_id: <span class="number">0 </span>};
 
-		<span class="kw">let</span> <span class="ident">sigs</span> <span class="op">=</span> <span class="ident">mock_signatures</span>();
+		<span class="kw">let </span>sigs = mock_signatures();
 
-		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">signed</span> <span class="op">=</span> <span class="ident">SignedCommitment</span> {
-			<span class="ident">commitment</span>,
-			<span class="ident">signatures</span>: <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">sigs</span>.<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="ident">sigs</span>.<span class="number">1</span>)],
+		<span class="kw">let </span><span class="kw-2">mut </span>signed = SignedCommitment {
+			commitment,
+			signatures: <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(sigs.<span class="number">0</span>), <span class="prelude-val">Some</span>(sigs.<span class="number">1</span>)],
 		};
-		<span class="macro">assert_eq!</span>(<span class="ident">signed</span>.<span class="ident">no_of_signatures</span>(), <span class="number">2</span>);
+		<span class="macro">assert_eq!</span>(signed.no_of_signatures(), <span class="number">2</span>);
 
-		<span class="comment">// when</span>
-		<span class="ident">signed</span>.<span class="ident">signatures</span>[<span class="number">2</span>] <span class="op">=</span> <span class="prelude-val">None</span>;
+		<span class="comment">// when
+		</span>signed.signatures[<span class="number">2</span>] = <span class="prelude-val">None</span>;
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">signed</span>.<span class="ident">no_of_signatures</span>(), <span class="number">1</span>);
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(signed.no_of_signatures(), <span class="number">1</span>);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">commitment_ordering</span>() {
-		<span class="kw">fn</span> <span class="ident">commitment</span>(
-			<span class="ident">block_number</span>: <span class="ident">u128</span>,
-			<span class="ident">validator_set_id</span>: <span class="ident"><span class="kw">crate</span>::ValidatorSetId</span>,
-		) -&gt; <span class="ident">TestCommitment</span> {
-			<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span>
-				<span class="ident">Payload::from_single_entry</span>(<span class="ident">known_payloads::MMR_ROOT_ID</span>, <span class="string">&quot;Hello World!&quot;</span>.<span class="ident">encode</span>());
-			<span class="ident">Commitment</span> { <span class="ident">payload</span>, <span class="ident">block_number</span>, <span class="ident">validator_set_id</span> }
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>commitment_ordering() {
+		<span class="kw">fn </span>commitment(
+			block_number: u128,
+			validator_set_id: <span class="kw">crate</span>::ValidatorSetId,
+		) -&gt; TestCommitment {
+			<span class="kw">let </span>payload =
+				Payload::from_single_entry(known_payloads::MMR_ROOT_ID, <span class="string">&quot;Hello World!&quot;</span>.encode());
+			Commitment { payload, block_number, validator_set_id }
 		}
 
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">commitment</span>(<span class="number">1</span>, <span class="number">0</span>);
-		<span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">commitment</span>(<span class="number">2</span>, <span class="number">1</span>);
-		<span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">commitment</span>(<span class="number">10</span>, <span class="number">0</span>);
-		<span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">commitment</span>(<span class="number">10</span>, <span class="number">1</span>);
+		<span class="comment">// given
+		</span><span class="kw">let </span>a = commitment(<span class="number">1</span>, <span class="number">0</span>);
+		<span class="kw">let </span>b = commitment(<span class="number">2</span>, <span class="number">1</span>);
+		<span class="kw">let </span>c = commitment(<span class="number">10</span>, <span class="number">0</span>);
+		<span class="kw">let </span>d = commitment(<span class="number">10</span>, <span class="number">1</span>);
 
-		<span class="comment">// then</span>
-		<span class="macro">assert!</span>(<span class="ident">a</span> <span class="op">&lt;</span> <span class="ident">b</span>);
-		<span class="macro">assert!</span>(<span class="ident">a</span> <span class="op">&lt;</span> <span class="ident">c</span>);
-		<span class="macro">assert!</span>(<span class="ident">c</span> <span class="op">&lt;</span> <span class="ident">b</span>);
-		<span class="macro">assert!</span>(<span class="ident">c</span> <span class="op">&lt;</span> <span class="ident">d</span>);
-		<span class="macro">assert!</span>(<span class="ident">b</span> <span class="op">&lt;</span> <span class="ident">d</span>);
+		<span class="comment">// then
+		</span><span class="macro">assert!</span>(a &lt; b);
+		<span class="macro">assert!</span>(a &lt; c);
+		<span class="macro">assert!</span>(c &lt; b);
+		<span class="macro">assert!</span>(c &lt; d);
+		<span class="macro">assert!</span>(b &lt; d);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">versioned_commitment_encode_decode</span>() {
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span>
-			<span class="ident">Payload::from_single_entry</span>(<span class="ident">known_payloads::MMR_ROOT_ID</span>, <span class="string">&quot;Hello World!&quot;</span>.<span class="ident">encode</span>());
-		<span class="kw">let</span> <span class="ident">commitment</span>: <span class="ident">TestCommitment</span> <span class="op">=</span>
-			<span class="ident">Commitment</span> { <span class="ident">payload</span>, <span class="ident">block_number</span>: <span class="number">5</span>, <span class="ident">validator_set_id</span>: <span class="number">0</span> };
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>versioned_commitment_encode_decode() {
+		<span class="kw">let </span>payload =
+			Payload::from_single_entry(known_payloads::MMR_ROOT_ID, <span class="string">&quot;Hello World!&quot;</span>.encode());
+		<span class="kw">let </span>commitment: TestCommitment =
+			Commitment { payload, block_number: <span class="number">5</span>, validator_set_id: <span class="number">0 </span>};
 
-		<span class="kw">let</span> <span class="ident">sigs</span> <span class="op">=</span> <span class="ident">mock_signatures</span>();
+		<span class="kw">let </span>sigs = mock_signatures();
 
-		<span class="kw">let</span> <span class="ident">signed</span> <span class="op">=</span> <span class="ident">SignedCommitment</span> {
-			<span class="ident">commitment</span>,
-			<span class="ident">signatures</span>: <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">sigs</span>.<span class="number">0</span>), <span class="prelude-val">Some</span>(<span class="ident">sigs</span>.<span class="number">1</span>)],
+		<span class="kw">let </span>signed = SignedCommitment {
+			commitment,
+			signatures: <span class="macro">vec!</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(sigs.<span class="number">0</span>), <span class="prelude-val">Some</span>(sigs.<span class="number">1</span>)],
 		};
 
-		<span class="kw">let</span> <span class="ident">versioned</span> <span class="op">=</span> <span class="ident">TestVersionedFinalityProof::V1</span>(<span class="ident">signed</span>.<span class="ident">clone</span>());
+		<span class="kw">let </span>versioned = TestVersionedFinalityProof::V1(signed.clone());
 
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">codec::Encode::encode</span>(<span class="kw-2">&amp;</span><span class="ident">versioned</span>);
+		<span class="kw">let </span>encoded = codec::Encode::encode(<span class="kw-2">&amp;</span>versioned);
 
-		<span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">encoded</span>[<span class="number">0</span>]);
-		<span class="macro">assert_eq!</span>(<span class="ident">encoded</span>[<span class="number">1</span>..], <span class="ident">codec::Encode::encode</span>(<span class="kw-2">&amp;</span><span class="ident">signed</span>));
+		<span class="macro">assert_eq!</span>(<span class="number">1</span>, encoded[<span class="number">0</span>]);
+		<span class="macro">assert_eq!</span>(encoded[<span class="number">1</span>..], codec::Encode::encode(<span class="kw-2">&amp;</span>signed));
 
-		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">TestVersionedFinalityProof::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>);
+		<span class="kw">let </span>decoded = TestVersionedFinalityProof::decode(<span class="kw-2">&amp;mut &amp;*</span>encoded);
 
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>, <span class="prelude-val">Ok</span>(<span class="ident">versioned</span>));
+		<span class="macro">assert_eq!</span>(decoded, <span class="prelude-val">Ok</span>(versioned));
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">large_signed_commitment_encode_decode</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span>
-			<span class="ident">Payload::from_single_entry</span>(<span class="ident">known_payloads::MMR_ROOT_ID</span>, <span class="string">&quot;Hello World!&quot;</span>.<span class="ident">encode</span>());
-		<span class="kw">let</span> <span class="ident">commitment</span>: <span class="ident">TestCommitment</span> <span class="op">=</span>
-			<span class="ident">Commitment</span> { <span class="ident">payload</span>, <span class="ident">block_number</span>: <span class="number">5</span>, <span class="ident">validator_set_id</span>: <span class="number">0</span> };
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>large_signed_commitment_encode_decode() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>payload =
+			Payload::from_single_entry(known_payloads::MMR_ROOT_ID, <span class="string">&quot;Hello World!&quot;</span>.encode());
+		<span class="kw">let </span>commitment: TestCommitment =
+			Commitment { payload, block_number: <span class="number">5</span>, validator_set_id: <span class="number">0 </span>};
 
-		<span class="kw">let</span> <span class="ident">sigs</span> <span class="op">=</span> <span class="ident">mock_signatures</span>();
+		<span class="kw">let </span>sigs = mock_signatures();
 
-		<span class="kw">let</span> <span class="ident">signatures</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">1024</span>)
-			.<span class="ident">into_iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">&lt;</span> <span class="number">340</span> { <span class="prelude-val">None</span> } <span class="kw">else</span> { <span class="prelude-val">Some</span>(<span class="ident">sigs</span>.<span class="number">0</span>.<span class="ident">clone</span>()) })
-			.<span class="ident">collect</span>();
-		<span class="kw">let</span> <span class="ident">signed</span> <span class="op">=</span> <span class="ident">SignedCommitment</span> { <span class="ident">commitment</span>, <span class="ident">signatures</span> };
+		<span class="kw">let </span>signatures: Vec&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw">_</span>&gt;&gt; = (<span class="number">0</span>..<span class="number">1024</span>)
+			.into_iter()
+			.map(|x| <span class="kw">if </span>x &lt; <span class="number">340 </span>{ <span class="prelude-val">None </span>} <span class="kw">else </span>{ <span class="prelude-val">Some</span>(sigs.<span class="number">0</span>.clone()) })
+			.collect();
+		<span class="kw">let </span>signed = SignedCommitment { commitment, signatures };
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">codec::Encode::encode</span>(<span class="kw-2">&amp;</span><span class="ident">signed</span>);
-		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">TestSignedCommitment::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>);
+		<span class="comment">// when
+		</span><span class="kw">let </span>encoded = codec::Encode::encode(<span class="kw-2">&amp;</span>signed);
+		<span class="kw">let </span>decoded = TestSignedCommitment::decode(<span class="kw-2">&amp;mut &amp;*</span>encoded);
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>, <span class="prelude-val">Ok</span>(<span class="ident">signed</span>));
-		<span class="macro">assert_eq!</span>(<span class="ident">encoded</span>, <span class="ident">LARGE_RAW_COMMITMENT</span>);
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(decoded, <span class="prelude-val">Ok</span>(signed));
+		<span class="macro">assert_eq!</span>(encoded, LARGE_RAW_COMMITMENT);
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beefy_primitives" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="beefy_primitives" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

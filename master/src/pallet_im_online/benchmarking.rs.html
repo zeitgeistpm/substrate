@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/im-online/src/benchmarking.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>benchmarking.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pallet_im_online/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../pallet_im_online/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_im_online/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `frame/im-online/src/benchmarking.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>benchmarking.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../pallet_im_online/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pallet_im_online/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -109,111 +103,110 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! I&#39;m Online pallet benchmarking.</span>
+</span><span class="doccomment">//! I&#39;m Online pallet benchmarking.
 
-<span class="attribute">#![<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime-benchmarks&quot;</span>)]</span>
+</span><span class="attribute">#![cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+</span><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-<span class="kw">use</span> <span class="ident">frame_benchmarking::benchmarks</span>;
-<span class="kw">use</span> <span class="ident">frame_support</span>::{<span class="ident">traits::UnfilteredDispatchable</span>, <span class="ident">WeakBoundedVec</span>};
-<span class="kw">use</span> <span class="ident">frame_system::RawOrigin</span>;
-<span class="kw">use</span> <span class="ident">sp_core</span>::{<span class="ident">offchain::OpaqueMultiaddr</span>, <span class="ident">OpaquePeerId</span>};
-<span class="kw">use</span> <span class="ident">sp_runtime</span>::{
-	<span class="ident">traits</span>::{<span class="ident">ValidateUnsigned</span>, <span class="ident">Zero</span>},
-	<span class="ident">transaction_validity::TransactionSource</span>,
+<span class="kw">use </span>frame_benchmarking::benchmarks;
+<span class="kw">use </span>frame_support::{traits::UnfilteredDispatchable, WeakBoundedVec};
+<span class="kw">use </span>frame_system::RawOrigin;
+<span class="kw">use </span>sp_core::{offchain::OpaqueMultiaddr, OpaquePeerId};
+<span class="kw">use </span>sp_runtime::{
+	traits::{ValidateUnsigned, Zero},
+	transaction_validity::TransactionSource,
 };
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Pallet</span> <span class="kw">as</span> <span class="ident">ImOnline</span>;
+<span class="kw">use </span><span class="kw">crate</span>::Pallet <span class="kw">as </span>ImOnline;
 
-<span class="kw">const</span> <span class="ident">MAX_KEYS</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">1000</span>;
-<span class="kw">const</span> <span class="ident">MAX_EXTERNAL_ADDRESSES</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">100</span>;
+<span class="kw">const </span>MAX_KEYS: u32 = <span class="number">1000</span>;
+<span class="kw">const </span>MAX_EXTERNAL_ADDRESSES: u32 = <span class="number">100</span>;
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_heartbeat</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Config</span><span class="op">&gt;</span>(
-	<span class="ident">k</span>: <span class="ident">u32</span>,
-	<span class="ident">e</span>: <span class="ident">u32</span>,
-) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>
-	(<span class="ident"><span class="kw">crate</span>::Heartbeat</span><span class="op">&lt;</span><span class="ident">T::BlockNumber</span><span class="op">&gt;</span>, <span class="op">&lt;</span><span class="ident">T::AuthorityId</span> <span class="kw">as</span> <span class="ident">RuntimeAppPublic</span><span class="op">&gt;</span><span class="ident">::Signature</span>),
-	<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
-<span class="op">&gt;</span> {
-	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">keys</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-	<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">k</span> {
-		<span class="ident">keys</span>.<span class="ident">push</span>(<span class="ident">T::AuthorityId::generate_pair</span>(<span class="prelude-val">None</span>));
+<span class="kw">pub fn </span>create_heartbeat&lt;T: Config&gt;(
+	k: u32,
+	e: u32,
+) -&gt; <span class="prelude-ty">Result</span>&lt;
+	(<span class="kw">crate</span>::Heartbeat&lt;T::BlockNumber&gt;, &lt;T::AuthorityId <span class="kw">as </span>RuntimeAppPublic&gt;::Signature),
+	<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
+&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>keys = Vec::new();
+	<span class="kw">for _ in </span><span class="number">0</span>..k {
+		keys.push(T::AuthorityId::generate_pair(<span class="prelude-val">None</span>));
 	}
-	<span class="kw">let</span> <span class="ident">bounded_keys</span> <span class="op">=</span> <span class="ident">WeakBoundedVec</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">T::MaxKeys</span><span class="op">&gt;</span><span class="ident">::try_from</span>(<span class="ident">keys</span>.<span class="ident">clone</span>())
-		.<span class="ident">map_err</span>(<span class="op">|</span>()<span class="op">|</span> <span class="string">&quot;More than the maximum number of keys provided&quot;</span>)<span class="question-mark">?</span>;
-	<span class="ident">Keys</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::put</span>(<span class="ident">bounded_keys</span>);
+	<span class="kw">let </span>bounded_keys = WeakBoundedVec::&lt;<span class="kw">_</span>, T::MaxKeys&gt;::try_from(keys.clone())
+		.map_err(|()| <span class="string">&quot;More than the maximum number of keys provided&quot;</span>)<span class="question-mark">?</span>;
+	Keys::&lt;T&gt;::put(bounded_keys);
 
-	<span class="kw">let</span> <span class="ident">network_state</span> <span class="op">=</span> <span class="ident">OpaqueNetworkState</span> {
-		<span class="ident">peer_id</span>: <span class="ident">OpaquePeerId::default</span>(),
-		<span class="ident">external_addresses</span>: <span class="macro">vec!</span>[<span class="ident">OpaqueMultiaddr::new</span>(<span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">32</span>]); <span class="ident">e</span> <span class="kw">as</span> <span class="ident">usize</span>],
+	<span class="kw">let </span>network_state = OpaqueNetworkState {
+		peer_id: OpaquePeerId::default(),
+		external_addresses: <span class="macro">vec!</span>[OpaqueMultiaddr::new(<span class="macro">vec!</span>[<span class="number">0</span>; <span class="number">32</span>]); e <span class="kw">as </span>usize],
 	};
-	<span class="kw">let</span> <span class="ident">input_heartbeat</span> <span class="op">=</span> <span class="ident">Heartbeat</span> {
-		<span class="ident">block_number</span>: <span class="ident">T::BlockNumber::zero</span>(),
-		<span class="ident">network_state</span>,
-		<span class="ident">session_index</span>: <span class="number">0</span>,
-		<span class="ident">authority_index</span>: <span class="ident">k</span> <span class="op">-</span> <span class="number">1</span>,
-		<span class="ident">validators_len</span>: <span class="ident">keys</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>,
+	<span class="kw">let </span>input_heartbeat = Heartbeat {
+		block_number: T::BlockNumber::zero(),
+		network_state,
+		session_index: <span class="number">0</span>,
+		authority_index: k - <span class="number">1</span>,
+		validators_len: keys.len() <span class="kw">as </span>u32,
 	};
 
-	<span class="kw">let</span> <span class="ident">encoded_heartbeat</span> <span class="op">=</span> <span class="ident">input_heartbeat</span>.<span class="ident">encode</span>();
-	<span class="kw">let</span> <span class="ident">authority_id</span> <span class="op">=</span> <span class="ident">keys</span>.<span class="ident">get</span>((<span class="ident">k</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">ok_or</span>(<span class="string">&quot;out of range&quot;</span>)<span class="question-mark">?</span>;
-	<span class="kw">let</span> <span class="ident">signature</span> <span class="op">=</span> <span class="ident">authority_id</span>.<span class="ident">sign</span>(<span class="kw-2">&amp;</span><span class="ident">encoded_heartbeat</span>).<span class="ident">ok_or</span>(<span class="string">&quot;couldn&#39;t make signature&quot;</span>)<span class="question-mark">?</span>;
+	<span class="kw">let </span>encoded_heartbeat = input_heartbeat.encode();
+	<span class="kw">let </span>authority_id = keys.get((k - <span class="number">1</span>) <span class="kw">as </span>usize).ok_or(<span class="string">&quot;out of range&quot;</span>)<span class="question-mark">?</span>;
+	<span class="kw">let </span>signature = authority_id.sign(<span class="kw-2">&amp;</span>encoded_heartbeat).ok_or(<span class="string">&quot;couldn&#39;t make signature&quot;</span>)<span class="question-mark">?</span>;
 
-	<span class="prelude-val">Ok</span>((<span class="ident">input_heartbeat</span>, <span class="ident">signature</span>))
+	<span class="prelude-val">Ok</span>((input_heartbeat, signature))
 }
 
-<span class="macro">benchmarks!</span> {
-	<span class="attribute">#[<span class="ident">extra</span>]</span>
-	<span class="ident">heartbeat</span> {
-		<span class="kw">let</span> <span class="ident">k</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">MAX_KEYS</span>;
-		<span class="kw">let</span> <span class="ident">e</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">MAX_EXTERNAL_ADDRESSES</span>;
-		<span class="kw">let</span> (<span class="ident">input_heartbeat</span>, <span class="ident">signature</span>) <span class="op">=</span> <span class="ident">create_heartbeat</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">k</span>, <span class="ident">e</span>)<span class="question-mark">?</span>;
-	}: <span class="kw">_</span>(<span class="ident">RawOrigin::None</span>, <span class="ident">input_heartbeat</span>, <span class="ident">signature</span>)
+<span class="macro">benchmarks! </span>{
+	<span class="attribute">#[extra]
+	</span>heartbeat {
+		<span class="kw">let </span>k <span class="kw">in </span><span class="number">1 </span>.. MAX_KEYS;
+		<span class="kw">let </span>e <span class="kw">in </span><span class="number">1 </span>.. MAX_EXTERNAL_ADDRESSES;
+		<span class="kw">let </span>(input_heartbeat, signature) = create_heartbeat::&lt;T&gt;(k, e)<span class="question-mark">?</span>;
+	}: <span class="kw">_</span>(RawOrigin::None, input_heartbeat, signature)
 
-	<span class="attribute">#[<span class="ident">extra</span>]</span>
-	<span class="ident">validate_unsigned</span> {
-		<span class="kw">let</span> <span class="ident">k</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">MAX_KEYS</span>;
-		<span class="kw">let</span> <span class="ident">e</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">MAX_EXTERNAL_ADDRESSES</span>;
-		<span class="kw">let</span> (<span class="ident">input_heartbeat</span>, <span class="ident">signature</span>) <span class="op">=</span> <span class="ident">create_heartbeat</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">k</span>, <span class="ident">e</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Call::heartbeat</span> { <span class="ident">heartbeat</span>: <span class="ident">input_heartbeat</span>, <span class="ident">signature</span> };
+	<span class="attribute">#[extra]
+	</span>validate_unsigned {
+		<span class="kw">let </span>k <span class="kw">in </span><span class="number">1 </span>.. MAX_KEYS;
+		<span class="kw">let </span>e <span class="kw">in </span><span class="number">1 </span>.. MAX_EXTERNAL_ADDRESSES;
+		<span class="kw">let </span>(input_heartbeat, signature) = create_heartbeat::&lt;T&gt;(k, e)<span class="question-mark">?</span>;
+		<span class="kw">let </span>call = Call::heartbeat { heartbeat: input_heartbeat, signature };
 	}: {
-		<span class="ident">ImOnline</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::validate_unsigned</span>(<span class="ident">TransactionSource::InBlock</span>, <span class="kw-2">&amp;</span><span class="ident">call</span>)
-			.<span class="ident">map_err</span>(<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="ident">::from</span>)<span class="question-mark">?</span>;
+		ImOnline::&lt;T&gt;::validate_unsigned(TransactionSource::InBlock, <span class="kw-2">&amp;</span>call)
+			.map_err(&lt;<span class="kw-2">&amp;</span>str&gt;::from)<span class="question-mark">?</span>;
 	}
 
-	<span class="ident">validate_unsigned_and_then_heartbeat</span> {
-		<span class="kw">let</span> <span class="ident">k</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">MAX_KEYS</span>;
-		<span class="kw">let</span> <span class="ident">e</span> <span class="kw">in</span> <span class="number">1</span> .. <span class="ident">MAX_EXTERNAL_ADDRESSES</span>;
-		<span class="kw">let</span> (<span class="ident">input_heartbeat</span>, <span class="ident">signature</span>) <span class="op">=</span> <span class="ident">create_heartbeat</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">k</span>, <span class="ident">e</span>)<span class="question-mark">?</span>;
-		<span class="kw">let</span> <span class="ident">call</span> <span class="op">=</span> <span class="ident">Call::heartbeat</span> { <span class="ident">heartbeat</span>: <span class="ident">input_heartbeat</span>, <span class="ident">signature</span> };
-		<span class="kw">let</span> <span class="ident">call_enc</span> <span class="op">=</span> <span class="ident">call</span>.<span class="ident">encode</span>();
+	validate_unsigned_and_then_heartbeat {
+		<span class="kw">let </span>k <span class="kw">in </span><span class="number">1 </span>.. MAX_KEYS;
+		<span class="kw">let </span>e <span class="kw">in </span><span class="number">1 </span>.. MAX_EXTERNAL_ADDRESSES;
+		<span class="kw">let </span>(input_heartbeat, signature) = create_heartbeat::&lt;T&gt;(k, e)<span class="question-mark">?</span>;
+		<span class="kw">let </span>call = Call::heartbeat { heartbeat: input_heartbeat, signature };
+		<span class="kw">let </span>call_enc = call.encode();
 	}: {
-		<span class="ident">ImOnline</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="ident">::validate_unsigned</span>(<span class="ident">TransactionSource::InBlock</span>, <span class="kw-2">&amp;</span><span class="ident">call</span>).<span class="ident">map_err</span>(<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span><span class="ident">::from</span>)<span class="question-mark">?</span>;
-		<span class="op">&lt;</span><span class="ident">Call</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="ident">Decode</span><span class="op">&gt;</span><span class="ident">::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">call_enc</span>)
-			.<span class="ident">expect</span>(<span class="string">&quot;call is encoded above, encoding must be correct&quot;</span>)
-			.<span class="ident">dispatch_bypass_filter</span>(<span class="ident">RawOrigin::None</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+		ImOnline::&lt;T&gt;::validate_unsigned(TransactionSource::InBlock, <span class="kw-2">&amp;</span>call).map_err(&lt;<span class="kw-2">&amp;</span>str&gt;::from)<span class="question-mark">?</span>;
+		&lt;Call&lt;T&gt; <span class="kw">as </span>Decode&gt;::decode(<span class="kw-2">&amp;mut &amp;*</span>call_enc)
+			.expect(<span class="string">&quot;call is encoded above, encoding must be correct&quot;</span>)
+			.dispatch_bypass_filter(RawOrigin::None.into())<span class="question-mark">?</span>;
 	}
 
-	<span class="macro">impl_benchmark_test_suite!</span>(<span class="ident">ImOnline</span>, <span class="ident"><span class="kw">crate</span>::mock::new_test_ext</span>(), <span class="ident"><span class="kw">crate</span>::mock::Runtime</span>);
+	<span class="macro">impl_benchmark_test_suite!</span>(ImOnline, <span class="kw">crate</span>::mock::new_test_ext(), <span class="kw">crate</span>::mock::Runtime);
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_im_online" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_im_online" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

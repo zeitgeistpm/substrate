@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/merkle-mountain-range/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../sp_mmr_primitives/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../sp_mmr_primitives/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sp_mmr_primitives/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `primitives/merkle-mountain-range/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../normalize.css"><link rel="stylesheet" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../ayu.css" disabled><link rel="stylesheet" href="../../dark.css" disabled><link rel="stylesheet" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../sp_mmr_primitives/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../sp_mmr_primitives/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -678,680 +672,679 @@
 <span id="672">672</span>
 <span id="673">673</span>
 <span id="674">674</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// 	http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// 	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Merkle Mountain Range primitive types.</span>
+</span><span class="doccomment">//! Merkle Mountain Range primitive types.
 
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>), <span class="ident">no_std</span>)]</span>
-<span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
+</span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
+#![warn(missing_docs)]
 
-<span class="kw">use</span> <span class="ident">scale_info::TypeInfo</span>;
-<span class="kw">use</span> <span class="ident">sp_debug_derive::RuntimeDebug</span>;
-<span class="kw">use</span> <span class="ident">sp_runtime::traits</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>))]</span>
-<span class="kw">use</span> <span class="ident">sp_std::prelude::Vec</span>;
-<span class="kw">use</span> <span class="ident">sp_std</span>::{<span class="ident">fmt</span>, <span class="ident">vec</span>};
+</span><span class="kw">use </span>scale_info::TypeInfo;
+<span class="kw">use </span>sp_debug_derive::RuntimeDebug;
+<span class="kw">use </span>sp_runtime::traits;
+<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
+</span><span class="kw">use </span>sp_std::prelude::Vec;
+<span class="kw">use </span>sp_std::{fmt, vec};
 
-<span class="doccomment">/// A type to describe node position in the MMR (node index).</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">NodeIndex</span> <span class="op">=</span> <span class="ident">u64</span>;
+<span class="doccomment">/// A type to describe node position in the MMR (node index).
+</span><span class="kw">pub type </span>NodeIndex = u64;
 
-<span class="doccomment">/// A type to describe leaf position in the MMR.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Note this is different from [`NodeIndex`], which can be applied to</span>
-<span class="doccomment">/// both leafs and inner nodes. Leafs will always have consecutive `LeafIndex`,</span>
-<span class="doccomment">/// but might be actually at different positions in the MMR `NodeIndex`.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">LeafIndex</span> <span class="op">=</span> <span class="ident">u64</span>;
+<span class="doccomment">/// A type to describe leaf position in the MMR.
+///
+/// Note this is different from [`NodeIndex`], which can be applied to
+/// both leafs and inner nodes. Leafs will always have consecutive `LeafIndex`,
+/// but might be actually at different positions in the MMR `NodeIndex`.
+</span><span class="kw">pub type </span>LeafIndex = u64;
 
-<span class="doccomment">/// A provider of the MMR&#39;s leaf data.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">LeafDataProvider</span> {
-	<span class="doccomment">/// A type that should end up in the leaf of MMR.</span>
-	<span class="kw">type</span> <span class="ident">LeafData</span>: <span class="ident">FullLeaf</span> <span class="op">+</span> <span class="ident">codec::Decode</span>;
+<span class="doccomment">/// A provider of the MMR&#39;s leaf data.
+</span><span class="kw">pub trait </span>LeafDataProvider {
+	<span class="doccomment">/// A type that should end up in the leaf of MMR.
+	</span><span class="kw">type </span>LeafData: FullLeaf + codec::Decode;
 
-	<span class="doccomment">/// The method to return leaf data that should be placed</span>
-	<span class="doccomment">/// in the leaf node appended MMR at this block.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// This is being called by the `on_initialize` method of</span>
-	<span class="doccomment">/// this pallet at the very beginning of each block.</span>
-	<span class="kw">fn</span> <span class="ident">leaf_data</span>() -&gt; <span class="ident"><span class="self">Self</span>::LeafData</span>;
+	<span class="doccomment">/// The method to return leaf data that should be placed
+	/// in the leaf node appended MMR at this block.
+	///
+	/// This is being called by the `on_initialize` method of
+	/// this pallet at the very beginning of each block.
+	</span><span class="kw">fn </span>leaf_data() -&gt; <span class="self">Self</span>::LeafData;
 }
 
-<span class="kw">impl</span> <span class="ident">LeafDataProvider</span> <span class="kw">for</span> () {
-	<span class="kw">type</span> <span class="ident">LeafData</span> <span class="op">=</span> ();
+<span class="kw">impl </span>LeafDataProvider <span class="kw">for </span>() {
+	<span class="kw">type </span>LeafData = ();
 
-	<span class="kw">fn</span> <span class="ident">leaf_data</span>() -&gt; <span class="ident"><span class="self">Self</span>::LeafData</span> {
+	<span class="kw">fn </span>leaf_data() -&gt; <span class="self">Self</span>::LeafData {
 		()
 	}
 }
 
-<span class="doccomment">/// New MMR root notification hook.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OnNewRoot</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Function called by the pallet in case new MMR root has been computed.</span>
-	<span class="kw">fn</span> <span class="ident">on_new_root</span>(<span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="ident">Hash</span>);
+<span class="doccomment">/// New MMR root notification hook.
+</span><span class="kw">pub trait </span>OnNewRoot&lt;Hash&gt; {
+	<span class="doccomment">/// Function called by the pallet in case new MMR root has been computed.
+	</span><span class="kw">fn </span>on_new_root(root: <span class="kw-2">&amp;</span>Hash);
 }
 
-<span class="doccomment">/// No-op implementation of [OnNewRoot].</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="ident">OnNewRoot</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="kw">for</span> () {
-	<span class="kw">fn</span> <span class="ident">on_new_root</span>(<span class="ident">_root</span>: <span class="kw-2">&amp;</span><span class="ident">Hash</span>) {}
+<span class="doccomment">/// No-op implementation of [OnNewRoot].
+</span><span class="kw">impl</span>&lt;Hash&gt; OnNewRoot&lt;Hash&gt; <span class="kw">for </span>() {
+	<span class="kw">fn </span>on_new_root(_root: <span class="kw-2">&amp;</span>Hash) {}
 }
 
-<span class="doccomment">/// A MMR proof data for one of the leaves.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">TypeInfo</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The index of the leaf the proof is for.</span>
-	<span class="kw">pub</span> <span class="ident">leaf_index</span>: <span class="ident">LeafIndex</span>,
-	<span class="doccomment">/// Number of leaves in MMR, when the proof was generated.</span>
-	<span class="kw">pub</span> <span class="ident">leaf_count</span>: <span class="ident">NodeIndex</span>,
-	<span class="doccomment">/// Proof elements (hashes of siblings of inner nodes on the path to the leaf).</span>
-	<span class="kw">pub</span> <span class="ident">items</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A MMR proof data for one of the leaves.
+</span><span class="attribute">#[derive(codec::Encode, codec::Decode, RuntimeDebug, Clone, PartialEq, Eq, TypeInfo)]
+</span><span class="kw">pub struct </span>Proof&lt;Hash&gt; {
+	<span class="doccomment">/// The index of the leaf the proof is for.
+	</span><span class="kw">pub </span>leaf_index: LeafIndex,
+	<span class="doccomment">/// Number of leaves in MMR, when the proof was generated.
+	</span><span class="kw">pub </span>leaf_count: NodeIndex,
+	<span class="doccomment">/// Proof elements (hashes of siblings of inner nodes on the path to the leaf).
+	</span><span class="kw">pub </span>items: Vec&lt;Hash&gt;,
 }
 
-<span class="doccomment">/// A full leaf content stored in the offchain-db.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">FullLeaf</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">fmt::Debug</span> {
-	<span class="doccomment">/// Encode the leaf either in its full or compact form.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// NOTE the encoding returned here MUST be `Decode`able into `FullLeaf`.</span>
-	<span class="kw">fn</span> <span class="ident">using_encoded</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">compact</span>: <span class="ident">bool</span>) -&gt; <span class="ident">R</span>;
+<span class="doccomment">/// A full leaf content stored in the offchain-db.
+</span><span class="kw">pub trait </span>FullLeaf: Clone + PartialEq + fmt::Debug {
+	<span class="doccomment">/// Encode the leaf either in its full or compact form.
+	///
+	/// NOTE the encoding returned here MUST be `Decode`able into `FullLeaf`.
+	</span><span class="kw">fn </span>using_encoded&lt;R, F: FnOnce(<span class="kw-2">&amp;</span>[u8]) -&gt; R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, f: F, compact: bool) -&gt; R;
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">codec::Encode</span> <span class="op">+</span> <span class="ident">codec::Decode</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">fmt::Debug</span><span class="op">&gt;</span> <span class="ident">FullLeaf</span> <span class="kw">for</span> <span class="ident">T</span> {
-	<span class="kw">fn</span> <span class="ident">using_encoded</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">_compact</span>: <span class="ident">bool</span>) -&gt; <span class="ident">R</span> {
-		<span class="ident">codec::Encode::using_encoded</span>(<span class="self">self</span>, <span class="ident">f</span>)
+<span class="kw">impl</span>&lt;T: codec::Encode + codec::Decode + Clone + PartialEq + fmt::Debug&gt; FullLeaf <span class="kw">for </span>T {
+	<span class="kw">fn </span>using_encoded&lt;R, F: FnOnce(<span class="kw-2">&amp;</span>[u8]) -&gt; R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, f: F, _compact: bool) -&gt; R {
+		codec::Encode::using_encoded(<span class="self">self</span>, f)
 	}
 }
 
-<span class="doccomment">/// A helper type to allow using arbitrary SCALE-encoded leaf data in the RuntimeApi.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The point is to be able to verify MMR proofs from external MMRs, where we don&#39;t</span>
-<span class="doccomment">/// know the exact leaf type, but it&#39;s enough for us to have it SCALE-encoded.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Note the leaf type should be encoded in its compact form when passed through this type.</span>
-<span class="doccomment">/// See [FullLeaf] documentation for details.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This type does not implement SCALE encoding/decoding on purpose to avoid confusion,</span>
-<span class="doccomment">/// it would have to be SCALE-compatible with the concrete leaf type, but due to SCALE limitations</span>
-<span class="doccomment">/// it&#39;s not possible to know how many bytes the encoding of concrete leaf type uses.</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">derive</span>(<span class="ident">serde::Serialize</span>, <span class="ident">serde::Deserialize</span>))]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">RuntimeDebug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OpaqueLeaf</span>(
-	<span class="doccomment">/// Raw bytes of the leaf type encoded in its compact form.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// NOTE it DOES NOT include length prefix (like `Vec&lt;u8&gt;` encoding would).</span>
-	<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;sp_core::bytes&quot;</span>))]</span>
-	<span class="kw">pub</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A helper type to allow using arbitrary SCALE-encoded leaf data in the RuntimeApi.
+///
+/// The point is to be able to verify MMR proofs from external MMRs, where we don&#39;t
+/// know the exact leaf type, but it&#39;s enough for us to have it SCALE-encoded.
+///
+/// Note the leaf type should be encoded in its compact form when passed through this type.
+/// See [FullLeaf] documentation for details.
+///
+/// This type does not implement SCALE encoding/decoding on purpose to avoid confusion,
+/// it would have to be SCALE-compatible with the concrete leaf type, but due to SCALE limitations
+/// it&#39;s not possible to know how many bytes the encoding of concrete leaf type uses.
+</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, derive(serde::Serialize, serde::Deserialize))]
+#[derive(RuntimeDebug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>OpaqueLeaf(
+	<span class="doccomment">/// Raw bytes of the leaf type encoded in its compact form.
+	///
+	/// NOTE it DOES NOT include length prefix (like `Vec&lt;u8&gt;` encoding would).
+	</span><span class="attribute">#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, serde(with = <span class="string">&quot;sp_core::bytes&quot;</span>))]
+	</span><span class="kw">pub </span>Vec&lt;u8&gt;,
 );
 
-<span class="kw">impl</span> <span class="ident">OpaqueLeaf</span> {
-	<span class="doccomment">/// Convert a concrete MMR leaf into an opaque type.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_leaf</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">FullLeaf</span><span class="op">&gt;</span>(<span class="ident">leaf</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">encoded_leaf</span> <span class="op">=</span> <span class="ident">leaf</span>.<span class="ident">using_encoded</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">to_vec</span>(), <span class="bool-val">true</span>);
-		<span class="ident">OpaqueLeaf::from_encoded_leaf</span>(<span class="ident">encoded_leaf</span>)
+<span class="kw">impl </span>OpaqueLeaf {
+	<span class="doccomment">/// Convert a concrete MMR leaf into an opaque type.
+	</span><span class="kw">pub fn </span>from_leaf&lt;T: FullLeaf&gt;(leaf: <span class="kw-2">&amp;</span>T) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>encoded_leaf = leaf.using_encoded(|d| d.to_vec(), <span class="bool-val">true</span>);
+		OpaqueLeaf::from_encoded_leaf(encoded_leaf)
 	}
 
-	<span class="doccomment">/// Create a `OpaqueLeaf` given raw bytes of compact-encoded leaf.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_encoded_leaf</span>(<span class="ident">encoded_leaf</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-		<span class="ident">OpaqueLeaf</span>(<span class="ident">encoded_leaf</span>)
+	<span class="doccomment">/// Create a `OpaqueLeaf` given raw bytes of compact-encoded leaf.
+	</span><span class="kw">pub fn </span>from_encoded_leaf(encoded_leaf: Vec&lt;u8&gt;) -&gt; <span class="self">Self </span>{
+		OpaqueLeaf(encoded_leaf)
 	}
 
-	<span class="doccomment">/// Attempt to decode the leaf into expected concrete type.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_decode</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">codec::Decode</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-		<span class="ident">codec::Decode::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="number">0</span>).<span class="ident">ok</span>()
-	}
-}
-
-<span class="kw">impl</span> <span class="ident">FullLeaf</span> <span class="kw">for</span> <span class="ident">OpaqueLeaf</span> {
-	<span class="kw">fn</span> <span class="ident">using_encoded</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">_compact</span>: <span class="ident">bool</span>) -&gt; <span class="ident">R</span> {
-		<span class="ident">f</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)
+	<span class="doccomment">/// Attempt to decode the leaf into expected concrete type.
+	</span><span class="kw">pub fn </span>try_decode&lt;T: codec::Decode&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;T&gt; {
+		codec::Decode::decode(<span class="kw-2">&amp;mut &amp;*</span><span class="self">self</span>.<span class="number">0</span>).ok()
 	}
 }
 
-<span class="doccomment">/// A type-safe wrapper for the concrete leaf type.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This structure serves merely to avoid passing raw `Vec&lt;u8&gt;` around.</span>
-<span class="doccomment">/// It must be `Vec&lt;u8&gt;`-encoding compatible.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// It is different from [`OpaqueLeaf`], because it does implement `Codec`</span>
-<span class="doccomment">/// and the encoding has to match raw `Vec&lt;u8&gt;` encoding.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EncodableOpaqueLeaf</span>(<span class="kw">pub</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>);
-
-<span class="kw">impl</span> <span class="ident">EncodableOpaqueLeaf</span> {
-	<span class="doccomment">/// Convert a concrete leaf into encodable opaque version.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_leaf</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">FullLeaf</span><span class="op">&gt;</span>(<span class="ident">leaf</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">opaque</span> <span class="op">=</span> <span class="ident">OpaqueLeaf::from_leaf</span>(<span class="ident">leaf</span>);
-		<span class="ident"><span class="self">Self</span>::from_opaque_leaf</span>(<span class="ident">opaque</span>)
-	}
-
-	<span class="doccomment">/// Given an opaque leaf, make it encodable.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_opaque_leaf</span>(<span class="ident">opaque</span>: <span class="ident">OpaqueLeaf</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span>(<span class="ident">opaque</span>.<span class="number">0</span>)
-	}
-
-	<span class="doccomment">/// Try to convert into a [OpaqueLeaf].</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_opaque_leaf</span>(<span class="self">self</span>) -&gt; <span class="ident">OpaqueLeaf</span> {
-		<span class="comment">// wrap into `OpaqueLeaf` type</span>
-		<span class="ident">OpaqueLeaf::from_encoded_leaf</span>(<span class="self">self</span>.<span class="number">0</span>)
+<span class="kw">impl </span>FullLeaf <span class="kw">for </span>OpaqueLeaf {
+	<span class="kw">fn </span>using_encoded&lt;R, F: FnOnce(<span class="kw-2">&amp;</span>[u8]) -&gt; R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, f: F, _compact: bool) -&gt; R {
+		f(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)
 	}
 }
 
-<span class="doccomment">/// An element representing either full data or its hash.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// See [Compact] to see how it may be used in practice to reduce the size</span>
-<span class="doccomment">/// of proofs in case multiple [LeafDataProvider]s are composed together.</span>
-<span class="doccomment">/// This is also used internally by the MMR to differentiate leaf nodes (data)</span>
-<span class="doccomment">/// and inner nodes (hashes).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// [DataOrHash::hash] method calculates the hash of this element in its compact form,</span>
-<span class="doccomment">/// so should be used instead of hashing the encoded form (which will always be non-compact).</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">RuntimeDebug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">traits::Hash</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Arbitrary data in its full form.</span>
-	<span class="ident">Data</span>(<span class="ident">L</span>),
-	<span class="doccomment">/// A hash of some data.</span>
-	<span class="ident">Hash</span>(<span class="ident">H::Output</span>),
-}
+<span class="doccomment">/// A type-safe wrapper for the concrete leaf type.
+///
+/// This structure serves merely to avoid passing raw `Vec&lt;u8&gt;` around.
+/// It must be `Vec&lt;u8&gt;`-encoding compatible.
+///
+/// It is different from [`OpaqueLeaf`], because it does implement `Codec`
+/// and the encoding has to match raw `Vec&lt;u8&gt;` encoding.
+</span><span class="attribute">#[derive(codec::Encode, codec::Decode, RuntimeDebug, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>EncodableOpaqueLeaf(<span class="kw">pub </span>Vec&lt;u8&gt;);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">traits::Hash</span>, <span class="ident">L</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">L</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">l</span>: <span class="ident">L</span>) -&gt; <span class="self">Self</span> {
-		<span class="ident"><span class="self">Self</span>::Data</span>(<span class="ident">l</span>)
+<span class="kw">impl </span>EncodableOpaqueLeaf {
+	<span class="doccomment">/// Convert a concrete leaf into encodable opaque version.
+	</span><span class="kw">pub fn </span>from_leaf&lt;T: FullLeaf&gt;(leaf: <span class="kw-2">&amp;</span>T) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>opaque = OpaqueLeaf::from_leaf(leaf);
+		<span class="self">Self</span>::from_opaque_leaf(opaque)
+	}
+
+	<span class="doccomment">/// Given an opaque leaf, make it encodable.
+	</span><span class="kw">pub fn </span>from_opaque_leaf(opaque: OpaqueLeaf) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(opaque.<span class="number">0</span>)
+	}
+
+	<span class="doccomment">/// Try to convert into a [OpaqueLeaf].
+	</span><span class="kw">pub fn </span>into_opaque_leaf(<span class="self">self</span>) -&gt; OpaqueLeaf {
+		<span class="comment">// wrap into `OpaqueLeaf` type
+		</span>OpaqueLeaf::from_encoded_leaf(<span class="self">self</span>.<span class="number">0</span>)
 	}
 }
 
-<span class="kw">mod</span> <span class="ident">encoding</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="doccomment">/// An element representing either full data or its hash.
+///
+/// See [Compact] to see how it may be used in practice to reduce the size
+/// of proofs in case multiple [LeafDataProvider]s are composed together.
+/// This is also used internally by the MMR to differentiate leaf nodes (data)
+/// and inner nodes (hashes).
+///
+/// [DataOrHash::hash] method calculates the hash of this element in its compact form,
+/// so should be used instead of hashing the encoded form (which will always be non-compact).
+</span><span class="attribute">#[derive(RuntimeDebug, Clone, PartialEq)]
+</span><span class="kw">pub enum </span>DataOrHash&lt;H: traits::Hash, L&gt; {
+	<span class="doccomment">/// Arbitrary data in its full form.
+	</span>Data(L),
+	<span class="doccomment">/// A hash of some data.
+	</span>Hash(H::Output),
+}
 
-	<span class="doccomment">/// A helper type to implement [codec::Codec] for [DataOrHash].</span>
-	<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>)]</span>
-	<span class="kw">enum</span> <span class="ident">Either</span><span class="op">&lt;</span><span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-		<span class="ident">Left</span>(<span class="ident">A</span>),
-		<span class="ident">Right</span>(<span class="ident">B</span>),
+<span class="kw">impl</span>&lt;H: traits::Hash, L&gt; From&lt;L&gt; <span class="kw">for </span>DataOrHash&lt;H, L&gt; {
+	<span class="kw">fn </span>from(l: L) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>::Data(l)
+	}
+}
+
+<span class="kw">mod </span>encoding {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+
+	<span class="doccomment">/// A helper type to implement [codec::Codec] for [DataOrHash].
+	</span><span class="attribute">#[derive(codec::Encode, codec::Decode)]
+	</span><span class="kw">enum </span>Either&lt;A, B&gt; {
+		Left(A),
+		Right(B),
 	}
 
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">traits::Hash</span>, <span class="ident">L</span>: <span class="ident">FullLeaf</span><span class="op">&gt;</span> <span class="ident">codec::Encode</span> <span class="kw">for</span> <span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">encode_to</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">codec::Output</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;mut</span> <span class="ident">T</span>) {
-			<span class="kw">match</span> <span class="self">self</span> {
-				<span class="ident"><span class="self">Self</span>::Data</span>(<span class="ident">l</span>) =&gt; <span class="ident">l</span>.<span class="ident">using_encoded</span>(
-					<span class="op">|</span><span class="ident">data</span><span class="op">|</span> <span class="ident">Either</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span><span class="ident">H::Output</span><span class="op">&gt;</span><span class="ident">::Left</span>(<span class="ident">data</span>).<span class="ident">encode_to</span>(<span class="ident">dest</span>),
+	<span class="kw">impl</span>&lt;H: traits::Hash, L: FullLeaf&gt; codec::Encode <span class="kw">for </span>DataOrHash&lt;H, L&gt; {
+		<span class="kw">fn </span>encode_to&lt;T: codec::Output + <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, dest: <span class="kw-2">&amp;mut </span>T) {
+			<span class="kw">match </span><span class="self">self </span>{
+				<span class="self">Self</span>::Data(l) =&gt; l.using_encoded(
+					|data| Either::&lt;<span class="kw-2">&amp;</span>[u8], <span class="kw-2">&amp;</span>H::Output&gt;::Left(data).encode_to(dest),
 					<span class="bool-val">false</span>,
 				),
-				<span class="ident"><span class="self">Self</span>::Hash</span>(<span class="ident">h</span>) =&gt; <span class="ident">Either</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span><span class="ident">H::Output</span><span class="op">&gt;</span><span class="ident">::Right</span>(<span class="ident">h</span>).<span class="ident">encode_to</span>(<span class="ident">dest</span>),
+				<span class="self">Self</span>::Hash(h) =&gt; Either::&lt;<span class="kw-2">&amp;</span>[u8], <span class="kw-2">&amp;</span>H::Output&gt;::Right(h).encode_to(dest),
 			}
 		}
 	}
 
-	<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">traits::Hash</span>, <span class="ident">L</span>: <span class="ident">FullLeaf</span> <span class="op">+</span> <span class="ident">codec::Decode</span><span class="op">&gt;</span> <span class="ident">codec::Decode</span> <span class="kw">for</span> <span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-		<span class="kw">fn</span> <span class="ident">decode</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">codec::Input</span><span class="op">&gt;</span>(<span class="ident">value</span>: <span class="kw-2">&amp;mut</span> <span class="ident">I</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">codec::Error</span><span class="op">&gt;</span> {
-			<span class="kw">let</span> <span class="ident">decoded</span>: <span class="ident">Either</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">H::Output</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Either::decode</span>(<span class="ident">value</span>)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">decoded</span> {
-				<span class="ident">Either::Left</span>(<span class="ident">l</span>) =&gt; <span class="ident">DataOrHash::Data</span>(<span class="ident">L::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">l</span>)<span class="question-mark">?</span>),
-				<span class="ident">Either::Right</span>(<span class="ident">r</span>) =&gt; <span class="ident">DataOrHash::Hash</span>(<span class="ident">r</span>),
+	<span class="kw">impl</span>&lt;H: traits::Hash, L: FullLeaf + codec::Decode&gt; codec::Decode <span class="kw">for </span>DataOrHash&lt;H, L&gt; {
+		<span class="kw">fn </span>decode&lt;I: codec::Input&gt;(value: <span class="kw-2">&amp;mut </span>I) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, codec::Error&gt; {
+			<span class="kw">let </span>decoded: Either&lt;Vec&lt;u8&gt;, H::Output&gt; = Either::decode(value)<span class="question-mark">?</span>;
+			<span class="prelude-val">Ok</span>(<span class="kw">match </span>decoded {
+				Either::Left(l) =&gt; DataOrHash::Data(L::decode(<span class="kw-2">&amp;mut &amp;*</span>l)<span class="question-mark">?</span>),
+				Either::Right(r) =&gt; DataOrHash::Hash(r),
 			})
 		}
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>: <span class="ident">traits::Hash</span>, <span class="ident">L</span>: <span class="ident">FullLeaf</span><span class="op">&gt;</span> <span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">L</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Retrieve a hash of this item.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// Depending on the node type it&#39;s going to either be a contained value for [DataOrHash::Hash]</span>
-	<span class="doccomment">/// node, or a hash of SCALE-encoded [DataOrHash::Data] data.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">H::Output</span> {
-		<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::Data</span>(<span class="kw-2">ref</span> <span class="ident">leaf</span>) =&gt; <span class="ident">leaf</span>.<span class="ident">using_encoded</span>(<span class="op">&lt;</span><span class="ident">H</span> <span class="kw">as</span> <span class="ident">traits::Hash</span><span class="op">&gt;</span><span class="ident">::hash</span>, <span class="bool-val">true</span>),
-			<span class="ident"><span class="self">Self</span>::Hash</span>(<span class="kw-2">ref</span> <span class="ident">hash</span>) =&gt; <span class="kw-2">*</span><span class="ident">hash</span>,
+<span class="kw">impl</span>&lt;H: traits::Hash, L: FullLeaf&gt; DataOrHash&lt;H, L&gt; {
+	<span class="doccomment">/// Retrieve a hash of this item.
+	///
+	/// Depending on the node type it&#39;s going to either be a contained value for [DataOrHash::Hash]
+	/// node, or a hash of SCALE-encoded [DataOrHash::Data] data.
+	</span><span class="kw">pub fn </span>hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; H::Output {
+		<span class="kw">match </span><span class="kw-2">*</span><span class="self">self </span>{
+			<span class="self">Self</span>::Data(<span class="kw-2">ref </span>leaf) =&gt; leaf.using_encoded(&lt;H <span class="kw">as </span>traits::Hash&gt;::hash, <span class="bool-val">true</span>),
+			<span class="self">Self</span>::Hash(<span class="kw-2">ref </span>hash) =&gt; <span class="kw-2">*</span>hash,
 		}
 	}
 }
 
-<span class="doccomment">/// A composition of multiple leaf elements with compact form representation.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// When composing together multiple [LeafDataProvider]s you will end up with</span>
-<span class="doccomment">/// a tuple of `LeafData` that each element provides.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// However this will cause the leaves to have significant size, while for some</span>
-<span class="doccomment">/// use cases it will be enough to prove only one element of the tuple.</span>
-<span class="doccomment">/// That&#39;s the rationale for [Compact] struct. We wrap each element of the tuple</span>
-<span class="doccomment">/// into [DataOrHash] and each tuple element is hashed first before constructing</span>
-<span class="doccomment">/// the final hash of the entire tuple. This allows you to replace tuple elements</span>
-<span class="doccomment">/// you don&#39;t care about with their hashes.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">RuntimeDebug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Compact</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Internal tuple representation.</span>
-	<span class="kw">pub</span> <span class="ident">tuple</span>: <span class="ident">T</span>,
-	<span class="ident">_hash</span>: <span class="ident">sp_std::marker::PhantomData</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A composition of multiple leaf elements with compact form representation.
+///
+/// When composing together multiple [LeafDataProvider]s you will end up with
+/// a tuple of `LeafData` that each element provides.
+///
+/// However this will cause the leaves to have significant size, while for some
+/// use cases it will be enough to prove only one element of the tuple.
+/// That&#39;s the rationale for [Compact] struct. We wrap each element of the tuple
+/// into [DataOrHash] and each tuple element is hashed first before constructing
+/// the final hash of the entire tuple. This allows you to replace tuple elements
+/// you don&#39;t care about with their hashes.
+</span><span class="attribute">#[derive(RuntimeDebug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>Compact&lt;H, T&gt; {
+	<span class="doccomment">/// Internal tuple representation.
+	</span><span class="kw">pub </span>tuple: T,
+	_hash: sp_std::marker::PhantomData&lt;H&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">sp_std::ops::Deref</span> <span class="kw">for</span> <span class="ident">Compact</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">T</span>;
+<span class="kw">impl</span>&lt;H, T&gt; sp_std::ops::Deref <span class="kw">for </span>Compact&lt;H, T&gt; {
+	<span class="kw">type </span>Target = T;
 
-	<span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tuple</span>
+	<span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.tuple
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Compact</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Create a new [Compact] wrapper for a tuple.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">tuple</span>: <span class="ident">T</span>) -&gt; <span class="self">Self</span> {
-		<span class="self">Self</span> { <span class="ident">tuple</span>, <span class="ident">_hash</span>: <span class="ident">Default::default</span>() }
+<span class="kw">impl</span>&lt;H, T&gt; Compact&lt;H, T&gt; {
+	<span class="doccomment">/// Create a new [Compact] wrapper for a tuple.
+	</span><span class="kw">pub fn </span>new(tuple: T) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ tuple, _hash: Default::default() }
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span>: <span class="ident">codec::Decode</span><span class="op">&gt;</span> <span class="ident">codec::Decode</span> <span class="kw">for</span> <span class="ident">Compact</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-	<span class="kw">fn</span> <span class="ident">decode</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">codec::Input</span><span class="op">&gt;</span>(<span class="ident">value</span>: <span class="kw-2">&amp;mut</span> <span class="ident">I</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">codec::Error</span><span class="op">&gt;</span> {
-		<span class="ident">T::decode</span>(<span class="ident">value</span>).<span class="ident">map</span>(<span class="ident">Compact::new</span>)
+<span class="kw">impl</span>&lt;H, T: codec::Decode&gt; codec::Decode <span class="kw">for </span>Compact&lt;H, T&gt; {
+	<span class="kw">fn </span>decode&lt;I: codec::Input&gt;(value: <span class="kw-2">&amp;mut </span>I) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, codec::Error&gt; {
+		T::decode(value).map(Compact::new)
 	}
 }
 
-<span class="macro">macro_rules!</span> <span class="ident">impl_leaf_data_for_tuple</span> {
-	( $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>:<span class="ident">tt</span> ),<span class="op">+</span> ) =&gt; {
-		<span class="doccomment">/// [FullLeaf] implementation for `Compact&lt;H, (DataOrHash&lt;H, Tuple&gt;, ...)&gt;`</span>
-		<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> ),<span class="op">+</span><span class="op">&gt;</span> <span class="ident">FullLeaf</span> <span class="kw">for</span> <span class="ident">Compact</span><span class="op">&lt;</span><span class="ident">H</span>, ( $( <span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span>, )<span class="op">+</span> )<span class="op">&gt;</span> <span class="kw">where</span>
-			<span class="ident">H</span>: <span class="ident">traits::Hash</span>,
-			$( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">FullLeaf</span> ),<span class="op">+</span>
+<span class="macro">macro_rules! </span>impl_leaf_data_for_tuple {
+	( $( <span class="macro-nonterminal">$name</span>:ident : <span class="macro-nonterminal">$id</span>:tt ),+ ) =&gt; {
+		<span class="doccomment">/// [FullLeaf] implementation for `Compact&lt;H, (DataOrHash&lt;H, Tuple&gt;, ...)&gt;`
+		</span><span class="kw">impl</span>&lt;H, $( <span class="macro-nonterminal">$name </span>),+&gt; FullLeaf <span class="kw">for </span>Compact&lt;H, ( $( DataOrHash&lt;H, <span class="macro-nonterminal">$name</span>&gt;, )+ )&gt; <span class="kw">where
+			</span>H: traits::Hash,
+			$( <span class="macro-nonterminal">$name</span>: FullLeaf ),+
 		{
-			<span class="kw">fn</span> <span class="ident">using_encoded</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="ident">R</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>, <span class="ident">compact</span>: <span class="ident">bool</span>) -&gt; <span class="ident">R</span> {
-				<span class="kw">if</span> <span class="ident">compact</span> {
-					<span class="ident">codec::Encode::using_encoded</span>(<span class="kw-2">&amp;</span>(
-						$( <span class="ident">DataOrHash</span>::<span class="op">&lt;</span><span class="ident">H</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span><span class="ident">::Hash</span>(<span class="self">self</span>.<span class="ident">tuple</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>.<span class="ident">hash</span>()), )<span class="op">+</span>
-					), <span class="ident">f</span>)
-				} <span class="kw">else</span> {
-					<span class="ident">codec::Encode::using_encoded</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">tuple</span>, <span class="ident">f</span>)
+			<span class="kw">fn </span>using_encoded&lt;R, F: FnOnce(<span class="kw-2">&amp;</span>[u8]) -&gt; R&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, f: F, compact: bool) -&gt; R {
+				<span class="kw">if </span>compact {
+					codec::Encode::using_encoded(<span class="kw-2">&amp;</span>(
+						$( DataOrHash::&lt;H, <span class="macro-nonterminal">$name</span>&gt;::Hash(<span class="self">self</span>.tuple.<span class="macro-nonterminal">$id</span>.hash()), )+
+					), f)
+				} <span class="kw">else </span>{
+					codec::Encode::using_encoded(<span class="kw-2">&amp;</span><span class="self">self</span>.tuple, f)
 				}
 			}
 		}
 
-		<span class="doccomment">/// [LeafDataProvider] implementation for `Compact&lt;H, (DataOrHash&lt;H, Tuple&gt;, ...)&gt;`</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This provides a compact-form encoding for tuples wrapped in [Compact].</span>
-		<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> ),<span class="op">+</span><span class="op">&gt;</span> <span class="ident">LeafDataProvider</span> <span class="kw">for</span> <span class="ident">Compact</span><span class="op">&lt;</span><span class="ident">H</span>, ( $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, )<span class="op">+</span> )<span class="op">&gt;</span> <span class="kw">where</span>
-			<span class="ident">H</span>: <span class="ident">traits::Hash</span>,
-			$( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">LeafDataProvider</span> ),<span class="op">+</span>
+		<span class="doccomment">/// [LeafDataProvider] implementation for `Compact&lt;H, (DataOrHash&lt;H, Tuple&gt;, ...)&gt;`
+		///
+		/// This provides a compact-form encoding for tuples wrapped in [Compact].
+		</span><span class="kw">impl</span>&lt;H, $( <span class="macro-nonterminal">$name </span>),+&gt; LeafDataProvider <span class="kw">for </span>Compact&lt;H, ( $( <span class="macro-nonterminal">$name</span>, )+ )&gt; <span class="kw">where
+			</span>H: traits::Hash,
+			$( <span class="macro-nonterminal">$name</span>: LeafDataProvider ),+
 		{
-			<span class="kw">type</span> <span class="ident">LeafData</span> <span class="op">=</span> <span class="ident">Compact</span><span class="op">&lt;</span>
-				<span class="ident">H</span>,
-				( $( <span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name::LeafData</span><span class="op">&gt;</span>, )<span class="op">+</span> ),
-			<span class="op">&gt;</span>;
+			<span class="kw">type </span>LeafData = Compact&lt;
+				H,
+				( $( DataOrHash&lt;H, <span class="macro-nonterminal">$name::LeafData</span>&gt;, )+ ),
+			&gt;;
 
-			<span class="kw">fn</span> <span class="ident">leaf_data</span>() -&gt; <span class="ident"><span class="self">Self</span>::LeafData</span> {
-				<span class="kw">let</span> <span class="ident">tuple</span> <span class="op">=</span> (
-					$( <span class="ident">DataOrHash::Data</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name::leaf_data</span>()), )<span class="op">+</span>
+			<span class="kw">fn </span>leaf_data() -&gt; <span class="self">Self</span>::LeafData {
+				<span class="kw">let </span>tuple = (
+					$( DataOrHash::Data(<span class="macro-nonterminal">$name::leaf_data</span>()), )+
 				);
-				<span class="ident">Compact::new</span>(<span class="ident">tuple</span>)
+				Compact::new(tuple)
 			}
 		}
 
-		<span class="doccomment">/// [LeafDataProvider] implementation for `(Tuple, ...)`</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// This provides regular (non-compactable) composition of [LeafDataProvider]s.</span>
-		<span class="kw">impl</span><span class="op">&lt;</span>$( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> ),<span class="op">+</span><span class="op">&gt;</span> <span class="ident">LeafDataProvider</span> <span class="kw">for</span> ( $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, )<span class="op">+</span> ) <span class="kw">where</span>
-			( $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name::LeafData</span>, )<span class="op">+</span> ): <span class="ident">FullLeaf</span>,
-			$( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">LeafDataProvider</span> ),<span class="op">+</span>
+		<span class="doccomment">/// [LeafDataProvider] implementation for `(Tuple, ...)`
+		///
+		/// This provides regular (non-compactable) composition of [LeafDataProvider]s.
+		</span><span class="kw">impl</span>&lt;$( <span class="macro-nonterminal">$name </span>),+&gt; LeafDataProvider <span class="kw">for </span>( $( <span class="macro-nonterminal">$name</span>, )+ ) <span class="kw">where
+			</span>( $( <span class="macro-nonterminal">$name::LeafData</span>, )+ ): FullLeaf,
+			$( <span class="macro-nonterminal">$name</span>: LeafDataProvider ),+
 		{
-			<span class="kw">type</span> <span class="ident">LeafData</span> <span class="op">=</span> ( $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name::LeafData</span>, )<span class="op">+</span> );
+			<span class="kw">type </span>LeafData = ( $( <span class="macro-nonterminal">$name::LeafData</span>, )+ );
 
-			<span class="kw">fn</span> <span class="ident">leaf_data</span>() -&gt; <span class="ident"><span class="self">Self</span>::LeafData</span> {
+			<span class="kw">fn </span>leaf_data() -&gt; <span class="self">Self</span>::LeafData {
 				(
-					$( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name::leaf_data</span>(), )<span class="op">+</span>
+					$( <span class="macro-nonterminal">$name::leaf_data</span>(), )+
 				)
 			}
 		}
 	}
 }
 
-<span class="doccomment">/// Test functions implementation for `Compact&lt;H, (DataOrHash&lt;H, Tuple&gt;, ...)&gt;`</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">A</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Compact</span><span class="op">&lt;</span><span class="ident">H</span>, (<span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">H</span>, <span class="ident">B</span><span class="op">&gt;</span>)<span class="op">&gt;</span>
-<span class="kw">where</span>
-	<span class="ident">H</span>: <span class="ident">traits::Hash</span>,
-	<span class="ident">A</span>: <span class="ident">FullLeaf</span>,
-	<span class="ident">B</span>: <span class="ident">FullLeaf</span>,
+<span class="doccomment">/// Test functions implementation for `Compact&lt;H, (DataOrHash&lt;H, Tuple&gt;, ...)&gt;`
+</span><span class="attribute">#[cfg(test)]
+</span><span class="kw">impl</span>&lt;H, A, B&gt; Compact&lt;H, (DataOrHash&lt;H, A&gt;, DataOrHash&lt;H, B&gt;)&gt;
+<span class="kw">where
+	</span>H: traits::Hash,
+	A: FullLeaf,
+	B: FullLeaf,
 {
-	<span class="doccomment">/// Retrieve a hash of this item in its compact form.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hash</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">H::Output</span> {
-		<span class="self">self</span>.<span class="ident">using_encoded</span>(<span class="op">&lt;</span><span class="ident">H</span> <span class="kw">as</span> <span class="ident">traits::Hash</span><span class="op">&gt;</span><span class="ident">::hash</span>, <span class="bool-val">true</span>)
+	<span class="doccomment">/// Retrieve a hash of this item in its compact form.
+	</span><span class="kw">pub fn </span>hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; H::Output {
+		<span class="self">self</span>.using_encoded(&lt;H <span class="kw">as </span>traits::Hash&gt;::hash, <span class="bool-val">true</span>)
 	}
 }
 
-<span class="macro">impl_leaf_data_for_tuple!</span>(<span class="ident">A</span>:<span class="number">0</span>);
-<span class="macro">impl_leaf_data_for_tuple!</span>(<span class="ident">A</span>:<span class="number">0</span>, <span class="ident">B</span>:<span class="number">1</span>);
-<span class="macro">impl_leaf_data_for_tuple!</span>(<span class="ident">A</span>:<span class="number">0</span>, <span class="ident">B</span>:<span class="number">1</span>, <span class="ident">C</span>:<span class="number">2</span>);
-<span class="macro">impl_leaf_data_for_tuple!</span>(<span class="ident">A</span>:<span class="number">0</span>, <span class="ident">B</span>:<span class="number">1</span>, <span class="ident">C</span>:<span class="number">2</span>, <span class="ident">D</span>:<span class="number">3</span>);
-<span class="macro">impl_leaf_data_for_tuple!</span>(<span class="ident">A</span>:<span class="number">0</span>, <span class="ident">B</span>:<span class="number">1</span>, <span class="ident">C</span>:<span class="number">2</span>, <span class="ident">D</span>:<span class="number">3</span>, <span class="ident">E</span>:<span class="number">4</span>);
+<span class="macro">impl_leaf_data_for_tuple!</span>(A:<span class="number">0</span>);
+<span class="macro">impl_leaf_data_for_tuple!</span>(A:<span class="number">0</span>, B:<span class="number">1</span>);
+<span class="macro">impl_leaf_data_for_tuple!</span>(A:<span class="number">0</span>, B:<span class="number">1</span>, C:<span class="number">2</span>);
+<span class="macro">impl_leaf_data_for_tuple!</span>(A:<span class="number">0</span>, B:<span class="number">1</span>, C:<span class="number">2</span>, D:<span class="number">3</span>);
+<span class="macro">impl_leaf_data_for_tuple!</span>(A:<span class="number">0</span>, B:<span class="number">1</span>, C:<span class="number">2</span>, D:<span class="number">3</span>, E:<span class="number">4</span>);
 
-<span class="doccomment">/// A MMR proof data for a group of leaves.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">RuntimeDebug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">TypeInfo</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// The indices of the leaves the proof is for.</span>
-	<span class="kw">pub</span> <span class="ident">leaf_indices</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">LeafIndex</span><span class="op">&gt;</span>,
-	<span class="doccomment">/// Number of leaves in MMR, when the proof was generated.</span>
-	<span class="kw">pub</span> <span class="ident">leaf_count</span>: <span class="ident">NodeIndex</span>,
-	<span class="doccomment">/// Proof elements (hashes of siblings of inner nodes on the path to the leaf).</span>
-	<span class="kw">pub</span> <span class="ident">items</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A MMR proof data for a group of leaves.
+</span><span class="attribute">#[derive(codec::Encode, codec::Decode, RuntimeDebug, Clone, PartialEq, Eq, TypeInfo)]
+</span><span class="kw">pub struct </span>BatchProof&lt;Hash&gt; {
+	<span class="doccomment">/// The indices of the leaves the proof is for.
+	</span><span class="kw">pub </span>leaf_indices: Vec&lt;LeafIndex&gt;,
+	<span class="doccomment">/// Number of leaves in MMR, when the proof was generated.
+	</span><span class="kw">pub </span>leaf_count: NodeIndex,
+	<span class="doccomment">/// Proof elements (hashes of siblings of inner nodes on the path to the leaf).
+	</span><span class="kw">pub </span>items: Vec&lt;Hash&gt;,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Converts batch proof to single leaf proof</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_single_leaf_proof</span>(<span class="ident">proof</span>: <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-		<span class="prelude-val">Ok</span>(<span class="ident">Proof</span> {
-			<span class="ident">leaf_index</span>: <span class="kw-2">*</span><span class="ident">proof</span>.<span class="ident">leaf_indices</span>.<span class="ident">get</span>(<span class="number">0</span>).<span class="ident">ok_or</span>(<span class="ident">Error::InvalidLeafIndex</span>)<span class="question-mark">?</span>,
-			<span class="ident">leaf_count</span>: <span class="ident">proof</span>.<span class="ident">leaf_count</span>,
-			<span class="ident">items</span>: <span class="ident">proof</span>.<span class="ident">items</span>,
+<span class="kw">impl</span>&lt;Hash&gt; BatchProof&lt;Hash&gt; {
+	<span class="doccomment">/// Converts batch proof to single leaf proof
+	</span><span class="kw">pub fn </span>into_single_leaf_proof(proof: BatchProof&lt;Hash&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Proof&lt;Hash&gt;, Error&gt; {
+		<span class="prelude-val">Ok</span>(Proof {
+			leaf_index: <span class="kw-2">*</span>proof.leaf_indices.get(<span class="number">0</span>).ok_or(Error::InvalidLeafIndex)<span class="question-mark">?</span>,
+			leaf_count: proof.leaf_count,
+			items: proof.items,
 		})
 	}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> <span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-	<span class="doccomment">/// Converts a single leaf proof into a batch proof</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_batch_proof</span>(<span class="ident">proof</span>: <span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>) -&gt; <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span> {
-		<span class="ident">BatchProof</span> {
-			<span class="ident">leaf_indices</span>: <span class="macro">vec!</span>[<span class="ident">proof</span>.<span class="ident">leaf_index</span>],
-			<span class="ident">leaf_count</span>: <span class="ident">proof</span>.<span class="ident">leaf_count</span>,
-			<span class="ident">items</span>: <span class="ident">proof</span>.<span class="ident">items</span>,
+<span class="kw">impl</span>&lt;Hash&gt; Proof&lt;Hash&gt; {
+	<span class="doccomment">/// Converts a single leaf proof into a batch proof
+	</span><span class="kw">pub fn </span>into_batch_proof(proof: Proof&lt;Hash&gt;) -&gt; BatchProof&lt;Hash&gt; {
+		BatchProof {
+			leaf_indices: <span class="macro">vec!</span>[proof.leaf_index],
+			leaf_count: proof.leaf_count,
+			items: proof.items,
 		}
 	}
 }
-<span class="doccomment">/// Merkle Mountain Range operation error.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">RuntimeDebug</span>, <span class="ident">codec::Encode</span>, <span class="ident">codec::Decode</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
-	<span class="doccomment">/// Error during translation of a block number into a leaf index.</span>
-	<span class="ident">BlockNumToLeafIndex</span>,
-	<span class="doccomment">/// Error while pushing new node.</span>
-	<span class="ident">Push</span>,
-	<span class="doccomment">/// Error getting the new root.</span>
-	<span class="ident">GetRoot</span>,
-	<span class="doccomment">/// Error commiting changes.</span>
-	<span class="ident">Commit</span>,
-	<span class="doccomment">/// Error during proof generation.</span>
-	<span class="ident">GenerateProof</span>,
-	<span class="doccomment">/// Proof verification error.</span>
-	<span class="ident">Verify</span>,
-	<span class="doccomment">/// Leaf not found in the storage.</span>
-	<span class="ident">LeafNotFound</span>,
-	<span class="doccomment">/// Mmr Pallet not included in runtime</span>
-	<span class="ident">PalletNotIncluded</span>,
-	<span class="doccomment">/// Cannot find the requested leaf index</span>
-	<span class="ident">InvalidLeafIndex</span>,
-	<span class="doccomment">/// The provided best know block number is invalid.</span>
-	<span class="ident">InvalidBestKnownBlock</span>,
+<span class="doccomment">/// Merkle Mountain Range operation error.
+</span><span class="attribute">#[derive(RuntimeDebug, codec::Encode, codec::Decode, PartialEq, Eq)]
+</span><span class="kw">pub enum </span>Error {
+	<span class="doccomment">/// Error during translation of a block number into a leaf index.
+	</span>BlockNumToLeafIndex,
+	<span class="doccomment">/// Error while pushing new node.
+	</span>Push,
+	<span class="doccomment">/// Error getting the new root.
+	</span>GetRoot,
+	<span class="doccomment">/// Error commiting changes.
+	</span>Commit,
+	<span class="doccomment">/// Error during proof generation.
+	</span>GenerateProof,
+	<span class="doccomment">/// Proof verification error.
+	</span>Verify,
+	<span class="doccomment">/// Leaf not found in the storage.
+	</span>LeafNotFound,
+	<span class="doccomment">/// Mmr Pallet not included in runtime
+	</span>PalletNotIncluded,
+	<span class="doccomment">/// Cannot find the requested leaf index
+	</span>InvalidLeafIndex,
+	<span class="doccomment">/// The provided best know block number is invalid.
+	</span>InvalidBestKnownBlock,
 }
 
-<span class="kw">impl</span> <span class="ident">Error</span> {
-	<span class="attribute">#![<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
-	<span class="doccomment">/// Consume given error `e` with `self` and generate a native log entry with error details.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">log_error</span>(<span class="self">self</span>, <span class="ident">e</span>: <span class="kw">impl</span> <span class="ident">fmt::Debug</span>) -&gt; <span class="self">Self</span> {
+<span class="kw">impl </span>Error {
+	<span class="attribute">#![allow(unused_variables)]
+	</span><span class="doccomment">/// Consume given error `e` with `self` and generate a native log entry with error details.
+	</span><span class="kw">pub fn </span>log_error(<span class="self">self</span>, e: <span class="kw">impl </span>fmt::Debug) -&gt; <span class="self">Self </span>{
 		<span class="macro">log::error!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;runtime::mmr&quot;</span>,
+			target: <span class="string">&quot;runtime::mmr&quot;</span>,
 			<span class="string">&quot;[{:?}] MMR error: {:?}&quot;</span>,
 			<span class="self">self</span>,
-			<span class="ident">e</span>,
+			e,
 		);
-		<span class="self">self</span>
-	}
+		<span class="self">self
+	</span>}
 
-	<span class="doccomment">/// Consume given error `e` with `self` and generate a native log entry with error details.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">log_debug</span>(<span class="self">self</span>, <span class="ident">e</span>: <span class="kw">impl</span> <span class="ident">fmt::Debug</span>) -&gt; <span class="self">Self</span> {
+	<span class="doccomment">/// Consume given error `e` with `self` and generate a native log entry with error details.
+	</span><span class="kw">pub fn </span>log_debug(<span class="self">self</span>, e: <span class="kw">impl </span>fmt::Debug) -&gt; <span class="self">Self </span>{
 		<span class="macro">log::debug!</span>(
-			<span class="ident">target</span>: <span class="string">&quot;runtime::mmr&quot;</span>,
+			target: <span class="string">&quot;runtime::mmr&quot;</span>,
 			<span class="string">&quot;[{:?}] MMR error: {:?}&quot;</span>,
 			<span class="self">self</span>,
-			<span class="ident">e</span>,
+			e,
 		);
-		<span class="self">self</span>
+		<span class="self">self
+	</span>}
+}
+
+<span class="macro">sp_api::decl_runtime_apis! </span>{
+	<span class="doccomment">/// API to interact with MMR pallet.
+	</span><span class="kw">pub trait </span>MmrApi&lt;Hash: codec::Codec, BlockNumber: codec::Codec&gt; {
+		<span class="doccomment">/// Generate MMR proof for a block with a specified `block_number`.
+		</span><span class="kw">fn </span>generate_proof(block_number: BlockNumber) -&gt; <span class="prelude-ty">Result</span>&lt;(EncodableOpaqueLeaf, Proof&lt;Hash&gt;), Error&gt;;
+
+		<span class="doccomment">/// Verify MMR proof against on-chain MMR.
+		///
+		/// Note this function will use on-chain MMR root hash and check if the proof
+		/// matches the hash.
+		/// See [Self::verify_proof_stateless] for a stateless verifier.
+		</span><span class="kw">fn </span>verify_proof(leaf: EncodableOpaqueLeaf, proof: Proof&lt;Hash&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
+
+		<span class="doccomment">/// Verify MMR proof against given root hash.
+		///
+		/// Note this function does not require any on-chain storage - the
+		/// proof is verified against given MMR root hash.
+		///
+		/// The leaf data is expected to be encoded in its compact form.
+		</span><span class="kw">fn </span>verify_proof_stateless(root: Hash, leaf: EncodableOpaqueLeaf, proof: Proof&lt;Hash&gt;)
+			-&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
+
+		<span class="doccomment">/// Return the on-chain MMR root hash.
+		</span><span class="kw">fn </span>mmr_root() -&gt; <span class="prelude-ty">Result</span>&lt;Hash, Error&gt;;
+
+		<span class="doccomment">/// Generate MMR proof for a series of blocks with the specified block numbers.
+		</span><span class="kw">fn </span>generate_batch_proof(block_numbers: Vec&lt;BlockNumber&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;EncodableOpaqueLeaf&gt;, BatchProof&lt;Hash&gt;), Error&gt;;
+
+		<span class="doccomment">/// Generate MMR proof for a series of `block_numbers`, given the `best_known_block_number`.
+		</span><span class="kw">fn </span>generate_historical_batch_proof(
+			block_numbers: Vec&lt;BlockNumber&gt;,
+			best_known_block_number: BlockNumber
+		) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;EncodableOpaqueLeaf&gt;, BatchProof&lt;Hash&gt;), Error&gt;;
+
+		<span class="doccomment">/// Verify MMR proof against on-chain MMR for a batch of leaves.
+		///
+		/// Note this function will use on-chain MMR root hash and check if the proof
+		/// matches the hash.
+		/// Note, the leaves should be sorted such that corresponding leaves and leaf indices have the
+		/// same position in both the `leaves` vector and the `leaf_indices` vector contained in the [BatchProof]
+		</span><span class="kw">fn </span>verify_batch_proof(leaves: Vec&lt;EncodableOpaqueLeaf&gt;, proof: BatchProof&lt;Hash&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
+
+		<span class="doccomment">/// Verify MMR proof against given root hash or a batch of leaves.
+		///
+		/// Note this function does not require any on-chain storage - the
+		/// proof is verified against given MMR root hash.
+		///
+		/// Note, the leaves should be sorted such that corresponding leaves and leaf indices have the
+		/// same position in both the `leaves` vector and the `leaf_indices` vector contained in the [BatchProof]
+		</span><span class="kw">fn </span>verify_batch_proof_stateless(root: Hash, leaves: Vec&lt;EncodableOpaqueLeaf&gt;, proof: BatchProof&lt;Hash&gt;)
+			-&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
 	}
 }
 
-<span class="macro">sp_api::decl_runtime_apis!</span> {
-	<span class="doccomment">/// API to interact with MMR pallet.</span>
-	<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">MmrApi</span><span class="op">&lt;</span><span class="ident">Hash</span>: <span class="ident">codec::Codec</span>, <span class="ident">BlockNumber</span>: <span class="ident">codec::Codec</span><span class="op">&gt;</span> {
-		<span class="doccomment">/// Generate MMR proof for a block with a specified `block_number`.</span>
-		<span class="kw">fn</span> <span class="ident">generate_proof</span>(<span class="ident">block_number</span>: <span class="ident">BlockNumber</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">EncodableOpaqueLeaf</span>, <span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-		<span class="doccomment">/// Verify MMR proof against on-chain MMR.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Note this function will use on-chain MMR root hash and check if the proof</span>
-		<span class="doccomment">/// matches the hash.</span>
-		<span class="doccomment">/// See [Self::verify_proof_stateless] for a stateless verifier.</span>
-		<span class="kw">fn</span> <span class="ident">verify_proof</span>(<span class="ident">leaf</span>: <span class="ident">EncodableOpaqueLeaf</span>, <span class="ident">proof</span>: <span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
+	<span class="kw">use </span>codec::Decode;
+	<span class="kw">use </span>sp_core::H256;
+	<span class="kw">use </span>sp_runtime::traits::Keccak256;
 
-		<span class="doccomment">/// Verify MMR proof against given root hash.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Note this function does not require any on-chain storage - the</span>
-		<span class="doccomment">/// proof is verified against given MMR root hash.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// The leaf data is expected to be encoded in its compact form.</span>
-		<span class="kw">fn</span> <span class="ident">verify_proof_stateless</span>(<span class="ident">root</span>: <span class="ident">Hash</span>, <span class="ident">leaf</span>: <span class="ident">EncodableOpaqueLeaf</span>, <span class="ident">proof</span>: <span class="ident">Proof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>)
-			-&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
-
-		<span class="doccomment">/// Return the on-chain MMR root hash.</span>
-		<span class="kw">fn</span> <span class="ident">mmr_root</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Hash</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
-
-		<span class="doccomment">/// Generate MMR proof for a series of blocks with the specified block numbers.</span>
-		<span class="kw">fn</span> <span class="ident">generate_batch_proof</span>(<span class="ident">block_numbers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
-
-		<span class="doccomment">/// Generate MMR proof for a series of `block_numbers`, given the `best_known_block_number`.</span>
-		<span class="kw">fn</span> <span class="ident">generate_historical_batch_proof</span>(
-			<span class="ident">block_numbers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BlockNumber</span><span class="op">&gt;</span>,
-			<span class="ident">best_known_block_number</span>: <span class="ident">BlockNumber</span>
-		) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>), <span class="ident">Error</span><span class="op">&gt;</span>;
-
-		<span class="doccomment">/// Verify MMR proof against on-chain MMR for a batch of leaves.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Note this function will use on-chain MMR root hash and check if the proof</span>
-		<span class="doccomment">/// matches the hash.</span>
-		<span class="doccomment">/// Note, the leaves should be sorted such that corresponding leaves and leaf indices have the</span>
-		<span class="doccomment">/// same position in both the `leaves` vector and the `leaf_indices` vector contained in the [BatchProof]</span>
-		<span class="kw">fn</span> <span class="ident">verify_batch_proof</span>(<span class="ident">leaves</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">proof</span>: <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
-
-		<span class="doccomment">/// Verify MMR proof against given root hash or a batch of leaves.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Note this function does not require any on-chain storage - the</span>
-		<span class="doccomment">/// proof is verified against given MMR root hash.</span>
-		<span class="doccomment">///</span>
-		<span class="doccomment">/// Note, the leaves should be sorted such that corresponding leaves and leaf indices have the</span>
-		<span class="doccomment">/// same position in both the `leaves` vector and the `leaf_indices` vector contained in the [BatchProof]</span>
-		<span class="kw">fn</span> <span class="ident">verify_batch_proof_stateless</span>(<span class="ident">root</span>: <span class="ident">Hash</span>, <span class="ident">leaves</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">EncodableOpaqueLeaf</span><span class="op">&gt;</span>, <span class="ident">proof</span>: <span class="ident">BatchProof</span><span class="op">&lt;</span><span class="ident">Hash</span><span class="op">&gt;</span>)
-			-&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
-	}
-}
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-
-	<span class="kw">use</span> <span class="ident">codec::Decode</span>;
-	<span class="kw">use</span> <span class="ident">sp_core::H256</span>;
-	<span class="kw">use</span> <span class="ident">sp_runtime::traits::Keccak256</span>;
-
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">hex</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">H256</span> {
-		<span class="ident">s</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>()
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>hex(s: <span class="kw-2">&amp;</span>str) -&gt; H256 {
+		s.parse().unwrap()
 	}
 
-	<span class="kw">type</span> <span class="ident">Test</span> <span class="op">=</span> <span class="ident">DataOrHash</span><span class="op">&lt;</span><span class="ident">Keccak256</span>, <span class="ident">String</span><span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">TestCompact</span> <span class="op">=</span> <span class="ident">Compact</span><span class="op">&lt;</span><span class="ident">Keccak256</span>, (<span class="ident">Test</span>, <span class="ident">Test</span>)<span class="op">&gt;</span>;
-	<span class="kw">type</span> <span class="ident">TestProof</span> <span class="op">=</span> <span class="ident">Proof</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">Keccak256</span> <span class="kw">as</span> <span class="ident">traits::Hash</span><span class="op">&gt;</span><span class="ident">::Output</span><span class="op">&gt;</span>;
+	<span class="kw">type </span>Test = DataOrHash&lt;Keccak256, String&gt;;
+	<span class="kw">type </span>TestCompact = Compact&lt;Keccak256, (Test, Test)&gt;;
+	<span class="kw">type </span>TestProof = Proof&lt;&lt;Keccak256 <span class="kw">as </span>traits::Hash&gt;::Output&gt;;
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">should_encode_decode_proof</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">proof</span>: <span class="ident">TestProof</span> <span class="op">=</span> <span class="ident">Proof</span> {
-			<span class="ident">leaf_index</span>: <span class="number">5</span>,
-			<span class="ident">leaf_count</span>: <span class="number">10</span>,
-			<span class="ident">items</span>: <span class="macro">vec!</span>[
-				<span class="ident">hex</span>(<span class="string">&quot;c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>),
-				<span class="ident">hex</span>(<span class="string">&quot;d3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>),
-				<span class="ident">hex</span>(<span class="string">&quot;e3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>),
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>should_encode_decode_proof() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>proof: TestProof = Proof {
+			leaf_index: <span class="number">5</span>,
+			leaf_count: <span class="number">10</span>,
+			items: <span class="macro">vec!</span>[
+				hex(<span class="string">&quot;c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>),
+				hex(<span class="string">&quot;d3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>),
+				hex(<span class="string">&quot;e3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>),
 			],
 		};
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">codec::Encode::encode</span>(<span class="kw-2">&amp;</span><span class="ident">proof</span>);
-		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">TestProof::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>);
+		<span class="comment">// when
+		</span><span class="kw">let </span>encoded = codec::Encode::encode(<span class="kw-2">&amp;</span>proof);
+		<span class="kw">let </span>decoded = TestProof::decode(<span class="kw-2">&amp;mut &amp;*</span>encoded);
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>, <span class="prelude-val">Ok</span>(<span class="ident">proof</span>));
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(decoded, <span class="prelude-val">Ok</span>(proof));
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">should_encode_decode_correctly_if_no_compact</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">cases</span> <span class="op">=</span> <span class="macro">vec!</span>[
-			<span class="ident">Test::Data</span>(<span class="string">&quot;Hello World!&quot;</span>.<span class="ident">into</span>()),
-			<span class="ident">Test::Hash</span>(<span class="ident">hex</span>(<span class="string">&quot;c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>)),
-			<span class="ident">Test::Data</span>(<span class="string">&quot;&quot;</span>.<span class="ident">into</span>()),
-			<span class="ident">Test::Data</span>(<span class="string">&quot;3e48d6bcd417fb22e044747242451e2c0f3e602d1bcad2767c34808621956417&quot;</span>.<span class="ident">into</span>()),
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>should_encode_decode_correctly_if_no_compact() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>cases = <span class="macro">vec!</span>[
+			Test::Data(<span class="string">&quot;Hello World!&quot;</span>.into()),
+			Test::Hash(hex(<span class="string">&quot;c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>)),
+			Test::Data(<span class="string">&quot;&quot;</span>.into()),
+			Test::Data(<span class="string">&quot;3e48d6bcd417fb22e044747242451e2c0f3e602d1bcad2767c34808621956417&quot;</span>.into()),
 		];
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">cases</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">codec::Encode::encode</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="comment">// when
+		</span><span class="kw">let </span>encoded = cases.iter().map(codec::Encode::encode).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">encoded</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">Test::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">x</span>)).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">let </span>decoded = encoded.iter().map(|x| Test::decode(<span class="kw-2">&amp;mut &amp;**</span>x)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(
-			<span class="ident">decoded</span>,
-			<span class="ident">cases</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="prelude-ty">Result</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">codec::Error</span><span class="op">&gt;</span><span class="ident">::Ok</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(
+			decoded,
+			cases.into_iter().map(<span class="prelude-ty">Result</span>::&lt;<span class="kw">_</span>, codec::Error&gt;::Ok).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
 		);
-		<span class="comment">// check encoding correctness</span>
-		<span class="macro">assert_eq!</span>(
-			<span class="kw-2">&amp;</span><span class="ident">encoded</span>[<span class="number">0</span>],
-			<span class="kw-2">&amp;</span><span class="ident">array_bytes::hex2bytes_unchecked</span>(<span class="string">&quot;00343048656c6c6f20576f726c6421&quot;</span>)
+		<span class="comment">// check encoding correctness
+		</span><span class="macro">assert_eq!</span>(
+			<span class="kw-2">&amp;</span>encoded[<span class="number">0</span>],
+			<span class="kw-2">&amp;</span>array_bytes::hex2bytes_unchecked(<span class="string">&quot;00343048656c6c6f20576f726c6421&quot;</span>)
 		);
 		<span class="macro">assert_eq!</span>(
-			<span class="ident">encoded</span>[<span class="number">1</span>].<span class="ident">as_slice</span>(),
-			<span class="ident">array_bytes::hex2bytes_unchecked</span>(
-				<span class="string">&quot;01c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>
-			)
-			.<span class="ident">as_slice</span>()
+			encoded[<span class="number">1</span>].as_slice(),
+			array_bytes::hex2bytes_unchecked(
+				<span class="string">&quot;01c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;
+			</span>)
+			.as_slice()
 		);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">should_return_the_hash_correctly</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Test::Data</span>(<span class="string">&quot;Hello World!&quot;</span>.<span class="ident">into</span>());
-		<span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">Test::Hash</span>(<span class="ident">hex</span>(<span class="string">&quot;c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>));
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>should_return_the_hash_correctly() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>a = Test::Data(<span class="string">&quot;Hello World!&quot;</span>.into());
+		<span class="kw">let </span>b = Test::Hash(hex(<span class="string">&quot;c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>));
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">hash</span>();
-		<span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">b</span>.<span class="ident">hash</span>();
+		<span class="comment">// when
+		</span><span class="kw">let </span>a = a.hash();
+		<span class="kw">let </span>b = b.hash();
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">a</span>, <span class="ident">hex</span>(<span class="string">&quot;a9c321be8c24ba4dc2bd73f5300bde67dc57228ab8b68b607bb4c39c5374fac9&quot;</span>));
-		<span class="macro">assert_eq!</span>(<span class="ident">b</span>, <span class="ident">hex</span>(<span class="string">&quot;c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>));
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(a, hex(<span class="string">&quot;a9c321be8c24ba4dc2bd73f5300bde67dc57228ab8b68b607bb4c39c5374fac9&quot;</span>));
+		<span class="macro">assert_eq!</span>(b, hex(<span class="string">&quot;c3e7ba6b511162fead58f2c8b5764ce869ed1118011ac37392522ed16720bbcd&quot;</span>));
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">compact_should_work</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Test::Data</span>(<span class="string">&quot;Hello World!&quot;</span>.<span class="ident">into</span>());
-		<span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">Test::Data</span>(<span class="string">&quot;&quot;</span>.<span class="ident">into</span>());
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>compact_should_work() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>a = Test::Data(<span class="string">&quot;Hello World!&quot;</span>.into());
+		<span class="kw">let </span>b = Test::Data(<span class="string">&quot;&quot;</span>.into());
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">c</span>: <span class="ident">TestCompact</span> <span class="op">=</span> <span class="ident">Compact::new</span>((<span class="ident">a</span>.<span class="ident">clone</span>(), <span class="ident">b</span>.<span class="ident">clone</span>()));
-		<span class="kw">let</span> <span class="ident">d</span>: <span class="ident">TestCompact</span> <span class="op">=</span> <span class="ident">Compact::new</span>((<span class="ident">Test::Hash</span>(<span class="ident">a</span>.<span class="ident">hash</span>()), <span class="ident">Test::Hash</span>(<span class="ident">b</span>.<span class="ident">hash</span>())));
+		<span class="comment">// when
+		</span><span class="kw">let </span>c: TestCompact = Compact::new((a.clone(), b.clone()));
+		<span class="kw">let </span>d: TestCompact = Compact::new((Test::Hash(a.hash()), Test::Hash(b.hash())));
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">c</span>.<span class="ident">hash</span>(), <span class="ident">d</span>.<span class="ident">hash</span>());
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(c.hash(), d.hash());
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">compact_should_encode_decode_correctly</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Test::Data</span>(<span class="string">&quot;Hello World!&quot;</span>.<span class="ident">into</span>());
-		<span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">Test::Data</span>(<span class="string">&quot;&quot;</span>.<span class="ident">into</span>());
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>compact_should_encode_decode_correctly() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>a = Test::Data(<span class="string">&quot;Hello World!&quot;</span>.into());
+		<span class="kw">let </span>b = Test::Data(<span class="string">&quot;&quot;</span>.into());
 
-		<span class="kw">let</span> <span class="ident">c</span>: <span class="ident">TestCompact</span> <span class="op">=</span> <span class="ident">Compact::new</span>((<span class="ident">a</span>.<span class="ident">clone</span>(), <span class="ident">b</span>.<span class="ident">clone</span>()));
-		<span class="kw">let</span> <span class="ident">d</span>: <span class="ident">TestCompact</span> <span class="op">=</span> <span class="ident">Compact::new</span>((<span class="ident">Test::Hash</span>(<span class="ident">a</span>.<span class="ident">hash</span>()), <span class="ident">Test::Hash</span>(<span class="ident">b</span>.<span class="ident">hash</span>())));
-		<span class="kw">let</span> <span class="ident">cases</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">c</span>, <span class="ident">d</span>.<span class="ident">clone</span>()];
+		<span class="kw">let </span>c: TestCompact = Compact::new((a.clone(), b.clone()));
+		<span class="kw">let </span>d: TestCompact = Compact::new((Test::Hash(a.hash()), Test::Hash(b.hash())));
+		<span class="kw">let </span>cases = <span class="macro">vec!</span>[c, d.clone()];
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">encoded_compact</span> <span class="op">=</span>
-			<span class="ident">cases</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">using_encoded</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">to_vec</span>(), <span class="bool-val">true</span>)).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="comment">// when
+		</span><span class="kw">let </span>encoded_compact =
+			cases.iter().map(|c| c.using_encoded(|x| x.to_vec(), <span class="bool-val">true</span>)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span>
-			<span class="ident">cases</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">using_encoded</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">to_vec</span>(), <span class="bool-val">false</span>)).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">let </span>encoded =
+			cases.iter().map(|c| c.using_encoded(|x| x.to_vec(), <span class="bool-val">false</span>)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="kw">let</span> <span class="ident">decoded_compact</span> <span class="op">=</span> <span class="ident">encoded_compact</span>
-			.<span class="ident">iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">TestCompact::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">x</span>))
-			.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">let </span>decoded_compact = encoded_compact
+			.iter()
+			.map(|x| TestCompact::decode(<span class="kw-2">&amp;mut &amp;**</span>x))
+			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="ident">encoded</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">TestCompact::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">x</span>)).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">let </span>decoded = encoded.iter().map(|x| TestCompact::decode(<span class="kw-2">&amp;mut &amp;**</span>x)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(
-			<span class="ident">decoded</span>,
-			<span class="ident">cases</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="prelude-ty">Result</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">codec::Error</span><span class="op">&gt;</span><span class="ident">::Ok</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(
+			decoded,
+			cases.into_iter().map(<span class="prelude-ty">Result</span>::&lt;<span class="kw">_</span>, codec::Error&gt;::Ok).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
 		);
 
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded_compact</span>, <span class="macro">vec!</span>[<span class="prelude-val">Ok</span>(<span class="ident">d</span>.<span class="ident">clone</span>()), <span class="prelude-val">Ok</span>(<span class="ident">d</span>.<span class="ident">clone</span>())]);
+		<span class="macro">assert_eq!</span>(decoded_compact, <span class="macro">vec!</span>[<span class="prelude-val">Ok</span>(d.clone()), <span class="prelude-val">Ok</span>(d.clone())]);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">opaque_leaves_should_be_full_leaf_compatible</span>() {
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Test::Data</span>(<span class="string">&quot;Hello World!&quot;</span>.<span class="ident">into</span>());
-		<span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">Test::Data</span>(<span class="string">&quot;&quot;</span>.<span class="ident">into</span>());
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>opaque_leaves_should_be_full_leaf_compatible() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>a = Test::Data(<span class="string">&quot;Hello World!&quot;</span>.into());
+		<span class="kw">let </span>b = Test::Data(<span class="string">&quot;&quot;</span>.into());
 
-		<span class="kw">let</span> <span class="ident">c</span>: <span class="ident">TestCompact</span> <span class="op">=</span> <span class="ident">Compact::new</span>((<span class="ident">a</span>.<span class="ident">clone</span>(), <span class="ident">b</span>.<span class="ident">clone</span>()));
-		<span class="kw">let</span> <span class="ident">d</span>: <span class="ident">TestCompact</span> <span class="op">=</span> <span class="ident">Compact::new</span>((<span class="ident">Test::Hash</span>(<span class="ident">a</span>.<span class="ident">hash</span>()), <span class="ident">Test::Hash</span>(<span class="ident">b</span>.<span class="ident">hash</span>())));
-		<span class="kw">let</span> <span class="ident">cases</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">c</span>, <span class="ident">d</span>.<span class="ident">clone</span>()];
+		<span class="kw">let </span>c: TestCompact = Compact::new((a.clone(), b.clone()));
+		<span class="kw">let </span>d: TestCompact = Compact::new((Test::Hash(a.hash()), Test::Hash(b.hash())));
+		<span class="kw">let </span>cases = <span class="macro">vec!</span>[c, d.clone()];
 
-		<span class="kw">let</span> <span class="ident">encoded_compact</span> <span class="op">=</span> <span class="ident">cases</span>
-			.<span class="ident">iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">using_encoded</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">to_vec</span>(), <span class="bool-val">true</span>))
-			.<span class="ident">map</span>(<span class="ident">OpaqueLeaf::from_encoded_leaf</span>)
-			.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">let </span>encoded_compact = cases
+			.iter()
+			.map(|c| c.using_encoded(|x| x.to_vec(), <span class="bool-val">true</span>))
+			.map(OpaqueLeaf::from_encoded_leaf)
+			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="kw">let</span> <span class="ident">opaque</span> <span class="op">=</span> <span class="ident">cases</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="ident">OpaqueLeaf::from_leaf</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="kw">let </span>opaque = cases.iter().map(OpaqueLeaf::from_leaf).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">encoded_compact</span>, <span class="ident">opaque</span>);
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(encoded_compact, opaque);
 	}
 
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">encode_opaque_leaf_should_be_scale_compatible</span>() {
-		<span class="kw">use</span> <span class="ident">codec::Encode</span>;
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>encode_opaque_leaf_should_be_scale_compatible() {
+		<span class="kw">use </span>codec::Encode;
 
-		<span class="comment">// given</span>
-		<span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Test::Data</span>(<span class="string">&quot;Hello World!&quot;</span>.<span class="ident">into</span>());
-		<span class="kw">let</span> <span class="ident">case1</span> <span class="op">=</span> <span class="ident">EncodableOpaqueLeaf::from_leaf</span>(<span class="kw-2">&amp;</span><span class="ident">a</span>);
-		<span class="kw">let</span> <span class="ident">case2</span> <span class="op">=</span> <span class="ident">EncodableOpaqueLeaf::from_opaque_leaf</span>(<span class="ident">OpaqueLeaf</span>(<span class="ident">a</span>.<span class="ident">encode</span>()));
-		<span class="kw">let</span> <span class="ident">case3</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">encode</span>().<span class="ident">encode</span>();
+		<span class="comment">// given
+		</span><span class="kw">let </span>a = Test::Data(<span class="string">&quot;Hello World!&quot;</span>.into());
+		<span class="kw">let </span>case1 = EncodableOpaqueLeaf::from_leaf(<span class="kw-2">&amp;</span>a);
+		<span class="kw">let </span>case2 = EncodableOpaqueLeaf::from_opaque_leaf(OpaqueLeaf(a.encode()));
+		<span class="kw">let </span>case3 = a.encode().encode();
 
-		<span class="comment">// when</span>
-		<span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="kw-2">&amp;</span><span class="ident">case1</span>, <span class="kw-2">&amp;</span><span class="ident">case2</span>].<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">encode</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-		<span class="kw">let</span> <span class="ident">decoded</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>[<span class="number">0</span>], <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">encoded</span>[<span class="number">1</span>], <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">case3</span>]
-			.<span class="ident">into_iter</span>()
-			.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">EncodableOpaqueLeaf::decode</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">x</span>))
-			.<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+		<span class="comment">// when
+		</span><span class="kw">let </span>encoded = <span class="macro">vec!</span>[<span class="kw-2">&amp;</span>case1, <span class="kw-2">&amp;</span>case2].into_iter().map(|x| x.encode()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+		<span class="kw">let </span>decoded = <span class="macro">vec!</span>[<span class="kw-2">&amp;*</span>encoded[<span class="number">0</span>], <span class="kw-2">&amp;*</span>encoded[<span class="number">1</span>], <span class="kw-2">&amp;*</span>case3]
+			.into_iter()
+			.map(|x| EncodableOpaqueLeaf::decode(<span class="kw-2">&amp;mut &amp;*</span>x))
+			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
-		<span class="comment">// then</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">case1</span>, <span class="ident">case2</span>);
-		<span class="macro">assert_eq!</span>(<span class="ident">encoded</span>[<span class="number">0</span>], <span class="ident">encoded</span>[<span class="number">1</span>]);
-		<span class="comment">// then encoding should also match double-encoded leaf.</span>
-		<span class="macro">assert_eq!</span>(<span class="ident">encoded</span>[<span class="number">0</span>], <span class="ident">case3</span>);
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(case1, case2);
+		<span class="macro">assert_eq!</span>(encoded[<span class="number">0</span>], encoded[<span class="number">1</span>]);
+		<span class="comment">// then encoding should also match double-encoded leaf.
+		</span><span class="macro">assert_eq!</span>(encoded[<span class="number">0</span>], case3);
 
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>[<span class="number">0</span>], <span class="ident">decoded</span>[<span class="number">1</span>]);
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>[<span class="number">1</span>], <span class="ident">decoded</span>[<span class="number">2</span>]);
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>[<span class="number">0</span>], <span class="prelude-val">Ok</span>(<span class="ident">case2</span>));
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>[<span class="number">1</span>], <span class="prelude-val">Ok</span>(<span class="ident">case1</span>));
+		<span class="macro">assert_eq!</span>(decoded[<span class="number">0</span>], decoded[<span class="number">1</span>]);
+		<span class="macro">assert_eq!</span>(decoded[<span class="number">1</span>], decoded[<span class="number">2</span>]);
+		<span class="macro">assert_eq!</span>(decoded[<span class="number">0</span>], <span class="prelude-val">Ok</span>(case2));
+		<span class="macro">assert_eq!</span>(decoded[<span class="number">1</span>], <span class="prelude-val">Ok</span>(case1));
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sp_mmr_primitives" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sp_mmr_primitives" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

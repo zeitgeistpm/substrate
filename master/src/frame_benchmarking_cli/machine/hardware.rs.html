@@ -1,10 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/machine/hardware.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>hardware.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a><h2 class="location"></h2>
-    </nav>
-    <nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1">
-                                <a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div>
-                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `utils/frame/benchmarking-cli/src/machine/hardware.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>hardware.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" href="../../../normalize.css"><link rel="stylesheet" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" href="../../../ayu.css" disabled><link rel="stylesheet" href="../../../dark.css" disabled><link rel="stylesheet" href="../../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../../storage.js"></script><script defer src="../../../source-script.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../main.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><a class="sidebar-logo" href="../../../frame_benchmarking_cli/index.html"><div class="logo-container"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../../frame_benchmarking_cli/index.html"><img class="rust-logo" src="../../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><span id="1">1</span>
 <span id="2">2</span>
 <span id="3">3</span>
 <span id="4">4</span>
@@ -195,197 +189,196 @@
 <span id="189">189</span>
 <span id="190">190</span>
 <span id="191">191</span>
-</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.</span>
+</pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
-<span class="comment">// Copyright (C) 2022 Parity Technologies (UK) Ltd.</span>
-<span class="comment">// SPDX-License-Identifier: Apache-2.0</span>
+// Copyright (C) 2022 Parity Technologies (UK) Ltd.
+// SPDX-License-Identifier: Apache-2.0
 
-<span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
-<span class="comment">// you may not use this file except in compliance with the License.</span>
-<span class="comment">// You may obtain a copy of the License at</span>
-<span class="comment">//</span>
-<span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="comment">//</span>
-<span class="comment">// Unless required by applicable law or agreed to in writing, software</span>
-<span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
-<span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
-<span class="comment">// See the License for the specific language governing permissions and</span>
-<span class="comment">// limitations under the License.</span>
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-<span class="doccomment">//! Contains types to define hardware requirements.</span>
+</span><span class="doccomment">//! Contains types to define hardware requirements.
 
-<span class="kw">use</span> <span class="ident">lazy_static::lazy_static</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::fmt</span>;
+</span><span class="kw">use </span>lazy_static::lazy_static;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>std::fmt;
 
-<span class="macro">lazy_static!</span> {
-	<span class="doccomment">/// The hardware requirements as measured on reference hardware.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// These values are provided by Parity, however it is possible</span>
-	<span class="doccomment">/// to use your own requirements if you are running a custom chain.</span>
-	<span class="doccomment">///</span>
-	<span class="doccomment">/// The reference hardware is describe here:</span>
-	<span class="doccomment">/// &lt;https://wiki.polkadot.network/docs/maintain-guides-how-to-validate-polkadot&gt;</span>
-	<span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">SUBSTRATE_REFERENCE_HARDWARE</span>: <span class="ident">Requirements</span> <span class="op">=</span> {
-		<span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="macro">include_bytes!</span>(<span class="string">&quot;reference_hardware.json&quot;</span>).<span class="ident">as_slice</span>();
-		<span class="ident">serde_json::from_slice</span>(<span class="ident">raw</span>).<span class="ident">expect</span>(<span class="string">&quot;Hardcoded data is known good; qed&quot;</span>)
+<span class="macro">lazy_static! </span>{
+	<span class="doccomment">/// The hardware requirements as measured on reference hardware.
+	///
+	/// These values are provided by Parity, however it is possible
+	/// to use your own requirements if you are running a custom chain.
+	///
+	/// The reference hardware is describe here:
+	/// &lt;https://wiki.polkadot.network/docs/maintain-guides-how-to-validate-polkadot&gt;
+	</span><span class="kw">pub static </span><span class="kw-2">ref </span>SUBSTRATE_REFERENCE_HARDWARE: Requirements = {
+		<span class="kw">let </span>raw = <span class="macro">include_bytes!</span>(<span class="string">&quot;reference_hardware.json&quot;</span>).as_slice();
+		serde_json::from_slice(raw).expect(<span class="string">&quot;Hardcoded data is known good; qed&quot;</span>)
 	};
 }
 
-<span class="doccomment">/// Multiple requirements for the hardware.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Requirements</span>(<span class="kw">pub</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Requirement</span><span class="op">&gt;</span>);
+<span class="doccomment">/// Multiple requirements for the hardware.
+</span><span class="attribute">#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+</span><span class="kw">pub struct </span>Requirements(<span class="kw">pub </span>Vec&lt;Requirement&gt;);
 
-<span class="doccomment">/// A single requirement for the hardware.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Requirement</span> {
-	<span class="doccomment">/// The metric to measure.</span>
-	<span class="kw">pub</span> <span class="ident">metric</span>: <span class="ident">Metric</span>,
-	<span class="doccomment">/// The minimal throughput that needs to be archived for this requirement.</span>
-	<span class="kw">pub</span> <span class="ident">minimum</span>: <span class="ident">Throughput</span>,
+<span class="doccomment">/// A single requirement for the hardware.
+</span><span class="attribute">#[derive(Deserialize, Serialize, Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">pub struct </span>Requirement {
+	<span class="doccomment">/// The metric to measure.
+	</span><span class="kw">pub </span>metric: Metric,
+	<span class="doccomment">/// The minimal throughput that needs to be archived for this requirement.
+	</span><span class="kw">pub </span>minimum: Throughput,
 }
 
-<span class="doccomment">/// A single hardware metric.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// The implementation of these is in `sc-sysinfo`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Metric</span> {
-	<span class="doccomment">/// SR25519 signature verification.</span>
-	<span class="ident">Sr25519Verify</span>,
-	<span class="doccomment">/// Blake2-256 hashing algorithm.</span>
-	<span class="ident">Blake2256</span>,
-	<span class="doccomment">/// Copying data in RAM.</span>
-	<span class="ident">MemCopy</span>,
-	<span class="doccomment">/// Disk sequential write.</span>
-	<span class="ident">DiskSeqWrite</span>,
-	<span class="doccomment">/// Disk random write.</span>
-	<span class="ident">DiskRndWrite</span>,
+<span class="doccomment">/// A single hardware metric.
+///
+/// The implementation of these is in `sc-sysinfo`.
+</span><span class="attribute">#[derive(Deserialize, Serialize, Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">pub enum </span>Metric {
+	<span class="doccomment">/// SR25519 signature verification.
+	</span>Sr25519Verify,
+	<span class="doccomment">/// Blake2-256 hashing algorithm.
+	</span>Blake2256,
+	<span class="doccomment">/// Copying data in RAM.
+	</span>MemCopy,
+	<span class="doccomment">/// Disk sequential write.
+	</span>DiskSeqWrite,
+	<span class="doccomment">/// Disk random write.
+	</span>DiskRndWrite,
 }
 
-<span class="doccomment">/// Throughput as measured in bytes per second.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Throughput</span> {
-	<span class="doccomment">/// KiB/s</span>
-	<span class="ident">KiBs</span>(<span class="ident">f64</span>),
-	<span class="doccomment">/// MiB/s</span>
-	<span class="ident">MiBs</span>(<span class="ident">f64</span>),
-	<span class="doccomment">/// GiB/s</span>
-	<span class="ident">GiBs</span>(<span class="ident">f64</span>),
+<span class="doccomment">/// Throughput as measured in bytes per second.
+</span><span class="attribute">#[derive(Deserialize, Serialize, Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">pub enum </span>Throughput {
+	<span class="doccomment">/// KiB/s
+	</span>KiBs(f64),
+	<span class="doccomment">/// MiB/s
+	</span>MiBs(f64),
+	<span class="doccomment">/// GiB/s
+	</span>GiBs(f64),
 }
 
-<span class="kw">impl</span> <span class="ident">Metric</span> {
-	<span class="doccomment">/// The category of the metric.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">category</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::Sr25519Verify</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::Blake2256</span> =&gt; <span class="string">&quot;CPU&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::MemCopy</span> =&gt; <span class="string">&quot;Memory&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::DiskSeqWrite</span> <span class="op">|</span> <span class="ident"><span class="self">Self</span>::DiskRndWrite</span> =&gt; <span class="string">&quot;Disk&quot;</span>,
+<span class="kw">impl </span>Metric {
+	<span class="doccomment">/// The category of the metric.
+	</span><span class="kw">pub fn </span>category(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+		<span class="kw">match </span><span class="self">self </span>{
+			<span class="self">Self</span>::Sr25519Verify | <span class="self">Self</span>::Blake2256 =&gt; <span class="string">&quot;CPU&quot;</span>,
+			<span class="self">Self</span>::MemCopy =&gt; <span class="string">&quot;Memory&quot;</span>,
+			<span class="self">Self</span>::DiskSeqWrite | <span class="self">Self</span>::DiskRndWrite =&gt; <span class="string">&quot;Disk&quot;</span>,
 		}
 	}
 
-	<span class="doccomment">/// The name of the metric. It is always prefixed by the [`self::category()`].</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::Sr25519Verify</span> =&gt; <span class="string">&quot;SR25519-Verify&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::Blake2256</span> =&gt; <span class="string">&quot;BLAKE2-256&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::MemCopy</span> =&gt; <span class="string">&quot;Copy&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::DiskSeqWrite</span> =&gt; <span class="string">&quot;Seq Write&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::DiskRndWrite</span> =&gt; <span class="string">&quot;Rnd Write&quot;</span>,
-		}
-	}
-}
-
-<span class="kw">const</span> <span class="ident">KIBIBYTE</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="number">1024.0</span>;
-
-<span class="kw">impl</span> <span class="ident">Throughput</span> {
-	<span class="doccomment">/// The unit of the metric.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::KiBs</span>(<span class="kw">_</span>) =&gt; <span class="string">&quot;KiB/s&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::MiBs</span>(<span class="kw">_</span>) =&gt; <span class="string">&quot;MiB/s&quot;</span>,
-			<span class="ident"><span class="self">Self</span>::GiBs</span>(<span class="kw">_</span>) =&gt; <span class="string">&quot;GiB/s&quot;</span>,
-		}
-	}
-
-	<span class="doccomment">/// [`Self`] as number of byte/s.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_bs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
-		<span class="self">self</span>.<span class="ident">to_kibs</span>() <span class="op">*</span> <span class="ident">KIBIBYTE</span>
-	}
-
-	<span class="doccomment">/// [`Self`] as number of kibibyte/s.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_kibs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
-		<span class="self">self</span>.<span class="ident">to_mibs</span>() <span class="op">*</span> <span class="ident">KIBIBYTE</span>
-	}
-
-	<span class="doccomment">/// [`Self`] as number of mebibyte/s.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_mibs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
-		<span class="self">self</span>.<span class="ident">to_gibs</span>() <span class="op">*</span> <span class="ident">KIBIBYTE</span>
-	}
-
-	<span class="doccomment">/// [`Self`] as number of gibibyte/s.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_gibs</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">f64</span> {
-		<span class="kw">match</span> <span class="self">self</span> {
-			<span class="ident"><span class="self">Self</span>::KiBs</span>(<span class="ident">k</span>) =&gt; <span class="kw-2">*</span><span class="ident">k</span> <span class="op">/</span> (<span class="ident">KIBIBYTE</span> <span class="op">*</span> <span class="ident">KIBIBYTE</span>),
-			<span class="ident"><span class="self">Self</span>::MiBs</span>(<span class="ident">m</span>) =&gt; <span class="kw-2">*</span><span class="ident">m</span> <span class="op">/</span> <span class="ident">KIBIBYTE</span>,
-			<span class="ident"><span class="self">Self</span>::GiBs</span>(<span class="ident">g</span>) =&gt; <span class="kw-2">*</span><span class="ident">g</span>,
-		}
-	}
-
-	<span class="doccomment">/// Normalizes [`Self`] to use the larges unit possible.</span>
-	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
-		<span class="kw">let</span> <span class="ident">bs</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">to_bs</span>();
-
-		<span class="kw">if</span> <span class="ident">bs</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">KIBIBYTE</span> <span class="op">*</span> <span class="ident">KIBIBYTE</span> <span class="op">*</span> <span class="ident">KIBIBYTE</span> {
-			<span class="ident"><span class="self">Self</span>::GiBs</span>(<span class="self">self</span>.<span class="ident">to_gibs</span>())
-		} <span class="kw">else</span> <span class="kw">if</span> <span class="ident">bs</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">KIBIBYTE</span> <span class="op">*</span> <span class="ident">KIBIBYTE</span> {
-			<span class="ident"><span class="self">Self</span>::MiBs</span>(<span class="self">self</span>.<span class="ident">to_mibs</span>())
-		} <span class="kw">else</span> {
-			<span class="ident"><span class="self">Self</span>::KiBs</span>(<span class="self">self</span>.<span class="ident">to_kibs</span>())
+	<span class="doccomment">/// The name of the metric. It is always prefixed by the [`self::category()`].
+	</span><span class="kw">pub fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+		<span class="kw">match </span><span class="self">self </span>{
+			<span class="self">Self</span>::Sr25519Verify =&gt; <span class="string">&quot;SR25519-Verify&quot;</span>,
+			<span class="self">Self</span>::Blake2256 =&gt; <span class="string">&quot;BLAKE2-256&quot;</span>,
+			<span class="self">Self</span>::MemCopy =&gt; <span class="string">&quot;Copy&quot;</span>,
+			<span class="self">Self</span>::DiskSeqWrite =&gt; <span class="string">&quot;Seq Write&quot;</span>,
+			<span class="self">Self</span>::DiskRndWrite =&gt; <span class="string">&quot;Rnd Write&quot;</span>,
 		}
 	}
 }
 
-<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">Throughput</span> {
-	<span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
-		<span class="kw">let</span> <span class="ident">normalized</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">normalize</span>();
-		<span class="kw">match</span> <span class="ident">normalized</span> {
-			<span class="ident"><span class="self">Self</span>::KiBs</span>(<span class="ident">s</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::MiBs</span>(<span class="ident">s</span>) <span class="op">|</span> <span class="ident"><span class="self">Self</span>::GiBs</span>(<span class="ident">s</span>) =&gt;
-				<span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:.2?} {}&quot;</span>, <span class="ident">s</span>, <span class="ident">normalized</span>.<span class="ident">unit</span>()),
+<span class="kw">const </span>KIBIBYTE: f64 = <span class="number">1024.0</span>;
+
+<span class="kw">impl </span>Throughput {
+	<span class="doccomment">/// The unit of the metric.
+	</span><span class="kw">pub fn </span>unit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
+		<span class="kw">match </span><span class="self">self </span>{
+			<span class="self">Self</span>::KiBs(<span class="kw">_</span>) =&gt; <span class="string">&quot;KiB/s&quot;</span>,
+			<span class="self">Self</span>::MiBs(<span class="kw">_</span>) =&gt; <span class="string">&quot;MiB/s&quot;</span>,
+			<span class="self">Self</span>::GiBs(<span class="kw">_</span>) =&gt; <span class="string">&quot;GiB/s&quot;</span>,
+		}
+	}
+
+	<span class="doccomment">/// [`Self`] as number of byte/s.
+	</span><span class="kw">pub fn </span>to_bs(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
+		<span class="self">self</span>.to_kibs() * KIBIBYTE
+	}
+
+	<span class="doccomment">/// [`Self`] as number of kibibyte/s.
+	</span><span class="kw">pub fn </span>to_kibs(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
+		<span class="self">self</span>.to_mibs() * KIBIBYTE
+	}
+
+	<span class="doccomment">/// [`Self`] as number of mebibyte/s.
+	</span><span class="kw">pub fn </span>to_mibs(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
+		<span class="self">self</span>.to_gibs() * KIBIBYTE
+	}
+
+	<span class="doccomment">/// [`Self`] as number of gibibyte/s.
+	</span><span class="kw">pub fn </span>to_gibs(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; f64 {
+		<span class="kw">match </span><span class="self">self </span>{
+			<span class="self">Self</span>::KiBs(k) =&gt; <span class="kw-2">*</span>k / (KIBIBYTE * KIBIBYTE),
+			<span class="self">Self</span>::MiBs(m) =&gt; <span class="kw-2">*</span>m / KIBIBYTE,
+			<span class="self">Self</span>::GiBs(g) =&gt; <span class="kw-2">*</span>g,
+		}
+	}
+
+	<span class="doccomment">/// Normalizes [`Self`] to use the larges unit possible.
+	</span><span class="kw">pub fn </span>normalize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span>bs = <span class="self">self</span>.to_bs();
+
+		<span class="kw">if </span>bs &gt;= KIBIBYTE * KIBIBYTE * KIBIBYTE {
+			<span class="self">Self</span>::GiBs(<span class="self">self</span>.to_gibs())
+		} <span class="kw">else if </span>bs &gt;= KIBIBYTE * KIBIBYTE {
+			<span class="self">Self</span>::MiBs(<span class="self">self</span>.to_mibs())
+		} <span class="kw">else </span>{
+			<span class="self">Self</span>::KiBs(<span class="self">self</span>.to_kibs())
 		}
 	}
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">tests</span> {
-	<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use</span> <span class="ident">sp_runtime::assert_eq_error_rate_float</span>;
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>Throughput {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
+		<span class="kw">let </span>normalized = <span class="self">self</span>.normalize();
+		<span class="kw">match </span>normalized {
+			<span class="self">Self</span>::KiBs(s) | <span class="self">Self</span>::MiBs(s) | <span class="self">Self</span>::GiBs(s) =&gt;
+				<span class="macro">write!</span>(f, <span class="string">&quot;{:.2?} {}&quot;</span>, s, normalized.unit()),
+		}
+	}
+}
 
-	<span class="doccomment">/// `SUBSTRATE_REFERENCE_HARDWARE` can be en- and decoded.</span>
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">json_static_data</span>() {
-		<span class="kw">let</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">serde_json::to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">SUBSTRATE_REFERENCE_HARDWARE</span>).<span class="ident">unwrap</span>();
-		<span class="kw">let</span> <span class="ident">decoded</span>: <span class="ident">Requirements</span> <span class="op">=</span> <span class="ident">serde_json::from_str</span>(<span class="kw-2">&amp;</span><span class="ident">raw</span>).<span class="ident">unwrap</span>();
+<span class="attribute">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>sp_runtime::assert_eq_error_rate_float;
 
-		<span class="macro">assert_eq!</span>(<span class="ident">decoded</span>, <span class="ident">SUBSTRATE_REFERENCE_HARDWARE</span>.<span class="ident">clone</span>());
+	<span class="doccomment">/// `SUBSTRATE_REFERENCE_HARDWARE` can be en- and decoded.
+	</span><span class="attribute">#[test]
+	</span><span class="kw">fn </span>json_static_data() {
+		<span class="kw">let </span>raw = serde_json::to_string(<span class="kw-2">&amp;*</span>SUBSTRATE_REFERENCE_HARDWARE).unwrap();
+		<span class="kw">let </span>decoded: Requirements = serde_json::from_str(<span class="kw-2">&amp;</span>raw).unwrap();
+
+		<span class="macro">assert_eq!</span>(decoded, SUBSTRATE_REFERENCE_HARDWARE.clone());
 	}
 
-	<span class="doccomment">/// Test the [`Throughput`].</span>
-	<span class="attribute">#[<span class="ident">test</span>]</span>
-	<span class="kw">fn</span> <span class="ident">throughput_works</span>() {
-		<span class="doccomment">/// Float precision.</span>
-		<span class="kw">const</span> <span class="ident">EPS</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="number">0.1</span>;
-		<span class="kw">let</span> <span class="ident">gib</span> <span class="op">=</span> <span class="ident">Throughput::GiBs</span>(<span class="number">14.324</span>);
+	<span class="doccomment">/// Test the [`Throughput`].
+	</span><span class="attribute">#[test]
+	</span><span class="kw">fn </span>throughput_works() {
+		<span class="doccomment">/// Float precision.
+		</span><span class="kw">const </span>EPS: f64 = <span class="number">0.1</span>;
+		<span class="kw">let </span>gib = Throughput::GiBs(<span class="number">14.324</span>);
 
-		<span class="macro">assert_eq_error_rate_float!</span>(<span class="number">14.324</span>, <span class="ident">gib</span>.<span class="ident">to_gibs</span>(), <span class="ident">EPS</span>);
-		<span class="macro">assert_eq_error_rate_float!</span>(<span class="number">14667.776</span>, <span class="ident">gib</span>.<span class="ident">to_mibs</span>(), <span class="ident">EPS</span>);
-		<span class="macro">assert_eq_error_rate_float!</span>(<span class="number">14667.776</span> <span class="op">*</span> <span class="number">1024.0</span>, <span class="ident">gib</span>.<span class="ident">to_kibs</span>(), <span class="ident">EPS</span>);
-		<span class="macro">assert_eq!</span>(<span class="string">&quot;14.32 GiB/s&quot;</span>, <span class="ident">gib</span>.<span class="ident">to_string</span>());
-		<span class="macro">assert_eq!</span>(<span class="string">&quot;14.32 GiB/s&quot;</span>, <span class="ident">gib</span>.<span class="ident">normalize</span>().<span class="ident">to_string</span>());
+		<span class="macro">assert_eq_error_rate_float!</span>(<span class="number">14.324</span>, gib.to_gibs(), EPS);
+		<span class="macro">assert_eq_error_rate_float!</span>(<span class="number">14667.776</span>, gib.to_mibs(), EPS);
+		<span class="macro">assert_eq_error_rate_float!</span>(<span class="number">14667.776 </span>* <span class="number">1024.0</span>, gib.to_kibs(), EPS);
+		<span class="macro">assert_eq!</span>(<span class="string">&quot;14.32 GiB/s&quot;</span>, gib.to_string());
+		<span class="macro">assert_eq!</span>(<span class="string">&quot;14.32 GiB/s&quot;</span>, gib.normalize().to_string());
 
-		<span class="kw">let</span> <span class="ident">mib</span> <span class="op">=</span> <span class="ident">Throughput::MiBs</span>(<span class="number">1029.0</span>);
-		<span class="macro">assert_eq!</span>(<span class="string">&quot;1.00 GiB/s&quot;</span>, <span class="ident">mib</span>.<span class="ident">to_string</span>());
+		<span class="kw">let </span>mib = Throughput::MiBs(<span class="number">1029.0</span>);
+		<span class="macro">assert_eq!</span>(<span class="string">&quot;1.00 GiB/s&quot;</span>, mib.to_string());
 	}
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.64.0-nightly (7fe022f5a 2022-07-24)" ></div>
-</body></html>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="frame_benchmarking_cli" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

@@ -1,3 +1,3 @@
-(function() {var implementors = {};
-implementors["sp_trie"] = [{"text":"impl&lt;H&gt; NodeCodec for <a class=\"struct\" href=\"sp_trie/struct.NodeCodec.html\" title=\"struct sp_trie::NodeCodec\">NodeCodec</a>&lt;H&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: Hasher,&nbsp;</span>","synthetic":false,"types":["sp_trie::node_codec::NodeCodec"]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
+(function() {var implementors = {
+"sp_trie":[["impl&lt;H&gt; NodeCodec for <a class=\"struct\" href=\"sp_trie/struct.NodeCodec.html\" title=\"struct sp_trie::NodeCodec\">NodeCodec</a>&lt;H&gt;<span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;H: Hasher,</span>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
