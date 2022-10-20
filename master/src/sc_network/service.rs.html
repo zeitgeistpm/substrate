@@ -2125,20 +2125,6 @@
 <span id="2125">2125</span>
 <span id="2126">2126</span>
 <span id="2127">2127</span>
-<span id="2128">2128</span>
-<span id="2129">2129</span>
-<span id="2130">2130</span>
-<span id="2131">2131</span>
-<span id="2132">2132</span>
-<span id="2133">2133</span>
-<span id="2134">2134</span>
-<span id="2135">2135</span>
-<span id="2136">2136</span>
-<span id="2137">2137</span>
-<span id="2138">2138</span>
-<span id="2139">2139</span>
-<span id="2140">2140</span>
-<span id="2141">2141</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -2425,7 +2411,7 @@
 				config.discovery_limit(
 					u64::from(params.network_config.default_peers_set.out_peers) + <span class="number">15</span>,
 				);
-				config.add_protocol(params.protocol_id.clone());
+				config.with_kademlia(params.protocol_id.clone());
 				config.with_dht_random_walk(params.network_config.enable_dht_random_walk);
 				config.allow_non_globals_in_dht(params.network_config.allow_non_globals_in_dht);
 				config.use_kademlia_disjoint_query_paths(
@@ -3806,16 +3792,9 @@
 						.user_protocol_mut()
 						.add_default_set_discovered_nodes(iter::once(peer_id));
 				},
-				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::RandomKademliaStarted(
-					protocols,
-				))) =&gt;
+				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::RandomKademliaStarted)) =&gt;
 					<span class="kw">if let </span><span class="prelude-val">Some</span>(metrics) = this.metrics.as_ref() {
-						<span class="kw">for </span>protocol <span class="kw">in </span>protocols {
-							metrics
-								.kademlia_random_queries_total
-								.with_label_values(<span class="kw-2">&amp;</span>[protocol.as_ref()])
-								.inc();
-						}
+						metrics.kademlia_random_queries_total.inc();
 					},
 				Poll::Ready(SwarmEvent::Behaviour(BehaviourOut::NotificationStreamOpened {
 					remote,
@@ -4156,28 +4135,21 @@
 		this.is_major_syncing.store(is_major_syncing, Ordering::Relaxed);
 
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(metrics) = this.metrics.as_ref() {
-			<span class="kw">for </span>(proto, buckets) <span class="kw">in </span>this.network_service.behaviour_mut().num_entries_per_kbucket() {
+			<span class="kw">if let </span><span class="prelude-val">Some</span>(buckets) = this.network_service.behaviour_mut().num_entries_per_kbucket() {
 				<span class="kw">for </span>(lower_ilog2_bucket_bound, num_entries) <span class="kw">in </span>buckets {
 					metrics
 						.kbuckets_num_nodes
-						.with_label_values(<span class="kw-2">&amp;</span>[proto.as_ref(), <span class="kw-2">&amp;</span>lower_ilog2_bucket_bound.to_string()])
+						.with_label_values(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>lower_ilog2_bucket_bound.to_string()])
 						.set(num_entries <span class="kw">as </span>u64);
 				}
 			}
-			<span class="kw">for </span>(proto, num_entries) <span class="kw">in </span>this.network_service.behaviour_mut().num_kademlia_records()
-			{
-				metrics
-					.kademlia_records_count
-					.with_label_values(<span class="kw-2">&amp;</span>[proto.as_ref()])
-					.set(num_entries <span class="kw">as </span>u64);
+			<span class="kw">if let </span><span class="prelude-val">Some</span>(num_entries) = this.network_service.behaviour_mut().num_kademlia_records() {
+				metrics.kademlia_records_count.set(num_entries <span class="kw">as </span>u64);
 			}
-			<span class="kw">for </span>(proto, num_entries) <span class="kw">in
-				</span>this.network_service.behaviour_mut().kademlia_records_total_size()
+			<span class="kw">if let </span><span class="prelude-val">Some</span>(num_entries) =
+				this.network_service.behaviour_mut().kademlia_records_total_size()
 			{
-				metrics
-					.kademlia_records_sizes_total
-					.with_label_values(<span class="kw-2">&amp;</span>[proto.as_ref()])
-					.set(num_entries <span class="kw">as </span>u64);
+				metrics.kademlia_records_sizes_total.set(num_entries <span class="kw">as </span>u64);
 			}
 			metrics
 				.peerset_num_discovered

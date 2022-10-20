@@ -334,15 +334,6 @@
 <span id="334">334</span>
 <span id="335">335</span>
 <span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -404,9 +395,9 @@
 	<span class="kw">pub </span>incoming_connections_total: Counter&lt;U64&gt;,
 	<span class="kw">pub </span>issued_light_requests: Counter&lt;U64&gt;,
 	<span class="kw">pub </span>kademlia_query_duration: HistogramVec,
-	<span class="kw">pub </span>kademlia_random_queries_total: CounterVec&lt;U64&gt;,
-	<span class="kw">pub </span>kademlia_records_count: GaugeVec&lt;U64&gt;,
-	<span class="kw">pub </span>kademlia_records_sizes_total: GaugeVec&lt;U64&gt;,
+	<span class="kw">pub </span>kademlia_random_queries_total: Counter&lt;U64&gt;,
+	<span class="kw">pub </span>kademlia_records_count: Gauge&lt;U64&gt;,
+	<span class="kw">pub </span>kademlia_records_sizes_total: Gauge&lt;U64&gt;,
 	<span class="kw">pub </span>kbuckets_num_nodes: GaugeVec&lt;U64&gt;,
 	<span class="kw">pub </span>listeners_local_addresses: Gauge&lt;U64&gt;,
 	<span class="kw">pub </span>listeners_errors_total: Counter&lt;U64&gt;,
@@ -483,33 +474,24 @@
 				},
 				<span class="kw-2">&amp;</span>[<span class="string">&quot;type&quot;</span>]
 			)<span class="question-mark">?</span>, registry)<span class="question-mark">?</span>,
-			kademlia_random_queries_total: prometheus::register(CounterVec::new(
-				Opts::new(
-					<span class="string">&quot;substrate_sub_libp2p_kademlia_random_queries_total&quot;</span>,
-					<span class="string">&quot;Number of random Kademlia queries started&quot;
-				</span>),
-				<span class="kw-2">&amp;</span>[<span class="string">&quot;protocol&quot;</span>]
+			kademlia_random_queries_total: prometheus::register(Counter::new(
+				<span class="string">&quot;substrate_sub_libp2p_kademlia_random_queries_total&quot;</span>,
+				<span class="string">&quot;Number of random Kademlia queries started&quot;</span>,
 			)<span class="question-mark">?</span>, registry)<span class="question-mark">?</span>,
-			kademlia_records_count: prometheus::register(GaugeVec::new(
-				Opts::new(
-					<span class="string">&quot;substrate_sub_libp2p_kademlia_records_count&quot;</span>,
-					<span class="string">&quot;Number of records in the Kademlia records store&quot;
-				</span>),
-				<span class="kw-2">&amp;</span>[<span class="string">&quot;protocol&quot;</span>]
+			kademlia_records_count: prometheus::register(Gauge::new(
+				<span class="string">&quot;substrate_sub_libp2p_kademlia_records_count&quot;</span>,
+				<span class="string">&quot;Number of records in the Kademlia records store&quot;</span>,
 			)<span class="question-mark">?</span>, registry)<span class="question-mark">?</span>,
-			kademlia_records_sizes_total: prometheus::register(GaugeVec::new(
-				Opts::new(
-					<span class="string">&quot;substrate_sub_libp2p_kademlia_records_sizes_total&quot;</span>,
-					<span class="string">&quot;Total size of all the records in the Kademlia records store&quot;
-				</span>),
-				<span class="kw-2">&amp;</span>[<span class="string">&quot;protocol&quot;</span>]
+			kademlia_records_sizes_total: prometheus::register(Gauge::new(
+				<span class="string">&quot;substrate_sub_libp2p_kademlia_records_sizes_total&quot;</span>,
+				<span class="string">&quot;Total size of all the records in the Kademlia records store&quot;</span>,
 			)<span class="question-mark">?</span>, registry)<span class="question-mark">?</span>,
 			kbuckets_num_nodes: prometheus::register(GaugeVec::new(
 				Opts::new(
 					<span class="string">&quot;substrate_sub_libp2p_kbuckets_num_nodes&quot;</span>,
 					<span class="string">&quot;Number of nodes per kbucket per Kademlia instance&quot;
 				</span>),
-				<span class="kw-2">&amp;</span>[<span class="string">&quot;protocol&quot;</span>, <span class="string">&quot;lower_ilog2_bucket_bound&quot;</span>]
+				<span class="kw-2">&amp;</span>[<span class="string">&quot;lower_ilog2_bucket_bound&quot;</span>]
 			)<span class="question-mark">?</span>, registry)<span class="question-mark">?</span>,
 			listeners_local_addresses: prometheus::register(Gauge::new(
 				<span class="string">&quot;substrate_sub_libp2p_listeners_local_addresses&quot;</span>,
