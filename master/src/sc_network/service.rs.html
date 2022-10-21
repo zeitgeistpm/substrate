@@ -2123,6 +2123,8 @@
 <span id="2123">2123</span>
 <span id="2124">2124</span>
 <span id="2125">2125</span>
+<span id="2126">2126</span>
+<span id="2127">2127</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -2195,7 +2197,7 @@
 		NotificationSender <span class="kw">as </span>NotificationSenderT, NotificationSenderError,
 		NotificationSenderReady <span class="kw">as </span>NotificationSenderReadyT, Signature, SigningError,
 	},
-	sync::{SyncState, SyncStatus},
+	sync::SyncStatus,
 	ExHashT,
 };
 <span class="kw">use </span>sc_peerset::PeersetHandle;
@@ -4122,11 +4124,13 @@
 			<span class="kw-2">*</span>this.external_addresses.lock() = external_addresses;
 		}
 
-		<span class="kw">let </span>is_major_syncing =
-			<span class="kw">match </span>this.network_service.behaviour_mut().user_protocol_mut().sync_state().state {
-				SyncState::Idle =&gt; <span class="bool-val">false</span>,
-				SyncState::Downloading =&gt; <span class="bool-val">true</span>,
-			};
+		<span class="kw">let </span>is_major_syncing = this
+			.network_service
+			.behaviour_mut()
+			.user_protocol_mut()
+			.sync_state()
+			.state
+			.is_major_syncing();
 
 		this.is_major_syncing.store(is_major_syncing, Ordering::Relaxed);
 

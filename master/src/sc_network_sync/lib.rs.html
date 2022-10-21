@@ -3489,6 +3489,9 @@
 <span id="3489">3489</span>
 <span id="3490">3490</span>
 <span id="3491">3491</span>
+<span id="3492">3492</span>
+<span id="3493">3493</span>
+<span id="3494">3494</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -3901,13 +3904,21 @@
 
 	<span class="doccomment">/// Returns the current sync status.
 	</span><span class="kw">fn </span>status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SyncStatus&lt;B&gt; {
-		<span class="kw">let </span>best_seen = <span class="self">self</span>.best_seen();
-		<span class="kw">let </span>sync_state = <span class="kw">if let </span><span class="prelude-val">Some</span>(n) = best_seen {
+		<span class="kw">let </span>median_seen = <span class="self">self</span>.median_seen();
+		<span class="kw">let </span>best_seen_block =
+			median_seen.and_then(|median| (median &gt; <span class="self">self</span>.best_queued_number).then_some(median));
+		<span class="kw">let </span>sync_state = <span class="kw">if let </span><span class="prelude-val">Some</span>(target) = median_seen {
 			<span class="comment">// A chain is classified as downloading if the provided best block is
-			// more than `MAJOR_SYNC_BLOCKS` behind the best block.
+			// more than `MAJOR_SYNC_BLOCKS` behind the best block or as importing
+			// if the same can be said about queued blocks.
 			</span><span class="kw">let </span>best_block = <span class="self">self</span>.client.info().best_number;
-			<span class="kw">if </span>n &gt; best_block &amp;&amp; n - best_block &gt; MAJOR_SYNC_BLOCKS.into() {
-				SyncState::Downloading
+			<span class="kw">if </span>target &gt; best_block &amp;&amp; target - best_block &gt; MAJOR_SYNC_BLOCKS.into() {
+				<span class="comment">// If target is not queued, we&#39;re downloading, otherwise importing.
+				</span><span class="kw">if </span>target &gt; <span class="self">self</span>.best_queued_number {
+					SyncState::Downloading { target }
+				} <span class="kw">else </span>{
+					SyncState::Importing { target }
+				}
 			} <span class="kw">else </span>{
 				SyncState::Idle
 			}
@@ -3928,7 +3939,7 @@
 
 		SyncStatus {
 			state: sync_state,
-			best_seen_block: best_seen,
+			best_seen_block,
 			num_peers: <span class="self">self</span>.peers.len() <span class="kw">as </span>u32,
 			queued_blocks: <span class="self">self</span>.queue_blocks.len() <span class="kw">as </span>u32,
 			state_sync: <span class="self">self</span>.state_sync.as_ref().map(|s| s.progress()),
@@ -4184,7 +4195,7 @@
 			<span class="macro">trace!</span>(target: <span class="string">&quot;sync&quot;</span>, <span class="string">&quot;Too many blocks in the queue.&quot;</span>);
 			<span class="kw">return </span>Box::new(std::iter::empty())
 		}
-		<span class="kw">let </span>major_sync = <span class="self">self</span>.status().state == SyncState::Downloading;
+		<span class="kw">let </span>is_major_syncing = <span class="self">self</span>.status().state.is_major_syncing();
 		<span class="kw">let </span>attrs = <span class="self">self</span>.required_block_attributes();
 		<span class="kw">let </span>blocks = <span class="kw-2">&amp;mut </span><span class="self">self</span>.blocks;
 		<span class="kw">let </span>fork_targets = <span class="kw-2">&amp;mut </span><span class="self">self</span>.fork_targets;
@@ -4194,7 +4205,7 @@
 		<span class="kw">let </span>client = <span class="kw-2">&amp;</span><span class="self">self</span>.client;
 		<span class="kw">let </span>queue = <span class="kw-2">&amp;</span><span class="self">self</span>.queue_blocks;
 		<span class="kw">let </span>allowed_requests = <span class="self">self</span>.allowed_requests.take();
-		<span class="kw">let </span>max_parallel = <span class="kw">if </span>major_sync { <span class="number">1 </span>} <span class="kw">else </span>{ <span class="self">self</span>.max_parallel_downloads };
+		<span class="kw">let </span>max_parallel = <span class="kw">if </span>is_major_syncing { <span class="number">1 </span>} <span class="kw">else </span>{ <span class="self">self</span>.max_parallel_downloads };
 		<span class="kw">let </span>gap_sync = <span class="kw-2">&amp;mut </span><span class="self">self</span>.gap_sync;
 		<span class="kw">let </span>iter = <span class="self">self</span>.peers.iter_mut().filter_map(<span class="kw">move </span>|(<span class="kw-2">&amp;</span>id, peer)| {
 			<span class="kw">if </span>!peer.state.is_available() || !allowed_requests.contains(<span class="kw-2">&amp;</span>id) {
@@ -5288,8 +5299,8 @@
 		<span class="prelude-val">Ok</span>((sync, Box::new(ChainSyncInterfaceHandle::new(tx))))
 	}
 
-	<span class="doccomment">/// Returns the best seen block number if we don&#39;t have that block yet, `None` otherwise.
-	</span><span class="kw">fn </span>best_seen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;NumberFor&lt;B&gt;&gt; {
+	<span class="doccomment">/// Returns the median seen block number.
+	</span><span class="kw">fn </span>median_seen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;NumberFor&lt;B&gt;&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>best_seens = <span class="self">self</span>.peers.values().map(|p| p.best_number).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
 		<span class="kw">if </span>best_seens.is_empty() {
@@ -5298,12 +5309,7 @@
 			<span class="kw">let </span>middle = best_seens.len() / <span class="number">2</span>;
 
 			<span class="comment">// Not the &quot;perfect median&quot; when we have an even number of peers.
-			</span><span class="kw">let </span>median = <span class="kw-2">*</span>best_seens.select_nth_unstable(middle).<span class="number">1</span>;
-			<span class="kw">if </span>median &gt; <span class="self">self</span>.best_queued_number {
-				<span class="prelude-val">Some</span>(median)
-			} <span class="kw">else </span>{
-				<span class="prelude-val">None
-			</span>}
+			</span><span class="prelude-val">Some</span>(<span class="kw-2">*</span>best_seens.select_nth_unstable(middle).<span class="number">1</span>)
 		}
 	}
 
@@ -5345,7 +5351,7 @@
 			);
 		}
 
-		<span class="kw">let </span>origin = <span class="kw">if </span>!gap &amp;&amp; <span class="self">self</span>.status().state != SyncState::Downloading {
+		<span class="kw">let </span>origin = <span class="kw">if </span>!gap &amp;&amp; !<span class="self">self</span>.status().state.is_major_syncing() {
 			BlockOrigin::NetworkBroadcast
 		} <span class="kw">else </span>{
 			BlockOrigin::NetworkInitialSync

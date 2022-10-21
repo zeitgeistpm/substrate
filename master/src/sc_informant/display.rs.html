@@ -227,11 +227,6 @@
 <span id="227">227</span>
 <span id="228">228</span>
 <span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -327,42 +322,37 @@
 			(diff_bytes_inbound, diff_bytes_outbound)
 		};
 
-		<span class="kw">let </span>(level, status, target) = <span class="kw">match </span>(
-			net_status.sync_state,
-			net_status.best_seen_block,
-			net_status.state_sync,
-			net_status.warp_sync,
-		) {
-			(
-				<span class="kw">_</span>,
-				<span class="kw">_</span>,
-				<span class="kw">_</span>,
-				<span class="prelude-val">Some</span>(WarpSyncProgress { phase: WarpSyncPhase::DownloadingBlocks(n), .. }),
-			) =&gt; (<span class="string">&quot;⏩&quot;</span>, <span class="string">&quot;Block history&quot;</span>.into(), <span class="macro">format!</span>(<span class="string">&quot;, #{}&quot;</span>, n)),
-			(<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(warp)) =&gt; (
-				<span class="string">&quot;⏩&quot;</span>,
-				<span class="string">&quot;Warping&quot;</span>.into(),
-				<span class="macro">format!</span>(
-					<span class="string">&quot;, {}, {:.2} Mib&quot;</span>,
-					warp.phase,
-					(warp.total_bytes <span class="kw">as </span>f32) / (<span class="number">1024f32 </span>* <span class="number">1024f32</span>)
+		<span class="kw">let </span>(level, status, target) =
+			<span class="kw">match </span>(net_status.sync_state, net_status.state_sync, net_status.warp_sync) {
+				(
+					<span class="kw">_</span>,
+					<span class="kw">_</span>,
+					<span class="prelude-val">Some</span>(WarpSyncProgress { phase: WarpSyncPhase::DownloadingBlocks(n), .. }),
+				) =&gt; (<span class="string">&quot;⏩&quot;</span>, <span class="string">&quot;Block history&quot;</span>.into(), <span class="macro">format!</span>(<span class="string">&quot;, #{}&quot;</span>, n)),
+				(<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(warp)) =&gt; (
+					<span class="string">&quot;⏩&quot;</span>,
+					<span class="string">&quot;Warping&quot;</span>.into(),
+					<span class="macro">format!</span>(
+						<span class="string">&quot;, {}, {:.2} Mib&quot;</span>,
+						warp.phase,
+						(warp.total_bytes <span class="kw">as </span>f32) / (<span class="number">1024f32 </span>* <span class="number">1024f32</span>)
+					),
 				),
-			),
-			(<span class="kw">_</span>, <span class="kw">_</span>, <span class="prelude-val">Some</span>(state), <span class="kw">_</span>) =&gt; (
-				<span class="string">&quot;⚙️ &quot;</span>,
-				<span class="string">&quot;Downloading state&quot;</span>.into(),
-				<span class="macro">format!</span>(
-					<span class="string">&quot;, {}%, {:.2} Mib&quot;</span>,
-					state.percentage,
-					(state.size <span class="kw">as </span>f32) / (<span class="number">1024f32 </span>* <span class="number">1024f32</span>)
+				(<span class="kw">_</span>, <span class="prelude-val">Some</span>(state), <span class="kw">_</span>) =&gt; (
+					<span class="string">&quot;⚙️ &quot;</span>,
+					<span class="string">&quot;Downloading state&quot;</span>.into(),
+					<span class="macro">format!</span>(
+						<span class="string">&quot;, {}%, {:.2} Mib&quot;</span>,
+						state.percentage,
+						(state.size <span class="kw">as </span>f32) / (<span class="number">1024f32 </span>* <span class="number">1024f32</span>)
+					),
 				),
-			),
-			(SyncState::Idle, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; (<span class="string">&quot;💤&quot;</span>, <span class="string">&quot;Idle&quot;</span>.into(), <span class="string">&quot;&quot;</span>.into()),
-			(SyncState::Downloading, <span class="prelude-val">None</span>, <span class="kw">_</span>, <span class="kw">_</span>) =&gt;
-				(<span class="string">&quot;⚙️ &quot;</span>, <span class="macro">format!</span>(<span class="string">&quot;Preparing{}&quot;</span>, speed), <span class="string">&quot;&quot;</span>.into()),
-			(SyncState::Downloading, <span class="prelude-val">Some</span>(n), <span class="prelude-val">None</span>, <span class="kw">_</span>) =&gt;
-				(<span class="string">&quot;⚙️ &quot;</span>, <span class="macro">format!</span>(<span class="string">&quot;Syncing{}&quot;</span>, speed), <span class="macro">format!</span>(<span class="string">&quot;, target=#{}&quot;</span>, n)),
-		};
+				(SyncState::Idle, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; (<span class="string">&quot;💤&quot;</span>, <span class="string">&quot;Idle&quot;</span>.into(), <span class="string">&quot;&quot;</span>.into()),
+				(SyncState::Downloading { target }, <span class="kw">_</span>, <span class="kw">_</span>) =&gt;
+					(<span class="string">&quot;⚙️ &quot;</span>, <span class="macro">format!</span>(<span class="string">&quot;Syncing{}&quot;</span>, speed), <span class="macro">format!</span>(<span class="string">&quot;, target=#{target}&quot;</span>)),
+				(SyncState::Importing { target }, <span class="kw">_</span>, <span class="kw">_</span>) =&gt;
+					(<span class="string">&quot;⚙️ &quot;</span>, <span class="macro">format!</span>(<span class="string">&quot;Preparing{}&quot;</span>, speed), <span class="macro">format!</span>(<span class="string">&quot;, target=#{target}&quot;</span>)),
+			};
 
 		<span class="kw">if </span><span class="self">self</span>.format.enable_color {
 			<span class="macro">info!</span>(
