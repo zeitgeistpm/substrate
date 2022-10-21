@@ -3780,19 +3780,6 @@
 <span id="3780">3780</span>
 <span id="3781">3781</span>
 <span id="3782">3782</span>
-<span id="3783">3783</span>
-<span id="3784">3784</span>
-<span id="3785">3785</span>
-<span id="3786">3786</span>
-<span id="3787">3787</span>
-<span id="3788">3788</span>
-<span id="3789">3789</span>
-<span id="3790">3790</span>
-<span id="3791">3791</span>
-<span id="3792">3792</span>
-<span id="3793">3793</span>
-<span id="3794">3794</span>
-<span id="3795">3795</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -5756,13 +5743,12 @@
 	<span class="kw">fn </span>begin_state_operation(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		operation: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::BlockImportOperation,
-		block: BlockId&lt;Block&gt;,
+		block: <span class="kw-2">&amp;</span>Block::Hash,
 	) -&gt; ClientResult&lt;()&gt; {
-		<span class="kw">let </span>hash = <span class="self">self</span>.blockchain.expect_block_hash_from_id(<span class="kw-2">&amp;</span>block)<span class="question-mark">?</span>;
-		<span class="kw">if </span>block.is_pre_genesis() {
+		<span class="kw">if </span><span class="kw-2">*</span>block == Default::default() {
 			operation.old_state = <span class="self">self</span>.empty_state()<span class="question-mark">?</span>;
 		} <span class="kw">else </span>{
-			operation.old_state = <span class="self">self</span>.state_at(<span class="kw-2">&amp;</span>hash)<span class="question-mark">?</span>;
+			operation.old_state = <span class="self">self</span>.state_at(block)<span class="question-mark">?</span>;
 		}
 
 		operation.commit_state = <span class="bool-val">true</span>;
@@ -6237,13 +6223,9 @@
 		};
 		<span class="kw">let </span>header_hash = header.hash();
 
-		<span class="kw">let </span>block_id = <span class="kw">if </span>number == <span class="number">0 </span>{
-			BlockId::Hash(Default::default())
-		} <span class="kw">else </span>{
-			BlockId::Number(number - <span class="number">1</span>)
-		};
+		<span class="kw">let </span>block_hash = <span class="kw">if </span>number == <span class="number">0 </span>{ Default::default() } <span class="kw">else </span>{ parent_hash };
 		<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, block_id).unwrap();
+		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>block_hash).unwrap();
 		op.set_block_data(header, <span class="prelude-val">Some</span>(body), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, NewBlockState::Best).unwrap();
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(index) = transaction_index {
 			op.update_transaction_index(index).unwrap();
@@ -6284,21 +6266,17 @@
 				<span class="macro">assert!</span>(db.blockchain().hash(i).unwrap().is_none());
 
 				{
-					<span class="kw">let </span>id = <span class="kw">if </span>i == <span class="number">0 </span>{
-						BlockId::Hash(Default::default())
+					<span class="kw">let </span>hash = <span class="kw">if </span>i == <span class="number">0 </span>{
+						Default::default()
 					} <span class="kw">else </span>{
-						BlockId::Number(i - <span class="number">1</span>)
+						db.blockchain.hash(i - <span class="number">1</span>).unwrap().unwrap()
 					};
 
 					<span class="kw">let </span><span class="kw-2">mut </span>op = db.begin_operation().unwrap();
-					db.begin_state_operation(<span class="kw-2">&amp;mut </span>op, id).unwrap();
+					db.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>hash).unwrap();
 					<span class="kw">let </span>header = Header {
 						number: i,
-						parent_hash: <span class="kw">if </span>i == <span class="number">0 </span>{
-							Default::default()
-						} <span class="kw">else </span>{
-							db.blockchain.hash(i - <span class="number">1</span>).unwrap().unwrap()
-						},
+						parent_hash: hash,
 						state_root: Default::default(),
 						digest: Default::default(),
 						extrinsics_root: Default::default(),
@@ -6380,7 +6358,7 @@
 
 		{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = db.begin_operation().unwrap();
-			db.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Number(<span class="number">0</span>)).unwrap();
+			db.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>hash).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
 				number: <span class="number">1</span>,
 				parent_hash: hash,
@@ -6421,9 +6399,7 @@
 
 		<span class="kw">let </span>hash = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend
-				.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(Default::default()))
-				.unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>Default::default()).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
 				number: <span class="number">0</span>,
 				parent_hash: Default::default(),
@@ -6460,7 +6436,7 @@
 
 		<span class="kw">let </span>hashof1 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Number(<span class="number">0</span>)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>hash).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
 				number: <span class="number">1</span>,
 				parent_hash: hash,
@@ -6497,7 +6473,7 @@
 
 		<span class="kw">let </span>hashof2 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Number(<span class="number">1</span>)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>hashof1).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
 				number: <span class="number">2</span>,
 				parent_hash: hashof1,
@@ -6531,7 +6507,7 @@
 
 		<span class="kw">let </span>hashof3 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Number(<span class="number">2</span>)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>hashof2).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
 				number: <span class="number">3</span>,
 				parent_hash: hashof2,
@@ -6865,14 +6841,14 @@
 		<span class="kw">let </span>block4 = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">4</span>, block3, <span class="prelude-val">None</span>, Default::default());
 		{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(block0)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>block0).unwrap();
 			op.mark_finalized(<span class="kw-2">&amp;</span>block1, <span class="prelude-val">None</span>).unwrap();
 			op.mark_finalized(<span class="kw-2">&amp;</span>block2, <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
 		}
 		{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(block2)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>block2).unwrap();
 			op.mark_finalized(<span class="kw-2">&amp;</span>block3, <span class="prelude-val">None</span>).unwrap();
 			op.mark_finalized(<span class="kw-2">&amp;</span>block4, <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
@@ -6886,9 +6862,7 @@
 
 		<span class="kw">let </span>hash0 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend
-				.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(Default::default()))
-				.unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>Default::default()).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
 				number: <span class="number">0</span>,
 				parent_hash: Default::default(),
@@ -6926,7 +6900,7 @@
 
 		<span class="kw">let </span>hash1 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Number(<span class="number">0</span>)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>hash0).unwrap();
 			<span class="kw">let </span><span class="kw-2">mut </span>header = Header {
 				number: <span class="number">1</span>,
 				parent_hash: hash0,
@@ -6975,7 +6949,7 @@
 		<span class="kw">let </span>block2 = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">2</span>, block1, <span class="prelude-val">None</span>, Default::default());
 		{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(block0)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>block0).unwrap();
 			op.mark_finalized(<span class="kw-2">&amp;</span>block2, <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap_err();
 		}
@@ -7003,7 +6977,7 @@
 
 		{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 			<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">5 </span>{
 				op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 			}
@@ -7038,7 +7012,7 @@
 		}
 
 		<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
+		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">3 </span>{
 			op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 		}
@@ -7095,7 +7069,7 @@
 		.unwrap();
 
 		<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
+		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 		op.mark_head(<span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 		backend.commit_operation(op).unwrap();
 
@@ -7104,7 +7078,7 @@
 
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">5 </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[i])).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>blocks[i]).unwrap();
 			op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
 		}
@@ -7164,13 +7138,13 @@
 		)
 		.unwrap();
 		<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
+		backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 		op.mark_head(<span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 		backend.commit_operation(op).unwrap();
 
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">5 </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 			op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
 		}
@@ -7296,7 +7270,7 @@
 
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">10 </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(blocks[<span class="number">4</span>])).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap();
 			op.mark_finalized(<span class="kw-2">&amp;</span>blocks[i], <span class="prelude-val">None</span>).unwrap();
 			backend.commit_operation(op).unwrap();
 			<span class="kw">let </span>bc = backend.blockchain();
@@ -7496,7 +7470,7 @@
 
 		<span class="kw">let </span>block3 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Number(<span class="number">1</span>)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>block1).unwrap();
 			<span class="kw">let </span>header = Header {
 				number: <span class="number">3</span>,
 				parent_hash: block2,
@@ -7515,7 +7489,7 @@
 
 		<span class="kw">let </span>block4 = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(block2)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>block2).unwrap();
 			<span class="kw">let </span>header = Header {
 				number: <span class="number">4</span>,
 				parent_hash: block3,
@@ -7534,7 +7508,7 @@
 
 		<span class="kw">let </span>block3_fork = {
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
-			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, BlockId::Hash(block2)).unwrap();
+			backend.begin_state_operation(<span class="kw-2">&amp;mut </span>op, <span class="kw-2">&amp;</span>block2).unwrap();
 			<span class="kw">let </span>header = Header {
 				number: <span class="number">3</span>,
 				parent_hash: block2,

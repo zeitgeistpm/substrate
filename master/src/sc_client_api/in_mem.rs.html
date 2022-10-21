@@ -889,7 +889,6 @@
 <span id="889">889</span>
 <span id="890">890</span>
 <span id="891">891</span>
-<span id="892">892</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1587,10 +1586,9 @@
 	<span class="kw">fn </span>begin_state_operation(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		operation: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::BlockImportOperation,
-		block: BlockId&lt;Block&gt;,
+		block: <span class="kw-2">&amp;</span>Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
-		<span class="kw">let </span>hash = <span class="self">self</span>.blockchain.expect_block_hash_from_id(<span class="kw-2">&amp;</span>block)<span class="question-mark">?</span>;
-		operation.old_state = <span class="self">self</span>.state_at(<span class="kw-2">&amp;</span>hash)<span class="question-mark">?</span>;
+		operation.old_state = <span class="self">self</span>.state_at(block)<span class="question-mark">?</span>;
 		<span class="prelude-val">Ok</span>(())
 	}
 
