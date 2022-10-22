@@ -3492,6 +3492,41 @@
 <span id="3492">3492</span>
 <span id="3493">3493</span>
 <span id="3494">3494</span>
+<span id="3495">3495</span>
+<span id="3496">3496</span>
+<span id="3497">3497</span>
+<span id="3498">3498</span>
+<span id="3499">3499</span>
+<span id="3500">3500</span>
+<span id="3501">3501</span>
+<span id="3502">3502</span>
+<span id="3503">3503</span>
+<span id="3504">3504</span>
+<span id="3505">3505</span>
+<span id="3506">3506</span>
+<span id="3507">3507</span>
+<span id="3508">3508</span>
+<span id="3509">3509</span>
+<span id="3510">3510</span>
+<span id="3511">3511</span>
+<span id="3512">3512</span>
+<span id="3513">3513</span>
+<span id="3514">3514</span>
+<span id="3515">3515</span>
+<span id="3516">3516</span>
+<span id="3517">3517</span>
+<span id="3518">3518</span>
+<span id="3519">3519</span>
+<span id="3520">3520</span>
+<span id="3521">3521</span>
+<span id="3522">3522</span>
+<span id="3523">3523</span>
+<span id="3524">3524</span>
+<span id="3525">3525</span>
+<span id="3526">3526</span>
+<span id="3527">3527</span>
+<span id="3528">3528</span>
+<span id="3529">3529</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -3765,6 +3800,8 @@
 	</span>gap_sync: <span class="prelude-ty">Option</span>&lt;GapSync&lt;B&gt;&gt;,
 	<span class="doccomment">/// Channel for receiving service commands
 	</span>service_rx: TracingUnboundedReceiver&lt;ToServiceCommand&lt;B&gt;&gt;,
+	<span class="doccomment">/// Handle for communicating with `NetworkService`
+	</span>_network_service: service::network::NetworkServiceHandle,
 }
 
 <span class="doccomment">/// All the data we have about a Peer that we are trying to sync with
@@ -5269,6 +5306,7 @@
 		block_announce_validator: Box&lt;<span class="kw">dyn </span>BlockAnnounceValidator&lt;B&gt; + Send&gt;,
 		max_parallel_downloads: u32,
 		warp_sync_provider: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>WarpSyncProvider&lt;B&gt;&gt;&gt;,
+		_network_service: service::network::NetworkServiceHandle,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="self">Self</span>, Box&lt;ChainSyncInterfaceHandle&lt;B&gt;&gt;), ClientError&gt; {
 		<span class="kw">let </span>(tx, service_rx) = tracing_unbounded(<span class="string">&quot;mpsc_chain_sync&quot;</span>);
 
@@ -5294,6 +5332,7 @@
 			import_existing: <span class="bool-val">false</span>,
 			gap_sync: <span class="prelude-val">None</span>,
 			service_rx,
+			_network_service,
 		};
 		sync.reset_sync_start_point()<span class="question-mark">?</span>;
 		<span class="prelude-val">Ok</span>((sync, Box::new(ChainSyncInterfaceHandle::new(tx))))
@@ -6164,6 +6203,7 @@
 <span class="attribute">#[cfg(test)]
 </span><span class="kw">mod </span>test {
 	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span><span class="kw">crate</span>::service::network::NetworkServiceProvider;
 	<span class="kw">use </span>futures::{executor::block_on, future::poll_fn};
 	<span class="kw">use </span>sc_block_builder::BlockBuilderProvider;
 	<span class="kw">use </span>sc_network_common::sync::message::{BlockData, BlockState, FromBlock};
@@ -6185,9 +6225,17 @@
 		<span class="kw">let </span>block_announce_validator = Box::new(DefaultBlockAnnounceValidator);
 		<span class="kw">let </span>peer_id = PeerId::random();
 
-		<span class="kw">let </span>(<span class="kw-2">mut </span>sync, <span class="kw">_</span>) =
-			ChainSync::new(SyncMode::Full, client.clone(), block_announce_validator, <span class="number">1</span>, <span class="prelude-val">None</span>)
-				.unwrap();
+		<span class="kw">let </span>(_chain_sync_network_provider, chain_sync_network_handle) =
+			NetworkServiceProvider::new();
+		<span class="kw">let </span>(<span class="kw-2">mut </span>sync, <span class="kw">_</span>) = ChainSync::new(
+			SyncMode::Full,
+			client.clone(),
+			block_announce_validator,
+			<span class="number">1</span>,
+			<span class="prelude-val">None</span>,
+			chain_sync_network_handle,
+		)
+		.unwrap();
 
 		<span class="kw">let </span>(a1_hash, a1_number) = {
 			<span class="kw">let </span>a1 = client.new_block(Default::default()).unwrap().build().unwrap().block;
@@ -6233,12 +6281,16 @@
 	<span class="attribute">#[test]
 	</span><span class="kw">fn </span>restart_doesnt_affect_peers_downloading_finality_data() {
 		<span class="kw">let </span><span class="kw-2">mut </span>client = Arc::new(TestClientBuilder::new().build());
+		<span class="kw">let </span>(_chain_sync_network_provider, chain_sync_network_handle) =
+			NetworkServiceProvider::new();
+
 		<span class="kw">let </span>(<span class="kw-2">mut </span>sync, <span class="kw">_</span>) = ChainSync::new(
 			SyncMode::Full,
 			client.clone(),
 			Box::new(DefaultBlockAnnounceValidator),
 			<span class="number">1</span>,
 			<span class="prelude-val">None</span>,
+			chain_sync_network_handle,
 		)
 		.unwrap();
 
@@ -6399,6 +6451,8 @@
 		sp_tracing::try_init_simple();
 
 		<span class="kw">let </span><span class="kw-2">mut </span>client = Arc::new(TestClientBuilder::new().build());
+		<span class="kw">let </span>(_chain_sync_network_provider, chain_sync_network_handle) =
+			NetworkServiceProvider::new();
 
 		<span class="kw">let </span>(<span class="kw-2">mut </span>sync, <span class="kw">_</span>) = ChainSync::new(
 			SyncMode::Full,
@@ -6406,6 +6460,7 @@
 			Box::new(DefaultBlockAnnounceValidator),
 			<span class="number">5</span>,
 			<span class="prelude-val">None</span>,
+			chain_sync_network_handle,
 		)
 		.unwrap();
 
@@ -6513,6 +6568,8 @@
 		};
 
 		<span class="kw">let </span><span class="kw-2">mut </span>client = Arc::new(TestClientBuilder::new().build());
+		<span class="kw">let </span>(_chain_sync_network_provider, chain_sync_network_handle) =
+			NetworkServiceProvider::new();
 		<span class="kw">let </span>info = client.info();
 
 		<span class="kw">let </span>(<span class="kw-2">mut </span>sync, <span class="kw">_</span>) = ChainSync::new(
@@ -6521,6 +6578,7 @@
 			Box::new(DefaultBlockAnnounceValidator),
 			<span class="number">5</span>,
 			<span class="prelude-val">None</span>,
+			chain_sync_network_handle,
 		)
 		.unwrap();
 
@@ -6634,6 +6692,8 @@
 	</span><span class="kw">fn </span>can_sync_huge_fork() {
 		sp_tracing::try_init_simple();
 
+		<span class="kw">let </span>(_chain_sync_network_provider, chain_sync_network_handle) =
+			NetworkServiceProvider::new();
 		<span class="kw">let </span><span class="kw-2">mut </span>client = Arc::new(TestClientBuilder::new().build());
 		<span class="kw">let </span>blocks = (<span class="number">0</span>..MAX_BLOCKS_TO_LOOK_BACKWARDS * <span class="number">4</span>)
 			.map(|<span class="kw">_</span>| build_block(<span class="kw-2">&amp;mut </span>client, <span class="prelude-val">None</span>, <span class="bool-val">false</span>))
@@ -6664,6 +6724,7 @@
 			Box::new(DefaultBlockAnnounceValidator),
 			<span class="number">5</span>,
 			<span class="prelude-val">None</span>,
+			chain_sync_network_handle,
 		)
 		.unwrap();
 
@@ -6763,6 +6824,8 @@
 	</span><span class="kw">fn </span>syncs_fork_without_duplicate_requests() {
 		sp_tracing::try_init_simple();
 
+		<span class="kw">let </span>(_chain_sync_network_provider, chain_sync_network_handle) =
+			NetworkServiceProvider::new();
 		<span class="kw">let </span><span class="kw-2">mut </span>client = Arc::new(TestClientBuilder::new().build());
 		<span class="kw">let </span>blocks = (<span class="number">0</span>..MAX_BLOCKS_TO_LOOK_BACKWARDS * <span class="number">4</span>)
 			.map(|<span class="kw">_</span>| build_block(<span class="kw-2">&amp;mut </span>client, <span class="prelude-val">None</span>, <span class="bool-val">false</span>))
@@ -6793,6 +6856,7 @@
 			Box::new(DefaultBlockAnnounceValidator),
 			<span class="number">5</span>,
 			<span class="prelude-val">None</span>,
+			chain_sync_network_handle,
 		)
 		.unwrap();
 
@@ -6913,6 +6977,8 @@
 	<span class="attribute">#[test]
 	</span><span class="kw">fn </span>removes_target_fork_on_disconnect() {
 		sp_tracing::try_init_simple();
+		<span class="kw">let </span>(_chain_sync_network_provider, chain_sync_network_handle) =
+			NetworkServiceProvider::new();
 		<span class="kw">let </span><span class="kw-2">mut </span>client = Arc::new(TestClientBuilder::new().build());
 		<span class="kw">let </span>blocks = (<span class="number">0</span>..<span class="number">3</span>).map(|<span class="kw">_</span>| build_block(<span class="kw-2">&amp;mut </span>client, <span class="prelude-val">None</span>, <span class="bool-val">false</span>)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
@@ -6922,6 +6988,7 @@
 			Box::new(DefaultBlockAnnounceValidator),
 			<span class="number">1</span>,
 			<span class="prelude-val">None</span>,
+			chain_sync_network_handle,
 		)
 		.unwrap();
 
@@ -6944,6 +7011,8 @@
 	<span class="attribute">#[test]
 	</span><span class="kw">fn </span>can_import_response_with_missing_blocks() {
 		sp_tracing::try_init_simple();
+		<span class="kw">let </span>(_chain_sync_network_provider, chain_sync_network_handle) =
+			NetworkServiceProvider::new();
 		<span class="kw">let </span><span class="kw-2">mut </span>client2 = Arc::new(TestClientBuilder::new().build());
 		<span class="kw">let </span>blocks = (<span class="number">0</span>..<span class="number">4</span>).map(|<span class="kw">_</span>| build_block(<span class="kw-2">&amp;mut </span>client2, <span class="prelude-val">None</span>, <span class="bool-val">false</span>)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
@@ -6955,6 +7024,7 @@
 			Box::new(DefaultBlockAnnounceValidator),
 			<span class="number">1</span>,
 			<span class="prelude-val">None</span>,
+			chain_sync_network_handle,
 		)
 		.unwrap();
 

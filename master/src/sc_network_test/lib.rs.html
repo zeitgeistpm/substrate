@@ -1156,6 +1156,14 @@
 <span id="1156">1156</span>
 <span id="1157">1157</span>
 <span id="1158">1158</span>
+<span id="1159">1159</span>
+<span id="1160">1160</span>
+<span id="1161">1161</span>
+<span id="1162">1162</span>
+<span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
+<span id="1166">1166</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1219,8 +1227,8 @@
 };
 <span class="kw">use </span>sc_network_light::light_client_requests::handler::LightClientRequestHandler;
 <span class="kw">use </span>sc_network_sync::{
-	block_request_handler::BlockRequestHandler, state_request_handler::StateRequestHandler,
-	warp_request_handler, ChainSync,
+	block_request_handler::BlockRequestHandler, service::network::NetworkServiceProvider,
+	state_request_handler::StateRequestHandler, warp_request_handler, ChainSync,
 };
 <span class="kw">use </span>sc_service::client::Client;
 <span class="kw">use </span>sp_blockchain::{
@@ -2022,6 +2030,8 @@
 		<span class="kw">let </span>block_announce_validator = config
 			.block_announce_validator
 			.unwrap_or_else(|| Box::new(DefaultBlockAnnounceValidator));
+		<span class="kw">let </span>(chain_sync_network_provider, chain_sync_network_handle) =
+			NetworkServiceProvider::new();
 		<span class="kw">let </span>(chain_sync, chain_sync_service) = ChainSync::new(
 			<span class="kw">match </span>network_config.sync_mode {
 				SyncMode::Full =&gt; sc_network_common::sync::SyncMode::Full,
@@ -2036,6 +2046,7 @@
 			block_announce_validator,
 			network_config.max_parallel_downloads,
 			<span class="prelude-val">Some</span>(warp_sync),
+			chain_sync_network_handle,
 		)
 		.unwrap();
 		<span class="kw">let </span>block_announce_config = chain_sync.get_block_announce_proto_config(
@@ -2072,6 +2083,11 @@
 		.unwrap();
 
 		<span class="macro">trace!</span>(target: <span class="string">&quot;test_network&quot;</span>, <span class="string">&quot;Peer identifier: {}&quot;</span>, network.service().local_peer_id());
+
+		<span class="kw">let </span>service = network.service().clone();
+		async_std::task::spawn(<span class="kw">async move </span>{
+			chain_sync_network_provider.run(service).<span class="kw">await</span>;
+		});
 
 		<span class="self">self</span>.mut_peers(<span class="kw">move </span>|peers| {
 			<span class="kw">for </span>peer <span class="kw">in </span>peers.iter_mut() {

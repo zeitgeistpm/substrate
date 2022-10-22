@@ -29,6 +29,50 @@
 <span id="29">29</span>
 <span id="30">30</span>
 <span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -47,9 +91,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
-</span><span class="kw">use </span>libp2p::PeerId;
-<span class="kw">use </span>sc_network_common::service::NetworkSyncForkRequest;
+</span><span class="kw">use </span>sc_network_common::service::{NetworkPeers, NetworkSyncForkRequest};
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, NumberFor};
+
+<span class="kw">pub use </span>libp2p::{identity::error::SigningError, kad::record::Key <span class="kw">as </span>KademliaKey};
+<span class="kw">use </span>libp2p::{Multiaddr, PeerId};
+<span class="kw">use </span>sc_network_common::{config::MultiaddrWithPeerId, protocol::ProtocolName};
+<span class="kw">use </span>sc_peerset::ReputationChange;
+<span class="kw">use </span>std::collections::HashSet;
 
 <span class="macro">mockall::mock! </span>{
 	<span class="kw">pub </span>ChainSyncInterface&lt;B: BlockT&gt; {}
@@ -58,6 +107,45 @@
 		<span class="kw">for </span>ChainSyncInterface&lt;B&gt;
 	{
 		<span class="kw">fn </span>set_sync_fork_request(<span class="kw-2">&amp;</span><span class="self">self</span>, peers: Vec&lt;PeerId&gt;, hash: B::Hash, number: NumberFor&lt;B&gt;);
+	}
+}
+
+<span class="macro">mockall::mock! </span>{
+	<span class="kw">pub </span>NetworkServiceHandle {}
+}
+
+<span class="comment">// Mocked `Network` for `ChainSync`-related tests
+</span><span class="macro">mockall::mock! </span>{
+	<span class="kw">pub </span>Network {}
+
+	<span class="kw">impl </span>NetworkPeers <span class="kw">for </span>Network {
+		<span class="kw">fn </span>set_authorized_peers(<span class="kw-2">&amp;</span><span class="self">self</span>, peers: HashSet&lt;PeerId&gt;);
+		<span class="kw">fn </span>set_authorized_only(<span class="kw-2">&amp;</span><span class="self">self</span>, reserved_only: bool);
+		<span class="kw">fn </span>add_known_address(<span class="kw-2">&amp;</span><span class="self">self</span>, peer_id: PeerId, addr: Multiaddr);
+		<span class="kw">fn </span>report_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, who: PeerId, cost_benefit: ReputationChange);
+		<span class="kw">fn </span>disconnect_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, who: PeerId, protocol: ProtocolName);
+		<span class="kw">fn </span>accept_unreserved_peers(<span class="kw-2">&amp;</span><span class="self">self</span>);
+		<span class="kw">fn </span>deny_unreserved_peers(<span class="kw-2">&amp;</span><span class="self">self</span>);
+		<span class="kw">fn </span>add_reserved_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, peer: MultiaddrWithPeerId) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt;;
+		<span class="kw">fn </span>remove_reserved_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, peer_id: PeerId);
+		<span class="kw">fn </span>set_reserved_peers(
+			<span class="kw-2">&amp;</span><span class="self">self</span>,
+			protocol: ProtocolName,
+			peers: HashSet&lt;Multiaddr&gt;,
+		) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt;;
+		<span class="kw">fn </span>add_peers_to_reserved_set(
+			<span class="kw-2">&amp;</span><span class="self">self</span>,
+			protocol: ProtocolName,
+			peers: HashSet&lt;Multiaddr&gt;,
+		) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt;;
+		<span class="kw">fn </span>remove_peers_from_reserved_set(<span class="kw-2">&amp;</span><span class="self">self</span>, protocol: ProtocolName, peers: Vec&lt;PeerId&gt;);
+		<span class="kw">fn </span>add_to_peers_set(
+			<span class="kw-2">&amp;</span><span class="self">self</span>,
+			protocol: ProtocolName,
+			peers: HashSet&lt;Multiaddr&gt;,
+		) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt;;
+		<span class="kw">fn </span>remove_from_peers_set(<span class="kw-2">&amp;</span><span class="self">self</span>, protocol: ProtocolName, peers: Vec&lt;PeerId&gt;);
+		<span class="kw">fn </span>sync_num_connected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize;
 	}
 }
 </code></pre></div>
