@@ -1231,6 +1231,27 @@
 <span id="1231">1231</span>
 <span id="1232">1232</span>
 <span id="1233">1233</span>
+<span id="1234">1234</span>
+<span id="1235">1235</span>
+<span id="1236">1236</span>
+<span id="1237">1237</span>
+<span id="1238">1238</span>
+<span id="1239">1239</span>
+<span id="1240">1240</span>
+<span id="1241">1241</span>
+<span id="1242">1242</span>
+<span id="1243">1243</span>
+<span id="1244">1244</span>
+<span id="1245">1245</span>
+<span id="1246">1246</span>
+<span id="1247">1247</span>
+<span id="1248">1248</span>
+<span id="1249">1249</span>
+<span id="1250">1250</span>
+<span id="1251">1251</span>
+<span id="1252">1252</span>
+<span id="1253">1253</span>
+<span id="1254">1254</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -1365,6 +1386,7 @@
 	migration::Migration,
 	pallet::<span class="kw-2">*</span>,
 	schedule::{HostFnWeights, InstructionWeights, Limits, Schedule},
+	wasm::Determinism,
 };
 
 <span class="kw">type </span>CodeHash&lt;T&gt; = &lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash;
@@ -1439,7 +1461,7 @@
 	<span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
 
 	<span class="doccomment">/// The current storage version.
-	</span><span class="kw">const </span>STORAGE_VERSION: StorageVersion = StorageVersion::new(<span class="number">8</span>);
+	</span><span class="kw">const </span>STORAGE_VERSION: StorageVersion = StorageVersion::new(<span class="number">9</span>);
 
 	<span class="attribute">#[pallet::pallet]
 	#[pallet::storage_version(STORAGE_VERSION)]
@@ -1689,6 +1711,10 @@
 		/// the in storage version to the current
 		/// [`InstructionWeights::version`](InstructionWeights).
 		///
+		/// - `determinism`: If this is set to any other value but [`Determinism::Deterministic`]
+		///   then the only way to use this code is to delegate call into it from an offchain
+		///   execution. Set to [`Determinism::Deterministic`] if in doubt.
+		///
 		/// # Note
 		///
 		/// Anyone can instantiate a contract from any uploaded code and thus prevent its removal.
@@ -1700,9 +1726,11 @@
 			origin: OriginFor&lt;T&gt;,
 			code: Vec&lt;u8&gt;,
 			storage_deposit_limit: <span class="prelude-ty">Option</span>&lt;&lt;BalanceOf&lt;T&gt; <span class="kw">as </span>codec::HasCompact&gt;::Type&gt;,
+			determinism: Determinism,
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>origin = ensure_signed(origin)<span class="question-mark">?</span>;
-			<span class="self">Self</span>::bare_upload_code(origin, code, storage_deposit_limit.map(Into::into)).map(|<span class="kw">_</span>| ())
+			<span class="self">Self</span>::bare_upload_code(origin, code, storage_deposit_limit.map(Into::into), determinism)
+				.map(|<span class="kw">_</span>| ())
 		}
 
 		<span class="doccomment">/// Remove the code stored under `code_hash` and refund the deposit to its owner.
@@ -1795,6 +1823,7 @@
 				storage_deposit_limit.map(Into::into),
 				data,
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 			<span class="kw">if let </span><span class="prelude-val">Ok</span>(retval) = <span class="kw-2">&amp;</span>output.result {
 				<span class="kw">if </span>retval.did_revert() {
@@ -2058,6 +2087,8 @@
 		/// A more detailed error can be found on the node console if debug messages are enabled
 		/// or in the debug buffer which is returned to RPC clients.
 		</span>CodeRejected,
+		<span class="doccomment">/// An indetermistic code was used in a context where this is not permitted.
+		</span>Indeterministic,
 	}
 
 	<span class="doccomment">/// A mapping from an original code hash to the original code, untouched by instrumentation.
@@ -2154,6 +2185,7 @@
 		storage_deposit_limit: <span class="prelude-ty">Option</span>&lt;BalanceOf&lt;T&gt;&gt;,
 		data: Vec&lt;u8&gt;,
 		debug: bool,
+		determinism: Determinism,
 	) -&gt; ContractExecResult&lt;BalanceOf&lt;T&gt;&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>debug_message = <span class="kw">if </span>debug { <span class="prelude-val">Some</span>(Vec::new()) } <span class="kw">else </span>{ <span class="prelude-val">None </span>};
 		<span class="kw">let </span>output = <span class="self">Self</span>::internal_call(
@@ -2164,6 +2196,7 @@
 			storage_deposit_limit,
 			data,
 			debug_message.as_mut(),
+			determinism,
 		);
 		ContractExecResult {
 			result: output.result.map_err(|r| r.error),
@@ -2227,10 +2260,11 @@
 		origin: T::AccountId,
 		code: Vec&lt;u8&gt;,
 		storage_deposit_limit: <span class="prelude-ty">Option</span>&lt;BalanceOf&lt;T&gt;&gt;,
+		determinism: Determinism,
 	) -&gt; CodeUploadResult&lt;CodeHash&lt;T&gt;, BalanceOf&lt;T&gt;&gt; {
 		<span class="kw">let </span>schedule = T::Schedule::get();
-		<span class="kw">let </span>module =
-			PrefabWasmModule::from_code(code, <span class="kw-2">&amp;</span>schedule, origin).map_err(|(err, <span class="kw">_</span>)| err)<span class="question-mark">?</span>;
+		<span class="kw">let </span>module = PrefabWasmModule::from_code(code, <span class="kw-2">&amp;</span>schedule, origin, determinism)
+			.map_err(|(err, <span class="kw">_</span>)| err)<span class="question-mark">?</span>;
 		<span class="kw">let </span>deposit = module.open_deposit();
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(storage_deposit_limit) = storage_deposit_limit {
 			<span class="macro">ensure!</span>(storage_deposit_limit &gt;= deposit, &lt;Error&lt;T&gt;&gt;::StorageDepositLimitExhausted);
@@ -2300,6 +2334,7 @@
 		storage_deposit_limit: <span class="prelude-ty">Option</span>&lt;BalanceOf&lt;T&gt;&gt;,
 		data: Vec&lt;u8&gt;,
 		debug_message: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>Vec&lt;u8&gt;&gt;,
+		determinism: Determinism,
 	) -&gt; InternalCallOutput&lt;T&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>gas_meter = GasMeter::new(gas_limit);
 		<span class="kw">let </span><span class="kw-2">mut </span>storage_meter = <span class="kw">match </span>StorageMeter::new(<span class="kw-2">&amp;</span>origin, storage_deposit_limit, value) {
@@ -2321,6 +2356,7 @@
 			value,
 			data,
 			debug_message,
+			determinism,
 		);
 		InternalCallOutput {
 			result,
@@ -2348,11 +2384,16 @@
 			<span class="kw">let </span>schedule = T::Schedule::get();
 			<span class="kw">let </span>(extra_deposit, executable) = <span class="kw">match </span>code {
 				Code::Upload(binary) =&gt; {
-					<span class="kw">let </span>executable = PrefabWasmModule::from_code(binary, <span class="kw-2">&amp;</span>schedule, origin.clone())
-						.map_err(|(err, msg)| {
-							debug_message.as_mut().map(|buffer| buffer.extend(msg.as_bytes()));
-							err
-						})<span class="question-mark">?</span>;
+					<span class="kw">let </span>executable = PrefabWasmModule::from_code(
+						binary,
+						<span class="kw-2">&amp;</span>schedule,
+						origin.clone(),
+						Determinism::Deterministic,
+					)
+					.map_err(|(err, msg)| {
+						debug_message.as_mut().map(|buffer| buffer.extend(msg.as_bytes()));
+						err
+					})<span class="question-mark">?</span>;
 					<span class="comment">// The open deposit will be charged during execution when the
 					// uploaded module does not already exist. This deposit is not part of the
 					// storage meter because it is not transferred to the contract but
@@ -2451,6 +2492,7 @@
 			origin: AccountId,
 			code: Vec&lt;u8&gt;,
 			storage_deposit_limit: <span class="prelude-ty">Option</span>&lt;Balance&gt;,
+			determinism: Determinism,
 		) -&gt; CodeUploadResult&lt;Hash, Balance&gt;;
 
 		<span class="doccomment">/// Query a given storage key in a given contract.

@@ -1105,6 +1105,16 @@
 <span id="1105">1105</span>
 <span id="1106">1106</span>
 <span id="1107">1107</span>
+<span id="1108">1108</span>
+<span id="1109">1109</span>
+<span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
+<span id="1113">1113</span>
+<span id="1114">1114</span>
+<span id="1115">1115</span>
+<span id="1116">1116</span>
+<span id="1117">1117</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -1129,7 +1139,7 @@
 </span><span class="kw">use crate</span>::{
 	chain_extension::ChainExtension,
 	storage::meter::Diff,
-	wasm::{env_def::ImportSatisfyCheck, OwnerInfo, PrefabWasmModule},
+	wasm::{env_def::ImportSatisfyCheck, Determinism, OwnerInfo, PrefabWasmModule},
 	AccountIdOf, CodeVec, Config, Error, Schedule,
 };
 <span class="kw">use </span>codec::{Encode, MaxEncodedLen};
@@ -1289,8 +1299,8 @@
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="kw">fn </span>inject_gas_metering(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-		<span class="kw">let </span>gas_rules = <span class="self">self</span>.schedule.rules(<span class="kw-2">&amp;</span><span class="self">self</span>.module);
+	<span class="kw">fn </span>inject_gas_metering(<span class="self">self</span>, determinism: Determinism) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span>gas_rules = <span class="self">self</span>.schedule.rules(<span class="kw-2">&amp;</span><span class="self">self</span>.module, determinism);
 		<span class="kw">let </span>contract_module =
 			wasm_instrument::gas_metering::inject(<span class="self">self</span>.module, <span class="kw-2">&amp;</span>gas_rules, <span class="string">&quot;seal0&quot;</span>)
 				.map_err(|<span class="kw">_</span>| <span class="string">&quot;gas instrumentation failed&quot;</span>)<span class="question-mark">?</span>;
@@ -1476,6 +1486,7 @@
 <span class="kw">fn </span>check_and_instrument&lt;C: ImportSatisfyCheck, T: Config&gt;(
 	original_code: <span class="kw-2">&amp;</span>[u8],
 	schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
+	determinism: Determinism,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;u8&gt;, (u32, u32)), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 	<span class="kw">let </span>result = (|| {
 		<span class="kw">let </span>contract_module = ContractModule::new(original_code, schedule)<span class="question-mark">?</span>;
@@ -1483,9 +1494,12 @@
 		contract_module.ensure_no_internal_memory()<span class="question-mark">?</span>;
 		contract_module.ensure_table_size_limit(schedule.limits.table_size)<span class="question-mark">?</span>;
 		contract_module.ensure_global_variable_limit(schedule.limits.globals)<span class="question-mark">?</span>;
-		contract_module.ensure_no_floating_types()<span class="question-mark">?</span>;
 		contract_module.ensure_parameter_limit(schedule.limits.parameters)<span class="question-mark">?</span>;
 		contract_module.ensure_br_table_size_limit(schedule.limits.br_table_size)<span class="question-mark">?</span>;
+
+		<span class="kw">if </span><span class="macro">matches!</span>(determinism, Determinism::Deterministic) {
+			contract_module.ensure_no_floating_types()<span class="question-mark">?</span>;
+		}
 
 		<span class="comment">// We disallow importing `gas` function here since it is treated as implementation detail.
 		</span><span class="kw">let </span>disallowed_imports = [<span class="string">b&quot;gas&quot;</span>.as_ref()];
@@ -1493,7 +1507,7 @@
 			get_memory_limits(contract_module.scan_imports::&lt;C&gt;(<span class="kw-2">&amp;</span>disallowed_imports)<span class="question-mark">?</span>, schedule)<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>code = contract_module
-			.inject_gas_metering()<span class="question-mark">?
+			.inject_gas_metering(determinism)<span class="question-mark">?
 			</span>.inject_stack_height_metering()<span class="question-mark">?
 			</span>.into_wasm_code()<span class="question-mark">?</span>;
 
@@ -1511,9 +1525,11 @@
 	original_code: CodeVec&lt;T&gt;,
 	schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
 	owner: AccountIdOf&lt;T&gt;,
+	determinism: Determinism,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;PrefabWasmModule&lt;T&gt;, (DispatchError, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str)&gt; {
-	<span class="kw">let </span>(code, (initial, maximum)) = check_and_instrument::&lt;C, T&gt;(original_code.as_ref(), schedule)
-		.map_err(|msg| (&lt;Error&lt;T&gt;&gt;::CodeRejected.into(), msg))<span class="question-mark">?</span>;
+	<span class="kw">let </span>(code, (initial, maximum)) =
+		check_and_instrument::&lt;C, T&gt;(original_code.as_ref(), schedule, determinism)
+			.map_err(|msg| (&lt;Error&lt;T&gt;&gt;::CodeRejected.into(), msg))<span class="question-mark">?</span>;
 	<span class="kw">let </span>original_code_len = original_code.len();
 
 	<span class="kw">let </span><span class="kw-2">mut </span>module = PrefabWasmModule {
@@ -1521,6 +1537,7 @@
 		initial,
 		maximum,
 		code: code.try_into().map_err(|<span class="kw">_</span>| (&lt;Error&lt;T&gt;&gt;::CodeTooLarge.into(), <span class="string">&quot;&quot;</span>))<span class="question-mark">?</span>,
+		determinism,
 		code_hash: T::Hashing::hash(<span class="kw-2">&amp;</span>original_code),
 		original_code: <span class="prelude-val">Some</span>(original_code),
 		owner_info: <span class="prelude-val">None</span>,
@@ -1556,8 +1573,9 @@
 	original_code: CodeVec&lt;T&gt;,
 	schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
 	owner: AccountIdOf&lt;T&gt;,
+	determinism: Determinism,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;PrefabWasmModule&lt;T&gt;, (DispatchError, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str)&gt; {
-	do_preparation::&lt;<span class="kw">super</span>::runtime::Env, T&gt;(original_code, schedule, owner)
+	do_preparation::&lt;<span class="kw">super</span>::runtime::Env, T&gt;(original_code, schedule, owner, determinism)
 }
 
 <span class="doccomment">/// The same as [`prepare_contract`] but without constructing a new [`PrefabWasmModule`]
@@ -1568,8 +1586,9 @@
 </span><span class="kw">pub fn </span>reinstrument_contract&lt;T: Config&gt;(
 	original_code: <span class="kw-2">&amp;</span>[u8],
 	schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
+	determinism: Determinism,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-	<span class="prelude-val">Ok</span>(check_and_instrument::&lt;<span class="kw">super</span>::runtime::Env, T&gt;(original_code, schedule)<span class="question-mark">?</span>.<span class="number">0</span>)
+	<span class="prelude-val">Ok</span>(check_and_instrument::&lt;<span class="kw">super</span>::runtime::Env, T&gt;(original_code, schedule, determinism)<span class="question-mark">?</span>.<span class="number">0</span>)
 }
 
 <span class="doccomment">/// Alternate (possibly unsafe) preparation functions used only for benchmarking.
@@ -1602,6 +1621,7 @@
 			maximum: memory_limits.<span class="number">1</span>,
 			code_hash: T::Hashing::hash(<span class="kw-2">&amp;</span>original_code),
 			original_code: <span class="prelude-val">Some</span>(original_code.try_into().map_err(|<span class="kw">_</span>| <span class="string">&quot;Original code too large&quot;</span>)<span class="question-mark">?</span>),
+			determinism: Determinism::Deterministic,
 			code: contract_module
 				.into_wasm_code()<span class="question-mark">?
 				</span>.try_into()
@@ -1679,7 +1699,7 @@
 					},
 					.. Default::default()
 				};
-				<span class="kw">let </span>r = do_preparation::&lt;env::Env, Test&gt;(wasm, <span class="kw-2">&amp;</span>schedule, ALICE);
+				<span class="kw">let </span>r = do_preparation::&lt;env::Env, Test&gt;(wasm, <span class="kw-2">&amp;</span>schedule, ALICE, Determinism::Deterministic);
 				<span class="macro">assert_matches::assert_matches!</span>(r.map_err(|(<span class="kw">_</span>, msg)| msg), $(<span class="macro-nonterminal">$expected</span>)<span class="kw-2">*</span>);
 			}
 		};

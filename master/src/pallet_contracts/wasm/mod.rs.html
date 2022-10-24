@@ -2941,6 +2941,43 @@
 <span id="2941">2941</span>
 <span id="2942">2942</span>
 <span id="2943">2943</span>
+<span id="2944">2944</span>
+<span id="2945">2945</span>
+<span id="2946">2946</span>
+<span id="2947">2947</span>
+<span id="2948">2948</span>
+<span id="2949">2949</span>
+<span id="2950">2950</span>
+<span id="2951">2951</span>
+<span id="2952">2952</span>
+<span id="2953">2953</span>
+<span id="2954">2954</span>
+<span id="2955">2955</span>
+<span id="2956">2956</span>
+<span id="2957">2957</span>
+<span id="2958">2958</span>
+<span id="2959">2959</span>
+<span id="2960">2960</span>
+<span id="2961">2961</span>
+<span id="2962">2962</span>
+<span id="2963">2963</span>
+<span id="2964">2964</span>
+<span id="2965">2965</span>
+<span id="2966">2966</span>
+<span id="2967">2967</span>
+<span id="2968">2968</span>
+<span id="2969">2969</span>
+<span id="2970">2970</span>
+<span id="2971">2971</span>
+<span id="2972">2972</span>
+<span id="2973">2973</span>
+<span id="2974">2974</span>
+<span id="2975">2975</span>
+<span id="2976">2976</span>
+<span id="2977">2977</span>
+<span id="2978">2978</span>
+<span id="2979">2979</span>
+<span id="2980">2980</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -2980,6 +3017,7 @@
 <span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>frame_support::dispatch::{DispatchError, DispatchResult};
 <span class="kw">use </span>sp_core::crypto::UncheckedFrom;
+<span class="kw">use </span>sp_runtime::RuntimeDebug;
 <span class="kw">use </span>sp_sandbox::{SandboxEnvironmentBuilder, SandboxInstance, SandboxMemory};
 <span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 <span class="attribute">#[cfg(test)]
@@ -3009,6 +3047,10 @@
 	</span>maximum: u32,
 	<span class="doccomment">/// Code instrumented with the latest schedule.
 	</span>code: RelaxedCodeVec&lt;T&gt;,
+	<span class="doccomment">/// A code that might contain non deterministic features and is therefore never allowed
+	/// to be run on chain. Specifically this code can never be instantiated into a contract
+	/// and can just be used through a delegate call.
+	</span>determinism: Determinism,
 	<span class="doccomment">/// The uninstrumented, pristine version of the code.
 	///
 	/// It is not stored because the pristine code has its own storage item. The value
@@ -3045,6 +3087,27 @@
 	</span>refcount: u64,
 }
 
+<span class="doccomment">/// Defines the required determinism level of a wasm blob when either running or uploading code.
+</span><span class="attribute">#[derive(
+	Clone, Copy, Encode, Decode, scale_info::TypeInfo, MaxEncodedLen, RuntimeDebug, PartialEq, Eq,
+)]
+</span><span class="kw">pub enum </span>Determinism {
+	<span class="doccomment">/// The execution should be deterministic and hence no indeterministic instructions are
+	/// allowed.
+	///
+	/// Dispatchables always use this mode in order to make on-chain execution deterministic.
+	</span>Deterministic,
+	<span class="doccomment">/// Allow calling or uploading an indeterministic code.
+	///
+	/// This is only possible when calling into `pallet-contracts` directly via
+	/// [`crate::Pallet::bare_call`].
+	///
+	/// # Note
+	///
+	/// **Never** use this mode for on-chain execution.
+	</span>AllowIndeterminism,
+}
+
 <span class="kw">impl </span>ExportedFunction {
 	<span class="doccomment">/// The wasm export name for the function.
 	</span><span class="kw">fn </span>identifier(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
@@ -3067,11 +3130,13 @@
 		original_code: Vec&lt;u8&gt;,
 		schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
 		owner: AccountIdOf&lt;T&gt;,
+		determinism: Determinism,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, (DispatchError, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str)&gt; {
 		<span class="kw">let </span>module = prepare::prepare_contract(
 			original_code.try_into().map_err(|<span class="kw">_</span>| (&lt;Error&lt;T&gt;&gt;::CodeTooLarge.into(), <span class="string">&quot;&quot;</span>))<span class="question-mark">?</span>,
 			schedule,
 			owner,
+			determinism,
 		)<span class="question-mark">?</span>;
 		<span class="prelude-val">Ok</span>(module)
 	}
@@ -3200,6 +3265,10 @@
 
 	<span class="kw">fn </span>code_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
 		<span class="self">self</span>.code.len() <span class="kw">as </span>u32
+	}
+
+	<span class="kw">fn </span>is_deterministic(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+		<span class="macro">matches!</span>(<span class="self">self</span>.determinism, Determinism::Deterministic)
 	}
 }
 
@@ -3494,8 +3563,13 @@
 	<span class="kw">fn </span>execute&lt;E: BorrowMut&lt;MockExt&gt;&gt;(wat: <span class="kw-2">&amp;</span>str, input_data: Vec&lt;u8&gt;, <span class="kw-2">mut </span>ext: E) -&gt; ExecResult {
 		<span class="kw">let </span>wasm = wat::parse_str(wat).unwrap();
 		<span class="kw">let </span>schedule = <span class="kw">crate</span>::Schedule::default();
-		<span class="kw">let </span>executable =
-			PrefabWasmModule::&lt;&lt;MockExt <span class="kw">as </span>Ext&gt;::T&gt;::from_code(wasm, <span class="kw-2">&amp;</span>schedule, ALICE).unwrap();
+		<span class="kw">let </span>executable = PrefabWasmModule::&lt;&lt;MockExt <span class="kw">as </span>Ext&gt;::T&gt;::from_code(
+			wasm,
+			<span class="kw-2">&amp;</span>schedule,
+			ALICE,
+			Determinism::Deterministic,
+		)
+		.unwrap();
 		executable.execute(ext.borrow_mut(), <span class="kw-2">&amp;</span>ExportedFunction::Call, input_data)
 	}
 

@@ -414,6 +414,63 @@
 <span id="414">414</span>
 <span id="415">415</span>
 <span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -448,65 +505,54 @@
 </span><span class="kw">pub struct </span>Migration&lt;T: Config&gt;(PhantomData&lt;T&gt;);
 <span class="kw">impl</span>&lt;T: Config&gt; OnRuntimeUpgrade <span class="kw">for </span>Migration&lt;T&gt; {
 	<span class="kw">fn </span>on_runtime_upgrade() -&gt; Weight {
-		<span class="kw">let </span>version = StorageVersion::get::&lt;Pallet&lt;T&gt;&gt;();
+		<span class="kw">let </span>version = &lt;Pallet&lt;T&gt;&gt;::on_chain_storage_version();
 		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
 
 		<span class="kw">if </span>version &lt; <span class="number">4 </span>{
-			weight = weight.saturating_add(v4::migrate::&lt;T&gt;());
-			StorageVersion::new(<span class="number">4</span>).put::&lt;Pallet&lt;T&gt;&gt;();
+			v4::migrate::&lt;T&gt;(<span class="kw-2">&amp;mut </span>weight);
 		}
 
 		<span class="kw">if </span>version &lt; <span class="number">5 </span>{
-			weight = weight.saturating_add(v5::migrate::&lt;T&gt;());
-			StorageVersion::new(<span class="number">5</span>).put::&lt;Pallet&lt;T&gt;&gt;();
+			v5::migrate::&lt;T&gt;(<span class="kw-2">&amp;mut </span>weight);
 		}
 
 		<span class="kw">if </span>version &lt; <span class="number">6 </span>{
-			weight = weight.saturating_add(v6::migrate::&lt;T&gt;());
-			StorageVersion::new(<span class="number">6</span>).put::&lt;Pallet&lt;T&gt;&gt;();
+			v6::migrate::&lt;T&gt;(<span class="kw-2">&amp;mut </span>weight);
 		}
 
 		<span class="kw">if </span>version &lt; <span class="number">7 </span>{
-			weight = weight.saturating_add(v7::migrate::&lt;T&gt;());
-			StorageVersion::new(<span class="number">7</span>).put::&lt;Pallet&lt;T&gt;&gt;();
+			v7::migrate::&lt;T&gt;(<span class="kw-2">&amp;mut </span>weight);
 		}
 
 		<span class="kw">if </span>version &lt; <span class="number">8 </span>{
-			weight = weight.saturating_add(v8::migrate::&lt;T&gt;());
-			StorageVersion::new(<span class="number">8</span>).put::&lt;Pallet&lt;T&gt;&gt;();
+			v8::migrate::&lt;T&gt;(<span class="kw-2">&amp;mut </span>weight);
 		}
+
+		<span class="kw">if </span>version &lt; <span class="number">9 </span>{
+			v9::migrate::&lt;T&gt;(<span class="kw-2">&amp;mut </span>weight);
+		}
+
+		StorageVersion::new(<span class="number">9</span>).put::&lt;Pallet&lt;T&gt;&gt;();
+		weight.saturating_accrue(T::DbWeight::get().writes(<span class="number">1</span>));
 
 		weight
 	}
 
 	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
 	</span><span class="kw">fn </span>pre_upgrade() -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-		<span class="kw">let </span>version = StorageVersion::get::&lt;Pallet&lt;T&gt;&gt;();
+		<span class="kw">let </span>version = &lt;Pallet&lt;T&gt;&gt;::on_chain_storage_version();
 
-		<span class="kw">if </span>version &lt; <span class="number">7 </span>{
-			<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[])
-		}
-
-		<span class="kw">if </span>version &lt; <span class="number">8 </span>{
+		<span class="kw">if </span>version == <span class="number">8 </span>{
 			v8::pre_upgrade::&lt;T&gt;()<span class="question-mark">?</span>;
 		}
 
-		<span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[])
+		<span class="prelude-val">Ok</span>(version.encode())
 	}
 
 	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
-	</span><span class="kw">fn </span>post_upgrade(_state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
-		<span class="kw">let </span>version = StorageVersion::get::&lt;Pallet&lt;T&gt;&gt;();
-
-		<span class="kw">if </span>version &lt; <span class="number">7 </span>{
-			<span class="kw">return </span><span class="prelude-val">Ok</span>(())
-		}
-
-		<span class="kw">if </span>version &lt; <span class="number">8 </span>{
-			v8::post_upgrade::&lt;T&gt;()<span class="question-mark">?</span>;
-		}
-
-		<span class="prelude-val">Ok</span>(())
+	</span><span class="kw">fn </span>post_upgrade(state: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">let </span>version = Decode::decode(<span class="kw-2">&amp;mut </span>state.as_ref()).map_err(|<span class="kw">_</span>| <span class="string">&quot;Cannot decode version&quot;</span>)<span class="question-mark">?</span>;
+		post_checks::post_upgrade::&lt;T&gt;(version)
 	}
 }
 
@@ -514,10 +560,10 @@
 </span><span class="kw">mod </span>v4 {
 	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;(weight: <span class="kw-2">&amp;mut </span>Weight) {
 		<span class="attribute">#[allow(deprecated)]
 		</span>migration::remove_storage_prefix(&lt;Pallet&lt;T&gt;&gt;::name().as_bytes(), <span class="string">b&quot;CurrentSchedule&quot;</span>, <span class="string">b&quot;&quot;</span>);
-		T::DbWeight::get().writes(<span class="number">1</span>)
+		weight.saturating_accrue(T::DbWeight::get().writes(<span class="number">1</span>));
 	}
 }
 
@@ -585,11 +631,9 @@
 	<span class="attribute">#[storage_alias]
 	</span><span class="kw">type </span>DeletionQueue&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, Vec&lt;DeletedContract&gt;&gt;;
 
-	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
-		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
-
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;(weight: <span class="kw-2">&amp;mut </span>Weight) {
 		&lt;ContractInfoOf&lt;T&gt;&gt;::translate(|_key, old: OldContractInfo&lt;T&gt;| {
-			weight = weight.saturating_add(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
+			weight.saturating_accrue(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
 			<span class="kw">match </span>old {
 				OldContractInfo::Alive(old) =&gt; <span class="prelude-val">Some</span>(ContractInfo::&lt;T&gt; {
 					trie_id: old.trie_id,
@@ -601,12 +645,10 @@
 		});
 
 		DeletionQueue::&lt;T&gt;::translate(|old: <span class="prelude-ty">Option</span>&lt;Vec&lt;OldDeletedContract&gt;&gt;| {
-			weight = weight.saturating_add(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
+			weight.saturating_accrue(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
 			old.map(|old| old.into_iter().map(|o| DeletedContract { trie_id: o.trie_id }).collect())
 		})
 		.ok();
-
-		weight
 	}
 }
 
@@ -630,14 +672,14 @@
 	}
 
 	<span class="attribute">#[derive(Encode, Decode)]
-	</span><span class="kw">struct </span>PrefabWasmModule {
+	</span><span class="kw">pub struct </span>PrefabWasmModule {
 		<span class="attribute">#[codec(compact)]
-		</span>instruction_weights_version: u32,
+		</span><span class="kw">pub </span>instruction_weights_version: u32,
 		<span class="attribute">#[codec(compact)]
-		</span>initial: u32,
+		</span><span class="kw">pub </span>initial: u32,
 		<span class="attribute">#[codec(compact)]
-		</span>maximum: u32,
-		code: Vec&lt;u8&gt;,
+		</span><span class="kw">pub </span>maximum: u32,
+		<span class="kw">pub </span>code: Vec&lt;u8&gt;,
 	}
 
 	<span class="kw">use </span>v5::ContractInfo <span class="kw">as </span>OldContractInfo;
@@ -674,11 +716,9 @@
 	<span class="attribute">#[storage_alias]
 	</span><span class="kw">type </span>OwnerInfoOf&lt;T: Config&gt; = StorageMap&lt;Pallet&lt;T&gt;, Identity, CodeHash&lt;T&gt;, OwnerInfo&lt;T&gt;&gt;;
 
-	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
-		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
-
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;(weight: <span class="kw-2">&amp;mut </span>Weight) {
 		&lt;ContractInfoOf&lt;T&gt;&gt;::translate(|_key, old: OldContractInfo&lt;T&gt;| {
-			weight = weight.saturating_add(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
+			weight.saturating_accrue(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
 			<span class="prelude-val">Some</span>(ContractInfo::&lt;T&gt; {
 				trie_id: old.trie_id,
 				code_hash: old.code_hash,
@@ -690,7 +730,7 @@
 			.expect(<span class="string">&quot;Infinite input; no dead input space; qed&quot;</span>);
 
 		&lt;CodeStorage&lt;T&gt;&gt;::translate(|key, old: OldPrefabWasmModule| {
-			weight = weight.saturating_add(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">2</span>));
+			weight.saturating_accrue(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">2</span>));
 			&lt;OwnerInfoOf&lt;T&gt;&gt;::insert(
 				key,
 				OwnerInfo {
@@ -706,8 +746,6 @@
 				code: old.code,
 			})
 		});
-
-		weight
 	}
 }
 
@@ -715,14 +753,14 @@
 </span><span class="kw">mod </span>v7 {
 	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;(weight: <span class="kw-2">&amp;mut </span>Weight) {
 		<span class="attribute">#[storage_alias]
 		</span><span class="kw">type </span>AccountCounter&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, u64, ValueQuery&gt;;
 		<span class="attribute">#[storage_alias]
 		</span><span class="kw">type </span>Nonce&lt;T: Config&gt; = StorageValue&lt;Pallet&lt;T&gt;, u64, ValueQuery&gt;;
 
 		Nonce::&lt;T&gt;::set(AccountCounter::&lt;T&gt;::take());
-		T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">2</span>)
+		weight.saturating_accrue(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">2</span>))
 	}
 }
 
@@ -733,23 +771,21 @@
 	<span class="kw">use </span>v6::ContractInfo <span class="kw">as </span>OldContractInfo;
 
 	<span class="attribute">#[derive(Encode, Decode)]
-	</span><span class="kw">struct </span>ContractInfo&lt;T: Config&gt; {
-		trie_id: TrieId,
-		code_hash: CodeHash&lt;T&gt;,
-		storage_bytes: u32,
-		storage_items: u32,
-		storage_byte_deposit: BalanceOf&lt;T&gt;,
-		storage_item_deposit: BalanceOf&lt;T&gt;,
-		storage_base_deposit: BalanceOf&lt;T&gt;,
+	</span><span class="kw">pub struct </span>ContractInfo&lt;T: Config&gt; {
+		<span class="kw">pub </span>trie_id: TrieId,
+		<span class="kw">pub </span>code_hash: CodeHash&lt;T&gt;,
+		<span class="kw">pub </span>storage_bytes: u32,
+		<span class="kw">pub </span>storage_items: u32,
+		<span class="kw">pub </span>storage_byte_deposit: BalanceOf&lt;T&gt;,
+		<span class="kw">pub </span>storage_item_deposit: BalanceOf&lt;T&gt;,
+		<span class="kw">pub </span>storage_base_deposit: BalanceOf&lt;T&gt;,
 	}
 
 	<span class="attribute">#[storage_alias]
 	</span><span class="kw">type </span>ContractInfoOf&lt;T: Config, V&gt; =
 		StorageMap&lt;Pallet&lt;T&gt;, Twox64Concat, &lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId, V&gt;;
 
-	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;() -&gt; Weight {
-		<span class="kw">let </span><span class="kw-2">mut </span>weight = Weight::zero();
-
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;(weight: <span class="kw-2">&amp;mut </span>Weight) {
 		&lt;ContractInfoOf&lt;T, ContractInfo&lt;T&gt;&gt;&gt;::translate_values(|old: OldContractInfo&lt;T&gt;| {
 			<span class="comment">// Count storage items of this contract
 			</span><span class="kw">let </span><span class="kw-2">mut </span>storage_bytes = <span class="number">0u32</span>;
@@ -775,8 +811,9 @@
 
 			<span class="comment">// Reads: One read for each storage item plus the contract info itself.
 			// Writes: Only the new contract info.
-			</span>weight = weight
-				.saturating_add(T::DbWeight::get().reads_writes(u64::from(storage_items) + <span class="number">1</span>, <span class="number">1</span>));
+			</span>weight.saturating_accrue(
+				T::DbWeight::get().reads_writes(u64::from(storage_items) + <span class="number">1</span>, <span class="number">1</span>),
+			);
 
 			<span class="prelude-val">Some</span>(ContractInfo {
 				trie_id: old.trie_id,
@@ -788,8 +825,6 @@
 				storage_base_deposit,
 			})
 		});
-
-		weight
 	}
 
 	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
@@ -801,9 +836,78 @@
 		}
 		<span class="prelude-val">Ok</span>(())
 	}
+}
 
-	<span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
-	</span><span class="kw">pub fn </span>post_upgrade&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+<span class="doccomment">/// Update `CodeStorage` with the new `determinism` field.
+</span><span class="kw">mod </span>v9 {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span><span class="kw">crate</span>::Determinism;
+	<span class="kw">use </span>v6::PrefabWasmModule <span class="kw">as </span>OldPrefabWasmModule;
+
+	<span class="attribute">#[derive(Encode, Decode)]
+	</span><span class="kw">pub struct </span>PrefabWasmModule {
+		<span class="attribute">#[codec(compact)]
+		</span><span class="kw">pub </span>instruction_weights_version: u32,
+		<span class="attribute">#[codec(compact)]
+		</span><span class="kw">pub </span>initial: u32,
+		<span class="attribute">#[codec(compact)]
+		</span><span class="kw">pub </span>maximum: u32,
+		<span class="kw">pub </span>code: Vec&lt;u8&gt;,
+		<span class="kw">pub </span>determinism: Determinism,
+	}
+
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>CodeStorage&lt;T: Config&gt; = StorageMap&lt;Pallet&lt;T&gt;, Identity, CodeHash&lt;T&gt;, PrefabWasmModule&gt;;
+
+	<span class="kw">pub fn </span>migrate&lt;T: Config&gt;(weight: <span class="kw-2">&amp;mut </span>Weight) {
+		&lt;CodeStorage&lt;T&gt;&gt;::translate_values(|old: OldPrefabWasmModule| {
+			weight.saturating_accrue(T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>));
+			<span class="prelude-val">Some</span>(PrefabWasmModule {
+				instruction_weights_version: old.instruction_weights_version,
+				initial: old.initial,
+				maximum: old.maximum,
+				code: old.code,
+				determinism: Determinism::Deterministic,
+			})
+		});
+	}
+}
+
+<span class="comment">// Post checks always need to be run against the latest storage version. This is why we
+// do not scope them in the per version modules. They always need to be ported to the latest
+// version.
+</span><span class="attribute">#[cfg(feature = <span class="string">&quot;try-runtime&quot;</span>)]
+</span><span class="kw">mod </span>post_checks {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span><span class="kw">crate</span>::Determinism;
+	<span class="kw">use </span>sp_io::default_child_storage <span class="kw">as </span>child;
+	<span class="kw">use </span>v8::ContractInfo;
+	<span class="kw">use </span>v9::PrefabWasmModule;
+
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>CodeStorage&lt;T: Config&gt; = StorageMap&lt;Pallet&lt;T&gt;, Identity, CodeHash&lt;T&gt;, PrefabWasmModule&gt;;
+
+	<span class="attribute">#[storage_alias]
+	</span><span class="kw">type </span>ContractInfoOf&lt;T: Config, V&gt; =
+		StorageMap&lt;Pallet&lt;T&gt;, Twox64Concat, &lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId, V&gt;;
+
+	<span class="kw">pub fn </span>post_upgrade&lt;T: Config&gt;(old_version: StorageVersion) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">if </span>old_version &lt; <span class="number">7 </span>{
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(())
+		}
+
+		<span class="kw">if </span>old_version &lt; <span class="number">8 </span>{
+			v8::&lt;T&gt;()<span class="question-mark">?</span>;
+		}
+
+		<span class="kw">if </span>old_version &lt; <span class="number">9 </span>{
+			v9::&lt;T&gt;()<span class="question-mark">?</span>;
+		}
+
+		<span class="prelude-val">Ok</span>(())
+	}
+
+	<span class="kw">fn </span>v8&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 		<span class="kw">use </span>frame_support::traits::ReservableCurrency;
 		<span class="kw">for </span>(key, value) <span class="kw">in </span>ContractInfoOf::&lt;T, ContractInfo&lt;T&gt;&gt;::iter() {
 			<span class="kw">let </span>reserved = T::Currency::reserved_balance(<span class="kw-2">&amp;</span>key);
@@ -826,6 +930,16 @@
 			}
 			<span class="macro">ensure!</span>(storage_bytes == value.storage_bytes, <span class="string">&quot;Storage bytes do not match.&quot;</span>,);
 			<span class="macro">ensure!</span>(storage_items == value.storage_items, <span class="string">&quot;Storage items do not match.&quot;</span>,);
+		}
+		<span class="prelude-val">Ok</span>(())
+	}
+
+	<span class="kw">fn </span>v9&lt;T: Config&gt;() -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
+		<span class="kw">for </span>value <span class="kw">in </span>CodeStorage::&lt;T&gt;::iter_values() {
+			<span class="macro">ensure!</span>(
+				value.determinism == Determinism::Deterministic,
+				<span class="string">&quot;All pre-existing codes need to be deterministic.&quot;
+			</span>);
 		}
 		<span class="prelude-val">Ok</span>(())
 	}

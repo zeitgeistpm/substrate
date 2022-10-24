@@ -2289,6 +2289,33 @@
 <span id="2289">2289</span>
 <span id="2290">2290</span>
 <span id="2291">2291</span>
+<span id="2292">2292</span>
+<span id="2293">2293</span>
+<span id="2294">2294</span>
+<span id="2295">2295</span>
+<span id="2296">2296</span>
+<span id="2297">2297</span>
+<span id="2298">2298</span>
+<span id="2299">2299</span>
+<span id="2300">2300</span>
+<span id="2301">2301</span>
+<span id="2302">2302</span>
+<span id="2303">2303</span>
+<span id="2304">2304</span>
+<span id="2305">2305</span>
+<span id="2306">2306</span>
+<span id="2307">2307</span>
+<span id="2308">2308</span>
+<span id="2309">2309</span>
+<span id="2310">2310</span>
+<span id="2311">2311</span>
+<span id="2312">2312</span>
+<span id="2313">2313</span>
+<span id="2314">2314</span>
+<span id="2315">2315</span>
+<span id="2316">2316</span>
+<span id="2317">2317</span>
+<span id="2318">2318</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -4250,7 +4277,16 @@
 			input_data: Vec&lt;u8&gt;,
 		) -&gt; pallet_contracts_primitives::ContractExecResult&lt;Balance&gt; {
 			<span class="kw">let </span>gas_limit = gas_limit.unwrap_or(RuntimeBlockWeights::get().max_block);
-			Contracts::bare_call(origin, dest, value, gas_limit, storage_deposit_limit, input_data, <span class="bool-val">true</span>)
+			Contracts::bare_call(
+				origin,
+				dest,
+				value,
+				gas_limit,
+				storage_deposit_limit,
+				input_data,
+				<span class="bool-val">true</span>,
+				pallet_contracts::Determinism::Deterministic,
+			)
 		}
 
 		<span class="kw">fn </span>instantiate(
@@ -4264,23 +4300,41 @@
 		) -&gt; pallet_contracts_primitives::ContractInstantiateResult&lt;AccountId, Balance&gt;
 		{
 			<span class="kw">let </span>gas_limit = gas_limit.unwrap_or(RuntimeBlockWeights::get().max_block);
-			Contracts::bare_instantiate(origin, value, gas_limit, storage_deposit_limit, code, data, salt, <span class="bool-val">true</span>)
+			Contracts::bare_instantiate(
+				origin,
+				value,
+				gas_limit,
+				storage_deposit_limit,
+				code,
+				data,
+				salt,
+				<span class="bool-val">true
+			</span>)
 		}
 
 		<span class="kw">fn </span>upload_code(
 			origin: AccountId,
 			code: Vec&lt;u8&gt;,
 			storage_deposit_limit: <span class="prelude-ty">Option</span>&lt;Balance&gt;,
+			determinism: pallet_contracts::Determinism,
 		) -&gt; pallet_contracts_primitives::CodeUploadResult&lt;Hash, Balance&gt;
 		{
-			Contracts::bare_upload_code(origin, code, storage_deposit_limit)
+			Contracts::bare_upload_code(
+				origin,
+				code,
+				storage_deposit_limit,
+				determinism,
+			)
 		}
 
 		<span class="kw">fn </span>get_storage(
 			address: AccountId,
 			key: Vec&lt;u8&gt;,
 		) -&gt; pallet_contracts_primitives::GetStorageResult {
-			Contracts::get_storage(address, key)
+			Contracts::get_storage(
+				address,
+				key
+			)
 		}
 	}
 

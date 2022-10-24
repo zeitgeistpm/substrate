@@ -3240,6 +3240,72 @@
 <span id="3240">3240</span>
 <span id="3241">3241</span>
 <span id="3242">3242</span>
+<span id="3243">3243</span>
+<span id="3244">3244</span>
+<span id="3245">3245</span>
+<span id="3246">3246</span>
+<span id="3247">3247</span>
+<span id="3248">3248</span>
+<span id="3249">3249</span>
+<span id="3250">3250</span>
+<span id="3251">3251</span>
+<span id="3252">3252</span>
+<span id="3253">3253</span>
+<span id="3254">3254</span>
+<span id="3255">3255</span>
+<span id="3256">3256</span>
+<span id="3257">3257</span>
+<span id="3258">3258</span>
+<span id="3259">3259</span>
+<span id="3260">3260</span>
+<span id="3261">3261</span>
+<span id="3262">3262</span>
+<span id="3263">3263</span>
+<span id="3264">3264</span>
+<span id="3265">3265</span>
+<span id="3266">3266</span>
+<span id="3267">3267</span>
+<span id="3268">3268</span>
+<span id="3269">3269</span>
+<span id="3270">3270</span>
+<span id="3271">3271</span>
+<span id="3272">3272</span>
+<span id="3273">3273</span>
+<span id="3274">3274</span>
+<span id="3275">3275</span>
+<span id="3276">3276</span>
+<span id="3277">3277</span>
+<span id="3278">3278</span>
+<span id="3279">3279</span>
+<span id="3280">3280</span>
+<span id="3281">3281</span>
+<span id="3282">3282</span>
+<span id="3283">3283</span>
+<span id="3284">3284</span>
+<span id="3285">3285</span>
+<span id="3286">3286</span>
+<span id="3287">3287</span>
+<span id="3288">3288</span>
+<span id="3289">3289</span>
+<span id="3290">3290</span>
+<span id="3291">3291</span>
+<span id="3292">3292</span>
+<span id="3293">3293</span>
+<span id="3294">3294</span>
+<span id="3295">3295</span>
+<span id="3296">3296</span>
+<span id="3297">3297</span>
+<span id="3298">3298</span>
+<span id="3299">3299</span>
+<span id="3300">3300</span>
+<span id="3301">3301</span>
+<span id="3302">3302</span>
+<span id="3303">3303</span>
+<span id="3304">3304</span>
+<span id="3305">3305</span>
+<span id="3306">3306</span>
+<span id="3307">3307</span>
+<span id="3308">3308</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -3260,7 +3326,7 @@
 </span><span class="kw">use crate</span>::{
 	gas::GasMeter,
 	storage::{<span class="self">self</span>, Storage, WriteOutcome},
-	BalanceOf, CodeHash, Config, ContractInfo, ContractInfoOf, Error, Event, Nonce,
+	BalanceOf, CodeHash, Config, ContractInfo, ContractInfoOf, Determinism, Error, Event, Nonce,
 	Pallet <span class="kw">as </span>Contracts, Schedule,
 };
 <span class="kw">use </span>frame_support::{
@@ -3597,6 +3663,9 @@
 
 	<span class="doccomment">/// Size of the instrumented code in bytes.
 	</span><span class="kw">fn </span>code_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32;
+
+	<span class="doccomment">/// The code does not contain any instructions which could lead to indeterminism.
+	</span><span class="kw">fn </span>is_deterministic(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool;
 }
 
 <span class="doccomment">/// The complete call stack of a contract execution.
@@ -3637,6 +3706,8 @@
 	/// All the bytes added to this field should be valid UTF-8. The buffer has no defined
 	/// structure and is intended to be shown to users as-is for debugging purposes.
 	</span>debug_message: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Vec&lt;u8&gt;&gt;,
+	<span class="doccomment">/// The determinism requirement of this call stack.
+	</span>determinism: Determinism,
 	<span class="doccomment">/// No executable is held by the struct but influences its behaviour.
 	</span>_phantom: PhantomData&lt;E&gt;,
 }
@@ -3843,6 +3914,7 @@
 		value: BalanceOf&lt;T&gt;,
 		input_data: Vec&lt;u8&gt;,
 		debug_message: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Vec&lt;u8&gt;&gt;,
+		determinism: Determinism,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;ExecReturnValue, ExecError&gt; {
 		<span class="kw">let </span>(<span class="kw-2">mut </span>stack, executable) = <span class="self">Self</span>::new(
 			FrameArgs::Call { dest, cached_info: <span class="prelude-val">None</span>, delegated_call: <span class="prelude-val">None </span>},
@@ -3852,6 +3924,7 @@
 			schedule,
 			value,
 			debug_message,
+			determinism,
 		)<span class="question-mark">?</span>;
 		stack.run(executable, input_data)
 	}
@@ -3890,6 +3963,7 @@
 			schedule,
 			value,
 			debug_message,
+			Determinism::Deterministic,
 		)<span class="question-mark">?</span>;
 		<span class="kw">let </span>account_id = stack.top_frame().account_id.clone();
 		stack.run(executable, input_data).map(|ret| (account_id, ret))
@@ -3904,9 +3978,17 @@
 		schedule: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schedule&lt;T&gt;,
 		value: BalanceOf&lt;T&gt;,
 		debug_message: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Vec&lt;u8&gt;&gt;,
+		determinism: Determinism,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="self">Self</span>, E), ExecError&gt; {
-		<span class="kw">let </span>(first_frame, executable, nonce) =
-			<span class="self">Self</span>::new_frame(args, value, gas_meter, storage_meter, Weight::zero(), schedule)<span class="question-mark">?</span>;
+		<span class="kw">let </span>(first_frame, executable, nonce) = <span class="self">Self</span>::new_frame(
+			args,
+			value,
+			gas_meter,
+			storage_meter,
+			Weight::zero(),
+			schedule,
+			determinism,
+		)<span class="question-mark">?</span>;
 		<span class="kw">let </span>stack = <span class="self">Self </span>{
 			origin,
 			schedule,
@@ -3918,6 +4000,7 @@
 			first_frame,
 			frames: Default::default(),
 			debug_message,
+			determinism,
 			_phantom: Default::default(),
 		};
 
@@ -3935,6 +4018,7 @@
 		storage_meter: <span class="kw-2">&amp;mut </span>storage::meter::GenericMeter&lt;T, S&gt;,
 		gas_limit: Weight,
 		schedule: <span class="kw-2">&amp;</span>Schedule&lt;T&gt;,
+		determinism: Determinism,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;(Frame&lt;T&gt;, E, <span class="prelude-ty">Option</span>&lt;u64&gt;), ExecError&gt; {
 		<span class="kw">let </span>(account_id, contract_info, executable, delegate_caller, entry_point, nonce) =
 			<span class="kw">match </span>frame_args {
@@ -3970,6 +4054,15 @@
 					)
 				},
 			};
+
+		<span class="comment">// `AllowIndeterminism` will only be ever set in case of off-chain execution.
+		// Instantiations are never allowed even when executing off-chain.
+		</span><span class="kw">if </span>!(executable.is_deterministic() ||
+			(<span class="macro">matches!</span>(determinism, Determinism::AllowIndeterminism) &amp;&amp;
+				<span class="macro">matches!</span>(entry_point, ExportedFunction::Call)))
+		{
+			<span class="kw">return </span><span class="prelude-val">Err</span>(Error::&lt;T&gt;::Indeterministic.into())
+		}
 
 		<span class="kw">let </span>frame = Frame {
 			delegate_caller,
@@ -4017,6 +4110,7 @@
 			nested_storage,
 			gas_limit,
 			<span class="self">self</span>.schedule,
+			<span class="self">self</span>.determinism,
 		)<span class="question-mark">?</span>;
 		<span class="self">self</span>.frames.push(frame);
 		<span class="prelude-val">Ok</span>(executable)
@@ -4570,15 +4664,18 @@
 	}
 
 	<span class="kw">fn </span>set_code_hash(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: CodeHash&lt;<span class="self">Self</span>::T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), DispatchError&gt; {
+		<span class="kw">let </span>frame = <span class="macro">top_frame_mut!</span>(<span class="self">self</span>);
+		<span class="kw">if </span>!E::from_storage(hash, <span class="self">self</span>.schedule, <span class="kw-2">&amp;mut </span>frame.nested_gas)<span class="question-mark">?</span>.is_deterministic() {
+			<span class="kw">return </span><span class="prelude-val">Err</span>(&lt;Error&lt;T&gt;&gt;::Indeterministic.into())
+		}
 		E::add_user(hash)<span class="question-mark">?</span>;
-		<span class="kw">let </span>top_frame = <span class="self">self</span>.top_frame_mut();
-		<span class="kw">let </span>prev_hash = top_frame.contract_info().code_hash;
+		<span class="kw">let </span>prev_hash = frame.contract_info().code_hash;
 		E::remove_user(prev_hash);
-		top_frame.contract_info().code_hash = hash;
+		frame.contract_info().code_hash = hash;
 		Contracts::&lt;<span class="self">Self</span>::T&gt;::deposit_event(
-			<span class="macro">vec!</span>[T::Hashing::hash_of(<span class="kw-2">&amp;</span>top_frame.account_id), hash, prev_hash],
+			<span class="macro">vec!</span>[T::Hashing::hash_of(<span class="kw-2">&amp;</span>frame.account_id), hash, prev_hash],
 			Event::ContractCodeUpdated {
-				contract: top_frame.account_id.clone(),
+				contract: frame.account_id.clone(),
 				new_code_hash: hash,
 				old_code_hash: prev_hash,
 			},
@@ -4755,6 +4852,10 @@
 		<span class="kw">fn </span>code_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
 			<span class="number">0
 		</span>}
+
+		<span class="kw">fn </span>is_deterministic(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+			<span class="bool-val">true
+		</span>}
 	}
 
 	<span class="kw">fn </span>exec_success() -&gt; ExecResult {
@@ -4793,6 +4894,7 @@
 					value,
 					<span class="macro">vec!</span>[],
 					<span class="prelude-val">None</span>,
+					Determinism::Deterministic,
 				),
 				<span class="prelude-val">Ok</span>(<span class="kw">_</span>)
 			);
@@ -4846,6 +4948,7 @@
 				value,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			)
 			.unwrap();
 
@@ -4887,6 +4990,7 @@
 				value,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			)
 			.unwrap();
 
@@ -4922,6 +5026,7 @@
 				<span class="number">55</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			)
 			.unwrap();
 
@@ -4973,6 +5078,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 
 			<span class="kw">let </span>output = result.unwrap();
@@ -5005,6 +5111,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 
 			<span class="kw">let </span>output = result.unwrap();
@@ -5035,6 +5142,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
 		});
@@ -5115,6 +5223,7 @@
 				value,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
@@ -5160,6 +5269,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
@@ -5193,6 +5303,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
 		});
@@ -5222,6 +5333,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[<span class="number">0</span>],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
 		});
@@ -5249,6 +5361,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[<span class="number">0</span>],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
 		});
@@ -5284,6 +5397,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[<span class="number">0</span>],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
 		});
@@ -5319,6 +5433,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
@@ -5477,6 +5592,7 @@
 					min_balance * <span class="number">10</span>,
 					<span class="macro">vec!</span>[],
 					<span class="prelude-val">None</span>,
+					Determinism::Deterministic,
 				),
 				<span class="prelude-val">Ok</span>(<span class="kw">_</span>)
 			);
@@ -5541,6 +5657,7 @@
 					<span class="number">0</span>,
 					<span class="macro">vec!</span>[],
 					<span class="prelude-val">None</span>,
+					Determinism::Deterministic,
 				),
 				<span class="prelude-val">Ok</span>(<span class="kw">_</span>)
 			);
@@ -5626,6 +5743,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[<span class="number">0</span>],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
 		});
@@ -5692,6 +5810,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>debug_buffer),
+				Determinism::Deterministic,
 			)
 			.unwrap();
 		});
@@ -5725,6 +5844,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>debug_buffer),
+				Determinism::Deterministic,
 			);
 			<span class="macro">assert!</span>(result.is_err());
 		});
@@ -5758,6 +5878,7 @@
 				<span class="number">0</span>,
 				CHARLIE.encode(),
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic
 			));
 
 			<span class="comment">// Calling into oneself fails
@@ -5771,6 +5892,7 @@
 					<span class="number">0</span>,
 					BOB.encode(),
 					<span class="prelude-val">None</span>,
+					Determinism::Deterministic
 				)
 				.map_err(|e| e.error),
 				&lt;Error&lt;Test&gt;&gt;::ReentranceDenied,
@@ -5809,6 +5931,7 @@
 					<span class="number">0</span>,
 					<span class="macro">vec!</span>[<span class="number">0</span>],
 					<span class="prelude-val">None</span>,
+					Determinism::Deterministic
 				)
 				.map_err(|e| e.error),
 				&lt;Error&lt;Test&gt;&gt;::ReentranceDenied,
@@ -5843,6 +5966,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			)
 			.unwrap();
 
@@ -5925,6 +6049,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			)
 			.unwrap();
 
@@ -6128,6 +6253,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic
 			));
 		});
 	}
@@ -6254,6 +6380,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic
 			));
 		});
 	}
@@ -6289,6 +6416,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic
 			));
 		});
 	}
@@ -6324,6 +6452,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic
 			));
 		});
 	}
@@ -6385,6 +6514,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic
 			));
 		});
 	}
@@ -6446,6 +6576,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic
 			));
 		});
 	}
@@ -6477,6 +6608,7 @@
 				<span class="number">0</span>,
 				<span class="macro">vec!</span>[],
 				<span class="prelude-val">None</span>,
+				Determinism::Deterministic,
 			);
 			<span class="macro">assert_matches!</span>(result, <span class="prelude-val">Ok</span>(<span class="kw">_</span>));
 		});

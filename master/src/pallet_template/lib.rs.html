@@ -147,7 +147,7 @@
 	</span><span class="kw">pub enum </span>Event&lt;T: Config&gt; {
 		<span class="doccomment">/// Event documentation should end with an array that provides descriptive names for event
 		/// parameters. [something, who]
-		</span>SomethingStored(u32, T::AccountId),
+		</span>SomethingStored { something: u32, who: T::AccountId },
 	}
 
 	<span class="comment">// Errors inform users that something went wrong.
@@ -177,7 +177,7 @@
 			</span>&lt;Something&lt;T&gt;&gt;::put(something);
 
 			<span class="comment">// Emit an event.
-			</span><span class="self">Self</span>::deposit_event(Event::SomethingStored(something, who));
+			</span><span class="self">Self</span>::deposit_event(Event::SomethingStored { something, who });
 			<span class="comment">// Return a successful DispatchResultWithPostInfo
 			</span><span class="prelude-val">Ok</span>(())
 		}

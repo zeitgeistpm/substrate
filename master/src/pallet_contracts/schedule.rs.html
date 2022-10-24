@@ -780,6 +780,23 @@
 <span id="780">780</span>
 <span id="781">781</span>
 <span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -800,7 +817,7 @@
 </span><span class="doccomment">//! This module contains the cost schedule and supporting code that constructs a
 //! sane default schedule from a `WeightInfo` implementation.
 
-</span><span class="kw">use crate</span>::{weights::WeightInfo, Config};
+</span><span class="kw">use crate</span>::{wasm::Determinism, weights::WeightInfo, Config};
 
 <span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>frame_support::DefaultNoBound;
@@ -975,6 +992,13 @@
 	/// Changes to other parts of the schedule should not increment the version in
 	/// order to avoid unnecessary re-instrumentations.
 	</span><span class="kw">pub </span>version: u32,
+	<span class="doccomment">/// Weight to be used for instructions which don&#39;t have benchmarks assigned.
+	///
+	/// This weight is used whenever a code is uploaded with [`Determinism::AllowIndeterminism`]
+	/// and an instruction (usually a float instruction) is encountered. This weight is **not**
+	/// used if a contract is uploaded with [`Determinism::Deterministic`]. If this field is set to
+	/// `0` (the default) only deterministic codes are allowed to be uploaded.
+	</span><span class="kw">pub </span>fallback: u32,
 	<span class="kw">pub </span>i64const: u32,
 	<span class="kw">pub </span>i64load: u32,
 	<span class="kw">pub </span>i64store: u32,
@@ -1308,6 +1332,7 @@
 		<span class="kw">let </span>max_pages = Limits::default().memory_pages;
 		<span class="self">Self </span>{
 			version: <span class="number">3</span>,
+			fallback: <span class="number">0</span>,
 			i64const: <span class="macro">cost_instr!</span>(instr_i64const, <span class="number">1</span>),
 			i64load: <span class="macro">cost_instr!</span>(instr_i64load, <span class="number">2</span>),
 			i64store: <span class="macro">cost_instr!</span>(instr_i64store, <span class="number">2</span>),
@@ -1441,10 +1466,15 @@
 <span class="kw">struct </span>ScheduleRules&lt;<span class="lifetime">&#39;a</span>, T: Config&gt; {
 	schedule: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schedule&lt;T&gt;,
 	params: Vec&lt;u32&gt;,
+	determinism: Determinism,
 }
 
 <span class="kw">impl</span>&lt;T: Config&gt; Schedule&lt;T&gt; {
-	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>rules(<span class="kw-2">&amp;</span><span class="self">self</span>, module: <span class="kw-2">&amp;</span>elements::Module) -&gt; <span class="kw">impl </span>gas_metering::Rules + <span class="lifetime">&#39;_ </span>{
+	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>rules(
+		<span class="kw-2">&amp;</span><span class="self">self</span>,
+		module: <span class="kw-2">&amp;</span>elements::Module,
+		determinism: Determinism,
+	) -&gt; <span class="kw">impl </span>gas_metering::Rules + <span class="lifetime">&#39;_ </span>{
 		ScheduleRules {
 			schedule: <span class="self">self</span>,
 			params: module
@@ -1456,6 +1486,7 @@
 					func.params().len() <span class="kw">as </span>u32
 				})
 				.collect(),
+			determinism,
 		}
 	}
 }
@@ -1538,8 +1569,11 @@
 			I32Rotr | I64Rotr =&gt; w.i64rotr,
 
 			<span class="comment">// Returning None makes the gas instrumentation fail which we intend for
-			// unsupported or unknown instructions.
-			</span><span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
+			// unsupported or unknown instructions. Offchain we might allow indeterminism and hence
+			// use the fallback weight for those instructions.
+			</span><span class="kw">_ if </span><span class="macro">matches!</span>(<span class="self">self</span>.determinism, Determinism::AllowIndeterminism) &amp;&amp; w.fallback &gt; <span class="number">0 </span>=&gt;
+				w.fallback,
+			<span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">None</span>,
 		};
 		<span class="prelude-val">Some</span>(weight)
 	}

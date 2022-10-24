@@ -591,7 +591,7 @@
 //! we define this simple definition of a contract that can be passed to `create_code` that
 //! compiles it down into a `WasmModule` that can be used as a contract&#39;s code.
 
-</span><span class="kw">use </span><span class="kw">crate</span>::Config;
+</span><span class="kw">use crate</span>::{Config, Determinism};
 <span class="kw">use </span>frame_support::traits::Get;
 <span class="kw">use </span>sp_core::crypto::UncheckedFrom;
 <span class="kw">use </span>sp_runtime::traits::Hash;
@@ -1121,7 +1121,7 @@
 
 <span class="kw">fn </span>inject_gas_metering&lt;T: Config&gt;(module: Module) -&gt; Module {
 	<span class="kw">let </span>schedule = T::Schedule::get();
-	<span class="kw">let </span>gas_rules = schedule.rules(<span class="kw-2">&amp;</span>module);
+	<span class="kw">let </span>gas_rules = schedule.rules(<span class="kw-2">&amp;</span>module, Determinism::Deterministic);
 	wasm_instrument::gas_metering::inject(module, <span class="kw-2">&amp;</span>gas_rules, <span class="string">&quot;seal0&quot;</span>).unwrap()
 }
 
