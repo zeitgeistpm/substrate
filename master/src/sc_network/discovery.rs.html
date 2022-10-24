@@ -1065,6 +1065,66 @@
 <span id="1065">1065</span>
 <span id="1066">1066</span>
 <span id="1067">1067</span>
+<span id="1068">1068</span>
+<span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
+<span id="1102">1102</span>
+<span id="1103">1103</span>
+<span id="1104">1104</span>
+<span id="1105">1105</span>
+<span id="1106">1106</span>
+<span id="1107">1107</span>
+<span id="1108">1108</span>
+<span id="1109">1109</span>
+<span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
+<span id="1113">1113</span>
+<span id="1114">1114</span>
+<span id="1115">1115</span>
+<span id="1116">1116</span>
+<span id="1117">1117</span>
+<span id="1118">1118</span>
+<span id="1119">1119</span>
+<span id="1120">1120</span>
+<span id="1121">1121</span>
+<span id="1122">1122</span>
+<span id="1123">1123</span>
+<span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -1113,7 +1173,8 @@
 //! active mechanism that asks nodes for the addresses they are listening on. Whenever we learn
 //! of a node&#39;s address, you must call `add_self_reported_address`.
 
-</span><span class="kw">use </span>futures::prelude::<span class="kw-2">*</span>;
+</span><span class="kw">use </span>array_bytes::bytes2hex;
+<span class="kw">use </span>futures::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>futures_timer::Delay;
 <span class="kw">use </span>ip_network::IpNetwork;
 <span class="kw">use </span>libp2p::{
@@ -1168,7 +1229,7 @@
 	discovery_only_if_under_num: u64,
 	enable_mdns: bool,
 	kademlia_disjoint_query_paths: bool,
-	kademlia_protocol_id: <span class="prelude-ty">Option</span>&lt;ProtocolId&gt;,
+	kademlia_protocols: Vec&lt;Vec&lt;u8&gt;&gt;,
 }
 
 <span class="kw">impl </span>DiscoveryConfig {
@@ -1183,7 +1244,7 @@
 			discovery_only_if_under_num: std::u64::MAX,
 			enable_mdns: <span class="bool-val">false</span>,
 			kademlia_disjoint_query_paths: <span class="bool-val">false</span>,
-			kademlia_protocol_id: <span class="prelude-val">None</span>,
+			kademlia_protocols: Vec::new(),
 		}
 	}
 
@@ -1228,9 +1289,18 @@
 	</span>}
 
 	<span class="doccomment">/// Add discovery via Kademlia for the given protocol.
-	</span><span class="kw">pub fn </span>with_kademlia(<span class="kw-2">&amp;mut </span><span class="self">self</span>, id: ProtocolId) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-		<span class="self">self</span>.kademlia_protocol_id = <span class="prelude-val">Some</span>(id);
-
+	///
+	/// Currently accepts `protocol_id`. This should be removed once all the nodes
+	/// are upgraded to genesis hash- and fork ID-based Kademlia protocol name.
+	</span><span class="kw">pub fn </span>with_kademlia&lt;Hash: AsRef&lt;[u8]&gt;&gt;(
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
+		genesis_hash: Hash,
+		fork_id: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
+		protocol_id: <span class="kw-2">&amp;</span>ProtocolId,
+	) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+		<span class="self">self</span>.kademlia_protocols = Vec::new();
+		<span class="self">self</span>.kademlia_protocols.push(kademlia_protocol_name(genesis_hash, fork_id));
+		<span class="self">self</span>.kademlia_protocols.push(legacy_kademlia_protocol_name(protocol_id));
 		<span class="self">self
 	</span>}
 
@@ -1252,14 +1322,12 @@
 			discovery_only_if_under_num,
 			enable_mdns,
 			kademlia_disjoint_query_paths,
-			kademlia_protocol_id,
+			kademlia_protocols,
 		} = <span class="self">self</span>;
 
-		<span class="kw">let </span>kademlia = kademlia_protocol_id.map(|protocol_id| {
-			<span class="kw">let </span>proto_name = protocol_name_from_protocol_id(<span class="kw-2">&amp;</span>protocol_id);
-
+		<span class="kw">let </span>kademlia = <span class="kw">if </span>!kademlia_protocols.is_empty() {
 			<span class="kw">let </span><span class="kw-2">mut </span>config = KademliaConfig::default();
-			config.set_protocol_names(std::iter::once(proto_name.into()).collect());
+			config.set_protocol_names(kademlia_protocols.into_iter().map(Into::into).collect());
 			<span class="comment">// By default Kademlia attempts to insert all peers into its routing table once a
 			// dialing attempt succeeds. In order to control which peer is added, disable the
 			// auto-insertion and instead add peers manually.
@@ -1273,8 +1341,10 @@
 				kad.add_address(peer_id, addr.clone());
 			}
 
-			kad
-		});
+			<span class="prelude-val">Some</span>(kad)
+		} <span class="kw">else </span>{
+			<span class="prelude-val">None
+		</span>};
 
 		DiscoveryBehaviour {
 			permanent_addresses,
@@ -1933,35 +2003,50 @@
 	}
 }
 
-<span class="comment">// NB: If this protocol name derivation is changed, check if
-// `DiscoveryBehaviour::new_handler` is still correct.
-</span><span class="kw">fn </span>protocol_name_from_protocol_id(id: <span class="kw-2">&amp;</span>ProtocolId) -&gt; Vec&lt;u8&gt; {
+<span class="doccomment">/// Legacy (fallback) Kademlia protocol name based on `protocol_id`.
+</span><span class="kw">fn </span>legacy_kademlia_protocol_name(id: <span class="kw-2">&amp;</span>ProtocolId) -&gt; Vec&lt;u8&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>v = <span class="macro">vec!</span>[<span class="string">b&#39;/&#39;</span>];
 	v.extend_from_slice(id.as_ref().as_bytes());
 	v.extend_from_slice(<span class="string">b&quot;/kad&quot;</span>);
 	v
 }
 
+<span class="doccomment">/// Kademlia protocol name based on `genesis_hash` and `fork_id`.
+</span><span class="kw">fn </span>kademlia_protocol_name&lt;Hash: AsRef&lt;[u8]&gt;&gt;(genesis_hash: Hash, fork_id: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; Vec&lt;u8&gt; {
+	<span class="kw">let </span>genesis_hash_hex = bytes2hex(<span class="string">&quot;&quot;</span>, genesis_hash.as_ref());
+	<span class="kw">if let </span><span class="prelude-val">Some</span>(fork_id) = fork_id {
+		<span class="macro">format!</span>(<span class="string">&quot;/{}/{}/kad&quot;</span>, genesis_hash_hex, fork_id).as_bytes().into()
+	} <span class="kw">else </span>{
+		<span class="macro">format!</span>(<span class="string">&quot;/{}/kad&quot;</span>, genesis_hash_hex).as_bytes().into()
+	}
+}
+
 <span class="attribute">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
-	<span class="kw">use super</span>::{protocol_name_from_protocol_id, DiscoveryConfig, DiscoveryOut};
+	<span class="kw">use super</span>::{
+		kademlia_protocol_name, legacy_kademlia_protocol_name, DiscoveryConfig, DiscoveryOut,
+	};
 	<span class="kw">use </span>futures::prelude::<span class="kw-2">*</span>;
 	<span class="kw">use </span>libp2p::{
 		core::{
 			transport::{MemoryTransport, Transport},
 			upgrade,
 		},
-		identity::Keypair,
+		identity::{ed25519, Keypair},
 		noise,
 		swarm::{Swarm, SwarmEvent},
-		yamux, Multiaddr, PeerId,
+		yamux, Multiaddr,
 	};
 	<span class="kw">use </span>sc_network_common::config::ProtocolId;
+	<span class="kw">use </span>sp_core::hash::H256;
 	<span class="kw">use </span>std::{collections::HashSet, task::Poll};
 
 	<span class="attribute">#[test]
 	</span><span class="kw">fn </span>discovery_working() {
 		<span class="kw">let </span><span class="kw-2">mut </span>first_swarm_peer_id_and_addr = <span class="prelude-val">None</span>;
+
+		<span class="kw">let </span>genesis_hash = H256::from_low_u64_be(<span class="number">1</span>);
+		<span class="kw">let </span>fork_id = <span class="prelude-val">Some</span>(<span class="string">&quot;test-fork-id&quot;</span>);
 		<span class="kw">let </span>protocol_id = ProtocolId::from(<span class="string">&quot;dot&quot;</span>);
 
 		<span class="comment">// Build swarms whose behaviour is `DiscoveryBehaviour`, each aware of
@@ -1986,7 +2071,7 @@
 						.allow_private_ipv4(<span class="bool-val">true</span>)
 						.allow_non_globals_in_dht(<span class="bool-val">true</span>)
 						.discovery_limit(<span class="number">50</span>)
-						.with_kademlia(protocol_id.clone());
+						.with_kademlia(genesis_hash, fork_id, <span class="kw-2">&amp;</span>protocol_id);
 
 					config.finish()
 				};
@@ -2039,12 +2124,19 @@
 													</span>}
 												})
 												.unwrap();
+											<span class="comment">// Test both genesis hash-based and legacy
+											// protocol names.
+											</span><span class="kw">let </span>protocol_name = <span class="kw">if </span>swarm_n % <span class="number">2 </span>== <span class="number">0 </span>{
+												kademlia_protocol_name(genesis_hash, fork_id)
+											} <span class="kw">else </span>{
+												legacy_kademlia_protocol_name(<span class="kw-2">&amp;</span>protocol_id)
+											};
 											swarms[swarm_n]
 												.<span class="number">0
 												</span>.behaviour_mut()
 												.add_self_reported_address(
 													<span class="kw-2">&amp;</span>other,
-													<span class="kw-2">&amp;</span>[protocol_name_from_protocol_id(<span class="kw-2">&amp;</span>protocol_id)],
+													<span class="kw-2">&amp;</span>[protocol_name],
 													addr,
 												);
 
@@ -2079,6 +2171,8 @@
 
 	<span class="attribute">#[test]
 	</span><span class="kw">fn </span>discovery_ignores_peers_with_unknown_protocols() {
+		<span class="kw">let </span>supported_genesis_hash = H256::from_low_u64_be(<span class="number">1</span>);
+		<span class="kw">let </span>unsupported_genesis_hash = H256::from_low_u64_be(<span class="number">2</span>);
 		<span class="kw">let </span>supported_protocol_id = ProtocolId::from(<span class="string">&quot;a&quot;</span>);
 		<span class="kw">let </span>unsupported_protocol_id = ProtocolId::from(<span class="string">&quot;b&quot;</span>);
 
@@ -2089,18 +2183,33 @@
 				.allow_private_ipv4(<span class="bool-val">true</span>)
 				.allow_non_globals_in_dht(<span class="bool-val">true</span>)
 				.discovery_limit(<span class="number">50</span>)
-				.with_kademlia(supported_protocol_id.clone());
+				.with_kademlia(supported_genesis_hash, <span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>supported_protocol_id);
 			config.finish()
 		};
 
-		<span class="kw">let </span>remote_peer_id = PeerId::random();
-		<span class="kw">let </span>remote_addr: Multiaddr = <span class="macro">format!</span>(<span class="string">&quot;/memory/{}&quot;</span>, rand::random::&lt;u64&gt;()).parse().unwrap();
+		<span class="kw">let </span>predictable_peer_id = |bytes: <span class="kw-2">&amp;</span>[u8; <span class="number">32</span>]| {
+			Keypair::Ed25519(ed25519::Keypair::from(
+				ed25519::SecretKey::from_bytes(bytes.to_owned()).unwrap(),
+			))
+			.public()
+			.to_peer_id()
+		};
 
-		<span class="comment">// Add remote peer with unsupported protocol.
+		<span class="kw">let </span>remote_peer_id = predictable_peer_id(<span class="string">b&quot;00000000000000000000000000000001&quot;</span>);
+		<span class="kw">let </span>remote_addr: Multiaddr = <span class="string">&quot;/memory/1&quot;</span>.parse().unwrap();
+		<span class="kw">let </span>another_peer_id = predictable_peer_id(<span class="string">b&quot;00000000000000000000000000000002&quot;</span>);
+		<span class="kw">let </span>another_addr: Multiaddr = <span class="string">&quot;/memory/2&quot;</span>.parse().unwrap();
+
+		<span class="comment">// Try adding remote peers with unsupported protocols.
 		</span>discovery.add_self_reported_address(
 			<span class="kw-2">&amp;</span>remote_peer_id,
-			<span class="kw-2">&amp;</span>[protocol_name_from_protocol_id(<span class="kw-2">&amp;</span>unsupported_protocol_id)],
+			<span class="kw-2">&amp;</span>[kademlia_protocol_name(unsupported_genesis_hash, <span class="prelude-val">None</span>)],
 			remote_addr.clone(),
+		);
+		discovery.add_self_reported_address(
+			<span class="kw-2">&amp;</span>another_peer_id,
+			<span class="kw-2">&amp;</span>[legacy_kademlia_protocol_name(<span class="kw-2">&amp;</span>unsupported_protocol_id)],
+			another_addr.clone(),
 		);
 
 		{
@@ -2112,24 +2221,35 @@
 					.is_empty(),
 				<span class="string">&quot;Expect peer with unsupported protocol not to be added.&quot;
 			</span>);
+			<span class="macro">assert!</span>(
+				kademlia
+					.kbucket(another_peer_id)
+					.expect(<span class="string">&quot;Remote peer id not to be equal to local peer id.&quot;</span>)
+					.is_empty(),
+				<span class="string">&quot;Expect peer with unsupported protocol not to be added.&quot;
+			</span>);
 		}
 
-		<span class="comment">// Add remote peer with supported protocol.
+		<span class="comment">// Add remote peers with supported protocols.
 		</span>discovery.add_self_reported_address(
 			<span class="kw-2">&amp;</span>remote_peer_id,
-			<span class="kw-2">&amp;</span>[protocol_name_from_protocol_id(<span class="kw-2">&amp;</span>supported_protocol_id)],
+			<span class="kw-2">&amp;</span>[kademlia_protocol_name(supported_genesis_hash, <span class="prelude-val">None</span>)],
 			remote_addr.clone(),
 		);
+		discovery.add_self_reported_address(
+			<span class="kw-2">&amp;</span>another_peer_id,
+			<span class="kw-2">&amp;</span>[legacy_kademlia_protocol_name(<span class="kw-2">&amp;</span>supported_protocol_id)],
+			another_addr.clone(),
+		);
 
-		<span class="kw">let </span>kademlia = discovery.kademlia.as_mut().unwrap();
-		<span class="macro">assert_eq!</span>(
-			<span class="number">1</span>,
-			kademlia
-				.kbucket(remote_peer_id)
-				.expect(<span class="string">&quot;Remote peer id not to be equal to local peer id.&quot;</span>)
-				.num_entries(),
-			<span class="string">&quot;Expect peer with supported protocol to be added.&quot;
-		</span>);
+		{
+			<span class="kw">let </span>kademlia = discovery.kademlia.as_mut().unwrap();
+			<span class="macro">assert_eq!</span>(
+				<span class="number">2</span>,
+				kademlia.kbuckets().fold(<span class="number">0</span>, |acc, bucket| acc + bucket.num_entries()),
+				<span class="string">&quot;Expect peers with supported protocol to be added.&quot;
+			</span>);
+		}
 	}
 }
 </code></pre></div>

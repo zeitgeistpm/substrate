@@ -2125,6 +2125,12 @@
 <span id="2125">2125</span>
 <span id="2126">2126</span>
 <span id="2127">2127</span>
+<span id="2128">2128</span>
+<span id="2129">2129</span>
+<span id="2130">2130</span>
+<span id="2131">2131</span>
+<span id="2132">2132</span>
+<span id="2133">2133</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -2203,7 +2209,7 @@
 <span class="kw">use </span>sc_peerset::PeersetHandle;
 <span class="kw">use </span>sc_utils::mpsc::{tracing_unbounded, TracingUnboundedReceiver, TracingUnboundedSender};
 <span class="kw">use </span>sp_blockchain::HeaderBackend;
-<span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, NumberFor};
+<span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, NumberFor, Zero};
 <span class="kw">use </span>std::{
 	cmp,
 	collections::{HashMap, HashSet},
@@ -2409,7 +2415,13 @@
 				config.discovery_limit(
 					u64::from(params.network_config.default_peers_set.out_peers) + <span class="number">15</span>,
 				);
-				config.with_kademlia(params.protocol_id.clone());
+				<span class="kw">let </span>genesis_hash = params
+					.chain
+					.hash(Zero::zero())
+					.ok()
+					.flatten()
+					.expect(<span class="string">&quot;Genesis block exists; qed&quot;</span>);
+				config.with_kademlia(genesis_hash, params.fork_id.as_deref(), <span class="kw-2">&amp;</span>params.protocol_id);
 				config.with_dht_random_walk(params.network_config.enable_dht_random_walk);
 				config.allow_non_globals_in_dht(params.network_config.allow_non_globals_in_dht);
 				config.use_kademlia_disjoint_query_paths(
