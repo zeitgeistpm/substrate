@@ -688,6 +688,16 @@
 <span id="688">688</span>
 <span id="689">689</span>
 <span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
+<span id="694">694</span>
+<span id="695">695</span>
+<span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -741,7 +751,7 @@
 <span class="kw">mod </span>tests;
 <span class="kw">pub mod </span>weights;
 
-<span class="kw">use </span>codec::{Decode, Encode};
+<span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>frame_support::{
 	dispatch::{
 		DispatchErrorWithPostInfo, DispatchResult, DispatchResultWithPostInfo, GetDispatchInfo,
@@ -750,7 +760,7 @@
 	ensure,
 	traits::{Currency, Get, ReservableCurrency},
 	weights::Weight,
-	RuntimeDebug,
+	BoundedVec, RuntimeDebug,
 };
 <span class="kw">use </span>frame_system::{<span class="self">self </span><span class="kw">as </span>system, RawOrigin};
 <span class="kw">use </span>scale_info::TypeInfo;
@@ -784,7 +794,9 @@
 <span class="doccomment">/// A global extrinsic index, formed as the extrinsic index within a block, together with that
 /// block&#39;s height. This allows a transaction in which a multisig operation of a particular
 /// composite was created to be uniquely identified.
-</span><span class="attribute">#[derive(Copy, Clone, Eq, PartialEq, Encode, Decode, Default, RuntimeDebug, TypeInfo)]
+</span><span class="attribute">#[derive(
+	Copy, Clone, Eq, PartialEq, Encode, Decode, Default, RuntimeDebug, TypeInfo, MaxEncodedLen,
+)]
 </span><span class="kw">pub struct </span>Timepoint&lt;BlockNumber&gt; {
 	<span class="doccomment">/// The height of the chain at the point in time.
 	</span>height: BlockNumber,
@@ -793,8 +805,12 @@
 }
 
 <span class="doccomment">/// An open multisig operation.
-</span><span class="attribute">#[derive(Clone, Eq, PartialEq, Encode, Decode, Default, RuntimeDebug, TypeInfo)]
-</span><span class="kw">pub struct </span>Multisig&lt;BlockNumber, Balance, AccountId&gt; {
+</span><span class="attribute">#[derive(Clone, Eq, PartialEq, Encode, Decode, Default, RuntimeDebug, TypeInfo, MaxEncodedLen)]
+#[scale_info(skip_type_params(MaxApprovals))]
+</span><span class="kw">pub struct </span>Multisig&lt;BlockNumber, Balance, AccountId, MaxApprovals&gt;
+<span class="kw">where
+	</span>MaxApprovals: Get&lt;u32&gt;,
+{
 	<span class="doccomment">/// The extrinsic when the multisig operation was opened.
 	</span>when: Timepoint&lt;BlockNumber&gt;,
 	<span class="doccomment">/// The amount held in reserve of the `depositor`, to be returned once the operation ends.
@@ -802,7 +818,7 @@
 	<span class="doccomment">/// The account who opened it (i.e. the first to approve it).
 	</span>depositor: AccountId,
 	<span class="doccomment">/// The approvals achieved so far, including the depositor. Always sorted.
-	</span>approvals: Vec&lt;AccountId&gt;,
+	</span>approvals: BoundedVec&lt;AccountId, MaxApprovals&gt;,
 }
 
 <span class="kw">type </span>CallHash = [u8; <span class="number">32</span>];
@@ -849,7 +865,7 @@
 
 		<span class="doccomment">/// The maximum amount of signatories allowed in the multisig.
 		</span><span class="attribute">#[pallet::constant]
-		</span><span class="kw">type </span>MaxSignatories: Get&lt;u16&gt;;
+		</span><span class="kw">type </span>MaxSignatories: Get&lt;u32&gt;;
 
 		<span class="doccomment">/// Weight information for extrinsics in this pallet.
 		</span><span class="kw">type </span>WeightInfo: WeightInfo;
@@ -860,7 +876,6 @@
 
 	<span class="attribute">#[pallet::pallet]
 	#[pallet::generate_store(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">trait </span>Store)]
-	#[pallet::without_storage_info]
 	#[pallet::storage_version(STORAGE_VERSION)]
 	</span><span class="kw">pub struct </span>Pallet&lt;T&gt;(<span class="kw">_</span>);
 
@@ -872,7 +887,7 @@
 		T::AccountId,
 		Blake2_128Concat,
 		[u8; <span class="number">32</span>],
-		Multisig&lt;T::BlockNumber, BalanceOf&lt;T&gt;, T::AccountId&gt;,
+		Multisig&lt;T::BlockNumber, BalanceOf&lt;T&gt;, T::AccountId, T::MaxSignatories&gt;,
 	&gt;;
 
 	<span class="attribute">#[pallet::error]
@@ -1291,7 +1306,9 @@
 
 				</span><span class="kw">if let </span><span class="prelude-val">Some</span>(pos) = maybe_pos {
 					<span class="comment">// Record approval.
-					</span>m.approvals.insert(pos, who.clone());
+					</span>m.approvals
+						.try_insert(pos, who.clone())
+						.map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::TooManySignatories)<span class="question-mark">?</span>;
 					&lt;Multisigs&lt;T&gt;&gt;::insert(<span class="kw-2">&amp;</span>id, call_hash, m);
 					<span class="self">Self</span>::deposit_event(Event::MultisigApproval {
 						approving: who,
@@ -1319,6 +1336,9 @@
 
 			T::Currency::reserve(<span class="kw-2">&amp;</span>who, deposit)<span class="question-mark">?</span>;
 
+			<span class="kw">let </span>initial_approvals =
+				<span class="macro">vec!</span>[who.clone()].try_into().map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::TooManySignatories)<span class="question-mark">?</span>;
+
 			&lt;Multisigs&lt;T&gt;&gt;::insert(
 				<span class="kw-2">&amp;</span>id,
 				call_hash,
@@ -1326,7 +1346,7 @@
 					when: <span class="self">Self</span>::timepoint(),
 					deposit,
 					depositor: who.clone(),
-					approvals: <span class="macro">vec!</span>[who.clone()],
+					approvals: initial_approvals,
 				},
 			);
 			<span class="self">Self</span>::deposit_event(Event::NewMultisig { approving: who, multisig: id, call_hash });
