@@ -227,7 +227,7 @@
 //! This uses compact proof from trie crate and extends
 //! it to substrate specific layout and child trie system.
 
-</span><span class="kw">use crate</span>::{CompactProof, HashDBT, StorageProof, TrieConfiguration, TrieHash, EMPTY_PREFIX};
+</span><span class="kw">use crate</span>::{CompactProof, HashDBT, TrieConfiguration, TrieHash, EMPTY_PREFIX};
 <span class="kw">use </span>sp_std::{boxed::Box, vec::Vec};
 <span class="kw">use </span>trie_db::{CError, Trie};
 
@@ -356,17 +356,17 @@
 /// Then parse all child trie root and compress main trie content first
 /// then all child trie contents.
 /// Child trie are ordered by the order of their roots in the top trie.
-</span><span class="kw">pub fn </span>encode_compact&lt;L&gt;(
-	proof: StorageProof,
-	root: TrieHash&lt;L&gt;,
+</span><span class="kw">pub fn </span>encode_compact&lt;L, DB&gt;(
+	partial_db: <span class="kw-2">&amp;</span>DB,
+	root: <span class="kw-2">&amp;</span>TrieHash&lt;L&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;CompactProof, Error&lt;TrieHash&lt;L&gt;, CError&lt;L&gt;&gt;&gt;
 <span class="kw">where
 	</span>L: TrieConfiguration,
+	DB: HashDBT&lt;L::Hash, trie_db::DBValue&gt; + hash_db::HashDBRef&lt;L::Hash, trie_db::DBValue&gt;,
 {
 	<span class="kw">let </span><span class="kw-2">mut </span>child_tries = Vec::new();
-	<span class="kw">let </span>partial_db = proof.into_memory_db();
 	<span class="kw">let </span><span class="kw-2">mut </span>compact_proof = {
-		<span class="kw">let </span>trie = <span class="kw">crate</span>::TrieDBBuilder::&lt;L&gt;::new(<span class="kw-2">&amp;</span>partial_db, <span class="kw-2">&amp;</span>root).build();
+		<span class="kw">let </span>trie = <span class="kw">crate</span>::TrieDBBuilder::&lt;L&gt;::new(partial_db, root).build();
 
 		<span class="kw">let </span><span class="kw-2">mut </span>iter = trie.iter()<span class="question-mark">?</span>;
 
@@ -398,13 +398,13 @@
 	</span>};
 
 	<span class="kw">for </span>child_root <span class="kw">in </span>child_tries {
-		<span class="kw">if </span>!HashDBT::&lt;L::Hash, <span class="kw">_</span>&gt;::contains(<span class="kw-2">&amp;</span>partial_db, <span class="kw-2">&amp;</span>child_root, EMPTY_PREFIX) {
+		<span class="kw">if </span>!HashDBT::&lt;L::Hash, <span class="kw">_</span>&gt;::contains(partial_db, <span class="kw-2">&amp;</span>child_root, EMPTY_PREFIX) {
 			<span class="comment">// child proof are allowed to be missing (unused root can be included
 			// due to trie structure modification).
 			</span><span class="kw">continue
 		</span>}
 
-		<span class="kw">let </span>trie = <span class="kw">crate</span>::TrieDBBuilder::&lt;L&gt;::new(<span class="kw-2">&amp;</span>partial_db, <span class="kw-2">&amp;</span>child_root).build();
+		<span class="kw">let </span>trie = <span class="kw">crate</span>::TrieDBBuilder::&lt;L&gt;::new(partial_db, <span class="kw-2">&amp;</span>child_root).build();
 		<span class="kw">let </span>child_proof = trie_db::encode_compact::&lt;L&gt;(<span class="kw-2">&amp;</span>trie)<span class="question-mark">?</span>;
 
 		compact_proof.extend(child_proof);

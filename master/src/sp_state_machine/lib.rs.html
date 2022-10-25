@@ -4135,13 +4135,13 @@
 		<span class="kw">let </span>(proof, count) =
 			prove_range_read_with_size(remote_backend, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="number">0</span>, <span class="prelude-val">None</span>).unwrap();
 		<span class="comment">// Always contains at least some nodes.
-		</span><span class="macro">assert_eq!</span>(proof.into_memory_db::&lt;BlakeTwo256&gt;().drain().len(), <span class="number">3</span>);
+		</span><span class="macro">assert_eq!</span>(proof.to_memory_db::&lt;BlakeTwo256&gt;().drain().len(), <span class="number">3</span>);
 		<span class="macro">assert_eq!</span>(count, <span class="number">1</span>);
 
 		<span class="kw">let </span>remote_backend = trie_backend::tests::test_trie(state_version, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
 		<span class="kw">let </span>(proof, count) =
 			prove_range_read_with_size(remote_backend, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="number">800</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[])).unwrap();
-		<span class="macro">assert_eq!</span>(proof.clone().into_memory_db::&lt;BlakeTwo256&gt;().drain().len(), <span class="number">9</span>);
+		<span class="macro">assert_eq!</span>(proof.to_memory_db::&lt;BlakeTwo256&gt;().drain().len(), <span class="number">9</span>);
 		<span class="macro">assert_eq!</span>(count, <span class="number">85</span>);
 		<span class="kw">let </span>(results, completed) = read_range_proof_check::&lt;BlakeTwo256&gt;(
 			remote_root,
@@ -4164,7 +4164,7 @@
 		<span class="kw">let </span>remote_backend = trie_backend::tests::test_trie(state_version, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
 		<span class="kw">let </span>(proof, count) =
 			prove_range_read_with_size(remote_backend, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="number">50000</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>[])).unwrap();
-		<span class="macro">assert_eq!</span>(proof.clone().into_memory_db::&lt;BlakeTwo256&gt;().drain().len(), <span class="number">11</span>);
+		<span class="macro">assert_eq!</span>(proof.to_memory_db::&lt;BlakeTwo256&gt;().drain().len(), <span class="number">11</span>);
 		<span class="macro">assert_eq!</span>(count, <span class="number">132</span>);
 		<span class="kw">let </span>(results, completed) =
 			read_range_proof_check::&lt;BlakeTwo256&gt;(remote_root, proof, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
@@ -4249,7 +4249,7 @@
 			)
 			.unwrap();
 			<span class="comment">// Always contains at least some nodes.
-			</span><span class="macro">assert!</span>(proof.clone().into_memory_db::&lt;BlakeTwo256&gt;().drain().len() &gt; <span class="number">0</span>);
+			</span><span class="macro">assert!</span>(proof.to_memory_db::&lt;BlakeTwo256&gt;().drain().len() &gt; <span class="number">0</span>);
 			<span class="macro">assert!</span>(count &lt; <span class="number">3</span>); <span class="comment">// when doing child we include parent and first child key.
 
 			</span><span class="kw">let </span>(result, completed_depth) = read_range_proof_check_with_child::&lt;BlakeTwo256&gt;(
