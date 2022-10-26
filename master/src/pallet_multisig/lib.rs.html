@@ -696,8 +696,6 @@
 <span id="696">696</span>
 <span id="697">697</span>
 <span id="698">698</span>
-<span id="699">699</span>
-<span id="700">700</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -1070,7 +1068,6 @@
 			<span class="kw">let </span>z = call.using_encoded(|d| d.len()) <span class="kw">as </span>u32;
 
 			T::WeightInfo::as_multi_create(s, z)
-			.max(T::WeightInfo::as_multi_create_store(s, z))
 			.max(T::WeightInfo::as_multi_approve(s, z))
 			.max(T::WeightInfo::as_multi_complete(s, z))
 			.saturating_add(<span class="kw-2">*</span>max_weight)
@@ -1134,7 +1131,6 @@
 
 			T::WeightInfo::approve_as_multi_create(s)
 				.max(T::WeightInfo::approve_as_multi_approve(s))
-				.max(T::WeightInfo::approve_as_multi_complete(s))
 				.saturating_add(<span class="kw-2">*</span>max_weight)
 		})]
 		</span><span class="kw">pub fn </span>approve_as_multi(
