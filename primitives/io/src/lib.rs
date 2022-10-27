@@ -747,6 +747,25 @@ pub trait Crypto {
 	///
 	/// Returns `true` when the verification was successful.
 	fn ed25519_verify(sig: &ed25519::Signature, msg: &[u8], pub_key: &ed25519::Public) -> bool {
+		use ed25519_dalek::Verifier;
+
+		let public_key = if let Ok(vk) = ed25519_dalek::PublicKey::from_bytes(&pub_key.0) {
+			vk
+		} else {
+			return false
+		};
+
+		let sig =
+			if let Ok(s) = ed25519_dalek::Signature::try_from(sig.0) { s } else { return false };
+
+		public_key.verify(msg, &sig).is_ok()
+	}
+
+	/// Verify `ed25519` signature.
+	///
+	/// Returns `true` when the verification was successful.
+	#[version(2)]
+	fn ed25519_verify(sig: &ed25519::Signature, msg: &[u8], pub_key: &ed25519::Public) -> bool {
 		ed25519::Pair::verify(sig, msg, pub_key)
 	}
 
