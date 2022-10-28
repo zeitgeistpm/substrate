@@ -749,6 +749,24 @@
 <span id="749">749</span>
 <span id="750">750</span>
 <span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -921,8 +939,9 @@
 	x_vars: usize,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;(f64, Vec&lt;f64&gt;, Vec&lt;f64&gt;)&gt; {
 	<span class="kw">let </span>(intercept, params, errors) = raw_linear_regression(<span class="kw-2">&amp;</span>xs, <span class="kw-2">&amp;</span>ys, x_vars, <span class="bool-val">true</span>)<span class="question-mark">?</span>;
-	<span class="kw">if </span>intercept &gt; <span class="number">0.0 </span>{
-		<span class="kw">return </span><span class="prelude-val">Some</span>((intercept, params, errors[<span class="number">1</span>..].to_vec()))
+	<span class="kw">if </span>intercept &gt;= -<span class="number">0.0001 </span>{
+		<span class="comment">// The intercept is positive, or is effectively zero.
+		</span><span class="kw">return </span><span class="prelude-val">Some</span>((intercept, params, errors[<span class="number">1</span>..].to_vec()))
 	}
 
 	<span class="comment">// The intercept is negative.
@@ -1498,6 +1517,23 @@
 			Analysis::min_squares_iqr(<span class="kw-2">&amp;</span>data, BenchmarkSelector::ExtrinsicTime).unwrap();
 		<span class="macro">assert_eq!</span>(extrinsic_time.base, <span class="number">3_000_000_000</span>);
 		<span class="macro">assert_eq!</span>(extrinsic_time.slopes, <span class="macro">vec!</span>[<span class="number">3_000_000_000</span>]);
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>intercept_of_a_little_under_zero_is_rounded_up_to_zero() {
+		<span class="comment">// Analytically this should result in an intercept of 0, but
+		// due to numerical imprecision this will generate an intercept
+		// equal to roughly -0.0000000000000004440892098500626
+		</span><span class="kw">let </span>data = <span class="macro">vec!</span>[
+			benchmark_result(<span class="macro">vec!</span>[(BenchmarkParameter::n, <span class="number">1</span>)], <span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
+			benchmark_result(<span class="macro">vec!</span>[(BenchmarkParameter::n, <span class="number">2</span>)], <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
+			benchmark_result(<span class="macro">vec!</span>[(BenchmarkParameter::n, <span class="number">3</span>)], <span class="number">6</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
+		];
+
+		<span class="kw">let </span>extrinsic_time =
+			Analysis::min_squares_iqr(<span class="kw-2">&amp;</span>data, BenchmarkSelector::ExtrinsicTime).unwrap();
+		<span class="macro">assert_eq!</span>(extrinsic_time.base, <span class="number">0</span>);
+		<span class="macro">assert_eq!</span>(extrinsic_time.slopes, <span class="macro">vec!</span>[<span class="number">2000</span>]);
 	}
 }
 </code></pre></div>
