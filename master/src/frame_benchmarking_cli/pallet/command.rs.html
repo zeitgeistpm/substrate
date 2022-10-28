@@ -592,6 +592,12 @@
 <span id="592">592</span>
 <span id="593">593</span>
 <span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -633,6 +639,9 @@
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, Header <span class="kw">as </span>HeaderT};
 <span class="kw">use </span>sp_state_machine::StateMachine;
 <span class="kw">use </span>std::{collections::HashMap, fmt::Debug, fs, sync::Arc, time};
+
+<span class="doccomment">/// Logging target
+</span><span class="kw">const </span>LOG_TARGET: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;frame::benchmark::pallet&quot;</span>;
 
 <span class="doccomment">/// The inclusive range of a component.
 </span><span class="attribute">#[derive(Serialize, Debug, Clone, Eq, PartialEq)]
@@ -836,7 +845,8 @@ not created by a node that was compiled with the flag&quot;</span>;
 		</span><span class="kw">let </span><span class="kw-2">mut </span>component_ranges = HashMap::&lt;(Vec&lt;u8&gt;, Vec&lt;u8&gt;), Vec&lt;ComponentRange&gt;&gt;::new();
 
 		<span class="kw">for </span>(pallet, extrinsic, components) <span class="kw">in </span>benchmarks_to_run {
-			<span class="macro">println!</span>(
+			<span class="macro">log::info!</span>(
+				target: LOG_TARGET,
 				<span class="string">&quot;Starting benchmark: {}::{}&quot;</span>,
 				String::from_utf8(pallet.clone()).expect(<span class="string">&quot;Encoded from String; qed&quot;</span>),
 				String::from_utf8(extrinsic.clone()).expect(<span class="string">&quot;Encoded from String; qed&quot;</span>),
@@ -996,7 +1006,9 @@ not created by a node that was compiled with the flag&quot;</span>;
 					</span><span class="kw">if let </span><span class="prelude-val">Ok</span>(elapsed) = timer.elapsed() {
 						<span class="kw">if </span>elapsed &gt;= time::Duration::from_secs(<span class="number">5</span>) {
 							timer = time::SystemTime::now();
-							<span class="macro">println!</span>(
+
+							<span class="macro">log::info!</span>(
+								target: LOG_TARGET,
 								<span class="string">&quot;Running Benchmark: {}.{}({} args) {}/{} {}/{}&quot;</span>,
 								String::from_utf8(pallet.clone())
 									.expect(<span class="string">&quot;Encoded from String; qed&quot;</span>),
@@ -1086,7 +1098,7 @@ not created by a node that was compiled with the flag&quot;</span>;
 			<span class="kw">if let </span><span class="prelude-val">Some</span>(path) = <span class="kw-2">&amp;</span><span class="self">self</span>.json_file {
 				fs::write(path, json)<span class="question-mark">?</span>;
 			} <span class="kw">else </span>{
-				<span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, json);
+				<span class="macro">print!</span>(<span class="string">&quot;{json}&quot;</span>);
 				<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
 			}
 		}
