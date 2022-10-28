@@ -19,13 +19,13 @@
     // some variants omitted
 }</code></pre></div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Contains one variant per dispatchable that can be called by an extrinsic.</p>
 </div></details><h2 id="variants" class="variants small-section-header">Variants<a href="#variants" class="anchor"></a></h2><h3 id="variant.batch" class="variant small-section-header"><a href="#variant.batch" class="anchor field"></a><code>batch</code></h3><div class="sub-variant" id="variant.batch.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.batch.field.calls" class="variant small-section-header"><a href="#variant.batch.field.calls" class="anchor field"></a><code>calls:&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;&lt;T as <a class="trait" href="trait.Config.html" title="trait pallet_utility::pallet::Config">Config</a>&gt;::<a class="associatedtype" href="trait.Config.html#associatedtype.RuntimeCall" title="type pallet_utility::pallet::Config::RuntimeCall">RuntimeCall</a>&gt;</code></span></div></div><div class="docblock"><p>Send a batch of dispatch calls.</p>
-<p>May be called from any origin.</p>
+<p>May be called from any origin except <code>None</code>.</p>
 <ul>
 <li><code>calls</code>: The calls to be dispatched from the same origin. The number of call must not
 exceed the constant: <code>batched_calls_limit</code> (available in constant metadata).</li>
 </ul>
-<p>If origin is root then call are dispatch without checking origin filter. (This includes
-bypassing <code>frame_system::Config::BaseCallFilter</code>).</p>
+<p>If origin is root then the calls are dispatched without checking origin filter. (This
+includes bypassing <code>frame_system::Config::BaseCallFilter</code>).</p>
 <h4 id=""><a href="#"><weight></a></h4>
 <ul>
 <li>Complexity: O(C) where C is the number of calls to be batched.</li>
@@ -47,13 +47,13 @@ in the Multisig pallet instead.</p>
 <p>The dispatch origin for this call must be <em>Signed</em>.</p>
 </div><h3 id="variant.batch_all" class="variant small-section-header"><a href="#variant.batch_all" class="anchor field"></a><code>batch_all</code></h3><div class="sub-variant" id="variant.batch_all.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.batch_all.field.calls" class="variant small-section-header"><a href="#variant.batch_all.field.calls" class="anchor field"></a><code>calls:&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;&lt;T as <a class="trait" href="trait.Config.html" title="trait pallet_utility::pallet::Config">Config</a>&gt;::<a class="associatedtype" href="trait.Config.html#associatedtype.RuntimeCall" title="type pallet_utility::pallet::Config::RuntimeCall">RuntimeCall</a>&gt;</code></span></div></div><div class="docblock"><p>Send a batch of dispatch calls and atomically execute them.
 The whole transaction will rollback and fail if any of the calls failed.</p>
-<p>May be called from any origin.</p>
+<p>May be called from any origin except <code>None</code>.</p>
 <ul>
 <li><code>calls</code>: The calls to be dispatched from the same origin. The number of call must not
 exceed the constant: <code>batched_calls_limit</code> (available in constant metadata).</li>
 </ul>
-<p>If origin is root then call are dispatch without checking origin filter. (This includes
-bypassing <code>frame_system::Config::BaseCallFilter</code>).</p>
+<p>If origin is root then the calls are dispatched without checking origin filter. (This
+includes bypassing <code>frame_system::Config::BaseCallFilter</code>).</p>
 <h4 id="-2"><a href="#-2"><weight></a></h4>
 <ul>
 <li>Complexity: O(C) where C is the number of calls to be batched.</li>
@@ -69,13 +69,13 @@ bypassing <code>frame_system::Config::BaseCallFilter</code>).</p>
 </ul>
 <h4 id="-5"><a href="#-5"></weight></a></h4></div><h3 id="variant.force_batch" class="variant small-section-header"><a href="#variant.force_batch" class="anchor field"></a><code>force_batch</code></h3><div class="sub-variant" id="variant.force_batch.fields"><h4>Fields</h4><div class="sub-variant-field"><span id="variant.force_batch.field.calls" class="variant small-section-header"><a href="#variant.force_batch.field.calls" class="anchor field"></a><code>calls:&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;&lt;T as <a class="trait" href="trait.Config.html" title="trait pallet_utility::pallet::Config">Config</a>&gt;::<a class="associatedtype" href="trait.Config.html#associatedtype.RuntimeCall" title="type pallet_utility::pallet::Config::RuntimeCall">RuntimeCall</a>&gt;</code></span></div></div><div class="docblock"><p>Send a batch of dispatch calls.
 Unlike <code>batch</code>, it allows errors and won’t interrupt.</p>
-<p>May be called from any origin.</p>
+<p>May be called from any origin except <code>None</code>.</p>
 <ul>
 <li><code>calls</code>: The calls to be dispatched from the same origin. The number of call must not
 exceed the constant: <code>batched_calls_limit</code> (available in constant metadata).</li>
 </ul>
-<p>If origin is root then call are dispatch without checking origin filter. (This includes
-bypassing <code>frame_system::Config::BaseCallFilter</code>).</p>
+<p>If origin is root then the calls are dispatch without checking origin filter. (This
+includes bypassing <code>frame_system::Config::BaseCallFilter</code>).</p>
 <h4 id="-6"><a href="#-6"><weight></a></h4>
 <ul>
 <li>Complexity: O(C) where C is the number of calls to be batched.</li>
