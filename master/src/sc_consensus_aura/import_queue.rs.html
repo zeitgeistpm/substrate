@@ -435,7 +435,9 @@
 
 </span><span class="doccomment">//! Module implementing the logic for verifying and importing AuRa blocks.
 
-</span><span class="kw">use crate</span>::{aura_err, authorities, find_pre_digest, slot_author, AuthorityId, Error};
+</span><span class="kw">use crate</span>::{
+	aura_err, authorities, find_pre_digest, slot_author, AuthorityId, CompatibilityMode, Error,
+};
 <span class="kw">use </span>codec::{Codec, Decode, Encode};
 <span class="kw">use </span>log::{debug, info, trace};
 <span class="kw">use </span>prometheus_endpoint::Registry;
@@ -448,21 +450,15 @@
 <span class="kw">use </span>sc_telemetry::{telemetry, TelemetryHandle, CONSENSUS_DEBUG, CONSENSUS_TRACE};
 <span class="kw">use </span>sp_api::{ApiExt, ProvideRuntimeApi};
 <span class="kw">use </span>sp_block_builder::BlockBuilder <span class="kw">as </span>BlockBuilderApi;
-<span class="kw">use </span>sp_blockchain::{
-	well_known_cache_keys::{<span class="self">self</span>, Id <span class="kw">as </span>CacheKeyId},
-	HeaderBackend,
-};
+<span class="kw">use </span>sp_blockchain::{well_known_cache_keys::Id <span class="kw">as </span>CacheKeyId, HeaderBackend};
 <span class="kw">use </span>sp_consensus::Error <span class="kw">as </span>ConsensusError;
-<span class="kw">use </span>sp_consensus_aura::{
-	digests::CompatibleDigestItem, inherents::AuraInherentData, AuraApi, ConsensusLog,
-	AURA_ENGINE_ID,
-};
+<span class="kw">use </span>sp_consensus_aura::{digests::CompatibleDigestItem, inherents::AuraInherentData, AuraApi};
 <span class="kw">use </span>sp_consensus_slots::Slot;
 <span class="kw">use </span>sp_core::{crypto::Pair, ExecutionContext};
 <span class="kw">use </span>sp_inherents::{CreateInherentDataProviders, InherentDataProvider <span class="kw">as _</span>};
 <span class="kw">use </span>sp_runtime::{
-	generic::{BlockId, OpaqueDigestItemId},
-	traits::{Block <span class="kw">as </span>BlockT, Header},
+	generic::BlockId,
+	traits::{Block <span class="kw">as </span>BlockT, Header, NumberFor},
 	DigestItem,
 };
 <span class="kw">use </span>std::{fmt::Debug, hash::Hash, marker::PhantomData, sync::Arc};
@@ -526,32 +522,35 @@
 }
 
 <span class="doccomment">/// A verifier for Aura blocks.
-</span><span class="kw">pub struct </span>AuraVerifier&lt;C, P, CIDP&gt; {
+</span><span class="kw">pub struct </span>AuraVerifier&lt;C, P, CIDP, N&gt; {
 	client: Arc&lt;C&gt;,
 	phantom: PhantomData&lt;P&gt;,
 	create_inherent_data_providers: CIDP,
 	check_for_equivocation: CheckForEquivocation,
 	telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+	compatibility_mode: CompatibilityMode&lt;N&gt;,
 }
 
-<span class="kw">impl</span>&lt;C, P, CIDP&gt; AuraVerifier&lt;C, P, CIDP&gt; {
+<span class="kw">impl</span>&lt;C, P, CIDP, N&gt; AuraVerifier&lt;C, P, CIDP, N&gt; {
 	<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
 		client: Arc&lt;C&gt;,
 		create_inherent_data_providers: CIDP,
 		check_for_equivocation: CheckForEquivocation,
 		telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+		compatibility_mode: CompatibilityMode&lt;N&gt;,
 	) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			client,
 			create_inherent_data_providers,
 			check_for_equivocation,
 			telemetry,
+			compatibility_mode,
 			phantom: PhantomData,
 		}
 	}
 }
 
-<span class="kw">impl</span>&lt;C, P, CIDP&gt; AuraVerifier&lt;C, P, CIDP&gt;
+<span class="kw">impl</span>&lt;C, P, CIDP, N&gt; AuraVerifier&lt;C, P, CIDP, N&gt;
 <span class="kw">where
 	</span>P: Send + Sync + <span class="lifetime">&#39;static</span>,
 	CIDP: Send,
@@ -589,9 +588,9 @@
 }
 
 <span class="attribute">#[async_trait::async_trait]
-</span><span class="kw">impl</span>&lt;B: BlockT, C, P, CIDP&gt; Verifier&lt;B&gt; <span class="kw">for </span>AuraVerifier&lt;C, P, CIDP&gt;
+</span><span class="kw">impl</span>&lt;B: BlockT, C, P, CIDP&gt; Verifier&lt;B&gt; <span class="kw">for </span>AuraVerifier&lt;C, P, CIDP, NumberFor&lt;B&gt;&gt;
 <span class="kw">where
-	</span>C: ProvideRuntimeApi&lt;B&gt; + Send + Sync + sc_client_api::backend::AuxStore + BlockOf,
+	</span>C: ProvideRuntimeApi&lt;B&gt; + Send + Sync + sc_client_api::backend::AuxStore,
 	C::Api: BlockBuilderApi&lt;B&gt; + AuraApi&lt;B, AuthorityId&lt;P&gt;&gt; + ApiExt&lt;B&gt;,
 	P: Pair + Send + Sync + <span class="lifetime">&#39;static</span>,
 	P::Public: Send + Sync + Hash + Eq + Clone + Decode + Encode + Debug + <span class="lifetime">&#39;static</span>,
@@ -605,8 +604,13 @@
 	) -&gt; <span class="prelude-ty">Result</span>&lt;(BlockImportParams&lt;B, ()&gt;, <span class="prelude-ty">Option</span>&lt;Vec&lt;(CacheKeyId, Vec&lt;u8&gt;)&gt;&gt;), String&gt; {
 		<span class="kw">let </span>hash = block.header.hash();
 		<span class="kw">let </span>parent_hash = <span class="kw-2">*</span>block.header.parent_hash();
-		<span class="kw">let </span>authorities = authorities(<span class="self">self</span>.client.as_ref(), <span class="kw-2">&amp;</span>BlockId::Hash(parent_hash))
-			.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Could not fetch authorities at {:?}: {}&quot;</span>, parent_hash, e))<span class="question-mark">?</span>;
+		<span class="kw">let </span>authorities = authorities(
+			<span class="self">self</span>.client.as_ref(),
+			parent_hash,
+			<span class="kw-2">*</span>block.header.number(),
+			<span class="kw-2">&amp;</span><span class="self">self</span>.compatibility_mode,
+		)
+		.map_err(|e| <span class="macro">format!</span>(<span class="string">&quot;Could not fetch authorities at {:?}: {}&quot;</span>, parent_hash, e))<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>create_inherent_data_providers = <span class="self">self
 			</span>.create_inherent_data_providers
@@ -676,28 +680,12 @@
 					<span class="string">&quot;pre_header&quot; </span>=&gt; <span class="question-mark">?</span>pre_header,
 				);
 
-				<span class="comment">// Look for an authorities-change log.
-				</span><span class="kw">let </span>maybe_keys = pre_header
-					.digest()
-					.logs()
-					.iter()
-					.filter_map(|l| {
-						l.try_to::&lt;ConsensusLog&lt;AuthorityId&lt;P&gt;&gt;&gt;(OpaqueDigestItemId::Consensus(
-							<span class="kw-2">&amp;</span>AURA_ENGINE_ID,
-						))
-					})
-					.find_map(|l| <span class="kw">match </span>l {
-						ConsensusLog::AuthoritiesChange(a) =&gt;
-							<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[(well_known_cache_keys::AUTHORITIES, a.encode())]),
-						<span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-					});
-
 				block.header = pre_header;
 				block.post_digests.push(seal);
 				block.fork_choice = <span class="prelude-val">Some</span>(ForkChoiceStrategy::LongestChain);
 				block.post_hash = <span class="prelude-val">Some</span>(hash);
 
-				<span class="prelude-val">Ok</span>((block, maybe_keys))
+				<span class="prelude-val">Ok</span>((block, <span class="prelude-val">None</span>))
 			},
 			CheckedHeader::Deferred(a, b) =&gt; {
 				<span class="macro">debug!</span>(target: <span class="string">&quot;aura&quot;</span>, <span class="string">&quot;Checking {:?} failed; {:?}, {:?}.&quot;</span>, hash, a, b);
@@ -740,7 +728,7 @@
 }
 
 <span class="doccomment">/// Parameters of [`import_queue`].
-</span><span class="kw">pub struct </span>ImportQueueParams&lt;<span class="lifetime">&#39;a</span>, Block, I, C, S, CIDP&gt; {
+</span><span class="kw">pub struct </span>ImportQueueParams&lt;<span class="lifetime">&#39;a</span>, Block: BlockT, I, C, S, CIDP&gt; {
 	<span class="doccomment">/// The block import to use.
 	</span><span class="kw">pub </span>block_import: I,
 	<span class="doccomment">/// The justification import.
@@ -757,6 +745,10 @@
 	</span><span class="kw">pub </span>check_for_equivocation: CheckForEquivocation,
 	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.
 	</span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+	<span class="doccomment">/// Compatibility mode that should be used.
+	///
+	/// If in doubt, use `Default::default()`.
+	</span><span class="kw">pub </span>compatibility_mode: CompatibilityMode&lt;NumberFor&lt;Block&gt;&gt;,
 }
 
 <span class="doccomment">/// Start an import queue for the Aura consensus algorithm.
@@ -770,6 +762,7 @@
 		registry,
 		check_for_equivocation,
 		telemetry,
+		compatibility_mode,
 	}: ImportQueueParams&lt;Block, I, C, S, CIDP&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;DefaultImportQueue&lt;Block, C&gt;, sp_consensus::Error&gt;
 <span class="kw">where
@@ -794,18 +787,19 @@
 	CIDP: CreateInherentDataProviders&lt;Block, ()&gt; + Sync + Send + <span class="lifetime">&#39;static</span>,
 	CIDP::InherentDataProviders: InherentDataProviderExt + Send + Sync,
 {
-	<span class="kw">let </span>verifier = build_verifier::&lt;P, <span class="kw">_</span>, <span class="kw">_</span>&gt;(BuildVerifierParams {
+	<span class="kw">let </span>verifier = build_verifier::&lt;P, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(BuildVerifierParams {
 		client,
 		create_inherent_data_providers,
 		check_for_equivocation,
 		telemetry,
+		compatibility_mode,
 	});
 
 	<span class="prelude-val">Ok</span>(BasicQueue::new(verifier, Box::new(block_import), justification_import, spawner, registry))
 }
 
 <span class="doccomment">/// Parameters of [`build_verifier`].
-</span><span class="kw">pub struct </span>BuildVerifierParams&lt;C, CIDP&gt; {
+</span><span class="kw">pub struct </span>BuildVerifierParams&lt;C, CIDP, N&gt; {
 	<span class="doccomment">/// The client to interact with the chain.
 	</span><span class="kw">pub </span>client: Arc&lt;C&gt;,
 	<span class="doccomment">/// Something that can create the inherent data providers.
@@ -814,22 +808,28 @@
 	</span><span class="kw">pub </span>check_for_equivocation: CheckForEquivocation,
 	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.
 	</span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+	<span class="doccomment">/// Compatibility mode that should be used.
+	///
+	/// If in doubt, use `Default::default()`.
+	</span><span class="kw">pub </span>compatibility_mode: CompatibilityMode&lt;N&gt;,
 }
 
 <span class="doccomment">/// Build the [`AuraVerifier`]
-</span><span class="kw">pub fn </span>build_verifier&lt;P, C, CIDP&gt;(
+</span><span class="kw">pub fn </span>build_verifier&lt;P, C, CIDP, N&gt;(
 	BuildVerifierParams {
 		client,
 		create_inherent_data_providers,
 		check_for_equivocation,
 		telemetry,
-	}: BuildVerifierParams&lt;C, CIDP&gt;,
-) -&gt; AuraVerifier&lt;C, P, CIDP&gt; {
-	AuraVerifier::&lt;<span class="kw">_</span>, P, <span class="kw">_</span>&gt;::new(
+		compatibility_mode,
+	}: BuildVerifierParams&lt;C, CIDP, N&gt;,
+) -&gt; AuraVerifier&lt;C, P, CIDP, N&gt; {
+	AuraVerifier::&lt;<span class="kw">_</span>, P, <span class="kw">_</span>, <span class="kw">_</span>&gt;::new(
 		client,
 		create_inherent_data_providers,
 		check_for_equivocation,
 		telemetry,
+		compatibility_mode,
 	)
 }
 </code></pre></div>

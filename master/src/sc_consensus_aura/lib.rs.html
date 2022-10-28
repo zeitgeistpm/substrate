@@ -884,6 +884,93 @@
 <span id="884">884</span>
 <span id="885">885</span>
 <span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
+<span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
+<span id="944">944</span>
+<span id="945">945</span>
+<span id="946">946</span>
+<span id="947">947</span>
+<span id="948">948</span>
+<span id="949">949</span>
+<span id="950">950</span>
+<span id="951">951</span>
+<span id="952">952</span>
+<span id="953">953</span>
+<span id="954">954</span>
+<span id="955">955</span>
+<span id="956">956</span>
+<span id="957">957</span>
+<span id="958">958</span>
+<span id="959">959</span>
+<span id="960">960</span>
+<span id="961">961</span>
+<span id="962">962</span>
+<span id="963">963</span>
+<span id="964">964</span>
+<span id="965">965</span>
+<span id="966">966</span>
+<span id="967">967</span>
+<span id="968">968</span>
+<span id="969">969</span>
+<span id="970">970</span>
+<span id="971">971</span>
+<span id="972">972</span>
+<span id="973">973</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -930,7 +1017,7 @@
 	SlotInfo, StorageChanges,
 };
 <span class="kw">use </span>sc_telemetry::TelemetryHandle;
-<span class="kw">use </span>sp_api::ProvideRuntimeApi;
+<span class="kw">use </span>sp_api::{Core, ProvideRuntimeApi};
 <span class="kw">use </span>sp_application_crypto::{AppKey, AppPublic};
 <span class="kw">use </span>sp_blockchain::{HeaderBackend, <span class="prelude-ty">Result </span><span class="kw">as </span>CResult};
 <span class="kw">use </span>sp_consensus::{BlockOrigin, Environment, Error <span class="kw">as </span>ConsensusError, Proposer, SelectChain};
@@ -959,6 +1046,43 @@
 };
 
 <span class="kw">type </span>AuthorityId&lt;P&gt; = &lt;P <span class="kw">as </span>Pair&gt;::Public;
+
+<span class="doccomment">/// Run `AURA` in a compatibility mode.
+///
+/// This is required for when the chain was launched and later there
+/// was a consensus breaking change.
+</span><span class="attribute">#[derive(Debug, Clone)]
+</span><span class="kw">pub enum </span>CompatibilityMode&lt;N&gt; {
+	<span class="doccomment">/// Don&#39;t use any compatibility mode.
+	</span><span class="prelude-val">None</span>,
+	<span class="doccomment">/// Call `initialize_block` before doing any runtime calls.
+	///
+	/// Previously the node would execute `initialize_block` before fetchting the authorities
+	/// from the runtime. This behaviour changed in: &lt;https://github.com/paritytech/substrate/pull/9132&gt;
+	///
+	/// By calling `initialize_block` before fetching the authorities, on a block that
+	/// would enact a new validator set, the block would already be build/sealed by an
+	/// authority of the new set. With this mode disabled (the default) a block that enacts a new
+	/// set isn&#39;t sealed/built by an authority of the new set, however to make new nodes be able to
+	/// sync old chains this compatibility mode exists.
+	</span>UseInitializeBlock {
+		<span class="doccomment">/// The block number until this compatibility mode should be executed. The first runtime
+		/// call in the context of the `until` block (importing it/building it) will disable the
+		/// compatibility mode (i.e. at `until` the default rules will apply). When enabling this
+		/// compatibility mode the `until` block should be a future block on which all nodes will
+		/// have upgraded to a release that includes the updated compatibility mode configuration.
+		/// At `until` block there will be a hard fork when the authority set changes, between the
+		/// old nodes (running with `initialize_block`, i.e. without the compatibility mode
+		/// configuration) and the new nodes.
+		</span>until: N,
+	},
+}
+
+<span class="kw">impl</span>&lt;N&gt; Default <span class="kw">for </span>CompatibilityMode&lt;N&gt; {
+	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>::None
+	}
+}
 
 <span class="doccomment">/// Get the slot duration for Aura.
 </span><span class="kw">pub fn </span>slot_duration&lt;A, B, C&gt;(client: <span class="kw-2">&amp;</span>C) -&gt; CResult&lt;SlotDuration&gt;
@@ -992,7 +1116,7 @@
 }
 
 <span class="doccomment">/// Parameters of [`start_aura`].
-</span><span class="kw">pub struct </span>StartAuraParams&lt;C, SC, I, PF, SO, L, CIDP, BS&gt; {
+</span><span class="kw">pub struct </span>StartAuraParams&lt;C, SC, I, PF, SO, L, CIDP, BS, N&gt; {
 	<span class="doccomment">/// The duration of a slot.
 	</span><span class="kw">pub </span>slot_duration: SlotDuration,
 	<span class="doccomment">/// The client to interact with the chain.
@@ -1026,6 +1150,10 @@
 	</span><span class="kw">pub </span>max_block_proposal_slot_portion: <span class="prelude-ty">Option</span>&lt;SlotProportion&gt;,
 	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.
 	</span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+	<span class="doccomment">/// Compatibility mode that should be used.
+	///
+	/// If in doubt, use `Default::default()`.
+	</span><span class="kw">pub </span>compatibility_mode: CompatibilityMode&lt;N&gt;,
 }
 
 <span class="doccomment">/// Start the aura worker. The returned future should be run in a futures executor.
@@ -1045,7 +1173,8 @@
 		block_proposal_slot_portion,
 		max_block_proposal_slot_portion,
 		telemetry,
-	}: StartAuraParams&lt;C, SC, I, PF, SO, L, CIDP, BS&gt;,
+		compatibility_mode,
+	}: StartAuraParams&lt;C, SC, I, PF, SO, L, CIDP, BS, NumberFor&lt;B&gt;&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw">impl </span>Future&lt;Output = ()&gt;, sp_consensus::Error&gt;
 <span class="kw">where
 	</span>P: Pair + Send + Sync,
@@ -1077,6 +1206,7 @@
 		telemetry,
 		block_proposal_slot_portion,
 		max_block_proposal_slot_portion,
+		compatibility_mode,
 	});
 
 	<span class="prelude-val">Ok</span>(sc_consensus_slots::start_slot_worker(
@@ -1089,7 +1219,7 @@
 }
 
 <span class="doccomment">/// Parameters of [`build_aura_worker`].
-</span><span class="kw">pub struct </span>BuildAuraWorkerParams&lt;C, I, PF, SO, L, BS&gt; {
+</span><span class="kw">pub struct </span>BuildAuraWorkerParams&lt;C, I, PF, SO, L, BS, N&gt; {
 	<span class="doccomment">/// The client to interact with the chain.
 	</span><span class="kw">pub </span>client: Arc&lt;C&gt;,
 	<span class="doccomment">/// The block import.
@@ -1117,6 +1247,10 @@
 	</span><span class="kw">pub </span>max_block_proposal_slot_portion: <span class="prelude-ty">Option</span>&lt;SlotProportion&gt;,
 	<span class="doccomment">/// Telemetry instance used to report telemetry metrics.
 	</span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+	<span class="doccomment">/// Compatibility mode that should be used.
+	///
+	/// If in doubt, use `Default::default()`.
+	</span><span class="kw">pub </span>compatibility_mode: CompatibilityMode&lt;N&gt;,
 }
 
 <span class="doccomment">/// Build the aura worker.
@@ -1135,7 +1269,8 @@
 		max_block_proposal_slot_portion,
 		telemetry,
 		force_authoring,
-	}: BuildAuraWorkerParams&lt;C, I, PF, SO, L, BS&gt;,
+		compatibility_mode,
+	}: BuildAuraWorkerParams&lt;C, I, PF, SO, L, BS, NumberFor&lt;B&gt;&gt;,
 ) -&gt; <span class="kw">impl </span>sc_consensus_slots::SimpleSlotWorker&lt;
 	B,
 	Proposer = PF::Proposer,
@@ -1172,11 +1307,12 @@
 		telemetry,
 		block_proposal_slot_portion,
 		max_block_proposal_slot_portion,
+		compatibility_mode,
 		_key_type: PhantomData::&lt;P&gt;,
 	}
 }
 
-<span class="kw">struct </span>AuraWorker&lt;C, E, I, P, SO, L, BS&gt; {
+<span class="kw">struct </span>AuraWorker&lt;C, E, I, P, SO, L, BS, N&gt; {
 	client: Arc&lt;C&gt;,
 	block_import: I,
 	env: E,
@@ -1188,12 +1324,13 @@
 	block_proposal_slot_portion: SlotProportion,
 	max_block_proposal_slot_portion: <span class="prelude-ty">Option</span>&lt;SlotProportion&gt;,
 	telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+	compatibility_mode: CompatibilityMode&lt;N&gt;,
 	_key_type: PhantomData&lt;P&gt;,
 }
 
 <span class="attribute">#[async_trait::async_trait]
 </span><span class="kw">impl</span>&lt;B, C, E, I, P, Error, SO, L, BS&gt; sc_consensus_slots::SimpleSlotWorker&lt;B&gt;
-	<span class="kw">for </span>AuraWorker&lt;C, E, I, P, SO, L, BS&gt;
+	<span class="kw">for </span>AuraWorker&lt;C, E, I, P, SO, L, BS, NumberFor&lt;B&gt;&gt;
 <span class="kw">where
 	</span>B: BlockT,
 	C: ProvideRuntimeApi&lt;B&gt; + BlockOf + HeaderBackend&lt;B&gt; + Sync,
@@ -1231,7 +1368,12 @@
 		header: <span class="kw-2">&amp;</span>B::Header,
 		_slot: Slot,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::AuxData, sp_consensus::Error&gt; {
-		authorities(<span class="self">self</span>.client.as_ref(), <span class="kw-2">&amp;</span>BlockId::Hash(header.hash()))
+		authorities(
+			<span class="self">self</span>.client.as_ref(),
+			header.hash(),
+			<span class="kw-2">*</span>header.number() + <span class="number">1u32</span>.into(),
+			<span class="kw-2">&amp;</span><span class="self">self</span>.compatibility_mode,
+		)
 	}
 
 	<span class="kw">fn </span>authorities_len(<span class="kw-2">&amp;</span><span class="self">self</span>, epoch_data: <span class="kw-2">&amp;</span><span class="self">Self</span>::AuxData) -&gt; <span class="prelude-ty">Option</span>&lt;usize&gt; {
@@ -1421,16 +1563,42 @@
 	pre_digest.ok_or_else(|| aura_err(Error::NoDigestFound))
 }
 
-<span class="kw">fn </span>authorities&lt;A, B, C&gt;(client: <span class="kw-2">&amp;</span>C, at: <span class="kw-2">&amp;</span>BlockId&lt;B&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;A&gt;, ConsensusError&gt;
+<span class="kw">fn </span>authorities&lt;A, B, C&gt;(
+	client: <span class="kw-2">&amp;</span>C,
+	parent_hash: B::Hash,
+	context_block_number: NumberFor&lt;B&gt;,
+	compatibility_mode: <span class="kw-2">&amp;</span>CompatibilityMode&lt;NumberFor&lt;B&gt;&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;A&gt;, ConsensusError&gt;
 <span class="kw">where
 	</span>A: Codec + Debug,
 	B: BlockT,
-	C: ProvideRuntimeApi&lt;B&gt; + BlockOf,
+	C: ProvideRuntimeApi&lt;B&gt;,
 	C::Api: AuraApi&lt;B, A&gt;,
 {
-	client
-		.runtime_api()
-		.authorities(at)
+	<span class="kw">let </span>runtime_api = client.runtime_api();
+
+	<span class="kw">match </span>compatibility_mode {
+		CompatibilityMode::None =&gt; {},
+		<span class="comment">// Use `initialize_block` until we hit the block that should disable the mode.
+		</span>CompatibilityMode::UseInitializeBlock { until } =&gt;
+			<span class="kw">if </span><span class="kw-2">*</span>until &gt; context_block_number {
+				runtime_api
+					.initialize_block(
+						<span class="kw-2">&amp;</span>BlockId::Hash(parent_hash),
+						<span class="kw-2">&amp;</span>B::Header::new(
+							context_block_number,
+							Default::default(),
+							Default::default(),
+							parent_hash,
+							Default::default(),
+						),
+					)
+					.map_err(|<span class="kw">_</span>| sp_consensus::Error::InvalidAuthoritiesSet)<span class="question-mark">?</span>;
+			},
+	}
+
+	runtime_api
+		.authorities(<span class="kw-2">&amp;</span>BlockId::Hash(parent_hash))
 		.ok()
 		.ok_or(sp_consensus::Error::InvalidAuthoritiesSet)
 }
@@ -1517,6 +1685,7 @@
 				InherentDataProviders = (InherentDataProvider,),
 			&gt;,
 		&gt;,
+		u64,
 	&gt;;
 	<span class="kw">type </span>AuraPeer = Peer&lt;(), PeersClient&gt;;
 
@@ -1546,6 +1715,7 @@
 				}),
 				CheckForEquivocation::Yes,
 				<span class="prelude-val">None</span>,
+				CompatibilityMode::None,
 			)
 		}
 
@@ -1635,6 +1805,7 @@
 					block_proposal_slot_portion: SlotProportion::new(<span class="number">0.5</span>),
 					max_block_proposal_slot_portion: <span class="prelude-val">None</span>,
 					telemetry: <span class="prelude-val">None</span>,
+					compatibility_mode: CompatibilityMode::None,
 				})
 				.expect(<span class="string">&quot;Starts aura&quot;</span>),
 			);
@@ -1655,7 +1826,8 @@
 
 		<span class="macro">assert_eq!</span>(client.chain_info().best_number, <span class="number">0</span>);
 		<span class="macro">assert_eq!</span>(
-			authorities(<span class="kw-2">&amp;</span>client, <span class="kw-2">&amp;</span>BlockId::Hash(client.chain_info().best_hash)).unwrap(),
+			authorities(<span class="kw-2">&amp;</span>client, client.chain_info().best_hash, <span class="number">1</span>, <span class="kw-2">&amp;</span>CompatibilityMode::None)
+				.unwrap(),
 			<span class="macro">vec!</span>[
 				Keyring::Alice.public().into(),
 				Keyring::Bob.public().into(),
@@ -1700,6 +1872,7 @@
 			_key_type: PhantomData::&lt;AuthorityPair&gt;,
 			block_proposal_slot_portion: SlotProportion::new(<span class="number">0.5</span>),
 			max_block_proposal_slot_portion: <span class="prelude-val">None</span>,
+			compatibility_mode: Default::default(),
 		};
 
 		<span class="kw">let </span>head = Header::new(
@@ -1752,6 +1925,7 @@
 			_key_type: PhantomData::&lt;AuthorityPair&gt;,
 			block_proposal_slot_portion: SlotProportion::new(<span class="number">0.5</span>),
 			max_block_proposal_slot_portion: <span class="prelude-val">None</span>,
+			compatibility_mode: Default::default(),
 		};
 
 		<span class="kw">let </span>head = client.header(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">0</span>)).unwrap().unwrap();

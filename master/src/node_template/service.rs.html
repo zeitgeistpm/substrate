@@ -336,6 +336,8 @@
 <span id="336">336</span>
 <span id="337">337</span>
 <span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Service and ServiceFactory implementation. Specialized wrapper over substrate service.
 
 </span><span class="kw">use </span>node_template_runtime::{<span class="self">self</span>, opaque::Block, RuntimeApi};
@@ -470,6 +472,7 @@
 			registry: config.prometheus_registry(),
 			check_for_equivocation: Default::default(),
 			telemetry: telemetry.as_ref().map(|x| x.handle()),
+			compatibility_mode: Default::default(),
 		})<span class="question-mark">?</span>;
 
 	<span class="prelude-val">Ok</span>(sc_service::PartialComponents {
@@ -618,6 +621,7 @@
 				block_proposal_slot_portion: SlotProportion::new(<span class="number">2f32 </span>/ <span class="number">3f32</span>),
 				max_block_proposal_slot_portion: <span class="prelude-val">None</span>,
 				telemetry: telemetry.as_ref().map(|x| x.handle()),
+				compatibility_mode: Default::default(),
 			},
 		)<span class="question-mark">?</span>;
 
