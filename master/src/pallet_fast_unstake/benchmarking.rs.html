@@ -186,24 +186,6 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
-<span id="196">196</span>
-<span id="197">197</span>
-<span id="198">198</span>
-<span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -232,22 +214,15 @@
 	traits::{Currency, EnsureOrigin, Get, Hooks},
 };
 <span class="kw">use </span>frame_system::RawOrigin;
-<span class="kw">use </span>pallet_staking::Pallet <span class="kw">as </span>Staking;
-<span class="kw">use </span>sp_runtime::traits::{StaticLookup, Zero};
-<span class="kw">use </span>sp_staking::EraIndex;
+<span class="kw">use </span>sp_runtime::traits::Zero;
+<span class="kw">use </span>sp_staking::{EraIndex, StakingInterface};
 <span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">const </span>USER_SEED: u32 = <span class="number">0</span>;
 <span class="kw">const </span>DEFAULT_BACKER_PER_VALIDATOR: u32 = <span class="number">128</span>;
 <span class="kw">const </span>MAX_VALIDATORS: u32 = <span class="number">128</span>;
 
-<span class="kw">type </span>CurrencyOf&lt;T&gt; = &lt;T <span class="kw">as </span>pallet_staking::Config&gt;::Currency;
-
-<span class="kw">fn </span>l&lt;T: Config&gt;(
-	who: T::AccountId,
-) -&gt; &lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::Lookup <span class="kw">as </span>StaticLookup&gt;::Source {
-	T::Lookup::unlookup(who)
-}
+<span class="kw">type </span>CurrencyOf&lt;T&gt; = &lt;T <span class="kw">as </span>Config&gt;::Currency;
 
 <span class="kw">fn </span>create_unexposed_nominator&lt;T: Config&gt;() -&gt; T::AccountId {
 	<span class="kw">let </span>account = frame_benchmarking::account::&lt;T::AccountId&gt;(<span class="string">&quot;nominator_42&quot;</span>, <span class="number">0</span>, USER_SEED);
@@ -259,18 +234,9 @@
 	<span class="kw">let </span>stake = CurrencyOf::&lt;T&gt;::minimum_balance() * <span class="number">100u32</span>.into();
 	CurrencyOf::&lt;T&gt;::make_free_balance_be(<span class="kw-2">&amp;</span>account, stake * <span class="number">10u32</span>.into());
 
-	<span class="kw">let </span>account_lookup = l::&lt;T&gt;(account.clone());
 	<span class="comment">// bond and nominate ourselves, this will guarantee that we are not backing anyone.
-	</span><span class="macro">assert_ok!</span>(Staking::&lt;T&gt;::bond(
-		RawOrigin::Signed(account.clone()).into(),
-		account_lookup.clone(),
-		stake,
-		pallet_staking::RewardDestination::Controller,
-	));
-	<span class="macro">assert_ok!</span>(Staking::&lt;T&gt;::nominate(
-		RawOrigin::Signed(account.clone()).into(),
-		<span class="macro">vec!</span>[account_lookup]
-	));
+	</span><span class="macro">assert_ok!</span>(T::Staking::bond(account, stake, account));
+	<span class="macro">assert_ok!</span>(T::Staking::nominate(account, <span class="macro">vec!</span>[account.clone()]));
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>fast_unstake_events&lt;T: Config&gt;() -&gt; Vec&lt;<span class="kw">crate</span>::Event&lt;T&gt;&gt; {
@@ -297,13 +263,11 @@
 			.map(|s| {
 				<span class="kw">let </span>who = frame_benchmarking::account::&lt;T::AccountId&gt;(<span class="string">&quot;nominator&quot;</span>, era, s);
 				<span class="kw">let </span>value = ed;
-				pallet_staking::IndividualExposure { who, value }
+				(who, value)
 			})
 			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-		<span class="kw">let </span>exposure =
-			pallet_staking::Exposure { total: Default::default(), own: Default::default(), others };
 		validators.iter().for_each(|v| {
-			Staking::&lt;T&gt;::add_era_stakers(era, v.clone(), exposure.clone());
+			T::Staking::add_era_stakers(<span class="kw-2">&amp;</span>era, <span class="kw-2">&amp;</span>v, others.clone());
 		});
 	}
 }
@@ -343,13 +307,13 @@
 	<span class="comment">// on_idle, when we check some number of eras,
 	</span>on_idle_check {
 		<span class="comment">// number of eras multiplied by validators in that era.
-		</span><span class="kw">let </span>x <span class="kw">in </span>(&lt;T <span class="kw">as </span>pallet_staking::Config&gt;::BondingDuration::get() * <span class="number">1</span>) .. (&lt;T <span class="kw">as </span>pallet_staking::Config&gt;::BondingDuration::get() * MAX_VALIDATORS);
+		</span><span class="kw">let </span>x <span class="kw">in </span>(T::Staking::bonding_duration() * <span class="number">1</span>) .. (T::Staking::bonding_duration() * MAX_VALIDATORS);
 
-		<span class="kw">let </span>v = x / &lt;T <span class="kw">as </span>pallet_staking::Config&gt;::BondingDuration::get();
-		<span class="kw">let </span>u = &lt;T <span class="kw">as </span>pallet_staking::Config&gt;::BondingDuration::get();
+		<span class="kw">let </span>u = T::Staking::bonding_duration();
+		<span class="kw">let </span>v = x / u;
 
 		ErasToCheckPerBlock::&lt;T&gt;::put(u);
-		pallet_staking::CurrentEra::&lt;T&gt;::put(u);
+		T::Staking::set_current_era(u);
 
 		<span class="comment">// setup staking with v validators and u eras of data (0..=u)
 		</span>setup_staking::&lt;T&gt;(v, u);

@@ -139,6 +139,57 @@
 <span id="139">139</span>
 <span id="140">140</span>
 <span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -160,8 +211,9 @@
 
 </span><span class="doccomment">//! A crate which contains primitives that are useful for implementation that uses staking
 //! approaches in general. Definitions related to sessions, slashing, etc go here.
+
 </span><span class="kw">use </span>sp_runtime::{DispatchError, DispatchResult};
-<span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
+<span class="kw">use </span>sp_std::{collections::btree_map::BTreeMap, vec::Vec};
 
 <span class="kw">pub mod </span>offence;
 
@@ -195,25 +247,55 @@
 	</span>}
 }
 
-<span class="doccomment">/// Trait for communication with the staking pallet.
+<span class="doccomment">/// A struct that reflects stake that an account has in the staking system. Provides a set of
+/// methods to operate on it&#39;s properties. Aimed at making `StakingInterface` more concise.
+</span><span class="kw">pub struct </span>Stake&lt;T: StakingInterface + <span class="question-mark">?</span>Sized&gt; {
+	<span class="doccomment">/// The stash account whose balance is actually locked and at stake.
+	</span><span class="kw">pub </span>stash: T::AccountId,
+	<span class="doccomment">/// The total stake that `stash` has in the staking system. This includes the
+	/// `active` stake, and any funds currently in the process of unbonding via
+	/// [`StakingInterface::unbond`].
+	///
+	/// # Note
+	///
+	/// This is only guaranteed to reflect the amount locked by the staking system. If there are
+	/// non-staking locks on the bonded pair&#39;s balance this amount is going to be larger in
+	/// reality.
+	</span><span class="kw">pub </span>total: T::Balance,
+	<span class="doccomment">/// The total amount of the stash&#39;s balance that will be at stake in any forthcoming
+	/// rounds.
+	</span><span class="kw">pub </span>active: T::Balance,
+}
+
+<span class="doccomment">/// A generic representation of a staking implementation.
+///
+/// This interface uses the terminology of NPoS, but it is aims to be generic enough to cover other
+/// implementations as well.
 </span><span class="kw">pub trait </span>StakingInterface {
 	<span class="doccomment">/// Balance type used by the staking system.
-	</span><span class="kw">type </span>Balance;
+	</span><span class="kw">type </span>Balance: PartialEq;
 
 	<span class="doccomment">/// AccountId type used by the staking system
 	</span><span class="kw">type </span>AccountId;
 
-	<span class="doccomment">/// The minimum amount required to bond in order to be a nominator. This does not necessarily
-	/// mean the nomination will be counted in an election, but instead just enough to be stored as
-	/// a nominator. In other words, this is the minimum amount to register the intention to
-	/// nominate.
-	</span><span class="kw">fn </span>minimum_bond() -&gt; <span class="self">Self</span>::Balance;
+	<span class="doccomment">/// The minimum amount required to bond in order to set nomination intentions. This does not
+	/// necessarily mean the nomination will be counted in an election, but instead just enough to
+	/// be stored as a nominator. In other words, this is the minimum amount to register the
+	/// intention to nominate.
+	</span><span class="kw">fn </span>minimum_nominator_bond() -&gt; <span class="self">Self</span>::Balance;
+
+	<span class="doccomment">/// The minimum amount required to bond in order to set validation intentions.
+	</span><span class="kw">fn </span>minimum_validator_bond() -&gt; <span class="self">Self</span>::Balance;
+
+	<span class="doccomment">/// Return a stash account that is controlled by a `controller`.
+	///
+	/// ## Note
+	///
+	/// The controller abstraction is not permanent and might go away. Avoid using this as much as
+	/// possible.
+	</span><span class="kw">fn </span>stash_by_ctrl(controller: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::AccountId, DispatchError&gt;;
 
 	<span class="doccomment">/// Number of eras that staked funds must remain bonded for.
-	///
-	/// # Note
-	///
-	/// This must be strictly greater than the staking systems slash deffer duration.
 	</span><span class="kw">fn </span>bonding_duration() -&gt; EraIndex;
 
 	<span class="doccomment">/// The current era index.
@@ -221,41 +303,39 @@
 	/// This should be the latest planned era that the staking system knows about.
 	</span><span class="kw">fn </span>current_era() -&gt; EraIndex;
 
-	<span class="doccomment">/// The amount of active stake that `stash` has in the staking system.
-	</span><span class="kw">fn </span>active_stake(stash: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Balance&gt;;
+	<span class="doccomment">/// Returns the stake of `who`.
+	</span><span class="kw">fn </span>stake(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Result</span>&lt;Stake&lt;<span class="self">Self</span>&gt;, DispatchError&gt;;
 
-	<span class="doccomment">/// The total stake that `stash` has in the staking system. This includes the
-	/// [`Self::active_stake`], and any funds currently in the process of unbonding via
-	/// [`Self::unbond`].
-	///
-	/// # Note
-	///
-	/// This is only guaranteed to reflect the amount locked by the staking system. If there are
-	/// non-staking locks on the bonded pair&#39;s balance this may not be accurate.
-	</span><span class="kw">fn </span>total_stake(stash: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Balance&gt;;
+	<span class="kw">fn </span>total_stake(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Balance, DispatchError&gt; {
+		<span class="self">Self</span>::stake(who).map(|s| s.total)
+	}
 
-	<span class="doccomment">/// Bond (lock) `value` of `stash`&#39;s balance. `controller` will be set as the account
-	/// controlling `stash`. This creates what is referred to as &quot;bonded pair&quot;.
-	</span><span class="kw">fn </span>bond(
-		stash: <span class="self">Self</span>::AccountId,
-		controller: <span class="self">Self</span>::AccountId,
-		value: <span class="self">Self</span>::Balance,
-		payee: <span class="self">Self</span>::AccountId,
-	) -&gt; DispatchResult;
+	<span class="kw">fn </span>active_stake(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Balance, DispatchError&gt; {
+		<span class="self">Self</span>::stake(who).map(|s| s.active)
+	}
 
-	<span class="doccomment">/// Have `controller` nominate `validators`.
-	</span><span class="kw">fn </span>nominate(
-		controller: <span class="self">Self</span>::AccountId,
-		validators: sp_std::vec::Vec&lt;<span class="self">Self</span>::AccountId&gt;,
-	) -&gt; DispatchResult;
+	<span class="kw">fn </span>is_unbonding(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Result</span>&lt;bool, DispatchError&gt; {
+		<span class="self">Self</span>::stake(who).map(|s| s.active != s.total)
+	}
 
-	<span class="doccomment">/// Chill `stash`.
-	</span><span class="kw">fn </span>chill(controller: <span class="self">Self</span>::AccountId) -&gt; DispatchResult;
+	<span class="kw">fn </span>fully_unbond(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; DispatchResult {
+		<span class="self">Self</span>::unbond(who, <span class="self">Self</span>::stake(who)<span class="question-mark">?</span>.active)
+	}
 
-	<span class="doccomment">/// Bond some extra amount in the _Stash_&#39;s free balance against the active bonded balance of
-	/// the account. The amount extra actually bonded will never be more than the _Stash_&#39;s free
+	<span class="doccomment">/// Bond (lock) `value` of `who`&#39;s balance, while forwarding any rewards to `payee`.
+	</span><span class="kw">fn </span>bond(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId, value: <span class="self">Self</span>::Balance, payee: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId)
+		-&gt; DispatchResult;
+
+	<span class="doccomment">/// Have `who` nominate `validators`.
+	</span><span class="kw">fn </span>nominate(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId, validators: Vec&lt;<span class="self">Self</span>::AccountId&gt;) -&gt; DispatchResult;
+
+	<span class="doccomment">/// Chill `who`.
+	</span><span class="kw">fn </span>chill(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; DispatchResult;
+
+	<span class="doccomment">/// Bond some extra amount in `who`&#39;s free balance against the active bonded balance of
+	/// the account. The amount extra actually bonded will never be more than `who`&#39;s free
 	/// balance.
-	</span><span class="kw">fn </span>bond_extra(stash: <span class="self">Self</span>::AccountId, extra: <span class="self">Self</span>::Balance) -&gt; DispatchResult;
+	</span><span class="kw">fn </span>bond_extra(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId, extra: <span class="self">Self</span>::Balance) -&gt; DispatchResult;
 
 	<span class="doccomment">/// Schedule a portion of the active bonded balance to be unlocked at era
 	/// [Self::current_era] + [`Self::bonding_duration`].
@@ -266,7 +346,7 @@
 	/// The amount of times this can be successfully called is limited based on how many distinct
 	/// eras funds are schedule to unlock in. Calling [`Self::withdraw_unbonded`] after some unlock
 	/// schedules have reached their unlocking era should allow more calls to this function.
-	</span><span class="kw">fn </span>unbond(stash: <span class="self">Self</span>::AccountId, value: <span class="self">Self</span>::Balance) -&gt; DispatchResult;
+	</span><span class="kw">fn </span>unbond(stash: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId, value: <span class="self">Self</span>::Balance) -&gt; DispatchResult;
 
 	<span class="doccomment">/// Unlock any funds schedule to unlock before or at the current era.
 	///
@@ -276,9 +356,31 @@
 		num_slashing_spans: u32,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;bool, DispatchError&gt;;
 
+	<span class="doccomment">/// The ideal number of active validators.
+	</span><span class="kw">fn </span>desired_validator_count() -&gt; u32;
+
+	<span class="doccomment">/// Whether or not there is an ongoing election.
+	</span><span class="kw">fn </span>election_ongoing() -&gt; bool;
+
+	<span class="doccomment">/// Force a current staker to become completely unstaked, immediately.
+	</span><span class="kw">fn </span>force_unstake(who: <span class="self">Self</span>::AccountId) -&gt; DispatchResult;
+
+	<span class="doccomment">/// Checks whether an account `staker` has been exposed in an era.
+	</span><span class="kw">fn </span>is_exposed_in_era(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId, era: <span class="kw-2">&amp;</span>EraIndex) -&gt; bool;
+
 	<span class="doccomment">/// Get the nominations of a stash, if they are a nominator, `None` otherwise.
 	</span><span class="attribute">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
-	</span><span class="kw">fn </span>nominations(who: <span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Option</span>&lt;sp_std::prelude::Vec&lt;<span class="self">Self</span>::AccountId&gt;&gt;;
+	</span><span class="kw">fn </span>nominations(who: <span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="self">Self</span>::AccountId&gt;&gt;;
+
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+	</span><span class="kw">fn </span>add_era_stakers(
+		current_era: <span class="kw-2">&amp;</span>EraIndex,
+		stash: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId,
+		exposures: Vec&lt;(<span class="self">Self</span>::AccountId, <span class="self">Self</span>::Balance)&gt;,
+	);
+
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+	</span><span class="kw">fn </span>set_current_era(era: EraIndex);
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="sp_staking" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

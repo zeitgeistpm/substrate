@@ -1657,6 +1657,59 @@
 <span id="1657">1657</span>
 <span id="1658">1658</span>
 <span id="1659">1659</span>
+<span id="1660">1660</span>
+<span id="1661">1661</span>
+<span id="1662">1662</span>
+<span id="1663">1663</span>
+<span id="1664">1664</span>
+<span id="1665">1665</span>
+<span id="1666">1666</span>
+<span id="1667">1667</span>
+<span id="1668">1668</span>
+<span id="1669">1669</span>
+<span id="1670">1670</span>
+<span id="1671">1671</span>
+<span id="1672">1672</span>
+<span id="1673">1673</span>
+<span id="1674">1674</span>
+<span id="1675">1675</span>
+<span id="1676">1676</span>
+<span id="1677">1677</span>
+<span id="1678">1678</span>
+<span id="1679">1679</span>
+<span id="1680">1680</span>
+<span id="1681">1681</span>
+<span id="1682">1682</span>
+<span id="1683">1683</span>
+<span id="1684">1684</span>
+<span id="1685">1685</span>
+<span id="1686">1686</span>
+<span id="1687">1687</span>
+<span id="1688">1688</span>
+<span id="1689">1689</span>
+<span id="1690">1690</span>
+<span id="1691">1691</span>
+<span id="1692">1692</span>
+<span id="1693">1693</span>
+<span id="1694">1694</span>
+<span id="1695">1695</span>
+<span id="1696">1696</span>
+<span id="1697">1697</span>
+<span id="1698">1698</span>
+<span id="1699">1699</span>
+<span id="1700">1700</span>
+<span id="1701">1701</span>
+<span id="1702">1702</span>
+<span id="1703">1703</span>
+<span id="1704">1704</span>
+<span id="1705">1705</span>
+<span id="1706">1706</span>
+<span id="1707">1707</span>
+<span id="1708">1708</span>
+<span id="1709">1709</span>
+<span id="1710">1710</span>
+<span id="1711">1711</span>
+<span id="1712">1712</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1677,8 +1730,8 @@
 </span><span class="doccomment">//! Implementations for the Staking FRAME Pallet.
 
 </span><span class="kw">use </span>frame_election_provider_support::{
-	data_provider, ElectionDataProvider, ElectionProvider, ScoreProvider, SortedListProvider,
-	Supports, VoteWeight, VoterOf,
+	data_provider, ElectionDataProvider, ElectionProvider, ElectionProviderBase, ScoreProvider,
+	SortedListProvider, Supports, VoteWeight, VoterOf,
 };
 <span class="kw">use </span>frame_support::{
 	dispatch::WithPostDispatchInfo,
@@ -1697,7 +1750,7 @@
 };
 <span class="kw">use </span>sp_staking::{
 	offence::{DisableStrategy, OffenceDetails, OnOffenceHandler},
-	EraIndex, SessionIndex, StakingInterface,
+	EraIndex, SessionIndex, Stake, StakingInterface,
 };
 <span class="kw">use </span>sp_std::{collections::btree_map::BTreeMap, prelude::<span class="kw-2">*</span>};
 
@@ -3141,12 +3194,42 @@
 	}
 }
 
-<span class="kw">impl</span>&lt;T: Config&gt; StakingInterface <span class="kw">for </span>Pallet&lt;T&gt; {
+<span class="comment">// NOTE: in this entire impl block, the assumption is that `who` is a stash account.
+</span><span class="kw">impl</span>&lt;T: Config&gt; StakingInterface <span class="kw">for </span>Pallet&lt;T&gt; {
 	<span class="kw">type </span>AccountId = T::AccountId;
 	<span class="kw">type </span>Balance = BalanceOf&lt;T&gt;;
 
-	<span class="kw">fn </span>minimum_bond() -&gt; <span class="self">Self</span>::Balance {
+	<span class="kw">fn </span>minimum_nominator_bond() -&gt; <span class="self">Self</span>::Balance {
 		MinNominatorBond::&lt;T&gt;::get()
+	}
+
+	<span class="kw">fn </span>minimum_validator_bond() -&gt; <span class="self">Self</span>::Balance {
+		MinValidatorBond::&lt;T&gt;::get()
+	}
+
+	<span class="kw">fn </span>desired_validator_count() -&gt; u32 {
+		ValidatorCount::&lt;T&gt;::get()
+	}
+
+	<span class="kw">fn </span>election_ongoing() -&gt; bool {
+		&lt;T::ElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::ongoing()
+	}
+
+	<span class="kw">fn </span>force_unstake(who: <span class="self">Self</span>::AccountId) -&gt; sp_runtime::DispatchResult {
+		<span class="kw">let </span>num_slashing_spans = <span class="self">Self</span>::slashing_spans(<span class="kw-2">&amp;</span>who).iter().count() <span class="kw">as </span>u32;
+		<span class="self">Self</span>::force_unstake(RawOrigin::Root.into(), who.clone(), num_slashing_spans)
+	}
+
+	<span class="kw">fn </span>stash_by_ctrl(controller: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::AccountId, DispatchError&gt; {
+		<span class="self">Self</span>::ledger(controller)
+			.map(|l| l.stash)
+			.ok_or(Error::&lt;T&gt;::NotController.into())
+	}
+
+	<span class="kw">fn </span>is_exposed_in_era(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId, era: <span class="kw-2">&amp;</span>EraIndex) -&gt; bool {
+		ErasStakers::&lt;T&gt;::iter_prefix(era).any(|(validator, exposures)| {
+			validator == <span class="kw-2">*</span>who || exposures.others.iter().any(|i| i.who == <span class="kw-2">*</span>who)
+		})
 	}
 
 	<span class="kw">fn </span>bonding_duration() -&gt; EraIndex {
@@ -3157,57 +3240,80 @@
 		<span class="self">Self</span>::current_era().unwrap_or(Zero::zero())
 	}
 
-	<span class="kw">fn </span>active_stake(controller: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Balance&gt; {
-		<span class="self">Self</span>::ledger(controller).map(|l| l.active)
+	<span class="kw">fn </span>stake(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Result</span>&lt;Stake&lt;<span class="self">Self</span>&gt;, DispatchError&gt; {
+		<span class="self">Self</span>::bonded(who)
+			.and_then(|c| <span class="self">Self</span>::ledger(c))
+			.map(|l| Stake { stash: l.stash, total: l.total, active: l.active })
+			.ok_or(Error::&lt;T&gt;::NotStash.into())
 	}
 
-	<span class="kw">fn </span>total_stake(controller: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Balance&gt; {
-		<span class="self">Self</span>::ledger(controller).map(|l| l.total)
+	<span class="kw">fn </span>bond_extra(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId, extra: <span class="self">Self</span>::Balance) -&gt; DispatchResult {
+		<span class="self">Self</span>::bond_extra(RawOrigin::Signed(who.clone()).into(), extra)
 	}
 
-	<span class="kw">fn </span>bond_extra(stash: <span class="self">Self</span>::AccountId, extra: <span class="self">Self</span>::Balance) -&gt; DispatchResult {
-		<span class="self">Self</span>::bond_extra(RawOrigin::Signed(stash).into(), extra)
+	<span class="kw">fn </span>unbond(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId, value: <span class="self">Self</span>::Balance) -&gt; DispatchResult {
+		<span class="kw">let </span>ctrl = <span class="self">Self</span>::bonded(who).ok_or(Error::&lt;T&gt;::NotStash)<span class="question-mark">?</span>;
+		<span class="self">Self</span>::unbond(RawOrigin::Signed(ctrl).into(), value)
 	}
 
-	<span class="kw">fn </span>unbond(controller: <span class="self">Self</span>::AccountId, value: <span class="self">Self</span>::Balance) -&gt; DispatchResult {
-		<span class="self">Self</span>::unbond(RawOrigin::Signed(controller).into(), value)
-	}
-
-	<span class="kw">fn </span>chill(controller: <span class="self">Self</span>::AccountId) -&gt; DispatchResult {
-		<span class="self">Self</span>::chill(RawOrigin::Signed(controller).into())
+	<span class="kw">fn </span>chill(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId) -&gt; DispatchResult {
+		<span class="comment">// defensive-only: any account bonded via this interface has the stash set as the
+		// controller, but we have to be sure. Same comment anywhere else that we read this.
+		</span><span class="kw">let </span>ctrl = <span class="self">Self</span>::bonded(who).ok_or(Error::&lt;T&gt;::NotStash)<span class="question-mark">?</span>;
+		<span class="self">Self</span>::chill(RawOrigin::Signed(ctrl).into())
 	}
 
 	<span class="kw">fn </span>withdraw_unbonded(
-		controller: <span class="self">Self</span>::AccountId,
+		who: <span class="self">Self</span>::AccountId,
 		num_slashing_spans: u32,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;bool, DispatchError&gt; {
-		<span class="self">Self</span>::withdraw_unbonded(RawOrigin::Signed(controller.clone()).into(), num_slashing_spans)
-			.map(|<span class="kw">_</span>| !Ledger::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>controller))
+		<span class="kw">let </span>ctrl = <span class="self">Self</span>::bonded(who).ok_or(Error::&lt;T&gt;::NotStash)<span class="question-mark">?</span>;
+		<span class="self">Self</span>::withdraw_unbonded(RawOrigin::Signed(ctrl.clone()).into(), num_slashing_spans)
+			.map(|<span class="kw">_</span>| !Ledger::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>ctrl))
 			.map_err(|with_post| with_post.error)
 	}
 
 	<span class="kw">fn </span>bond(
-		stash: <span class="self">Self</span>::AccountId,
-		controller: <span class="self">Self</span>::AccountId,
+		who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId,
 		value: <span class="self">Self</span>::Balance,
-		payee: <span class="self">Self</span>::AccountId,
+		payee: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId,
 	) -&gt; DispatchResult {
 		<span class="self">Self</span>::bond(
-			RawOrigin::Signed(stash).into(),
-			T::Lookup::unlookup(controller),
+			RawOrigin::Signed(who.clone()).into(),
+			T::Lookup::unlookup(who.clone()),
 			value,
-			RewardDestination::Account(payee),
+			RewardDestination::Account(payee.clone()),
 		)
 	}
 
-	<span class="kw">fn </span>nominate(controller: <span class="self">Self</span>::AccountId, targets: Vec&lt;<span class="self">Self</span>::AccountId&gt;) -&gt; DispatchResult {
+	<span class="kw">fn </span>nominate(who: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId, targets: Vec&lt;<span class="self">Self</span>::AccountId&gt;) -&gt; DispatchResult {
+		<span class="kw">let </span>ctrl = <span class="self">Self</span>::bonded(who).ok_or(Error::&lt;T&gt;::NotStash)<span class="question-mark">?</span>;
 		<span class="kw">let </span>targets = targets.into_iter().map(T::Lookup::unlookup).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-		<span class="self">Self</span>::nominate(RawOrigin::Signed(controller).into(), targets)
+		<span class="self">Self</span>::nominate(RawOrigin::Signed(ctrl).into(), targets)
 	}
 
 	<span class="attribute">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
 	</span><span class="kw">fn </span>nominations(who: <span class="self">Self</span>::AccountId) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;T::AccountId&gt;&gt; {
 		Nominators::&lt;T&gt;::get(who).map(|n| n.targets.into_inner())
+	}
+
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+	</span><span class="kw">fn </span>add_era_stakers(
+		current_era: <span class="kw-2">&amp;</span>EraIndex,
+		stash: <span class="kw-2">&amp;</span>T::AccountId,
+		exposures: Vec&lt;(<span class="self">Self</span>::AccountId, <span class="self">Self</span>::Balance)&gt;,
+	) {
+		<span class="kw">let </span>others = exposures
+			.iter()
+			.map(|(who, value)| IndividualExposure { who: who.clone(), value: value.clone() })
+			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+		<span class="kw">let </span>exposure = Exposure { total: Default::default(), own: Default::default(), others };
+		<span class="self">Self</span>::add_era_stakers(current_era.clone(), stash.clone(), exposure)
+	}
+
+	<span class="attribute">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+	</span><span class="kw">fn </span>set_current_era(era: EraIndex) {
+		CurrentEra::&lt;T&gt;::put(era);
 	}
 }
 

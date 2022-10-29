@@ -45,7 +45,6 @@
 <span id="45">45</span>
 <span id="46">46</span>
 <span id="47">47</span>
-<span id="48">48</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -65,7 +64,8 @@
 
 </span><span class="doccomment">//! Types used in the Fast Unstake pallet.
 
-</span><span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
+</span><span class="kw">use </span><span class="kw">crate</span>::Config;
+<span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>frame_support::{
 	traits::{Currency, Get},
 	BoundedVec, EqNoBound, PartialEqNoBound, RuntimeDebugNoBound,
@@ -74,10 +74,8 @@
 <span class="kw">use </span>sp_staking::EraIndex;
 <span class="kw">use </span>sp_std::{fmt::Debug, prelude::<span class="kw-2">*</span>};
 
-<span class="kw">pub type </span>BalanceOf&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>pallet_staking::Config&gt;::Currency <span class="kw">as </span>Currency&lt;
-	&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId,
-&gt;&gt;::Balance;
-
+<span class="kw">pub type </span>BalanceOf&lt;T&gt; =
+	&lt;&lt;T <span class="kw">as </span>Config&gt;::Currency <span class="kw">as </span>Currency&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId&gt;&gt;::Balance;
 <span class="doccomment">/// An unstake request.
 </span><span class="attribute">#[derive(
 	Encode, Decode, EqNoBound, PartialEqNoBound, Clone, TypeInfo, RuntimeDebugNoBound, MaxEncodedLen,

@@ -464,23 +464,6 @@
 <span id="464">464</span>
 <span id="465">465</span>
 <span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -563,18 +546,16 @@
 </span><span class="kw">pub mod </span>pallet {
 	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 	<span class="kw">use </span><span class="kw">crate</span>::types::<span class="kw-2">*</span>;
-	<span class="kw">use </span>frame_election_provider_support::ElectionProviderBase;
 	<span class="kw">use </span>frame_support::{
 		pallet_prelude::<span class="kw-2">*</span>,
 		traits::{Defensive, ReservableCurrency},
 	};
-	<span class="kw">use </span>frame_system::{pallet_prelude::<span class="kw-2">*</span>, RawOrigin};
-	<span class="kw">use </span>pallet_staking::Pallet <span class="kw">as </span>Staking;
+	<span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
 	<span class="kw">use </span>sp_runtime::{
 		traits::{Saturating, Zero},
 		DispatchResult,
 	};
-	<span class="kw">use </span>sp_staking::EraIndex;
+	<span class="kw">use </span>sp_staking::{EraIndex, StakingInterface};
 	<span class="kw">use </span>sp_std::{prelude::<span class="kw-2">*</span>, vec::Vec};
 	<span class="kw">pub use </span>weights::WeightInfo;
 
@@ -584,7 +565,7 @@
 	</span><span class="kw">pub struct </span>MaxChecking&lt;T: Config&gt;(sp_std::marker::PhantomData&lt;T&gt;);
 	<span class="kw">impl</span>&lt;T: Config&gt; frame_support::traits::Get&lt;u32&gt; <span class="kw">for </span>MaxChecking&lt;T&gt; {
 		<span class="kw">fn </span>get() -&gt; u32 {
-			&lt;T <span class="kw">as </span>pallet_staking::Config&gt;::BondingDuration::get() + <span class="number">1
+			T::Staking::bonding_duration() + <span class="number">1
 		</span>}
 	}
 
@@ -592,14 +573,14 @@
 	</span><span class="kw">pub struct </span>Pallet&lt;T&gt;(<span class="kw">_</span>);
 
 	<span class="attribute">#[pallet::config]
-	</span><span class="kw">pub trait </span>Config: frame_system::Config + pallet_staking::Config {
+	</span><span class="kw">pub trait </span>Config: frame_system::Config {
 		<span class="doccomment">/// The overarching event type.
 		</span><span class="kw">type </span>RuntimeEvent: From&lt;Event&lt;<span class="self">Self</span>&gt;&gt;
 			+ IsType&lt;&lt;<span class="self">Self </span><span class="kw">as </span>frame_system::Config&gt;::RuntimeEvent&gt;
 			+ TryInto&lt;Event&lt;<span class="self">Self</span>&gt;&gt;;
 
 		<span class="doccomment">/// The currency used for deposits.
-		</span><span class="kw">type </span>DepositCurrency: ReservableCurrency&lt;<span class="self">Self</span>::AccountId, Balance = BalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
+		</span><span class="kw">type </span>Currency: ReservableCurrency&lt;<span class="self">Self</span>::AccountId&gt;;
 
 		<span class="doccomment">/// Deposit to take for unstaking, to make sure we&#39;re able to slash the it in order to cover
 		/// the costs of resources on unsuccessful unstake.
@@ -607,6 +588,9 @@
 
 		<span class="doccomment">/// The origin that can control this pallet.
 		</span><span class="kw">type </span>ControlOrigin: frame_support::traits::EnsureOrigin&lt;<span class="self">Self</span>::RuntimeOrigin&gt;;
+
+		<span class="doccomment">/// The access to staking functionality.
+		</span><span class="kw">type </span>Staking: StakingInterface&lt;Balance = BalanceOf&lt;<span class="self">Self</span>&gt;, AccountId = <span class="self">Self</span>::AccountId&gt;;
 
 		<span class="doccomment">/// The weight information of this pallet.
 		</span><span class="kw">type </span>WeightInfo: WeightInfo;
@@ -704,28 +688,25 @@
 			<span class="kw">let </span>ctrl = ensure_signed(origin)<span class="question-mark">?</span>;
 
 			<span class="macro">ensure!</span>(ErasToCheckPerBlock::&lt;T&gt;::get() != <span class="number">0</span>, &lt;Error&lt;T&gt;&gt;::CallNotAllowed);
-
-			<span class="kw">let </span>ledger =
-				pallet_staking::Ledger::&lt;T&gt;::get(<span class="kw-2">&amp;</span>ctrl).ok_or(Error::&lt;T&gt;::NotController)<span class="question-mark">?</span>;
-			<span class="macro">ensure!</span>(!Queue::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>ledger.stash), Error::&lt;T&gt;::AlreadyQueued);
+			<span class="kw">let </span>stash_account =
+				T::Staking::stash_by_ctrl(<span class="kw-2">&amp;</span>ctrl).map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::NotController)<span class="question-mark">?</span>;
+			<span class="macro">ensure!</span>(!Queue::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>stash_account), Error::&lt;T&gt;::AlreadyQueued);
 			<span class="macro">ensure!</span>(
-				Head::&lt;T&gt;::get().map_or(<span class="bool-val">true</span>, |UnstakeRequest { stash, .. }| stash != ledger.stash),
+				Head::&lt;T&gt;::get()
+					.map_or(<span class="bool-val">true</span>, |UnstakeRequest { stash, .. }| stash_account != stash),
 				Error::&lt;T&gt;::AlreadyHead
 			);
-			<span class="comment">// second part of the &amp;&amp; is defensive.
-			</span><span class="macro">ensure!</span>(
-				ledger.active == ledger.total &amp;&amp; ledger.unlocking.is_empty(),
-				Error::&lt;T&gt;::NotFullyBonded
-			);
+
+			<span class="macro">ensure!</span>(!T::Staking::is_unbonding(<span class="kw-2">&amp;</span>stash_account)<span class="question-mark">?</span>, Error::&lt;T&gt;::NotFullyBonded);
 
 			<span class="comment">// chill and fully unstake.
-			</span>Staking::&lt;T&gt;::chill(RawOrigin::Signed(ctrl.clone()).into())<span class="question-mark">?</span>;
-			Staking::&lt;T&gt;::unbond(RawOrigin::Signed(ctrl).into(), ledger.total)<span class="question-mark">?</span>;
+			</span>T::Staking::chill(<span class="kw-2">&amp;</span>stash_account)<span class="question-mark">?</span>;
+			T::Staking::fully_unbond(<span class="kw-2">&amp;</span>stash_account)<span class="question-mark">?</span>;
 
-			T::DepositCurrency::reserve(<span class="kw-2">&amp;</span>ledger.stash, T::Deposit::get())<span class="question-mark">?</span>;
+			T::Currency::reserve(<span class="kw-2">&amp;</span>stash_account, T::Deposit::get())<span class="question-mark">?</span>;
 
 			<span class="comment">// enqueue them.
-			</span>Queue::&lt;T&gt;::insert(ledger.stash, T::Deposit::get());
+			</span>Queue::&lt;T&gt;::insert(stash_account, T::Deposit::get());
 			<span class="prelude-val">Ok</span>(())
 		}
 
@@ -742,18 +723,18 @@
 
 			<span class="macro">ensure!</span>(ErasToCheckPerBlock::&lt;T&gt;::get() != <span class="number">0</span>, &lt;Error&lt;T&gt;&gt;::CallNotAllowed);
 
-			<span class="kw">let </span>stash = pallet_staking::Ledger::&lt;T&gt;::get(<span class="kw-2">&amp;</span>ctrl)
-				.map(|l| l.stash)
-				.ok_or(Error::&lt;T&gt;::NotController)<span class="question-mark">?</span>;
-			<span class="macro">ensure!</span>(Queue::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>stash), Error::&lt;T&gt;::NotQueued);
+			<span class="kw">let </span>stash_account =
+				T::Staking::stash_by_ctrl(<span class="kw-2">&amp;</span>ctrl).map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::NotController)<span class="question-mark">?</span>;
+			<span class="macro">ensure!</span>(Queue::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>stash_account), Error::&lt;T&gt;::NotQueued);
 			<span class="macro">ensure!</span>(
-				Head::&lt;T&gt;::get().map_or(<span class="bool-val">true</span>, |UnstakeRequest { stash, .. }| stash != stash),
+				Head::&lt;T&gt;::get()
+					.map_or(<span class="bool-val">true</span>, |UnstakeRequest { stash, .. }| stash_account != stash),
 				Error::&lt;T&gt;::AlreadyHead
 			);
-			<span class="kw">let </span>deposit = Queue::&lt;T&gt;::take(stash.clone());
+			<span class="kw">let </span>deposit = Queue::&lt;T&gt;::take(stash_account.clone());
 
 			<span class="kw">if let </span><span class="prelude-val">Some</span>(deposit) = deposit.defensive() {
-				<span class="kw">let </span>remaining = T::DepositCurrency::unreserve(<span class="kw-2">&amp;</span>stash, deposit);
+				<span class="kw">let </span>remaining = T::Currency::unreserve(<span class="kw-2">&amp;</span>stash_account, deposit);
 				<span class="kw">if </span>!remaining.is_zero() {
 					<span class="macro">frame_support::defensive!</span>(<span class="string">&quot;`not enough balance to unreserve`&quot;</span>);
 					ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">0</span>);
@@ -797,7 +778,7 @@
 
 			<span class="comment">// NOTE: here we&#39;re assuming that the number of validators has only ever increased,
 			// meaning that the number of exposures to check is either this per era, or less.
-			</span><span class="kw">let </span>validator_count = pallet_staking::ValidatorCount::&lt;T&gt;::get();
+			</span><span class="kw">let </span>validator_count = T::Staking::desired_validator_count();
 
 			<span class="comment">// determine the number of eras to check. This is based on both `ErasToCheckPerBlock`
 			// and `remaining_weight` passed on to us from the runtime executive.
@@ -813,8 +794,7 @@
 				}
 			}
 
-			<span class="kw">if </span>&lt;&lt;T <span class="kw">as </span>pallet_staking::Config&gt;::ElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::ongoing()
-			{
+			<span class="kw">if </span>T::Staking::election_ongoing() {
 				<span class="comment">// NOTE: we assume `ongoing` does not consume any weight.
 				// there is an ongoing election -- we better not do anything. Imagine someone is not
 				// exposed anywhere in the last era, and the snapshot for the election is already
@@ -849,8 +829,8 @@
 			);
 
 			<span class="comment">// the range that we&#39;re allowed to check in this round.
-			</span><span class="kw">let </span>current_era = pallet_staking::CurrentEra::&lt;T&gt;::get().unwrap_or_default();
-			<span class="kw">let </span>bonding_duration = &lt;T <span class="kw">as </span>pallet_staking::Config&gt;::BondingDuration::get();
+			</span><span class="kw">let </span>current_era = T::Staking::current_era();
+			<span class="kw">let </span>bonding_duration = T::Staking::bonding_duration();
 			<span class="comment">// prune all the old eras that we don&#39;t care about. This will help us keep the bound
 			// of `checked`.
 			</span>checked.retain(|e| <span class="kw-2">*</span>e &gt;= current_era.saturating_sub(bonding_duration));
@@ -884,16 +864,9 @@
 			);
 
 			<span class="kw">if </span>unchecked_eras_to_check.is_empty() {
-				<span class="comment">// `stash` is not exposed in any era now -- we can let go of them now.
-				</span><span class="kw">let </span>num_slashing_spans = Staking::&lt;T&gt;::slashing_spans(<span class="kw-2">&amp;</span>stash).iter().count() <span class="kw">as </span>u32;
+				<span class="kw">let </span>result = T::Staking::force_unstake(stash.clone());
 
-				<span class="kw">let </span>result = pallet_staking::Pallet::&lt;T&gt;::force_unstake(
-					RawOrigin::Root.into(),
-					stash.clone(),
-					num_slashing_spans,
-				);
-
-				<span class="kw">let </span>remaining = T::DepositCurrency::unreserve(<span class="kw-2">&amp;</span>stash, deposit);
+				<span class="kw">let </span>remaining = T::Currency::unreserve(<span class="kw-2">&amp;</span>stash, deposit);
 				<span class="kw">if </span>!remaining.is_zero() {
 					<span class="macro">frame_support::defensive!</span>(<span class="string">&quot;`not enough balance to unreserve`&quot;</span>);
 					ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">0</span>);
@@ -909,7 +882,7 @@
 				</span><span class="kw">let </span><span class="kw-2">mut </span>eras_checked = <span class="number">0u32</span>;
 				<span class="kw">let </span>is_exposed = unchecked_eras_to_check.iter().any(|e| {
 					eras_checked.saturating_inc();
-					<span class="self">Self</span>::is_exposed_in_era(<span class="kw-2">&amp;</span>stash, e)
+					T::Staking::is_exposed_in_era(<span class="kw-2">&amp;</span>stash, e)
 				});
 
 				<span class="macro">log!</span>(
@@ -925,7 +898,7 @@
 				// the last 28 eras, have registered yourself to be unstaked, midway being checked,
 				// you are exposed.
 				</span><span class="kw">if </span>is_exposed {
-					T::DepositCurrency::slash_reserved(<span class="kw-2">&amp;</span>stash, deposit);
+					T::Currency::slash_reserved(<span class="kw-2">&amp;</span>stash, deposit);
 					<span class="macro">log!</span>(info, <span class="string">&quot;slashed {:?} by {:?}&quot;</span>, stash, deposit);
 					<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Slashed { stash, amount: deposit });
 				} <span class="kw">else </span>{
@@ -954,13 +927,6 @@
 
 				&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::on_idle_check(validator_count * eras_checked)
 			}
-		}
-
-		<span class="doccomment">/// Checks whether an account `staker` has been exposed in an era.
-		</span><span class="kw">fn </span>is_exposed_in_era(staker: <span class="kw-2">&amp;</span>T::AccountId, era: <span class="kw-2">&amp;</span>EraIndex) -&gt; bool {
-			pallet_staking::ErasStakers::&lt;T&gt;::iter_prefix(era).any(|(validator, exposures)| {
-				validator == <span class="kw-2">*</span>staker || exposures.others.iter().any(|i| i.who == <span class="kw-2">*</span>staker)
-			})
 		}
 	}
 }

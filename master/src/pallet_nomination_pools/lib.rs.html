@@ -2524,31 +2524,6 @@
 <span id="2524">2524</span>
 <span id="2525">2525</span>
 <span id="2526">2526</span>
-<span id="2527">2527</span>
-<span id="2528">2528</span>
-<span id="2529">2529</span>
-<span id="2530">2530</span>
-<span id="2531">2531</span>
-<span id="2532">2532</span>
-<span id="2533">2533</span>
-<span id="2534">2534</span>
-<span id="2535">2535</span>
-<span id="2536">2536</span>
-<span id="2537">2537</span>
-<span id="2538">2538</span>
-<span id="2539">2539</span>
-<span id="2540">2540</span>
-<span id="2541">2541</span>
-<span id="2542">2542</span>
-<span id="2543">2543</span>
-<span id="2544">2544</span>
-<span id="2545">2545</span>
-<span id="2546">2546</span>
-<span id="2547">2547</span>
-<span id="2548">2548</span>
-<span id="2549">2549</span>
-<span id="2550">2550</span>
-<span id="2551">2551</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -2837,7 +2812,7 @@
 		AccountIdConversion, Bounded, CheckedAdd, CheckedSub, Convert, Saturating, StaticLookup,
 		Zero,
 	},
-	FixedPointNumber, FixedPointOperand,
+	FixedPointNumber,
 };
 <span class="kw">use </span>sp_staking::{EraIndex, OnStakerSlash, StakingInterface};
 <span class="kw">use </span>sp_std::{collections::btree_map::BTreeMap, fmt::Debug, ops::Div, vec::Vec};
@@ -2968,7 +2943,7 @@
 	///
 	/// This is derived from the ratio of points in the pool to which the member belongs to.
 	/// Might return different values based on the pool state for the same member and points.
-	</span><span class="kw">fn </span>active_balance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BalanceOf&lt;T&gt; {
+	</span><span class="kw">fn </span>active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BalanceOf&lt;T&gt; {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(pool) = BondedPool::&lt;T&gt;::get(<span class="self">self</span>.pool_id).defensive() {
 			pool.points_to_balance(<span class="self">self</span>.points)
 		} <span class="kw">else </span>{
@@ -3174,7 +3149,7 @@
 	/// This is often used for bonding and issuing new funds into the pool.
 	</span><span class="kw">fn </span>balance_to_point(<span class="kw-2">&amp;</span><span class="self">self</span>, new_funds: BalanceOf&lt;T&gt;) -&gt; BalanceOf&lt;T&gt; {
 		<span class="kw">let </span>bonded_balance =
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>.bonded_account()).unwrap_or(Zero::zero());
+			T::Staking::active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>.bonded_account()).unwrap_or(Zero::zero());
 		Pallet::&lt;T&gt;::balance_to_point(bonded_balance, <span class="self">self</span>.points, new_funds)
 	}
 
@@ -3183,7 +3158,7 @@
 	/// This is often used for unbonding.
 	</span><span class="kw">fn </span>points_to_balance(<span class="kw-2">&amp;</span><span class="self">self</span>, points: BalanceOf&lt;T&gt;) -&gt; BalanceOf&lt;T&gt; {
 		<span class="kw">let </span>bonded_balance =
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>.bonded_account()).unwrap_or(Zero::zero());
+			T::Staking::active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>.bonded_account()).unwrap_or(Zero::zero());
 		Pallet::&lt;T&gt;::point_to_balance(bonded_balance, <span class="self">self</span>.points, points)
 	}
 
@@ -3234,7 +3209,7 @@
 	</span><span class="kw">fn </span>transferrable_balance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BalanceOf&lt;T&gt; {
 		<span class="kw">let </span>account = <span class="self">self</span>.bonded_account();
 		T::Currency::free_balance(<span class="kw-2">&amp;</span>account)
-			.saturating_sub(T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>account).unwrap_or_default())
+			.saturating_sub(T::Staking::active_stake(<span class="kw-2">&amp;</span>account).unwrap_or_default())
 	}
 
 	<span class="kw">fn </span>is_root(<span class="kw-2">&amp;</span><span class="self">self</span>, who: <span class="kw-2">&amp;</span>T::AccountId) -&gt; bool {
@@ -3289,7 +3264,7 @@
 		<span class="macro">ensure!</span>(!<span class="self">self</span>.is_destroying(), Error::&lt;T&gt;::CanNotChangeState);
 
 		<span class="kw">let </span>bonded_balance =
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>.bonded_account()).unwrap_or(Zero::zero());
+			T::Staking::active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>.bonded_account()).unwrap_or(Zero::zero());
 		<span class="macro">ensure!</span>(!bonded_balance.is_zero(), Error::&lt;T&gt;::OverflowRisk);
 
 		<span class="kw">let </span>points_to_balance_ratio_floor = <span class="self">self
@@ -3342,7 +3317,7 @@
 				target_member.active_points().saturating_sub(unbonding_points);
 			<span class="kw">let </span><span class="kw-2">mut </span>target_member_after_unbond = (<span class="kw-2">*</span>target_member).clone();
 			target_member_after_unbond.points = new_depositor_points;
-			target_member_after_unbond.active_balance()
+			target_member_after_unbond.active_stake()
 		};
 
 		<span class="comment">// any partial unbonding is only ever allowed if this unbond is permissioned.
@@ -3413,8 +3388,8 @@
 
 	<span class="doccomment">/// Bond exactly `amount` from `who`&#39;s funds into this pool.
 	///
-	/// If the bond type is `Create`, `StakingInterface::bond` is called, and `who`
-	/// is allowed to be killed. Otherwise, `StakingInterface::bond_extra` is called and `who`
+	/// If the bond type is `Create`, `Staking::bond` is called, and `who`
+	/// is allowed to be killed. Otherwise, `Staking::bond_extra` is called and `who`
 	/// cannot be killed.
 	///
 	/// Returns `Ok(points_issues)`, `Err` otherwise.
@@ -3440,16 +3415,11 @@
 		</span><span class="kw">let </span>points_issued = <span class="self">self</span>.issue(amount);
 
 		<span class="kw">match </span>ty {
-			BondType::Create =&gt; T::StakingInterface::bond(
-				bonded_account.clone(),
-				bonded_account,
-				amount,
-				<span class="self">self</span>.reward_account(),
-			)<span class="question-mark">?</span>,
+			BondType::Create =&gt; T::Staking::bond(<span class="kw-2">&amp;</span>bonded_account, amount, <span class="kw-2">&amp;</span><span class="self">self</span>.reward_account())<span class="question-mark">?</span>,
 			<span class="comment">// The pool should always be created in such a way its in a state to bond extra, but if
 			// the active balance is slashed below the minimum bonded or the account cannot be
 			// found, we exit early.
-			</span>BondType::Later =&gt; T::StakingInterface::bond_extra(bonded_account, amount)<span class="question-mark">?</span>,
+			</span>BondType::Later =&gt; T::Staking::bond_extra(<span class="kw-2">&amp;</span>bonded_account, amount)<span class="question-mark">?</span>,
 		}
 
 		<span class="prelude-val">Ok</span>(points_issued)
@@ -3680,7 +3650,7 @@
 		<span class="comment">// NOTE: this may be dangerous in the scenario bonding_duration gets decreased because
 		// we would no longer be able to decode `UnbondingPoolsWithEra`, which uses
 		// `TotalUnbondingPools` as the bound
-		</span>T::StakingInterface::bonding_duration() + T::PostUnbondingPoolsWindow::get()
+		</span>T::Staking::bonding_duration() + T::PostUnbondingPoolsWindow::get()
 	}
 }
 
@@ -3689,7 +3659,6 @@
 	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 	<span class="kw">use </span>frame_support::traits::StorageVersion;
 	<span class="kw">use </span>frame_system::{ensure_signed, pallet_prelude::<span class="kw-2">*</span>};
-	<span class="kw">use </span>sp_runtime::traits::CheckedAdd;
 
 	<span class="doccomment">/// The current storage version.
 	</span><span class="kw">const </span>STORAGE_VERSION: StorageVersion = StorageVersion::new(<span class="number">3</span>);
@@ -3708,20 +3677,7 @@
 		</span><span class="kw">type </span>WeightInfo: weights::WeightInfo;
 
 		<span class="doccomment">/// The nominating balance.
-		</span><span class="kw">type </span>Currency: Currency&lt;<span class="self">Self</span>::AccountId, Balance = <span class="self">Self</span>::CurrencyBalance&gt;;
-
-		<span class="doccomment">/// Sadly needed to bound it to `FixedPointOperand`.
-		</span><span class="comment">// The only alternative is to sprinkle a `where BalanceOf&lt;T&gt;: FixedPointOperand` in roughly
-		// a million places, so we prefer doing this.
-		</span><span class="kw">type </span>CurrencyBalance: sp_runtime::traits::AtLeast32BitUnsigned
-			+ codec::FullCodec
-			+ MaybeSerializeDeserialize
-			+ sp_std::fmt::Debug
-			+ Default
-			+ FixedPointOperand
-			+ CheckedAdd
-			+ TypeInfo
-			+ MaxEncodedLen;
+		</span><span class="kw">type </span>Currency: Currency&lt;<span class="self">Self</span>::AccountId&gt;;
 
 		<span class="doccomment">/// The type that is used for reward counter.
 		///
@@ -3763,10 +3719,7 @@
 		</span><span class="kw">type </span>U256ToBalance: Convert&lt;U256, BalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
 
 		<span class="doccomment">/// The interface for nominating.
-		</span><span class="kw">type </span>StakingInterface: StakingInterface&lt;
-			Balance = BalanceOf&lt;<span class="self">Self</span>&gt;,
-			AccountId = <span class="self">Self</span>::AccountId,
-		&gt;;
+		</span><span class="kw">type </span>Staking: StakingInterface&lt;Balance = BalanceOf&lt;<span class="self">Self</span>&gt;, AccountId = <span class="self">Self</span>::AccountId&gt;;
 
 		<span class="doccomment">/// The amount of eras a `SubPools::with_era` pool can exist before it gets merged into the
 		/// `SubPools::no_era` pool. In other words, this is the amount of eras a member will be
@@ -4201,12 +4154,12 @@
 			</span><span class="kw">let _ </span>= reward_pool.update_records(bonded_pool.id, bonded_pool.points)<span class="question-mark">?</span>;
 			<span class="kw">let _ </span>= <span class="self">Self</span>::do_reward_payout(<span class="kw-2">&amp;</span>who, <span class="kw-2">&amp;mut </span>member, <span class="kw-2">&amp;mut </span>bonded_pool, <span class="kw-2">&amp;mut </span>reward_pool)<span class="question-mark">?</span>;
 
-			<span class="kw">let </span>current_era = T::StakingInterface::current_era();
-			<span class="kw">let </span>unbond_era = T::StakingInterface::bonding_duration().saturating_add(current_era);
+			<span class="kw">let </span>current_era = T::Staking::current_era();
+			<span class="kw">let </span>unbond_era = T::Staking::bonding_duration().saturating_add(current_era);
 
 			<span class="comment">// Unbond in the actual underlying nominator.
 			</span><span class="kw">let </span>unbonding_balance = bonded_pool.dissolve(unbonding_points);
-			T::StakingInterface::unbond(bonded_pool.bonded_account(), unbonding_balance)<span class="question-mark">?</span>;
+			T::Staking::unbond(<span class="kw-2">&amp;</span>bonded_pool.bonded_account(), unbonding_balance)<span class="question-mark">?</span>;
 
 			<span class="comment">// Note that we lazily create the unbonding pools here if they don&#39;t already exist
 			</span><span class="kw">let </span><span class="kw-2">mut </span>sub_pools = SubPoolsStorage::&lt;T&gt;::get(member.pool_id)
@@ -4269,7 +4222,7 @@
 			<span class="comment">// For now we only allow a pool to withdraw unbonded if its not destroying. If the pool
 			// is destroying then `withdraw_unbonded` can be used.
 			</span><span class="macro">ensure!</span>(pool.state != PoolState::Destroying, Error::&lt;T&gt;::NotDestroying);
-			T::StakingInterface::withdraw_unbonded(pool.bonded_account(), num_slashing_spans)<span class="question-mark">?</span>;
+			T::Staking::withdraw_unbonded(pool.bonded_account(), num_slashing_spans)<span class="question-mark">?</span>;
 			<span class="prelude-val">Ok</span>(())
 		}
 
@@ -4305,7 +4258,7 @@
 			<span class="kw">let </span>member_account = T::Lookup::lookup(member_account)<span class="question-mark">?</span>;
 			<span class="kw">let </span><span class="kw-2">mut </span>member =
 				PoolMembers::&lt;T&gt;::get(<span class="kw-2">&amp;</span>member_account).ok_or(Error::&lt;T&gt;::PoolMemberNotFound)<span class="question-mark">?</span>;
-			<span class="kw">let </span>current_era = T::StakingInterface::current_era();
+			<span class="kw">let </span>current_era = T::Staking::current_era();
 
 			<span class="kw">let </span>bonded_pool = BondedPool::&lt;T&gt;::get(member.pool_id)
 				.defensive_ok_or::&lt;Error&lt;T&gt;&gt;(DefensiveError::PoolNotFound.into())<span class="question-mark">?</span>;
@@ -4320,10 +4273,8 @@
 
 			<span class="comment">// Before calculate the `balance_to_unbond`, with call withdraw unbonded to ensure the
 			// `transferrable_balance` is correct.
-			</span><span class="kw">let </span>stash_killed = T::StakingInterface::withdraw_unbonded(
-				bonded_pool.bonded_account(),
-				num_slashing_spans,
-			)<span class="question-mark">?</span>;
+			</span><span class="kw">let </span>stash_killed =
+				T::Staking::withdraw_unbonded(bonded_pool.bonded_account(), num_slashing_spans)<span class="question-mark">?</span>;
 
 			<span class="comment">// defensive-only: the depositor puts enough funds into the stash so that it will only
 			// be destroyed when they are leaving.
@@ -4511,7 +4462,7 @@
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
 			<span class="macro">ensure!</span>(bonded_pool.can_nominate(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::NotNominator);
-			T::StakingInterface::nominate(bonded_pool.bonded_account(), validators)
+			T::Staking::nominate(<span class="kw-2">&amp;</span>bonded_pool.bonded_account(), validators)
 		}
 
 		<span class="doccomment">/// Set a new state for the pool.
@@ -4683,7 +4634,7 @@
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
 			<span class="macro">ensure!</span>(bonded_pool.can_nominate(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::NotNominator);
-			T::StakingInterface::chill(bonded_pool.bonded_account())
+			T::Staking::chill(<span class="kw-2">&amp;</span>bonded_pool.bonded_account())
 		}
 	}
 
@@ -4700,7 +4651,7 @@
 				<span class="string">&quot;Minimum points to balance ratio must be greater than 0&quot;
 			</span>);
 			<span class="macro">assert!</span>(
-				T::StakingInterface::bonding_duration() &lt; TotalUnbondingPools::&lt;T&gt;::get(),
+				T::Staking::bonding_duration() &lt; TotalUnbondingPools::&lt;T&gt;::get(),
 				<span class="string">&quot;There must be more unbonding pools then the bonding duration /
 				so a slash can be applied to relevant unboding pools. (We assume /
 				the bonding duration &gt; slash deffer duration.&quot;</span>,
@@ -4736,7 +4687,7 @@
 	/// It is essentially `max { MinNominatorBond, MinCreateBond, MinJoinBond }`, where the former
 	/// is coming from the staking pallet and the latter two are configured in this pallet.
 	</span><span class="kw">pub fn </span>depositor_min_bond() -&gt; BalanceOf&lt;T&gt; {
-		T::StakingInterface::minimum_bond()
+		T::Staking::minimum_nominator_bond()
 			.max(MinCreateBond::&lt;T&gt;::get())
 			.max(MinJoinBond::&lt;T&gt;::get())
 			.max(T::Currency::minimum_balance())
@@ -4763,7 +4714,7 @@
 		</span><span class="macro">debug_assert_eq!</span>(frame_system::Pallet::&lt;T&gt;::consumers(<span class="kw-2">&amp;</span>reward_account), <span class="number">0</span>);
 		<span class="macro">debug_assert_eq!</span>(frame_system::Pallet::&lt;T&gt;::consumers(<span class="kw-2">&amp;</span>bonded_account), <span class="number">0</span>);
 		<span class="macro">debug_assert_eq!</span>(
-			T::StakingInterface::total_stake(<span class="kw-2">&amp;</span>bonded_account).unwrap_or_default(),
+			T::Staking::total_stake(<span class="kw-2">&amp;</span>bonded_account).unwrap_or_default(),
 			Zero::zero()
 		);
 
@@ -5038,8 +4989,7 @@
 			<span class="kw">let </span>subs = SubPoolsStorage::&lt;T&gt;::get(pool_id).unwrap_or_default();
 
 			<span class="kw">let </span>sum_unbonding_balance = subs.sum_unbonding_balance();
-			<span class="kw">let </span>bonded_balance =
-				T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap_or_default();
+			<span class="kw">let </span>bonded_balance = T::Staking::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap_or_default();
 			<span class="kw">let </span>total_balance = T::Currency::total_balance(<span class="kw-2">&amp;</span>pool_account);
 
 			<span class="macro">assert!</span>(

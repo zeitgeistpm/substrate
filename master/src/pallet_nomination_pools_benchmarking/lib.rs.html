@@ -658,10 +658,6 @@
 <span id="658">658</span>
 <span id="659">659</span>
 <span id="660">660</span>
-<span id="661">661</span>
-<span id="662">662</span>
-<span id="663">663</span>
-<span id="664">664</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -797,15 +793,15 @@
 
 		<span class="comment">// Create accounts with the origin weight
 		</span><span class="kw">let </span>(pool_creator1, pool_origin1) = create_pool_account::&lt;T&gt;(USER_SEED + <span class="number">1</span>, origin_weight);
-		T::StakingInterface::nominate(
-			pool_origin1.clone(),
+		T::Staking::nominate(
+			<span class="kw-2">&amp;</span>pool_origin1,
 			<span class="comment">// NOTE: these don&#39;t really need to be validators.
 			</span><span class="macro">vec!</span>[account(<span class="string">&quot;random_validator&quot;</span>, <span class="number">0</span>, USER_SEED)],
 		)<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>(<span class="kw">_</span>, pool_origin2) = create_pool_account::&lt;T&gt;(USER_SEED + <span class="number">2</span>, origin_weight);
-		T::StakingInterface::nominate(
-			pool_origin2.clone(),
+		T::Staking::nominate(
+			<span class="kw-2">&amp;</span>pool_origin2,
 			<span class="macro">vec!</span>[account(<span class="string">&quot;random_validator&quot;</span>, <span class="number">0</span>, USER_SEED)].clone(),
 		)<span class="question-mark">?</span>;
 
@@ -820,10 +816,7 @@
 
 		<span class="comment">// Create an account with the worst case destination weight
 		</span><span class="kw">let </span>(<span class="kw">_</span>, pool_dest1) = create_pool_account::&lt;T&gt;(USER_SEED + <span class="number">3</span>, dest_weight);
-		T::StakingInterface::nominate(
-			pool_dest1.clone(),
-			<span class="macro">vec!</span>[account(<span class="string">&quot;random_validator&quot;</span>, <span class="number">0</span>, USER_SEED)],
-		)<span class="question-mark">?</span>;
+		T::Staking::nominate(<span class="kw-2">&amp;</span>pool_dest1, <span class="macro">vec!</span>[account(<span class="string">&quot;random_validator&quot;</span>, <span class="number">0</span>, USER_SEED)])<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>weight_of = pallet_staking::Pallet::&lt;T&gt;::weight_of_fn();
 		<span class="macro">assert_eq!</span>(vote_to_balance::&lt;T&gt;(weight_of(<span class="kw-2">&amp;</span>pool_origin1)).unwrap(), origin_weight);
@@ -849,12 +842,11 @@
 		<span class="self">self</span>.origin1_member = <span class="prelude-val">Some</span>(joiner.clone());
 		CurrencyOf::&lt;T&gt;::make_free_balance_be(<span class="kw-2">&amp;</span>joiner, amount * <span class="number">2u32</span>.into());
 
-		<span class="kw">let </span>original_bonded = T::StakingInterface::active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>.origin1).unwrap();
+		<span class="kw">let </span>original_bonded = T::Staking::active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>.origin1).unwrap();
 
 		<span class="comment">// Unbond `amount` from the underlying pool account so when the member joins
 		// we will maintain `current_bonded`.
-		</span>T::StakingInterface::unbond(<span class="self">self</span>.origin1.clone(), amount)
-			.expect(<span class="string">&quot;the pool was created in `Self::new`.&quot;</span>);
+		</span>T::Staking::unbond(<span class="kw-2">&amp;</span><span class="self">self</span>.origin1, amount).expect(<span class="string">&quot;the pool was created in `Self::new`.&quot;</span>);
 
 		<span class="comment">// Account pool points for the unbonded balance.
 		</span>BondedPools::&lt;T&gt;::mutate(<span class="kw-2">&amp;</span><span class="number">1</span>, |maybe_pool| {
@@ -883,7 +875,7 @@
 		<span class="comment">// setup the worst case list scenario.
 		</span><span class="kw">let </span>scenario = ListScenario::&lt;T&gt;::new(origin_weight, <span class="bool-val">true</span>)<span class="question-mark">?</span>;
 		<span class="macro">assert_eq!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap(),
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap(),
 			origin_weight
 		);
 
@@ -898,7 +890,7 @@
 	verify {
 		<span class="macro">assert_eq!</span>(CurrencyOf::&lt;T&gt;::free_balance(<span class="kw-2">&amp;</span>joiner), joiner_free - max_additional);
 		<span class="macro">assert_eq!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap(),
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap(),
 			scenario.dest_weight
 		);
 	}
@@ -913,7 +905,7 @@
 	</span>}: bond_extra(RuntimeOrigin::Signed(scenario.creator1.clone()), BondExtra::FreeBalance(extra))
 	verify {
 		<span class="macro">assert!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap() &gt;=
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap() &gt;=
 			scenario.dest_weight
 		);
 	}
@@ -931,7 +923,7 @@
 	}: bond_extra(RuntimeOrigin::Signed(scenario.creator1.clone()), BondExtra::Rewards)
 	verify {
 		<span class="macro">assert!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap() &gt;=
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap() &gt;=
 			scenario.dest_weight
 		);
 	}
@@ -978,7 +970,7 @@
 		<span class="macro">whitelist_account!</span>(member_id);
 	}: <span class="kw">_</span>(RuntimeOrigin::Signed(member_id.clone()), member_id_lookup, all_points)
 	verify {
-		<span class="kw">let </span>bonded_after = T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap();
+		<span class="kw">let </span>bonded_after = T::Staking::active_stake(<span class="kw-2">&amp;</span>scenario.origin1).unwrap();
 		<span class="comment">// We at least went down to the destination bag
 		</span><span class="macro">assert!</span>(bonded_after &lt;= scenario.dest_weight);
 		<span class="kw">let </span>member = PoolMembers::&lt;T&gt;::get(
@@ -987,7 +979,7 @@
 		.unwrap();
 		<span class="macro">assert_eq!</span>(
 			member.unbonding_eras.keys().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
-			<span class="macro">vec!</span>[<span class="number">0 </span>+ T::StakingInterface::bonding_duration()]
+			<span class="macro">vec!</span>[<span class="number">0 </span>+ T::Staking::bonding_duration()]
 		);
 		<span class="macro">assert_eq!</span>(
 			member.unbonding_eras.values().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
@@ -1009,7 +1001,7 @@
 
 		<span class="comment">// Sanity check join worked
 		</span><span class="macro">assert_eq!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
 			min_create_bond + min_join_bond
 		);
 		<span class="macro">assert_eq!</span>(CurrencyOf::&lt;T&gt;::free_balance(<span class="kw-2">&amp;</span>joiner), min_join_bond);
@@ -1019,7 +1011,7 @@
 
 		<span class="comment">// Sanity check that unbond worked
 		</span><span class="macro">assert_eq!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
 			min_create_bond
 		);
 		<span class="macro">assert_eq!</span>(pallet_staking::Ledger::&lt;T&gt;::get(<span class="kw-2">&amp;</span>pool_account).unwrap().unlocking.len(), <span class="number">1</span>);
@@ -1052,7 +1044,7 @@
 
 		<span class="comment">// Sanity check join worked
 		</span><span class="macro">assert_eq!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
 			min_create_bond + min_join_bond
 		);
 		<span class="macro">assert_eq!</span>(CurrencyOf::&lt;T&gt;::free_balance(<span class="kw-2">&amp;</span>joiner), min_join_bond);
@@ -1063,7 +1055,7 @@
 
 		<span class="comment">// Sanity check that unbond worked
 		</span><span class="macro">assert_eq!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
 			min_create_bond
 		);
 		<span class="macro">assert_eq!</span>(pallet_staking::Ledger::&lt;T&gt;::get(<span class="kw-2">&amp;</span>pool_account).unwrap().unlocking.len(), <span class="number">1</span>);
@@ -1110,7 +1102,7 @@
 
 		<span class="comment">// Sanity check that unbond worked
 		</span><span class="macro">assert_eq!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>pool_account).unwrap(),
 			Zero::zero()
 		);
 		<span class="macro">assert_eq!</span>(
@@ -1189,8 +1181,8 @@
 			}
 		);
 		<span class="macro">assert_eq!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>Pools::&lt;T&gt;::create_bonded_account(<span class="number">1</span>)),
-			<span class="prelude-val">Some</span>(min_create_bond)
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>Pools::&lt;T&gt;::create_bonded_account(<span class="number">1</span>)),
+			<span class="prelude-val">Ok</span>(min_create_bond)
 		);
 	}
 
@@ -1228,8 +1220,8 @@
 			}
 		);
 		<span class="macro">assert_eq!</span>(
-			T::StakingInterface::active_stake(<span class="kw-2">&amp;</span>Pools::&lt;T&gt;::create_bonded_account(<span class="number">1</span>)),
-			<span class="prelude-val">Some</span>(min_create_bond)
+			T::Staking::active_stake(<span class="kw-2">&amp;</span>Pools::&lt;T&gt;::create_bonded_account(<span class="number">1</span>)),
+			<span class="prelude-val">Ok</span>(min_create_bond)
 		);
 	}
 
@@ -1311,13 +1303,13 @@
 			.map(|i| account(<span class="string">&quot;stash&quot;</span>, USER_SEED, i))
 			.collect();
 
-		<span class="macro">assert_ok!</span>(Pools::&lt;T&gt;::nominate(RuntimeOrigin::Signed(depositor.clone()).into(), <span class="number">1</span>, validators));
-		<span class="macro">assert!</span>(T::StakingInterface::nominations(Pools::&lt;T&gt;::create_bonded_account(<span class="number">1</span>)).is_some());
+		<span class="macro">assert_ok!</span>(T::Staking::nominate(<span class="kw-2">&amp;</span>pool_account, validators));
+		<span class="macro">assert!</span>(T::Staking::nominations(Pools::&lt;T&gt;::create_bonded_account(<span class="number">1</span>)).is_some());
 
 		<span class="macro">whitelist_account!</span>(depositor);
 	}:<span class="kw">_</span>(RuntimeOrigin::Signed(depositor.clone()), <span class="number">1</span>)
 	verify {
-		<span class="macro">assert!</span>(T::StakingInterface::nominations(Pools::&lt;T&gt;::create_bonded_account(<span class="number">1</span>)).is_none());
+		<span class="macro">assert!</span>(T::Staking::nominations(Pools::&lt;T&gt;::create_bonded_account(<span class="number">1</span>)).is_none());
 	}
 
 	<span class="macro">impl_benchmark_test_suite!</span>(
