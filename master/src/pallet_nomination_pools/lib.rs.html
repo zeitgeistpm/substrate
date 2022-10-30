@@ -2524,6 +2524,45 @@
 <span id="2524">2524</span>
 <span id="2525">2525</span>
 <span id="2526">2526</span>
+<span id="2527">2527</span>
+<span id="2528">2528</span>
+<span id="2529">2529</span>
+<span id="2530">2530</span>
+<span id="2531">2531</span>
+<span id="2532">2532</span>
+<span id="2533">2533</span>
+<span id="2534">2534</span>
+<span id="2535">2535</span>
+<span id="2536">2536</span>
+<span id="2537">2537</span>
+<span id="2538">2538</span>
+<span id="2539">2539</span>
+<span id="2540">2540</span>
+<span id="2541">2541</span>
+<span id="2542">2542</span>
+<span id="2543">2543</span>
+<span id="2544">2544</span>
+<span id="2545">2545</span>
+<span id="2546">2546</span>
+<span id="2547">2547</span>
+<span id="2548">2548</span>
+<span id="2549">2549</span>
+<span id="2550">2550</span>
+<span id="2551">2551</span>
+<span id="2552">2552</span>
+<span id="2553">2553</span>
+<span id="2554">2554</span>
+<span id="2555">2555</span>
+<span id="2556">2556</span>
+<span id="2557">2557</span>
+<span id="2558">2558</span>
+<span id="2559">2559</span>
+<span id="2560">2560</span>
+<span id="2561">2561</span>
+<span id="2562">2562</span>
+<span id="2563">2563</span>
+<span id="2564">2564</span>
+<span id="2565">2565</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -2554,7 +2593,7 @@
 //!
 //! ## Key terms
 //!
-//!  * pool id: A unique identifier of each pool. Set to u12
+//!  * pool id: A unique identifier of each pool. Set to u32.
 //!  * bonded pool: Tracks the distribution of actively staked funds. See [`BondedPool`] and
 //! [`BondedPoolInner`].
 //! * reward pool: Tracks rewards earned by actively staked funds. See [`RewardPool`] and
@@ -2573,7 +2612,7 @@
 //!   exactly the same rules and conditions as a normal staker. Its bond increases or decreases as
 //!   members join, it can `nominate` or `chill`, and might not even earn staking rewards if it is
 //!   not nominating proper validators.
-//! * reward account: A similar key-less account, that is set as the `Payee` account fo the bonded
+//! * reward account: A similar key-less account, that is set as the `Payee` account for the bonded
 //!   account for all staking rewards.
 //!
 //! ## Usage
@@ -3955,6 +3994,10 @@
 		</span>Defensive(DefensiveError),
 		<span class="doccomment">/// Partial unbonding now allowed permissionlessly.
 		</span>PartialUnbondNotAllowedPermissionlessly,
+		<span class="doccomment">/// Pool id currently in use.
+		</span>PoolIdInUse,
+		<span class="doccomment">/// Pool id provided is not correct/usable.
+		</span>InvalidPoolId,
 	}
 
 	<span class="attribute">#[derive(Encode, Decode, PartialEq, TypeInfo, frame_support::PalletError, RuntimeDebug)]
@@ -4376,73 +4419,38 @@
 			nominator: AccountIdLookupOf&lt;T&gt;,
 			state_toggler: AccountIdLookupOf&lt;T&gt;,
 		) -&gt; DispatchResult {
-			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
-			<span class="kw">let </span>root = T::Lookup::lookup(root)<span class="question-mark">?</span>;
-			<span class="kw">let </span>nominator = T::Lookup::lookup(nominator)<span class="question-mark">?</span>;
-			<span class="kw">let </span>state_toggler = T::Lookup::lookup(state_toggler)<span class="question-mark">?</span>;
-
-			<span class="macro">ensure!</span>(amount &gt;= Pallet::&lt;T&gt;::depositor_min_bond(), Error::&lt;T&gt;::MinimumBondNotMet);
-			<span class="macro">ensure!</span>(
-				MaxPools::&lt;T&gt;::get()
-					.map_or(<span class="bool-val">true</span>, |max_pools| BondedPools::&lt;T&gt;::count() &lt; max_pools),
-				Error::&lt;T&gt;::MaxPools
-			);
-			<span class="macro">ensure!</span>(!PoolMembers::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::AccountBelongsToOtherPool);
+			<span class="kw">let </span>depositor = ensure_signed(origin)<span class="question-mark">?</span>;
 
 			<span class="kw">let </span>pool_id = LastPoolId::&lt;T&gt;::try_mutate::&lt;<span class="kw">_</span>, Error&lt;T&gt;, <span class="kw">_</span>&gt;(|id| {
 				<span class="kw-2">*</span>id = id.checked_add(<span class="number">1</span>).ok_or(Error::&lt;T&gt;::OverflowRisk)<span class="question-mark">?</span>;
 				<span class="prelude-val">Ok</span>(<span class="kw-2">*</span>id)
 			})<span class="question-mark">?</span>;
-			<span class="kw">let </span><span class="kw-2">mut </span>bonded_pool = BondedPool::&lt;T&gt;::new(
-				pool_id,
-				PoolRoles {
-					root: <span class="prelude-val">Some</span>(root),
-					nominator: <span class="prelude-val">Some</span>(nominator),
-					state_toggler: <span class="prelude-val">Some</span>(state_toggler),
-					depositor: who.clone(),
-				},
-			);
 
-			bonded_pool.try_inc_members()<span class="question-mark">?</span>;
-			<span class="kw">let </span>points = bonded_pool.try_bond_funds(<span class="kw-2">&amp;</span>who, amount, BondType::Create)<span class="question-mark">?</span>;
+			<span class="self">Self</span>::do_create(depositor, amount, root, nominator, state_toggler, pool_id)
+		}
 
-			T::Currency::transfer(
-				<span class="kw-2">&amp;</span>who,
-				<span class="kw-2">&amp;</span>bonded_pool.reward_account(),
-				T::Currency::minimum_balance(),
-				ExistenceRequirement::AllowDeath,
-			)<span class="question-mark">?</span>;
+		<span class="doccomment">/// Create a new delegation pool with a previously used pool id
+		///
+		/// # Arguments
+		///
+		/// same as `create` with the inclusion of
+		/// * `pool_id` - `A valid PoolId.
+		</span><span class="attribute">#[pallet::weight(T::WeightInfo::create())]
+		#[transactional]
+		</span><span class="kw">pub fn </span>create_with_pool_id(
+			origin: OriginFor&lt;T&gt;,
+			<span class="attribute">#[pallet::compact] </span>amount: BalanceOf&lt;T&gt;,
+			root: AccountIdLookupOf&lt;T&gt;,
+			nominator: AccountIdLookupOf&lt;T&gt;,
+			state_toggler: AccountIdLookupOf&lt;T&gt;,
+			pool_id: PoolId,
+		) -&gt; DispatchResult {
+			<span class="kw">let </span>depositor = ensure_signed(origin)<span class="question-mark">?</span>;
 
-			PoolMembers::&lt;T&gt;::insert(
-				who.clone(),
-				PoolMember::&lt;T&gt; {
-					pool_id,
-					points,
-					last_recorded_reward_counter: Zero::zero(),
-					unbonding_eras: Default::default(),
-				},
-			);
-			RewardPools::&lt;T&gt;::insert(
-				pool_id,
-				RewardPool::&lt;T&gt; {
-					last_recorded_reward_counter: Zero::zero(),
-					last_recorded_total_payouts: Zero::zero(),
-					total_rewards_claimed: Zero::zero(),
-				},
-			);
-			ReversePoolIdLookup::&lt;T&gt;::insert(bonded_pool.bonded_account(), pool_id);
+			<span class="macro">ensure!</span>(!BondedPools::&lt;T&gt;::contains_key(pool_id), Error::&lt;T&gt;::PoolIdInUse);
+			<span class="macro">ensure!</span>(pool_id &lt; LastPoolId::&lt;T&gt;::get(), Error::&lt;T&gt;::InvalidPoolId);
 
-			<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Created { depositor: who.clone(), pool_id });
-
-			<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Bonded {
-				member: who,
-				pool_id,
-				bonded: amount,
-				joined: <span class="bool-val">true</span>,
-			});
-			bonded_pool.put();
-
-			<span class="prelude-val">Ok</span>(())
+			<span class="self">Self</span>::do_create(depositor, amount, root, nominator, state_toggler, pool_id)
 		}
 
 		<span class="doccomment">/// Nominate on behalf of the pool.
@@ -4864,6 +4872,76 @@
 		});
 
 		<span class="prelude-val">Ok</span>(pending_rewards)
+	}
+
+	<span class="kw">fn </span>do_create(
+		who: T::AccountId,
+		amount: BalanceOf&lt;T&gt;,
+		root: AccountIdLookupOf&lt;T&gt;,
+		nominator: AccountIdLookupOf&lt;T&gt;,
+		state_toggler: AccountIdLookupOf&lt;T&gt;,
+		pool_id: PoolId,
+	) -&gt; DispatchResult {
+		<span class="kw">let </span>root = T::Lookup::lookup(root)<span class="question-mark">?</span>;
+		<span class="kw">let </span>nominator = T::Lookup::lookup(nominator)<span class="question-mark">?</span>;
+		<span class="kw">let </span>state_toggler = T::Lookup::lookup(state_toggler)<span class="question-mark">?</span>;
+
+		<span class="macro">ensure!</span>(amount &gt;= Pallet::&lt;T&gt;::depositor_min_bond(), Error::&lt;T&gt;::MinimumBondNotMet);
+		<span class="macro">ensure!</span>(
+			MaxPools::&lt;T&gt;::get().map_or(<span class="bool-val">true</span>, |max_pools| BondedPools::&lt;T&gt;::count() &lt; max_pools),
+			Error::&lt;T&gt;::MaxPools
+		);
+		<span class="macro">ensure!</span>(!PoolMembers::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::AccountBelongsToOtherPool);
+		<span class="kw">let </span><span class="kw-2">mut </span>bonded_pool = BondedPool::&lt;T&gt;::new(
+			pool_id,
+			PoolRoles {
+				root: <span class="prelude-val">Some</span>(root),
+				nominator: <span class="prelude-val">Some</span>(nominator),
+				state_toggler: <span class="prelude-val">Some</span>(state_toggler),
+				depositor: who.clone(),
+			},
+		);
+
+		bonded_pool.try_inc_members()<span class="question-mark">?</span>;
+		<span class="kw">let </span>points = bonded_pool.try_bond_funds(<span class="kw-2">&amp;</span>who, amount, BondType::Create)<span class="question-mark">?</span>;
+
+		T::Currency::transfer(
+			<span class="kw-2">&amp;</span>who,
+			<span class="kw-2">&amp;</span>bonded_pool.reward_account(),
+			T::Currency::minimum_balance(),
+			ExistenceRequirement::AllowDeath,
+		)<span class="question-mark">?</span>;
+
+		PoolMembers::&lt;T&gt;::insert(
+			who.clone(),
+			PoolMember::&lt;T&gt; {
+				pool_id,
+				points,
+				last_recorded_reward_counter: Zero::zero(),
+				unbonding_eras: Default::default(),
+			},
+		);
+		RewardPools::&lt;T&gt;::insert(
+			pool_id,
+			RewardPool::&lt;T&gt; {
+				last_recorded_reward_counter: Zero::zero(),
+				last_recorded_total_payouts: Zero::zero(),
+				total_rewards_claimed: Zero::zero(),
+			},
+		);
+		ReversePoolIdLookup::&lt;T&gt;::insert(bonded_pool.bonded_account(), pool_id);
+
+		<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Created { depositor: who.clone(), pool_id });
+
+		<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Bonded {
+			member: who,
+			pool_id,
+			bonded: amount,
+			joined: <span class="bool-val">true</span>,
+		});
+		bonded_pool.put();
+
+		<span class="prelude-val">Ok</span>(())
 	}
 
 	<span class="doccomment">/// Ensure the correctness of the state of this pallet.

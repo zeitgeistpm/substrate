@@ -875,17 +875,6 @@
 <span id="875">875</span>
 <span id="876">876</span>
 <span id="877">877</span>
-<span id="878">878</span>
-<span id="879">879</span>
-<span id="880">880</span>
-<span id="881">881</span>
-<span id="882">882</span>
-<span id="883">883</span>
-<span id="884">884</span>
-<span id="885">885</span>
-<span id="886">886</span>
-<span id="887">887</span>
-<span id="888">888</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -1544,50 +1533,39 @@
 	project: <span class="kw-2">&amp;</span>Path,
 	profile: Profile,
 	cargo_manifest: <span class="kw-2">&amp;</span>Path,
-	wasm_binary_name: <span class="prelude-ty">Option</span>&lt;String&gt;,
+	out_name: <span class="prelude-ty">Option</span>&lt;String&gt;,
 ) -&gt; (<span class="prelude-ty">Option</span>&lt;WasmBinary&gt;, <span class="prelude-ty">Option</span>&lt;WasmBinary&gt;, WasmBinaryBloaty) {
-	<span class="kw">let </span>default_wasm_binary_name = get_wasm_binary_name(cargo_manifest);
-	<span class="kw">let </span>wasm_file = project
+	<span class="kw">let </span>default_out_name = get_wasm_binary_name(cargo_manifest);
+	<span class="kw">let </span>out_name = out_name.unwrap_or_else(|| default_out_name.clone());
+	<span class="kw">let </span>in_path = project
 		.join(<span class="string">&quot;target/wasm32-unknown-unknown&quot;</span>)
 		.join(profile.directory())
-		.join(<span class="macro">format!</span>(<span class="string">&quot;{}.wasm&quot;</span>, default_wasm_binary_name));
+		.join(<span class="macro">format!</span>(<span class="string">&quot;{}.wasm&quot;</span>, default_out_name));
 
-	<span class="kw">let </span>wasm_compact_file = <span class="kw">if </span>profile.wants_compact() {
-		<span class="kw">let </span>wasm_compact_file = project.join(<span class="macro">format!</span>(
-			<span class="string">&quot;{}.compact.wasm&quot;</span>,
-			wasm_binary_name.clone().unwrap_or_else(|| default_wasm_binary_name.clone()),
-		));
-		wasm_gc::garbage_collect_file(<span class="kw-2">&amp;</span>wasm_file, <span class="kw-2">&amp;</span>wasm_compact_file)
+	<span class="kw">let </span>(wasm_compact_path, wasm_compact_compressed_path) = <span class="kw">if </span>profile.wants_compact() {
+		<span class="kw">let </span>wasm_compact_path = project.join(<span class="macro">format!</span>(<span class="string">&quot;{}.compact.wasm&quot;</span>, out_name,));
+		wasm_opt::OptimizationOptions::new_opt_level_0()
+			.mvp_features_only()
+			.debug_info(<span class="bool-val">true</span>)
+			.add_pass(wasm_opt::Pass::StripDwarf)
+			.run(<span class="kw-2">&amp;</span>in_path, <span class="kw-2">&amp;</span>wasm_compact_path)
 			.expect(<span class="string">&quot;Failed to compact generated WASM binary.&quot;</span>);
-		<span class="prelude-val">Some</span>(WasmBinary(wasm_compact_file))
-	} <span class="kw">else </span>{
-		<span class="prelude-val">None
-	</span>};
 
-	<span class="kw">let </span>wasm_compact_compressed_file = wasm_compact_file.as_ref().and_then(|compact_binary| {
-		<span class="kw">let </span>file_name =
-			wasm_binary_name.clone().unwrap_or_else(|| default_wasm_binary_name.clone());
-
-		<span class="kw">let </span>wasm_compact_compressed_file =
-			project.join(<span class="macro">format!</span>(<span class="string">&quot;{}.compact.compressed.wasm&quot;</span>, file_name));
-
-		<span class="kw">if </span>compress_wasm(<span class="kw-2">&amp;</span>compact_binary.<span class="number">0</span>, <span class="kw-2">&amp;</span>wasm_compact_compressed_file) {
-			<span class="prelude-val">Some</span>(WasmBinary(wasm_compact_compressed_file))
+		<span class="kw">let </span>wasm_compact_compressed_path =
+			project.join(<span class="macro">format!</span>(<span class="string">&quot;{}.compact.compressed.wasm&quot;</span>, out_name));
+		<span class="kw">if </span>compress_wasm(<span class="kw-2">&amp;</span>wasm_compact_path, <span class="kw-2">&amp;</span>wasm_compact_compressed_path) {
+			(<span class="prelude-val">Some</span>(WasmBinary(wasm_compact_path)), <span class="prelude-val">Some</span>(WasmBinary(wasm_compact_compressed_path)))
 		} <span class="kw">else </span>{
-			<span class="prelude-val">None
-		</span>}
-	});
-
-	<span class="kw">let </span>bloaty_file_name = <span class="kw">if let </span><span class="prelude-val">Some</span>(name) = wasm_binary_name {
-		<span class="macro">format!</span>(<span class="string">&quot;{}.wasm&quot;</span>, name)
+			(<span class="prelude-val">Some</span>(WasmBinary(wasm_compact_path)), <span class="prelude-val">None</span>)
+		}
 	} <span class="kw">else </span>{
-		<span class="macro">format!</span>(<span class="string">&quot;{}.wasm&quot;</span>, default_wasm_binary_name)
+		(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
 	};
 
-	<span class="kw">let </span>bloaty_file = project.join(bloaty_file_name);
-	fs::copy(wasm_file, <span class="kw-2">&amp;</span>bloaty_file).expect(<span class="string">&quot;Copying the bloaty file to the project dir.&quot;</span>);
+	<span class="kw">let </span>bloaty_path = project.join(<span class="macro">format!</span>(<span class="string">&quot;{}.wasm&quot;</span>, out_name));
+	fs::copy(in_path, <span class="kw-2">&amp;</span>bloaty_path).expect(<span class="string">&quot;Copying the bloaty file to the project dir.&quot;</span>);
 
-	(wasm_compact_file, wasm_compact_compressed_file, WasmBinaryBloaty(bloaty_file))
+	(wasm_compact_path, wasm_compact_compressed_path, WasmBinaryBloaty(bloaty_path))
 }
 
 <span class="kw">fn </span>compress_wasm(wasm_binary_path: <span class="kw-2">&amp;</span>Path, compressed_binary_out_path: <span class="kw-2">&amp;</span>Path) -&gt; bool {
