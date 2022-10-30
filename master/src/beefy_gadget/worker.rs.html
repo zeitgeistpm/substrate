@@ -1601,6 +1601,12 @@
 <span id="1601">1601</span>
 <span id="1602">1602</span>
 <span id="1603">1603</span>
+<span id="1604">1604</span>
+<span id="1605">1605</span>
+<span id="1606">1606</span>
+<span id="1607">1607</span>
+<span id="1608">1608</span>
+<span id="1609">1609</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
@@ -2103,19 +2109,21 @@
 
 			<span class="self">self</span>.on_demand_justifications.cancel_requests_older_than(block_num);
 
-			<span class="kw">if let </span><span class="prelude-val">Err</span>(e) = <span class="self">self</span>.backend.append_justification(
-				BlockId::Number(block_num),
-				(BEEFY_ENGINE_ID, finality_proof.encode()),
-			) {
+			<span class="kw">if let </span><span class="prelude-val">Err</span>(e) = <span class="self">self
+				</span>.backend
+				.blockchain()
+				.expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(block_num))
+				.and_then(|hash| {
+					<span class="self">self</span>.links
+						.to_rpc_best_block_sender
+						.notify(|| <span class="prelude-val">Ok</span>::&lt;<span class="kw">_</span>, ()&gt;(hash))
+						.expect(<span class="string">&quot;forwards closure result; the closure always returns Ok; qed.&quot;</span>);
+
+					<span class="self">self</span>.backend
+						.append_justification(<span class="kw-2">&amp;</span>hash, (BEEFY_ENGINE_ID, finality_proof.encode()))
+				}) {
 				<span class="macro">error!</span>(target: <span class="string">&quot;beefy&quot;</span>, <span class="string">&quot;🥩 Error {:?} on appending justification: {:?}&quot;</span>, e, finality_proof);
 			}
-
-			<span class="self">self</span>.backend.blockchain().hash(block_num).ok().flatten().map(|hash| {
-				<span class="self">self</span>.links
-					.to_rpc_best_block_sender
-					.notify(|| <span class="prelude-val">Ok</span>::&lt;<span class="kw">_</span>, ()&gt;(hash))
-					.expect(<span class="string">&quot;forwards closure result; the closure always returns Ok; qed.&quot;</span>)
-			});
 
 			<span class="self">self</span>.links
 				.to_rpc_justif_sender
@@ -3149,8 +3157,10 @@
 				commitment,
 				signatures: <span class="macro">vec!</span>[<span class="prelude-val">None</span>],
 			});
+			<span class="kw">let </span>hashof10 =
+				backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">10</span>)).unwrap();
 			backend
-				.append_justification(BlockId::Number(<span class="number">10</span>), (BEEFY_ENGINE_ID, justif.encode()))
+				.append_justification(<span class="kw-2">&amp;</span>hashof10, (BEEFY_ENGINE_ID, justif.encode()))
 				.unwrap();
 
 			<span class="comment">// initialize voter at block 13, expect rounds initialized at last beefy finalized 10
@@ -3183,8 +3193,10 @@
 				commitment,
 				signatures: <span class="macro">vec!</span>[<span class="prelude-val">None</span>],
 			});
+			<span class="kw">let </span>hashof12 =
+				backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">12</span>)).unwrap();
 			backend
-				.append_justification(BlockId::Number(<span class="number">12</span>), (BEEFY_ENGINE_ID, justif.encode()))
+				.append_justification(<span class="kw-2">&amp;</span>hashof12, (BEEFY_ENGINE_ID, justif.encode()))
 				.unwrap();
 
 			<span class="comment">// initialize voter at block 13, expect rounds initialized at last beefy finalized 12

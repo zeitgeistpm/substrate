@@ -1186,10 +1186,9 @@
 
 	<span class="kw">fn </span>append_justification(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		id: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: Justification,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
-		<span class="kw">let </span>hash = <span class="self">self</span>.expect_block_hash_from_id(<span class="kw-2">&amp;</span>id)<span class="question-mark">?</span>;
 		<span class="kw">let </span><span class="kw-2">mut </span>storage = <span class="self">self</span>.storage.write();
 
 		<span class="kw">let </span>block = storage
@@ -1636,10 +1635,10 @@
 
 	<span class="kw">fn </span>append_justification(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: Justification,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
-		<span class="self">self</span>.blockchain.append_justification(block, justification)
+		<span class="self">self</span>.blockchain.append_justification(hash, justification)
 	}
 
 	<span class="kw">fn </span>blockchain(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Blockchain {
@@ -1756,26 +1755,27 @@
 	</span><span class="kw">fn </span>append_and_retrieve_justifications() {
 		<span class="kw">let </span>blockchain = test_blockchain();
 		<span class="kw">let </span>last_finalized = blockchain.last_finalized().unwrap();
-		<span class="kw">let </span>block = BlockId::Hash(last_finalized);
 
-		blockchain.append_justification(block, (ID2, <span class="macro">vec!</span>[<span class="number">4</span>])).unwrap();
+		blockchain.append_justification(<span class="kw-2">&amp;</span>last_finalized, (ID2, <span class="macro">vec!</span>[<span class="number">4</span>])).unwrap();
 		<span class="kw">let </span>justifications = {
 			<span class="kw">let </span><span class="kw-2">mut </span>just = Justifications::from((ID1, <span class="macro">vec!</span>[<span class="number">3</span>]));
 			just.append((ID2, <span class="macro">vec!</span>[<span class="number">4</span>]));
 			just
 		};
-		<span class="macro">assert_eq!</span>(blockchain.justifications(block).unwrap(), <span class="prelude-val">Some</span>(justifications));
+		<span class="macro">assert_eq!</span>(
+			blockchain.justifications(BlockId::Hash(last_finalized)).unwrap(),
+			<span class="prelude-val">Some</span>(justifications)
+		);
 	}
 
 	<span class="attribute">#[test]
 	</span><span class="kw">fn </span>store_duplicate_justifications_is_forbidden() {
 		<span class="kw">let </span>blockchain = test_blockchain();
 		<span class="kw">let </span>last_finalized = blockchain.last_finalized().unwrap();
-		<span class="kw">let </span>block = BlockId::Hash(last_finalized);
 
-		blockchain.append_justification(block, (ID2, <span class="macro">vec!</span>[<span class="number">0</span>])).unwrap();
+		blockchain.append_justification(<span class="kw-2">&amp;</span>last_finalized, (ID2, <span class="macro">vec!</span>[<span class="number">0</span>])).unwrap();
 		<span class="macro">assert!</span>(<span class="macro">matches!</span>(
-			blockchain.append_justification(block, (ID2, <span class="macro">vec!</span>[<span class="number">1</span>])),
+			blockchain.append_justification(<span class="kw-2">&amp;</span>last_finalized, (ID2, <span class="macro">vec!</span>[<span class="number">1</span>])),
 			<span class="prelude-val">Err</span>(sp_blockchain::Error::BadJustification(<span class="kw">_</span>)),
 		));
 	}

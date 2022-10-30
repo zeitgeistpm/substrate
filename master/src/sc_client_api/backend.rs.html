@@ -559,7 +559,6 @@
 <span id="559">559</span>
 <span id="560">560</span>
 <span id="561">561</span>
-<span id="562">562</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -589,7 +588,6 @@
 <span class="kw">use </span>sp_consensus::BlockOrigin;
 <span class="kw">use </span>sp_core::offchain::OffchainStorage;
 <span class="kw">use </span>sp_runtime::{
-	generic::BlockId,
 	traits::{Block <span class="kw">as </span>BlockT, HashFor, NumberFor},
 	Justification, Justifications, StateVersion, Storage,
 };
@@ -1047,12 +1045,12 @@
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
 
-	<span class="doccomment">/// Append justification to the block with the given Id.
+	<span class="doccomment">/// Append justification to the block with the given `hash`.
 	///
 	/// This should only be called for blocks that are already finalized.
 	</span><span class="kw">fn </span>append_justification(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: Justification,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
 

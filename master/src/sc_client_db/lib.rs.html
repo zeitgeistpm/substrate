@@ -3779,7 +3779,6 @@
 <span id="3779">3779</span>
 <span id="3780">3780</span>
 <span id="3781">3781</span>
-<span id="3782">3782</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -5795,12 +5794,11 @@
 
 	<span class="kw">fn </span>append_justification(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 		justification: Justification,
 	) -&gt; ClientResult&lt;()&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>transaction: Transaction&lt;DbHash&gt; = Transaction::new();
-		<span class="kw">let </span>hash = <span class="self">self</span>.blockchain.expect_block_hash_from_id(<span class="kw-2">&amp;</span>block)<span class="question-mark">?</span>;
-		<span class="kw">let </span>header = <span class="self">self</span>.blockchain.expect_header(block)<span class="question-mark">?</span>;
+		<span class="kw">let </span>header = <span class="self">self</span>.blockchain.expect_header(BlockId::Hash(<span class="kw-2">*</span>hash))<span class="question-mark">?</span>;
 		<span class="kw">let </span>number = <span class="kw-2">*</span>header.number();
 
 		<span class="comment">// Check if the block is finalized first.
@@ -5809,13 +5807,13 @@
 
 		<span class="comment">// We can do a quick check first, before doing a proper but more expensive check
 		</span><span class="kw">if </span>number &gt; <span class="self">self</span>.blockchain.info().finalized_number ||
-			(hash != last_finalized &amp;&amp; !is_descendent_of(<span class="kw-2">&amp;</span>hash, <span class="kw-2">&amp;</span>last_finalized)<span class="question-mark">?</span>)
+			(<span class="kw-2">*</span>hash != last_finalized &amp;&amp; !is_descendent_of(hash, <span class="kw-2">&amp;</span>last_finalized)<span class="question-mark">?</span>)
 		{
 			<span class="kw">return </span><span class="prelude-val">Err</span>(ClientError::NotInFinalizedChain)
 		}
 
 		<span class="kw">let </span>justifications = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>stored_justifications) =
-			<span class="self">self</span>.blockchain.justifications(block)<span class="question-mark">?
+			<span class="self">self</span>.blockchain.justifications(BlockId::Hash(<span class="kw-2">*</span>hash))<span class="question-mark">?
 		</span>{
 			<span class="kw">if </span>!stored_justifications.append(justification) {
 				<span class="kw">return </span><span class="prelude-val">Err</span>(ClientError::BadJustification(<span class="string">&quot;Duplicate consensus engine ID&quot;</span>.into()))
@@ -5827,7 +5825,7 @@
 
 		transaction.set_from_vec(
 			columns::JUSTIFICATIONS,
-			<span class="kw-2">&amp;</span>utils::number_and_hash_to_lookup_key(number, hash)<span class="question-mark">?</span>,
+			<span class="kw-2">&amp;</span>utils::number_and_hash_to_lookup_key(number, <span class="kw-2">*</span>hash)<span class="question-mark">?</span>,
 			justifications.encode(),
 		);
 
@@ -6811,11 +6809,11 @@
 		backend.finalize_block(<span class="kw-2">&amp;</span>block1, <span class="prelude-val">Some</span>(just0.clone().into())).unwrap();
 
 		<span class="kw">let </span>just1 = (CONS1_ENGINE_ID, <span class="macro">vec!</span>[<span class="number">4</span>, <span class="number">5</span>]);
-		backend.append_justification(BlockId::Number(<span class="number">1</span>), just1.clone()).unwrap();
+		backend.append_justification(<span class="kw-2">&amp;</span>block1, just1.clone()).unwrap();
 
 		<span class="kw">let </span>just2 = (CONS1_ENGINE_ID, <span class="macro">vec!</span>[<span class="number">6</span>, <span class="number">7</span>]);
 		<span class="macro">assert!</span>(<span class="macro">matches!</span>(
-			backend.append_justification(BlockId::Number(<span class="number">1</span>), just2),
+			backend.append_justification(<span class="kw-2">&amp;</span>block1, just2),
 			<span class="prelude-val">Err</span>(ClientError::BadJustification(<span class="kw">_</span>))
 		));
 
