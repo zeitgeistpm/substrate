@@ -741,7 +741,7 @@
 //! systems such as the Referenda pallet. Members each have a rank, with zero being the lowest.
 //! There is no complexity limitation on either the number of members at a rank or the number of
 //! ranks in the system thus allowing potentially public membership. A member of at least a given
-//! rank can be selected at random in O(1) time, allowing for various games to constructed using
+//! rank can be selected at random in O(1) time, allowing for various games to be constructed using
 //! this as a primitive. Members may only be promoted and demoted by one rank at a time, however
 //! all operations (save one) are O(1) in complexity. The only operation which is not O(1) is the
 //! `remove_member` since they must be removed from all ranks from the present down to zero.
@@ -753,7 +753,7 @@
 //!
 //! Two `Config` trait items control these &quot;rank privileges&quot;: `MinRankOfClass` and `VoteWeight`.
 //! The first controls which ranks are allowed to vote on a particular class of poll. The second
-//! controls the weight of a vote given the voters rank compared to the minimum rank of the poll.
+//! controls the weight of a vote given the voter&#39;s rank compared to the minimum rank of the poll.
 //!
 //! An origin control, `EnsureRank`, ensures that the origin is a member of the collective of at
 //! least a particular rank.
@@ -1030,8 +1030,8 @@
 	}
 }
 
-<span class="doccomment">/// Guard to ensure that the given origin is a member of the collective. The pair of including both
-/// the account ID and the rank of the member is the `Success` value.
+<span class="doccomment">/// Guard to ensure that the given origin is a member of the collective. The pair of both the
+/// account ID and the rank of the member is the `Success` value.
 </span><span class="kw">pub struct </span>EnsureRankedMember&lt;T, I, <span class="kw">const </span>MIN_RANK: u16&gt;(PhantomData&lt;(T, I)&gt;);
 <span class="kw">impl</span>&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>, <span class="kw">const </span>MIN_RANK: u16&gt; EnsureOrigin&lt;T::RuntimeOrigin&gt;
 	<span class="kw">for </span>EnsureRankedMember&lt;T, I, MIN_RANK&gt;
@@ -1150,7 +1150,7 @@
 	</span><span class="kw">pub enum </span>Event&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static </span>= ()&gt; {
 		<span class="doccomment">/// A member `who` has been added.
 		</span>MemberAdded { who: T::AccountId },
-		<span class="doccomment">/// The member `who`&#39;s rank has been changed to the given `rank`.
+		<span class="doccomment">/// The member `who`se rank has been changed to the given `rank`.
 		</span>RankChanged { who: T::AccountId, rank: Rank },
 		<span class="doccomment">/// The member `who` of given `rank` has been removed from the collective.
 		</span>MemberRemoved { who: T::AccountId, rank: Rank },
