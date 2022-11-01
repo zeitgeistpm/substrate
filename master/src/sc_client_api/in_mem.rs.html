@@ -888,7 +888,6 @@
 <span id="888">888</span>
 <span id="889">889</span>
 <span id="890">890</span>
-<span id="891">891</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1296,15 +1295,14 @@
 <span class="kw">impl</span>&lt;Block: BlockT&gt; blockchain::Backend&lt;Block&gt; <span class="kw">for </span>Blockchain&lt;Block&gt; {
 	<span class="kw">fn </span>body(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		id: BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;&gt;&gt; {
-		<span class="prelude-val">Ok</span>(<span class="self">self</span>.id(id).and_then(|hash| {
-			<span class="self">self</span>.storage
-				.read()
-				.blocks
-				.get(<span class="kw-2">&amp;</span>hash)
-				.and_then(|b| b.extrinsics().map(|x| x.to_vec()))
-		}))
+		<span class="prelude-val">Ok</span>(<span class="self">self
+			</span>.storage
+			.read()
+			.blocks
+			.get(hash)
+			.and_then(|b| b.extrinsics().map(|x| x.to_vec())))
 	}
 
 	<span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, id: BlockId&lt;Block&gt;) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {

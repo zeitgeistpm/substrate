@@ -3779,6 +3779,14 @@
 <span id="3779">3779</span>
 <span id="3780">3780</span>
 <span id="3781">3781</span>
+<span id="3782">3782</span>
+<span id="3783">3783</span>
+<span id="3784">3784</span>
+<span id="3785">3785</span>
+<span id="3786">3786</span>
+<span id="3787">3787</span>
+<span id="3788">3788</span>
+<span id="3789">3789</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -4358,8 +4366,10 @@
 }
 
 <span class="kw">impl</span>&lt;Block: BlockT&gt; sc_client_api::blockchain::Backend&lt;Block&gt; <span class="kw">for </span>BlockchainDb&lt;Block&gt; {
-	<span class="kw">fn </span>body(<span class="kw-2">&amp;</span><span class="self">self</span>, id: BlockId&lt;Block&gt;) -&gt; ClientResult&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Block::Extrinsic&gt;&gt;&gt; {
-		<span class="kw">if let </span><span class="prelude-val">Some</span>(body) = read_db(<span class="kw-2">&amp;*</span><span class="self">self</span>.db, columns::KEY_LOOKUP, columns::BODY, id)<span class="question-mark">? </span>{
+	<span class="kw">fn </span>body(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; ClientResult&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Block::Extrinsic&gt;&gt;&gt; {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(body) =
+			read_db(<span class="kw-2">&amp;*</span><span class="self">self</span>.db, columns::KEY_LOOKUP, columns::BODY, BlockId::Hash::&lt;Block&gt;(<span class="kw-2">*</span>hash))<span class="question-mark">?
+		</span>{
 			<span class="comment">// Plain body
 			</span><span class="kw">match </span>Decode::decode(<span class="kw-2">&amp;mut &amp;</span>body[..]) {
 				<span class="prelude-val">Ok</span>(body) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(body)),
@@ -4371,7 +4381,12 @@
 			}
 		}
 
-		<span class="kw">if let </span><span class="prelude-val">Some</span>(index) = read_db(<span class="kw-2">&amp;*</span><span class="self">self</span>.db, columns::KEY_LOOKUP, columns::BODY_INDEX, id)<span class="question-mark">? </span>{
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(index) = read_db(
+			<span class="kw-2">&amp;*</span><span class="self">self</span>.db,
+			columns::KEY_LOOKUP,
+			columns::BODY_INDEX,
+			BlockId::Hash::&lt;Block&gt;(<span class="kw-2">*</span>hash),
+		)<span class="question-mark">? </span>{
 			<span class="kw">match </span>Vec::&lt;DbExtrinsic&lt;Block&gt;&gt;::decode(<span class="kw-2">&amp;mut &amp;</span>index[..]) {
 				<span class="prelude-val">Ok</span>(index) =&gt; {
 					<span class="kw">let </span><span class="kw-2">mut </span>body = Vec::new();
@@ -6982,11 +6997,11 @@
 			backend.commit_operation(op).unwrap();
 		}
 		<span class="kw">let </span>bc = backend.blockchain();
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(BlockId::hash(blocks[<span class="number">0</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(BlockId::hash(blocks[<span class="number">1</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(BlockId::hash(blocks[<span class="number">2</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">3</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">4</span>])).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">0</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">1</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">2</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">3</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap());
 	}
 
 	<span class="attribute">#[test]
@@ -7017,11 +7032,11 @@
 		backend.commit_operation(op).unwrap();
 
 		<span class="kw">let </span>bc = backend.blockchain();
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">0</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">1</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">2</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">3</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">4</span>])).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">0</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">1</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">2</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">3</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap());
 	}
 
 	<span class="attribute">#[test]
@@ -7072,7 +7087,7 @@
 		backend.commit_operation(op).unwrap();
 
 		<span class="kw">let </span>bc = backend.blockchain();
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>.into()]), bc.body(BlockId::hash(fork_hash_root)).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>.into()]), bc.body(<span class="kw-2">&amp;</span>fork_hash_root).unwrap());
 
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">1</span>..<span class="number">5 </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>op = backend.begin_operation().unwrap();
@@ -7081,13 +7096,13 @@
 			backend.commit_operation(op).unwrap();
 		}
 
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">0</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">1</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">2</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">3</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">4</span>])).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">0</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">0</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">1</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">1</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">2</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">3</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap());
 
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>.into()]), bc.body(BlockId::hash(fork_hash_root)).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">2</span>.into()]), bc.body(<span class="kw-2">&amp;</span>fork_hash_root).unwrap());
 		<span class="macro">assert_eq!</span>(bc.info().best_number, <span class="number">4</span>);
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..<span class="number">5 </span>{
 			<span class="macro">assert!</span>(bc.hash(i).unwrap().is_some());
@@ -7148,11 +7163,11 @@
 		}
 
 		<span class="kw">let </span>bc = backend.blockchain();
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(BlockId::hash(blocks[<span class="number">0</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(BlockId::hash(blocks[<span class="number">1</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(BlockId::hash(blocks[<span class="number">2</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">3</span>])).unwrap());
-		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>.into()]), bc.body(BlockId::hash(blocks[<span class="number">4</span>])).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">0</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">1</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">None</span>, bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">2</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">3</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">3</span>]).unwrap());
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[<span class="number">4</span>.into()]), bc.body(<span class="kw-2">&amp;</span>blocks[<span class="number">4</span>]).unwrap());
 	}
 
 	<span class="attribute">#[test]
@@ -7189,11 +7204,12 @@
 		<span class="macro">assert_eq!</span>(bc.indexed_transaction(<span class="kw-2">&amp;</span>x0_hash).unwrap().unwrap(), <span class="kw-2">&amp;</span>x0[<span class="number">1</span>..]);
 		<span class="macro">assert_eq!</span>(bc.indexed_transaction(<span class="kw-2">&amp;</span>x1_hash).unwrap().unwrap(), <span class="kw-2">&amp;</span>x1[<span class="number">1</span>..]);
 
+		<span class="kw">let </span>hashof0 = bc.info().genesis_hash;
 		<span class="comment">// Push one more blocks and make sure block is pruned and transaction index is cleared.
 		</span><span class="kw">let </span>block1 =
 			insert_block(<span class="kw-2">&amp;</span>backend, <span class="number">1</span>, hash, <span class="prelude-val">None</span>, Default::default(), <span class="macro">vec!</span>[], <span class="prelude-val">None</span>).unwrap();
 		backend.finalize_block(<span class="kw-2">&amp;</span>block1, <span class="prelude-val">None</span>).unwrap();
-		<span class="macro">assert_eq!</span>(bc.body(BlockId::Number(<span class="number">0</span>)).unwrap(), <span class="prelude-val">None</span>);
+		<span class="macro">assert_eq!</span>(bc.body(<span class="kw-2">&amp;</span>hashof0).unwrap(), <span class="prelude-val">None</span>);
 		<span class="macro">assert_eq!</span>(bc.indexed_transaction(<span class="kw-2">&amp;</span>x0_hash).unwrap(), <span class="prelude-val">None</span>);
 		<span class="macro">assert_eq!</span>(bc.indexed_transaction(<span class="kw-2">&amp;</span>x1_hash).unwrap(), <span class="prelude-val">None</span>);
 	}

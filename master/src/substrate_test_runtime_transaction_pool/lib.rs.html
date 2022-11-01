@@ -690,13 +690,13 @@
 		<span class="self">Self</span>::hash_and_length_inner(ex)
 	}
 
-	<span class="kw">fn </span>block_body(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>BlockId&lt;<span class="self">Self</span>::Block&gt;) -&gt; <span class="self">Self</span>::BodyFuture {
-		futures::future::ready(<span class="prelude-val">Ok</span>(<span class="kw">match </span>id {
-			BlockId::Number(num) =&gt;
-				<span class="self">self</span>.chain.read().block_by_number.get(num).map(|b| b[<span class="number">0</span>].<span class="number">0</span>.extrinsics().to_vec()),
-			BlockId::Hash(hash) =&gt;
-				<span class="self">self</span>.chain.read().block_by_hash.get(hash).map(|b| b.extrinsics().to_vec()),
-		}))
+	<span class="kw">fn </span>block_body(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>&lt;<span class="self">Self</span>::Block <span class="kw">as </span>BlockT&gt;::Hash) -&gt; <span class="self">Self</span>::BodyFuture {
+		futures::future::ready(<span class="prelude-val">Ok</span>(<span class="self">self
+			</span>.chain
+			.read()
+			.block_by_hash
+			.get(hash)
+			.map(|b| b.extrinsics().to_vec())))
 	}
 
 	<span class="kw">fn </span>block_header(
