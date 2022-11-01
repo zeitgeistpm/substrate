@@ -614,6 +614,7 @@
 <span id="614">614</span>
 <span id="615">615</span>
 <span id="616">616</span>
+<span id="617">617</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -1005,8 +1006,9 @@
 				(attr, names)
 			} <span class="kw">else </span>{
 				<span class="kw">let </span>test_cfg = features.remove(<span class="string">&quot;test&quot;</span>).then_some(<span class="macro">quote!</span>(test)).into_iter();
+				<span class="kw">let </span>disabled_features = all_features.difference(<span class="kw-2">&amp;</span>features);
 				<span class="kw">let </span>features = features.iter();
-				<span class="kw">let </span>attr = <span class="macro">quote!</span>(<span class="attribute">#[cfg(all( #(#test_cfg),* #(feature = #features),* ))]</span>);
+				<span class="kw">let </span>attr = <span class="macro">quote!</span>(<span class="attribute">#[cfg(all( #(#test_cfg,)* #(feature = #features,)* #(not(feature = #disabled_features)),* ))]</span>);
 
 				(attr, names)
 			}
