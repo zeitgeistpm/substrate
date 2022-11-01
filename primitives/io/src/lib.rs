@@ -755,6 +755,8 @@ pub trait Crypto {
 			return false
 		};
 
+		// We pass sig.0.as_ref() to make sure we pass &[u8], and not a [u8;64]- The latter
+		// would generate a panic
 		let sig = if let Ok(s) = ed25519_dalek::Signature::try_from(sig.0.as_ref()) {
 			s
 		} else {
