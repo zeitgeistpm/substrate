@@ -755,8 +755,11 @@ pub trait Crypto {
 			return false
 		};
 
-		let sig =
-			if let Ok(s) = ed25519_dalek::Signature::try_from(sig.0) { s } else { return false };
+		let sig = if let Ok(s) = ed25519_dalek::Signature::try_from(sig.0.as_ref()) {
+			s
+		} else {
+			return false
+		};
 
 		public_key.verify(msg, &sig).is_ok()
 	}
