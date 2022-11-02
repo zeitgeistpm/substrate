@@ -766,33 +766,6 @@ pub trait Crypto {
 		public_key.verify(msg, &sig).is_ok()
 	}
 
-	/// Verify `ed25519` signature.
-	///
-	/// Returns `true` when the verification was successful.
-	#[version(2)]
-	fn ed25519_verify(sig: &ed25519::Signature, msg: &[u8], pub_key: &ed25519::Public) -> bool {
-		ed25519::Pair::verify(sig, msg, pub_key)
-	}
-
-	/// Register a `ed25519` signature for batch verification.
-	///
-	/// Batch verification must be enabled by calling [`start_batch_verify`].
-	/// If batch verification is not enabled, the signature will be verified immediatley.
-	/// To get the result of the batch verification, [`finish_batch_verify`]
-	/// needs to be called.
-	///
-	/// Returns `true` when the verification is either successful or batched.
-	fn ed25519_batch_verify(
-		&mut self,
-		sig: &ed25519::Signature,
-		msg: &[u8],
-		pub_key: &ed25519::Public,
-	) -> bool {
-		self.extension::<VerificationExt>()
-			.map(|extension| extension.push_ed25519(sig.clone(), *pub_key, msg.to_vec()))
-			.unwrap_or_else(|| ed25519_verify(sig, msg, pub_key))
-	}
-
 	/// Verify `sr25519` signature.
 	///
 	/// Returns `true` when the verification was successful.
