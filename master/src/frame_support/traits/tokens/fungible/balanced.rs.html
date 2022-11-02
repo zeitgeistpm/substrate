@@ -351,6 +351,7 @@
 <span id="351">351</span>
 <span id="352">352</span>
 <span id="353">353</span>
+<span id="354">354</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -517,7 +518,7 @@
 		amount: <span class="self">Self</span>::Balance,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::Balance, DispatchError&gt; {
 		<span class="kw">let </span>old_balance = <span class="self">Self</span>::balance(who);
-		<span class="kw">let </span>(<span class="kw-2">mut </span>new_balance, <span class="kw-2">mut </span>amount) = <span class="kw">if </span>old_balance &lt; amount {
+		<span class="kw">let </span>(<span class="kw-2">mut </span>new_balance, <span class="kw-2">mut </span>amount) = <span class="kw">if </span><span class="self">Self</span>::reducible_balance(who, <span class="bool-val">false</span>) &lt; amount {
 			<span class="kw">return </span><span class="prelude-val">Err</span>(TokenError::NoFunds.into())
 		} <span class="kw">else </span>{
 			(old_balance - amount, amount)
@@ -539,8 +540,9 @@
 	/// Return the imbalance by which the account was reduced.
 	</span><span class="kw">fn </span>decrease_balance_at_most(who: <span class="kw-2">&amp;</span>AccountId, amount: <span class="self">Self</span>::Balance) -&gt; <span class="self">Self</span>::Balance {
 		<span class="kw">let </span>old_balance = <span class="self">Self</span>::balance(who);
-		<span class="kw">let </span>(<span class="kw-2">mut </span>new_balance, <span class="kw-2">mut </span>amount) = <span class="kw">if </span>old_balance &lt; amount {
-			(Zero::zero(), old_balance)
+		<span class="kw">let </span>old_free_balance = <span class="self">Self</span>::reducible_balance(who, <span class="bool-val">false</span>);
+		<span class="kw">let </span>(<span class="kw-2">mut </span>new_balance, <span class="kw-2">mut </span>amount) = <span class="kw">if </span>old_free_balance &lt; amount {
+			(old_balance.saturating_sub(old_free_balance), old_free_balance)
 		} <span class="kw">else </span>{
 			(old_balance - amount, amount)
 		};
