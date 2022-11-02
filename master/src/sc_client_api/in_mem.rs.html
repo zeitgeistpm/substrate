@@ -883,11 +883,6 @@
 <span id="883">883</span>
 <span id="884">884</span>
 <span id="885">885</span>
-<span id="886">886</span>
-<span id="887">887</span>
-<span id="888">888</span>
-<span id="889">889</span>
-<span id="890">890</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1305,10 +1300,8 @@
 			.and_then(|b| b.extrinsics().map(|x| x.to_vec())))
 	}
 
-	<span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, id: BlockId&lt;Block&gt;) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {
-		<span class="prelude-val">Ok</span>(<span class="self">self</span>.id(id).and_then(|hash| {
-			<span class="self">self</span>.storage.read().blocks.get(<span class="kw-2">&amp;</span>hash).and_then(|b| b.justifications().cloned())
-		}))
+	<span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {
+		<span class="prelude-val">Ok</span>(<span class="self">self</span>.storage.read().blocks.get(<span class="kw-2">&amp;</span>hash).and_then(|b| b.justifications().cloned()))
 	}
 
 	<span class="kw">fn </span>last_finalized(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; sp_blockchain::Result&lt;Block::Hash&gt; {
@@ -1706,7 +1699,7 @@
 <span class="attribute">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
 	<span class="kw">use crate</span>::{in_mem::Blockchain, NewBlockState};
-	<span class="kw">use </span>sp_api::{BlockId, HeaderT};
+	<span class="kw">use </span>sp_api::HeaderT;
 	<span class="kw">use </span>sp_blockchain::Backend;
 	<span class="kw">use </span>sp_runtime::{ConsensusEngineId, Justifications};
 	<span class="kw">use </span>substrate_test_runtime::{Block, Header, H256};
@@ -1760,10 +1753,7 @@
 			just.append((ID2, <span class="macro">vec!</span>[<span class="number">4</span>]));
 			just
 		};
-		<span class="macro">assert_eq!</span>(
-			blockchain.justifications(BlockId::Hash(last_finalized)).unwrap(),
-			<span class="prelude-val">Some</span>(justifications)
-		);
+		<span class="macro">assert_eq!</span>(blockchain.justifications(<span class="kw-2">&amp;</span>last_finalized).unwrap(), <span class="prelude-val">Some</span>(justifications));
 	}
 
 	<span class="attribute">#[test]

@@ -555,6 +555,8 @@
 <span id="555">555</span>
 <span id="556">556</span>
 <span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -740,10 +742,12 @@
 			}
 		},
 		AuthoritySetChangeId::Set(<span class="kw">_</span>, last_block_for_set) =&gt; {
-			<span class="kw">let </span>last_block_for_set_id = BlockId::Number(last_block_for_set);
+			<span class="kw">let </span>last_block_for_set_id = backend
+				.blockchain()
+				.expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(last_block_for_set))<span class="question-mark">?</span>;
 			<span class="kw">let </span>justification = <span class="kw">if let </span><span class="prelude-val">Some</span>(grandpa_justification) = backend
 				.blockchain()
-				.justifications(last_block_for_set_id)<span class="question-mark">?
+				.justifications(<span class="kw-2">&amp;</span>last_block_for_set_id)<span class="question-mark">?
 				</span>.and_then(|justifications| justifications.into_justification(GRANDPA_ENGINE_ID))
 			{
 				grandpa_justification

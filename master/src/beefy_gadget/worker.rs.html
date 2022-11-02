@@ -2318,7 +2318,7 @@
 			// a BEEFY justification, or at this session&#39;s boundary; voter will resume from there.
 			</span><span class="kw">loop </span>{
 				<span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="bool-val">true</span>) = blockchain
-					.justifications(BlockId::hash(header.hash()))
+					.justifications(<span class="kw-2">&amp;</span>header.hash())
 					.ok()
 					.flatten()
 					.map(|justifs| justifs.get(BEEFY_ENGINE_ID).is_some())
@@ -3010,7 +3010,7 @@
 		}));
 
 		<span class="comment">// check BEEFY justifications are also appended to backend
-		</span><span class="kw">let </span>justifs = backend.blockchain().justifications(BlockId::number(<span class="number">2</span>)).unwrap().unwrap();
+		</span><span class="kw">let </span>justifs = backend.blockchain().justifications(<span class="kw-2">&amp;</span>hashof2).unwrap().unwrap();
 		<span class="macro">assert!</span>(justifs.get(BEEFY_ENGINE_ID).is_some())
 	}
 

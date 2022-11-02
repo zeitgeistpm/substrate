@@ -452,9 +452,6 @@
 <span id="452">452</span>
 <span id="453">453</span>
 <span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2020 Parity Technologies (UK) Ltd.
 // This file is part of Substrate.
 
@@ -788,11 +785,8 @@
 			<span class="kw">let </span>number = <span class="kw-2">*</span>header.number();
 			<span class="kw">let </span>hash = header.hash();
 			<span class="kw">let </span>parent_hash = <span class="kw-2">*</span>header.parent_hash();
-			<span class="kw">let </span>justifications = <span class="kw">if </span>get_justification {
-				<span class="self">self</span>.client.justifications(<span class="kw-2">&amp;</span>BlockId::Hash(hash))<span class="question-mark">?
-			</span>} <span class="kw">else </span>{
-				<span class="prelude-val">None
-			</span>};
+			<span class="kw">let </span>justifications =
+				<span class="kw">if </span>get_justification { <span class="self">self</span>.client.justifications(<span class="kw-2">&amp;</span>hash)<span class="question-mark">? </span>} <span class="kw">else </span>{ <span class="prelude-val">None </span>};
 
 			<span class="kw">let </span>(justifications, justification, is_empty_justification) =
 				<span class="kw">if </span>support_multiple_justifications {

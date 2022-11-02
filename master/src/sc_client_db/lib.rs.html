@@ -3787,6 +3787,8 @@
 <span id="3787">3787</span>
 <span id="3788">3788</span>
 <span id="3789">3789</span>
+<span id="3790">3790</span>
+<span id="3791">3791</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -4431,8 +4433,13 @@
 		<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
 	}
 
-	<span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, id: BlockId&lt;Block&gt;) -&gt; ClientResult&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {
-		<span class="kw">match </span>read_db(<span class="kw-2">&amp;*</span><span class="self">self</span>.db, columns::KEY_LOOKUP, columns::JUSTIFICATIONS, id)<span class="question-mark">? </span>{
+	<span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; ClientResult&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {
+		<span class="kw">match </span>read_db(
+			<span class="kw-2">&amp;*</span><span class="self">self</span>.db,
+			columns::KEY_LOOKUP,
+			columns::JUSTIFICATIONS,
+			BlockId::&lt;Block&gt;::Hash(<span class="kw-2">*</span>hash),
+		)<span class="question-mark">? </span>{
 			<span class="prelude-val">Some</span>(justifications) =&gt; <span class="kw">match </span>Decode::decode(<span class="kw-2">&amp;mut &amp;</span>justifications[..]) {
 				<span class="prelude-val">Ok</span>(justifications) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(justifications)),
 				<span class="prelude-val">Err</span>(err) =&gt;
@@ -5828,7 +5835,7 @@
 		}
 
 		<span class="kw">let </span>justifications = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>stored_justifications) =
-			<span class="self">self</span>.blockchain.justifications(BlockId::Hash(<span class="kw-2">*</span>hash))<span class="question-mark">?
+			<span class="self">self</span>.blockchain.justifications(hash)<span class="question-mark">?
 		</span>{
 			<span class="kw">if </span>!stored_justifications.append(justification) {
 				<span class="kw">return </span><span class="prelude-val">Err</span>(ClientError::BadJustification(<span class="string">&quot;Duplicate consensus engine ID&quot;</span>.into()))
@@ -6806,7 +6813,7 @@
 		backend.finalize_block(<span class="kw-2">&amp;</span>block1, justification.clone()).unwrap();
 
 		<span class="macro">assert_eq!</span>(
-			backend.blockchain().justifications(BlockId::Number(<span class="number">1</span>)).unwrap(),
+			backend.blockchain().justifications(<span class="kw-2">&amp;</span>block1).unwrap(),
 			justification.map(Justifications::from),
 		);
 	}
@@ -6837,10 +6844,7 @@
 			just.append(just1);
 			just
 		};
-		<span class="macro">assert_eq!</span>(
-			backend.blockchain().justifications(BlockId::Number(<span class="number">1</span>)).unwrap(),
-			<span class="prelude-val">Some</span>(justifications),
-		);
+		<span class="macro">assert_eq!</span>(backend.blockchain().justifications(<span class="kw-2">&amp;</span>block1).unwrap(), <span class="prelude-val">Some</span>(justifications),);
 	}
 
 	<span class="attribute">#[test]
