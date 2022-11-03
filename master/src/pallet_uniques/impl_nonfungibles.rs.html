@@ -186,6 +186,13 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -207,6 +214,7 @@
 
 </span><span class="kw">use super</span>::<span class="kw-2">*</span>;
 <span class="kw">use </span>frame_support::{
+	storage::KeyPrefixIterator,
 	traits::{tokens::nonfungibles::<span class="kw-2">*</span>, Get},
 	BoundedSlice,
 };
@@ -343,25 +351,31 @@
 }
 
 <span class="kw">impl</span>&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt; InspectEnumerable&lt;T::AccountId&gt; <span class="kw">for </span>Pallet&lt;T, I&gt; {
+	<span class="kw">type </span>CollectionsIterator = KeyPrefixIterator&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::CollectionId&gt;;
+	<span class="kw">type </span>ItemsIterator = KeyPrefixIterator&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::ItemId&gt;;
+	<span class="kw">type </span>OwnedIterator =
+		KeyPrefixIterator&lt;(&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::CollectionId, &lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::ItemId)&gt;;
+	<span class="kw">type </span>OwnedInCollectionIterator = KeyPrefixIterator&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::ItemId&gt;;
+
 	<span class="doccomment">/// Returns an iterator of the collections in existence.
 	///
 	/// NOTE: iterating this list invokes a storage read per item.
-	</span><span class="kw">fn </span>collections() -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = <span class="self">Self</span>::CollectionId&gt;&gt; {
-		Box::new(CollectionMetadataOf::&lt;T, I&gt;::iter_keys())
+	</span><span class="kw">fn </span>collections() -&gt; <span class="self">Self</span>::CollectionsIterator {
+		CollectionMetadataOf::&lt;T, I&gt;::iter_keys()
 	}
 
 	<span class="doccomment">/// Returns an iterator of the items of a `collection` in existence.
 	///
 	/// NOTE: iterating this list invokes a storage read per item.
-	</span><span class="kw">fn </span>items(collection: <span class="kw-2">&amp;</span><span class="self">Self</span>::CollectionId) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = <span class="self">Self</span>::ItemId&gt;&gt; {
-		Box::new(ItemMetadataOf::&lt;T, I&gt;::iter_key_prefix(collection))
+	</span><span class="kw">fn </span>items(collection: <span class="kw-2">&amp;</span><span class="self">Self</span>::CollectionId) -&gt; <span class="self">Self</span>::ItemsIterator {
+		ItemMetadataOf::&lt;T, I&gt;::iter_key_prefix(collection)
 	}
 
 	<span class="doccomment">/// Returns an iterator of the items of all collections owned by `who`.
 	///
 	/// NOTE: iterating this list invokes a storage read per item.
-	</span><span class="kw">fn </span>owned(who: <span class="kw-2">&amp;</span>T::AccountId) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = (<span class="self">Self</span>::CollectionId, <span class="self">Self</span>::ItemId)&gt;&gt; {
-		Box::new(Account::&lt;T, I&gt;::iter_key_prefix((who,)))
+	</span><span class="kw">fn </span>owned(who: <span class="kw-2">&amp;</span>T::AccountId) -&gt; <span class="self">Self</span>::OwnedIterator {
+		Account::&lt;T, I&gt;::iter_key_prefix((who,))
 	}
 
 	<span class="doccomment">/// Returns an iterator of the items of `collection` owned by `who`.
@@ -370,8 +384,8 @@
 	</span><span class="kw">fn </span>owned_in_collection(
 		collection: <span class="kw-2">&amp;</span><span class="self">Self</span>::CollectionId,
 		who: <span class="kw-2">&amp;</span>T::AccountId,
-	) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = <span class="self">Self</span>::ItemId&gt;&gt; {
-		Box::new(Account::&lt;T, I&gt;::iter_key_prefix((who, collection)))
+	) -&gt; <span class="self">Self</span>::OwnedInCollectionIterator {
+		Account::&lt;T, I&gt;::iter_key_prefix((who, collection))
 	}
 }
 </code></pre></div>

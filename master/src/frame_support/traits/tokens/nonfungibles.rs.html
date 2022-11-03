@@ -239,6 +239,15 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -346,20 +355,29 @@
 <span class="doccomment">/// Interface for enumerating items in existence or owned by a given account over many collections
 /// of NFTs.
 </span><span class="kw">pub trait </span>InspectEnumerable&lt;AccountId&gt;: Inspect&lt;AccountId&gt; {
+	<span class="doccomment">/// The iterator type for [`Self::collections`].
+	</span><span class="kw">type </span>CollectionsIterator: Iterator&lt;Item = <span class="self">Self</span>::CollectionId&gt;;
+	<span class="doccomment">/// The iterator type for [`Self::items`].
+	</span><span class="kw">type </span>ItemsIterator: Iterator&lt;Item = <span class="self">Self</span>::ItemId&gt;;
+	<span class="doccomment">/// The iterator type for [`Self::owned`].
+	</span><span class="kw">type </span>OwnedIterator: Iterator&lt;Item = (<span class="self">Self</span>::CollectionId, <span class="self">Self</span>::ItemId)&gt;;
+	<span class="doccomment">/// The iterator type for [`Self::owned_in_collection`].
+	</span><span class="kw">type </span>OwnedInCollectionIterator: Iterator&lt;Item = <span class="self">Self</span>::ItemId&gt;;
+
 	<span class="doccomment">/// Returns an iterator of the collections in existence.
-	</span><span class="kw">fn </span>collections() -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = <span class="self">Self</span>::CollectionId&gt;&gt;;
+	</span><span class="kw">fn </span>collections() -&gt; <span class="self">Self</span>::CollectionsIterator;
 
 	<span class="doccomment">/// Returns an iterator of the items of a `collection` in existence.
-	</span><span class="kw">fn </span>items(collection: <span class="kw-2">&amp;</span><span class="self">Self</span>::CollectionId) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = <span class="self">Self</span>::ItemId&gt;&gt;;
+	</span><span class="kw">fn </span>items(collection: <span class="kw-2">&amp;</span><span class="self">Self</span>::CollectionId) -&gt; <span class="self">Self</span>::ItemsIterator;
 
 	<span class="doccomment">/// Returns an iterator of the items of all collections owned by `who`.
-	</span><span class="kw">fn </span>owned(who: <span class="kw-2">&amp;</span>AccountId) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = (<span class="self">Self</span>::CollectionId, <span class="self">Self</span>::ItemId)&gt;&gt;;
+	</span><span class="kw">fn </span>owned(who: <span class="kw-2">&amp;</span>AccountId) -&gt; <span class="self">Self</span>::OwnedIterator;
 
 	<span class="doccomment">/// Returns an iterator of the items of `collection` owned by `who`.
 	</span><span class="kw">fn </span>owned_in_collection(
 		collection: <span class="kw-2">&amp;</span><span class="self">Self</span>::CollectionId,
 		who: <span class="kw-2">&amp;</span>AccountId,
-	) -&gt; Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = <span class="self">Self</span>::ItemId&gt;&gt;;
+	) -&gt; <span class="self">Self</span>::OwnedInCollectionIterator;
 }
 
 <span class="doccomment">/// Trait for providing the ability to create collections of nonfungible items.
