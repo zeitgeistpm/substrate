@@ -3789,6 +3789,11 @@
 <span id="3789">3789</span>
 <span id="3790">3790</span>
 <span id="3791">3791</span>
+<span id="3792">3792</span>
+<span id="3793">3793</span>
+<span id="3794">3794</span>
+<span id="3795">3795</span>
+<span id="3796">3796</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -4485,8 +4490,13 @@
 		<span class="prelude-val">Ok</span>(<span class="self">self</span>.db.contains(columns::TRANSACTION, hash.as_ref()))
 	}
 
-	<span class="kw">fn </span>block_indexed_body(<span class="kw-2">&amp;</span><span class="self">self</span>, id: BlockId&lt;Block&gt;) -&gt; ClientResult&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt;&gt; {
-		<span class="kw">let </span>body = <span class="kw">match </span>read_db(<span class="kw-2">&amp;*</span><span class="self">self</span>.db, columns::KEY_LOOKUP, columns::BODY_INDEX, id)<span class="question-mark">? </span>{
+	<span class="kw">fn </span>block_indexed_body(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; ClientResult&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt;&gt; {
+		<span class="kw">let </span>body = <span class="kw">match </span>read_db(
+			<span class="kw-2">&amp;*</span><span class="self">self</span>.db,
+			columns::KEY_LOOKUP,
+			columns::BODY_INDEX,
+			BlockId::&lt;Block&gt;::Hash(<span class="kw-2">*</span>hash),
+		)<span class="question-mark">? </span>{
 			<span class="prelude-val">Some</span>(body) =&gt; body,
 			<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
 		};

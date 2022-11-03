@@ -2089,6 +2089,16 @@
 <span id="2089">2089</span>
 <span id="2090">2090</span>
 <span id="2091">2091</span>
+<span id="2092">2092</span>
+<span id="2093">2093</span>
+<span id="2094">2094</span>
+<span id="2095">2095</span>
+<span id="2096">2096</span>
+<span id="2097">2097</span>
+<span id="2098">2098</span>
+<span id="2099">2099</span>
+<span id="2100">2100</span>
+<span id="2101">2101</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -4071,9 +4081,9 @@
 
 	<span class="kw">fn </span>block_indexed_body(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		id: <span class="kw-2">&amp;</span>BlockId&lt;Block&gt;,
+		hash: <span class="kw-2">&amp;</span>Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt;&gt; {
-		<span class="self">self</span>.backend.blockchain().block_indexed_body(<span class="kw-2">*</span>id)
+		<span class="self">self</span>.backend.blockchain().block_indexed_body(hash)
 	}
 
 	<span class="kw">fn </span>requires_full_sync(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -4164,9 +4174,19 @@
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		number: NumberFor&lt;B&gt;,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt;, sp_transaction_storage_proof::Error&gt; {
+		<span class="kw">let </span>hash = <span class="kw">match </span><span class="self">self
+			</span>.backend
+			.blockchain()
+			.block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(number))
+			.map_err(|e| sp_transaction_storage_proof::Error::Application(Box::new(e)))<span class="question-mark">?
+		</span>{
+			<span class="prelude-val">Some</span>(hash) =&gt; hash,
+			<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+		};
+
 		<span class="self">self</span>.backend
 			.blockchain()
-			.block_indexed_body(BlockId::number(number))
+			.block_indexed_body(<span class="kw-2">&amp;</span>hash)
 			.map_err(|e| sp_transaction_storage_proof::Error::Application(Box::new(e)))
 	}
 
