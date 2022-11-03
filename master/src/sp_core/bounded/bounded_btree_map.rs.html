@@ -538,6 +538,91 @@
 <span id="538">538</span>
 <span id="539">539</span>
 <span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -707,6 +792,37 @@
 	/// See [`BTreeMap::iter_mut`] for more information.
 	</span><span class="kw">pub fn </span>iter_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; sp_std::collections::btree_map::IterMut&lt;K, V&gt; {
 		<span class="self">self</span>.<span class="number">0</span>.iter_mut()
+	}
+
+	<span class="doccomment">/// Consume the map, applying `f` to each of it&#39;s values and returning a new map.
+	</span><span class="kw">pub fn </span>map&lt;T, F&gt;(<span class="self">self</span>, <span class="kw-2">mut </span>f: F) -&gt; BoundedBTreeMap&lt;K, T, S&gt;
+	<span class="kw">where
+		</span>F: FnMut((<span class="kw-2">&amp;</span>K, V)) -&gt; T,
+	{
+		BoundedBTreeMap::&lt;K, T, S&gt;::unchecked_from(
+			<span class="self">self</span>.<span class="number">0
+				</span>.into_iter()
+				.map(|(k, v)| {
+					<span class="kw">let </span>t = f((<span class="kw-2">&amp;</span>k, v));
+					(k, t)
+				})
+				.collect(),
+		)
+	}
+
+	<span class="doccomment">/// Consume the map, applying `f` to each of it&#39;s values as long as it returns successfully. If
+	/// an `Err(E)` is ever encountered, the mapping is short circuited and the error is returned;
+	/// otherwise, a new map is returned in the contained `Ok` value.
+	</span><span class="kw">pub fn </span>try_map&lt;T, E, F&gt;(<span class="self">self</span>, <span class="kw-2">mut </span>f: F) -&gt; <span class="prelude-ty">Result</span>&lt;BoundedBTreeMap&lt;K, T, S&gt;, E&gt;
+	<span class="kw">where
+		</span>F: FnMut((<span class="kw-2">&amp;</span>K, V)) -&gt; <span class="prelude-ty">Result</span>&lt;T, E&gt;,
+	{
+		<span class="prelude-val">Ok</span>(BoundedBTreeMap::&lt;K, T, S&gt;::unchecked_from(
+			<span class="self">self</span>.<span class="number">0
+				</span>.into_iter()
+				.map(|(k, v)| (f((<span class="kw-2">&amp;</span>k, v)).map(|t| (k, t))))
+				.collect::&lt;<span class="prelude-ty">Result</span>&lt;BTreeMap&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>,
+		))
 	}
 }
 
@@ -1076,6 +1192,60 @@
 		b1.iter_mut().for_each(|(<span class="kw">_</span>, v)| <span class="kw-2">*</span>v <span class="kw-2">*</span>= <span class="number">2</span>);
 
 		<span class="macro">assert_eq!</span>(b1, b2);
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>map_retains_size() {
+		<span class="kw">let </span>b1 = boundedmap_from_keys::&lt;u32, ConstU32&lt;<span class="number">7</span>&gt;&gt;(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>]);
+		<span class="kw">let </span>b2 = b1.clone();
+
+		<span class="macro">assert_eq!</span>(b1.len(), b2.map(|(<span class="kw">_</span>, <span class="kw">_</span>)| <span class="number">5_u32</span>).len());
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>map_maps_properly() {
+		<span class="kw">let </span>b1: BoundedBTreeMap&lt;u32, u32, ConstU32&lt;<span class="number">7</span>&gt;&gt; =
+			[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into_iter().map(|k| (k, k * <span class="number">2</span>)).try_collect().unwrap();
+		<span class="kw">let </span>b2: BoundedBTreeMap&lt;u32, u32, ConstU32&lt;<span class="number">7</span>&gt;&gt; =
+			[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into_iter().map(|k| (k, k)).try_collect().unwrap();
+
+		<span class="macro">assert_eq!</span>(b1, b2.map(|(<span class="kw">_</span>, v)| v * <span class="number">2</span>));
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>try_map_retains_size() {
+		<span class="kw">let </span>b1 = boundedmap_from_keys::&lt;u32, ConstU32&lt;<span class="number">7</span>&gt;&gt;(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>]);
+		<span class="kw">let </span>b2 = b1.clone();
+
+		<span class="macro">assert_eq!</span>(b1.len(), b2.try_map::&lt;<span class="kw">_</span>, (), <span class="kw">_</span>&gt;(|(<span class="kw">_</span>, <span class="kw">_</span>)| <span class="prelude-val">Ok</span>(<span class="number">5_u32</span>)).unwrap().len());
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>try_map_maps_properly() {
+		<span class="kw">let </span>b1: BoundedBTreeMap&lt;u32, u32, ConstU32&lt;<span class="number">7</span>&gt;&gt; =
+			[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into_iter().map(|k| (k, k * <span class="number">2</span>)).try_collect().unwrap();
+		<span class="kw">let </span>b2: BoundedBTreeMap&lt;u32, u32, ConstU32&lt;<span class="number">7</span>&gt;&gt; =
+			[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into_iter().map(|k| (k, k)).try_collect().unwrap();
+
+		<span class="macro">assert_eq!</span>(b1, b2.try_map::&lt;<span class="kw">_</span>, (), <span class="kw">_</span>&gt;(|(<span class="kw">_</span>, v)| <span class="prelude-val">Ok</span>(v * <span class="number">2</span>)).unwrap());
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>try_map_short_circuit() {
+		<span class="kw">let </span>b1: BoundedBTreeMap&lt;u8, u8, ConstU32&lt;<span class="number">7</span>&gt;&gt; =
+			[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into_iter().map(|k| (k, k)).try_collect().unwrap();
+
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Err</span>(<span class="string">&quot;overflow&quot;</span>), b1.try_map(|(<span class="kw">_</span>, v)| v.checked_mul(<span class="number">100</span>).ok_or(<span class="string">&quot;overflow&quot;</span>)));
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>try_map_ok() {
+		<span class="kw">let </span>b1: BoundedBTreeMap&lt;u8, u8, ConstU32&lt;<span class="number">7</span>&gt;&gt; =
+			[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into_iter().map(|k| (k, k)).try_collect().unwrap();
+		<span class="kw">let </span>b2: BoundedBTreeMap&lt;u8, u16, ConstU32&lt;<span class="number">7</span>&gt;&gt; =
+			[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].into_iter().map(|k| (k, (k <span class="kw">as </span>u16) * <span class="number">100</span>)).try_collect().unwrap();
+
+		<span class="macro">assert_eq!</span>(<span class="prelude-val">Ok</span>(b2), b1.try_map(|(<span class="kw">_</span>, v)| (v <span class="kw">as </span>u16).checked_mul(<span class="number">100_u16</span>).ok_or(<span class="string">&quot;overflow&quot;</span>)));
 	}
 }
 </code></pre></div>
