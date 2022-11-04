@@ -150,6 +150,17 @@
 <span id="150">150</span>
 <span id="151">151</span>
 <span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -181,6 +192,7 @@
 <span class="kw">pub use </span>sysinfo::{
 	benchmark_cpu, benchmark_disk_random_writes, benchmark_disk_sequential_writes,
 	benchmark_memory, benchmark_sr25519_verify, gather_hwbench, gather_sysinfo,
+	serialize_throughput, serialize_throughput_option, Throughput,
 };
 
 <span class="doccomment">/// The operating system part of the current target triplet.
@@ -196,13 +208,23 @@
 </span><span class="attribute">#[derive(Clone, Debug, serde::Serialize)]
 </span><span class="kw">pub struct </span>HwBench {
 	<span class="doccomment">/// The CPU speed, as measured in how many MB/s it can hash using the BLAKE2b-256 hash.
-	</span><span class="kw">pub </span>cpu_hashrate_score: u64,
+	</span><span class="attribute">#[serde(serialize_with = <span class="string">&quot;serialize_throughput&quot;</span>)]
+	</span><span class="kw">pub </span>cpu_hashrate_score: Throughput,
 	<span class="doccomment">/// Memory bandwidth in MB/s, calculated by measuring the throughput of `memcpy`.
-	</span><span class="kw">pub </span>memory_memcpy_score: u64,
+	</span><span class="attribute">#[serde(serialize_with = <span class="string">&quot;serialize_throughput&quot;</span>)]
+	</span><span class="kw">pub </span>memory_memcpy_score: Throughput,
 	<span class="doccomment">/// Sequential disk write speed in MB/s.
-	</span><span class="kw">pub </span>disk_sequential_write_score: <span class="prelude-ty">Option</span>&lt;u64&gt;,
+	</span><span class="attribute">#[serde(
+		serialize_with = <span class="string">&quot;serialize_throughput_option&quot;</span>,
+		skip_serializing_if = <span class="string">&quot;Option::is_none&quot;
+	</span>)]
+	</span><span class="kw">pub </span>disk_sequential_write_score: <span class="prelude-ty">Option</span>&lt;Throughput&gt;,
 	<span class="doccomment">/// Random disk write speed in MB/s.
-	</span><span class="kw">pub </span>disk_random_write_score: <span class="prelude-ty">Option</span>&lt;u64&gt;,
+	</span><span class="attribute">#[serde(
+		serialize_with = <span class="string">&quot;serialize_throughput_option&quot;</span>,
+		skip_serializing_if = <span class="string">&quot;Option::is_none&quot;
+	</span>)]
+	</span><span class="kw">pub </span>disk_random_write_score: <span class="prelude-ty">Option</span>&lt;Throughput&gt;,
 }
 
 <span class="doccomment">/// Limit the execution time of a benchmark.

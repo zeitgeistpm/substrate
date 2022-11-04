@@ -237,7 +237,6 @@
 <span id="237">237</span>
 <span id="238">238</span>
 <span id="239">239</span>
-<span id="240">240</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -270,11 +269,11 @@
 <span class="kw">use </span>sc_service::Configuration;
 <span class="kw">use </span>sc_sysinfo::{
 	benchmark_cpu, benchmark_disk_random_writes, benchmark_disk_sequential_writes,
-	benchmark_memory, benchmark_sr25519_verify, ExecutionLimit,
+	benchmark_memory, benchmark_sr25519_verify, ExecutionLimit, Throughput,
 };
 
 <span class="kw">use </span><span class="kw">crate</span>::shared::check_build_profile;
-<span class="kw">pub use </span>hardware::{Metric, Requirement, Requirements, Throughput, SUBSTRATE_REFERENCE_HARDWARE};
+<span class="kw">pub use </span>hardware::{Metric, Requirement, Requirements, SUBSTRATE_REFERENCE_HARDWARE};
 
 <span class="doccomment">/// Command to benchmark the hardware.
 ///
@@ -368,8 +367,9 @@
 	<span class="doccomment">/// Benchmarks a specific metric of the hardware and judges the resulting score.
 	</span><span class="kw">fn </span>run_benchmark(<span class="kw-2">&amp;</span><span class="self">self</span>, requirement: <span class="kw-2">&amp;</span>Requirement, dir: <span class="kw-2">&amp;</span>Path) -&gt; <span class="prelude-ty">Result</span>&lt;BenchResult&gt; {
 		<span class="comment">// Dispatch the concrete function from `sc-sysinfo`.
+
 		</span><span class="kw">let </span>score = <span class="self">self</span>.measure(<span class="kw-2">&amp;</span>requirement.metric, dir)<span class="question-mark">?</span>;
-		<span class="kw">let </span>rel_score = score.to_bs() / requirement.minimum.to_bs();
+		<span class="kw">let </span>rel_score = score.as_bytes() / requirement.minimum.as_bytes();
 
 		<span class="comment">// Sanity check if the result is off by factor &gt;100x.
 		</span><span class="kw">if </span>rel_score &gt;= <span class="number">100.0 </span>|| rel_score &lt;= <span class="number">0.01 </span>{
@@ -387,13 +387,11 @@
 		<span class="kw">let </span>memory_limit = ExecutionLimit::from_secs_f32(<span class="self">self</span>.memory_duration);
 
 		<span class="kw">let </span>score = <span class="kw">match </span>metric {
-			Metric::Blake2256 =&gt; Throughput::MiBs(benchmark_cpu(hash_limit) <span class="kw">as </span>f64),
-			Metric::Sr25519Verify =&gt; Throughput::MiBs(benchmark_sr25519_verify(verify_limit)),
-			Metric::MemCopy =&gt; Throughput::MiBs(benchmark_memory(memory_limit) <span class="kw">as </span>f64),
-			Metric::DiskSeqWrite =&gt;
-				Throughput::MiBs(benchmark_disk_sequential_writes(disk_limit, dir)<span class="question-mark">? </span><span class="kw">as </span>f64),
-			Metric::DiskRndWrite =&gt;
-				Throughput::MiBs(benchmark_disk_random_writes(disk_limit, dir)<span class="question-mark">? </span><span class="kw">as </span>f64),
+			Metric::Blake2256 =&gt; benchmark_cpu(hash_limit),
+			Metric::Sr25519Verify =&gt; benchmark_sr25519_verify(verify_limit),
+			Metric::MemCopy =&gt; benchmark_memory(memory_limit),
+			Metric::DiskSeqWrite =&gt; benchmark_disk_sequential_writes(disk_limit, dir)<span class="question-mark">?</span>,
+			Metric::DiskRndWrite =&gt; benchmark_disk_random_writes(disk_limit, dir)<span class="question-mark">?</span>,
 		};
 		<span class="prelude-val">Ok</span>(score)
 	}
