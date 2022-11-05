@@ -325,6 +325,11 @@
 <span id="325">325</span>
 <span id="326">326</span>
 <span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2015-2022 Parity Technologies (UK) Ltd.
@@ -631,8 +636,13 @@
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Bitmap(u16);
 
 <span class="kw">impl </span>Bitmap {
-	<span class="kw">pub fn </span>decode(<span class="kw-2">mut </span>data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, codec::Error&gt; {
-		<span class="prelude-val">Ok</span>(Bitmap(u16::decode(<span class="kw-2">&amp;mut </span>data)<span class="question-mark">?</span>))
+	<span class="kw">pub fn </span>decode(data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, codec::Error&gt; {
+		<span class="kw">let </span>value = u16::decode(<span class="kw-2">&amp;mut &amp;</span>data[..])<span class="question-mark">?</span>;
+		<span class="kw">if </span>value == <span class="number">0 </span>{
+			<span class="prelude-val">Err</span>(<span class="string">&quot;Bitmap without a child.&quot;</span>.into())
+		} <span class="kw">else </span>{
+			<span class="prelude-val">Ok</span>(Bitmap(value))
+		}
 	}
 
 	<span class="kw">pub fn </span>value_at(<span class="kw-2">&amp;</span><span class="self">self</span>, i: usize) -&gt; bool {

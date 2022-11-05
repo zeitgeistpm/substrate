@@ -987,6 +987,17 @@
 <span id="987">987</span>
 <span id="988">988</span>
 <span id="989">989</span>
+<span id="990">990</span>
+<span id="991">991</span>
+<span id="992">992</span>
+<span id="993">993</span>
+<span id="994">994</span>
+<span id="995">995</span>
+<span id="996">996</span>
+<span id="997">997</span>
+<span id="998">998</span>
+<span id="999">999</span>
+<span id="1000">1000</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2015-2022 Parity Technologies (UK) Ltd.
@@ -1974,6 +1985,17 @@
 		.unwrap();
 
 		<span class="macro">assert_eq!</span>(first_storage_root, second_storage_root);
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>node_with_no_children_fail_decoding() {
+		<span class="kw">let </span>branch = NodeCodec::&lt;Blake2Hasher&gt;::branch_node_nibbled(
+			<span class="string">b&quot;some_partial&quot;</span>.iter().copied(),
+			<span class="number">24</span>,
+			<span class="macro">vec!</span>[<span class="prelude-val">None</span>; <span class="number">16</span>].into_iter(),
+			<span class="prelude-val">Some</span>(trie_db::node::Value::Inline(<span class="string">b&quot;value&quot;</span>[..].into())),
+		);
+		<span class="macro">assert!</span>(NodeCodec::&lt;Blake2Hasher&gt;::decode(branch.as_slice()).is_err());
 	}
 }
 </code></pre></div>
