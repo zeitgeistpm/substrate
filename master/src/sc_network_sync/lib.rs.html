@@ -5572,15 +5572,15 @@
 			<span class="kw">return </span>PollBlockAnnounceValidation::Nothing { is_best, who, announce }
 		};
 
+		<span class="kw">if let </span>PeerSyncState::AncestorSearch { .. } = peer.state {
+			<span class="macro">trace!</span>(target: <span class="string">&quot;sync&quot;</span>, <span class="string">&quot;Peer state is ancestor search.&quot;</span>);
+			<span class="kw">return </span>PollBlockAnnounceValidation::Nothing { is_best, who, announce }
+		}
+
 		<span class="kw">if </span>is_best {
 			<span class="comment">// update their best block
 			</span>peer.best_number = number;
 			peer.best_hash = hash;
-		}
-
-		<span class="kw">if let </span>PeerSyncState::AncestorSearch { .. } = peer.state {
-			<span class="macro">trace!</span>(target: <span class="string">&quot;sync&quot;</span>, <span class="string">&quot;Peer state is ancestor search.&quot;</span>);
-			<span class="kw">return </span>PollBlockAnnounceValidation::Nothing { is_best, who, announce }
 		}
 
 		<span class="comment">// If the announced block is the best they have and is not ahead of us, our common number
