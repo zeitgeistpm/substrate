@@ -105,7 +105,7 @@
 {
 	<span class="kw">let </span>FinalizeBlockParams { hash, <span class="kw-2">mut </span>sender, justification, finalizer, .. } = params;
 
-	<span class="kw">match </span>finalizer.finalize_block(<span class="kw-2">&amp;</span>hash, justification, <span class="bool-val">true</span>) {
+	<span class="kw">match </span>finalizer.finalize_block(hash, justification, <span class="bool-val">true</span>) {
 		<span class="prelude-val">Err</span>(e) =&gt; {
 			<span class="macro">log::warn!</span>(<span class="string">&quot;Failed to finalize block {}&quot;</span>, e);
 			rpc::send_result(<span class="kw-2">&amp;mut </span>sender, <span class="prelude-val">Err</span>(e.into()))

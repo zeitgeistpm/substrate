@@ -133,7 +133,7 @@
 		<span class="macro">info!</span>(<span class="string">&quot;Preparing keys from block {}&quot;</span>, best_hash);
 		<span class="comment">// Load all keys and randomly shuffle them.
 		</span><span class="kw">let </span>empty_prefix = StorageKey(Vec::new());
-		<span class="kw">let </span><span class="kw-2">mut </span>keys = client.storage_keys(<span class="kw-2">&amp;</span>best_hash, <span class="kw-2">&amp;</span>empty_prefix)<span class="question-mark">?</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>keys = client.storage_keys(best_hash, <span class="kw-2">&amp;</span>empty_prefix)<span class="question-mark">?</span>;
 		<span class="kw">let </span>(<span class="kw-2">mut </span>rng, <span class="kw">_</span>) = new_rng(<span class="prelude-val">None</span>);
 		keys.shuffle(<span class="kw-2">&amp;mut </span>rng);
 
@@ -145,7 +145,7 @@
 			<span class="kw">match </span>(<span class="self">self</span>.params.include_child_trees, <span class="self">self</span>.is_child_key(key.clone().<span class="number">0</span>)) {
 				(<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(info)) =&gt; {
 					<span class="comment">// child tree key
-					</span><span class="kw">let </span>child_keys = client.child_storage_keys(<span class="kw-2">&amp;</span>best_hash, <span class="kw-2">&amp;</span>info, <span class="kw-2">&amp;</span>empty_prefix)<span class="question-mark">?</span>;
+					</span><span class="kw">let </span>child_keys = client.child_storage_keys(best_hash, <span class="kw-2">&amp;</span>info, <span class="kw-2">&amp;</span>empty_prefix)<span class="question-mark">?</span>;
 					<span class="kw">for </span>ck <span class="kw">in </span>child_keys {
 						child_nodes.push((ck.clone(), info.clone()));
 					}
@@ -154,7 +154,7 @@
 					<span class="comment">// regular key
 					</span><span class="kw">let </span>start = Instant::now();
 					<span class="kw">let </span>v = client
-						.storage(<span class="kw-2">&amp;</span>best_hash, <span class="kw-2">&amp;</span>key)
+						.storage(best_hash, <span class="kw-2">&amp;</span>key)
 						.expect(<span class="string">&quot;Checked above to exist&quot;</span>)
 						.ok_or(<span class="string">&quot;Value unexpectedly empty&quot;</span>)<span class="question-mark">?</span>;
 					record.append(v.<span class="number">0</span>.len(), start.elapsed())<span class="question-mark">?</span>;
@@ -169,7 +169,7 @@
 			<span class="kw">for </span>(key, info) <span class="kw">in </span>child_nodes.as_slice() {
 				<span class="kw">let </span>start = Instant::now();
 				<span class="kw">let </span>v = client
-					.child_storage(<span class="kw-2">&amp;</span>best_hash, info, key)
+					.child_storage(best_hash, info, key)
 					.expect(<span class="string">&quot;Checked above to exist&quot;</span>)
 					.ok_or(<span class="string">&quot;Value unexpectedly empty&quot;</span>)<span class="question-mark">?</span>;
 				record.append(v.<span class="number">0</span>.len(), start.elapsed())<span class="question-mark">?</span>;

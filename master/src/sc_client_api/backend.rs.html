@@ -776,13 +776,13 @@
 	<span class="doccomment">/// Mark a block as finalized.
 	</span><span class="kw">fn </span>mark_finalized(
 		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
 
 	<span class="doccomment">/// Mark a block as new head. If both block import and set head are specified, set head
 	/// overrides block import&#39;s best block rule.
-	</span><span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt;;
+	</span><span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt;;
 
 	<span class="doccomment">/// Add a transaction index operation.
 	</span><span class="kw">fn </span>update_transaction_index(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: Vec&lt;IndexOperation&gt;)
@@ -812,7 +812,7 @@
 	</span><span class="kw">fn </span>apply_finality(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		operation: <span class="kw-2">&amp;mut </span>ClientImportOperation&lt;Block, B&gt;,
-		block: <span class="kw-2">&amp;</span>Block::Hash,
+		block: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
@@ -832,7 +832,7 @@
 	/// while performing major synchronization work.
 	</span><span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block: <span class="kw-2">&amp;</span>Block::Hash,
+		block: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
@@ -920,21 +920,21 @@
 	<span class="doccomment">/// Given a block&#39;s `Hash` and a key, return the value under the key in that block.
 	</span><span class="kw">fn </span>storage(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		key: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;StorageData&gt;&gt;;
 
 	<span class="doccomment">/// Given a block&#39;s `Hash` and a key prefix, return the matching storage keys in that block.
 	</span><span class="kw">fn </span>storage_keys(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		key_prefix: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;Vec&lt;StorageKey&gt;&gt;;
 
 	<span class="doccomment">/// Given a block&#39;s `Hash` and a key, return the value under the hash in that block.
 	</span><span class="kw">fn </span>storage_hash(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		key: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Block::Hash&gt;&gt;;
 
@@ -942,7 +942,7 @@
 	/// in that block.
 	</span><span class="kw">fn </span>storage_pairs(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		key_prefix: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;Vec&lt;(StorageKey, StorageData)&gt;&gt;;
 
@@ -950,7 +950,7 @@
 	/// keys in that block.
 	</span><span class="kw">fn </span>storage_keys_iter&lt;<span class="lifetime">&#39;a</span>&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		prefix: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>StorageKey&gt;,
 		start_key: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>StorageKey&gt;,
 	) -&gt; sp_blockchain::Result&lt;KeyIterator&lt;<span class="lifetime">&#39;a</span>, B::State, Block&gt;&gt;;
@@ -959,7 +959,7 @@
 	/// that block.
 	</span><span class="kw">fn </span>child_storage(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		child_info: <span class="kw-2">&amp;</span>ChildInfo,
 		key: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;StorageData&gt;&gt;;
@@ -968,7 +968,7 @@
 	/// storage keys.
 	</span><span class="kw">fn </span>child_storage_keys(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		child_info: <span class="kw-2">&amp;</span>ChildInfo,
 		key_prefix: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;Vec&lt;StorageKey&gt;&gt;;
@@ -977,7 +977,7 @@
 	/// return a `KeyIterator` that iterates matching storage keys in that block.
 	</span><span class="kw">fn </span>child_storage_keys_iter&lt;<span class="lifetime">&#39;a</span>&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		child_info: ChildInfo,
 		prefix: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>StorageKey&gt;,
 		start_key: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>StorageKey&gt;,
@@ -987,7 +987,7 @@
 	/// block.
 	</span><span class="kw">fn </span>child_storage_hash(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		child_info: <span class="kw-2">&amp;</span>ChildInfo,
 		key: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Block::Hash&gt;&gt;;
@@ -1027,7 +1027,7 @@
 	</span><span class="kw">fn </span>begin_state_operation(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		operation: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::BlockImportOperation,
-		block: <span class="kw-2">&amp;</span>Block::Hash,
+		block: Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
 
 	<span class="doccomment">/// Commit block insertion.
@@ -1041,7 +1041,7 @@
 	/// This should only be called if the parent of the given block has been finalized.
 	</span><span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
 
@@ -1050,7 +1050,7 @@
 	/// This should only be called for blocks that are already finalized.
 	</span><span class="kw">fn </span>append_justification(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: Justification,
 	) -&gt; sp_blockchain::Result&lt;()&gt;;
 
@@ -1064,12 +1064,12 @@
 	</span><span class="kw">fn </span>offchain_storage(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::OffchainStorage&gt;;
 
 	<span class="doccomment">/// Returns true if state for given block is available.
-	</span><span class="kw">fn </span>have_state_at(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash, _number: NumberFor&lt;Block&gt;) -&gt; bool {
+	</span><span class="kw">fn </span>have_state_at(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash, _number: NumberFor&lt;Block&gt;) -&gt; bool {
 		<span class="self">self</span>.state_at(hash).is_ok()
 	}
 
 	<span class="doccomment">/// Returns state backend with post-state of given block.
-	</span><span class="kw">fn </span>state_at(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="self">Self</span>::State&gt;;
+	</span><span class="kw">fn </span>state_at(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="self">Self</span>::State&gt;;
 
 	<span class="doccomment">/// Attempts to revert the chain by `n` blocks. If `revert_finalized` is set it will attempt to
 	/// revert past any finalized block, this is unsafe and can potentially leave the node in an
@@ -1085,7 +1085,7 @@
 	) -&gt; sp_blockchain::Result&lt;(NumberFor&lt;Block&gt;, HashSet&lt;Block::Hash&gt;)&gt;;
 
 	<span class="doccomment">/// Discard non-best, unfinalized leaf block.
-	</span><span class="kw">fn </span>remove_leaf_block(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt;;
+	</span><span class="kw">fn </span>remove_leaf_block(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt;;
 
 	<span class="doccomment">/// Insert auxiliary data into key-value store.
 	</span><span class="kw">fn </span>insert_aux&lt;

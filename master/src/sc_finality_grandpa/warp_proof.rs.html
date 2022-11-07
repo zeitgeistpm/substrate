@@ -575,7 +575,7 @@
 			</span>}
 
 			<span class="kw">let </span>justification = blockchain
-				.justifications(<span class="kw-2">&amp;</span>header.hash())<span class="question-mark">?
+				.justifications(header.hash())<span class="question-mark">?
 				</span>.and_then(|just| just.into_justification(GRANDPA_ENGINE_ID))
 				.expect(
 					<span class="string">&quot;header is last in set and contains standard change signal; \
@@ -857,7 +857,7 @@
 				<span class="kw">let </span>justification = GrandpaJustification::from_commit(<span class="kw-2">&amp;</span>client, <span class="number">42</span>, commit).unwrap();
 
 				client
-					.finalize_block(<span class="kw-2">&amp;</span>target_hash, <span class="prelude-val">Some</span>((GRANDPA_ENGINE_ID, justification.encode())))
+					.finalize_block(target_hash, <span class="prelude-val">Some</span>((GRANDPA_ENGINE_ID, justification.encode())))
 					.unwrap();
 
 				authority_set_changes.push((current_set_id, n));

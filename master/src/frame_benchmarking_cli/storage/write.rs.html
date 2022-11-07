@@ -324,7 +324,7 @@
 			<span class="kw">match </span>(<span class="self">self</span>.params.include_child_trees, <span class="self">self</span>.is_child_key(k.to_vec())) {
 				(<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(info)) =&gt; {
 					<span class="kw">let </span>child_keys =
-						client.child_storage_keys_iter(<span class="kw-2">&amp;</span>best_hash, info.clone(), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+						client.child_storage_keys_iter(best_hash, info.clone(), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 					<span class="kw">for </span>ck <span class="kw">in </span>child_keys {
 						child_nodes.push((ck.clone(), info.clone()));
 					}
@@ -371,7 +371,7 @@
 
 			<span class="kw">for </span>(key, info) <span class="kw">in </span>child_nodes {
 				<span class="kw">if let </span><span class="prelude-val">Some</span>(original_v) = client
-					.child_storage(<span class="kw-2">&amp;</span>best_hash, <span class="kw-2">&amp;</span>info.clone(), <span class="kw-2">&amp;</span>key)
+					.child_storage(best_hash, <span class="kw-2">&amp;</span>info.clone(), <span class="kw-2">&amp;</span>key)
 					.expect(<span class="string">&quot;Checked above to exist&quot;</span>)
 				{
 					<span class="kw">let </span><span class="kw-2">mut </span>new_v = <span class="macro">vec!</span>[<span class="number">0</span>; original_v.<span class="number">0</span>.len()];

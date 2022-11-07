@@ -355,7 +355,6 @@
 <span id="355">355</span>
 <span id="356">356</span>
 <span id="357">357</span>
-<span id="358">358</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -468,7 +467,7 @@
 	<span class="doccomment">/// Get block body by ID. Returns `None` if the body is not stored.
 	</span><span class="kw">fn </span>block_body(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;&gt;&gt;;
 
 	<span class="doccomment">/// Get all indexed transactions for a block,
@@ -476,8 +475,7 @@
 	///
 	/// Note that this will only fetch transactions
 	/// that are indexed by the runtime with `storage_index_transaction`.
-	</span><span class="kw">fn </span>block_indexed_body(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash)
-		-&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt;&gt;;
+	</span><span class="kw">fn </span>block_indexed_body(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt;&gt;;
 
 	<span class="doccomment">/// Get full block by id.
 	</span><span class="kw">fn </span>block(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>BlockId&lt;Block&gt;) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;SignedBlock&lt;Block&gt;&gt;&gt;;
@@ -487,7 +485,7 @@
 		-&gt; sp_blockchain::Result&lt;sp_consensus::BlockStatus&gt;;
 
 	<span class="doccomment">/// Get block justifications for the block with the given id.
-	</span><span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt;;
+	</span><span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt;;
 
 	<span class="doccomment">/// Get block hash by number.
 	</span><span class="kw">fn </span>block_hash(<span class="kw-2">&amp;</span><span class="self">self</span>, number: NumberFor&lt;Block&gt;) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Block::Hash&gt;&gt;;
@@ -496,10 +494,10 @@
 	///
 	/// Note that this will only fetch transactions
 	/// that are indexed by the runtime with `storage_index_transaction`.
-	</span><span class="kw">fn </span>indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt;;
+	</span><span class="kw">fn </span>indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt;;
 
 	<span class="doccomment">/// Check if transaction index exists.
-	</span><span class="kw">fn </span>has_indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;bool&gt; {
+	</span><span class="kw">fn </span>has_indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;bool&gt; {
 		<span class="prelude-val">Ok</span>(<span class="self">self</span>.indexed_transaction(hash)<span class="question-mark">?</span>.is_some())
 	}
 

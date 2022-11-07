@@ -770,7 +770,7 @@
 			<span class="kw">let </span><span class="kw-2">mut </span>block_changes = StorageChangeSet { block: <span class="kw-2">*</span>block_hash, changes: Vec::new() };
 			<span class="kw">for </span>key <span class="kw">in </span>keys {
 				<span class="kw">let </span>(has_changed, data) = {
-					<span class="kw">let </span>curr_data = <span class="self">self</span>.client.storage(block_hash, key).map_err(client_err)<span class="question-mark">?</span>;
+					<span class="kw">let </span>curr_data = <span class="self">self</span>.client.storage(<span class="kw-2">*</span>block_hash, key).map_err(client_err)<span class="question-mark">?</span>;
 					<span class="kw">match </span>last_values.get(key) {
 						<span class="prelude-val">Some</span>(prev_data) =&gt; (curr_data != <span class="kw-2">*</span>prev_data, curr_data),
 						<span class="prelude-val">None </span>=&gt; (<span class="bool-val">true</span>, curr_data),
@@ -836,7 +836,7 @@
 		prefix: StorageKey,
 	) -&gt; std::result::Result&lt;Vec&lt;StorageKey&gt;, Error&gt; {
 		<span class="self">self</span>.block_or_best(block)
-			.and_then(|block| <span class="self">self</span>.client.storage_keys(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>prefix))
+			.and_then(|block| <span class="self">self</span>.client.storage_keys(block, <span class="kw-2">&amp;</span>prefix))
 			.map_err(client_err)
 	}
 
@@ -846,7 +846,7 @@
 		prefix: StorageKey,
 	) -&gt; std::result::Result&lt;Vec&lt;(StorageKey, StorageData)&gt;, Error&gt; {
 		<span class="self">self</span>.block_or_best(block)
-			.and_then(|block| <span class="self">self</span>.client.storage_pairs(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>prefix))
+			.and_then(|block| <span class="self">self</span>.client.storage_pairs(block, <span class="kw-2">&amp;</span>prefix))
 			.map_err(client_err)
 	}
 
@@ -859,7 +859,7 @@
 	) -&gt; std::result::Result&lt;Vec&lt;StorageKey&gt;, Error&gt; {
 		<span class="self">self</span>.block_or_best(block)
 			.and_then(|block| {
-				<span class="self">self</span>.client.storage_keys_iter(<span class="kw-2">&amp;</span>block, prefix.as_ref(), start_key.as_ref())
+				<span class="self">self</span>.client.storage_keys_iter(block, prefix.as_ref(), start_key.as_ref())
 			})
 			.map(|iter| iter.take(count <span class="kw">as </span>usize).collect())
 			.map_err(client_err)
@@ -871,7 +871,7 @@
 		key: StorageKey,
 	) -&gt; std::result::Result&lt;<span class="prelude-ty">Option</span>&lt;StorageData&gt;, Error&gt; {
 		<span class="self">self</span>.block_or_best(block)
-			.and_then(|block| <span class="self">self</span>.client.storage(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>key))
+			.and_then(|block| <span class="self">self</span>.client.storage(block, <span class="kw-2">&amp;</span>key))
 			.map_err(client_err)
 	}
 
@@ -885,14 +885,14 @@
 			<span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(client_err(e)),
 		};
 
-		<span class="kw">match </span><span class="self">self</span>.client.storage(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>key) {
+		<span class="kw">match </span><span class="self">self</span>.client.storage(block, <span class="kw-2">&amp;</span>key) {
 			<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(d)) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(d.<span class="number">0</span>.len() <span class="kw">as </span>u64)),
 			<span class="prelude-val">Err</span>(e) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(client_err(e)),
 			<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; {},
 		}
 
 		<span class="self">self</span>.client
-			.storage_pairs(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>key)
+			.storage_pairs(block, <span class="kw-2">&amp;</span>key)
 			.map(|kv| {
 				<span class="kw">let </span>item_sum = kv.iter().map(|(<span class="kw">_</span>, v)| v.<span class="number">0</span>.len() <span class="kw">as </span>u64).sum::&lt;u64&gt;();
 				<span class="kw">if </span>item_sum &gt; <span class="number">0 </span>{
@@ -910,7 +910,7 @@
 		key: StorageKey,
 	) -&gt; std::result::Result&lt;<span class="prelude-ty">Option</span>&lt;Block::Hash&gt;, Error&gt; {
 		<span class="self">self</span>.block_or_best(block)
-			.and_then(|block| <span class="self">self</span>.client.storage_hash(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>key))
+			.and_then(|block| <span class="self">self</span>.client.storage_hash(block, <span class="kw-2">&amp;</span>key))
 			.map_err(client_err)
 	}
 
@@ -968,7 +968,7 @@
 		<span class="self">self</span>.block_or_best(block)
 			.and_then(|block| {
 				<span class="self">self</span>.client
-					.read_proof(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;mut </span>keys.iter().map(|key| key.<span class="number">0</span>.as_ref()))
+					.read_proof(block, <span class="kw-2">&amp;mut </span>keys.iter().map(|key| key.<span class="number">0</span>.as_ref()))
 					.map(|proof| proof.into_iter_nodes().map(|node| node.into()).collect())
 					.map(|proof| ReadProof { at: block, proof })
 			})
@@ -1036,7 +1036,7 @@
 			<span class="kw">let </span>changes = keys
 				.into_iter()
 				.map(|key| {
-					<span class="kw">let </span>v = <span class="self">self</span>.client.storage(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>key).ok().flatten();
+					<span class="kw">let </span>v = <span class="self">self</span>.client.storage(block, <span class="kw-2">&amp;</span>key).ok().flatten();
 					(key, v)
 				})
 				.collect();
@@ -1117,7 +1117,7 @@
 				};
 				<span class="self">self</span>.client
 					.read_child_proof(
-						<span class="kw-2">&amp;</span>block,
+						block,
 						<span class="kw-2">&amp;</span>child_info,
 						<span class="kw-2">&amp;mut </span>keys.iter().map(|key| key.<span class="number">0</span>.as_ref()),
 					)
@@ -1140,7 +1140,7 @@
 						ChildInfo::new_default(storage_key),
 					<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(sp_blockchain::Error::InvalidChildStorageKey),
 				};
-				<span class="self">self</span>.client.child_storage_keys(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>child_info, <span class="kw-2">&amp;</span>prefix)
+				<span class="self">self</span>.client.child_storage_keys(block, <span class="kw-2">&amp;</span>child_info, <span class="kw-2">&amp;</span>prefix)
 			})
 			.map_err(client_err)
 	}
@@ -1161,7 +1161,7 @@
 					<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(sp_blockchain::Error::InvalidChildStorageKey),
 				};
 				<span class="self">self</span>.client.child_storage_keys_iter(
-					<span class="kw-2">&amp;</span>block,
+					block,
 					child_info,
 					prefix.as_ref(),
 					start_key.as_ref(),
@@ -1184,7 +1184,7 @@
 						ChildInfo::new_default(storage_key),
 					<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(sp_blockchain::Error::InvalidChildStorageKey),
 				};
-				<span class="self">self</span>.client.child_storage(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>child_info, <span class="kw-2">&amp;</span>key)
+				<span class="self">self</span>.client.child_storage(block, <span class="kw-2">&amp;</span>child_info, <span class="kw-2">&amp;</span>key)
 			})
 			.map_err(client_err)
 	}
@@ -1207,7 +1207,7 @@
 
 		keys.into_iter()
 			.map(<span class="kw">move </span>|key| {
-				client.clone().child_storage(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>child_info, <span class="kw-2">&amp;</span>key).map_err(client_err)
+				client.clone().child_storage(block, <span class="kw-2">&amp;</span>child_info, <span class="kw-2">&amp;</span>key).map_err(client_err)
 			})
 			.collect()
 	}
@@ -1225,7 +1225,7 @@
 						ChildInfo::new_default(storage_key),
 					<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(sp_blockchain::Error::InvalidChildStorageKey),
 				};
-				<span class="self">self</span>.client.child_storage_hash(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>child_info, <span class="kw-2">&amp;</span>key)
+				<span class="self">self</span>.client.child_storage_hash(block, <span class="kw-2">&amp;</span>child_info, <span class="kw-2">&amp;</span>key)
 			})
 			.map_err(client_err)
 	}

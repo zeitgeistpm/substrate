@@ -467,6 +467,8 @@
 <span id="467">467</span>
 <span id="468">468</span>
 <span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -528,10 +530,11 @@
 	<span class="kw">pub </span>type_values: Vec&lt;type_value::TypeValueDef&gt;,
 	<span class="kw">pub </span>frame_system: syn::Ident,
 	<span class="kw">pub </span>frame_support: syn::Ident,
+	<span class="kw">pub </span>dev_mode: bool,
 }
 
 <span class="kw">impl </span>Def {
-	<span class="kw">pub fn </span>try_from(<span class="kw-2">mut </span>item: syn::ItemMod) -&gt; syn::Result&lt;<span class="self">Self</span>&gt; {
+	<span class="kw">pub fn </span>try_from(<span class="kw-2">mut </span>item: syn::ItemMod, dev_mode: bool) -&gt; syn::Result&lt;<span class="self">Self</span>&gt; {
 		<span class="kw">let </span>frame_system = generate_crate_access_2018(<span class="string">&quot;frame-system&quot;</span>)<span class="question-mark">?</span>;
 		<span class="kw">let </span>frame_support = generate_crate_access_2018(<span class="string">&quot;frame-support&quot;</span>)<span class="question-mark">?</span>;
 
@@ -575,7 +578,7 @@
 					hooks = <span class="prelude-val">Some</span>(m);
 				},
 				<span class="prelude-val">Some</span>(PalletAttr::RuntimeCall(span)) <span class="kw">if </span>call.is_none() =&gt;
-					call = <span class="prelude-val">Some</span>(call::CallDef::try_from(span, index, item)<span class="question-mark">?</span>),
+					call = <span class="prelude-val">Some</span>(call::CallDef::try_from(span, index, item, dev_mode)<span class="question-mark">?</span>),
 				<span class="prelude-val">Some</span>(PalletAttr::Error(span)) <span class="kw">if </span>error.is_none() =&gt;
 					error = <span class="prelude-val">Some</span>(error::ErrorDef::try_from(span, index, item)<span class="question-mark">?</span>),
 				<span class="prelude-val">Some</span>(PalletAttr::RuntimeEvent(span)) <span class="kw">if </span>event.is_none() =&gt;
@@ -593,7 +596,7 @@
 				<span class="prelude-val">Some</span>(PalletAttr::Inherent(<span class="kw">_</span>)) <span class="kw">if </span>inherent.is_none() =&gt;
 					inherent = <span class="prelude-val">Some</span>(inherent::InherentDef::try_from(index, item)<span class="question-mark">?</span>),
 				<span class="prelude-val">Some</span>(PalletAttr::Storage(span)) =&gt;
-					storages.push(storage::StorageDef::try_from(span, index, item)<span class="question-mark">?</span>),
+					storages.push(storage::StorageDef::try_from(span, index, item, dev_mode)<span class="question-mark">?</span>),
 				<span class="prelude-val">Some</span>(PalletAttr::ValidateUnsigned(<span class="kw">_</span>)) <span class="kw">if </span>validate_unsigned.is_none() =&gt; {
 					<span class="kw">let </span>v = validate_unsigned::ValidateUnsignedDef::try_from(index, item)<span class="question-mark">?</span>;
 					validate_unsigned = <span class="prelude-val">Some</span>(v);
@@ -642,6 +645,7 @@
 			type_values,
 			frame_system,
 			frame_support,
+			dev_mode,
 		};
 
 		def.check_instance_usage()<span class="question-mark">?</span>;

@@ -832,6 +832,9 @@
 <span id="832">832</span>
 <span id="833">833</span>
 <span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -1512,6 +1515,7 @@
 		attr_span: proc_macro2::Span,
 		index: usize,
 		item: <span class="kw-2">&amp;mut </span>syn::Item,
+		dev_mode: bool,
 	) -&gt; syn::Result&lt;<span class="self">Self</span>&gt; {
 		<span class="kw">let </span>item = <span class="kw">if let </span>syn::Item::Type(item) = item {
 			item
@@ -1520,9 +1524,11 @@
 		};
 
 		<span class="kw">let </span>attrs: Vec&lt;PalletStorageAttr&gt; = helper::take_item_pallet_attrs(<span class="kw-2">&amp;mut </span>item.attrs)<span class="question-mark">?</span>;
-		<span class="kw">let </span>PalletStorageAttrInfo { getter, rename_as, unbounded, whitelisted } =
+		<span class="kw">let </span>PalletStorageAttrInfo { getter, rename_as, <span class="kw-2">mut </span>unbounded, whitelisted } =
 			PalletStorageAttrInfo::from_attrs(attrs)<span class="question-mark">?</span>;
 
+		<span class="comment">// set all storages to be unbounded if dev_mode is enabled
+		</span>unbounded |= dev_mode;
 		<span class="kw">let </span>cfg_attrs = helper::get_item_cfg_attrs(<span class="kw-2">&amp;</span>item.attrs);
 
 		<span class="kw">let </span>instances = <span class="macro">vec!</span>[helper::check_type_def_gen(<span class="kw-2">&amp;</span>item.generics, item.ident.span())<span class="question-mark">?</span>];

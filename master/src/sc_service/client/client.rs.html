@@ -2096,9 +2096,6 @@
 <span id="2096">2096</span>
 <span id="2097">2097</span>
 <span id="2098">2098</span>
-<span id="2099">2099</span>
-<span id="2100">2100</span>
-<span id="2101">2101</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -2515,14 +2512,14 @@
 	}
 
 	<span class="doccomment">/// Get a reference to the state at a given block.
-	</span><span class="kw">pub fn </span>state_at(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;B::State&gt; {
+	</span><span class="kw">pub fn </span>state_at(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;B::State&gt; {
 		<span class="self">self</span>.backend.state_at(hash)
 	}
 
 	<span class="doccomment">/// Get the code at a given block.
 	</span><span class="kw">pub fn </span>code_at(<span class="kw-2">&amp;</span><span class="self">self</span>, id: <span class="kw-2">&amp;</span>BlockId&lt;Block&gt;) -&gt; sp_blockchain::Result&lt;Vec&lt;u8&gt;&gt; {
 		<span class="kw">let </span>hash = <span class="self">self</span>.backend.blockchain().expect_block_hash_from_id(id)<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(StorageProvider::storage(<span class="self">self</span>, <span class="kw-2">&amp;</span>hash, <span class="kw-2">&amp;</span>StorageKey(well_known_keys::CODE.to_vec()))<span class="question-mark">?
+		<span class="prelude-val">Ok</span>(StorageProvider::storage(<span class="self">self</span>, hash, <span class="kw-2">&amp;</span>StorageKey(well_known_keys::CODE.to_vec()))<span class="question-mark">?
 			</span>.expect(
 				<span class="string">&quot;None is returned if there&#39;s no value stored for the given key;\
 				&#39;:code&#39; key is always defined; qed&quot;</span>,
@@ -2687,7 +2684,7 @@
 			<span class="prelude-val">Some</span>(storage_changes) =&gt; {
 				<span class="kw">let </span>storage_changes = <span class="kw">match </span>storage_changes {
 					sc_consensus::StorageChanges::Changes(storage_changes) =&gt; {
-						<span class="self">self</span>.backend.begin_state_operation(<span class="kw-2">&amp;mut </span>operation.op, <span class="kw-2">&amp;</span>parent_hash)<span class="question-mark">?</span>;
+						<span class="self">self</span>.backend.begin_state_operation(<span class="kw-2">&amp;mut </span>operation.op, parent_hash)<span class="question-mark">?</span>;
 						<span class="kw">let </span>(main_sc, child_sc, offchain_sc, tx, <span class="kw">_</span>, tx_index) =
 							storage_changes.into_inner();
 
@@ -2914,7 +2911,7 @@
 					Block::new(import_block.header.clone(), body.clone()),
 				)<span class="question-mark">?</span>;
 
-				<span class="kw">let </span>state = <span class="self">self</span>.backend.state_at(parent_hash)<span class="question-mark">?</span>;
+				<span class="kw">let </span>state = <span class="self">self</span>.backend.state_at(<span class="kw-2">*</span>parent_hash)<span class="question-mark">?</span>;
 				<span class="kw">let </span>gen_storage_changes = runtime_api
 					.into_storage_changes(<span class="kw-2">&amp;</span>state, <span class="kw-2">*</span>parent_hash)
 					.map_err(sp_blockchain::Error::Storage)<span class="question-mark">?</span>;
@@ -2978,17 +2975,17 @@
 			// plugable we cannot make a better choice here. usages that need
 			// an accurate &quot;best&quot; block need to go through `SelectChain`
 			// instead.
-			</span>operation.op.mark_head(<span class="kw-2">&amp;</span>block)<span class="question-mark">?</span>;
+			</span>operation.op.mark_head(block)<span class="question-mark">?</span>;
 		}
 
 		<span class="kw">let </span>enacted = route_from_finalized.enacted();
 		<span class="macro">assert!</span>(enacted.len() &gt; <span class="number">0</span>);
 		<span class="kw">for </span>finalize_new <span class="kw">in </span><span class="kw-2">&amp;</span>enacted[..enacted.len() - <span class="number">1</span>] {
-			operation.op.mark_finalized(<span class="kw-2">&amp;</span>finalize_new.hash, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+			operation.op.mark_finalized(finalize_new.hash, <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 		}
 
 		<span class="macro">assert_eq!</span>(enacted.last().map(|e| e.hash), <span class="prelude-val">Some</span>(block));
-		operation.op.mark_finalized(<span class="kw-2">&amp;</span>block, justification)<span class="question-mark">?</span>;
+		operation.op.mark_finalized(block, justification)<span class="question-mark">?</span>;
 
 		<span class="kw">if </span>notify {
 			<span class="kw">let </span>finalized =
@@ -3134,7 +3131,7 @@
 		};
 		<span class="kw">match </span>hash_and_number {
 			<span class="prelude-val">Some</span>((hash, number)) =&gt;
-				<span class="kw">if </span><span class="self">self</span>.backend.have_state_at(<span class="kw-2">&amp;</span>hash, number) {
+				<span class="kw">if </span><span class="self">self</span>.backend.have_state_at(hash, number) {
 					<span class="prelude-val">Ok</span>(BlockStatus::InChainWithState)
 				} <span class="kw">else </span>{
 					<span class="prelude-val">Ok</span>(BlockStatus::InChainPruned)
@@ -3154,7 +3151,7 @@
 	<span class="doccomment">/// Get block body by id.
 	</span><span class="kw">pub fn </span>body(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;&gt;&gt; {
 		<span class="self">self</span>.backend.blockchain().body(hash)
 	}
@@ -3252,7 +3249,7 @@
 {
 	<span class="kw">fn </span>read_proof(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		keys: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Iterator&lt;Item = <span class="kw-2">&amp;</span>[u8]&gt;,
 	) -&gt; sp_blockchain::Result&lt;StorageProof&gt; {
 		<span class="self">self</span>.state_at(hash)
@@ -3261,7 +3258,7 @@
 
 	<span class="kw">fn </span>read_child_proof(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		child_info: <span class="kw-2">&amp;</span>ChildInfo,
 		keys: <span class="kw-2">&amp;mut </span><span class="kw">dyn </span>Iterator&lt;Item = <span class="kw-2">&amp;</span>[u8]&gt;,
 	) -&gt; sp_blockchain::Result&lt;StorageProof&gt; {
@@ -3271,16 +3268,16 @@
 
 	<span class="kw">fn </span>execution_proof(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		method: <span class="kw-2">&amp;</span>str,
 		call_data: <span class="kw-2">&amp;</span>[u8],
 	) -&gt; sp_blockchain::Result&lt;(Vec&lt;u8&gt;, StorageProof)&gt; {
-		<span class="self">self</span>.executor.prove_execution(<span class="kw-2">&amp;</span>BlockId::Hash(<span class="kw-2">*</span>hash), method, call_data)
+		<span class="self">self</span>.executor.prove_execution(<span class="kw-2">&amp;</span>BlockId::Hash(hash), method, call_data)
 	}
 
 	<span class="kw">fn </span>read_proof_collection(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		start_key: <span class="kw-2">&amp;</span>[Vec&lt;u8&gt;],
 		size_limit: usize,
 	) -&gt; sp_blockchain::Result&lt;(CompactProof, u32)&gt; {
@@ -3299,14 +3296,14 @@
 
 	<span class="kw">fn </span>storage_collection(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		start_key: <span class="kw-2">&amp;</span>[Vec&lt;u8&gt;],
 		size_limit: usize,
 	) -&gt; sp_blockchain::Result&lt;Vec&lt;(KeyValueStorageLevel, bool)&gt;&gt; {
 		<span class="kw">if </span>start_key.len() &gt; MAX_NESTED_TRIE_DEPTH {
 			<span class="kw">return </span><span class="prelude-val">Err</span>(Error::Backend(<span class="string">&quot;Invalid start key.&quot;</span>.to_string()))
 		}
-		<span class="kw">let </span>state = <span class="self">self</span>.state_at(<span class="kw-2">&amp;</span>hash)<span class="question-mark">?</span>;
+		<span class="kw">let </span>state = <span class="self">self</span>.state_at(hash)<span class="question-mark">?</span>;
 		<span class="kw">let </span>child_info = |storage_key: <span class="kw-2">&amp;</span>Vec&lt;u8&gt;| -&gt; sp_blockchain::Result&lt;ChildInfo&gt; {
 			<span class="kw">let </span>storage_key = PrefixedStorageKey::new_ref(storage_key);
 			<span class="kw">match </span>ChildType::from_prefixed_key(storage_key) {
@@ -3499,7 +3496,7 @@
 {
 	<span class="kw">fn </span>storage_keys(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		key_prefix: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;Vec&lt;StorageKey&gt;&gt; {
 		<span class="kw">let </span>keys = <span class="self">self</span>.state_at(hash)<span class="question-mark">?</span>.keys(<span class="kw-2">&amp;</span>key_prefix.<span class="number">0</span>).into_iter().map(StorageKey).collect();
@@ -3508,7 +3505,7 @@
 
 	<span class="kw">fn </span>storage_pairs(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
+		hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 		key_prefix: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;Vec&lt;(StorageKey, StorageData)&gt;&gt; {
 		<span class="kw">let </span>state = <span class="self">self</span>.state_at(hash)<span class="question-mark">?</span>;
@@ -3525,7 +3522,7 @@
 
 	<span class="kw">fn </span>storage_keys_iter&lt;<span class="lifetime">&#39;a</span>&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
+		hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 		prefix: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>StorageKey&gt;,
 		start_key: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>StorageKey&gt;,
 	) -&gt; sp_blockchain::Result&lt;KeyIterator&lt;<span class="lifetime">&#39;a</span>, B::State, Block&gt;&gt; {
@@ -3536,7 +3533,7 @@
 
 	<span class="kw">fn </span>child_storage_keys_iter&lt;<span class="lifetime">&#39;a</span>&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
+		hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 		child_info: ChildInfo,
 		prefix: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>StorageKey&gt;,
 		start_key: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>StorageKey&gt;,
@@ -3548,7 +3545,7 @@
 
 	<span class="kw">fn </span>storage(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		key: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;StorageData&gt;&gt; {
 		<span class="prelude-val">Ok</span>(<span class="self">self
@@ -3560,7 +3557,7 @@
 
 	<span class="kw">fn </span>storage_hash(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
+		hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 		key: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Block::Hash&gt;&gt; {
 		<span class="self">self</span>.state_at(hash)<span class="question-mark">?
@@ -3570,7 +3567,7 @@
 
 	<span class="kw">fn </span>child_storage_keys(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
+		hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 		child_info: <span class="kw-2">&amp;</span>ChildInfo,
 		key_prefix: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;Vec&lt;StorageKey&gt;&gt; {
@@ -3585,7 +3582,7 @@
 
 	<span class="kw">fn </span>child_storage(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
+		hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 		child_info: <span class="kw-2">&amp;</span>ChildInfo,
 		key: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;StorageData&gt;&gt; {
@@ -3598,7 +3595,7 @@
 
 	<span class="kw">fn </span>child_storage_hash(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
+		hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 		child_info: <span class="kw-2">&amp;</span>ChildInfo,
 		key: <span class="kw-2">&amp;</span>StorageKey,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Block::Hash&gt;&gt; {
@@ -3784,7 +3781,7 @@
 
 	<span class="kw">fn </span>state_at(<span class="kw-2">&amp;</span><span class="self">self</span>, at: <span class="kw-2">&amp;</span>BlockId&lt;Block&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::StateBackend, sp_api::ApiError&gt; {
 		<span class="kw">let </span>hash = <span class="self">self</span>.backend.blockchain().expect_block_hash_from_id(at)<span class="question-mark">?</span>;
-		<span class="self">self</span>.state_at(<span class="kw-2">&amp;</span>hash).map_err(Into::into)
+		<span class="self">self</span>.state_at(hash).map_err(Into::into)
 	}
 }
 
@@ -3945,17 +3942,17 @@
 	<span class="kw">fn </span>apply_finality(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		operation: <span class="kw-2">&amp;mut </span>ClientImportOperation&lt;Block, B&gt;,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="kw">let </span>last_best = <span class="self">self</span>.backend.blockchain().info().best_hash;
-		<span class="self">self</span>.apply_finality_with_block_hash(operation, <span class="kw-2">*</span>hash, justification, last_best, notify)
+		<span class="self">self</span>.apply_finality_with_block_hash(operation, hash, justification, last_best, notify)
 	}
 
 	<span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
@@ -3974,7 +3971,7 @@
 	<span class="kw">fn </span>apply_finality(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		operation: <span class="kw-2">&amp;mut </span>ClientImportOperation&lt;Block, B&gt;,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
@@ -3983,7 +3980,7 @@
 
 	<span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
@@ -4040,7 +4037,7 @@
 {
 	<span class="kw">fn </span>block_body(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;&gt;&gt; {
 		<span class="self">self</span>.body(hash)
 	}
@@ -4049,7 +4046,7 @@
 		<span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.header(id)<span class="question-mark">? </span>{
 			<span class="prelude-val">Some</span>(header) =&gt; {
 				<span class="kw">let </span>hash = header.hash();
-				<span class="kw">match </span>(<span class="self">self</span>.body(<span class="kw-2">&amp;</span>hash)<span class="question-mark">?</span>, <span class="self">self</span>.justifications(<span class="kw-2">&amp;</span>hash)<span class="question-mark">?</span>) {
+				<span class="kw">match </span>(<span class="self">self</span>.body(hash)<span class="question-mark">?</span>, <span class="self">self</span>.justifications(hash)<span class="question-mark">?</span>) {
 					(<span class="prelude-val">Some</span>(extrinsics), justifications) =&gt;
 						<span class="prelude-val">Some</span>(SignedBlock { block: Block::new(header, extrinsics), justifications }),
 					<span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
@@ -4063,7 +4060,7 @@
 		Client::block_status(<span class="self">self</span>, id)
 	}
 
-	<span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {
+	<span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {
 		<span class="self">self</span>.backend.blockchain().justifications(hash)
 	}
 
@@ -4071,18 +4068,15 @@
 		<span class="self">self</span>.backend.blockchain().hash(number)
 	}
 
-	<span class="kw">fn </span>indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt; {
+	<span class="kw">fn </span>indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt; {
 		<span class="self">self</span>.backend.blockchain().indexed_transaction(hash)
 	}
 
-	<span class="kw">fn </span>has_indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;bool&gt; {
+	<span class="kw">fn </span>has_indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;bool&gt; {
 		<span class="self">self</span>.backend.blockchain().has_indexed_transaction(hash)
 	}
 
-	<span class="kw">fn </span>block_indexed_body(
-		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
-	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt;&gt; {
+	<span class="kw">fn </span>block_indexed_body(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt;&gt; {
 		<span class="self">self</span>.backend.blockchain().block_indexed_body(hash)
 	}
 
@@ -4186,7 +4180,7 @@
 
 		<span class="self">self</span>.backend
 			.blockchain()
-			.block_indexed_body(<span class="kw-2">&amp;</span>hash)
+			.block_indexed_body(hash)
 			.map_err(|e| sp_transaction_storage_proof::Error::Application(Box::new(e)))
 	}
 

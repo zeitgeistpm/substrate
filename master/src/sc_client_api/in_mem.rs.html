@@ -1156,16 +1156,16 @@
 
 	<span class="kw">fn </span>finalize_header(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block: <span class="kw-2">&amp;</span>Block::Hash,
+		block: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>storage = <span class="self">self</span>.storage.write();
-		storage.finalized_hash = <span class="kw-2">*</span>block;
+		storage.finalized_hash = block;
 
 		<span class="kw">if </span>justification.is_some() {
 			<span class="kw">let </span>block = storage
 				.blocks
-				.get_mut(block)
+				.get_mut(<span class="kw-2">&amp;</span>block)
 				.expect(<span class="string">&quot;hash was fetched from a block in the db; qed&quot;</span>);
 
 			<span class="kw">let </span>block_justifications = <span class="kw">match </span>block {
@@ -1180,7 +1180,7 @@
 
 	<span class="kw">fn </span>append_justification(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: Justification,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>storage = <span class="self">self</span>.storage.write();
@@ -1290,17 +1290,17 @@
 <span class="kw">impl</span>&lt;Block: BlockT&gt; blockchain::Backend&lt;Block&gt; <span class="kw">for </span>Blockchain&lt;Block&gt; {
 	<span class="kw">fn </span>body(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;&gt;&gt; {
 		<span class="prelude-val">Ok</span>(<span class="self">self
 			</span>.storage
 			.read()
 			.blocks
-			.get(hash)
+			.get(<span class="kw-2">&amp;</span>hash)
 			.and_then(|b| b.extrinsics().map(|x| x.to_vec())))
 	}
 
-	<span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {
+	<span class="kw">fn </span>justifications(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {
 		<span class="prelude-val">Ok</span>(<span class="self">self</span>.storage.read().blocks.get(<span class="kw-2">&amp;</span>hash).and_then(|b| b.justifications().cloned()))
 	}
 
@@ -1330,13 +1330,13 @@
 		<span class="macro">unimplemented!</span>()
 	}
 
-	<span class="kw">fn </span>indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, _hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt; {
+	<span class="kw">fn </span>indexed_transaction(<span class="kw-2">&amp;</span><span class="self">self</span>, _hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt; {
 		<span class="macro">unimplemented!</span>(<span class="string">&quot;Not supported by the in-mem backend.&quot;</span>)
 	}
 
 	<span class="kw">fn </span>block_indexed_body(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		_hash: <span class="kw-2">&amp;</span>Block::Hash,
+		_hash: Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt;&gt; {
 		<span class="macro">unimplemented!</span>(<span class="string">&quot;Not supported by the in-mem backend.&quot;</span>)
 	}
@@ -1481,16 +1481,16 @@
 
 	<span class="kw">fn </span>mark_finalized(
 		<span class="kw-2">&amp;mut </span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
-		<span class="self">self</span>.finalized_blocks.push((<span class="kw-2">*</span>hash, justification));
+		<span class="self">self</span>.finalized_blocks.push((hash, justification));
 		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt; {
+	<span class="kw">fn </span>mark_head(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="macro">assert!</span>(<span class="self">self</span>.pending_block.is_none(), <span class="string">&quot;Only one set block per operation is allowed&quot;</span>);
-		<span class="self">self</span>.set_head = <span class="prelude-val">Some</span>(<span class="kw-2">*</span>hash);
+		<span class="self">self</span>.set_head = <span class="prelude-val">Some</span>(hash);
 		<span class="prelude-val">Ok</span>(())
 	}
 
@@ -1562,7 +1562,7 @@
 	<span class="kw">type </span>OffchainStorage = OffchainStorage;
 
 	<span class="kw">fn </span>begin_operation(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; sp_blockchain::Result&lt;<span class="self">Self</span>::BlockImportOperation&gt; {
-		<span class="kw">let </span>old_state = <span class="self">self</span>.state_at(<span class="kw-2">&amp;</span>Default::default())<span class="question-mark">?</span>;
+		<span class="kw">let </span>old_state = <span class="self">self</span>.state_at(Default::default())<span class="question-mark">?</span>;
 		<span class="prelude-val">Ok</span>(BlockImportOperation {
 			pending_block: <span class="prelude-val">None</span>,
 			old_state,
@@ -1576,7 +1576,7 @@
 	<span class="kw">fn </span>begin_state_operation(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		operation: <span class="kw-2">&amp;mut </span><span class="self">Self</span>::BlockImportOperation,
-		block: <span class="kw-2">&amp;</span>Block::Hash,
+		block: Block::Hash,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
 		operation.old_state = <span class="self">self</span>.state_at(block)<span class="question-mark">?</span>;
 		<span class="prelude-val">Ok</span>(())
@@ -1585,7 +1585,7 @@
 	<span class="kw">fn </span>commit_operation(<span class="kw-2">&amp;</span><span class="self">self</span>, operation: <span class="self">Self</span>::BlockImportOperation) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="kw">if </span>!operation.finalized_blocks.is_empty() {
 			<span class="kw">for </span>(block, justification) <span class="kw">in </span>operation.finalized_blocks {
-				<span class="self">self</span>.blockchain.finalize_header(<span class="kw-2">&amp;</span>block, justification)<span class="question-mark">?</span>;
+				<span class="self">self</span>.blockchain.finalize_header(block, justification)<span class="question-mark">?</span>;
 			}
 		}
 
@@ -1618,7 +1618,7 @@
 
 	<span class="kw">fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="self">self</span>.blockchain.finalize_header(hash, justification)
@@ -1626,7 +1626,7 @@
 
 	<span class="kw">fn </span>append_justification(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>Block::Hash,
+		hash: Block::Hash,
 		justification: Justification,
 	) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="self">self</span>.blockchain.append_justification(hash, justification)
@@ -1644,14 +1644,14 @@
 		<span class="prelude-val">None
 	</span>}
 
-	<span class="kw">fn </span>state_at(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="self">Self</span>::State&gt; {
-		<span class="kw">if </span><span class="kw-2">*</span>hash == Default::default() {
+	<span class="kw">fn </span>state_at(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; sp_blockchain::Result&lt;<span class="self">Self</span>::State&gt; {
+		<span class="kw">if </span>hash == Default::default() {
 			<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">Self</span>::State::default())
 		}
 
 		<span class="self">self</span>.states
 			.read()
-			.get(hash)
+			.get(<span class="kw-2">&amp;</span>hash)
 			.cloned()
 			.ok_or_else(|| sp_blockchain::Error::UnknownBlock(<span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, hash)))
 	}
@@ -1664,7 +1664,7 @@
 		<span class="prelude-val">Ok</span>((Zero::zero(), HashSet::new()))
 	}
 
-	<span class="kw">fn </span>remove_leaf_block(<span class="kw-2">&amp;</span><span class="self">self</span>, _hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt; {
+	<span class="kw">fn </span>remove_leaf_block(<span class="kw-2">&amp;</span><span class="self">self</span>, _hash: Block::Hash) -&gt; sp_blockchain::Result&lt;()&gt; {
 		<span class="prelude-val">Ok</span>(())
 	}
 
@@ -1747,13 +1747,13 @@
 		<span class="kw">let </span>blockchain = test_blockchain();
 		<span class="kw">let </span>last_finalized = blockchain.last_finalized().unwrap();
 
-		blockchain.append_justification(<span class="kw-2">&amp;</span>last_finalized, (ID2, <span class="macro">vec!</span>[<span class="number">4</span>])).unwrap();
+		blockchain.append_justification(last_finalized, (ID2, <span class="macro">vec!</span>[<span class="number">4</span>])).unwrap();
 		<span class="kw">let </span>justifications = {
 			<span class="kw">let </span><span class="kw-2">mut </span>just = Justifications::from((ID1, <span class="macro">vec!</span>[<span class="number">3</span>]));
 			just.append((ID2, <span class="macro">vec!</span>[<span class="number">4</span>]));
 			just
 		};
-		<span class="macro">assert_eq!</span>(blockchain.justifications(<span class="kw-2">&amp;</span>last_finalized).unwrap(), <span class="prelude-val">Some</span>(justifications));
+		<span class="macro">assert_eq!</span>(blockchain.justifications(last_finalized).unwrap(), <span class="prelude-val">Some</span>(justifications));
 	}
 
 	<span class="attribute">#[test]
@@ -1761,9 +1761,9 @@
 		<span class="kw">let </span>blockchain = test_blockchain();
 		<span class="kw">let </span>last_finalized = blockchain.last_finalized().unwrap();
 
-		blockchain.append_justification(<span class="kw-2">&amp;</span>last_finalized, (ID2, <span class="macro">vec!</span>[<span class="number">0</span>])).unwrap();
+		blockchain.append_justification(last_finalized, (ID2, <span class="macro">vec!</span>[<span class="number">0</span>])).unwrap();
 		<span class="macro">assert!</span>(<span class="macro">matches!</span>(
-			blockchain.append_justification(<span class="kw-2">&amp;</span>last_finalized, (ID2, <span class="macro">vec!</span>[<span class="number">1</span>])),
+			blockchain.append_justification(last_finalized, (ID2, <span class="macro">vec!</span>[<span class="number">1</span>])),
 			<span class="prelude-val">Err</span>(sp_blockchain::Error::BadJustification(<span class="kw">_</span>)),
 		));
 	}

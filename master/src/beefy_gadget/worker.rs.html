@@ -2120,7 +2120,7 @@
 						.expect(<span class="string">&quot;forwards closure result; the closure always returns Ok; qed.&quot;</span>);
 
 					<span class="self">self</span>.backend
-						.append_justification(<span class="kw-2">&amp;</span>hash, (BEEFY_ENGINE_ID, finality_proof.encode()))
+						.append_justification(hash, (BEEFY_ENGINE_ID, finality_proof.encode()))
 				}) {
 				<span class="macro">error!</span>(target: <span class="string">&quot;beefy&quot;</span>, <span class="string">&quot;🥩 Error {:?} on appending justification: {:?}&quot;</span>, e, finality_proof);
 			}
@@ -2318,7 +2318,7 @@
 			// a BEEFY justification, or at this session&#39;s boundary; voter will resume from there.
 			</span><span class="kw">loop </span>{
 				<span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="bool-val">true</span>) = blockchain
-					.justifications(<span class="kw-2">&amp;</span>header.hash())
+					.justifications(header.hash())
 					.ok()
 					.flatten()
 					.map(|justifs| justifs.get(BEEFY_ENGINE_ID).is_some())
@@ -2984,8 +2984,8 @@
 		<span class="comment">// finalize 1 and 2 without justifications
 		</span><span class="kw">let </span>hashof1 = backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">1</span>)).unwrap();
 		<span class="kw">let </span>hashof2 = backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">2</span>)).unwrap();
-		backend.finalize_block(<span class="kw-2">&amp;</span>hashof1, <span class="prelude-val">None</span>).unwrap();
-		backend.finalize_block(<span class="kw-2">&amp;</span>hashof2, <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(hashof1, <span class="prelude-val">None</span>).unwrap();
+		backend.finalize_block(hashof2, <span class="prelude-val">None</span>).unwrap();
 
 		<span class="kw">let </span>justif = create_finality_proof(<span class="number">2</span>);
 		<span class="comment">// create new session at block #2
@@ -3010,7 +3010,7 @@
 		}));
 
 		<span class="comment">// check BEEFY justifications are also appended to backend
-		</span><span class="kw">let </span>justifs = backend.blockchain().justifications(<span class="kw-2">&amp;</span>hashof2).unwrap().unwrap();
+		</span><span class="kw">let </span>justifs = backend.blockchain().justifications(hashof2).unwrap().unwrap();
 		<span class="macro">assert!</span>(justifs.get(BEEFY_ENGINE_ID).is_some())
 	}
 
@@ -3121,7 +3121,7 @@
 		<span class="comment">// finalize 13 without justifications
 		</span><span class="kw">let </span>hashof13 =
 			backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">13</span>)).unwrap();
-		net.peer(<span class="number">0</span>).client().as_client().finalize_block(<span class="kw-2">&amp;</span>hashof13, <span class="prelude-val">None</span>).unwrap();
+		net.peer(<span class="number">0</span>).client().as_client().finalize_block(hashof13, <span class="prelude-val">None</span>).unwrap();
 
 		<span class="comment">// Test initialization at session boundary.
 		</span>{
@@ -3160,7 +3160,7 @@
 			<span class="kw">let </span>hashof10 =
 				backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">10</span>)).unwrap();
 			backend
-				.append_justification(<span class="kw-2">&amp;</span>hashof10, (BEEFY_ENGINE_ID, justif.encode()))
+				.append_justification(hashof10, (BEEFY_ENGINE_ID, justif.encode()))
 				.unwrap();
 
 			<span class="comment">// initialize voter at block 13, expect rounds initialized at last beefy finalized 10
@@ -3196,7 +3196,7 @@
 			<span class="kw">let </span>hashof12 =
 				backend.blockchain().expect_block_hash_from_id(<span class="kw-2">&amp;</span>BlockId::Number(<span class="number">12</span>)).unwrap();
 			backend
-				.append_justification(<span class="kw-2">&amp;</span>hashof12, (BEEFY_ENGINE_ID, justif.encode()))
+				.append_justification(hashof12, (BEEFY_ENGINE_ID, justif.encode()))
 				.unwrap();
 
 			<span class="comment">// initialize voter at block 13, expect rounds initialized at last beefy finalized 12

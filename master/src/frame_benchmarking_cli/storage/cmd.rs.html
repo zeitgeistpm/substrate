@@ -428,7 +428,7 @@
 	{
 		<span class="kw">let </span>hash = client.usage_info().chain.best_hash;
 		<span class="kw">let </span>empty_prefix = StorageKey(Vec::new());
-		<span class="kw">let </span><span class="kw-2">mut </span>keys = client.storage_keys(<span class="kw-2">&amp;</span>hash, <span class="kw-2">&amp;</span>empty_prefix)<span class="question-mark">?</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>keys = client.storage_keys(hash, <span class="kw-2">&amp;</span>empty_prefix)<span class="question-mark">?</span>;
 		<span class="kw">let </span>(<span class="kw-2">mut </span>rng, <span class="kw">_</span>) = new_rng(<span class="prelude-val">None</span>);
 		keys.shuffle(<span class="kw-2">&amp;mut </span>rng);
 
@@ -436,7 +436,7 @@
 			<span class="macro">info!</span>(<span class="string">&quot;Warmup round {}/{}&quot;</span>, i + <span class="number">1</span>, <span class="self">self</span>.params.warmups);
 			<span class="kw">for </span>key <span class="kw">in </span>keys.as_slice() {
 				<span class="kw">let _ </span>= client
-					.storage(<span class="kw-2">&amp;</span>hash, <span class="kw-2">&amp;</span>key)
+					.storage(hash, <span class="kw-2">&amp;</span>key)
 					.expect(<span class="string">&quot;Checked above to exist&quot;</span>)
 					.ok_or(<span class="string">&quot;Value unexpectedly empty&quot;</span>);
 			}

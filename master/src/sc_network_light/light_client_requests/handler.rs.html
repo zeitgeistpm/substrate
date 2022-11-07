@@ -486,7 +486,7 @@
 
 		<span class="kw">let </span>block = Decode::decode(<span class="kw-2">&amp;mut </span>request.block.as_ref())<span class="question-mark">?</span>;
 
-		<span class="kw">let </span>response = <span class="kw">match </span><span class="self">self</span>.client.execution_proof(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;</span>request.method, <span class="kw-2">&amp;</span>request.data) {
+		<span class="kw">let </span>response = <span class="kw">match </span><span class="self">self</span>.client.execution_proof(block, <span class="kw-2">&amp;</span>request.method, <span class="kw-2">&amp;</span>request.data) {
 			<span class="prelude-val">Ok</span>((<span class="kw">_</span>, proof)) =&gt; {
 				<span class="kw">let </span>r = schema::v1::light::RemoteCallResponse { proof: proof.encode() };
 				<span class="prelude-val">Some</span>(schema::v1::light::response::Response::RemoteCallResponse(r))
@@ -526,7 +526,7 @@
 		<span class="kw">let </span>block = Decode::decode(<span class="kw-2">&amp;mut </span>request.block.as_ref())<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>response =
-			<span class="kw">match </span><span class="self">self</span>.client.read_proof(<span class="kw-2">&amp;</span>block, <span class="kw-2">&amp;mut </span>request.keys.iter().map(AsRef::as_ref)) {
+			<span class="kw">match </span><span class="self">self</span>.client.read_proof(block, <span class="kw-2">&amp;mut </span>request.keys.iter().map(AsRef::as_ref)) {
 				<span class="prelude-val">Ok</span>(proof) =&gt; {
 					<span class="kw">let </span>r = schema::v1::light::RemoteReadResponse { proof: proof.encode() };
 					<span class="prelude-val">Some</span>(schema::v1::light::response::Response::RemoteReadResponse(r))
@@ -573,7 +573,7 @@
 		};
 		<span class="kw">let </span>response = <span class="kw">match </span>child_info.and_then(|child_info| {
 			<span class="self">self</span>.client.read_child_proof(
-				<span class="kw-2">&amp;</span>block,
+				block,
 				<span class="kw-2">&amp;</span>child_info,
 				<span class="kw-2">&amp;mut </span>request.keys.iter().map(AsRef::as_ref),
 			)

@@ -1342,12 +1342,12 @@
 			<span class="prelude-val">Some</span>(header) =&gt; header,
 			<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="bool-val">false</span>,
 		};
-		<span class="self">self</span>.backend.have_state_at(<span class="kw-2">&amp;</span>header.hash(), <span class="kw-2">*</span>header.number())
+		<span class="self">self</span>.backend.have_state_at(header.hash(), <span class="kw-2">*</span>header.number())
 	}
 
 	<span class="kw">pub fn </span>justifications(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
+		hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 	) -&gt; ClientResult&lt;<span class="prelude-ty">Option</span>&lt;Justifications&gt;&gt; {
 		<span class="self">self</span>.client.justifications(hash)
 	}
@@ -1362,7 +1362,7 @@
 
 	<span class="kw">pub fn </span>finalize_block(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hash: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
+		hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
 		justification: <span class="prelude-ty">Option</span>&lt;Justification&gt;,
 		notify: bool,
 	) -&gt; ClientResult&lt;()&gt; {
@@ -1704,14 +1704,14 @@
 		<span class="self">self</span>.verifier.failed_verifications.lock().clone()
 	}
 
-	<span class="kw">pub fn </span>has_block(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>H256) -&gt; bool {
+	<span class="kw">pub fn </span>has_block(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: H256) -&gt; bool {
 		<span class="self">self</span>.backend
 			.as_ref()
-			.map(|backend| backend.blockchain().header(BlockId::hash(<span class="kw-2">*</span>hash)).unwrap().is_some())
+			.map(|backend| backend.blockchain().header(BlockId::hash(hash)).unwrap().is_some())
 			.unwrap_or(<span class="bool-val">false</span>)
 	}
 
-	<span class="kw">pub fn </span>has_body(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>H256) -&gt; bool {
+	<span class="kw">pub fn </span>has_body(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: H256) -&gt; bool {
 		<span class="self">self</span>.backend
 			.as_ref()
 			.map(|backend| backend.blockchain().body(hash).unwrap().is_some())
@@ -2293,7 +2293,7 @@
 		justification: Justification,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="self">Self</span>::Error&gt; {
 		<span class="self">self</span>.<span class="number">0
-			</span>.finalize_block(<span class="kw-2">&amp;</span>hash, <span class="prelude-val">Some</span>(justification), <span class="bool-val">true</span>)
+			</span>.finalize_block(hash, <span class="prelude-val">Some</span>(justification), <span class="bool-val">true</span>)
 			.map_err(|<span class="kw">_</span>| ConsensusError::InvalidJustification)
 	}
 }

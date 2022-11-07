@@ -1262,8 +1262,8 @@
 	}
 
 	<span class="doccomment">/// Read current set id form a given state.
-	</span><span class="kw">fn </span>current_set_id(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: <span class="kw-2">&amp;</span>Block::Hash) -&gt; <span class="prelude-ty">Result</span>&lt;SetId, ConsensusError&gt; {
-		<span class="kw">let </span>id = <span class="kw-2">&amp;</span>BlockId::hash(<span class="kw-2">*</span>hash);
+	</span><span class="kw">fn </span>current_set_id(<span class="kw-2">&amp;</span><span class="self">self</span>, hash: Block::Hash) -&gt; <span class="prelude-ty">Result</span>&lt;SetId, ConsensusError&gt; {
+		<span class="kw">let </span>id = <span class="kw-2">&amp;</span>BlockId::hash(hash);
 		<span class="kw">let </span>runtime_version = <span class="self">self</span>.inner.runtime_api().version(id).map_err(|e| {
 			ConsensusError::ClientImport(<span class="macro">format!</span>(
 				<span class="string">&quot;Unable to retrieve current runtime version. {}&quot;</span>,
@@ -1318,7 +1318,7 @@
 					.runtime_api()
 					.grandpa_authorities(<span class="kw-2">&amp;</span>BlockId::hash(hash))
 					.map_err(|e| ConsensusError::ClientImport(e.to_string()))<span class="question-mark">?</span>;
-				<span class="kw">let </span>set_id = <span class="self">self</span>.current_set_id(<span class="kw-2">&amp;</span>hash)<span class="question-mark">?</span>;
+				<span class="kw">let </span>set_id = <span class="self">self</span>.current_set_id(hash)<span class="question-mark">?</span>;
 				<span class="kw">let </span>authority_set = AuthoritySet::new(
 					authorities.clone(),
 					set_id,

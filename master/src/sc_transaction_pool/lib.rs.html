@@ -1346,12 +1346,12 @@
 
 <span class="doccomment">/// Prune the known txs for the given block.
 </span><span class="kw">async fn </span>prune_known_txs_for_block&lt;Block: BlockT, Api: graph::ChainApi&lt;Block = Block&gt;&gt;(
-	block_hash: <span class="kw-2">&amp;</span>Block::Hash,
+	block_hash: Block::Hash,
 	api: <span class="kw-2">&amp;</span>Api,
 	pool: <span class="kw-2">&amp;</span>graph::Pool&lt;Api&gt;,
 ) -&gt; Vec&lt;ExtrinsicHash&lt;Api&gt;&gt; {
 	<span class="kw">let </span>extrinsics = api
-		.block_body(<span class="kw-2">&amp;</span>block_hash)
+		.block_body(block_hash)
 		.<span class="kw">await
 		</span>.unwrap_or_else(|e| {
 			<span class="macro">log::warn!</span>(<span class="string">&quot;Prune known transactions: error request: {}&quot;</span>, e);
@@ -1363,7 +1363,7 @@
 
 	<span class="macro">log::trace!</span>(target: <span class="string">&quot;txpool&quot;</span>, <span class="string">&quot;Pruning transactions: {:?}&quot;</span>, hashes);
 
-	<span class="kw">let </span>header = <span class="kw">match </span>api.block_header(<span class="kw-2">&amp;</span>BlockId::Hash(<span class="kw-2">*</span>block_hash)) {
+	<span class="kw">let </span>header = <span class="kw">match </span>api.block_header(<span class="kw-2">&amp;</span>BlockId::Hash(block_hash)) {
 		<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(h)) =&gt; h,
 		<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) =&gt; {
 			<span class="macro">log::debug!</span>(target: <span class="string">&quot;txpool&quot;</span>, <span class="string">&quot;Could not find header for {:?}.&quot;</span>, block_hash);
@@ -1376,7 +1376,7 @@
 	};
 
 	<span class="kw">if let </span><span class="prelude-val">Err</span>(e) = pool
-		.prune(<span class="kw-2">&amp;</span>BlockId::Hash(<span class="kw-2">*</span>block_hash), <span class="kw-2">&amp;</span>BlockId::hash(<span class="kw-2">*</span>header.parent_hash()), <span class="kw-2">&amp;</span>extrinsics)
+		.prune(<span class="kw-2">&amp;</span>BlockId::Hash(block_hash), <span class="kw-2">&amp;</span>BlockId::hash(<span class="kw-2">*</span>header.parent_hash()), <span class="kw-2">&amp;</span>extrinsics)
 		.<span class="kw">await
 	</span>{
 		<span class="macro">log::error!</span>(<span class="string">&quot;Cannot prune known in the pool: {}&quot;</span>, e);
@@ -1434,7 +1434,7 @@
 			tree_route
 				.enacted()
 				.iter()
-				.map(|h| prune_known_txs_for_block(<span class="kw-2">&amp;</span>h.hash, <span class="kw-2">&amp;*</span>api, <span class="kw-2">&amp;*</span>pool)),
+				.map(|h| prune_known_txs_for_block(h.hash, <span class="kw-2">&amp;*</span>api, <span class="kw-2">&amp;*</span>pool)),
 		)
 		.<span class="kw">await
 		</span>.into_iter()
@@ -1452,7 +1452,7 @@
 				<span class="kw">let </span>hash = retracted.hash;
 
 				<span class="kw">let </span>block_transactions = api
-					.block_body(<span class="kw-2">&amp;</span>hash)
+					.block_body(hash)
 					.<span class="kw">await
 					</span>.unwrap_or_else(|e| {
 						<span class="macro">log::warn!</span>(<span class="string">&quot;Failed to fetch block body: {}&quot;</span>, e);
