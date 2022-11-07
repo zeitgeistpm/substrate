@@ -577,6 +577,34 @@
 <span id="577">577</span>
 <span id="578">578</span>
 <span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -712,6 +740,16 @@
 		<span class="self">self</span>.recent_best_block = new_hash;
 
 		<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(tree_route))
+	}
+
+	<span class="doccomment">/// Forces update of the state according to the given `ChainEvent`. Intended to be used as a
+	/// fallback when tree_route cannot be computed.
+	</span><span class="kw">pub fn </span>force_update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: <span class="kw-2">&amp;</span>ChainEvent&lt;Block&gt;) {
+		<span class="kw">match </span>event {
+			ChainEvent::NewBestBlock { hash, .. } =&gt; <span class="self">self</span>.recent_best_block = <span class="kw-2">*</span>hash,
+			ChainEvent::Finalized { hash, .. } =&gt; <span class="self">self</span>.recent_finalized_block = <span class="kw-2">*</span>hash,
+		};
+		<span class="macro">log::debug!</span>(target: <span class="string">&quot;txpool&quot;</span>, <span class="string">&quot;forced update: {:?}, {:?}&quot;</span>, <span class="self">self</span>.recent_best_block, <span class="self">self</span>.recent_finalized_block);
 	}
 }
 
@@ -1154,6 +1192,24 @@
 		<span class="kw">let </span>result = trigger_new_best_block(<span class="kw-2">&amp;mut </span>es, a(), c1());
 		<span class="macro">assert_eq!</span>(result, <span class="bool-val">false</span>);
 		assert_es_eq(<span class="kw-2">&amp;</span>es, e1(), d1());
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>test_enactment_forced_update_best_block() {
+		sp_tracing::try_init_simple();
+		<span class="kw">let </span><span class="kw-2">mut </span>es = EnactmentState::new(a().hash, a().hash);
+
+		es.force_update(<span class="kw-2">&amp;</span>ChainEvent::NewBestBlock { hash: b1().hash, tree_route: <span class="prelude-val">None </span>});
+		assert_es_eq(<span class="kw-2">&amp;</span>es, b1(), a());
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>test_enactment_forced_update_finalize() {
+		sp_tracing::try_init_simple();
+		<span class="kw">let </span><span class="kw-2">mut </span>es = EnactmentState::new(a().hash, a().hash);
+
+		es.force_update(<span class="kw-2">&amp;</span>ChainEvent::Finalized { hash: b1().hash, tree_route: Arc::from([]) });
+		assert_es_eq(<span class="kw-2">&amp;</span>es, a(), b1());
 	}
 }
 </code></pre></div>
