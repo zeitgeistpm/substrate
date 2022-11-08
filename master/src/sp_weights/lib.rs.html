@@ -344,9 +344,7 @@
 
 </span><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-</span><span class="kw">extern crate </span><span class="self">self </span><span class="kw">as </span>sp_weights;
-
-<span class="kw">mod </span>weight_v2;
+</span><span class="kw">mod </span>weight_v2;
 
 <span class="kw">use </span>codec::{CompactAs, Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>scale_info::TypeInfo;
@@ -388,6 +386,8 @@
 	MaxEncodedLen,
 	TypeInfo,
 )]
+#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, derive(Serialize, Deserialize))]
+#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, serde(transparent))]
 </span><span class="kw">pub struct </span>OldWeight(<span class="kw">pub </span>u64);
 
 <span class="doccomment">/// The weight of database operations that the runtime can invoke.
@@ -424,7 +424,7 @@
 /// coeff_integer * x^(degree) + coeff_frac * x^(degree)
 /// ```
 ///
-/// The `negative` value encodes whether the term is added or substracted from the
+/// The `negative` value encodes whether the term is added or subtracted from the
 /// overall polynomial result.
 </span><span class="attribute">#[derive(Clone, Encode, Decode, TypeInfo)]
 </span><span class="kw">pub struct </span>WeightToFeeCoefficient&lt;Balance&gt; {

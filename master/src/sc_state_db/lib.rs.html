@@ -942,37 +942,6 @@
 <span id="942">942</span>
 <span id="943">943</span>
 <span id="944">944</span>
-<span id="945">945</span>
-<span id="946">946</span>
-<span id="947">947</span>
-<span id="948">948</span>
-<span id="949">949</span>
-<span id="950">950</span>
-<span id="951">951</span>
-<span id="952">952</span>
-<span id="953">953</span>
-<span id="954">954</span>
-<span id="955">955</span>
-<span id="956">956</span>
-<span id="957">957</span>
-<span id="958">958</span>
-<span id="959">959</span>
-<span id="960">960</span>
-<span id="961">961</span>
-<span id="962">962</span>
-<span id="963">963</span>
-<span id="964">964</span>
-<span id="965">965</span>
-<span id="966">966</span>
-<span id="967">967</span>
-<span id="968">968</span>
-<span id="969">969</span>
-<span id="970">970</span>
-<span id="971">971</span>
-<span id="972">972</span>
-<span id="973">973</span>
-<span id="974">974</span>
-<span id="975">975</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1266,6 +1235,7 @@
 	non_canonical: NonCanonicalOverlay&lt;BlockHash, Key&gt;,
 	pruning: <span class="prelude-ty">Option</span>&lt;RefWindow&lt;BlockHash, Key, D&gt;&gt;,
 	pinned: HashMap&lt;BlockHash, u32&gt;,
+	ref_counting: bool,
 }
 
 <span class="kw">impl</span>&lt;BlockHash: Hash + MallocSizeOf, Key: Hash + MallocSizeOf, D: MetaDb&gt;
@@ -1286,7 +1256,7 @@
 			PruningMode::ArchiveAll | PruningMode::ArchiveCanonical =&gt; <span class="prelude-val">None</span>,
 		};
 
-		<span class="prelude-val">Ok</span>(StateDbSync { mode, non_canonical, pruning, pinned: Default::default() })
+		<span class="prelude-val">Ok</span>(StateDbSync { mode, non_canonical, pruning, pinned: Default::default(), ref_counting })
 	}
 
 	<span class="kw">fn </span>insert_block(
@@ -1347,9 +1317,9 @@
 					<span class="kw">match </span><span class="self">self</span>.pruning.as_ref() {
 						<span class="prelude-val">None </span>=&gt; IsPruned::NotPruned,
 						<span class="prelude-val">Some</span>(pruning) =&gt; <span class="kw">match </span>pruning.have_block(hash, number) {
-							HaveBlock::NotHave =&gt; IsPruned::Pruned,
-							HaveBlock::Have =&gt; IsPruned::NotPruned,
-							HaveBlock::MayHave =&gt; IsPruned::MaybePruned,
+							HaveBlock::No =&gt; IsPruned::Pruned,
+							HaveBlock::Yes =&gt; IsPruned::NotPruned,
+							HaveBlock::Maybe =&gt; IsPruned::MaybePruned,
 						},
 					}
 				}
@@ -1419,9 +1389,9 @@
 				<span class="kw">let </span>have_block = <span class="self">self</span>.non_canonical.have_block(hash) ||
 					<span class="self">self</span>.pruning.as_ref().map_or(<span class="bool-val">false</span>, |pruning| {
 						<span class="kw">match </span>pruning.have_block(hash, number) {
-							HaveBlock::NotHave =&gt; <span class="bool-val">false</span>,
-							HaveBlock::Have =&gt; <span class="bool-val">true</span>,
-							HaveBlock::MayHave =&gt; hint(),
+							HaveBlock::No =&gt; <span class="bool-val">false</span>,
+							HaveBlock::Yes =&gt; <span class="bool-val">true</span>,
+							HaveBlock::Maybe =&gt; hint(),
 						}
 					});
 				<span class="kw">if </span>have_block {
@@ -1469,30 +1439,6 @@
 			<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(value))
 		}
 		db.get(key.as_ref()).map_err(Error::Db)
-	}
-
-	<span class="kw">fn </span>apply_pending(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-		<span class="self">self</span>.non_canonical.apply_pending();
-		<span class="kw">if let </span><span class="prelude-val">Some</span>(pruning) = <span class="kw-2">&amp;mut </span><span class="self">self</span>.pruning {
-			pruning.apply_pending();
-		}
-		<span class="kw">let </span>next_hash = <span class="self">self</span>.pruning.as_mut().map(|p| p.next_hash());
-		<span class="macro">trace!</span>(
-			target: <span class="string">&quot;forks&quot;</span>,
-			<span class="string">&quot;First available: {:?} ({}), Last canon: {:?} ({}), Best forks: {:?}&quot;</span>,
-			next_hash,
-			<span class="self">self</span>.pruning.as_ref().map(|p| p.pending()).unwrap_or(<span class="number">0</span>),
-			<span class="self">self</span>.non_canonical.last_canonicalized_hash(),
-			<span class="self">self</span>.non_canonical.last_canonicalized_block_number().unwrap_or(<span class="number">0</span>),
-			<span class="self">self</span>.non_canonical.top_level(),
-		);
-	}
-
-	<span class="kw">fn </span>revert_pending(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-		<span class="kw">if let </span><span class="prelude-val">Some</span>(pruning) = <span class="kw-2">&amp;mut </span><span class="self">self</span>.pruning {
-			pruning.revert_pending();
-		}
-		<span class="self">self</span>.non_canonical.revert_pending();
 	}
 
 	<span class="kw">fn </span>memory_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; StateDbMemoryInfo {
@@ -1629,14 +1575,11 @@
 		<span class="kw">return </span><span class="self">self</span>.db.read().is_pruned(hash, number)
 	}
 
-	<span class="doccomment">/// Apply all pending changes
-	</span><span class="kw">pub fn </span>apply_pending(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.db.write().apply_pending();
-	}
-
-	<span class="doccomment">/// Revert all pending changes
-	</span><span class="kw">pub fn </span>revert_pending(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.db.write().revert_pending();
+	<span class="doccomment">/// Reset in-memory changes to the last disk-backed state.
+	</span><span class="kw">pub fn </span>reset(<span class="kw-2">&amp;</span><span class="self">self</span>, db: D) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&lt;D::Error&gt;&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>state_db = <span class="self">self</span>.db.write();
+		<span class="kw-2">*</span>state_db = StateDbSync::new(state_db.mode.clone(), state_db.ref_counting, db)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(())
 	}
 
 	<span class="doccomment">/// Returns the current memory statistics of this instance.
@@ -1741,9 +1684,7 @@
 				)
 				.unwrap(),
 		);
-		state_db.apply_pending();
 		db.commit(<span class="kw-2">&amp;</span>state_db.canonicalize_block(<span class="kw-2">&amp;</span>H256::from_low_u64_be(<span class="number">1</span>)).unwrap());
-		state_db.apply_pending();
 		db.commit(
 			<span class="kw-2">&amp;</span>state_db
 				.insert_block(
@@ -1754,11 +1695,8 @@
 				)
 				.unwrap(),
 		);
-		state_db.apply_pending();
 		db.commit(<span class="kw-2">&amp;</span>state_db.canonicalize_block(<span class="kw-2">&amp;</span>H256::from_low_u64_be(<span class="number">21</span>)).unwrap());
-		state_db.apply_pending();
 		db.commit(<span class="kw-2">&amp;</span>state_db.canonicalize_block(<span class="kw-2">&amp;</span>H256::from_low_u64_be(<span class="number">3</span>)).unwrap());
-		state_db.apply_pending();
 
 		(db, state_db)
 	}

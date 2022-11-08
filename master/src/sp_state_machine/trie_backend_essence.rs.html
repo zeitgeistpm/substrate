@@ -969,6 +969,11 @@
 <span id="969">969</span>
 <span id="970">970</span>
 <span id="971">971</span>
+<span id="972">972</span>
+<span id="973">973</span>
+<span id="974">974</span>
+<span id="975">975</span>
+<span id="976">976</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1148,7 +1153,7 @@
 		) -&gt; R,
 	) -&gt; R {
 		<span class="kw">let </span>storage_root = storage_root.unwrap_or_else(|| <span class="self">self</span>.root);
-		<span class="kw">let </span><span class="kw-2">mut </span>recorder = <span class="self">self</span>.recorder.as_ref().map(|r| r.as_trie_recorder());
+		<span class="kw">let </span><span class="kw-2">mut </span>recorder = <span class="self">self</span>.recorder.as_ref().map(|r| r.as_trie_recorder(storage_root));
 		<span class="kw">let </span>recorder = <span class="kw">match </span>recorder.as_mut() {
 			<span class="prelude-val">Some</span>(recorder) =&gt; <span class="prelude-val">Some</span>(recorder <span class="kw">as </span><span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TrieRecorder&lt;H::Out&gt;),
 			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
@@ -1180,16 +1185,19 @@
 	/// This function must only be used when the operation in `callback` is
 	/// calculating a `storage_root`. It is expected that `callback` returns
 	/// the new storage root. This is required to register the changes in the cache
-	/// for the correct storage root.
+	/// for the correct storage root. The given `storage_root` corresponds to the root of the &quot;old&quot;
+	/// trie. If the value is not given, `self.root` is used.
 	</span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
 	</span><span class="kw">fn </span>with_recorder_and_cache_for_storage_root&lt;R&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
+		storage_root: <span class="prelude-ty">Option</span>&lt;H::Out&gt;,
 		callback: <span class="kw">impl </span>FnOnce(
 			<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TrieRecorder&lt;H::Out&gt;&gt;,
 			<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TrieCache&lt;NodeCodec&lt;H&gt;&gt;&gt;,
 		) -&gt; (<span class="prelude-ty">Option</span>&lt;H::Out&gt;, R),
 	) -&gt; R {
-		<span class="kw">let </span><span class="kw-2">mut </span>recorder = <span class="self">self</span>.recorder.as_ref().map(|r| r.as_trie_recorder());
+		<span class="kw">let </span>storage_root = storage_root.unwrap_or_else(|| <span class="self">self</span>.root);
+		<span class="kw">let </span><span class="kw-2">mut </span>recorder = <span class="self">self</span>.recorder.as_ref().map(|r| r.as_trie_recorder(storage_root));
 		<span class="kw">let </span>recorder = <span class="kw">match </span>recorder.as_mut() {
 			<span class="prelude-val">Some</span>(recorder) =&gt; <span class="prelude-val">Some</span>(recorder <span class="kw">as </span><span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TrieRecorder&lt;H::Out&gt;),
 			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
@@ -1215,6 +1223,7 @@
 	<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
 	</span><span class="kw">fn </span>with_recorder_and_cache_for_storage_root&lt;R&gt;(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
+		<span class="kw">_</span>: <span class="prelude-ty">Option</span>&lt;H::Out&gt;,
 		callback: <span class="kw">impl </span>FnOnce(
 			<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TrieRecorder&lt;H::Out&gt;&gt;,
 			<span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span><span class="kw">dyn </span>TrieCache&lt;NodeCodec&lt;H&gt;&gt;&gt;,
@@ -1646,7 +1655,7 @@
 	) -&gt; (H::Out, S::Overlay) {
 		<span class="kw">let </span><span class="kw-2">mut </span>write_overlay = S::Overlay::default();
 
-		<span class="kw">let </span>root = <span class="self">self</span>.with_recorder_and_cache_for_storage_root(|recorder, cache| {
+		<span class="kw">let </span>root = <span class="self">self</span>.with_recorder_and_cache_for_storage_root(<span class="prelude-val">None</span>, |recorder, cache| {
 			<span class="kw">let </span><span class="kw-2">mut </span>eph = Ephemeral::new(<span class="self">self</span>.backend_storage(), <span class="kw-2">&amp;mut </span>write_overlay);
 			<span class="kw">let </span>res = <span class="kw">match </span>state_version {
 				StateVersion::V0 =&gt; delta_trie_root::&lt;sp_trie::LayoutV0&lt;H&gt;, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
@@ -1690,35 +1699,36 @@
 			},
 		};
 
-		<span class="kw">let </span>new_child_root = <span class="self">self</span>.with_recorder_and_cache_for_storage_root(|recorder, cache| {
-			<span class="kw">let </span><span class="kw-2">mut </span>eph = Ephemeral::new(<span class="self">self</span>.backend_storage(), <span class="kw-2">&amp;mut </span>write_overlay);
-			<span class="kw">match match </span>state_version {
-				StateVersion::V0 =&gt;
-					child_delta_trie_root::&lt;sp_trie::LayoutV0&lt;H&gt;, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
-						child_info.keyspace(),
-						<span class="kw-2">&amp;mut </span>eph,
-						child_root,
-						delta,
-						recorder,
-						cache,
-					),
-				StateVersion::V1 =&gt;
-					child_delta_trie_root::&lt;sp_trie::LayoutV1&lt;H&gt;, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
-						child_info.keyspace(),
-						<span class="kw-2">&amp;mut </span>eph,
-						child_root,
-						delta,
-						recorder,
-						cache,
-					),
-			} {
-				<span class="prelude-val">Ok</span>(ret) =&gt; (<span class="prelude-val">Some</span>(ret), ret),
-				<span class="prelude-val">Err</span>(e) =&gt; {
-					<span class="macro">warn!</span>(target: <span class="string">&quot;trie&quot;</span>, <span class="string">&quot;Failed to write to trie: {}&quot;</span>, e);
-					(<span class="prelude-val">None</span>, child_root)
-				},
-			}
-		});
+		<span class="kw">let </span>new_child_root =
+			<span class="self">self</span>.with_recorder_and_cache_for_storage_root(<span class="prelude-val">Some</span>(child_root), |recorder, cache| {
+				<span class="kw">let </span><span class="kw-2">mut </span>eph = Ephemeral::new(<span class="self">self</span>.backend_storage(), <span class="kw-2">&amp;mut </span>write_overlay);
+				<span class="kw">match match </span>state_version {
+					StateVersion::V0 =&gt;
+						child_delta_trie_root::&lt;sp_trie::LayoutV0&lt;H&gt;, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
+							child_info.keyspace(),
+							<span class="kw-2">&amp;mut </span>eph,
+							child_root,
+							delta,
+							recorder,
+							cache,
+						),
+					StateVersion::V1 =&gt;
+						child_delta_trie_root::&lt;sp_trie::LayoutV1&lt;H&gt;, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
+							child_info.keyspace(),
+							<span class="kw-2">&amp;mut </span>eph,
+							child_root,
+							delta,
+							recorder,
+							cache,
+						),
+				} {
+					<span class="prelude-val">Ok</span>(ret) =&gt; (<span class="prelude-val">Some</span>(ret), ret),
+					<span class="prelude-val">Err</span>(e) =&gt; {
+						<span class="macro">warn!</span>(target: <span class="string">&quot;trie&quot;</span>, <span class="string">&quot;Failed to write to trie: {}&quot;</span>, e);
+						(<span class="prelude-val">None</span>, child_root)
+					},
+				}
+			});
 
 		<span class="kw">let </span>is_default = new_child_root == default_root;
 

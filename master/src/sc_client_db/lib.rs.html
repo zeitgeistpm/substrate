@@ -5790,15 +5790,15 @@
 		<span class="kw">let </span>usage = operation.old_state.usage_info();
 		<span class="self">self</span>.state_usage.merge_sm(usage);
 
-		<span class="kw">match </span><span class="self">self</span>.try_commit_operation(operation) {
-			<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-				<span class="self">self</span>.storage.state_db.apply_pending();
-				<span class="prelude-val">Ok</span>(())
-			},
-			e @ <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-				<span class="self">self</span>.storage.state_db.revert_pending();
-				e
-			},
+		<span class="kw">if let </span><span class="prelude-val">Err</span>(e) = <span class="self">self</span>.try_commit_operation(operation) {
+			<span class="kw">let </span>state_meta_db = StateMetaDb(<span class="self">self</span>.storage.db.clone());
+			<span class="self">self</span>.storage
+				.state_db
+				.reset(state_meta_db)
+				.map_err(sp_blockchain::Error::from_state_db)<span class="question-mark">?</span>;
+			<span class="prelude-val">Err</span>(e)
+		} <span class="kw">else </span>{
+			<span class="prelude-val">Ok</span>(())
 		}
 	}
 

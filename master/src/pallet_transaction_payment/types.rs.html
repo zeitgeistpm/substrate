@@ -167,6 +167,13 @@
 <span id="167">167</span>
 <span id="168">168</span>
 <span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
@@ -193,7 +200,7 @@
 <span class="kw">use </span>sp_runtime::traits::{AtLeast32BitUnsigned, Zero};
 <span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">use </span>frame_support::{dispatch::DispatchClass, weights::Weight};
+<span class="kw">use </span>frame_support::dispatch::DispatchClass;
 
 <span class="doccomment">/// The base fee and adjusted weight and length fees constitute the _inclusion fee_.
 </span><span class="attribute">#[derive(Encode, Decode, Clone, Eq, PartialEq)]
@@ -263,9 +270,15 @@
 </span><span class="attribute">#[derive(Eq, PartialEq, Encode, Decode, Default)]
 #[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, derive(Debug, Serialize, Deserialize))]
 #[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, serde(rename_all = <span class="string">&quot;camelCase&quot;</span>))]
-#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, serde(bound(serialize = <span class="string">&quot;Balance: std::fmt::Display&quot;</span>)))]
-#[cfg_attr(feature = <span class="string">&quot;std&quot;</span>, serde(bound(deserialize = <span class="string">&quot;Balance: std::str::FromStr&quot;</span>)))]
-</span><span class="kw">pub struct </span>RuntimeDispatchInfo&lt;Balance&gt; {
+#[cfg_attr(
+	feature = <span class="string">&quot;std&quot;</span>,
+	serde(bound(serialize = <span class="string">&quot;Balance: std::fmt::Display, Weight: Serialize&quot;</span>))
+)]
+#[cfg_attr(
+	feature = <span class="string">&quot;std&quot;</span>,
+	serde(bound(deserialize = <span class="string">&quot;Balance: std::str::FromStr, Weight: Deserialize&lt;&#39;de&gt;&quot;</span>))
+)]
+</span><span class="kw">pub struct </span>RuntimeDispatchInfo&lt;Balance, Weight = frame_support::weights::Weight&gt; {
 	<span class="doccomment">/// Weight of this dispatch.
 	</span><span class="kw">pub </span>weight: Weight,
 	<span class="doccomment">/// Class of this dispatch.
@@ -300,6 +313,7 @@
 <span class="attribute">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
 	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::weights::Weight;
 
 	<span class="attribute">#[test]
 	</span><span class="kw">fn </span>should_serialize_and_deserialize_properly_with_string() {

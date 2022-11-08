@@ -44,6 +44,10 @@
 <span id="44">44</span>
 <span id="45">45</span>
 <span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -71,14 +75,18 @@
 <span class="kw">pub use </span>pallet_transaction_payment::{FeeDetails, InclusionFee, RuntimeDispatchInfo};
 
 <span class="macro">sp_api::decl_runtime_apis! </span>{
-	<span class="kw">pub trait </span>TransactionPaymentApi&lt;Balance&gt; <span class="kw">where
+	<span class="attribute">#[api_version(<span class="number">2</span>)]
+	</span><span class="kw">pub trait </span>TransactionPaymentApi&lt;Balance&gt; <span class="kw">where
 		</span>Balance: Codec + MaybeDisplay,
 	{
+		<span class="attribute">#[changed_in(<span class="number">2</span>)]
+		</span><span class="kw">fn </span>query_info(uxt: Block::Extrinsic, len: u32) -&gt; RuntimeDispatchInfo&lt;Balance, sp_weights::OldWeight&gt;;
 		<span class="kw">fn </span>query_info(uxt: Block::Extrinsic, len: u32) -&gt; RuntimeDispatchInfo&lt;Balance&gt;;
 		<span class="kw">fn </span>query_fee_details(uxt: Block::Extrinsic, len: u32) -&gt; FeeDetails&lt;Balance&gt;;
 	}
 
-	<span class="kw">pub trait </span>TransactionPaymentCallApi&lt;Balance, Call&gt;
+	<span class="attribute">#[api_version(<span class="number">2</span>)]
+	</span><span class="kw">pub trait </span>TransactionPaymentCallApi&lt;Balance, Call&gt;
 	<span class="kw">where
 		</span>Balance: Codec + MaybeDisplay,
 		Call: Codec,
