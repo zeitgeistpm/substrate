@@ -186,6 +186,19 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -224,10 +237,15 @@
 
 <span class="kw">type </span>CurrencyOf&lt;T&gt; = &lt;T <span class="kw">as </span>Config&gt;::Currency;
 
-<span class="kw">fn </span>create_unexposed_nominator&lt;T: Config&gt;() -&gt; T::AccountId {
-	<span class="kw">let </span>account = frame_benchmarking::account::&lt;T::AccountId&gt;(<span class="string">&quot;nominator_42&quot;</span>, <span class="number">0</span>, USER_SEED);
-	fund_and_bond_account::&lt;T&gt;(<span class="kw-2">&amp;</span>account);
-	account
+<span class="kw">fn </span>create_unexposed_nominators&lt;T: Config&gt;() -&gt; Vec&lt;T::AccountId&gt; {
+	(<span class="number">0</span>..T::BatchSize::get())
+		.map(|i| {
+			<span class="kw">let </span>account =
+				frame_benchmarking::account::&lt;T::AccountId&gt;(<span class="string">&quot;unexposed_nominator&quot;</span>, i, USER_SEED);
+			fund_and_bond_account::&lt;T&gt;(<span class="kw-2">&amp;</span>account);
+			account
+		})
+		.collect()
 }
 
 <span class="kw">fn </span>fund_and_bond_account&lt;T: Config&gt;(account: <span class="kw-2">&amp;</span>T::AccountId) {
@@ -278,21 +296,27 @@
 }
 
 <span class="macro">benchmarks! </span>{
-	<span class="comment">// on_idle, we we don&#39;t check anyone, but fully unbond and move them to another pool.
+	<span class="comment">// on_idle, we don&#39;t check anyone, but fully unbond them.
 	</span>on_idle_unstake {
 		ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">1</span>);
-		<span class="kw">let </span>who = create_unexposed_nominator::&lt;T&gt;();
-		<span class="macro">assert_ok!</span>(FastUnstake::&lt;T&gt;::register_fast_unstake(
-			RawOrigin::Signed(who.clone()).into(),
-		));
+		<span class="kw">for </span>who <span class="kw">in </span>create_unexposed_nominators::&lt;T&gt;() {
+			<span class="macro">assert_ok!</span>(FastUnstake::&lt;T&gt;::register_fast_unstake(
+				RawOrigin::Signed(who.clone()).into(),
+			));
+		}
 
 		<span class="comment">// run on_idle once. This will check era 0.
 		</span><span class="macro">assert_eq!</span>(Head::&lt;T&gt;::get(), <span class="prelude-val">None</span>);
 		on_idle_full_block::&lt;T&gt;();
-		<span class="macro">assert_eq!</span>(
+
+		<span class="macro">assert!</span>(<span class="macro">matches!</span>(
 			Head::&lt;T&gt;::get(),
-			<span class="prelude-val">Some</span>(UnstakeRequest { stash: who.clone(), checked: <span class="macro">vec!</span>[<span class="number">0</span>].try_into().unwrap(), deposit: T::Deposit::get() })
-		);
+			<span class="prelude-val">Some</span>(UnstakeRequest {
+				checked,
+				stashes,
+				..
+			}) <span class="kw">if </span>checked.len() == <span class="number">1 </span>&amp;&amp; stashes.len() <span class="kw">as </span>u32 == T::BatchSize::get()
+		));
 	}
 	: {
 		on_idle_full_block::&lt;T&gt;();
@@ -300,7 +324,7 @@
 	verify {
 		<span class="macro">assert!</span>(<span class="macro">matches!</span>(
 			fast_unstake_events::&lt;T&gt;().last(),
-			<span class="prelude-val">Some</span>(Event::Unstaked { .. })
+			<span class="prelude-val">Some</span>(Event::BatchFinished)
 		));
 	}
 
@@ -317,10 +341,13 @@
 
 		<span class="comment">// setup staking with v validators and u eras of data (0..=u)
 		</span>setup_staking::&lt;T&gt;(v, u);
-		<span class="kw">let </span>who = create_unexposed_nominator::&lt;T&gt;();
-		<span class="macro">assert_ok!</span>(FastUnstake::&lt;T&gt;::register_fast_unstake(
-			RawOrigin::Signed(who.clone()).into(),
-		));
+
+		<span class="kw">let </span>stashes = create_unexposed_nominators::&lt;T&gt;().into_iter().map(|s| {
+			<span class="macro">assert_ok!</span>(FastUnstake::&lt;T&gt;::register_fast_unstake(
+				RawOrigin::Signed(s.clone()).into(),
+			));
+			(s, T::Deposit::get())
+		}).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
 		<span class="comment">// no one is queued thus far.
 		</span><span class="macro">assert_eq!</span>(Head::&lt;T&gt;::get(), <span class="prelude-val">None</span>);
@@ -329,20 +356,19 @@
 		on_idle_full_block::&lt;T&gt;();
 	}
 	verify {
-		<span class="kw">let </span>checked: frame_support::BoundedVec&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt; = (<span class="number">1</span>..=u).rev().collect::&lt;Vec&lt;EraIndex&gt;&gt;().try_into().unwrap();
-		<span class="macro">assert_eq!</span>(
-			Head::&lt;T&gt;::get(),
-			<span class="prelude-val">Some</span>(UnstakeRequest { stash: who.clone(), checked, deposit: T::Deposit::get() })
-		);
+		<span class="kw">let </span>checked = (<span class="number">1</span>..=u).rev().collect::&lt;Vec&lt;EraIndex&gt;&gt;();
+		<span class="kw">let </span>request = Head::&lt;T&gt;::get().unwrap();
+		<span class="macro">assert_eq!</span>(checked, request.checked.into_inner());
 		<span class="macro">assert!</span>(<span class="macro">matches!</span>(
 			fast_unstake_events::&lt;T&gt;().last(),
-			<span class="prelude-val">Some</span>(Event::Checking { .. })
+			<span class="prelude-val">Some</span>(Event::BatchChecked { .. })
 		));
+		<span class="macro">assert!</span>(stashes.iter().all(|(s, <span class="kw">_</span>)| request.stashes.iter().find(|(ss, <span class="kw">_</span>)| ss == s).is_some()));
 	}
 
 	register_fast_unstake {
 		ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">1</span>);
-		<span class="kw">let </span>who = create_unexposed_nominator::&lt;T&gt;();
+		<span class="kw">let </span>who = create_unexposed_nominators::&lt;T&gt;().get(<span class="number">0</span>).cloned().unwrap();
 		<span class="macro">whitelist_account!</span>(who);
 		<span class="macro">assert_eq!</span>(Queue::&lt;T&gt;::count(), <span class="number">0</span>);
 
@@ -354,7 +380,7 @@
 
 	deregister {
 		ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">1</span>);
-		<span class="kw">let </span>who = create_unexposed_nominator::&lt;T&gt;();
+		<span class="kw">let </span>who = create_unexposed_nominators::&lt;T&gt;().get(<span class="number">0</span>).cloned().unwrap();
 		<span class="macro">assert_ok!</span>(FastUnstake::&lt;T&gt;::register_fast_unstake(
 			RawOrigin::Signed(who.clone()).into(),
 		));

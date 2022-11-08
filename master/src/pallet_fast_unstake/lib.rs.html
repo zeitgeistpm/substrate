@@ -464,6 +464,35 @@
 <span id="464">464</span>
 <span id="465">465</span>
 <span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -526,6 +555,7 @@
 <span class="comment">// NOTE: enable benchmarking in tests as well.
 </span><span class="attribute">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
 </span><span class="kw">mod </span>benchmarking;
+<span class="kw">pub mod </span>migrations;
 <span class="kw">pub mod </span>types;
 <span class="kw">pub mod </span>weights;
 
@@ -548,7 +578,7 @@
 	<span class="kw">use </span><span class="kw">crate</span>::types::<span class="kw-2">*</span>;
 	<span class="kw">use </span>frame_support::{
 		pallet_prelude::<span class="kw-2">*</span>,
-		traits::{Defensive, ReservableCurrency},
+		traits::{Defensive, ReservableCurrency, StorageVersion},
 	};
 	<span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
 	<span class="kw">use </span>sp_runtime::{
@@ -569,7 +599,10 @@
 		</span>}
 	}
 
+	<span class="kw">const </span>STORAGE_VERSION: StorageVersion = StorageVersion::new(<span class="number">1</span>);
+
 	<span class="attribute">#[pallet::pallet]
+	#[pallet::storage_version(STORAGE_VERSION)]
 	</span><span class="kw">pub struct </span>Pallet&lt;T&gt;(<span class="kw">_</span>);
 
 	<span class="attribute">#[pallet::config]
@@ -589,6 +622,11 @@
 		<span class="doccomment">/// The origin that can control this pallet.
 		</span><span class="kw">type </span>ControlOrigin: frame_support::traits::EnsureOrigin&lt;<span class="self">Self</span>::RuntimeOrigin&gt;;
 
+		<span class="doccomment">/// Batch size.
+		///
+		/// This many stashes are processed in each unstake request.
+		</span><span class="kw">type </span>BatchSize: Get&lt;u32&gt;;
+
 		<span class="doccomment">/// The access to staking functionality.
 		</span><span class="kw">type </span>Staking: StakingInterface&lt;Balance = BalanceOf&lt;<span class="self">Self</span>&gt;, AccountId = <span class="self">Self</span>::AccountId&gt;;
 
@@ -598,8 +636,7 @@
 
 	<span class="doccomment">/// The current &quot;head of the queue&quot; being unstaked.
 	</span><span class="attribute">#[pallet::storage]
-	</span><span class="kw">pub type </span>Head&lt;T: Config&gt; =
-		StorageValue&lt;<span class="kw">_</span>, UnstakeRequest&lt;T::AccountId, MaxChecking&lt;T&gt;, BalanceOf&lt;T&gt;&gt;, OptionQuery&gt;;
+	</span><span class="kw">pub type </span>Head&lt;T: Config&gt; = StorageValue&lt;<span class="kw">_</span>, UnstakeRequest&lt;T&gt;, OptionQuery&gt;;
 
 	<span class="doccomment">/// The map of all accounts wishing to be unstaked.
 	///
@@ -624,13 +661,18 @@
 		</span>Unstaked { stash: T::AccountId, result: DispatchResult },
 		<span class="doccomment">/// A staker was slashed for requesting fast-unstake whilst being exposed.
 		</span>Slashed { stash: T::AccountId, amount: BalanceOf&lt;T&gt; },
-		<span class="doccomment">/// A staker was partially checked for the given eras, but the process did not finish.
-		</span>Checking { stash: T::AccountId, eras: Vec&lt;EraIndex&gt; },
 		<span class="doccomment">/// Some internal error happened while migrating stash. They are removed as head as a
 		/// consequence.
 		</span>Errored { stash: T::AccountId },
 		<span class="doccomment">/// An internal error happened. Operations will be paused now.
 		</span>InternalError,
+		<span class="doccomment">/// A batch was partially checked for the given eras, but the process did not finish.
+		</span>BatchChecked { eras: Vec&lt;EraIndex&gt; },
+		<span class="doccomment">/// A batch was terminated.
+		///
+		/// This is always follows by a number of `Unstaked` or `Slashed` events, marking the end
+		/// of the batch. A new batch will be created upon next block.
+		</span>BatchFinished,
 	}
 
 	<span class="attribute">#[pallet::error]
@@ -691,12 +733,7 @@
 			<span class="kw">let </span>stash_account =
 				T::Staking::stash_by_ctrl(<span class="kw-2">&amp;</span>ctrl).map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::NotController)<span class="question-mark">?</span>;
 			<span class="macro">ensure!</span>(!Queue::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>stash_account), Error::&lt;T&gt;::AlreadyQueued);
-			<span class="macro">ensure!</span>(
-				Head::&lt;T&gt;::get()
-					.map_or(<span class="bool-val">true</span>, |UnstakeRequest { stash, .. }| stash_account != stash),
-				Error::&lt;T&gt;::AlreadyHead
-			);
-
+			<span class="macro">ensure!</span>(!<span class="self">Self</span>::is_head(<span class="kw-2">&amp;</span>stash_account), Error::&lt;T&gt;::AlreadyHead);
 			<span class="macro">ensure!</span>(!T::Staking::is_unbonding(<span class="kw-2">&amp;</span>stash_account)<span class="question-mark">?</span>, Error::&lt;T&gt;::NotFullyBonded);
 
 			<span class="comment">// chill and fully unstake.
@@ -726,19 +763,13 @@
 			<span class="kw">let </span>stash_account =
 				T::Staking::stash_by_ctrl(<span class="kw-2">&amp;</span>ctrl).map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::NotController)<span class="question-mark">?</span>;
 			<span class="macro">ensure!</span>(Queue::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>stash_account), Error::&lt;T&gt;::NotQueued);
-			<span class="macro">ensure!</span>(
-				Head::&lt;T&gt;::get()
-					.map_or(<span class="bool-val">true</span>, |UnstakeRequest { stash, .. }| stash_account != stash),
-				Error::&lt;T&gt;::AlreadyHead
-			);
+			<span class="macro">ensure!</span>(!<span class="self">Self</span>::is_head(<span class="kw-2">&amp;</span>stash_account), Error::&lt;T&gt;::AlreadyHead);
 			<span class="kw">let </span>deposit = Queue::&lt;T&gt;::take(stash_account.clone());
 
 			<span class="kw">if let </span><span class="prelude-val">Some</span>(deposit) = deposit.defensive() {
 				<span class="kw">let </span>remaining = T::Currency::unreserve(<span class="kw-2">&amp;</span>stash_account, deposit);
 				<span class="kw">if </span>!remaining.is_zero() {
-					<span class="macro">frame_support::defensive!</span>(<span class="string">&quot;`not enough balance to unreserve`&quot;</span>);
-					ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">0</span>);
-					<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::InternalError)
+					<span class="self">Self</span>::halt(<span class="string">&quot;not enough balance to unreserve&quot;</span>);
 				}
 			}
 
@@ -757,6 +788,20 @@
 	}
 
 	<span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
+		<span class="doccomment">/// Returns `true` if `staker` is anywhere to be found in the `head`.
+		</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>is_head(staker: <span class="kw-2">&amp;</span>T::AccountId) -&gt; bool {
+			Head::&lt;T&gt;::get().map_or(<span class="bool-val">false</span>, |UnstakeRequest { stashes, .. }| {
+				stashes.iter().any(|(stash, <span class="kw">_</span>)| stash == staker)
+			})
+		}
+
+		<span class="doccomment">/// Halt the operations of this pallet.
+		</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>halt(reason: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str) {
+			<span class="macro">frame_support::defensive!</span>(reason);
+			ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">0</span>);
+			<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::InternalError)
+		}
+
 		<span class="doccomment">/// process up to `remaining_weight`.
 		///
 		/// Returns the actual weight consumed.
@@ -802,28 +847,30 @@
 				</span><span class="kw">return </span>T::DbWeight::get().reads(<span class="number">2</span>)
 			}
 
-			<span class="kw">let </span>UnstakeRequest { stash, <span class="kw-2">mut </span>checked, deposit } =
-				<span class="kw">match </span>Head::&lt;T&gt;::take().or_else(|| {
-					<span class="comment">// NOTE: there is no order guarantees in `Queue`.
-					</span>Queue::&lt;T&gt;::drain()
-						.map(|(stash, deposit)| UnstakeRequest {
-							stash,
-							deposit,
-							checked: Default::default(),
-						})
-						.next()
-				}) {
-					<span class="prelude-val">None </span>=&gt; {
-						<span class="comment">// There&#39;s no `Head` and nothing in the `Queue`, nothing to do here.
-						</span><span class="kw">return </span>T::DbWeight::get().reads(<span class="number">4</span>)
-					},
-					<span class="prelude-val">Some</span>(head) =&gt; head,
-				};
+			<span class="kw">let </span>UnstakeRequest { stashes, <span class="kw-2">mut </span>checked } = <span class="kw">match </span>Head::&lt;T&gt;::take().or_else(|| {
+				<span class="comment">// NOTE: there is no order guarantees in `Queue`.
+				</span><span class="kw">let </span>stashes: BoundedVec&lt;<span class="kw">_</span>, T::BatchSize&gt; = Queue::&lt;T&gt;::drain()
+					.take(T::BatchSize::get() <span class="kw">as </span>usize)
+					.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+					.try_into()
+					.expect(<span class="string">&quot;take ensures bound is met; qed&quot;</span>);
+				<span class="kw">if </span>stashes.is_empty() {
+					<span class="prelude-val">None
+				</span>} <span class="kw">else </span>{
+					<span class="prelude-val">Some</span>(UnstakeRequest { stashes, checked: Default::default() })
+				}
+			}) {
+				<span class="prelude-val">None </span>=&gt; {
+					<span class="comment">// There&#39;s no `Head` and nothing in the `Queue`, nothing to do here.
+					</span><span class="kw">return </span>T::DbWeight::get().reads(<span class="number">4</span>)
+				},
+				<span class="prelude-val">Some</span>(head) =&gt; head,
+			};
 
 			<span class="macro">log!</span>(
 				debug,
-				<span class="string">&quot;checking {:?}, eras_to_check_per_block = {:?}, remaining_weight = {:?}&quot;</span>,
-				stash,
+				<span class="string">&quot;checking {:?} stashes, eras_to_check_per_block = {:?}, remaining_weight = {:?}&quot;</span>,
+				stashes.len(),
 				eras_to_check_per_block,
 				remaining_weight
 			);
@@ -831,9 +878,11 @@
 			<span class="comment">// the range that we&#39;re allowed to check in this round.
 			</span><span class="kw">let </span>current_era = T::Staking::current_era();
 			<span class="kw">let </span>bonding_duration = T::Staking::bonding_duration();
+
 			<span class="comment">// prune all the old eras that we don&#39;t care about. This will help us keep the bound
 			// of `checked`.
 			</span>checked.retain(|e| <span class="kw-2">*</span>e &gt;= current_era.saturating_sub(bonding_duration));
+
 			<span class="kw">let </span>unchecked_eras_to_check = {
 				<span class="comment">// get the last available `bonding_duration` eras up to current era in reverse
 				// order.
@@ -863,66 +912,75 @@
 				unchecked_eras_to_check
 			);
 
-			<span class="kw">if </span>unchecked_eras_to_check.is_empty() {
+			<span class="kw">let </span>unstake_stash = |stash: T::AccountId, deposit| {
 				<span class="kw">let </span>result = T::Staking::force_unstake(stash.clone());
-
 				<span class="kw">let </span>remaining = T::Currency::unreserve(<span class="kw-2">&amp;</span>stash, deposit);
 				<span class="kw">if </span>!remaining.is_zero() {
-					<span class="macro">frame_support::defensive!</span>(<span class="string">&quot;`not enough balance to unreserve`&quot;</span>);
-					ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">0</span>);
-					<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::InternalError)
+					<span class="self">Self</span>::halt(<span class="string">&quot;not enough balance to unreserve&quot;</span>);
 				} <span class="kw">else </span>{
 					<span class="macro">log!</span>(info, <span class="string">&quot;unstaked {:?}, outcome: {:?}&quot;</span>, stash, result);
 					<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Unstaked { stash, result });
 				}
+			};
 
-				&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::on_idle_unstake()
-			} <span class="kw">else </span>{
-				<span class="comment">// eras remaining to be checked.
-				</span><span class="kw">let </span><span class="kw-2">mut </span>eras_checked = <span class="number">0u32</span>;
+			<span class="kw">let </span>check_stash = |stash, deposit, eras_checked: <span class="kw-2">&amp;mut </span>u32| {
 				<span class="kw">let </span>is_exposed = unchecked_eras_to_check.iter().any(|e| {
 					eras_checked.saturating_inc();
 					T::Staking::is_exposed_in_era(<span class="kw-2">&amp;</span>stash, e)
 				});
 
-				<span class="macro">log!</span>(
-					debug,
-					<span class="string">&quot;checked {:?} eras, exposed? {}, (v: {:?}, u: {:?})&quot;</span>,
-					eras_checked,
-					is_exposed,
-					validator_count,
-					unchecked_eras_to_check.len()
-				);
-
-				<span class="comment">// NOTE: you can be extremely unlucky and get slashed here: You are not exposed in
-				// the last 28 eras, have registered yourself to be unstaked, midway being checked,
-				// you are exposed.
-				</span><span class="kw">if </span>is_exposed {
+				<span class="kw">if </span>is_exposed {
 					T::Currency::slash_reserved(<span class="kw-2">&amp;</span>stash, deposit);
 					<span class="macro">log!</span>(info, <span class="string">&quot;slashed {:?} by {:?}&quot;</span>, stash, deposit);
 					<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Slashed { stash, amount: deposit });
-				} <span class="kw">else </span>{
-					<span class="comment">// Not exposed in these eras.
-					</span><span class="kw">match </span>checked.try_extend(unchecked_eras_to_check.clone().into_iter()) {
-						<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; {
-							Head::&lt;T&gt;::put(UnstakeRequest {
-								stash: stash.clone(),
-								checked,
-								deposit,
-							});
-							<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Checking {
-								stash,
+					<span class="bool-val">false
+				</span>} <span class="kw">else </span>{
+					<span class="bool-val">true
+				</span>}
+			};
+
+			<span class="kw">if </span>unchecked_eras_to_check.is_empty() {
+				<span class="comment">// `stash` is not exposed in any era now -- we can let go of them now.
+				</span>stashes.into_iter().for_each(|(stash, deposit)| unstake_stash(stash, deposit));
+				<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::BatchFinished);
+				&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::on_idle_unstake()
+			} <span class="kw">else </span>{
+				<span class="comment">// eras checked so far.
+				</span><span class="kw">let </span><span class="kw-2">mut </span>eras_checked = <span class="number">0u32</span>;
+
+				<span class="kw">let </span>pre_length = stashes.len();
+				<span class="kw">let </span>stashes: BoundedVec&lt;(T::AccountId, BalanceOf&lt;T&gt;), T::BatchSize&gt; = stashes
+					.into_iter()
+					.filter(|(stash, deposit)| {
+						check_stash(stash.clone(), <span class="kw-2">*</span>deposit, <span class="kw-2">&amp;mut </span>eras_checked)
+					})
+					.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+					.try_into()
+					.expect(<span class="string">&quot;filter can only lessen the length; still in bound; qed&quot;</span>);
+				<span class="kw">let </span>post_length = stashes.len();
+
+				<span class="macro">log!</span>(
+					debug,
+					<span class="string">&quot;checked {:?} eras, pre stashes: {:?}, post: {:?}&quot;</span>,
+					eras_checked,
+					pre_length,
+					post_length,
+				);
+
+				<span class="kw">match </span>checked.try_extend(unchecked_eras_to_check.clone().into_iter()) {
+					<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt;
+						<span class="kw">if </span>stashes.is_empty() {
+							<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::BatchFinished);
+						} <span class="kw">else </span>{
+							Head::&lt;T&gt;::put(UnstakeRequest { stashes, checked });
+							<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::BatchChecked {
 								eras: unchecked_eras_to_check,
 							});
 						},
-						<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-							<span class="comment">// don&#39;t put the head back in -- there is an internal error in the
-							// pallet.
-							</span><span class="macro">frame_support::defensive!</span>(<span class="string">&quot;`checked is pruned via retain above`&quot;</span>);
-							ErasToCheckPerBlock::&lt;T&gt;::put(<span class="number">0</span>);
-							<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::InternalError);
-						},
-					}
+					<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+						<span class="comment">// don&#39;t put the head back in -- there is an internal error in the pallet.
+						</span><span class="self">Self</span>::halt(<span class="string">&quot;checked is pruned via retain above&quot;</span>)
+					},
 				}
 
 				&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::on_idle_check(validator_count * eras_checked)

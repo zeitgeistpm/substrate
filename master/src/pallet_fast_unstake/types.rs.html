@@ -39,12 +39,6 @@
 <span id="39">39</span>
 <span id="40">40</span>
 <span id="41">41</span>
-<span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -64,15 +58,14 @@
 
 </span><span class="doccomment">//! Types used in the Fast Unstake pallet.
 
-</span><span class="kw">use </span><span class="kw">crate</span>::Config;
+</span><span class="kw">use crate</span>::{Config, MaxChecking};
 <span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>frame_support::{
-	traits::{Currency, Get},
-	BoundedVec, EqNoBound, PartialEqNoBound, RuntimeDebugNoBound,
+	traits::Currency, BoundedVec, EqNoBound, PartialEqNoBound, RuntimeDebugNoBound,
 };
 <span class="kw">use </span>scale_info::TypeInfo;
 <span class="kw">use </span>sp_staking::EraIndex;
-<span class="kw">use </span>sp_std::{fmt::Debug, prelude::<span class="kw-2">*</span>};
+<span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">pub type </span>BalanceOf&lt;T&gt; =
 	&lt;&lt;T <span class="kw">as </span>Config&gt;::Currency <span class="kw">as </span>Currency&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId&gt;&gt;::Balance;
@@ -80,17 +73,12 @@
 </span><span class="attribute">#[derive(
 	Encode, Decode, EqNoBound, PartialEqNoBound, Clone, TypeInfo, RuntimeDebugNoBound, MaxEncodedLen,
 )]
-</span><span class="kw">pub struct </span>UnstakeRequest&lt;
-	AccountId: Eq + PartialEq + Debug,
-	MaxChecked: Get&lt;u32&gt;,
-	Balance: PartialEq + Debug,
-&gt; {
-	<span class="doccomment">/// Their stash account.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) stash: AccountId,
+#[scale_info(skip_type_params(T))]
+</span><span class="kw">pub struct </span>UnstakeRequest&lt;T: Config&gt; {
+	<span class="doccomment">/// This list of stashes being processed in this request, and their corresponding deposit.
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) stashes: BoundedVec&lt;(T::AccountId, BalanceOf&lt;T&gt;), T::BatchSize&gt;,
 	<span class="doccomment">/// The list of eras for which they have been checked.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) checked: BoundedVec&lt;EraIndex, MaxChecked&gt;,
-	<span class="doccomment">/// Deposit to be slashed if the unstake was unsuccessful.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) deposit: Balance,
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) checked: BoundedVec&lt;EraIndex, MaxChecking&lt;T&gt;&gt;,
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_fast_unstake" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>
