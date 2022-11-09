@@ -445,20 +445,6 @@
 <span id="445">445</span>
 <span id="446">446</span>
 <span id="447">447</span>
-<span id="448">448</span>
-<span id="449">449</span>
-<span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -483,7 +469,7 @@
 //! Details on Merkle Mountain Ranges (MMRs) can be found here:
 //! &lt;https://github.com/mimblewimble/grin/blob/master/doc/mmr.md&gt;
 //!
-//! The MMR pallet constructs a MMR from leaf data obtained on every block from
+//! The MMR pallet constructs an MMR from leaf data obtained on every block from
 //! `LeafDataProvider`. MMR nodes are stored both in:
 //! - on-chain storage - hashes only; not full leaf content)
 //! - off-chain storage - via Indexing API we push full leaf content (and all internal nodes as
@@ -511,7 +497,7 @@
 //!
 //! Secondary use case is to archive historical data, but still be able to retrieve them on-demand
 //! if needed. For instance if parent block hashes are stored in the MMR it&#39;s possible at any point
-//! in time to provide a MMR proof about some past block hash, while this data can be safely pruned
+//! in time to provide an MMR proof about some past block hash, while this data can be safely pruned
 //! from on-chain storage.
 //!
 //! NOTE This pallet is experimental and not proven to work in production.
@@ -564,7 +550,7 @@
 	<span class="kw">fn </span>on_initialize(peaks: NodeIndex) -&gt; Weight;
 }
 
-<span class="doccomment">/// A MMR specific to the pallet.
+<span class="doccomment">/// An MMR specific to the pallet.
 </span><span class="kw">type </span>ModuleMmr&lt;StorageType, T, I&gt; = mmr::Mmr&lt;StorageType, T, I, LeafOf&lt;T, I&gt;&gt;;
 
 <span class="doccomment">/// Leaf data.
@@ -748,15 +734,15 @@
 
 <span class="doccomment">/// Stateless MMR proof verification for batch of leaves.
 ///
-/// This function can be used to verify received MMR [primitives::BatchProof] (`proof`)
+/// This function can be used to verify received MMR [primitives::Proof] (`proof`)
 /// for given leaves set (`leaves`) against a known MMR root hash (`root`).
 /// Note, the leaves should be sorted such that corresponding leaves and leaf indices have the
 /// same position in both the `leaves` vector and the `leaf_indices` vector contained in the
-/// [primitives::BatchProof].
+/// [primitives::Proof].
 </span><span class="kw">pub fn </span>verify_leaves_proof&lt;H, L&gt;(
 	root: H::Output,
 	leaves: Vec&lt;mmr::Node&lt;H, L&gt;&gt;,
-	proof: primitives::BatchProof&lt;H::Output&gt;,
+	proof: primitives::Proof&lt;H::Output&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), primitives::Error&gt;
 <span class="kw">where
 	</span>H: traits::Hash,
@@ -842,37 +828,23 @@
 		<span class="prelude-val">Ok</span>(leaf_idx)
 	}
 
-	<span class="doccomment">/// Generate a MMR proof for the given `block_numbers`.
+	<span class="doccomment">/// Generate an MMR proof for the given `block_numbers`.
+	/// If `best_known_block_number = Some(n)`, this generates a historical proof for
+	/// the chain with head at height `n`.
+	/// Else it generates a proof for the MMR at the current block height.
 	///
 	/// Note this method can only be used from an off-chain context
 	/// (Offchain Worker or Runtime API call), since it requires
 	/// all the leaves to be present.
 	/// It may return an error or panic if used incorrectly.
-	</span><span class="kw">pub fn </span>generate_batch_proof(
+	</span><span class="kw">pub fn </span>generate_proof(
 		block_numbers: Vec&lt;T::BlockNumber&gt;,
-	) -&gt; <span class="prelude-ty">Result</span>&lt;
-		(Vec&lt;LeafOf&lt;T, I&gt;&gt;, primitives::BatchProof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;),
-		primitives::Error,
-	&gt; {
-		<span class="self">Self</span>::generate_historical_batch_proof(
-			block_numbers,
-			&lt;frame_system::Pallet&lt;T&gt;&gt;::block_number(),
-		)
-	}
+		best_known_block_number: <span class="prelude-ty">Option</span>&lt;T::BlockNumber&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;LeafOf&lt;T, I&gt;&gt;, primitives::Proof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;), primitives::Error&gt; {
+		<span class="comment">// check whether best_known_block_number provided, else use current best block
+		</span><span class="kw">let </span>best_known_block_number =
+			best_known_block_number.unwrap_or_else(|| &lt;frame_system::Pallet&lt;T&gt;&gt;::block_number());
 
-	<span class="doccomment">/// Generate a MMR proof for the given `block_numbers` given the `best_known_block_number`.
-	///
-	/// Note this method can only be used from an off-chain context
-	/// (Offchain Worker or Runtime API call), since it requires
-	/// all the leaves to be present.
-	/// It may return an error or panic if used incorrectly.
-	</span><span class="kw">pub fn </span>generate_historical_batch_proof(
-		block_numbers: Vec&lt;T::BlockNumber&gt;,
-		best_known_block_number: T::BlockNumber,
-	) -&gt; <span class="prelude-ty">Result</span>&lt;
-		(Vec&lt;LeafOf&lt;T, I&gt;&gt;, primitives::BatchProof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;),
-		primitives::Error,
-	&gt; {
 		<span class="kw">let </span>leaves_count =
 			<span class="self">Self</span>::block_num_to_leaf_index(best_known_block_number)<span class="question-mark">?</span>.saturating_add(<span class="number">1</span>);
 
@@ -885,7 +857,7 @@
 			.collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;LeafIndex&gt;, <span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>mmr: ModuleMmr&lt;mmr::storage::OffchainStorage, T, I&gt; = mmr::Mmr::new(leaves_count);
-		mmr.generate_batch_proof(leaf_indices)
+		mmr.generate_proof(leaf_indices)
 	}
 
 	<span class="doccomment">/// Return the on-chain MMR root hash.
@@ -901,7 +873,7 @@
 	/// or the proof is invalid.
 	</span><span class="kw">pub fn </span>verify_leaves(
 		leaves: Vec&lt;LeafOf&lt;T, I&gt;&gt;,
-		proof: primitives::BatchProof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;,
+		proof: primitives::Proof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;(), primitives::Error&gt; {
 		<span class="kw">if </span>proof.leaf_count &gt; <span class="self">Self</span>::mmr_leaves() ||
 			proof.leaf_count == <span class="number">0 </span>||

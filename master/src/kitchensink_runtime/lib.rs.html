@@ -2279,50 +2279,6 @@
 <span id="2279">2279</span>
 <span id="2280">2280</span>
 <span id="2281">2281</span>
-<span id="2282">2282</span>
-<span id="2283">2283</span>
-<span id="2284">2284</span>
-<span id="2285">2285</span>
-<span id="2286">2286</span>
-<span id="2287">2287</span>
-<span id="2288">2288</span>
-<span id="2289">2289</span>
-<span id="2290">2290</span>
-<span id="2291">2291</span>
-<span id="2292">2292</span>
-<span id="2293">2293</span>
-<span id="2294">2294</span>
-<span id="2295">2295</span>
-<span id="2296">2296</span>
-<span id="2297">2297</span>
-<span id="2298">2298</span>
-<span id="2299">2299</span>
-<span id="2300">2300</span>
-<span id="2301">2301</span>
-<span id="2302">2302</span>
-<span id="2303">2303</span>
-<span id="2304">2304</span>
-<span id="2305">2305</span>
-<span id="2306">2306</span>
-<span id="2307">2307</span>
-<span id="2308">2308</span>
-<span id="2309">2309</span>
-<span id="2310">2310</span>
-<span id="2311">2311</span>
-<span id="2312">2312</span>
-<span id="2313">2313</span>
-<span id="2314">2314</span>
-<span id="2315">2315</span>
-<span id="2316">2316</span>
-<span id="2317">2317</span>
-<span id="2318">2318</span>
-<span id="2319">2319</span>
-<span id="2320">2320</span>
-<span id="2321">2321</span>
-<span id="2322">2322</span>
-<span id="2323">2323</span>
-<span id="2324">2324</span>
-<span id="2325">2325</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -4380,59 +4336,15 @@
 		mmr::Hash,
 		BlockNumber,
 	&gt; <span class="kw">for </span>Runtime {
-		<span class="kw">fn </span>generate_proof(block_number: BlockNumber)
-			-&gt; <span class="prelude-ty">Result</span>&lt;(mmr::EncodableOpaqueLeaf, mmr::Proof&lt;mmr::Hash&gt;), mmr::Error&gt;
-		{
-			Mmr::generate_batch_proof(<span class="macro">vec!</span>[block_number]).and_then(|(leaves, proof)|
-				<span class="prelude-val">Ok</span>((
-					mmr::EncodableOpaqueLeaf::from_leaf(<span class="kw-2">&amp;</span>leaves[<span class="number">0</span>]),
-					mmr::BatchProof::into_single_leaf_proof(proof)<span class="question-mark">?
-				</span>))
-			)
-		}
-
-		<span class="kw">fn </span>verify_proof(leaf: mmr::EncodableOpaqueLeaf, proof: mmr::Proof&lt;mmr::Hash&gt;)
-			-&gt; <span class="prelude-ty">Result</span>&lt;(), mmr::Error&gt;
-		{
-			<span class="kw">let </span>leaf: mmr::Leaf = leaf
-				.into_opaque_leaf()
-				.try_decode()
-				.ok_or(mmr::Error::Verify)<span class="question-mark">?</span>;
-			Mmr::verify_leaves(<span class="macro">vec!</span>[leaf], mmr::Proof::into_batch_proof(proof))
-		}
-
-		<span class="kw">fn </span>verify_proof_stateless(
-			root: mmr::Hash,
-			leaf: mmr::EncodableOpaqueLeaf,
-			proof: mmr::Proof&lt;mmr::Hash&gt;
-		) -&gt; <span class="prelude-ty">Result</span>&lt;(), mmr::Error&gt; {
-			<span class="kw">let </span>node = mmr::DataOrHash::Data(leaf.into_opaque_leaf());
-			pallet_mmr::verify_leaves_proof::&lt;mmr::Hashing, <span class="kw">_</span>&gt;(root, <span class="macro">vec!</span>[node], mmr::Proof::into_batch_proof(proof))
-		}
-
 		<span class="kw">fn </span>mmr_root() -&gt; <span class="prelude-ty">Result</span>&lt;mmr::Hash, mmr::Error&gt; {
 			<span class="prelude-val">Ok</span>(Mmr::mmr_root())
 		}
 
-		<span class="kw">fn </span>generate_batch_proof(
+		<span class="kw">fn </span>generate_proof(
 			block_numbers: Vec&lt;BlockNumber&gt;,
-		) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;mmr::EncodableOpaqueLeaf&gt;, mmr::BatchProof&lt;mmr::Hash&gt;), mmr::Error&gt; {
-			Mmr::generate_batch_proof(block_numbers).map(|(leaves, proof)| {
-				(
-					leaves
-						.into_iter()
-						.map(|leaf| mmr::EncodableOpaqueLeaf::from_leaf(<span class="kw-2">&amp;</span>leaf))
-						.collect(),
-					proof,
-				)
-			})
-		}
-
-		<span class="kw">fn </span>generate_historical_batch_proof(
-			block_numbers: Vec&lt;BlockNumber&gt;,
-			best_known_block_number: BlockNumber,
-		) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;mmr::EncodableOpaqueLeaf&gt;, mmr::BatchProof&lt;mmr::Hash&gt;), mmr::Error&gt; {
-			Mmr::generate_historical_batch_proof(block_numbers, best_known_block_number).map(
+			best_known_block_number: <span class="prelude-ty">Option</span>&lt;BlockNumber&gt;,
+		) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;mmr::EncodableOpaqueLeaf&gt;, mmr::Proof&lt;mmr::Hash&gt;), mmr::Error&gt; {
+			Mmr::generate_proof(block_numbers, best_known_block_number).map(
 				|(leaves, proof)| {
 					(
 						leaves
@@ -4445,7 +4357,7 @@
 			)
 		}
 
-		<span class="kw">fn </span>verify_batch_proof(leaves: Vec&lt;mmr::EncodableOpaqueLeaf&gt;, proof: mmr::BatchProof&lt;mmr::Hash&gt;)
+		<span class="kw">fn </span>verify_proof(leaves: Vec&lt;mmr::EncodableOpaqueLeaf&gt;, proof: mmr::Proof&lt;mmr::Hash&gt;)
 			-&gt; <span class="prelude-ty">Result</span>&lt;(), mmr::Error&gt;
 		{
 			<span class="kw">let </span>leaves = leaves.into_iter().map(|leaf|
@@ -4455,10 +4367,10 @@
 			Mmr::verify_leaves(leaves, proof)
 		}
 
-		<span class="kw">fn </span>verify_batch_proof_stateless(
+		<span class="kw">fn </span>verify_proof_stateless(
 			root: mmr::Hash,
 			leaves: Vec&lt;mmr::EncodableOpaqueLeaf&gt;,
-			proof: mmr::BatchProof&lt;mmr::Hash&gt;
+			proof: mmr::Proof&lt;mmr::Hash&gt;
 		) -&gt; <span class="prelude-ty">Result</span>&lt;(), mmr::Error&gt; {
 			<span class="kw">let </span>nodes = leaves.into_iter().map(|leaf|mmr::DataOrHash::Data(leaf.into_opaque_leaf())).collect();
 			pallet_mmr::verify_leaves_proof::&lt;mmr::Hashing, <span class="kw">_</span>&gt;(root, nodes, proof)

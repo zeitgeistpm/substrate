@@ -223,11 +223,11 @@
 <span class="doccomment">/// Stateless verification of the proof for a batch of leaves.
 /// Note, the leaves should be sorted such that corresponding leaves and leaf indices have the
 /// same position in both the `leaves` vector and the `leaf_indices` vector contained in the
-/// [primitives::BatchProof]
+/// [primitives::Proof]
 </span><span class="kw">pub fn </span>verify_leaves_proof&lt;H, L&gt;(
 	root: H::Output,
 	leaves: Vec&lt;Node&lt;H, L&gt;&gt;,
-	proof: primitives::BatchProof&lt;H::Output&gt;,
+	proof: primitives::Proof&lt;H::Output&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;bool, Error&gt;
 <span class="kw">where
 	</span>H: sp_runtime::traits::Hash,
@@ -254,7 +254,7 @@
 		.map_err(|e| Error::Verify.log_debug(e))
 }
 
-<span class="doccomment">/// A wrapper around a MMR library to expose limited functionality.
+<span class="doccomment">/// A wrapper around an MMR library to expose limited functionality.
 ///
 /// Available functions depend on the storage kind ([Runtime](crate::mmr::storage::RuntimeStorage)
 /// vs [Off-chain](crate::mmr::storage::OffchainStorage)).
@@ -285,11 +285,11 @@
 	<span class="doccomment">/// Verify proof for a set of leaves.
 	/// Note, the leaves should be sorted such that corresponding leaves and leaf indices have
 	/// the same position in both the `leaves` vector and the `leaf_indices` vector contained in the
-	/// [primitives::BatchProof]
+	/// [primitives::Proof]
 	</span><span class="kw">pub fn </span>verify_leaves_proof(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		leaves: Vec&lt;L&gt;,
-		proof: primitives::BatchProof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;,
+		proof: primitives::Proof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;bool, Error&gt; {
 		<span class="kw">let </span>p = mmr_lib::MerkleProof::&lt;NodeOf&lt;T, I, L&gt;, Hasher&lt;HashingOf&lt;T, I&gt;, L&gt;&gt;::new(
 			<span class="self">self</span>.mmr.mmr_size(),
@@ -357,10 +357,10 @@
 	///
 	/// Proof generation requires all the nodes (or their hashes) to be available in the storage.
 	/// (i.e. you can&#39;t run the function in the pruned storage).
-	</span><span class="kw">pub fn </span>generate_batch_proof(
+	</span><span class="kw">pub fn </span>generate_proof(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		leaf_indices: Vec&lt;NodeIndex&gt;,
-	) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;L&gt;, primitives::BatchProof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;), Error&gt; {
+	) -&gt; <span class="prelude-ty">Result</span>&lt;(Vec&lt;L&gt;, primitives::Proof&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Hash&gt;), Error&gt; {
 		<span class="kw">let </span>positions = leaf_indices
 			.iter()
 			.map(|index| mmr_lib::leaf_index_to_pos(<span class="kw-2">*</span>index))
@@ -378,7 +378,7 @@
 		<span class="self">self</span>.mmr
 			.gen_proof(positions)
 			.map_err(|e| Error::GenerateProof.log_error(e))
-			.map(|p| primitives::BatchProof {
+			.map(|p| primitives::Proof {
 				leaf_indices,
 				leaf_count,
 				items: p.proof_items().iter().map(|x| x.hash()).collect(),

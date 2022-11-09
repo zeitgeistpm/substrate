@@ -359,21 +359,6 @@
 <span id="359">359</span>
 <span id="360">360</span>
 <span id="361">361</span>
-<span id="362">362</span>
-<span id="363">363</span>
-<span id="364">364</span>
-<span id="365">365</span>
-<span id="366">366</span>
-<span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
@@ -398,7 +383,7 @@
 
 </span><span class="kw">use </span>std::{marker::PhantomData, sync::Arc};
 
-<span class="kw">use </span>codec::{Codec, Encode};
+<span class="kw">use </span>codec::{Codec, Decode, Encode};
 <span class="kw">use </span>jsonrpsee::{
 	core::{async_trait, RpcResult},
 	proc_macros::rpc,
@@ -409,58 +394,33 @@
 <span class="kw">use </span>sp_api::{NumberFor, ProvideRuntimeApi};
 <span class="kw">use </span>sp_blockchain::HeaderBackend;
 <span class="kw">use </span>sp_core::Bytes;
-<span class="kw">use </span>sp_mmr_primitives::{BatchProof, Error <span class="kw">as </span>MmrError, Proof};
+<span class="kw">use </span>sp_mmr_primitives::{Error <span class="kw">as </span>MmrError, Proof};
 <span class="kw">use </span>sp_runtime::{generic::BlockId, traits::Block <span class="kw">as </span>BlockT};
 
 <span class="kw">pub use </span>sp_mmr_primitives::MmrApi <span class="kw">as </span>MmrRuntimeApi;
 
 <span class="kw">const </span>RUNTIME_ERROR: i32 = <span class="number">8000</span>;
 <span class="kw">const </span>MMR_ERROR: i32 = <span class="number">8010</span>;
-<span class="kw">const </span>LEAF_NOT_FOUND_ERROR: i32 = MMR_ERROR + <span class="number">1</span>;
-<span class="kw">const </span>GENERATE_PROOF_ERROR: i32 = MMR_ERROR + <span class="number">2</span>;
-
-<span class="doccomment">/// Retrieved MMR leaf and its proof.
-</span><span class="attribute">#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
-#[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
-</span><span class="kw">pub struct </span>LeafProof&lt;BlockHash&gt; {
-	<span class="doccomment">/// Block hash the proof was generated for.
-	</span><span class="kw">pub </span>block_hash: BlockHash,
-	<span class="doccomment">/// SCALE-encoded leaf data.
-	</span><span class="kw">pub </span>leaf: Bytes,
-	<span class="doccomment">/// SCALE-encoded proof data. See [sp_mmr_primitives::Proof].
-	</span><span class="kw">pub </span>proof: Bytes,
-}
-
-<span class="kw">impl</span>&lt;BlockHash&gt; LeafProof&lt;BlockHash&gt; {
-	<span class="doccomment">/// Create new `LeafProof` from given concrete `leaf` and `proof`.
-	</span><span class="kw">pub fn </span>new&lt;Leaf, MmrHash&gt;(block_hash: BlockHash, leaf: Leaf, proof: Proof&lt;MmrHash&gt;) -&gt; <span class="self">Self
-	</span><span class="kw">where
-		</span>Leaf: Encode,
-		MmrHash: Encode,
-	{
-		<span class="self">Self </span>{ block_hash, leaf: Bytes(leaf.encode()), proof: Bytes(proof.encode()) }
-	}
-}
 
 <span class="doccomment">/// Retrieved MMR leaves and their proof.
 </span><span class="attribute">#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 #[serde(rename_all = <span class="string">&quot;camelCase&quot;</span>)]
-</span><span class="kw">pub struct </span>LeafBatchProof&lt;BlockHash&gt; {
+</span><span class="kw">pub struct </span>LeavesProof&lt;BlockHash&gt; {
 	<span class="doccomment">/// Block hash the proof was generated for.
 	</span><span class="kw">pub </span>block_hash: BlockHash,
 	<span class="doccomment">/// SCALE-encoded vector of `LeafData`.
 	</span><span class="kw">pub </span>leaves: Bytes,
-	<span class="doccomment">/// SCALE-encoded proof data. See [sp_mmr_primitives::BatchProof].
+	<span class="doccomment">/// SCALE-encoded proof data. See [sp_mmr_primitives::Proof].
 	</span><span class="kw">pub </span>proof: Bytes,
 }
 
-<span class="kw">impl</span>&lt;BlockHash&gt; LeafBatchProof&lt;BlockHash&gt; {
-	<span class="doccomment">/// Create new `LeafBatchProof` from a given vector of `Leaf` and a
-	/// [sp_mmr_primitives::BatchProof].
+<span class="kw">impl</span>&lt;BlockHash&gt; LeavesProof&lt;BlockHash&gt; {
+	<span class="doccomment">/// Create new `LeavesProof` from a given vector of `Leaf` and a
+	/// [sp_mmr_primitives::Proof].
 	</span><span class="kw">pub fn </span>new&lt;Leaf, MmrHash&gt;(
 		block_hash: BlockHash,
 		leaves: Vec&lt;Leaf&gt;,
-		proof: BatchProof&lt;MmrHash&gt;,
+		proof: Proof&lt;MmrHash&gt;,
 	) -&gt; <span class="self">Self
 	</span><span class="kw">where
 		</span>Leaf: Encode,
@@ -472,63 +432,59 @@
 
 <span class="doccomment">/// MMR RPC methods.
 </span><span class="attribute">#[rpc(client, server)]
-</span><span class="kw">pub trait </span>MmrApi&lt;BlockHash, BlockNumber&gt; {
-	<span class="doccomment">/// Generate MMR proof for given block number.
-	///
-	/// This method calls into a runtime with MMR pallet included and attempts to generate
-	/// MMR proof for a block with a specified `block_number`.
-	/// Optionally, a block hash at which the runtime should be queried can be specified.
-	///
-	/// Returns the (full) leaf itself and a proof for this leaf (compact encoding, i.e. hash of
-	/// the leaf). Both parameters are SCALE-encoded.
-	</span><span class="attribute">#[method(name = <span class="string">&quot;mmr_generateProof&quot;</span>)]
-	</span><span class="kw">fn </span>generate_proof(
-		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block_number: BlockNumber,
-		at: <span class="prelude-ty">Option</span>&lt;BlockHash&gt;,
-	) -&gt; RpcResult&lt;LeafProof&lt;BlockHash&gt;&gt;;
+</span><span class="kw">pub trait </span>MmrApi&lt;BlockHash, BlockNumber, MmrHash&gt; {
+	<span class="doccomment">/// Get the MMR root hash for the current best block.
+	</span><span class="attribute">#[method(name = <span class="string">&quot;mmr_root&quot;</span>)]
+	</span><span class="kw">fn </span>mmr_root(<span class="kw-2">&amp;</span><span class="self">self</span>, at: <span class="prelude-ty">Option</span>&lt;BlockHash&gt;) -&gt; RpcResult&lt;MmrHash&gt;;
 
-	<span class="doccomment">/// Generate MMR proof for the given block numbers.
+	<span class="doccomment">/// Generate an MMR proof for the given `block_numbers`.
 	///
 	/// This method calls into a runtime with MMR pallet included and attempts to generate
-	/// MMR proof for a set of blocks with the specific `block_numbers`.
-	/// Optionally, a block hash at which the runtime should be queried can be specified.
-	///
-	/// Returns the leaves and a proof for these leaves (compact encoding, i.e. hash of
-	/// the leaves). Both parameters are SCALE-encoded.
-	/// The order of entries in the `leaves` field of the returned struct
-	/// is the same as the order of the entries in `block_numbers` supplied
-	</span><span class="attribute">#[method(name = <span class="string">&quot;mmr_generateBatchProof&quot;</span>)]
-	</span><span class="kw">fn </span>generate_batch_proof(
-		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block_numbers: Vec&lt;BlockNumber&gt;,
-		at: <span class="prelude-ty">Option</span>&lt;BlockHash&gt;,
-	) -&gt; RpcResult&lt;LeafBatchProof&lt;BlockHash&gt;&gt;;
-
-	<span class="doccomment">/// Generate a MMR proof for the given `block_numbers` given the `best_known_block_number`.
-	///
-	/// This method calls into a runtime with MMR pallet included and attempts to generate
-	/// a MMR proof for the set of blocks that have the given `block_numbers` with MMR given the
+	/// an MMR proof for the set of blocks that have the given `block_numbers` with the MMR root at
 	/// `best_known_block_number`. `best_known_block_number` must be larger than all the
 	/// `block_numbers` for the function to succeed.
 	///
-	/// Optionally, a block hash at which the runtime should be queried can be specified.
-	/// Note that specifying the block hash isn&#39;t super-useful here, unless you&#39;re generating
-	/// proof using non-finalized blocks where there are several competing forks. That&#39;s because
-	/// MMR state will be fixed to the state with `best_known_block_number`, which already points to
+	/// Optionally via `at`, a block hash at which the runtime should be queried can be specified.
+	/// Optionally via `best_known_block_number`, the proof can be generated using the MMR&#39;s state
+	/// at a specific best block. Note that if `best_known_block_number` is provided, then also
+	/// specifying the block hash via `at` isn&#39;t super-useful here, unless you&#39;re generating proof
+	/// using non-finalized blocks where there are several competing forks. That&#39;s because MMR state
+	/// will be fixed to the state with `best_known_block_number`, which already points to
 	/// some historical block.
 	///
-	/// Returns the leaves and a proof for these leaves (compact encoding, i.e. hash of
+	/// Returns the (full) leaves and a proof for these leaves (compact encoding, i.e. hash of
 	/// the leaves). Both parameters are SCALE-encoded.
 	/// The order of entries in the `leaves` field of the returned struct
 	/// is the same as the order of the entries in `block_numbers` supplied
-	</span><span class="attribute">#[method(name = <span class="string">&quot;mmr_generateHistoricalBatchProof&quot;</span>)]
-	</span><span class="kw">fn </span>generate_historical_batch_proof(
+	</span><span class="attribute">#[method(name = <span class="string">&quot;mmr_generateProof&quot;</span>)]
+	</span><span class="kw">fn </span>generate_proof(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
 		block_numbers: Vec&lt;BlockNumber&gt;,
-		best_known_block_number: BlockNumber,
+		best_known_block_number: <span class="prelude-ty">Option</span>&lt;BlockNumber&gt;,
 		at: <span class="prelude-ty">Option</span>&lt;BlockHash&gt;,
-	) -&gt; RpcResult&lt;LeafBatchProof&lt;BlockHash&gt;&gt;;
+	) -&gt; RpcResult&lt;LeavesProof&lt;BlockHash&gt;&gt;;
+
+	<span class="doccomment">/// Verify an MMR `proof`.
+	///
+	/// This method calls into a runtime with MMR pallet included and attempts to verify
+	/// an MMR proof.
+	///
+	/// Returns `true` if the proof is valid, else returns the verification error.
+	</span><span class="attribute">#[method(name = <span class="string">&quot;mmr_verifyProof&quot;</span>)]
+	</span><span class="kw">fn </span>verify_proof(<span class="kw-2">&amp;</span><span class="self">self</span>, proof: LeavesProof&lt;BlockHash&gt;) -&gt; RpcResult&lt;bool&gt;;
+
+	<span class="doccomment">/// Verify an MMR `proof` statelessly given an `mmr_root`.
+	///
+	/// This method calls into a runtime with MMR pallet included and attempts to verify
+	/// an MMR proof against a provided MMR root.
+	///
+	/// Returns `true` if the proof is valid, else returns the verification error.
+	</span><span class="attribute">#[method(name = <span class="string">&quot;mmr_verifyProofStateless&quot;</span>)]
+	</span><span class="kw">fn </span>verify_proof_stateless(
+		<span class="kw-2">&amp;</span><span class="self">self</span>,
+		mmr_root: MmrHash,
+		proof: LeavesProof&lt;BlockHash&gt;,
+	) -&gt; RpcResult&lt;bool&gt;;
 }
 
 <span class="doccomment">/// MMR RPC methods.
@@ -545,7 +501,7 @@
 }
 
 <span class="attribute">#[async_trait]
-</span><span class="kw">impl</span>&lt;Client, Block, MmrHash&gt; MmrApiServer&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash, NumberFor&lt;Block&gt;&gt;
+</span><span class="kw">impl</span>&lt;Client, Block, MmrHash&gt; MmrApiServer&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash, NumberFor&lt;Block&gt;, MmrHash&gt;
 	<span class="kw">for </span>Mmr&lt;Client, (Block, MmrHash)&gt;
 <span class="kw">where
 	</span>Block: BlockT,
@@ -553,61 +509,31 @@
 	Client::Api: MmrRuntimeApi&lt;Block, MmrHash, NumberFor&lt;Block&gt;&gt;,
 	MmrHash: Codec + Send + Sync + <span class="lifetime">&#39;static</span>,
 {
+	<span class="kw">fn </span>mmr_root(<span class="kw-2">&amp;</span><span class="self">self</span>, at: <span class="prelude-ty">Option</span>&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;) -&gt; RpcResult&lt;MmrHash&gt; {
+		<span class="kw">let </span>block_hash = at.unwrap_or_else(||
+			<span class="comment">// If the block hash is not supplied assume the best block.
+			</span><span class="self">self</span>.client.info().best_hash);
+		<span class="kw">let </span>api = <span class="self">self</span>.client.runtime_api();
+		<span class="kw">let </span>mmr_root = api
+			.mmr_root(<span class="kw-2">&amp;</span>BlockId::Hash(block_hash))
+			.map_err(runtime_error_into_rpc_error)<span class="question-mark">?
+			</span>.map_err(mmr_error_into_rpc_error)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(mmr_root)
+	}
+
 	<span class="kw">fn </span>generate_proof(
 		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block_number: NumberFor&lt;Block&gt;,
+		block_numbers: Vec&lt;NumberFor&lt;Block&gt;&gt;,
+		best_known_block_number: <span class="prelude-ty">Option</span>&lt;NumberFor&lt;Block&gt;&gt;,
 		at: <span class="prelude-ty">Option</span>&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;,
-	) -&gt; RpcResult&lt;LeafProof&lt;Block::Hash&gt;&gt; {
+	) -&gt; RpcResult&lt;LeavesProof&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;&gt; {
 		<span class="kw">let </span>api = <span class="self">self</span>.client.runtime_api();
-		<span class="kw">let </span>block_hash = at.unwrap_or_else(|| <span class="self">self</span>.client.info().best_hash);
+		<span class="kw">let </span>block_hash = at.unwrap_or_else(||
+			<span class="comment">// If the block hash is not supplied assume the best block.
+			</span><span class="self">self</span>.client.info().best_hash);
 
-		<span class="kw">let </span>(leaf, proof) = api
+		<span class="kw">let </span>(leaves, proof) = api
 			.generate_proof_with_context(
-				<span class="kw-2">&amp;</span>BlockId::hash(block_hash),
-				sp_core::ExecutionContext::OffchainCall(<span class="prelude-val">None</span>),
-				block_number,
-			)
-			.map_err(runtime_error_into_rpc_error)<span class="question-mark">?
-			</span>.map_err(mmr_error_into_rpc_error)<span class="question-mark">?</span>;
-
-		<span class="prelude-val">Ok</span>(LeafProof::new(block_hash, leaf, proof))
-	}
-
-	<span class="kw">fn </span>generate_batch_proof(
-		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block_numbers: Vec&lt;NumberFor&lt;Block&gt;&gt;,
-		at: <span class="prelude-ty">Option</span>&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;,
-	) -&gt; RpcResult&lt;LeafBatchProof&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;&gt; {
-		<span class="kw">let </span>api = <span class="self">self</span>.client.runtime_api();
-		<span class="kw">let </span>block_hash = at.unwrap_or_else(||
-			<span class="comment">// If the block hash is not supplied assume the best block.
-			</span><span class="self">self</span>.client.info().best_hash);
-
-		<span class="kw">let </span>(leaves, proof) = api
-			.generate_batch_proof_with_context(
-				<span class="kw-2">&amp;</span>BlockId::hash(block_hash),
-				sp_core::ExecutionContext::OffchainCall(<span class="prelude-val">None</span>),
-				block_numbers,
-			)
-			.map_err(runtime_error_into_rpc_error)<span class="question-mark">?
-			</span>.map_err(mmr_error_into_rpc_error)<span class="question-mark">?</span>;
-
-		<span class="prelude-val">Ok</span>(LeafBatchProof::new(block_hash, leaves, proof))
-	}
-
-	<span class="kw">fn </span>generate_historical_batch_proof(
-		<span class="kw-2">&amp;</span><span class="self">self</span>,
-		block_numbers: Vec&lt;NumberFor&lt;Block&gt;&gt;,
-		best_known_block_number: NumberFor&lt;Block&gt;,
-		at: <span class="prelude-ty">Option</span>&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;,
-	) -&gt; RpcResult&lt;LeafBatchProof&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;&gt; {
-		<span class="kw">let </span>api = <span class="self">self</span>.client.runtime_api();
-		<span class="kw">let </span>block_hash = at.unwrap_or_else(||
-			<span class="comment">// If the block hash is not supplied assume the best block.
-			</span><span class="self">self</span>.client.info().best_hash);
-
-		<span class="kw">let </span>(leaves, proof) = api
-			.generate_historical_batch_proof_with_context(
 				<span class="kw-2">&amp;</span>BlockId::hash(block_hash),
 				sp_core::ExecutionContext::OffchainCall(<span class="prelude-val">None</span>),
 				block_numbers,
@@ -616,26 +542,69 @@
 			.map_err(runtime_error_into_rpc_error)<span class="question-mark">?
 			</span>.map_err(mmr_error_into_rpc_error)<span class="question-mark">?</span>;
 
-		<span class="prelude-val">Ok</span>(LeafBatchProof::new(block_hash, leaves, proof))
+		<span class="prelude-val">Ok</span>(LeavesProof::new(block_hash, leaves, proof))
+	}
+
+	<span class="kw">fn </span>verify_proof(<span class="kw-2">&amp;</span><span class="self">self</span>, proof: LeavesProof&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;) -&gt; RpcResult&lt;bool&gt; {
+		<span class="kw">let </span>api = <span class="self">self</span>.client.runtime_api();
+
+		<span class="kw">let </span>leaves = Decode::decode(<span class="kw-2">&amp;mut &amp;</span>proof.leaves.<span class="number">0</span>[..])
+			.map_err(|e| CallError::InvalidParams(anyhow::Error::new(e)))<span class="question-mark">?</span>;
+
+		<span class="kw">let </span>decoded_proof = Decode::decode(<span class="kw-2">&amp;mut &amp;</span>proof.proof.<span class="number">0</span>[..])
+			.map_err(|e| CallError::InvalidParams(anyhow::Error::new(e)))<span class="question-mark">?</span>;
+
+		api.verify_proof_with_context(
+			<span class="kw-2">&amp;</span>BlockId::hash(proof.block_hash),
+			sp_core::ExecutionContext::OffchainCall(<span class="prelude-val">None</span>),
+			leaves,
+			decoded_proof,
+		)
+		.map_err(runtime_error_into_rpc_error)<span class="question-mark">?
+		</span>.map_err(mmr_error_into_rpc_error)<span class="question-mark">?</span>;
+
+		<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
+	}
+
+	<span class="kw">fn </span>verify_proof_stateless(
+		<span class="kw-2">&amp;</span><span class="self">self</span>,
+		mmr_root: MmrHash,
+		proof: LeavesProof&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;,
+	) -&gt; RpcResult&lt;bool&gt; {
+		<span class="kw">let </span>api = <span class="self">self</span>.client.runtime_api();
+
+		<span class="kw">let </span>leaves = Decode::decode(<span class="kw-2">&amp;mut &amp;</span>proof.leaves.<span class="number">0</span>[..])
+			.map_err(|e| CallError::InvalidParams(anyhow::Error::new(e)))<span class="question-mark">?</span>;
+
+		<span class="kw">let </span>decoded_proof = Decode::decode(<span class="kw-2">&amp;mut &amp;</span>proof.proof.<span class="number">0</span>[..])
+			.map_err(|e| CallError::InvalidParams(anyhow::Error::new(e)))<span class="question-mark">?</span>;
+
+		api.verify_proof_stateless(
+			<span class="kw-2">&amp;</span>BlockId::hash(proof.block_hash),
+			mmr_root,
+			leaves,
+			decoded_proof,
+		)
+		.map_err(runtime_error_into_rpc_error)<span class="question-mark">?
+		</span>.map_err(mmr_error_into_rpc_error)<span class="question-mark">?</span>;
+
+		<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
 	}
 }
 
-<span class="doccomment">/// Converts a mmr-specific error into a [`CallError`].
+<span class="doccomment">/// Converts an mmr-specific error into a [`CallError`].
 </span><span class="kw">fn </span>mmr_error_into_rpc_error(err: MmrError) -&gt; CallError {
-	<span class="kw">let </span>data = <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, err);
-	<span class="kw">match </span>err {
-		MmrError::LeafNotFound =&gt; CallError::Custom(ErrorObject::owned(
-			LEAF_NOT_FOUND_ERROR,
-			<span class="string">&quot;Leaf was not found&quot;</span>,
-			<span class="prelude-val">Some</span>(data),
-		)),
-		MmrError::GenerateProof =&gt; CallError::Custom(ErrorObject::owned(
-			GENERATE_PROOF_ERROR,
-			<span class="string">&quot;Error while generating the proof&quot;</span>,
-			<span class="prelude-val">Some</span>(data),
-		)),
-		<span class="kw">_ </span>=&gt; CallError::Custom(ErrorObject::owned(MMR_ERROR, <span class="string">&quot;Unexpected MMR error&quot;</span>, <span class="prelude-val">Some</span>(data))),
-	}
+	<span class="kw">let </span>error_code = MMR_ERROR +
+		<span class="kw">match </span>err {
+			MmrError::LeafNotFound =&gt; <span class="number">1</span>,
+			MmrError::GenerateProof =&gt; <span class="number">2</span>,
+			MmrError::Verify =&gt; <span class="number">3</span>,
+			MmrError::BlockNumToLeafIndex =&gt; <span class="number">4</span>,
+			MmrError::InvalidBestKnownBlock =&gt; <span class="number">5</span>,
+			<span class="kw">_ </span>=&gt; <span class="number">0</span>,
+		};
+
+	CallError::Custom(ErrorObject::owned(error_code, err.to_string(), <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, err))))
 }
 
 <span class="doccomment">/// Converts a runtime trap into a [`CallError`].
@@ -657,34 +626,12 @@
 		<span class="comment">// given
 		</span><span class="kw">let </span>leaf = <span class="macro">vec!</span>[<span class="number">1_u8</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];
 		<span class="kw">let </span>proof = Proof {
-			leaf_index: <span class="number">1</span>,
-			leaf_count: <span class="number">9</span>,
-			items: <span class="macro">vec!</span>[H256::repeat_byte(<span class="number">1</span>), H256::repeat_byte(<span class="number">2</span>)],
-		};
-
-		<span class="kw">let </span>leaf_proof = LeafProof::new(H256::repeat_byte(<span class="number">0</span>), leaf, proof);
-
-		<span class="comment">// when
-		</span><span class="kw">let </span>actual = serde_json::to_string(<span class="kw-2">&amp;</span>leaf_proof).unwrap();
-
-		<span class="comment">// then
-		</span><span class="macro">assert_eq!</span>(
-			actual,
-			<span class="string">r#&quot;{&quot;blockHash&quot;:&quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,&quot;leaf&quot;:&quot;0x1001020304&quot;,&quot;proof&quot;:&quot;0x010000000000000009000000000000000801010101010101010101010101010101010101010101010101010101010101010202020202020202020202020202020202020202020202020202020202020202&quot;}&quot;#
-		</span>);
-	}
-
-	<span class="attribute">#[test]
-	</span><span class="kw">fn </span>should_serialize_leaf_batch_proof() {
-		<span class="comment">// given
-		</span><span class="kw">let </span>leaf = <span class="macro">vec!</span>[<span class="number">1_u8</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];
-		<span class="kw">let </span>proof = BatchProof {
 			leaf_indices: <span class="macro">vec!</span>[<span class="number">1</span>],
 			leaf_count: <span class="number">9</span>,
 			items: <span class="macro">vec!</span>[H256::repeat_byte(<span class="number">1</span>), H256::repeat_byte(<span class="number">2</span>)],
 		};
 
-		<span class="kw">let </span>leaf_proof = LeafBatchProof::new(H256::repeat_byte(<span class="number">0</span>), <span class="macro">vec!</span>[leaf], proof);
+		<span class="kw">let </span>leaf_proof = LeavesProof::new(H256::repeat_byte(<span class="number">0</span>), <span class="macro">vec!</span>[leaf], proof);
 
 		<span class="comment">// when
 		</span><span class="kw">let </span>actual = serde_json::to_string(<span class="kw-2">&amp;</span>leaf_proof).unwrap();
@@ -697,40 +644,36 @@
 	}
 
 	<span class="attribute">#[test]
-	</span><span class="kw">fn </span>should_deserialize_leaf_proof() {
+	</span><span class="kw">fn </span>should_serialize_leaves_proof() {
 		<span class="comment">// given
-		</span><span class="kw">let </span>expected = LeafProof {
-			block_hash: H256::repeat_byte(<span class="number">0</span>),
-			leaf: Bytes(<span class="macro">vec!</span>[<span class="number">1_u8</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>].encode()),
-			proof: Bytes(
-				Proof {
-					leaf_index: <span class="number">1</span>,
-					leaf_count: <span class="number">9</span>,
-					items: <span class="macro">vec!</span>[H256::repeat_byte(<span class="number">1</span>), H256::repeat_byte(<span class="number">2</span>)],
-				}
-				.encode(),
-			),
+		</span><span class="kw">let </span>leaf_a = <span class="macro">vec!</span>[<span class="number">1_u8</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];
+		<span class="kw">let </span>leaf_b = <span class="macro">vec!</span>[<span class="number">2_u8</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];
+		<span class="kw">let </span>proof = Proof {
+			leaf_indices: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>],
+			leaf_count: <span class="number">9</span>,
+			items: <span class="macro">vec!</span>[H256::repeat_byte(<span class="number">1</span>), H256::repeat_byte(<span class="number">2</span>)],
 		};
 
+		<span class="kw">let </span>leaf_proof = LeavesProof::new(H256::repeat_byte(<span class="number">0</span>), <span class="macro">vec!</span>[leaf_a, leaf_b], proof);
+
 		<span class="comment">// when
-		</span><span class="kw">let </span>actual: LeafProof&lt;H256&gt; = serde_json::from_str(<span class="string">r#&quot;{
-			&quot;blockHash&quot;:&quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
-			&quot;leaf&quot;:&quot;0x1001020304&quot;,
-			&quot;proof&quot;:&quot;0x010000000000000009000000000000000801010101010101010101010101010101010101010101010101010101010101010202020202020202020202020202020202020202020202020202020202020202&quot;
-		}&quot;#</span>).unwrap();
+		</span><span class="kw">let </span>actual = serde_json::to_string(<span class="kw-2">&amp;</span>leaf_proof).unwrap();
 
 		<span class="comment">// then
-		</span><span class="macro">assert_eq!</span>(actual, expected);
+		</span><span class="macro">assert_eq!</span>(
+			actual,
+			<span class="string">r#&quot;{&quot;blockHash&quot;:&quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,&quot;leaves&quot;:&quot;0x0810010203041002020304&quot;,&quot;proof&quot;:&quot;0x080100000000000000020000000000000009000000000000000801010101010101010101010101010101010101010101010101010101010101010202020202020202020202020202020202020202020202020202020202020202&quot;}&quot;#
+		</span>);
 	}
 
 	<span class="attribute">#[test]
-	</span><span class="kw">fn </span>should_deserialize_leaf_batch_proof() {
+	</span><span class="kw">fn </span>should_deserialize_leaf_proof() {
 		<span class="comment">// given
-		</span><span class="kw">let </span>expected = LeafBatchProof {
+		</span><span class="kw">let </span>expected = LeavesProof {
 			block_hash: H256::repeat_byte(<span class="number">0</span>),
 			leaves: Bytes(<span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="number">1_u8</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]].encode()),
 			proof: Bytes(
-				BatchProof {
+				Proof {
 					leaf_indices: <span class="macro">vec!</span>[<span class="number">1</span>],
 					leaf_count: <span class="number">9</span>,
 					items: <span class="macro">vec!</span>[H256::repeat_byte(<span class="number">1</span>), H256::repeat_byte(<span class="number">2</span>)],
@@ -740,10 +683,37 @@
 		};
 
 		<span class="comment">// when
-		</span><span class="kw">let </span>actual: LeafBatchProof&lt;H256&gt; = serde_json::from_str(<span class="string">r#&quot;{
+		</span><span class="kw">let </span>actual: LeavesProof&lt;H256&gt; = serde_json::from_str(<span class="string">r#&quot;{
 			&quot;blockHash&quot;:&quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
 			&quot;leaves&quot;:&quot;0x041001020304&quot;,
 			&quot;proof&quot;:&quot;0x04010000000000000009000000000000000801010101010101010101010101010101010101010101010101010101010101010202020202020202020202020202020202020202020202020202020202020202&quot;
+		}&quot;#</span>).unwrap();
+
+		<span class="comment">// then
+		</span><span class="macro">assert_eq!</span>(actual, expected);
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>should_deserialize_leaves_proof() {
+		<span class="comment">// given
+		</span><span class="kw">let </span>expected = LeavesProof {
+			block_hash: H256::repeat_byte(<span class="number">0</span>),
+			leaves: Bytes(<span class="macro">vec!</span>[<span class="macro">vec!</span>[<span class="number">1_u8</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], <span class="macro">vec!</span>[<span class="number">2_u8</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]].encode()),
+			proof: Bytes(
+				Proof {
+					leaf_indices: <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>],
+					leaf_count: <span class="number">9</span>,
+					items: <span class="macro">vec!</span>[H256::repeat_byte(<span class="number">1</span>), H256::repeat_byte(<span class="number">2</span>)],
+				}
+				.encode(),
+			),
+		};
+
+		<span class="comment">// when
+		</span><span class="kw">let </span>actual: LeavesProof&lt;H256&gt; = serde_json::from_str(<span class="string">r#&quot;{
+			&quot;blockHash&quot;:&quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,
+			&quot;leaves&quot;:&quot;0x0810010203041002020304&quot;,
+			&quot;proof&quot;:&quot;0x080100000000000000020000000000000009000000000000000801010101010101010101010101010101010101010101010101010101010101010202020202020202020202020202020202020202020202020202020202020202&quot;
 		}&quot;#</span>).unwrap();
 
 		<span class="comment">// then
