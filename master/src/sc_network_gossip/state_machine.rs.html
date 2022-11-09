@@ -811,6 +811,10 @@
 <span id="811">811</span>
 <span id="812">812</span>
 <span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -837,7 +841,7 @@
 <span class="kw">use </span>prometheus_endpoint::{register, Counter, PrometheusError, Registry, U64};
 <span class="kw">use </span>sc_network_common::protocol::{role::ObservedRole, ProtocolName};
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, Hash, HashFor};
-<span class="kw">use </span>std::{collections::HashMap, iter, sync::Arc, time, time::Instant};
+<span class="kw">use </span>std::{collections::HashMap, iter, num::NonZeroUsize, sync::Arc, time, time::Instant};
 
 <span class="comment">// FIXME: Add additional spam/DoS attack protection: https://github.com/paritytech/substrate/issues/1115
 // NOTE: The current value is adjusted based on largest production network deployment (Kusama) and
@@ -993,7 +997,11 @@
 		ConsensusGossip {
 			peers: HashMap::new(),
 			messages: Default::default(),
-			known_messages: LruCache::new(KNOWN_MESSAGES_CACHE_SIZE),
+			known_messages: {
+				<span class="kw">let </span>cap = NonZeroUsize::new(KNOWN_MESSAGES_CACHE_SIZE)
+					.expect(<span class="string">&quot;cache capacity is not zero&quot;</span>);
+				LruCache::new(cap)
+			},
 			protocol,
 			validator,
 			next_broadcast: Instant::now() + REBROADCAST_INTERVAL,

@@ -569,7 +569,6 @@
 <span id="569">569</span>
 <span id="570">570</span>
 <span id="571">571</span>
-<span id="572">572</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -604,6 +603,7 @@
 <span class="kw">use </span>sp_core::traits::{Externalities, FetchRuntimeCode, RuntimeCode};
 <span class="kw">use </span>sp_version::RuntimeVersion;
 <span class="kw">use </span>std::{
+	num::NonZeroUsize,
 	panic::AssertUnwindSafe,
 	path::{Path, PathBuf},
 	sync::Arc,
@@ -751,17 +751,15 @@
 	/// for caching.
 	///
 	/// `runtime_cache_size` specifies the number of different runtimes versions preserved in an
-	/// in-memory cache.
+	/// in-memory cache, must always be at least 1.
 	</span><span class="kw">pub fn </span>new(
 		max_runtime_instances: usize,
 		cache_path: <span class="prelude-ty">Option</span>&lt;PathBuf&gt;,
 		runtime_cache_size: u8,
 	) -&gt; RuntimeCache {
-		RuntimeCache {
-			runtimes: Mutex::new(LruCache::new(runtime_cache_size.into())),
-			max_runtime_instances,
-			cache_path,
-		}
+		<span class="kw">let </span>cap =
+			NonZeroUsize::new(runtime_cache_size.max(<span class="number">1</span>) <span class="kw">as </span>usize).expect(<span class="string">&quot;cache size is not zero&quot;</span>);
+		RuntimeCache { runtimes: Mutex::new(LruCache::new(cap)), max_runtime_instances, cache_path }
 	}
 
 	<span class="doccomment">/// Prepares a WASM module instance and executes given function for it.

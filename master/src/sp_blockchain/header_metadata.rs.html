@@ -290,6 +290,8 @@
 <span id="290">290</span>
 <span id="291">291</span>
 <span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -313,6 +315,7 @@
 </span><span class="kw">use </span>lru::LruCache;
 <span class="kw">use </span>parking_lot::RwLock;
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, Header, NumberFor, One};
+<span class="kw">use </span>std::num::NonZeroUsize;
 
 <span class="doccomment">/// Set to the expected max difference between `best` and `finalized` blocks at sync.
 </span><span class="kw">const </span>LRU_CACHE_SIZE: usize = <span class="number">5_000</span>;
@@ -531,14 +534,15 @@
 
 <span class="kw">impl</span>&lt;Block: BlockT&gt; HeaderMetadataCache&lt;Block&gt; {
 	<span class="doccomment">/// Creates a new LRU header metadata cache with `capacity`.
-	</span><span class="kw">pub fn </span>new(capacity: usize) -&gt; <span class="self">Self </span>{
+	</span><span class="kw">pub fn </span>new(capacity: NonZeroUsize) -&gt; <span class="self">Self </span>{
 		HeaderMetadataCache { cache: RwLock::new(LruCache::new(capacity)) }
 	}
 }
 
 <span class="kw">impl</span>&lt;Block: BlockT&gt; Default <span class="kw">for </span>HeaderMetadataCache&lt;Block&gt; {
 	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-		HeaderMetadataCache { cache: RwLock::new(LruCache::new(LRU_CACHE_SIZE)) }
+		<span class="kw">let </span>cap = NonZeroUsize::new(LRU_CACHE_SIZE).expect(<span class="string">&quot;cache capacity is not zero&quot;</span>);
+		HeaderMetadataCache { cache: RwLock::new(LruCache::new(cap)) }
 	}
 }
 

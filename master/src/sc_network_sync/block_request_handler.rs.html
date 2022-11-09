@@ -452,6 +452,9 @@
 <span id="452">452</span>
 <span id="453">453</span>
 <span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2020 Parity Technologies (UK) Ltd.
 // This file is part of Substrate.
 
@@ -495,6 +498,7 @@
 <span class="kw">use </span>std::{
 	cmp::min,
 	hash::{Hash, Hasher},
+	num::NonZeroUsize,
 	sync::Arc,
 	time::Duration,
 };
@@ -618,7 +622,9 @@
 		);
 		protocol_config.inbound_queue = <span class="prelude-val">Some</span>(tx);
 
-		<span class="kw">let </span>seen_requests = LruCache::new(num_peer_hint * <span class="number">2</span>);
+		<span class="kw">let </span>capacity =
+			NonZeroUsize::new(num_peer_hint.max(<span class="number">1</span>) * <span class="number">2</span>).expect(<span class="string">&quot;cache capacity is not zero&quot;</span>);
+		<span class="kw">let </span>seen_requests = LruCache::new(capacity);
 
 		(<span class="self">Self </span>{ client, request_receiver, seen_requests }, protocol_config)
 	}

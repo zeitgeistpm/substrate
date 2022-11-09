@@ -1707,6 +1707,10 @@
 <span id="1707">1707</span>
 <span id="1708">1708</span>
 <span id="1709">1709</span>
+<span id="1710">1710</span>
+<span id="1711">1711</span>
+<span id="1712">1712</span>
+<span id="1713">1713</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1740,6 +1744,7 @@
 	Multiaddr, PeerId,
 };
 <span class="kw">use </span>log::{debug, error, info, log, trace, warn, Level};
+<span class="kw">use </span>lru::LruCache;
 <span class="kw">use </span>message::{generic::Message <span class="kw">as </span>GenericMessage, Message};
 <span class="kw">use </span>notifications::{Notifications, NotificationsOut};
 <span class="kw">use </span>prometheus_endpoint::{register, Gauge, GaugeVec, Opts, PrometheusError, Registry, U64};
@@ -1909,7 +1914,7 @@
 	<span class="doccomment">/// The `PeerId`&#39;s of all boot nodes.
 	</span>boot_node_ids: HashSet&lt;PeerId&gt;,
 	<span class="doccomment">/// A cache for the data that was associated to a block announcement.
-	</span>block_announce_data_cache: lru::LruCache&lt;B::Hash, Vec&lt;u8&gt;&gt;,
+	</span>block_announce_data_cache: LruCache&lt;B::Hash, Vec&lt;u8&gt;&gt;,
 }
 
 <span class="attribute">#[derive(Debug)]
@@ -2065,10 +2070,13 @@
 			)
 		};
 
-		<span class="kw">let </span>block_announce_data_cache = lru::LruCache::new(
-			network_config.default_peers_set.in_peers <span class="kw">as </span>usize +
-				network_config.default_peers_set.out_peers <span class="kw">as </span>usize,
-		);
+		<span class="kw">let </span>cache_capacity = NonZeroUsize::new(
+			(network_config.default_peers_set.in_peers <span class="kw">as </span>usize +
+				network_config.default_peers_set.out_peers <span class="kw">as </span>usize)
+				.max(<span class="number">1</span>),
+		)
+		.expect(<span class="string">&quot;cache capacity is not zero&quot;</span>);
+		<span class="kw">let </span>block_announce_data_cache = LruCache::new(cache_capacity);
 
 		<span class="kw">let </span>protocol = <span class="self">Self </span>{
 			tick_timeout: Box::pin(interval(TICK_TIMEOUT)),
