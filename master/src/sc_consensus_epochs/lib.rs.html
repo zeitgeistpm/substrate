@@ -1398,6 +1398,89 @@
 <span id="1398">1398</span>
 <span id="1399">1399</span>
 <span id="1400">1400</span>
+<span id="1401">1401</span>
+<span id="1402">1402</span>
+<span id="1403">1403</span>
+<span id="1404">1404</span>
+<span id="1405">1405</span>
+<span id="1406">1406</span>
+<span id="1407">1407</span>
+<span id="1408">1408</span>
+<span id="1409">1409</span>
+<span id="1410">1410</span>
+<span id="1411">1411</span>
+<span id="1412">1412</span>
+<span id="1413">1413</span>
+<span id="1414">1414</span>
+<span id="1415">1415</span>
+<span id="1416">1416</span>
+<span id="1417">1417</span>
+<span id="1418">1418</span>
+<span id="1419">1419</span>
+<span id="1420">1420</span>
+<span id="1421">1421</span>
+<span id="1422">1422</span>
+<span id="1423">1423</span>
+<span id="1424">1424</span>
+<span id="1425">1425</span>
+<span id="1426">1426</span>
+<span id="1427">1427</span>
+<span id="1428">1428</span>
+<span id="1429">1429</span>
+<span id="1430">1430</span>
+<span id="1431">1431</span>
+<span id="1432">1432</span>
+<span id="1433">1433</span>
+<span id="1434">1434</span>
+<span id="1435">1435</span>
+<span id="1436">1436</span>
+<span id="1437">1437</span>
+<span id="1438">1438</span>
+<span id="1439">1439</span>
+<span id="1440">1440</span>
+<span id="1441">1441</span>
+<span id="1442">1442</span>
+<span id="1443">1443</span>
+<span id="1444">1444</span>
+<span id="1445">1445</span>
+<span id="1446">1446</span>
+<span id="1447">1447</span>
+<span id="1448">1448</span>
+<span id="1449">1449</span>
+<span id="1450">1450</span>
+<span id="1451">1451</span>
+<span id="1452">1452</span>
+<span id="1453">1453</span>
+<span id="1454">1454</span>
+<span id="1455">1455</span>
+<span id="1456">1456</span>
+<span id="1457">1457</span>
+<span id="1458">1458</span>
+<span id="1459">1459</span>
+<span id="1460">1460</span>
+<span id="1461">1461</span>
+<span id="1462">1462</span>
+<span id="1463">1463</span>
+<span id="1464">1464</span>
+<span id="1465">1465</span>
+<span id="1466">1466</span>
+<span id="1467">1467</span>
+<span id="1468">1468</span>
+<span id="1469">1469</span>
+<span id="1470">1470</span>
+<span id="1471">1471</span>
+<span id="1472">1472</span>
+<span id="1473">1473</span>
+<span id="1474">1474</span>
+<span id="1475">1475</span>
+<span id="1476">1476</span>
+<span id="1477">1477</span>
+<span id="1478">1478</span>
+<span id="1479">1479</span>
+<span id="1480">1480</span>
+<span id="1481">1481</span>
+<span id="1482">1482</span>
+<span id="1483">1483</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -1918,8 +2001,8 @@
 		<span class="kw">let </span>is_descendent_of = descendent_of_builder.build_is_descendent_of(<span class="prelude-val">None</span>);
 
 		<span class="kw">let </span>predicate = |epoch: <span class="kw-2">&amp;</span>PersistedEpochHeader&lt;E&gt;| <span class="kw">match </span><span class="kw-2">*</span>epoch {
-			PersistedEpochHeader::Genesis(<span class="kw">_</span>, <span class="kw-2">ref </span>epoch_1) =&gt; slot &gt;= epoch_1.end_slot,
-			PersistedEpochHeader::Regular(<span class="kw-2">ref </span>epoch_n) =&gt; slot &gt;= epoch_n.end_slot,
+			PersistedEpochHeader::Genesis(<span class="kw-2">ref </span>epoch_0, <span class="kw">_</span>) =&gt; epoch_0.start_slot &lt;= slot,
+			PersistedEpochHeader::Regular(<span class="kw-2">ref </span>epoch_n) =&gt; epoch_n.start_slot &lt;= slot,
 		};
 
 		<span class="comment">// prune any epochs which could not be _live_ as of the children of the
@@ -2177,11 +2260,6 @@
 		}
 	}
 
-	<span class="doccomment">/// Return the inner fork tree.
-	</span><span class="kw">pub fn </span>tree(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ForkTree&lt;Hash, Number, PersistedEpochHeader&lt;E&gt;&gt; {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.inner
-	}
-
 	<span class="doccomment">/// Reset to a specified pair of epochs, as if they were announced at blocks `parent_hash` and
 	/// `hash`.
 	</span><span class="kw">pub fn </span>reset(<span class="kw-2">&amp;mut </span><span class="self">self</span>, parent_hash: Hash, hash: Hash, number: Number, current: E, next: E) {
@@ -2231,6 +2309,11 @@
 		<span class="self">self</span>.inner.drain_filter(filter).for_each(|(h, n, <span class="kw">_</span>)| {
 			<span class="self">self</span>.epochs.remove(<span class="kw-2">&amp;</span>(h, n));
 		});
+	}
+
+	<span class="doccomment">/// Return the inner fork tree (mostly useful for testing)
+	</span><span class="kw">pub fn </span>tree(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ForkTree&lt;Hash, Number, PersistedEpochHeader&lt;E&gt;&gt; {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.inner
 	}
 }
 
@@ -2512,6 +2595,89 @@
 			// this chain.
 			</span><span class="macro">assert!</span>(epoch_for_x_child_before_genesis.is_none());
 		}
+	}
+
+	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>prune_removes_stale_nodes() {
+		<span class="comment">//     +---D       +-------F
+		//     |           |
+		// 0---A---B--(x)--C--(y)--G
+		// |       |
+		// +---H   +-------E
+		//
+		//  Test parameters:
+		//  - epoch duration: 100
+		//
+		//  We are going to prune the tree at:
+		//  - &#39;x&#39;, a node between B and C
+		//  - &#39;y&#39;, a node between C and G
+
+		</span><span class="kw">let </span>is_descendent_of = |base: <span class="kw-2">&amp;</span>Hash, block: <span class="kw-2">&amp;</span>Hash| -&gt; <span class="prelude-ty">Result</span>&lt;bool, TestError&gt; {
+			<span class="kw">match </span>(base, block) {
+				(<span class="string">b&quot;0&quot;</span>, <span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>),
+				(<span class="string">b&quot;A&quot;</span>, b) =&gt; <span class="prelude-val">Ok</span>(b != <span class="string">b&quot;0&quot;</span>),
+				(<span class="string">b&quot;B&quot;</span>, b) =&gt; <span class="prelude-val">Ok</span>(b != <span class="string">b&quot;0&quot; </span>&amp;&amp; b != <span class="string">b&quot;A&quot; </span>&amp;&amp; b != <span class="string">b&quot;D&quot;</span>),
+				(<span class="string">b&quot;C&quot;</span>, b) =&gt; <span class="prelude-val">Ok</span>(b == <span class="string">b&quot;F&quot; </span>|| b == <span class="string">b&quot;G&quot; </span>|| b == <span class="string">b&quot;y&quot;</span>),
+				(<span class="string">b&quot;x&quot;</span>, b) =&gt; <span class="prelude-val">Ok</span>(b == <span class="string">b&quot;C&quot; </span>|| b == <span class="string">b&quot;F&quot; </span>|| b == <span class="string">b&quot;G&quot; </span>|| b == <span class="string">b&quot;y&quot;</span>),
+				(<span class="string">b&quot;y&quot;</span>, b) =&gt; <span class="prelude-val">Ok</span>(b == <span class="string">b&quot;G&quot;</span>),
+				<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>),
+			}
+		};
+
+		<span class="kw">let </span><span class="kw-2">mut </span>epoch_changes = EpochChanges::new();
+
+		<span class="kw">let </span><span class="kw-2">mut </span>import_at = |slot, hash: <span class="kw-2">&amp;</span>Hash, number, parent_hash, parent_number| {
+			<span class="kw">let </span>make_genesis = |slot| Epoch { start_slot: slot, duration: <span class="number">100 </span>};
+			<span class="comment">// Get epoch descriptor valid for &#39;slot&#39;
+			</span><span class="kw">let </span>epoch_descriptor = epoch_changes
+				.epoch_descriptor_for_child_of(<span class="kw-2">&amp;</span>is_descendent_of, parent_hash, parent_number, slot)
+				.unwrap()
+				.unwrap();
+			<span class="comment">// Increment it
+			</span><span class="kw">let </span>next_epoch_desc = epoch_changes
+				.viable_epoch(<span class="kw-2">&amp;</span>epoch_descriptor, <span class="kw-2">&amp;</span>make_genesis)
+				.unwrap()
+				.increment(());
+			<span class="comment">// Assign it to hash/number
+			</span>epoch_changes
+				.import(<span class="kw-2">&amp;</span>is_descendent_of, <span class="kw-2">*</span>hash, number, <span class="kw-2">*</span>parent_hash, next_epoch_desc)
+				.unwrap();
+		};
+
+		import_at(<span class="number">100</span>, <span class="string">b&quot;A&quot;</span>, <span class="number">10</span>, <span class="string">b&quot;0&quot;</span>, <span class="number">0</span>);
+		import_at(<span class="number">200</span>, <span class="string">b&quot;B&quot;</span>, <span class="number">20</span>, <span class="string">b&quot;A&quot;</span>, <span class="number">10</span>);
+		import_at(<span class="number">300</span>, <span class="string">b&quot;C&quot;</span>, <span class="number">30</span>, <span class="string">b&quot;B&quot;</span>, <span class="number">20</span>);
+		import_at(<span class="number">200</span>, <span class="string">b&quot;D&quot;</span>, <span class="number">20</span>, <span class="string">b&quot;A&quot;</span>, <span class="number">10</span>);
+		import_at(<span class="number">300</span>, <span class="string">b&quot;E&quot;</span>, <span class="number">30</span>, <span class="string">b&quot;B&quot;</span>, <span class="number">20</span>);
+		import_at(<span class="number">400</span>, <span class="string">b&quot;F&quot;</span>, <span class="number">40</span>, <span class="string">b&quot;C&quot;</span>, <span class="number">30</span>);
+		import_at(<span class="number">400</span>, <span class="string">b&quot;G&quot;</span>, <span class="number">40</span>, <span class="string">b&quot;C&quot;</span>, <span class="number">30</span>);
+		import_at(<span class="number">100</span>, <span class="string">b&quot;H&quot;</span>, <span class="number">10</span>, <span class="string">b&quot;0&quot;</span>, <span class="number">0</span>);
+
+		<span class="kw">let </span><span class="kw-2">mut </span>nodes: Vec&lt;<span class="kw">_</span>&gt; = epoch_changes.tree().iter().map(|(h, <span class="kw">_</span>, <span class="kw">_</span>)| h).collect();
+		nodes.sort();
+		<span class="macro">assert_eq!</span>(nodes, <span class="macro">vec!</span>[<span class="string">b&quot;A&quot;</span>, <span class="string">b&quot;B&quot;</span>, <span class="string">b&quot;C&quot;</span>, <span class="string">b&quot;D&quot;</span>, <span class="string">b&quot;E&quot;</span>, <span class="string">b&quot;F&quot;</span>, <span class="string">b&quot;G&quot;</span>, <span class="string">b&quot;H&quot;</span>]);
+
+		<span class="comment">// Finalize block &#39;x&#39; @ number 25, slot 230
+		// This should prune all nodes imported by blocks with a number &lt; 25 that are not
+		// ancestors of &#39;x&#39; and all nodes before the one holding the epoch information
+		// to which &#39;x&#39; belongs to (i.e. before A).
+
+		</span>epoch_changes.prune_finalized(<span class="kw-2">&amp;</span>is_descendent_of, <span class="string">b&quot;x&quot;</span>, <span class="number">25</span>, <span class="number">230</span>).unwrap();
+
+		<span class="kw">let </span><span class="kw-2">mut </span>nodes: Vec&lt;<span class="kw">_</span>&gt; = epoch_changes.tree().iter().map(|(h, <span class="kw">_</span>, <span class="kw">_</span>)| h).collect();
+		nodes.sort();
+		<span class="macro">assert_eq!</span>(nodes, <span class="macro">vec!</span>[<span class="string">b&quot;A&quot;</span>, <span class="string">b&quot;B&quot;</span>, <span class="string">b&quot;C&quot;</span>, <span class="string">b&quot;E&quot;</span>, <span class="string">b&quot;F&quot;</span>, <span class="string">b&quot;G&quot;</span>]);
+
+		<span class="comment">// Finalize block y @ number 35, slot 330
+		// This should prune all nodes imported by blocks with a number &lt; 35 that are not
+		// ancestors of &#39;y&#39; and all nodes before the one holding the epoch information
+		// to which &#39;y&#39; belongs to (i.e. before B).
+
+		</span>epoch_changes.prune_finalized(<span class="kw-2">&amp;</span>is_descendent_of, <span class="string">b&quot;y&quot;</span>, <span class="number">35</span>, <span class="number">330</span>).unwrap();
+
+		<span class="kw">let </span><span class="kw-2">mut </span>nodes: Vec&lt;<span class="kw">_</span>&gt; = epoch_changes.tree().iter().map(|(h, <span class="kw">_</span>, <span class="kw">_</span>)| h).collect();
+		nodes.sort();
+		<span class="macro">assert_eq!</span>(nodes, <span class="macro">vec!</span>[<span class="string">b&quot;B&quot;</span>, <span class="string">b&quot;C&quot;</span>, <span class="string">b&quot;F&quot;</span>, <span class="string">b&quot;G&quot;</span>]);
 	}
 
 	<span class="doccomment">/// Test that ensures that the gap is not enabled when we import multiple genesis blocks.

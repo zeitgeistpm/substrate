@@ -356,11 +356,13 @@
 //! careful when using it onchain.
 
 </span><span class="kw">use crate</span>::{
-	Debug, ElectionDataProvider, ElectionProvider, ElectionProviderBase, InstantElectionProvider,
-	NposSolver, WeightInfo,
+	BoundedSupportsOf, Debug, ElectionDataProvider, ElectionProvider, ElectionProviderBase,
+	InstantElectionProvider, NposSolver, WeightInfo,
 };
 <span class="kw">use </span>frame_support::{dispatch::DispatchClass, traits::Get};
-<span class="kw">use </span>sp_npos_elections::<span class="kw-2">*</span>;
+<span class="kw">use </span>sp_npos_elections::{
+	assignment_ratio_to_staked_normalized, to_supports, BoundedSupports, ElectionResult, VoteWeight,
+};
 <span class="kw">use </span>sp_std::{collections::btree_map::BTreeMap, marker::PhantomData, prelude::<span class="kw-2">*</span>};
 
 <span class="doccomment">/// Errors of the on-chain election.
@@ -370,6 +372,9 @@
 	</span>NposElections(sp_npos_elections::Error),
 	<span class="doccomment">/// Errors from the data provider.
 	</span>DataProvider(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str),
+	<span class="doccomment">/// Configurational error caused by `desired_targets` requested by data provider exceeding
+	/// `MaxWinners`.
+	</span>TooManyWinners,
 }
 
 <span class="kw">impl </span>From&lt;sp_npos_elections::Error&gt; <span class="kw">for </span>Error {
@@ -380,64 +385,70 @@
 
 <span class="doccomment">/// A simple on-chain implementation of the election provider trait.
 ///
-/// This will accept voting data on the fly and produce the results immediately.
+/// This implements both `ElectionProvider` and `InstantElectionProvider`.
 ///
-/// The [`ElectionProvider`] implementation of this type does not impose any dynamic limits on the
-/// number of voters and targets that are fetched. This could potentially make this unsuitable for
-/// execution onchain. One could, however, impose bounds on it by using `BoundedExecution` using the
-/// `MaxVoters` and `MaxTargets` bonds in the `BoundedConfig` trait.
-///
-/// On the other hand, the [`InstantElectionProvider`] implementation does limit these inputs
-/// dynamically. If you use `elect_with_bounds` along with `InstantElectionProvider`, the bound that
-/// would be used is the minimum of the dynamic bounds given as arguments to `elect_with_bounds` and
-/// the trait bounds (`MaxVoters` and `MaxTargets`).
-///
-/// Please use `BoundedExecution` at all times except at genesis or for testing, with thoughtful
-/// bounds in order to bound the potential execution time. Limit the use `UnboundedExecution` at
-/// genesis or for testing, as it does not bound the inputs. However, this can be used with
-/// `[InstantElectionProvider::elect_with_bounds`] that dynamically imposes limits.
-</span><span class="kw">pub struct </span>BoundedExecution&lt;T: BoundedConfig&gt;(PhantomData&lt;T&gt;);
+/// This type has some utilities to make it safe. Nonetheless, it should be used with utmost care. A
+/// thoughtful value must be set as [`Config::VotersBound`] and [`Config::TargetsBound`] to ensure
+/// the size of the input is sensible.
+</span><span class="kw">pub struct </span>OnChainExecution&lt;T: Config&gt;(PhantomData&lt;T&gt;);
 
-<span class="doccomment">/// An unbounded variant of [`BoundedExecution`].
-///
-/// ### Warning
-///
-/// This can be very expensive to run frequently on-chain. Use with care.
-</span><span class="kw">pub struct </span>UnboundedExecution&lt;T: Config&gt;(PhantomData&lt;T&gt;);
+<span class="attribute">#[deprecated(note = <span class="string">&quot;use OnChainExecution, which is bounded by default&quot;</span>)]
+</span><span class="kw">pub type </span>BoundedExecution&lt;T&gt; = OnChainExecution&lt;T&gt;;
 
 <span class="doccomment">/// Configuration trait for an onchain election execution.
 </span><span class="kw">pub trait </span>Config {
 	<span class="doccomment">/// Needed for weight registration.
 	</span><span class="kw">type </span>System: frame_system::Config;
+
 	<span class="doccomment">/// `NposSolver` that should be used, an example would be `PhragMMS`.
 	</span><span class="kw">type </span>Solver: NposSolver&lt;
 		AccountId = &lt;<span class="self">Self</span>::System <span class="kw">as </span>frame_system::Config&gt;::AccountId,
 		Error = sp_npos_elections::Error,
 	&gt;;
+
 	<span class="doccomment">/// Something that provides the data for election.
 	</span><span class="kw">type </span>DataProvider: ElectionDataProvider&lt;
 		AccountId = &lt;<span class="self">Self</span>::System <span class="kw">as </span>frame_system::Config&gt;::AccountId,
 		BlockNumber = &lt;<span class="self">Self</span>::System <span class="kw">as </span>frame_system::Config&gt;::BlockNumber,
 	&gt;;
+
 	<span class="doccomment">/// Weight information for extrinsics in this pallet.
 	</span><span class="kw">type </span>WeightInfo: WeightInfo;
-}
 
-<span class="kw">pub trait </span>BoundedConfig: Config {
-	<span class="doccomment">/// Bounds the number of voters.
+	<span class="doccomment">/// Upper bound on maximum winners from electable targets.
+	///
+	/// As noted in the documentation of [`ElectionProviderBase::MaxWinners`], this value should
+	/// always be more than `DataProvider::desired_target`.
+	</span><span class="kw">type </span>MaxWinners: Get&lt;u32&gt;;
+
+	<span class="doccomment">/// Bounds the number of voters, when calling into [`Config::DataProvider`]. It might be
+	/// overwritten in the `InstantElectionProvider` impl.
 	</span><span class="kw">type </span>VotersBound: Get&lt;u32&gt;;
-	<span class="doccomment">/// Bounds the number of targets.
+
+	<span class="doccomment">/// Bounds the number of targets, when calling into [`Config::DataProvider`]. It might be
+	/// overwritten in the `InstantElectionProvider` impl.
 	</span><span class="kw">type </span>TargetsBound: Get&lt;u32&gt;;
 }
 
-<span class="kw">fn </span>elect_with&lt;T: Config&gt;(
+<span class="doccomment">/// Same as `BoundedSupportsOf` but for `onchain::Config`.
+</span><span class="kw">pub type </span>OnChainBoundedSupportsOf&lt;E&gt; = BoundedSupports&lt;
+	&lt;&lt;E <span class="kw">as </span>Config&gt;::System <span class="kw">as </span>frame_system::Config&gt;::AccountId,
+	&lt;E <span class="kw">as </span>Config&gt;::MaxWinners,
+&gt;;
+
+<span class="kw">fn </span>elect_with_input_bounds&lt;T: Config&gt;(
 	maybe_max_voters: <span class="prelude-ty">Option</span>&lt;usize&gt;,
 	maybe_max_targets: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;&lt;T::System <span class="kw">as </span>frame_system::Config&gt;::AccountId&gt;, Error&gt; {
+) -&gt; <span class="prelude-ty">Result</span>&lt;OnChainBoundedSupportsOf&lt;T&gt;, Error&gt; {
 	<span class="kw">let </span>voters = T::DataProvider::electing_voters(maybe_max_voters).map_err(Error::DataProvider)<span class="question-mark">?</span>;
 	<span class="kw">let </span>targets =
 		T::DataProvider::electable_targets(maybe_max_targets).map_err(Error::DataProvider)<span class="question-mark">?</span>;
 	<span class="kw">let </span>desired_targets = T::DataProvider::desired_targets().map_err(Error::DataProvider)<span class="question-mark">?</span>;
+
+	<span class="kw">if </span>desired_targets &gt; T::MaxWinners::get() {
+		<span class="comment">// early exit
+		</span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::TooManyWinners)
+	}
 
 	<span class="kw">let </span>voters_len = voters.len() <span class="kw">as </span>u32;
 	<span class="kw">let </span>targets_len = targets.len() <span class="kw">as </span>u32;
@@ -466,69 +477,43 @@
 		DispatchClass::Mandatory,
 	);
 
-	<span class="prelude-val">Ok</span>(to_supports(<span class="kw-2">&amp;</span>staked))
+	<span class="comment">// defensive: Since npos solver returns a result always bounded by `desired_targets`, this is
+	// never expected to happen as long as npos solver does what is expected for it to do.
+	</span><span class="kw">let </span>supports: OnChainBoundedSupportsOf&lt;T&gt; =
+		to_supports(<span class="kw-2">&amp;</span>staked).try_into().map_err(|<span class="kw">_</span>| Error::TooManyWinners)<span class="question-mark">?</span>;
+
+	<span class="prelude-val">Ok</span>(supports)
 }
 
-<span class="kw">impl</span>&lt;T: Config&gt; ElectionProvider <span class="kw">for </span>UnboundedExecution&lt;T&gt; {
-	<span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;<span class="self">Self</span>::AccountId&gt;, <span class="self">Self</span>::Error&gt; {
-		<span class="comment">// This should not be called if not in `std` mode (and therefore neither in genesis nor in
-		// testing)
-		</span><span class="kw">if </span><span class="macro">cfg!</span>(not(feature = <span class="string">&quot;std&quot;</span>)) {
-			<span class="macro">frame_support::log::error!</span>(
-				<span class="string">&quot;Please use `InstantElectionProvider` instead to provide bounds on election if not in \
-				genesis or testing mode&quot;
-			</span>);
-		}
-
-		elect_with::&lt;T&gt;(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
-	}
-}
-
-<span class="kw">impl</span>&lt;T: Config&gt; ElectionProviderBase <span class="kw">for </span>UnboundedExecution&lt;T&gt; {
+<span class="kw">impl</span>&lt;T: Config&gt; ElectionProviderBase <span class="kw">for </span>OnChainExecution&lt;T&gt; {
 	<span class="kw">type </span>AccountId = &lt;T::System <span class="kw">as </span>frame_system::Config&gt;::AccountId;
 	<span class="kw">type </span>BlockNumber = &lt;T::System <span class="kw">as </span>frame_system::Config&gt;::BlockNumber;
 	<span class="kw">type </span>Error = Error;
+	<span class="kw">type </span>MaxWinners = T::MaxWinners;
 	<span class="kw">type </span>DataProvider = T::DataProvider;
-
-	<span class="kw">fn </span>ongoing() -&gt; bool {
-		<span class="bool-val">false
-	</span>}
 }
 
-<span class="kw">impl</span>&lt;T: Config&gt; InstantElectionProvider <span class="kw">for </span>UnboundedExecution&lt;T&gt; {
-	<span class="kw">fn </span>elect_with_bounds(
-		max_voters: usize,
-		max_targets: usize,
-	) -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;<span class="self">Self</span>::AccountId&gt;, <span class="self">Self</span>::Error&gt; {
-		elect_with::&lt;T&gt;(<span class="prelude-val">Some</span>(max_voters), <span class="prelude-val">Some</span>(max_targets))
+<span class="kw">impl</span>&lt;T: Config&gt; InstantElectionProvider <span class="kw">for </span>OnChainExecution&lt;T&gt; {
+	<span class="kw">fn </span>instant_elect(
+		forced_input_voters_bound: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+		forced_input_target_bound: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;BoundedSupportsOf&lt;<span class="self">Self</span>&gt;, <span class="self">Self</span>::Error&gt; {
+		elect_with_input_bounds::&lt;T&gt;(
+			<span class="prelude-val">Some</span>(T::VotersBound::get().min(forced_input_voters_bound.unwrap_or(u32::MAX)) <span class="kw">as </span>usize),
+			<span class="prelude-val">Some</span>(T::TargetsBound::get().min(forced_input_target_bound.unwrap_or(u32::MAX)) <span class="kw">as </span>usize),
+		)
 	}
 }
 
-<span class="kw">impl</span>&lt;T: BoundedConfig&gt; ElectionProviderBase <span class="kw">for </span>BoundedExecution&lt;T&gt; {
-	<span class="kw">type </span>AccountId = &lt;T::System <span class="kw">as </span>frame_system::Config&gt;::AccountId;
-	<span class="kw">type </span>BlockNumber = &lt;T::System <span class="kw">as </span>frame_system::Config&gt;::BlockNumber;
-	<span class="kw">type </span>Error = Error;
-	<span class="kw">type </span>DataProvider = T::DataProvider;
-
+<span class="kw">impl</span>&lt;T: Config&gt; ElectionProvider <span class="kw">for </span>OnChainExecution&lt;T&gt; {
 	<span class="kw">fn </span>ongoing() -&gt; bool {
 		<span class="bool-val">false
 	</span>}
-}
 
-<span class="kw">impl</span>&lt;T: BoundedConfig&gt; ElectionProvider <span class="kw">for </span>BoundedExecution&lt;T&gt; {
-	<span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;<span class="self">Self</span>::AccountId&gt;, <span class="self">Self</span>::Error&gt; {
-		elect_with::&lt;T&gt;(<span class="prelude-val">Some</span>(T::VotersBound::get() <span class="kw">as </span>usize), <span class="prelude-val">Some</span>(T::TargetsBound::get() <span class="kw">as </span>usize))
-	}
-}
-
-<span class="kw">impl</span>&lt;T: BoundedConfig&gt; InstantElectionProvider <span class="kw">for </span>BoundedExecution&lt;T&gt; {
-	<span class="kw">fn </span>elect_with_bounds(
-		max_voters: usize,
-		max_targets: usize,
-	) -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;<span class="self">Self</span>::AccountId&gt;, <span class="self">Self</span>::Error&gt; {
-		elect_with::&lt;T&gt;(
-			<span class="prelude-val">Some</span>(max_voters.min(T::VotersBound::get() <span class="kw">as </span>usize)),
-			<span class="prelude-val">Some</span>(max_targets.min(T::TargetsBound::get() <span class="kw">as </span>usize)),
+	<span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;BoundedSupportsOf&lt;<span class="self">Self</span>&gt;, <span class="self">Self</span>::Error&gt; {
+		elect_with_input_bounds::&lt;T&gt;(
+			<span class="prelude-val">Some</span>(T::VotersBound::get() <span class="kw">as </span>usize),
+			<span class="prelude-val">Some</span>(T::TargetsBound::get() <span class="kw">as </span>usize),
 		)
 	}
 }
@@ -536,8 +521,8 @@
 <span class="attribute">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
 	<span class="kw">use super</span>::<span class="kw-2">*</span>;
-	<span class="kw">use crate</span>::{PhragMMS, SequentialPhragmen};
-	<span class="kw">use </span>frame_support::traits::ConstU32;
+	<span class="kw">use crate</span>::{ElectionProvider, PhragMMS, SequentialPhragmen};
+	<span class="kw">use </span>frame_support::{assert_noop, parameter_types, traits::ConstU32};
 	<span class="kw">use </span>sp_npos_elections::Support;
 	<span class="kw">use </span>sp_runtime::Perbill;
 	<span class="kw">type </span>AccountId = u64;
@@ -587,14 +572,17 @@
 	<span class="kw">struct </span>PhragmenParams;
 	<span class="kw">struct </span>PhragMMSParams;
 
+	<span class="macro">parameter_types! </span>{
+		<span class="kw">pub static </span>MaxWinners: u32 = <span class="number">10</span>;
+		<span class="kw">pub static </span>DesiredTargets: u32 = <span class="number">2</span>;
+	}
+
 	<span class="kw">impl </span>Config <span class="kw">for </span>PhragmenParams {
 		<span class="kw">type </span>System = Runtime;
 		<span class="kw">type </span>Solver = SequentialPhragmen&lt;AccountId, Perbill&gt;;
 		<span class="kw">type </span>DataProvider = mock_data_provider::DataProvider;
 		<span class="kw">type </span>WeightInfo = ();
-	}
-
-	<span class="kw">impl </span>BoundedConfig <span class="kw">for </span>PhragmenParams {
+		<span class="kw">type </span>MaxWinners = MaxWinners;
 		<span class="kw">type </span>VotersBound = ConstU32&lt;<span class="number">600</span>&gt;;
 		<span class="kw">type </span>TargetsBound = ConstU32&lt;<span class="number">400</span>&gt;;
 	}
@@ -604,9 +592,7 @@
 		<span class="kw">type </span>Solver = PhragMMS&lt;AccountId, Perbill&gt;;
 		<span class="kw">type </span>DataProvider = mock_data_provider::DataProvider;
 		<span class="kw">type </span>WeightInfo = ();
-	}
-
-	<span class="kw">impl </span>BoundedConfig <span class="kw">for </span>PhragMMSParams {
+		<span class="kw">type </span>MaxWinners = MaxWinners;
 		<span class="kw">type </span>VotersBound = ConstU32&lt;<span class="number">600</span>&gt;;
 		<span class="kw">type </span>TargetsBound = ConstU32&lt;<span class="number">400</span>&gt;;
 	}
@@ -635,7 +621,7 @@
 			}
 
 			<span class="kw">fn </span>desired_targets() -&gt; data_provider::Result&lt;u32&gt; {
-				<span class="prelude-val">Ok</span>(<span class="number">2</span>)
+				<span class="prelude-val">Ok</span>(DesiredTargets::get())
 			}
 
 			<span class="kw">fn </span>next_election_prediction(<span class="kw">_</span>: BlockNumber) -&gt; BlockNumber {
@@ -648,7 +634,7 @@
 	</span><span class="kw">fn </span>onchain_seq_phragmen_works() {
 		sp_io::TestExternalities::new_empty().execute_with(|| {
 			<span class="macro">assert_eq!</span>(
-				BoundedExecution::&lt;PhragmenParams&gt;::elect().unwrap(),
+				&lt;OnChainExecution::&lt;PhragmenParams&gt; <span class="kw">as </span>ElectionProvider&gt;::elect().unwrap(),
 				<span class="macro">vec!</span>[
 					(<span class="number">10</span>, Support { total: <span class="number">25</span>, voters: <span class="macro">vec!</span>[(<span class="number">1</span>, <span class="number">10</span>), (<span class="number">3</span>, <span class="number">15</span>)] }),
 					(<span class="number">30</span>, Support { total: <span class="number">35</span>, voters: <span class="macro">vec!</span>[(<span class="number">2</span>, <span class="number">20</span>), (<span class="number">3</span>, <span class="number">15</span>)] })
@@ -658,10 +644,24 @@
 	}
 
 	<span class="attribute">#[test]
+	</span><span class="kw">fn </span>too_many_winners_when_desired_targets_exceed_max_winners() {
+		sp_io::TestExternalities::new_empty().execute_with(|| {
+			<span class="comment">// given desired targets larger than max winners
+			</span>DesiredTargets::set(<span class="number">10</span>);
+			MaxWinners::set(<span class="number">9</span>);
+
+			<span class="macro">assert_noop!</span>(
+				&lt;OnChainExecution::&lt;PhragmenParams&gt; <span class="kw">as </span>ElectionProvider&gt;::elect(),
+				Error::TooManyWinners,
+			);
+		})
+	}
+
+	<span class="attribute">#[test]
 	</span><span class="kw">fn </span>onchain_phragmms_works() {
 		sp_io::TestExternalities::new_empty().execute_with(|| {
 			<span class="macro">assert_eq!</span>(
-				BoundedExecution::&lt;PhragMMSParams&gt;::elect().unwrap(),
+				&lt;OnChainExecution::&lt;PhragMMSParams&gt; <span class="kw">as </span>ElectionProvider&gt;::elect().unwrap(),
 				<span class="macro">vec!</span>[
 					(<span class="number">10</span>, Support { total: <span class="number">25</span>, voters: <span class="macro">vec!</span>[(<span class="number">1</span>, <span class="number">10</span>), (<span class="number">3</span>, <span class="number">15</span>)] }),
 					(<span class="number">30</span>, Support { total: <span class="number">35</span>, voters: <span class="macro">vec!</span>[(<span class="number">2</span>, <span class="number">20</span>), (<span class="number">3</span>, <span class="number">15</span>)] })

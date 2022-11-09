@@ -1710,6 +1710,35 @@
 <span id="1710">1710</span>
 <span id="1711">1711</span>
 <span id="1712">1712</span>
+<span id="1713">1713</span>
+<span id="1714">1714</span>
+<span id="1715">1715</span>
+<span id="1716">1716</span>
+<span id="1717">1717</span>
+<span id="1718">1718</span>
+<span id="1719">1719</span>
+<span id="1720">1720</span>
+<span id="1721">1721</span>
+<span id="1722">1722</span>
+<span id="1723">1723</span>
+<span id="1724">1724</span>
+<span id="1725">1725</span>
+<span id="1726">1726</span>
+<span id="1727">1727</span>
+<span id="1728">1728</span>
+<span id="1729">1729</span>
+<span id="1730">1730</span>
+<span id="1731">1731</span>
+<span id="1732">1732</span>
+<span id="1733">1733</span>
+<span id="1734">1734</span>
+<span id="1735">1735</span>
+<span id="1736">1736</span>
+<span id="1737">1737</span>
+<span id="1738">1738</span>
+<span id="1739">1739</span>
+<span id="1740">1740</span>
+<span id="1741">1741</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1730,15 +1759,15 @@
 </span><span class="doccomment">//! Implementations for the Staking FRAME Pallet.
 
 </span><span class="kw">use </span>frame_election_provider_support::{
-	data_provider, ElectionDataProvider, ElectionProvider, ElectionProviderBase, ScoreProvider,
-	SortedListProvider, Supports, VoteWeight, VoterOf,
+	data_provider, BoundedSupportsOf, ElectionDataProvider, ElectionProvider, ScoreProvider,
+	SortedListProvider, VoteWeight, VoterOf,
 };
 <span class="kw">use </span>frame_support::{
 	dispatch::WithPostDispatchInfo,
 	pallet_prelude::<span class="kw-2">*</span>,
 	traits::{
 		Currency, CurrencyToVote, Defensive, DefensiveResult, EstimateNextNewSession, Get,
-		Imbalance, LockableCurrency, OnUnbalanced, UnixTime, WithdrawReasons,
+		Imbalance, LockableCurrency, OnUnbalanced, TryCollect, UnixTime, WithdrawReasons,
 	},
 	weights::Weight,
 };
@@ -1756,7 +1785,7 @@
 
 <span class="kw">use crate</span>::{
 	log, slashing, weights::WeightInfo, ActiveEraInfo, BalanceOf, EraPayout, Exposure, ExposureOf,
-	Forcing, IndividualExposure, Nominations, PositiveImbalanceOf, RewardDestination,
+	Forcing, IndividualExposure, MaxWinnersOf, Nominations, PositiveImbalanceOf, RewardDestination,
 	SessionInterface, StakingLedger, ValidatorPrefs,
 };
 
@@ -1979,7 +2008,10 @@
 	}
 
 	<span class="doccomment">/// Plan a new session potentially trigger a new era.
-	</span><span class="kw">fn </span>new_session(session_index: SessionIndex, is_genesis: bool) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;T::AccountId&gt;&gt; {
+	</span><span class="kw">fn </span>new_session(
+		session_index: SessionIndex,
+		is_genesis: bool,
+	) -&gt; <span class="prelude-ty">Option</span>&lt;BoundedVec&lt;T::AccountId, MaxWinnersOf&lt;T&gt;&gt;&gt; {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(current_era) = <span class="self">Self</span>::current_era() {
 			<span class="comment">// Initial era has been set.
 			</span><span class="kw">let </span>current_era_start_session_index = <span class="self">Self</span>::eras_start_session_index(current_era)
@@ -2138,8 +2170,11 @@
 	/// Returns the new validator set.
 	</span><span class="kw">pub fn </span>trigger_new_era(
 		start_session_index: SessionIndex,
-		exposures: Vec&lt;(T::AccountId, Exposure&lt;T::AccountId, BalanceOf&lt;T&gt;&gt;)&gt;,
-	) -&gt; Vec&lt;T::AccountId&gt; {
+		exposures: BoundedVec&lt;
+			(T::AccountId, Exposure&lt;T::AccountId, BalanceOf&lt;T&gt;&gt;),
+			MaxWinnersOf&lt;T&gt;,
+		&gt;,
+	) -&gt; BoundedVec&lt;T::AccountId, MaxWinnersOf&lt;T&gt;&gt; {
 		<span class="comment">// Increment or set current era.
 		</span><span class="kw">let </span>new_planned_era = CurrentEra::&lt;T&gt;::mutate(|s| {
 			<span class="kw-2">*</span>s = <span class="prelude-val">Some</span>(s.map(|s| s + <span class="number">1</span>).unwrap_or(<span class="number">0</span>));
@@ -2165,19 +2200,26 @@
 	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>try_trigger_new_era(
 		start_session_index: SessionIndex,
 		is_genesis: bool,
-	) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;T::AccountId&gt;&gt; {
-		<span class="kw">let </span>election_result = <span class="kw">if </span>is_genesis {
-			T::GenesisElectionProvider::elect().map_err(|e| {
+	) -&gt; <span class="prelude-ty">Option</span>&lt;BoundedVec&lt;T::AccountId, MaxWinnersOf&lt;T&gt;&gt;&gt; {
+		<span class="kw">let </span>election_result: BoundedVec&lt;<span class="kw">_</span>, MaxWinnersOf&lt;T&gt;&gt; = <span class="kw">if </span>is_genesis {
+			<span class="kw">let </span>result = &lt;T::GenesisElectionProvider&gt;::elect().map_err(|e| {
 				<span class="macro">log!</span>(warn, <span class="string">&quot;genesis election provider failed due to {:?}&quot;</span>, e);
 				<span class="self">Self</span>::deposit_event(Event::StakingElectionFailed);
-			})
+			});
+
+			result
+				.ok()<span class="question-mark">?
+				</span>.into_inner()
+				.try_into()
+				<span class="comment">// both bounds checked in integrity test to be equal
+				</span>.defensive_unwrap_or_default()
 		} <span class="kw">else </span>{
-			T::ElectionProvider::elect().map_err(|e| {
+			<span class="kw">let </span>result = &lt;T::ElectionProvider&gt;::elect().map_err(|e| {
 				<span class="macro">log!</span>(warn, <span class="string">&quot;election provider failed due to {:?}&quot;</span>, e);
 				<span class="self">Self</span>::deposit_event(Event::StakingElectionFailed);
-			})
-		}
-		.ok()<span class="question-mark">?</span>;
+			});
+			result.ok()<span class="question-mark">?
+		</span>};
 
 		<span class="kw">let </span>exposures = <span class="self">Self</span>::collect_exposures(election_result);
 		<span class="kw">if </span>(exposures.len() <span class="kw">as </span>u32) &lt; <span class="self">Self</span>::minimum_validator_count().max(<span class="number">1</span>) {
@@ -2214,10 +2256,19 @@
 	///
 	/// Store staking information for the new planned era
 	</span><span class="kw">pub fn </span>store_stakers_info(
-		exposures: Vec&lt;(T::AccountId, Exposure&lt;T::AccountId, BalanceOf&lt;T&gt;&gt;)&gt;,
+		exposures: BoundedVec&lt;
+			(T::AccountId, Exposure&lt;T::AccountId, BalanceOf&lt;T&gt;&gt;),
+			MaxWinnersOf&lt;T&gt;,
+		&gt;,
 		new_planned_era: EraIndex,
-	) -&gt; Vec&lt;T::AccountId&gt; {
-		<span class="kw">let </span>elected_stashes = exposures.iter().cloned().map(|(x, <span class="kw">_</span>)| x).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+	) -&gt; BoundedVec&lt;T::AccountId, MaxWinnersOf&lt;T&gt;&gt; {
+		<span class="kw">let </span>elected_stashes: BoundedVec&lt;<span class="kw">_</span>, MaxWinnersOf&lt;T&gt;&gt; = exposures
+			.iter()
+			.cloned()
+			.map(|(x, <span class="kw">_</span>)| x)
+			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
+			.try_into()
+			.expect(<span class="string">&quot;since we only map through exposures, size of elected_stashes is always same as exposures; qed&quot;</span>);
 
 		<span class="comment">// Populate stakers, exposures, and the snapshot of validator prefs.
 		</span><span class="kw">let </span><span class="kw-2">mut </span>total_stake: BalanceOf&lt;T&gt; = Zero::zero();
@@ -2255,11 +2306,11 @@
 		elected_stashes
 	}
 
-	<span class="doccomment">/// Consume a set of [`Supports`] from [`sp_npos_elections`] and collect them into a
+	<span class="doccomment">/// Consume a set of [`BoundedSupports`] from [`sp_npos_elections`] and collect them into a
 	/// [`Exposure`].
 	</span><span class="kw">fn </span>collect_exposures(
-		supports: Supports&lt;T::AccountId&gt;,
-	) -&gt; Vec&lt;(T::AccountId, Exposure&lt;T::AccountId, BalanceOf&lt;T&gt;&gt;)&gt; {
+		supports: BoundedSupportsOf&lt;T::ElectionProvider&gt;,
+	) -&gt; BoundedVec&lt;(T::AccountId, Exposure&lt;T::AccountId, BalanceOf&lt;T&gt;&gt;), MaxWinnersOf&lt;T&gt;&gt; {
 		<span class="kw">let </span>total_issuance = T::Currency::total_issuance();
 		<span class="kw">let </span>to_currency = |e: frame_election_provider_support::ExtendedBalance| {
 			T::CurrencyToVote::to_currency(e, total_issuance)
@@ -2288,7 +2339,8 @@
 				<span class="kw">let </span>exposure = Exposure { own, others, total };
 				(validator, exposure)
 			})
-			.collect::&lt;Vec&lt;(T::AccountId, Exposure&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;)&gt;&gt;()
+			.try_collect()
+			.expect(<span class="string">&quot;we only map through support vector which cannot change the size; qed&quot;</span>)
 	}
 
 	<span class="doccomment">/// Remove all associated data of a stash account from the staking system.
@@ -2797,12 +2849,12 @@
 	<span class="kw">fn </span>new_session(new_index: SessionIndex) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;T::AccountId&gt;&gt; {
 		<span class="macro">log!</span>(trace, <span class="string">&quot;planning new session {}&quot;</span>, new_index);
 		CurrentPlannedSession::&lt;T&gt;::put(new_index);
-		<span class="self">Self</span>::new_session(new_index, <span class="bool-val">false</span>)
+		<span class="self">Self</span>::new_session(new_index, <span class="bool-val">false</span>).map(|v| v.into_inner())
 	}
 	<span class="kw">fn </span>new_session_genesis(new_index: SessionIndex) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;T::AccountId&gt;&gt; {
 		<span class="macro">log!</span>(trace, <span class="string">&quot;planning new session {} at genesis&quot;</span>, new_index);
 		CurrentPlannedSession::&lt;T&gt;::put(new_index);
-		<span class="self">Self</span>::new_session(new_index, <span class="bool-val">true</span>)
+		<span class="self">Self</span>::new_session(new_index, <span class="bool-val">true</span>).map(|v| v.into_inner())
 	}
 	<span class="kw">fn </span>start_session(start_index: SessionIndex) {
 		<span class="macro">log!</span>(trace, <span class="string">&quot;starting session {}&quot;</span>, start_index);
@@ -3212,7 +3264,7 @@
 	}
 
 	<span class="kw">fn </span>election_ongoing() -&gt; bool {
-		&lt;T::ElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::ongoing()
+		T::ElectionProvider::ongoing()
 	}
 
 	<span class="kw">fn </span>force_unstake(who: <span class="self">Self</span>::AccountId) -&gt; sp_runtime::DispatchResult {
@@ -3337,6 +3389,12 @@
 			&lt;T <span class="kw">as </span>Config&gt;::VoterList::count() ==
 				Nominators::&lt;T&gt;::count() + Validators::&lt;T&gt;::count(),
 			<span class="string">&quot;wrong external count&quot;
+		</span>);
+
+		<span class="macro">ensure!</span>(
+			ValidatorCount::&lt;T&gt;::get() &lt;=
+				&lt;T::ElectionProvider <span class="kw">as </span>frame_election_provider_support::ElectionProviderBase&gt;::MaxWinners::get(),
+			<span class="string">&quot;validator count exceeded election max winners&quot;
 		</span>);
 		<span class="prelude-val">Ok</span>(())
 	}

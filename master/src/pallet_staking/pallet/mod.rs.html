@@ -1733,6 +1733,41 @@
 <span id="1733">1733</span>
 <span id="1734">1734</span>
 <span id="1735">1735</span>
+<span id="1736">1736</span>
+<span id="1737">1737</span>
+<span id="1738">1738</span>
+<span id="1739">1739</span>
+<span id="1740">1740</span>
+<span id="1741">1741</span>
+<span id="1742">1742</span>
+<span id="1743">1743</span>
+<span id="1744">1744</span>
+<span id="1745">1745</span>
+<span id="1746">1746</span>
+<span id="1747">1747</span>
+<span id="1748">1748</span>
+<span id="1749">1749</span>
+<span id="1750">1750</span>
+<span id="1751">1751</span>
+<span id="1752">1752</span>
+<span id="1753">1753</span>
+<span id="1754">1754</span>
+<span id="1755">1755</span>
+<span id="1756">1756</span>
+<span id="1757">1757</span>
+<span id="1758">1758</span>
+<span id="1759">1759</span>
+<span id="1760">1760</span>
+<span id="1761">1761</span>
+<span id="1762">1762</span>
+<span id="1763">1763</span>
+<span id="1764">1764</span>
+<span id="1765">1765</span>
+<span id="1766">1766</span>
+<span id="1767">1767</span>
+<span id="1768">1768</span>
+<span id="1769">1769</span>
+<span id="1770">1770</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1752,7 +1787,9 @@
 
 </span><span class="doccomment">//! Staking FRAME Pallet.
 
-</span><span class="kw">use </span>frame_election_provider_support::{SortedListProvider, VoteWeight};
+</span><span class="kw">use </span>frame_election_provider_support::{
+	ElectionProvider, ElectionProviderBase, SortedListProvider, VoteWeight,
+};
 <span class="kw">use </span>frame_support::{
 	dispatch::Codec,
 	pallet_prelude::<span class="kw-2">*</span>,
@@ -1767,7 +1804,7 @@
 <span class="kw">use </span>frame_system::{ensure_root, ensure_signed, pallet_prelude::<span class="kw-2">*</span>};
 <span class="kw">use </span>sp_runtime::{
 	traits::{CheckedSub, SaturatedConversion, StaticLookup, Zero},
-	Perbill, Percent,
+	ArithmeticError, Perbill, Percent,
 };
 <span class="kw">use </span>sp_staking::{EraIndex, SessionIndex};
 <span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
@@ -1842,7 +1879,7 @@
 		</span><span class="kw">type </span>CurrencyToVote: CurrencyToVote&lt;BalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
 
 		<span class="doccomment">/// Something that provides the election functionality.
-		</span><span class="kw">type </span>ElectionProvider: frame_election_provider_support::ElectionProvider&lt;
+		</span><span class="kw">type </span>ElectionProvider: ElectionProvider&lt;
 			AccountId = <span class="self">Self</span>::AccountId,
 			BlockNumber = <span class="self">Self</span>::BlockNumber,
 			<span class="comment">// we only accept an election provider that has staking as data provider.
@@ -1850,7 +1887,7 @@
 		&gt;;
 
 		<span class="doccomment">/// Something that provides the election functionality at genesis.
-		</span><span class="kw">type </span>GenesisElectionProvider: frame_election_provider_support::ElectionProvider&lt;
+		</span><span class="kw">type </span>GenesisElectionProvider: ElectionProvider&lt;
 			AccountId = <span class="self">Self</span>::AccountId,
 			BlockNumber = <span class="self">Self</span>::BlockNumber,
 			DataProvider = Pallet&lt;<span class="self">Self</span>&gt;,
@@ -2381,6 +2418,10 @@
 					),
 					<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
 				});
+				<span class="macro">assert!</span>(
+					ValidatorCount::&lt;T&gt;::get() &lt;=
+						&lt;T::ElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::MaxWinners::get()
+				);
 			}
 
 			<span class="comment">// all voters are reported to the `VoterList`.
@@ -2478,8 +2519,8 @@
 		<span class="doccomment">/// There are too many nominators in the system. Governance needs to adjust the staking
 		/// settings to keep things safe for the runtime.
 		</span>TooManyNominators,
-		<span class="doccomment">/// There are too many validators in the system. Governance needs to adjust the staking
-		/// settings to keep things safe for the runtime.
+		<span class="doccomment">/// There are too many validator candidates in the system. Governance needs to adjust the
+		/// staking settings to keep things safe for the runtime.
 		</span>TooManyValidators,
 		<span class="doccomment">/// Commission is too low. Must be at least `MinCommission`.
 		</span>CommissionTooLow,
@@ -2516,6 +2557,12 @@
 			);
 			<span class="comment">// and that MaxNominations is always greater than 1, since we count on this.
 			</span><span class="macro">assert!</span>(!T::MaxNominations::get().is_zero());
+
+			<span class="comment">// ensure election results are always bounded with the same value
+			</span><span class="macro">assert!</span>(
+				&lt;T::ElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::MaxWinners::get() ==
+					&lt;T::GenesisElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::MaxWinners::get()
+			);
 
 			<span class="macro">sp_std::if_std! </span>{
 				sp_io::TestExternalities::new_empty().execute_with(||
@@ -2999,11 +3046,18 @@
 			<span class="attribute">#[pallet::compact] </span>new: u32,
 		) -&gt; DispatchResult {
 			ensure_root(origin)<span class="question-mark">?</span>;
+			<span class="comment">// ensure new validator count does not exceed maximum winners
+			// support by election provider.
+			</span><span class="macro">ensure!</span>(
+				new &lt;= &lt;T::ElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::MaxWinners::get(),
+				Error::&lt;T&gt;::TooManyValidators
+			);
 			ValidatorCount::&lt;T&gt;::put(new);
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Increments the ideal number of validators.
+		<span class="doccomment">/// Increments the ideal number of validators upto maximum of
+		/// `ElectionProviderBase::MaxWinners`.
 		///
 		/// The dispatch origin must be Root.
 		///
@@ -3016,11 +3070,19 @@
 			<span class="attribute">#[pallet::compact] </span>additional: u32,
 		) -&gt; DispatchResult {
 			ensure_root(origin)<span class="question-mark">?</span>;
-			ValidatorCount::&lt;T&gt;::mutate(|n| <span class="kw-2">*</span>n += additional);
+			<span class="kw">let </span>old = ValidatorCount::&lt;T&gt;::get();
+			<span class="kw">let </span>new = old.checked_add(additional).ok_or(ArithmeticError::Overflow)<span class="question-mark">?</span>;
+			<span class="macro">ensure!</span>(
+				new &lt;= &lt;T::ElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::MaxWinners::get(),
+				Error::&lt;T&gt;::TooManyValidators
+			);
+
+			ValidatorCount::&lt;T&gt;::put(new);
 			<span class="prelude-val">Ok</span>(())
 		}
 
-		<span class="doccomment">/// Scale up the ideal number of validators by a factor.
+		<span class="doccomment">/// Scale up the ideal number of validators by a factor upto maximum of
+		/// `ElectionProviderBase::MaxWinners`.
 		///
 		/// The dispatch origin must be Root.
 		///
@@ -3030,7 +3092,15 @@
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::set_validator_count())]
 		</span><span class="kw">pub fn </span>scale_validator_count(origin: OriginFor&lt;T&gt;, factor: Percent) -&gt; DispatchResult {
 			ensure_root(origin)<span class="question-mark">?</span>;
-			ValidatorCount::&lt;T&gt;::mutate(|n| <span class="kw-2">*</span>n += factor * <span class="kw-2">*</span>n);
+			<span class="kw">let </span>old = ValidatorCount::&lt;T&gt;::get();
+			<span class="kw">let </span>new = old.checked_add(factor.mul_floor(old)).ok_or(ArithmeticError::Overflow)<span class="question-mark">?</span>;
+
+			<span class="macro">ensure!</span>(
+				new &lt;= &lt;T::ElectionProvider <span class="kw">as </span>ElectionProviderBase&gt;::MaxWinners::get(),
+				Error::&lt;T&gt;::TooManyValidators
+			);
+
+			ValidatorCount::&lt;T&gt;::put(new);
 			<span class="prelude-val">Ok</span>(())
 		}
 

@@ -650,6 +650,29 @@
 <span id="650">650</span>
 <span id="651">651</span>
 <span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -734,6 +757,7 @@
 //! # use frame_election_provider_support::{*, data_provider};
 //! # use sp_npos_elections::{Support, Assignment};
 //! # use frame_support::traits::ConstU32;
+//! # use frame_support::bounded_vec;
 //!
 //! type AccountId = u64;
 //! type Balance = u64;
@@ -789,15 +813,16 @@
 //!         type BlockNumber = BlockNumber;
 //!         type Error = &amp;&#39;static str;
 //!         type DataProvider = T::DataProvider;
-//! 	        fn ongoing() -&gt; bool { false }
-//!        
+//!         type MaxWinners = ConstU32&lt;{ u32::MAX }&gt;;
+//!
 //!     }
 //!
 //!     impl&lt;T: Config&gt; ElectionProvider for GenericElectionProvider&lt;T&gt; {
-//!         fn elect() -&gt; Result&lt;Supports&lt;AccountId&gt;, Self::Error&gt; {
+//!         fn ongoing() -&gt; bool { false }
+//!         fn elect() -&gt; Result&lt;BoundedSupportsOf&lt;Self&gt;, Self::Error&gt; {
 //!             Self::DataProvider::electable_targets(None)
 //!                 .map_err(|_| &quot;failed to elect&quot;)
-//!                 .map(|t| vec![(t[0], Support::default())])
+//!                 .map(|t| bounded_vec![(t[0], Support::default())])
 //!         }
 //!     }
 //! }
@@ -1006,11 +1031,7 @@
 	</span><span class="kw">fn </span>clear() {}
 }
 
-<span class="doccomment">/// Base trait for [`ElectionProvider`] and [`BoundedElectionProvider`]. It is
-/// meant to be used only with an extension trait that adds an election
-/// functionality.
-///
-/// Data can be bounded or unbounded and is fetched from [`Self::DataProvider`].
+<span class="doccomment">/// Base trait for types that can provide election
 </span><span class="kw">pub trait </span>ElectionProviderBase {
 	<span class="doccomment">/// The account identifier type.
 	</span><span class="kw">type </span>AccountId;
@@ -1021,90 +1042,109 @@
 	<span class="doccomment">/// The error type that is returned by the provider.
 	</span><span class="kw">type </span>Error: Debug;
 
+	<span class="doccomment">/// The upper bound on election winners that can be returned.
+	///
+	/// # WARNING
+	///
+	/// when communicating with the data provider, one must ensure that
+	/// `DataProvider::desired_targets` returns a value less than this bound. An
+	/// implementation can chose to either return an error and/or sort and
+	/// truncate the output to meet this bound.
+	</span><span class="kw">type </span>MaxWinners: Get&lt;u32&gt;;
+
 	<span class="doccomment">/// The data provider of the election.
 	</span><span class="kw">type </span>DataProvider: ElectionDataProvider&lt;
 		AccountId = <span class="self">Self</span>::AccountId,
 		BlockNumber = <span class="self">Self</span>::BlockNumber,
 	&gt;;
 
-	<span class="doccomment">/// Indicate if this election provider is currently ongoing an asynchronous election or not.
-	</span><span class="kw">fn </span>ongoing() -&gt; bool;
+	<span class="doccomment">/// checked call to `Self::DataProvider::desired_targets()` ensuring the value never exceeds
+	/// [`Self::MaxWinners`].
+	</span><span class="kw">fn </span>desired_targets_checked() -&gt; data_provider::Result&lt;u32&gt; {
+		<span class="kw">match </span><span class="self">Self</span>::DataProvider::desired_targets() {
+			<span class="prelude-val">Ok</span>(desired_targets) =&gt;
+				<span class="kw">if </span>desired_targets &lt;= <span class="self">Self</span>::MaxWinners::get() {
+					<span class="prelude-val">Ok</span>(desired_targets)
+				} <span class="kw">else </span>{
+					<span class="prelude-val">Err</span>(<span class="string">&quot;desired_targets should not be greater than MaxWinners&quot;</span>)
+				},
+			<span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(e),
+		}
+	}
 }
 
 <span class="doccomment">/// Elect a new set of winners, bounded by `MaxWinners`.
 ///
-/// Returns a result in bounded, target major format, namely as
-/// *BoundedVec&lt;(AccountId, Vec&lt;Support&gt;), MaxWinners&gt;*.   
-</span><span class="kw">pub trait </span>BoundedElectionProvider: ElectionProviderBase {
-	<span class="doccomment">/// The upper bound on election winners.
-	</span><span class="kw">type </span>MaxWinners: Get&lt;u32&gt;;
+/// It must always use [`ElectionProviderBase::DataProvider`] to fetch the data it needs.
+///
+/// This election provider that could function asynchronously. This implies that this election might
+/// needs data ahead of time (ergo, receives no arguments to `elect`), and might be `ongoing` at
+/// times.
+</span><span class="kw">pub trait </span>ElectionProvider: ElectionProviderBase {
+	<span class="doccomment">/// Indicate if this election provider is currently ongoing an asynchronous election or not.
+	</span><span class="kw">fn </span>ongoing() -&gt; bool;
+
 	<span class="doccomment">/// Performs the election. This should be implemented as a self-weighing function. The
 	/// implementor should register its appropriate weight at the end of execution with the
 	/// system pallet directly.
-	</span><span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;BoundedSupports&lt;<span class="self">Self</span>::AccountId, <span class="self">Self</span>::MaxWinners&gt;, <span class="self">Self</span>::Error&gt;;
+	</span><span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;BoundedSupportsOf&lt;<span class="self">Self</span>&gt;, <span class="self">Self</span>::Error&gt;;
 }
 
-<span class="doccomment">/// Same a [`BoundedElectionProvider`], but no bounds are imposed on the number
-/// of winners.
+<span class="doccomment">/// A (almost) marker trait that signifies an election provider as working synchronously. i.e. being
+/// *instant*.
 ///
-/// The result is returned in a target major format, namely as
-///*Vec&lt;(AccountId, Vec&lt;Support&gt;)&gt;*.
-</span><span class="kw">pub trait </span>ElectionProvider: ElectionProviderBase {
-	<span class="doccomment">/// Performs the election. This should be implemented as a self-weighing
-	/// function, similar to [`BoundedElectionProvider::elect()`].
-	</span><span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;<span class="self">Self</span>::AccountId&gt;, <span class="self">Self</span>::Error&gt;;
+/// This must still use the same data provider as with [`ElectionProviderBase::DataProvider`].
+/// However, it can optionally overwrite the amount of voters and targets that are fetched from the
+/// data provider at runtime via `forced_input_voters_bound` and `forced_input_target_bound`.
+</span><span class="kw">pub trait </span>InstantElectionProvider: ElectionProviderBase {
+	<span class="kw">fn </span>instant_elect(
+		forced_input_voters_bound: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+		forced_input_target_bound: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;BoundedSupportsOf&lt;<span class="self">Self</span>&gt;, <span class="self">Self</span>::Error&gt;;
 }
 
-<span class="doccomment">/// A sub-trait of the [`ElectionProvider`] for cases where we need to be sure
-/// an election needs to happen instantly, not asynchronously.
-///
-/// The same `DataProvider` is assumed to be used.
-///
-/// Consequently, allows for control over the amount of data that is being
-/// fetched from the [`ElectionProviderBase::DataProvider`].
-</span><span class="kw">pub trait </span>InstantElectionProvider: ElectionProvider {
-	<span class="doccomment">/// Elect a new set of winners, but unlike [`ElectionProvider::elect`] which cannot enforce
-	/// bounds, this trait method can enforce bounds on the amount of data provided by the
-	/// `DataProvider`.
-	///
-	/// An implementing type, if itself bounded, should choose the minimum of the two bounds to
-	/// choose the final value of `max_voters` and `max_targets`. In other words, an implementation
-	/// should guarantee that `max_voter` and `max_targets` provided to this method are absolutely
-	/// respected.
-	</span><span class="kw">fn </span>elect_with_bounds(
-		max_voters: usize,
-		max_targets: usize,
-	) -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;<span class="self">Self</span>::AccountId&gt;, <span class="self">Self</span>::Error&gt;;
-}
-
-<span class="doccomment">/// An election provider to be used only for testing.
-</span><span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+<span class="doccomment">/// An election provider that does nothing whatsoever.
 </span><span class="kw">pub struct </span>NoElection&lt;X&gt;(sp_std::marker::PhantomData&lt;X&gt;);
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
-</span><span class="kw">impl</span>&lt;AccountId, BlockNumber, DataProvider&gt; ElectionProviderBase
-	<span class="kw">for </span>NoElection&lt;(AccountId, BlockNumber, DataProvider)&gt;
+<span class="kw">impl</span>&lt;AccountId, BlockNumber, DataProvider, MaxWinners&gt; ElectionProviderBase
+	<span class="kw">for </span>NoElection&lt;(AccountId, BlockNumber, DataProvider, MaxWinners)&gt;
 <span class="kw">where
 	</span>DataProvider: ElectionDataProvider&lt;AccountId = AccountId, BlockNumber = BlockNumber&gt;,
+	MaxWinners: Get&lt;u32&gt;,
 {
 	<span class="kw">type </span>AccountId = AccountId;
 	<span class="kw">type </span>BlockNumber = BlockNumber;
 	<span class="kw">type </span>Error = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
+	<span class="kw">type </span>MaxWinners = MaxWinners;
 	<span class="kw">type </span>DataProvider = DataProvider;
+}
 
+<span class="kw">impl</span>&lt;AccountId, BlockNumber, DataProvider, MaxWinners&gt; ElectionProvider
+	<span class="kw">for </span>NoElection&lt;(AccountId, BlockNumber, DataProvider, MaxWinners)&gt;
+<span class="kw">where
+	</span>DataProvider: ElectionDataProvider&lt;AccountId = AccountId, BlockNumber = BlockNumber&gt;,
+	MaxWinners: Get&lt;u32&gt;,
+{
 	<span class="kw">fn </span>ongoing() -&gt; bool {
 		<span class="bool-val">false
 	</span>}
+
+	<span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;BoundedSupportsOf&lt;<span class="self">Self</span>&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="prelude-val">Err</span>(<span class="string">&quot;`NoElection` cannot do anything.&quot;</span>)
+	}
 }
 
-<span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
-</span><span class="kw">impl</span>&lt;AccountId, BlockNumber, DataProvider&gt; ElectionProvider
-	<span class="kw">for </span>NoElection&lt;(AccountId, BlockNumber, DataProvider)&gt;
+<span class="kw">impl</span>&lt;AccountId, BlockNumber, DataProvider, MaxWinners&gt; InstantElectionProvider
+	<span class="kw">for </span>NoElection&lt;(AccountId, BlockNumber, DataProvider, MaxWinners)&gt;
 <span class="kw">where
 	</span>DataProvider: ElectionDataProvider&lt;AccountId = AccountId, BlockNumber = BlockNumber&gt;,
+	MaxWinners: Get&lt;u32&gt;,
 {
-	<span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;AccountId&gt;, <span class="self">Self</span>::Error&gt; {
-		<span class="prelude-val">Err</span>(<span class="string">&quot;&lt;NoElection as ElectionProvider&gt; cannot do anything.&quot;</span>)
+	<span class="kw">fn </span>instant_elect(
+		<span class="kw">_</span>: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+		<span class="kw">_</span>: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+	) -&gt; <span class="prelude-ty">Result</span>&lt;BoundedSupportsOf&lt;<span class="self">Self</span>&gt;, <span class="self">Self</span>::Error&gt; {
+		<span class="prelude-val">Err</span>(<span class="string">&quot;`NoElection` cannot do anything.&quot;</span>)
 	}
 }
 
@@ -1302,5 +1342,11 @@
 <span class="doccomment">/// Same as [`Voter`], but parameterized by an [`ElectionDataProvider`].
 </span><span class="kw">pub type </span>VoterOf&lt;D&gt; =
 	Voter&lt;&lt;D <span class="kw">as </span>ElectionDataProvider&gt;::AccountId, &lt;D <span class="kw">as </span>ElectionDataProvider&gt;::MaxVotesPerVoter&gt;;
+
+<span class="doccomment">/// Same as `BoundedSupports` but parameterized by a `ElectionProviderBase`.
+</span><span class="kw">pub type </span>BoundedSupportsOf&lt;E&gt; = BoundedSupports&lt;
+	&lt;E <span class="kw">as </span>ElectionProviderBase&gt;::AccountId,
+	&lt;E <span class="kw">as </span>ElectionProviderBase&gt;::MaxWinners,
+&gt;;
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="frame_election_provider_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

@@ -2461,6 +2461,20 @@
 <span id="2461">2461</span>
 <span id="2462">2462</span>
 <span id="2463">2463</span>
+<span id="2464">2464</span>
+<span id="2465">2465</span>
+<span id="2466">2466</span>
+<span id="2467">2467</span>
+<span id="2468">2468</span>
+<span id="2469">2469</span>
+<span id="2470">2470</span>
+<span id="2471">2471</span>
+<span id="2472">2472</span>
+<span id="2473">2473</span>
+<span id="2474">2474</span>
+<span id="2475">2475</span>
+<span id="2476">2476</span>
+<span id="2477">2477</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
@@ -2577,8 +2591,8 @@
 //! If we reach the end of both phases (i.e. call to [`ElectionProvider::elect`] happens) and no
 //! good solution is queued, then the fallback strategy [`pallet::Config::Fallback`] is used to
 //! determine what needs to be done. The on-chain election is slow, and contains no balancing or
-//! reduction post-processing. [`NoFallback`] does nothing and enables [`Phase::Emergency`], which
-//! is a more *fail-safe* approach.
+//! reduction post-processing. If [`pallet::Config::Fallback`] fails, the next phase
+//! [`Phase::Emergency`] is enabled, which is a more *fail-safe* approach.
 //!
 //! ### Emergency Phase
 //!
@@ -2694,23 +2708,25 @@
 
 </span><span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>frame_election_provider_support::{
-	ElectionDataProvider, ElectionProvider, ElectionProviderBase, InstantElectionProvider,
-	NposSolution,
+	BoundedSupportsOf, ElectionDataProvider, ElectionProvider, ElectionProviderBase,
+	InstantElectionProvider, NposSolution,
 };
 <span class="kw">use </span>frame_support::{
 	dispatch::DispatchClass,
 	ensure,
 	traits::{Currency, Get, OnUnbalanced, ReservableCurrency},
 	weights::Weight,
+	DefaultNoBound, EqNoBound, PartialEqNoBound,
 };
 <span class="kw">use </span>frame_system::{ensure_none, offchain::SendTransactionTypes};
 <span class="kw">use </span>scale_info::TypeInfo;
 <span class="kw">use </span>sp_arithmetic::{
-	traits::{Bounded, CheckedAdd, Zero},
+	traits::{CheckedAdd, Zero},
 	UpperOf,
 };
 <span class="kw">use </span>sp_npos_elections::{
-	assignment_ratio_to_staked_normalized, ElectionScore, EvaluateSupport, Supports, VoteWeight,
+	assignment_ratio_to_staked_normalized, BoundedSupports, ElectionScore, EvaluateSupport,
+	Supports, VoteWeight,
 };
 <span class="kw">use </span>sp_runtime::{
 	transaction_validity::{
@@ -2772,33 +2788,6 @@
 	</span><span class="kw">const </span>MINER_MAXIMUM_VOTERS: u32;
 	<span class="doccomment">/// Maximum number of targets expected. This is used only for memory-benchmarking.
 	</span><span class="kw">const </span>MAXIMUM_TARGETS: u32;
-}
-
-<span class="doccomment">/// A fallback implementation that transitions the pallet to the emergency phase.
-</span><span class="kw">pub struct </span>NoFallback&lt;T&gt;(sp_std::marker::PhantomData&lt;T&gt;);
-
-<span class="kw">impl</span>&lt;T: Config&gt; ElectionProviderBase <span class="kw">for </span>NoFallback&lt;T&gt; {
-	<span class="kw">type </span>AccountId = T::AccountId;
-	<span class="kw">type </span>BlockNumber = T::BlockNumber;
-	<span class="kw">type </span>DataProvider = T::DataProvider;
-	<span class="kw">type </span>Error = <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str;
-
-	<span class="kw">fn </span>ongoing() -&gt; bool {
-		<span class="bool-val">false
-	</span>}
-}
-
-<span class="kw">impl</span>&lt;T: Config&gt; ElectionProvider <span class="kw">for </span>NoFallback&lt;T&gt; {
-	<span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;T::AccountId&gt;, <span class="self">Self</span>::Error&gt; {
-		<span class="comment">// Do nothing, this will enable the emergency phase.
-		</span><span class="prelude-val">Err</span>(<span class="string">&quot;NoFallback.&quot;</span>)
-	}
-}
-
-<span class="kw">impl</span>&lt;T: Config&gt; InstantElectionProvider <span class="kw">for </span>NoFallback&lt;T&gt; {
-	<span class="kw">fn </span>elect_with_bounds(<span class="kw">_</span>: usize, <span class="kw">_</span>: usize) -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;T::AccountId&gt;, <span class="self">Self</span>::Error&gt; {
-		<span class="prelude-val">Err</span>(<span class="string">&quot;NoFallback.&quot;</span>)
-	}
 }
 
 <span class="doccomment">/// Current phase of the pallet.
@@ -2908,13 +2897,23 @@
 }
 
 <span class="doccomment">/// A checked solution, ready to be enacted.
-</span><span class="attribute">#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, Default, TypeInfo)]
-</span><span class="kw">pub struct </span>ReadySolution&lt;A&gt; {
+</span><span class="attribute">#[derive(
+	PartialEqNoBound,
+	EqNoBound,
+	Clone,
+	Encode,
+	Decode,
+	RuntimeDebug,
+	DefaultNoBound,
+	scale_info::TypeInfo,
+)]
+#[scale_info(skip_type_params(T))]
+</span><span class="kw">pub struct </span>ReadySolution&lt;T: Config&gt; {
 	<span class="doccomment">/// The final supports of the solution.
 	///
 	/// This is target-major vector, storing each winners, total backing, and each individual
 	/// backer.
-	</span><span class="kw">pub </span>supports: Supports&lt;A&gt;,
+	</span><span class="kw">pub </span>supports: BoundedSupports&lt;T::AccountId, T::MaxWinners&gt;,
 	<span class="doccomment">/// The score of the solution.
 	///
 	/// This is needed to potentially challenge the solution.
@@ -2928,7 +2927,6 @@
 ///
 /// These are stored together because they are often accessed together.
 </span><span class="attribute">#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, Default, TypeInfo)]
-#[codec(mel_bound())]
 #[scale_info(skip_type_params(T))]
 </span><span class="kw">pub struct </span>RoundSnapshot&lt;T: Config&gt; {
 	<span class="doccomment">/// All of the voters.
@@ -3024,6 +3022,8 @@
 	</span>InvalidRound,
 	<span class="doccomment">/// Comparison against `MinimumUntrustedScore` failed.
 	</span>UntrustedScoreTooLow,
+	<span class="doccomment">/// Data Provider returned too many desired targets
+	</span>TooManyDesiredTargets,
 }
 
 <span class="kw">impl </span>From&lt;sp_npos_elections::Error&gt; <span class="kw">for </span>FeasibilityError {
@@ -3037,7 +3037,10 @@
 </span><span class="kw">pub mod </span>pallet {
 	<span class="kw">use super</span>::<span class="kw-2">*</span>;
 	<span class="kw">use </span>frame_election_provider_support::{InstantElectionProvider, NposSolver};
-	<span class="kw">use </span>frame_support::{pallet_prelude::<span class="kw-2">*</span>, traits::EstimateCallFee};
+	<span class="kw">use </span>frame_support::{
+		pallet_prelude::<span class="kw-2">*</span>,
+		traits::{DefensiveResult, EstimateCallFee},
+	};
 	<span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
 
 	<span class="attribute">#[pallet::config]
@@ -3137,6 +3140,13 @@
 		</span><span class="attribute">#[pallet::constant]
 		</span><span class="kw">type </span>MaxElectableTargets: Get&lt;SolutionTargetIndexOf&lt;<span class="self">Self</span>::MinerConfig&gt;&gt;;
 
+		<span class="doccomment">/// The maximum number of winners that can be elected by this `ElectionProvider`
+		/// implementation.
+		///
+		/// Note: This must always be greater or equal to `T::DataProvider::desired_targets()`.
+		</span><span class="attribute">#[pallet::constant]
+		</span><span class="kw">type </span>MaxWinners: Get&lt;u32&gt;;
+
 		<span class="doccomment">/// Handler for the slashed deposits.
 		</span><span class="kw">type </span>SlashHandler: OnUnbalanced&lt;NegativeImbalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
 
@@ -3154,6 +3164,7 @@
 			AccountId = <span class="self">Self</span>::AccountId,
 			BlockNumber = <span class="self">Self</span>::BlockNumber,
 			DataProvider = <span class="self">Self</span>::DataProvider,
+			MaxWinners = <span class="self">Self</span>::MaxWinners,
 		&gt;;
 
 		<span class="doccomment">/// Configuration of the governance-only fallback.
@@ -3164,6 +3175,7 @@
 			AccountId = <span class="self">Self</span>::AccountId,
 			BlockNumber = <span class="self">Self</span>::BlockNumber,
 			DataProvider = <span class="self">Self</span>::DataProvider,
+			MaxWinners = <span class="self">Self</span>::MaxWinners,
 		&gt;;
 
 		<span class="doccomment">/// OCW election solution miner algorithm implementation.
@@ -3431,9 +3443,11 @@
 			T::ForceOrigin::ensure_origin(origin)<span class="question-mark">?</span>;
 			<span class="macro">ensure!</span>(<span class="self">Self</span>::current_phase().is_emergency(), &lt;Error&lt;T&gt;&gt;::CallNotAllowed);
 
+			<span class="comment">// bound supports with T::MaxWinners
+			</span><span class="kw">let </span>supports = supports.try_into().map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::TooManyWinners)<span class="question-mark">?</span>;
+
 			<span class="comment">// Note: we don&#39;t `rotate_round` at this point; the next call to
 			// `ElectionProvider::elect` will succeed and take care of that.
-
 			</span><span class="kw">let </span>solution = ReadySolution {
 				supports,
 				score: Default::default(),
@@ -3536,17 +3550,20 @@
 			T::ForceOrigin::ensure_origin(origin)<span class="question-mark">?</span>;
 			<span class="macro">ensure!</span>(<span class="self">Self</span>::current_phase().is_emergency(), &lt;Error&lt;T&gt;&gt;::CallNotAllowed);
 
-			<span class="kw">let </span>maybe_max_voters = maybe_max_voters.map(|x| x <span class="kw">as </span>usize);
-			<span class="kw">let </span>maybe_max_targets = maybe_max_targets.map(|x| x <span class="kw">as </span>usize);
+			<span class="kw">let </span>supports =
+				T::GovernanceFallback::instant_elect(maybe_max_voters, maybe_max_targets).map_err(
+					|e| {
+						<span class="macro">log!</span>(error, <span class="string">&quot;GovernanceFallback failed: {:?}&quot;</span>, e);
+						Error::&lt;T&gt;::FallbackFailed
+					},
+				)<span class="question-mark">?</span>;
 
-			<span class="kw">let </span>supports = T::GovernanceFallback::elect_with_bounds(
-				maybe_max_voters.unwrap_or(Bounded::max_value()),
-				maybe_max_targets.unwrap_or(Bounded::max_value()),
-			)
-			.map_err(|e| {
-				<span class="macro">log!</span>(error, <span class="string">&quot;GovernanceFallback failed: {:?}&quot;</span>, e);
-				Error::&lt;T&gt;::FallbackFailed
-			})<span class="question-mark">?</span>;
+			<span class="comment">// transform BoundedVec&lt;_, T::GovernanceFallback::MaxWinners&gt; into
+			// `BoundedVec&lt;_, T::MaxWinners&gt;`
+			</span><span class="kw">let </span>supports: BoundedVec&lt;<span class="kw">_</span>, T::MaxWinners&gt; = supports
+				.into_inner()
+				.try_into()
+				.defensive_map_err(|<span class="kw">_</span>| Error::&lt;T&gt;::BoundNotMet)<span class="question-mark">?</span>;
 
 			<span class="kw">let </span>solution = ReadySolution {
 				supports,
@@ -3617,6 +3634,10 @@
 		</span>CallNotAllowed,
 		<span class="doccomment">/// The fallback failed
 		</span>FallbackFailed,
+		<span class="doccomment">/// Some bound not met
+		</span>BoundNotMet,
+		<span class="doccomment">/// Submitted solution has too many winners
+		</span>TooManyWinners,
 	}
 
 	<span class="attribute">#[pallet::validate_unsigned]
@@ -3690,7 +3711,7 @@
 	<span class="doccomment">/// Current best solution, signed or unsigned, queued to be returned upon `elect`.
 	</span><span class="attribute">#[pallet::storage]
 	#[pallet::getter(<span class="kw">fn </span>queued_solution)]
-	</span><span class="kw">pub type </span>QueuedSolution&lt;T: Config&gt; = StorageValue&lt;<span class="kw">_</span>, ReadySolution&lt;T::AccountId&gt;&gt;;
+	</span><span class="kw">pub type </span>QueuedSolution&lt;T: Config&gt; = StorageValue&lt;<span class="kw">_</span>, ReadySolution&lt;T&gt;&gt;;
 
 	<span class="doccomment">/// Snapshot data of the round.
 	///
@@ -3856,31 +3877,28 @@
 
 		<span class="kw">let </span>targets = T::DataProvider::electable_targets(<span class="prelude-val">Some</span>(target_limit))
 			.map_err(ElectionError::DataProvider)<span class="question-mark">?</span>;
+
 		<span class="kw">let </span>voters = T::DataProvider::electing_voters(<span class="prelude-val">Some</span>(voter_limit))
 			.map_err(ElectionError::DataProvider)<span class="question-mark">?</span>;
-		<span class="kw">let </span><span class="kw-2">mut </span>desired_targets =
-			T::DataProvider::desired_targets().map_err(ElectionError::DataProvider)<span class="question-mark">?</span>;
 
-		<span class="comment">// Defensive-only.
-		</span><span class="kw">if </span>targets.len() &gt; target_limit || voters.len() &gt; voter_limit {
-			<span class="macro">debug_assert!</span>(<span class="bool-val">false</span>, <span class="string">&quot;Snapshot limit has not been respected.&quot;</span>);
+		<span class="kw">if </span>targets.len() &gt; target_limit || voters.len() &gt; voter_limit {
 			<span class="kw">return </span><span class="prelude-val">Err</span>(ElectionError::DataProvider(<span class="string">&quot;Snapshot too big for submission.&quot;</span>))
 		}
 
-		<span class="comment">// If `desired_targets` &gt; `targets.len()`, cap `desired_targets` to that level and emit a
-		// warning
-		</span><span class="kw">let </span>max_len = targets
-			.len()
-			.try_into()
-			.map_err(|<span class="kw">_</span>| ElectionError::DataProvider(<span class="string">&quot;Failed to convert usize&quot;</span>))<span class="question-mark">?</span>;
-		<span class="kw">if </span>desired_targets &gt; max_len {
+		<span class="kw">let </span><span class="kw-2">mut </span>desired_targets =
+			T::DataProvider::desired_targets().map_err(ElectionError::DataProvider)<span class="question-mark">?</span>;
+
+		<span class="comment">// If `desired_targets` &gt; `targets.len()`, cap `desired_targets` to that
+		// level and emit a warning
+		</span><span class="kw">let </span>max_desired_targets: u32 = (targets.len() <span class="kw">as </span>u32).min(T::MaxWinners::get());
+		<span class="kw">if </span>desired_targets &gt; max_desired_targets {
 			<span class="macro">log!</span>(
 				warn,
 				<span class="string">&quot;desired_targets: {} &gt; targets.len(): {}, capping desired_targets&quot;</span>,
 				desired_targets,
-				max_len
+				max_desired_targets
 			);
-			desired_targets = max_len;
+			desired_targets = max_desired_targets;
 		}
 
 		<span class="prelude-val">Ok</span>((targets, voters, desired_targets))
@@ -3929,7 +3947,7 @@
 	</span><span class="kw">pub fn </span>feasibility_check(
 		raw_solution: RawSolution&lt;SolutionOf&lt;T::MinerConfig&gt;&gt;,
 		compute: ElectionCompute,
-	) -&gt; <span class="prelude-ty">Result</span>&lt;ReadySolution&lt;T::AccountId&gt;, FeasibilityError&gt; {
+	) -&gt; <span class="prelude-ty">Result</span>&lt;ReadySolution&lt;T&gt;, FeasibilityError&gt; {
 		<span class="kw">let </span>RawSolution { solution, score, round } = raw_solution;
 
 		<span class="comment">// First, check round.
@@ -3942,6 +3960,11 @@
 			<span class="self">Self</span>::desired_targets().ok_or(FeasibilityError::SnapshotUnavailable)<span class="question-mark">?</span>;
 
 		<span class="macro">ensure!</span>(winners.len() <span class="kw">as </span>u32 == desired_targets, FeasibilityError::WrongWinnerCount);
+		<span class="comment">// Fail early if targets requested by data provider exceed maximum winners supported.
+		</span><span class="macro">ensure!</span>(
+			desired_targets &lt;= &lt;T <span class="kw">as </span>pallet::Config&gt;::MaxWinners::get(),
+			FeasibilityError::TooManyDesiredTargets
+		);
 
 		<span class="comment">// Ensure that the solution&#39;s score can pass absolute min-score.
 		</span><span class="kw">let </span>submitted_score = raw_solution.score;
@@ -4002,6 +4025,8 @@
 		</span><span class="kw">let </span>known_score = supports.evaluate();
 		<span class="macro">ensure!</span>(known_score == score, FeasibilityError::InvalidScore);
 
+		<span class="comment">// Size of winners in miner solution is equal to `desired_targets` &lt;= `MaxWinners`.
+		</span><span class="kw">let </span>supports = supports.try_into().expect(<span class="string">&quot;checked desired_targets &lt;= MaxWinners; qed&quot;</span>);
 		<span class="prelude-val">Ok</span>(ReadySolution { supports, compute, score })
 	}
 
@@ -4021,7 +4046,7 @@
 		</span><span class="self">Self</span>::kill_snapshot();
 	}
 
-	<span class="kw">fn </span>do_elect() -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;T::AccountId&gt;, ElectionError&lt;T&gt;&gt; {
+	<span class="kw">fn </span>do_elect() -&gt; <span class="prelude-ty">Result</span>&lt;BoundedSupportsOf&lt;<span class="self">Self</span>&gt;, ElectionError&lt;T&gt;&gt; {
 		<span class="comment">// We have to unconditionally try finalizing the signed phase here. There are only two
 		// possibilities:
 		//
@@ -4033,13 +4058,15 @@
 		&lt;QueuedSolution&lt;T&gt;&gt;::take()
 			.ok_or(ElectionError::&lt;T&gt;::NothingQueued)
 			.or_else(|<span class="kw">_</span>| {
-				&lt;T::Fallback <span class="kw">as </span>ElectionProvider&gt;::elect()
-					.map(|supports| ReadySolution {
-						supports,
-						score: Default::default(),
-						compute: ElectionCompute::Fallback,
-					})
+				T::Fallback::instant_elect(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
 					.map_err(|fe| ElectionError::Fallback(fe))
+					.and_then(|supports| {
+						<span class="prelude-val">Ok</span>(ReadySolution {
+							supports,
+							score: Default::default(),
+							compute: ElectionCompute::Fallback,
+						})
+					})
 			})
 			.map(|ReadySolution { compute, score, supports }| {
 				<span class="self">Self</span>::deposit_event(Event::ElectionFinalized { compute, score });
@@ -4072,18 +4099,19 @@
 	<span class="kw">type </span>AccountId = T::AccountId;
 	<span class="kw">type </span>BlockNumber = T::BlockNumber;
 	<span class="kw">type </span>Error = ElectionError&lt;T&gt;;
+	<span class="kw">type </span>MaxWinners = T::MaxWinners;
 	<span class="kw">type </span>DataProvider = T::DataProvider;
+}
 
+<span class="kw">impl</span>&lt;T: Config&gt; ElectionProvider <span class="kw">for </span>Pallet&lt;T&gt; {
 	<span class="kw">fn </span>ongoing() -&gt; bool {
 		<span class="kw">match </span><span class="self">Self</span>::current_phase() {
 			Phase::Off =&gt; <span class="bool-val">false</span>,
 			<span class="kw">_ </span>=&gt; <span class="bool-val">true</span>,
 		}
 	}
-}
 
-<span class="kw">impl</span>&lt;T: Config&gt; ElectionProvider <span class="kw">for </span>Pallet&lt;T&gt; {
-	<span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;Supports&lt;T::AccountId&gt;, <span class="self">Self</span>::Error&gt; {
+	<span class="kw">fn </span>elect() -&gt; <span class="prelude-ty">Result</span>&lt;BoundedSupportsOf&lt;<span class="self">Self</span>&gt;, <span class="self">Self</span>::Error&gt; {
 		<span class="kw">match </span><span class="self">Self</span>::do_elect() {
 			<span class="prelude-val">Ok</span>(supports) =&gt; {
 				<span class="comment">// All went okay, record the weight, put sign to be Off, clean snapshot, etc.
@@ -4099,6 +4127,7 @@
 		}
 	}
 }
+
 <span class="doccomment">/// convert a DispatchError to a custom InvalidTransaction with the inner code being the error
 /// number.
 </span><span class="kw">pub fn </span>dispatch_error_to_invalid(error: DispatchError) -&gt; InvalidTransaction {
@@ -4317,7 +4346,6 @@
 		},
 		Phase,
 	};
-	<span class="kw">use </span>frame_election_provider_support::ElectionProvider;
 	<span class="kw">use </span>frame_support::{assert_noop, assert_ok};
 	<span class="kw">use </span>sp_npos_elections::{BalancingConfig, Support};
 
