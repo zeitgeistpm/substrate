@@ -440,6 +440,8 @@
 <span id="440">440</span>
 <span id="441">441</span>
 <span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -592,12 +594,14 @@
 
 <span class="macro">benchmarks_instance_pallet! </span>{
 	create {
-		<span class="kw">let </span>caller: T::AccountId = whitelisted_caller();
+		<span class="kw">let </span>asset_id = Default::default();
+		<span class="kw">let </span>origin = T::CreateOrigin::successful_origin(<span class="kw-2">&amp;</span>asset_id);
+		<span class="kw">let </span>caller = T::CreateOrigin::ensure_origin(origin, <span class="kw-2">&amp;</span>asset_id).unwrap();
 		<span class="kw">let </span>caller_lookup = T::Lookup::unlookup(caller.clone());
 		T::Currency::make_free_balance_be(<span class="kw-2">&amp;</span>caller, DepositBalanceOf::&lt;T, I&gt;::max_value());
-	}: <span class="kw">_</span>(SystemOrigin::Signed(caller.clone()), Default::default(), caller_lookup, <span class="number">1u32</span>.into())
+	}: <span class="kw">_</span>(SystemOrigin::Signed(caller.clone()), asset_id, caller_lookup, <span class="number">1u32</span>.into())
 	verify {
-		assert_last_event::&lt;T, I&gt;(Event::Created { asset_id: Default::default(), creator: caller.clone(), owner: caller }.into());
+		assert_last_event::&lt;T, I&gt;(Event::Created { asset_id, creator: caller.clone(), owner: caller }.into());
 	}
 
 	force_create {
