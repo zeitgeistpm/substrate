@@ -496,43 +496,6 @@
 <span id="496">496</span>
 <span id="497">497</span>
 <span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
 </pre><pre class="rust"><code><span class="attribute">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
 </span><span class="comment">// Make the WASM binary available.
@@ -853,24 +816,6 @@
 		message_slice.copy_from_slice(test_message);
 	}
 
-	<span class="kw">fn </span>test_spawn() {
-		<span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">1u8</span>, <span class="number">2u8</span>];
-		<span class="kw">let </span>data_new = sp_tasks::spawn(tasks::incrementer, data).join();
-
-		<span class="macro">assert_eq!</span>(data_new, <span class="macro">vec!</span>[<span class="number">2u8</span>, <span class="number">3u8</span>]);
-	}
-
-	<span class="kw">fn </span>test_nested_spawn() {
-		<span class="kw">let </span>data = <span class="macro">vec!</span>[<span class="number">7u8</span>, <span class="number">13u8</span>];
-		<span class="kw">let </span>data_new = sp_tasks::spawn(tasks::parallel_incrementer, data).join();
-
-		<span class="macro">assert_eq!</span>(data_new, <span class="macro">vec!</span>[<span class="number">10u8</span>, <span class="number">16u8</span>]);
-	}
-
-	<span class="kw">fn </span>test_panic_in_spawned() {
-		sp_tasks::spawn(tasks::panicker, <span class="macro">vec!</span>[]).join();
-	}
-
 	<span class="kw">fn </span>test_return_i8() -&gt; i8 {
 		-<span class="number">66
 	</span>}
@@ -890,25 +835,6 @@
 	<span class="kw">fn </span>test_return_value() -&gt; u64 {
 		<span class="comment">// Mainly a test that the macro is working when we have a return statement here.
 		</span><span class="kw">return </span><span class="number">1234</span>;
-	}
-}
-
-<span class="attribute">#[cfg(not(feature = <span class="string">&quot;std&quot;</span>))]
-</span><span class="kw">mod </span>tasks {
-	<span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
-
-	<span class="kw">pub fn </span>incrementer(data: Vec&lt;u8&gt;) -&gt; Vec&lt;u8&gt; {
-		data.into_iter().map(|v| v + <span class="number">1</span>).collect()
-	}
-
-	<span class="kw">pub fn </span>panicker(<span class="kw">_</span>: Vec&lt;u8&gt;) -&gt; Vec&lt;u8&gt; {
-		<span class="macro">panic!</span>()
-	}
-
-	<span class="kw">pub fn </span>parallel_incrementer(data: Vec&lt;u8&gt;) -&gt; Vec&lt;u8&gt; {
-		<span class="kw">let </span>first = data.into_iter().map(|v| v + <span class="number">2</span>).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-		<span class="kw">let </span>second = sp_tasks::spawn(incrementer, first).join();
-		second
 	}
 }
 

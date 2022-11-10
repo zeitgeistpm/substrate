@@ -1978,39 +1978,6 @@
 <span id="1978">1978</span>
 <span id="1979">1979</span>
 <span id="1980">1980</span>
-<span id="1981">1981</span>
-<span id="1982">1982</span>
-<span id="1983">1983</span>
-<span id="1984">1984</span>
-<span id="1985">1985</span>
-<span id="1986">1986</span>
-<span id="1987">1987</span>
-<span id="1988">1988</span>
-<span id="1989">1989</span>
-<span id="1990">1990</span>
-<span id="1991">1991</span>
-<span id="1992">1992</span>
-<span id="1993">1993</span>
-<span id="1994">1994</span>
-<span id="1995">1995</span>
-<span id="1996">1996</span>
-<span id="1997">1997</span>
-<span id="1998">1998</span>
-<span id="1999">1999</span>
-<span id="2000">2000</span>
-<span id="2001">2001</span>
-<span id="2002">2002</span>
-<span id="2003">2003</span>
-<span id="2004">2004</span>
-<span id="2005">2005</span>
-<span id="2006">2006</span>
-<span id="2007">2007</span>
-<span id="2008">2008</span>
-<span id="2009">2009</span>
-<span id="2010">2010</span>
-<span id="2011">2011</span>
-<span id="2012">2012</span>
-<span id="2013">2013</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -2053,7 +2020,7 @@
 	hexdisplay::HexDisplay,
 	offchain::{OffchainDbExt, OffchainWorkerExt, TransactionPoolExt},
 	storage::ChildInfo,
-	traits::{RuntimeSpawnExt, TaskExecutorExt},
+	traits::TaskExecutorExt,
 };
 <span class="attribute">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
 </span><span class="kw">use </span>sp_keystore::{KeystoreExt, SyncCryptoStore};
@@ -3670,38 +3637,6 @@
 	}
 }
 
-<span class="doccomment">/// Wasm host functions for managing tasks.
-///
-/// This should not be used directly. Use `sp_tasks` for running parallel tasks instead.
-</span><span class="attribute">#[runtime_interface(wasm_only)]
-</span><span class="kw">pub trait </span>RuntimeTasks {
-	<span class="doccomment">/// Wasm host function for spawning task.
-	///
-	/// This should not be used directly. Use `sp_tasks::spawn` instead.
-	</span><span class="kw">fn </span>spawn(dispatcher_ref: u32, entry: u32, payload: Vec&lt;u8&gt;) -&gt; u64 {
-		sp_externalities::with_externalities(|<span class="kw-2">mut </span>ext| {
-			<span class="kw">let </span>runtime_spawn = ext
-				.extension::&lt;RuntimeSpawnExt&gt;()
-				.expect(<span class="string">&quot;Cannot spawn without dynamic runtime dispatcher (RuntimeSpawnExt)&quot;</span>);
-			runtime_spawn.spawn_call(dispatcher_ref, entry, payload)
-		})
-		.expect(<span class="string">&quot;`RuntimeTasks::spawn`: called outside of externalities context&quot;</span>)
-	}
-
-	<span class="doccomment">/// Wasm host function for joining a task.
-	///
-	/// This should not be used directly. Use `join` of `sp_tasks::spawn` result instead.
-	</span><span class="kw">fn </span>join(handle: u64) -&gt; Vec&lt;u8&gt; {
-		sp_externalities::with_externalities(|<span class="kw-2">mut </span>ext| {
-			<span class="kw">let </span>runtime_spawn = ext
-				.extension::&lt;RuntimeSpawnExt&gt;()
-				.expect(<span class="string">&quot;Cannot join without dynamic runtime dispatcher (RuntimeSpawnExt)&quot;</span>);
-			runtime_spawn.join(handle)
-		})
-		.expect(<span class="string">&quot;`RuntimeTasks::join`: called outside of externalities context&quot;</span>)
-	}
-}
-
 <span class="doccomment">/// Allocator used by Substrate when executing the Wasm runtime.
 </span><span class="attribute">#[cfg(all(target_arch = <span class="string">&quot;wasm32&quot;</span>, not(feature = <span class="string">&quot;std&quot;</span>)))]
 </span><span class="kw">struct </span>WasmAllocator;
@@ -3780,7 +3715,6 @@
 	sandbox::HostFunctions,
 	<span class="kw">crate</span>::trie::HostFunctions,
 	offchain_index::HostFunctions,
-	runtime_tasks::HostFunctions,
 	transaction_index::HostFunctions,
 );
 

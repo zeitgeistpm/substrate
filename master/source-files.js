@@ -66,7 +66,6 @@ var sourcesIndex = JSON.parse('{\
 "pallet_elections_phragmen":["",[["migrations",[],["mod.rs","v3.rs","v4.rs","v5.rs"]]],["benchmarking.rs","lib.rs","weights.rs"]],\
 "pallet_example_basic":["",[],["benchmarking.rs","lib.rs","weights.rs"]],\
 "pallet_example_offchain_worker":["",[],["lib.rs"]],\
-"pallet_example_parallel":["",[],["lib.rs"]],\
 "pallet_fast_unstake":["",[],["benchmarking.rs","lib.rs","migrations.rs","types.rs","weights.rs"]],\
 "pallet_gilt":["",[],["benchmarking.rs","lib.rs","weights.rs"]],\
 "pallet_grandpa":["",[["migrations",[],["v4.rs"]]],["benchmarking.rs","default_weights.rs","equivocation.rs","lib.rs","migrations.rs"]],\
@@ -220,7 +219,6 @@ var sourcesIndex = JSON.parse('{\
 "sp_state_machine":["",[["overlayed_changes",[],["changeset.rs","mod.rs","offchain.rs"]]],["backend.rs","basic.rs","error.rs","ext.rs","in_memory_backend.rs","lib.rs","read_only.rs","stats.rs","testing.rs","trie_backend.rs","trie_backend_essence.rs"]],\
 "sp_std":["",[],["lib.rs","with_std.rs"]],\
 "sp_storage":["",[],["lib.rs"]],\
-"sp_tasks":["",[],["async_externalities.rs","lib.rs"]],\
 "sp_test_primitives":["",[],["lib.rs"]],\
 "sp_timestamp":["",[],["lib.rs"]],\
 "sp_tracing":["",[],["lib.rs","types.rs"]],\
