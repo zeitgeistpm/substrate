@@ -80,7 +80,7 @@ impl Config {
 	}
 }
 
-/// Start WS server listening on given address.
+/// Start JSON-RPC server listening on given address.
 pub async fn start_server<M: Send + Sync + 'static>(
 	addrs: [SocketAddr; 2],
 	cors: Option<&Vec<String>>,
@@ -89,20 +89,23 @@ pub async fn start_server<M: Send + Sync + 'static>(
 	rpc_api: RpcModule<M>,
 	rt: tokio::runtime::Handle,
 	id_provider: Option<Box<dyn IdProvider>>,
+	transport_label: &str,
 ) -> Result<ServerHandle, Box<dyn StdError + Send + Sync>> {
 	let (max_payload_in, max_payload_out, max_connections, max_subs_per_conn) =
 		config.deconstruct();
 
-	let (allow_hosts, cors) = {
+	let host_filter = hosts_filter(cors.is_some(), &addrs);
+
+	let cors = {
 		if let Some(cors) = cors {
 			let mut list = Vec::new();
 			for origin in cors {
 				list.push(HeaderValue::from_str(origin.as_str())?);
 			}
-			(allowed_hosts(&addrs), CorsLayer::new().allow_origin(AllowOrigin::list(list)))
+			CorsLayer::new().allow_origin(AllowOrigin::list(list))
 		} else {
 			// allow all cors
-			(AllowHosts::Any, CorsLayer::permissive())
+			CorsLayer::permissive()
 		}
 	};
 
@@ -117,7 +120,7 @@ pub async fn start_server<M: Send + Sync + 'static>(
 		.max_connections(max_connections)
 		.max_subscriptions_per_connection(max_subs_per_conn)
 		.ping_interval(std::time::Duration::from_secs(30))
-		.set_host_filtering(allow_hosts)
+		.set_host_filtering(host_filter)
 		.set_middleware(middleware)
 		.custom_tokio_runtime(rt);
 
@@ -140,21 +143,13 @@ pub async fn start_server<M: Send + Sync + 'static>(
 	};
 
 	log::info!(
-		"Running JSON-RPC server: addr={}, cors={:?}",
+		"Running JSON-RPC {} server: addr={}, cors={:?}",
+		transport_label,
 		addr.map_or_else(|_| "unknown".to_string(), |a| a.to_string()),
 		cors
 	);
 
 	Ok(handle)
-}
-
-fn allowed_hosts(addrs: &[SocketAddr]) -> AllowHosts {
-	let mut hosts = Vec::with_capacity(addrs.len() * 2);
-	for addr in addrs {
-		hosts.push(format!("localhost:{}", addr.port()).into());
-		hosts.push(format!("127.0.0.1:{}", addr.port()).into());
-	}
-	AllowHosts::Only(hosts)
 }
 
 fn build_rpc_api<M: Send + Sync + 'static>(mut rpc_api: RpcModule<M>) -> RpcModule<M> {
@@ -174,4 +169,18 @@ fn build_rpc_api<M: Send + Sync + 'static>(mut rpc_api: RpcModule<M>) -> RpcModu
 
 fn payload_size_or_default(size_mb: Option<usize>) -> usize {
 	size_mb.map_or(RPC_MAX_PAYLOAD_DEFAULT, |mb| mb.saturating_mul(MEGABYTE))
+}
+
+fn hosts_filter(enabled: bool, addrs: &[SocketAddr]) -> AllowHosts {
+	if enabled {
+		// NOTE The listening addresses are whitelisted by default.
+		let mut hosts = Vec::with_capacity(addrs.len() * 2);
+		for addr in addrs {
+			hosts.push(format!("localhost:{}", addr.port()).into());
+			hosts.push(format!("127.0.0.1:{}", addr.port()).into());
+		}
+		AllowHosts::Only(hosts)
+	} else {
+		AllowHosts::Any
+	}
 }
