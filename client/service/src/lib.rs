@@ -329,10 +329,15 @@ where
 		addr
 	};
 
-	let addr = config
+	let ws_addr = config
 		.rpc_ws
 		.unwrap_or_else(|| "127.0.0.1:9944".parse().expect("valid sockaddr; qed"));
-	let addr2 = random_port(addr);
+	let ws_addr2 = random_port(ws_addr);
+
+	let http_addr = config
+		.rpc_http
+		.unwrap_or_else(|| "127.0.0.1:9933".parse().expect("valid sockaddr; qed"));
+	let http_addr2 = random_port(http_addr);
 
 	let metrics = sc_rpc_server::RpcMetrics::new(config.prometheus_registry())?;
 
@@ -343,18 +348,37 @@ where
 		max_subs_per_conn: config.rpc_max_subs_per_conn,
 	};
 
-	let server_fut = sc_rpc_server::start_server(
-		[addr, addr2],
+	let ws_fut = sc_rpc_server::start_server(
+		[ws_addr, ws_addr2],
+		config.rpc_cors.as_ref(),
+		server_config.clone(),
+		metrics.clone(),
+		gen_rpc_module(deny_unsafe(ws_addr, &config.rpc_methods))?,
+		config.tokio_handle.clone(),
+		rpc_id_provider,
+		"WS",
+	);
+
+	let http_fut = sc_rpc_server::start_server(
+		[http_addr, http_addr2],
 		config.rpc_cors.as_ref(),
 		server_config,
 		metrics,
-		gen_rpc_module(deny_unsafe(addr, &config.rpc_methods))?,
+		gen_rpc_module(deny_unsafe(http_addr, &config.rpc_methods))?,
 		config.tokio_handle.clone(),
-		rpc_id_provider,
+		// NOTE: this is hack to be backwards compatible because the `RpcSubscriptionIdProvider`
+		// isn't cloneable and we don't expect ws connections to the old http server.
+		//
+		// The only downside to that is if one configures a custom subscription ID generator
+		// then this will use the default one.
+		None,
+		"HTTP",
 	);
 
-	match tokio::task::block_in_place(|| config.tokio_handle.block_on(server_fut)) {
-		Ok(server) => Ok(Box::new(waiting::Server(Some(server)))),
+	match tokio::task::block_in_place(|| {
+		config.tokio_handle.block_on(futures::future::try_join(http_fut, ws_fut))
+	}) {
+		Ok((http, ws)) => Ok(Box::new((waiting::Server(Some(http)), waiting::Server(Some(ws))))),
 		Err(e) => Err(Error::Application(e)),
 	}
 }
