@@ -2563,6 +2563,27 @@
 <span id="2563">2563</span>
 <span id="2564">2564</span>
 <span id="2565">2565</span>
+<span id="2566">2566</span>
+<span id="2567">2567</span>
+<span id="2568">2568</span>
+<span id="2569">2569</span>
+<span id="2570">2570</span>
+<span id="2571">2571</span>
+<span id="2572">2572</span>
+<span id="2573">2573</span>
+<span id="2574">2574</span>
+<span id="2575">2575</span>
+<span id="2576">2576</span>
+<span id="2577">2577</span>
+<span id="2578">2578</span>
+<span id="2579">2579</span>
+<span id="2580">2580</span>
+<span id="2581">2581</span>
+<span id="2582">2582</span>
+<span id="2583">2583</span>
+<span id="2584">2584</span>
+<span id="2585">2585</span>
+<span id="2586">2586</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -2589,9 +2610,10 @@
 //!
 //! * [Key terms](#key-terms)
 //! * [Usage](#usage)
+//! * [Implementor&#39;s Guide](#implementors-guide)
 //! * [Design](#design)
 //!
-//! ## Key terms
+//! ## Key Terms
 //!
 //!  * pool id: A unique identifier of each pool. Set to u32.
 //!  * bonded pool: Tracks the distribution of actively staked funds. See [`BondedPool`] and
@@ -2653,13 +2675,21 @@
 </span><span class="doccomment">//! in the aforementioned range of eras will be affected by the slash. A member is slashed pro-rata
 //! based on its stake relative to the total slash amount.
 //!
-//! For design docs see the [slashing](#slashing) section.
+//! Slashing does not change any single member&#39;s balance. Instead, the slash will only reduce the
+//! balance associated with a particular pool. But, we never change the total *points* of a pool
+//! because of slashing. Therefore, when a slash happens, the ratio of points to balance changes in
+//! a pool. In other words, the value of one point, which is initially 1-to-1 against a unit of
+//! balance, is now less than one balance because of the slash.
 //!
 //! ### Administration
 //!
 //! A pool can be created with the [`Call::create`] call. Once created, the pools nominator or root
 //! user must call [`Call::nominate`] to start nominating. [`Call::nominate`] can be called at
 //! anytime to update validator selection.
+//!
+//! Similar to [`Call::nominate`], [`Call::chill`] will chill to pool in the staking system, and
+//! [`Call::pool_withdraw_unbonded`] will withdraw any unbonding chunks of the pool bonded account.
+//! The latter call is permissionless and can be called by anyone at any time.
 //!
 //! To help facilitate pool administration the pool has one of three states (see [`PoolState`]):
 //!
@@ -2686,10 +2716,52 @@
 //!
 //! 1. First, all members need to fully unbond and withdraw. If the pool state is set to
 //!    `Destroying`, this can happen permissionlessly.
-//! 2. The depositor itself fully unbonds and withdraws. Note that at this point, based on the
-//!    requirements of the staking system, the pool&#39;s bonded account&#39;s stake might not be able to ge
-//!    below a certain threshold as a nominator. At this point, the pool should `chill` itself to
-//!    allow the depositor to leave.
+//! 2. The depositor itself fully unbonds and withdraws.
+//!
+//! &gt; Note that at this point, based on the requirements of the staking system, the pool&#39;s bonded
+//! &gt; account&#39;s stake might not be able to ge below a certain threshold as a nominator. At this
+//! &gt; point, the pool should `chill` itself to allow the depositor to leave. See [`Call::chill`].
+//!
+//! ## Implementor&#39;s Guide
+//!
+//! Some notes and common mistakes that wallets/apps wishing to implement this pallet should be
+//! aware of:
+//!
+//!
+//! ### Pool Members
+//!
+//! * In general, whenever a pool member changes their total point, the chain will automatically
+//!   claim all their pending rewards for them. This is not optional, and MUST happen for the reward
+//!   calculation to remain correct (see the documentation of `bond` as an example). So, make sure
+//!   you are warning your users about it. They might be surprised if they see that they bonded an
+//!   extra 100 DOTs, and now suddenly their 5.23 DOTs in pending reward is gone. It is not gone, it
+//!   has been paid out to you!
+//! * Joining a pool implies transferring funds to the pool account. So it might be (based on which
+//!   wallet that you are using) that you no longer see the funds that are moved to the pool in your
+//!   “free balance” section. Make sure the user is aware of this, and not surprised by seeing this.
+//!   Also, the transfer that happens here is configured to to never accidentally destroy the sender
+//!   account. So to join a Pool, your sender account must remain alive with 1 DOT left in it. This
+//!   means, with 1 DOT as existential deposit, and 1 DOT as minimum to join a pool, you need at
+//!   least 2 DOT to join a pool. Consequently, if you are suggesting members to join a pool with
+//!   “Maximum possible value”, you must subtract 1 DOT to remain in the sender account to not
+//!   accidentally kill it.
+//! * Points and balance are not the same! Any pool member, at any point in time, can have points in
+//!   either the bonded pool or any of the unbonding pools. The crucial fact is that in any of these
+//!   pools, the ratio of point to balance is different and might not be 1. Each pool starts with a
+//!   ratio of 1, but as time goes on, for reasons such as slashing, the ratio gets broken. Over
+//!   time, 100 points in a bonded pool can be worth 90 DOTs. Make sure you are either representing
+//!   points as points (not as DOTs), or even better, always display both: “You have x points in
+//!   pool y which is worth z DOTs”. See here and here for examples of how to calculate point to
+//!   balance ratio of each pool (it is almost trivial ;))
+//!
+//! ### Pool Management
+//!
+//! * The pool will be seen from the perspective of the rest of the system as a single nominator.
+//!   Ergo, This nominator must always respect the `staking.minNominatorBond` limit. Similar to a
+//!   normal nominator, who has to first `chill` before fully unbonding, the pool must also do the
+//!   same. The pool’s bonded account will be fully unbonded only when the depositor wants to leave
+//!   and dismantle the pool. All that said, the message is: the depositor can only leave the chain
+//!   when they chill the pool first.
 //!
 //! ## Design
 //!
@@ -2842,14 +2914,13 @@
 		Currency, Defensive, DefensiveOption, DefensiveResult, DefensiveSaturating,
 		ExistenceRequirement, Get,
 	},
-	transactional, CloneNoBound, DefaultNoBound, RuntimeDebugNoBound,
+	DefaultNoBound,
 };
 <span class="kw">use </span>scale_info::TypeInfo;
 <span class="kw">use </span>sp_core::U256;
 <span class="kw">use </span>sp_runtime::{
 	traits::{
-		AccountIdConversion, Bounded, CheckedAdd, CheckedSub, Convert, Saturating, StaticLookup,
-		Zero,
+		AccountIdConversion, CheckedAdd, CheckedSub, Convert, Saturating, StaticLookup, Zero,
 	},
 	FixedPointNumber,
 };
@@ -2864,14 +2935,14 @@
 </span><span class="macro">macro_rules! </span>log {
 	(<span class="macro-nonterminal">$level</span>:tt, <span class="macro-nonterminal">$patter</span>:expr $(, <span class="macro-nonterminal">$values</span>:expr)* $(,)<span class="question-mark">?</span>) =&gt; {
 		log::<span class="macro-nonterminal">$</span><span class="macro">level!</span>(
-			<span class="macro-nonterminal">target</span>: <span class="kw">crate</span>::LOG_TARGET,
+			<span class="macro-nonterminal">target</span>: <span class="macro-nonterminal">$crate::LOG_TARGET</span>,
 			<span class="macro">concat!</span>(<span class="string">&quot;[{:?}] 🏊‍♂️ &quot;</span>, <span class="macro-nonterminal">$patter</span>), &lt;frame_system::Pallet&lt;T&gt;&gt;::block_number() $(, <span class="macro-nonterminal">$values</span>)*
 		)
 	};
 }
 
-<span class="attribute">#[cfg(test)]
-</span><span class="kw">mod </span>mock;
+<span class="attribute">#[cfg(any(test, feature = <span class="string">&quot;fuzzing&quot;</span>))]
+</span><span class="kw">pub mod </span>mock;
 <span class="attribute">#[cfg(test)]
 </span><span class="kw">mod </span>tests;
 
@@ -2886,8 +2957,6 @@
 	&lt;&lt;T <span class="kw">as </span>Config&gt;::Currency <span class="kw">as </span>Currency&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId&gt;&gt;::Balance;
 <span class="doccomment">/// Type used for unique identifier of each pool.
 </span><span class="kw">pub type </span>PoolId = u32;
-
-<span class="kw">type </span>UnbondingPoolsWithEra&lt;T&gt; = BoundedBTreeMap&lt;EraIndex, UnbondPool&lt;T&gt;, TotalUnbondingPools&lt;T&gt;&gt;;
 
 <span class="kw">type </span>AccountIdLookupOf&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::Lookup <span class="kw">as </span>StaticLookup&gt;::Source;
 
@@ -2963,16 +3032,12 @@
 		//
 		// rc * 10^20 / 10^18 = rc * 100
 		//
-		// meaning that as long as reward_counter&#39;s value is less than 1/100th of its max capacity
-		// (u128::MAX_VALUE), `checked_mul_int` won&#39;t saturate.
-		//
-		// given the nature of reward counter being &#39;pending_rewards / pool_total_point&#39;, the only
-		// (unrealistic) way that super high values can be achieved is for a pool to suddenly
-		// receive massive rewards with a very very small amount of stake. In all normal pools, as
-		// the points increase, so does the rewards. Moreover, as long as rewards are not
-		// accumulated for astronomically large durations,
-		// `current_reward_counter.defensive_saturating_sub(self.last_recorded_reward_counter)`
-		// won&#39;t be extremely big.
+		// the implementation of `multiply_by_rational_with_rounding` shows that it will only fail
+		// if the final division is not enough to fit in u128. In other words, if `rc * 100` is more
+		// than u128::max. Given that RC is interpreted as reward per unit of point, and unit of
+		// point is equal to balance (normally), and rewards are usually a proportion of the points
+		// in the pool, the likelihood of rc reaching near u128::MAX is near impossible.
+
 		</span>(current_reward_counter.defensive_saturating_sub(<span class="self">self</span>.last_recorded_reward_counter))
 			.checked_mul_int(<span class="self">self</span>.active_points())
 			.ok_or(Error::&lt;T&gt;::OverflowRisk)
@@ -2982,7 +3047,7 @@
 	///
 	/// This is derived from the ratio of points in the pool to which the member belongs to.
 	/// Might return different values based on the pool state for the same member and points.
-	</span><span class="kw">fn </span>active_stake(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BalanceOf&lt;T&gt; {
+	</span><span class="kw">fn </span>active_balance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BalanceOf&lt;T&gt; {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(pool) = BondedPool::&lt;T&gt;::get(<span class="self">self</span>.pool_id).defensive() {
 			pool.points_to_balance(<span class="self">self</span>.points)
 		} <span class="kw">else </span>{
@@ -3159,7 +3224,7 @@
 	}
 
 	<span class="doccomment">/// Get [`Self`] from storage. Returns `None` if no entry for `pool_account` exists.
-	</span><span class="kw">fn </span>get(id: PoolId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
+	</span><span class="kw">pub fn </span>get(id: PoolId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt; {
 		BondedPools::&lt;T&gt;::try_get(id).ok().map(|inner| <span class="self">Self </span>{ id, inner })
 	}
 
@@ -3299,7 +3364,7 @@
 
 	<span class="doccomment">/// Whether or not the pool is ok to be in `PoolSate::Open`. If this returns an `Err`, then the
 	/// pool is unrecoverable and should be in the destroying state.
-	</span><span class="kw">fn </span>ok_to_be_open(<span class="kw-2">&amp;</span><span class="self">self</span>, new_funds: BalanceOf&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), DispatchError&gt; {
+	</span><span class="kw">fn </span>ok_to_be_open(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), DispatchError&gt; {
 		<span class="macro">ensure!</span>(!<span class="self">self</span>.is_destroying(), Error::&lt;T&gt;::CanNotChangeState);
 
 		<span class="kw">let </span>bonded_balance =
@@ -3320,12 +3385,6 @@
 			points_to_balance_ratio_floor &lt; max_points_to_balance.into(),
 			Error::&lt;T&gt;::OverflowRisk
 		);
-		<span class="comment">// while restricting the balance to `max_points_to_balance` of max total issuance,
-		</span><span class="kw">let </span>next_bonded_balance = bonded_balance.saturating_add(new_funds);
-		<span class="macro">ensure!</span>(
-			next_bonded_balance &lt; BalanceOf::&lt;T&gt;::max_value().div(max_points_to_balance.into()),
-			Error::&lt;T&gt;::OverflowRisk
-		);
 
 		<span class="comment">// then we can be decently confident the bonding pool points will not overflow
 		// `BalanceOf&lt;T&gt;`. Note that these are just heuristics.
@@ -3334,9 +3393,9 @@
 	}
 
 	<span class="doccomment">/// Check that the pool can accept a member with `new_funds`.
-	</span><span class="kw">fn </span>ok_to_join(<span class="kw-2">&amp;</span><span class="self">self</span>, new_funds: BalanceOf&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), DispatchError&gt; {
+	</span><span class="kw">fn </span>ok_to_join(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), DispatchError&gt; {
 		<span class="macro">ensure!</span>(<span class="self">self</span>.state == PoolState::Open, Error::&lt;T&gt;::NotOpen);
-		<span class="self">self</span>.ok_to_be_open(new_funds)<span class="question-mark">?</span>;
+		<span class="self">self</span>.ok_to_be_open()<span class="question-mark">?</span>;
 		<span class="prelude-val">Ok</span>(())
 	}
 
@@ -3356,7 +3415,7 @@
 				target_member.active_points().saturating_sub(unbonding_points);
 			<span class="kw">let </span><span class="kw-2">mut </span>target_member_after_unbond = (<span class="kw-2">*</span>target_member).clone();
 			target_member_after_unbond.points = new_depositor_points;
-			target_member_after_unbond.active_stake()
+			target_member_after_unbond.active_balance()
 		};
 
 		<span class="comment">// any partial unbonding is only ever allowed if this unbond is permissioned.
@@ -3638,7 +3697,7 @@
 	/// older then `current_era - TotalUnbondingPools`.
 	</span>no_era: UnbondPool&lt;T&gt;,
 	<span class="doccomment">/// Map of era in which a pool becomes unbonded in =&gt; unbond pools.
-	</span>with_era: UnbondingPoolsWithEra&lt;T&gt;,
+	</span>with_era: BoundedBTreeMap&lt;EraIndex, UnbondPool&lt;T&gt;, TotalUnbondingPools&lt;T&gt;&gt;,
 }
 
 <span class="kw">impl</span>&lt;T: Config&gt; SubPools&lt;T&gt; {
@@ -3670,7 +3729,7 @@
 	</span>}
 
 	<span class="doccomment">/// The sum of all unbonding balance, regardless of whether they are actually unlocked or not.
-	</span><span class="attribute">#[cfg(any(feature = <span class="string">&quot;try-runtime&quot;</span>, test, debug_assertions))]
+	</span><span class="attribute">#[cfg(any(feature = <span class="string">&quot;try-runtime&quot;</span>, feature = <span class="string">&quot;fuzzing&quot;</span>, test, debug_assertions))]
 	</span><span class="kw">fn </span>sum_unbonding_balance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; BalanceOf&lt;T&gt; {
 		<span class="self">self</span>.no_era.balance.saturating_add(
 			<span class="self">self</span>.with_era
@@ -3687,8 +3746,8 @@
 <span class="kw">impl</span>&lt;T: Config&gt; Get&lt;u32&gt; <span class="kw">for </span>TotalUnbondingPools&lt;T&gt; {
 	<span class="kw">fn </span>get() -&gt; u32 {
 		<span class="comment">// NOTE: this may be dangerous in the scenario bonding_duration gets decreased because
-		// we would no longer be able to decode `UnbondingPoolsWithEra`, which uses
-		// `TotalUnbondingPools` as the bound
+		// we would no longer be able to decode `BoundedBTreeMap::&lt;EraIndex, UnbondPool&lt;T&gt;,
+		// TotalUnbondingPools&lt;T&gt;&gt;`, which uses `TotalUnbondingPools` as the bound
 		</span>T::Staking::bonding_duration() + T::PostUnbondingPoolsWindow::get()
 	}
 }
@@ -4034,7 +4093,6 @@
 		///   `existential deposit + amount` in their account.
 		/// * Only a pool with [`PoolState::Open`] can be joined
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::join())]
-		#[transactional]
 		</span><span class="kw">pub fn </span>join(
 			origin: OriginFor&lt;T&gt;,
 			<span class="attribute">#[pallet::compact] </span>amount: BalanceOf&lt;T&gt;,
@@ -4047,7 +4105,7 @@
 			</span><span class="macro">ensure!</span>(!PoolMembers::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::AccountBelongsToOtherPool);
 
 			<span class="kw">let </span><span class="kw-2">mut </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
-			bonded_pool.ok_to_join(amount)<span class="question-mark">?</span>;
+			bonded_pool.ok_to_join()<span class="question-mark">?</span>;
 
 			<span class="kw">let </span><span class="kw-2">mut </span>reward_pool = RewardPools::&lt;T&gt;::get(pool_id)
 				.defensive_ok_or::&lt;Error&lt;T&gt;&gt;(DefensiveError::RewardPoolNotFound.into())<span class="question-mark">?</span>;
@@ -4095,7 +4153,6 @@
 			T::WeightInfo::bond_extra_transfer()
 			.max(T::WeightInfo::bond_extra_reward())
 		)]
-		#[transactional]
 		</span><span class="kw">pub fn </span>bond_extra(origin: OriginFor&lt;T&gt;, extra: BondExtra&lt;BalanceOf&lt;T&gt;&gt;) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span>(<span class="kw-2">mut </span>member, <span class="kw-2">mut </span>bonded_pool, <span class="kw-2">mut </span>reward_pool) = <span class="self">Self</span>::get_member_with_pools(<span class="kw-2">&amp;</span>who)<span class="question-mark">?</span>;
@@ -4103,11 +4160,7 @@
 			<span class="comment">// payout related stuff: we must claim the payouts, and updated recorded payout data
 			// before updating the bonded pool points, similar to that of `join` transaction.
 			</span>reward_pool.update_records(bonded_pool.id, bonded_pool.points)<span class="question-mark">?</span>;
-			<span class="comment">// TODO: optimize this to not touch the free balance of `who ` at all in benchmarks.
-			// Currently, bonding rewards is like a batch. In the same PR, also make this function
-			// take a boolean argument that make it either 100% pure (no storage update), or make it
-			// also emit event and do the transfer. #11671
-			</span><span class="kw">let </span>claimed =
+			<span class="kw">let </span>claimed =
 				<span class="self">Self</span>::do_reward_payout(<span class="kw-2">&amp;</span>who, <span class="kw-2">&amp;mut </span>member, <span class="kw-2">&amp;mut </span>bonded_pool, <span class="kw-2">&amp;mut </span>reward_pool)<span class="question-mark">?</span>;
 
 			<span class="kw">let </span>(points_issued, bonded) = <span class="kw">match </span>extra {
@@ -4117,8 +4170,9 @@
 					(bonded_pool.try_bond_funds(<span class="kw-2">&amp;</span>who, claimed, BondType::Later)<span class="question-mark">?</span>, claimed),
 			};
 
-			bonded_pool.ok_to_be_open(bonded)<span class="question-mark">?</span>;
-			member.points = member.points.saturating_add(points_issued);
+			bonded_pool.ok_to_be_open()<span class="question-mark">?</span>;
+			member.points =
+				member.points.checked_add(<span class="kw-2">&amp;</span>points_issued).ok_or(Error::&lt;T&gt;::OverflowRisk)<span class="question-mark">?</span>;
 
 			<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Bonded {
 				member: who.clone(),
@@ -4138,7 +4192,6 @@
 		/// The member will earn rewards pro rata based on the members stake vs the sum of the
 		/// members in the pools stake. Rewards do not &quot;expire&quot;.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::claim_payout())]
-		#[transactional]
 		</span><span class="kw">pub fn </span>claim_payout(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span>(<span class="kw-2">mut </span>member, <span class="kw-2">mut </span>bonded_pool, <span class="kw-2">mut </span>reward_pool) = <span class="self">Self</span>::get_member_with_pools(<span class="kw-2">&amp;</span>who)<span class="question-mark">?</span>;
@@ -4178,7 +4231,6 @@
 		/// there are too many unlocking chunks, the result of this call will likely be the
 		/// `NoMoreChunks` error from the staking system.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::unbond())]
-		#[transactional]
 		</span><span class="kw">pub fn </span>unbond(
 			origin: OriginFor&lt;T&gt;,
 			member_account: AccountIdLookupOf&lt;T&gt;,
@@ -4254,7 +4306,6 @@
 		/// would probably see an error like `NoMoreChunks` emitted from the staking system when
 		/// they attempt to unbond.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::pool_withdraw_unbonded(<span class="kw-2">*</span>num_slashing_spans))]
-		#[transactional]
 		</span><span class="kw">pub fn </span>pool_withdraw_unbonded(
 			origin: OriginFor&lt;T&gt;,
 			pool_id: PoolId,
@@ -4291,7 +4342,6 @@
 		</span><span class="attribute">#[pallet::weight(
 			T::WeightInfo::withdraw_unbonded_kill(<span class="kw-2">*</span>num_slashing_spans)
 		)]
-		#[transactional]
 		</span><span class="kw">pub fn </span>withdraw_unbonded(
 			origin: OriginFor&lt;T&gt;,
 			member_account: AccountIdLookupOf&lt;T&gt;,
@@ -4314,7 +4364,7 @@
 			</span><span class="kw">let </span>withdrawn_points = member.withdraw_unlocked(current_era);
 			<span class="macro">ensure!</span>(!withdrawn_points.is_empty(), Error::&lt;T&gt;::CannotWithdrawAny);
 
-			<span class="comment">// Before calculate the `balance_to_unbond`, with call withdraw unbonded to ensure the
+			<span class="comment">// Before calculating the `balance_to_unbond`, we call withdraw unbonded to ensure the
 			// `transferrable_balance` is correct.
 			</span><span class="kw">let </span>stash_killed =
 				T::Staking::withdraw_unbonded(bonded_pool.bonded_account(), num_slashing_spans)<span class="question-mark">?</span>;
@@ -4343,13 +4393,13 @@
 						</span>accumulator.saturating_add(sub_pools.no_era.dissolve(<span class="kw-2">*</span>unlocked_points))
 					}
 				})
-				<span class="comment">// A call to this function may cause the pool&#39;s stash to get dusted. If this happens
-				// before the last member has withdrawn, then all subsequent withdraws will be 0.
-				// However the unbond pools do no get updated to reflect this. In the aforementioned
-				// scenario, this check ensures we don&#39;t try to withdraw funds that don&#39;t exist.
-				// This check is also defensive in cases where the unbond pool does not update its
-				// balance (e.g. a bug in the slashing hook.) We gracefully proceed in order to
-				// ensure members can leave the pool and it can be destroyed.
+				<span class="comment">// A call to this transaction may cause the pool&#39;s stash to get dusted. If this
+				// happens before the last member has withdrawn, then all subsequent withdraws will
+				// be 0. However the unbond pools do no get updated to reflect this. In the
+				// aforementioned scenario, this check ensures we don&#39;t try to withdraw funds that
+				// don&#39;t exist. This check is also defensive in cases where the unbond pool does not
+				// update its balance (e.g. a bug in the slashing hook.) We gracefully proceed in
+				// order to ensure members can leave the pool and it can be destroyed.
 				</span>.min(bonded_pool.transferrable_balance());
 
 			T::Currency::transfer(
@@ -4411,7 +4461,6 @@
 		/// In addition to `amount`, the caller will transfer the existential deposit; so the caller
 		/// needs at have at least `amount + existential_deposit` transferrable.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::create())]
-		#[transactional]
 		</span><span class="kw">pub fn </span>create(
 			origin: OriginFor&lt;T&gt;,
 			<span class="attribute">#[pallet::compact] </span>amount: BalanceOf&lt;T&gt;,
@@ -4436,7 +4485,6 @@
 		/// same as `create` with the inclusion of
 		/// * `pool_id` - `A valid PoolId.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::create())]
-		#[transactional]
 		</span><span class="kw">pub fn </span>create_with_pool_id(
 			origin: OriginFor&lt;T&gt;,
 			<span class="attribute">#[pallet::compact] </span>amount: BalanceOf&lt;T&gt;,
@@ -4461,7 +4509,6 @@
 		/// This directly forward the call to the staking pallet, on behalf of the pool bonded
 		/// account.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::nominate(validators.len() <span class="kw">as </span>u32))]
-		#[transactional]
 		</span><span class="kw">pub fn </span>nominate(
 			origin: OriginFor&lt;T&gt;,
 			pool_id: PoolId,
@@ -4484,7 +4531,6 @@
 		/// 2. if the pool conditions to be open are NOT met (as described by `ok_to_be_open`), and
 		///    then the state of the pool can be permissionlessly changed to `Destroying`.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::set_state())]
-		#[transactional]
 		</span><span class="kw">pub fn </span>set_state(
 			origin: OriginFor&lt;T&gt;,
 			pool_id: PoolId,
@@ -4496,9 +4542,7 @@
 
 			<span class="kw">if </span>bonded_pool.can_toggle_state(<span class="kw-2">&amp;</span>who) {
 				bonded_pool.set_state(state);
-			} <span class="kw">else if </span>bonded_pool.ok_to_be_open(Zero::zero()).is_err() &amp;&amp;
-				state == PoolState::Destroying
-			{
+			} <span class="kw">else if </span>bonded_pool.ok_to_be_open().is_err() &amp;&amp; state == PoolState::Destroying {
 				<span class="comment">// If the pool has bad properties, then anyone can set it as destroying
 				</span>bonded_pool.set_state(PoolState::Destroying);
 			} <span class="kw">else </span>{
@@ -4515,7 +4559,6 @@
 		/// The dispatch origin of this call must be signed by the state toggler, or the root role
 		/// of the pool.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::set_metadata(metadata.len() <span class="kw">as </span>u32))]
-		#[transactional]
 		</span><span class="kw">pub fn </span>set_metadata(
 			origin: OriginFor&lt;T&gt;,
 			pool_id: PoolId,
@@ -4547,7 +4590,6 @@
 		/// * `max_members` - Set [`MaxPoolMembers`].
 		/// * `max_members_per_pool` - Set [`MaxPoolMembersPerPool`].
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::set_configs())]
-		#[transactional]
 		</span><span class="kw">pub fn </span>set_configs(
 			origin: OriginFor&lt;T&gt;,
 			min_join_bond: ConfigOp&lt;BalanceOf&lt;T&gt;&gt;,
@@ -4584,7 +4626,6 @@
 		/// It emits an event, notifying UIs of the role change. This event is quite relevant to
 		/// most pool members and they should be informed of changes to pool roles.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::update_roles())]
-		#[transactional]
 		</span><span class="kw">pub fn </span>update_roles(
 			origin: OriginFor&lt;T&gt;,
 			pool_id: PoolId,
@@ -4637,7 +4678,6 @@
 		/// This directly forward the call to the staking pallet, on behalf of the pool bonded
 		/// account.
 		</span><span class="attribute">#[pallet::weight(T::WeightInfo::chill())]
-		#[transactional]
 		</span><span class="kw">pub fn </span>chill(origin: OriginFor&lt;T&gt;, pool_id: PoolId) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
@@ -4862,7 +4902,9 @@
 			<span class="kw-2">&amp;</span>bonded_pool.reward_account(),
 			<span class="kw-2">&amp;</span>member_account,
 			pending_rewards,
-			ExistenceRequirement::AllowDeath,
+			<span class="comment">// defensive: the depositor has put existential deposit into the pool and it stays
+			// untouched, reward account shall not die.
+			</span>ExistenceRequirement::AllowDeath,
 		)<span class="question-mark">?</span>;
 
 		<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::PaidOut {
@@ -4979,7 +5021,7 @@
 	/// To cater for tests that want to escape parts of these checks, this function is split into
 	/// multiple `level`s, where the higher the level, the more checks we performs. So,
 	/// `try_state(255)` is the strongest sanity check, and `0` performs no checks.
-	</span><span class="attribute">#[cfg(any(feature = <span class="string">&quot;try-runtime&quot;</span>, test, debug_assertions))]
+	</span><span class="attribute">#[cfg(any(feature = <span class="string">&quot;try-runtime&quot;</span>, feature = <span class="string">&quot;fuzzing&quot;</span>, test, debug_assertions))]
 	</span><span class="kw">pub fn </span>do_try_state(level: u8) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str&gt; {
 		<span class="kw">if </span>level.is_zero() {
 			<span class="kw">return </span><span class="prelude-val">Ok</span>(())

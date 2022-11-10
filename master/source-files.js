@@ -5,6 +5,7 @@ var sourcesIndex = JSON.parse('{\
 "beefy_merkle_tree":["",[],["lib.rs"]],\
 "beefy_primitives":["",[],["commitment.rs","lib.rs","mmr.rs","payload.rs","witness.rs"]],\
 "biguint":["",[],["biguint.rs"]],\
+"call":["",[],["call.rs"]],\
 "chain_spec_builder":["",[],["main.rs"]],\
 "compact":["",[],["compact.rs"]],\
 "fixed_point":["",[],["fixed_point.rs"]],\
@@ -79,7 +80,7 @@ var sourcesIndex = JSON.parse('{\
 "pallet_multisig":["",[],["benchmarking.rs","lib.rs","migrations.rs","weights.rs"]],\
 "pallet_nicks":["",[],["lib.rs"]],\
 "pallet_node_authorization":["",[],["lib.rs","weights.rs"]],\
-"pallet_nomination_pools":["",[],["lib.rs","migration.rs","weights.rs"]],\
+"pallet_nomination_pools":["",[],["lib.rs","migration.rs","mock.rs","weights.rs"]],\
 "pallet_nomination_pools_benchmarking":["",[],["lib.rs"]],\
 "pallet_nomination_pools_runtime_api":["",[],["lib.rs"]],\
 "pallet_nomination_pools_test_staking":["",[],["lib.rs"]],\
