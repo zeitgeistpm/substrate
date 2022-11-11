@@ -3794,6 +3794,14 @@
 <span id="3794">3794</span>
 <span id="3795">3795</span>
 <span id="3796">3796</span>
+<span id="3797">3797</span>
+<span id="3798">3798</span>
+<span id="3799">3799</span>
+<span id="3800">3800</span>
+<span id="3801">3801</span>
+<span id="3802">3802</span>
+<span id="3803">3803</span>
+<span id="3804">3804</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -6591,6 +6599,14 @@
 		<span class="comment">// fork from genesis: 2 prong.
 		</span><span class="kw">let </span>b1 = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">1</span>, block0, <span class="prelude-val">None</span>, H256::from([<span class="number">1</span>; <span class="number">32</span>]));
 		<span class="kw">let </span>b2 = insert_header(<span class="kw-2">&amp;</span>backend, <span class="number">2</span>, b1, <span class="prelude-val">None</span>, Default::default());
+
+		{
+			<span class="kw">let </span>tree_route = tree_route(blockchain, a1, a1).unwrap();
+
+			<span class="macro">assert_eq!</span>(tree_route.common_block().hash, a1);
+			<span class="macro">assert!</span>(tree_route.retracted().is_empty());
+			<span class="macro">assert!</span>(tree_route.enacted().is_empty());
+		}
 
 		{
 			<span class="kw">let </span>tree_route = tree_route(blockchain, a3, b2).unwrap();

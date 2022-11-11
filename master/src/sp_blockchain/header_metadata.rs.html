@@ -292,6 +292,14 @@
 <span id="292">292</span>
 <span id="293">293</span>
 <span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -473,9 +481,17 @@
 <span class="kw">impl</span>&lt;Block: BlockT&gt; TreeRoute&lt;Block&gt; {
 	<span class="doccomment">/// Creates a new `TreeRoute`.
 	///
-	/// It is required that `pivot &gt;= route.len()`, otherwise it may panics.
-	</span><span class="kw">pub fn </span>new(route: Vec&lt;HashAndNumber&lt;Block&gt;&gt;, pivot: usize) -&gt; <span class="self">Self </span>{
-		TreeRoute { route, pivot }
+	/// To preserve the structure safety invariats it is required that `pivot &lt; route.len()`.
+	</span><span class="kw">pub fn </span>new(route: Vec&lt;HashAndNumber&lt;Block&gt;&gt;, pivot: usize) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, String&gt; {
+		<span class="kw">if </span>pivot &lt; route.len() {
+			<span class="prelude-val">Ok</span>(TreeRoute { route, pivot })
+		} <span class="kw">else </span>{
+			<span class="prelude-val">Err</span>(<span class="macro">format!</span>(
+				<span class="string">&quot;TreeRoute pivot ({}) should be less than route length ({})&quot;</span>,
+				pivot,
+				route.len()
+			))
+		}
 	}
 
 	<span class="doccomment">/// Get a slice of all retracted blocks in reverse order (towards common ancestor).

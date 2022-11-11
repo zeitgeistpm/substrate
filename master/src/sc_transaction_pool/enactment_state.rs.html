@@ -605,6 +605,12 @@
 <span id="605">605</span>
 <span id="606">606</span>
 <span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -838,14 +844,19 @@
 			}
 		};
 
-		<span class="prelude-val">Ok</span>(TreeRoute::new(vec, pivot))
+		TreeRoute::new(vec, pivot)
 	}
 
 	<span class="kw">mod </span>mock_tree_route_tests {
 		<span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 		<span class="doccomment">/// asserts that tree routes are equal
-		</span><span class="kw">fn </span>assert_treeroute_eq(expected: TreeRoute&lt;Block&gt;, result: TreeRoute&lt;Block&gt;) {
+		</span><span class="kw">fn </span>assert_treeroute_eq(
+			expected: <span class="prelude-ty">Result</span>&lt;TreeRoute&lt;Block&gt;, String&gt;,
+			result: <span class="prelude-ty">Result</span>&lt;TreeRoute&lt;Block&gt;, String&gt;,
+		) {
+			<span class="kw">let </span>expected = expected.unwrap();
+			<span class="kw">let </span>result = result.unwrap();
 			<span class="macro">assert_eq!</span>(result.common_block().hash, expected.common_block().hash);
 			<span class="macro">assert_eq!</span>(result.enacted().len(), expected.enacted().len());
 			<span class="macro">assert_eq!</span>(result.retracted().len(), expected.retracted().len());
@@ -862,65 +873,66 @@
 		}
 
 		<span class="comment">// some tests for mock tree_route function
+
 		</span><span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_01() {
-			<span class="kw">let </span>result = tree_route(b1().hash, a().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(b1().hash, a().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b1(), a()], <span class="number">1</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_02() {
-			<span class="kw">let </span>result = tree_route(a().hash, b1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(a().hash, b1().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[a(), b1()], <span class="number">0</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_03() {
-			<span class="kw">let </span>result = tree_route(a().hash, c2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(a().hash, c2().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[a(), b2(), c2()], <span class="number">0</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_04() {
-			<span class="kw">let </span>result = tree_route(e2().hash, a().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(e2().hash, a().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[e2(), d2(), c2(), b2(), a()], <span class="number">4</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_05() {
-			<span class="kw">let </span>result = tree_route(d1().hash, b1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(d1().hash, b1().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[d1(), c1(), b1()], <span class="number">2</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_06() {
-			<span class="kw">let </span>result = tree_route(d2().hash, b2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(d2().hash, b2().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[d2(), c2(), b2()], <span class="number">2</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_07() {
-			<span class="kw">let </span>result = tree_route(b1().hash, d1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(b1().hash, d1().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b1(), c1(), d1()], <span class="number">0</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_08() {
-			<span class="kw">let </span>result = tree_route(b2().hash, d2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(b2().hash, d2().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b2(), c2(), d2()], <span class="number">0</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_09() {
-			<span class="kw">let </span>result = tree_route(e2().hash, e1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(e2().hash, e1().hash);
 			<span class="kw">let </span>expected =
 				TreeRoute::new(<span class="macro">vec!</span>[e2(), d2(), c2(), b2(), a(), b1(), c1(), d1(), e1()], <span class="number">4</span>);
 			assert_treeroute_eq(result, expected);
@@ -928,49 +940,49 @@
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_10() {
-			<span class="kw">let </span>result = tree_route(e1().hash, e2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(e1().hash, e2().hash);
 			<span class="kw">let </span>expected =
 				TreeRoute::new(<span class="macro">vec!</span>[e1(), d1(), c1(), b1(), a(), b2(), c2(), d2(), e2()], <span class="number">4</span>);
 			assert_treeroute_eq(result, expected);
 		}
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_11() {
-			<span class="kw">let </span>result = tree_route(b1().hash, c2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(b1().hash, c2().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b1(), a(), b2(), c2()], <span class="number">1</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_12() {
-			<span class="kw">let </span>result = tree_route(d2().hash, b1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(d2().hash, b1().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[d2(), c2(), b2(), a(), b1()], <span class="number">3</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_13() {
-			<span class="kw">let </span>result = tree_route(c2().hash, e1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(c2().hash, e1().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[c2(), b2(), a(), b1(), c1(), d1(), e1()], <span class="number">2</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_14() {
-			<span class="kw">let </span>result = tree_route(b1().hash, b1().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(b1().hash, b1().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b1()], <span class="number">0</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_15() {
-			<span class="kw">let </span>result = tree_route(b2().hash, b2().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(b2().hash, b2().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[b2()], <span class="number">0</span>);
 			assert_treeroute_eq(result, expected);
 		}
 
 		<span class="attribute">#[test]
 		</span><span class="kw">fn </span>tree_route_mock_test_16() {
-			<span class="kw">let </span>result = tree_route(a().hash, a().hash).expect(<span class="string">&quot;tree route exists&quot;</span>);
+			<span class="kw">let </span>result = tree_route(a().hash, a().hash);
 			<span class="kw">let </span>expected = TreeRoute::new(<span class="macro">vec!</span>[a()], <span class="number">0</span>);
 			assert_treeroute_eq(result, expected);
 		}
