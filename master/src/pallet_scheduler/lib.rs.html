@@ -1272,26 +1272,6 @@
 <span id="1272">1272</span>
 <span id="1273">1273</span>
 <span id="1274">1274</span>
-<span id="1275">1275</span>
-<span id="1276">1276</span>
-<span id="1277">1277</span>
-<span id="1278">1278</span>
-<span id="1279">1279</span>
-<span id="1280">1280</span>
-<span id="1281">1281</span>
-<span id="1282">1282</span>
-<span id="1283">1283</span>
-<span id="1284">1284</span>
-<span id="1285">1285</span>
-<span id="1286">1286</span>
-<span id="1287">1287</span>
-<span id="1288">1288</span>
-<span id="1289">1289</span>
-<span id="1290">1290</span>
-<span id="1291">1291</span>
-<span id="1292">1292</span>
-<span id="1293">1293</span>
-<span id="1294">1294</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1364,7 +1344,7 @@
 		Bounded, CallerTrait, EnsureOrigin, Get, Hash <span class="kw">as </span>PreimageHash, IsType, OriginTrait,
 		PalletInfoAccess, PrivilegeCmp, QueryPreimage, StorageVersion, StorePreimage,
 	},
-	weights::Weight,
+	weights::{Weight, WeightMeter},
 };
 <span class="kw">use </span>frame_system::{<span class="self">self </span><span class="kw">as </span>system};
 <span class="kw">pub use </span>pallet::<span class="kw-2">*</span>;
@@ -1436,25 +1416,6 @@
 	&lt;T <span class="kw">as </span>Config&gt;::PalletsOrigin,
 	&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId,
 &gt;;
-
-<span class="kw">struct </span>WeightCounter {
-	used: Weight,
-	limit: Weight,
-}
-<span class="kw">impl </span>WeightCounter {
-	<span class="kw">fn </span>check_accrue(<span class="kw-2">&amp;mut </span><span class="self">self</span>, w: Weight) -&gt; bool {
-		<span class="kw">let </span>test = <span class="self">self</span>.used.saturating_add(w);
-		<span class="kw">if </span>test.any_gt(<span class="self">self</span>.limit) {
-			<span class="bool-val">false
-		</span>} <span class="kw">else </span>{
-			<span class="self">self</span>.used = test;
-			<span class="bool-val">true
-		</span>}
-	}
-	<span class="kw">fn </span>can_accrue(<span class="kw-2">&amp;mut </span><span class="self">self</span>, w: Weight) -&gt; bool {
-		<span class="self">self</span>.used.saturating_add(w).all_lte(<span class="self">self</span>.limit)
-	}
-}
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>MarginalWeightInfo: WeightInfo {
 	<span class="kw">fn </span>service_task(maybe_lookup_len: <span class="prelude-ty">Option</span>&lt;usize&gt;, named: bool, periodic: bool) -&gt; Weight {
@@ -1600,10 +1561,9 @@
 	</span><span class="kw">impl</span>&lt;T: Config&gt; Hooks&lt;BlockNumberFor&lt;T&gt;&gt; <span class="kw">for </span>Pallet&lt;T&gt; {
 		<span class="doccomment">/// Execute the scheduled calls
 		</span><span class="kw">fn </span>on_initialize(now: T::BlockNumber) -&gt; Weight {
-			<span class="kw">let </span><span class="kw-2">mut </span>weight_counter =
-				WeightCounter { used: Weight::zero(), limit: T::MaximumWeight::get() };
+			<span class="kw">let </span><span class="kw-2">mut </span>weight_counter = WeightMeter::from_limit(T::MaximumWeight::get());
 			<span class="self">Self</span>::service_agendas(<span class="kw-2">&amp;mut </span>weight_counter, now, u32::max_value());
-			weight_counter.used
+			weight_counter.consumed
 		}
 	}
 
@@ -2227,7 +2187,7 @@
 
 <span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
 	<span class="doccomment">/// Service up to `max` agendas queue starting from earliest incompletely executed agenda.
-	</span><span class="kw">fn </span>service_agendas(weight: <span class="kw-2">&amp;mut </span>WeightCounter, now: T::BlockNumber, max: u32) {
+	</span><span class="kw">fn </span>service_agendas(weight: <span class="kw-2">&amp;mut </span>WeightMeter, now: T::BlockNumber, max: u32) {
 		<span class="kw">if </span>!weight.check_accrue(T::WeightInfo::service_agendas_base()) {
 			<span class="kw">return
 		</span>}
@@ -2255,7 +2215,7 @@
 	<span class="doccomment">/// Returns `true` if the agenda was fully completed, `false` if it should be revisited at a
 	/// later block.
 	</span><span class="kw">fn </span>service_agenda(
-		weight: <span class="kw-2">&amp;mut </span>WeightCounter,
+		weight: <span class="kw-2">&amp;mut </span>WeightMeter,
 		executed: <span class="kw-2">&amp;mut </span>u32,
 		now: T::BlockNumber,
 		when: T::BlockNumber,
@@ -2324,7 +2284,7 @@
 	/// - realizing the task&#39;s call which can include a preimage lookup.
 	/// - Rescheduling the task for execution in a later agenda if periodic.
 	</span><span class="kw">fn </span>service_task(
-		weight: <span class="kw-2">&amp;mut </span>WeightCounter,
+		weight: <span class="kw-2">&amp;mut </span>WeightMeter,
 		now: T::BlockNumber,
 		when: T::BlockNumber,
 		agenda_index: u32,
@@ -2404,7 +2364,7 @@
 	/// NOTE: Only the weight for this function will be counted (origin lookup, dispatch and the
 	/// call itself).
 	</span><span class="kw">fn </span>execute_dispatch(
-		weight: <span class="kw-2">&amp;mut </span>WeightCounter,
+		weight: <span class="kw-2">&amp;mut </span>WeightMeter,
 		origin: T::PalletsOrigin,
 		call: &lt;T <span class="kw">as </span>Config&gt;::RuntimeCall,
 	) -&gt; <span class="prelude-ty">Result</span>&lt;DispatchResult, ServiceTaskError&gt; {

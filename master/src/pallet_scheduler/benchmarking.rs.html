@@ -292,10 +292,6 @@
 <span id="292">292</span>
 <span id="293">293</span>
 <span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -420,17 +416,13 @@
 	}
 }
 
-<span class="kw">fn </span>dummy_counter() -&gt; WeightCounter {
-	WeightCounter { used: Weight::zero(), limit: Weight::MAX }
-}
-
 <span class="macro">benchmarks! </span>{
 	<span class="comment">// `service_agendas` when no work is done.
 	</span>service_agendas_base {
 		<span class="kw">let </span>now = T::BlockNumber::from(BLOCK_NUMBER);
 		IncompleteSince::&lt;T&gt;::put(now - One::one());
 	}: {
-		Scheduler::&lt;T&gt;::service_agendas(<span class="kw-2">&amp;mut </span>dummy_counter(), now, <span class="number">0</span>);
+		Scheduler::&lt;T&gt;::service_agendas(<span class="kw-2">&amp;mut </span>WeightMeter::max_limit(), now, <span class="number">0</span>);
 	} verify {
 		<span class="macro">assert_eq!</span>(IncompleteSince::&lt;T&gt;::get(), <span class="prelude-val">Some</span>(now - One::one()));
 	}
@@ -442,7 +434,7 @@
 		fill_schedule::&lt;T&gt;(now, s)<span class="question-mark">?</span>;
 		<span class="kw">let </span><span class="kw-2">mut </span>executed = <span class="number">0</span>;
 	}: {
-		Scheduler::&lt;T&gt;::service_agenda(<span class="kw-2">&amp;mut </span>dummy_counter(), <span class="kw-2">&amp;mut </span>executed, now, now, <span class="number">0</span>);
+		Scheduler::&lt;T&gt;::service_agenda(<span class="kw-2">&amp;mut </span>WeightMeter::max_limit(), <span class="kw-2">&amp;mut </span>executed, now, now, <span class="number">0</span>);
 	} verify {
 		<span class="macro">assert_eq!</span>(executed, <span class="number">0</span>);
 	}
@@ -453,7 +445,7 @@
 		<span class="kw">let </span>now = BLOCK_NUMBER.into();
 		<span class="kw">let </span>task = make_task::&lt;T&gt;(<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="prelude-val">None</span>, <span class="number">0</span>);
 		<span class="comment">// prevent any tasks from actually being executed as we only want the surrounding weight.
-		</span><span class="kw">let </span><span class="kw-2">mut </span>counter = WeightCounter { used: Weight::zero(), limit: Weight::zero() };
+		</span><span class="kw">let </span><span class="kw-2">mut </span>counter = WeightMeter::from_limit(Weight::zero());
 	}: {
 		<span class="kw">let </span>result = Scheduler::&lt;T&gt;::service_task(<span class="kw-2">&amp;mut </span>counter, now, now, <span class="number">0</span>, <span class="bool-val">true</span>, task);
 	} verify {
@@ -467,7 +459,7 @@
 		<span class="kw">let </span>now = BLOCK_NUMBER.into();
 		<span class="kw">let </span>task = make_task::&lt;T&gt;(<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="prelude-val">Some</span>(s), <span class="number">0</span>);
 		<span class="comment">// prevent any tasks from actually being executed as we only want the surrounding weight.
-		</span><span class="kw">let </span><span class="kw-2">mut </span>counter = WeightCounter { used: Weight::zero(), limit: Weight::zero() };
+		</span><span class="kw">let </span><span class="kw-2">mut </span>counter = WeightMeter::from_limit(Weight::zero());
 	}: {
 		<span class="kw">let </span>result = Scheduler::&lt;T&gt;::service_task(<span class="kw-2">&amp;mut </span>counter, now, now, <span class="number">0</span>, <span class="bool-val">true</span>, task);
 	} verify {
@@ -479,7 +471,7 @@
 		<span class="kw">let </span>now = BLOCK_NUMBER.into();
 		<span class="kw">let </span>task = make_task::&lt;T&gt;(<span class="bool-val">false</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="prelude-val">None</span>, <span class="number">0</span>);
 		<span class="comment">// prevent any tasks from actually being executed as we only want the surrounding weight.
-		</span><span class="kw">let </span><span class="kw-2">mut </span>counter = WeightCounter { used: Weight::zero(), limit: Weight::zero() };
+		</span><span class="kw">let </span><span class="kw-2">mut </span>counter = WeightMeter::from_limit(Weight::zero());
 	}: {
 		<span class="kw">let </span>result = Scheduler::&lt;T&gt;::service_task(<span class="kw-2">&amp;mut </span>counter, now, now, <span class="number">0</span>, <span class="bool-val">true</span>, task);
 	} verify {
@@ -491,7 +483,7 @@
 		<span class="kw">let </span>now = BLOCK_NUMBER.into();
 		<span class="kw">let </span>task = make_task::&lt;T&gt;(<span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="prelude-val">None</span>, <span class="number">0</span>);
 		<span class="comment">// prevent any tasks from actually being executed as we only want the surrounding weight.
-		</span><span class="kw">let </span><span class="kw-2">mut </span>counter = WeightCounter { used: Weight::zero(), limit: Weight::zero() };
+		</span><span class="kw">let </span><span class="kw-2">mut </span>counter = WeightMeter::from_limit(Weight::zero());
 	}: {
 		<span class="kw">let </span>result = Scheduler::&lt;T&gt;::service_task(<span class="kw-2">&amp;mut </span>counter, now, now, <span class="number">0</span>, <span class="bool-val">true</span>, task);
 	} verify {
@@ -499,7 +491,7 @@
 
 	<span class="comment">// `execute_dispatch` when the origin is `Signed`, not counting the dispatable&#39;s weight.
 	</span>execute_dispatch_signed {
-		<span class="kw">let </span><span class="kw-2">mut </span>counter = WeightCounter { used: Weight::zero(), limit: Weight::MAX };
+		<span class="kw">let </span><span class="kw-2">mut </span>counter = WeightMeter::max_limit();
 		<span class="kw">let </span>origin = make_origin::&lt;T&gt;(<span class="bool-val">true</span>);
 		<span class="kw">let </span>call = T::Preimages::realize(<span class="kw-2">&amp;</span>make_call::&lt;T&gt;(<span class="prelude-val">None</span>)).unwrap().<span class="number">0</span>;
 	}: {
@@ -510,7 +502,7 @@
 
 	<span class="comment">// `execute_dispatch` when the origin is not `Signed`, not counting the dispatable&#39;s weight.
 	</span>execute_dispatch_unsigned {
-		<span class="kw">let </span><span class="kw-2">mut </span>counter = WeightCounter { used: Weight::zero(), limit: Weight::MAX };
+		<span class="kw">let </span><span class="kw-2">mut </span>counter = WeightMeter::max_limit();
 		<span class="kw">let </span>origin = make_origin::&lt;T&gt;(<span class="bool-val">false</span>);
 		<span class="kw">let </span>call = T::Preimages::realize(<span class="kw-2">&amp;</span>make_call::&lt;T&gt;(<span class="prelude-val">None</span>)).unwrap().<span class="number">0</span>;
 	}: {

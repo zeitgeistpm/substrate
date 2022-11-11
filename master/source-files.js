@@ -228,7 +228,7 @@ var sourcesIndex = JSON.parse('{\
 "sp_version":["",[],["embed.rs","lib.rs"]],\
 "sp_version_proc_macro":["",[],["decl_runtime_version.rs","lib.rs"]],\
 "sp_wasm_interface":["",[],["lib.rs","wasmi_impl.rs"]],\
-"sp_weights":["",[],["lib.rs","weight_v2.rs"]],\
+"sp_weights":["",[],["lib.rs","weight_meter.rs","weight_v2.rs"]],\
 "subkey":["",[],["lib.rs"]],\
 "substrate":["",[],["main.rs"]],\
 "substrate_build_script_utils":["",[],["git.rs","lib.rs","version.rs"]],\
