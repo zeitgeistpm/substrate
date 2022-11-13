@@ -1697,24 +1697,6 @@
 <span id="1697">1697</span>
 <span id="1698">1698</span>
 <span id="1699">1699</span>
-<span id="1700">1700</span>
-<span id="1701">1701</span>
-<span id="1702">1702</span>
-<span id="1703">1703</span>
-<span id="1704">1704</span>
-<span id="1705">1705</span>
-<span id="1706">1706</span>
-<span id="1707">1707</span>
-<span id="1708">1708</span>
-<span id="1709">1709</span>
-<span id="1710">1710</span>
-<span id="1711">1711</span>
-<span id="1712">1712</span>
-<span id="1713">1713</span>
-<span id="1714">1714</span>
-<span id="1715">1715</span>
-<span id="1716">1716</span>
-<span id="1717">1717</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1792,7 +1774,7 @@
 		CheckEqual, Dispatchable, Hash, Lookup, LookupError, MaybeDisplay, MaybeMallocSizeOf,
 		MaybeSerializeDeserialize, Member, One, Saturating, SimpleBitOps, StaticLookup, Zero,
 	},
-	DispatchError, Perbill, RuntimeDebug,
+	DispatchError, RuntimeDebug,
 };
 <span class="attribute">#[cfg(any(feature = <span class="string">&quot;std&quot;</span>, test))]
 </span><span class="kw">use </span>sp_std::map;
@@ -1914,7 +1896,6 @@
 </span><span class="kw">pub mod </span>pallet {
 	<span class="kw">use crate</span>::{<span class="self">self </span><span class="kw">as </span>frame_system, pallet_prelude::<span class="kw-2">*</span>, <span class="kw-2">*</span>};
 	<span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
-	<span class="kw">use </span>sp_runtime::DispatchErrorWithPostInfo;
 
 	<span class="doccomment">/// System configuration trait. Implemented by runtime.
 	</span><span class="attribute">#[pallet::config]
@@ -2087,23 +2068,6 @@
 
 	<span class="attribute">#[pallet::call]
 	</span><span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
-		<span class="doccomment">/// A dispatch that will fill the block weight up to the given ratio.
-		</span><span class="comment">// TODO: This should only be available for testing, rather than in general usage, but
-		// that&#39;s not possible at present (since it&#39;s within the pallet macro).
-		</span><span class="attribute">#[pallet::weight(<span class="kw-2">*</span>_ratio * T::BlockWeights::get().max_block)]
-		</span><span class="kw">pub fn </span>fill_block(origin: OriginFor&lt;T&gt;, _ratio: Perbill) -&gt; DispatchResultWithPostInfo {
-			<span class="kw">match </span>ensure_root(origin) {
-				<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(().into()),
-				<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
-					<span class="comment">// roughly same as a 4 byte remark since perbill is u32.
-					</span><span class="prelude-val">Err</span>(DispatchErrorWithPostInfo {
-						post_info: <span class="prelude-val">Some</span>(T::SystemWeightInfo::remark(<span class="number">4u32</span>)).into(),
-						error: DispatchError::BadOrigin,
-					})
-				},
-			}
-		}
-
 		<span class="doccomment">/// Make some on-chain remark.
 		///
 		/// # &lt;weight&gt;

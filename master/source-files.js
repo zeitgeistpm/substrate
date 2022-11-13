@@ -93,6 +93,7 @@ var sourcesIndex = JSON.parse('{\
 "pallet_referenda":["",[],["benchmarking.rs","branch.rs","lib.rs","types.rs","weights.rs"]],\
 "pallet_remark":["",[],["benchmarking.rs","lib.rs","weights.rs"]],\
 "pallet_root_offences":["",[],["lib.rs"]],\
+"pallet_root_testing":["",[],["lib.rs"]],\
 "pallet_scheduler":["",[],["benchmarking.rs","lib.rs","migration.rs","weights.rs"]],\
 "pallet_scored_pool":["",[],["lib.rs"]],\
 "pallet_session":["",[["historical",[],["mod.rs","offchain.rs","onchain.rs","shared.rs"]],["migrations",[],["mod.rs","v1.rs"]]],["lib.rs","weights.rs"]],\
