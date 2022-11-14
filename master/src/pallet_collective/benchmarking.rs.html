@@ -648,8 +648,6 @@
 <span id="648">648</span>
 <span id="649">649</span>
 <span id="650">650</span>
-<span id="651">651</span>
-<span id="652">652</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -686,6 +684,10 @@
 	frame_system::Pallet::&lt;T&gt;::assert_last_event(generic_event.into());
 }
 
+<span class="kw">fn </span>id_to_remark_data(id: u32, length: usize) -&gt; Vec&lt;u8&gt; {
+	id.to_le_bytes().into_iter().cycle().take(length).collect()
+}
+
 <span class="macro">benchmarks_instance_pallet! </span>{
 	set_members {
 		<span class="kw">let </span>m <span class="kw">in </span><span class="number">0 </span>.. T::MaxMembers::get();
@@ -716,9 +718,7 @@
 			</span><span class="kw">let </span>length = <span class="number">100</span>;
 			<span class="kw">for </span>i <span class="kw">in </span><span class="number">0 </span>.. p {
 				<span class="comment">// Proposals should be different so that different proposal hashes are generated
-				</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark {
-					remark: <span class="macro">vec!</span>[i <span class="kw">as </span>u8; length]
-				}.into();
+				</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(i, length) }.into();
 				Collective::&lt;T, I&gt;::propose(
 					SystemOrigin::Signed(old_members.last().unwrap().clone()).into(),
 					threshold,
@@ -757,7 +757,7 @@
 	}
 
 	execute {
-		<span class="kw">let </span>b <span class="kw">in </span><span class="number">1 </span>.. MAX_BYTES;
+		<span class="kw">let </span>b <span class="kw">in </span><span class="number">2 </span>.. MAX_BYTES;
 		<span class="kw">let </span>m <span class="kw">in </span><span class="number">1 </span>.. T::MaxMembers::get();
 
 		<span class="kw">let </span>bytes_in_storage = b + size_of::&lt;u32&gt;() <span class="kw">as </span>u32;
@@ -774,7 +774,7 @@
 
 		Collective::&lt;T, I&gt;::set_members(SystemOrigin::Root.into(), members, <span class="prelude-val">None</span>, T::MaxMembers::get())<span class="question-mark">?</span>;
 
-		<span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: <span class="macro">vec!</span>[<span class="number">1</span>; b <span class="kw">as </span>usize] }.into();
+		<span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(<span class="number">1</span>, b <span class="kw">as </span>usize) }.into();
 
 	}: <span class="kw">_</span>(SystemOrigin::Signed(caller), Box::new(proposal.clone()), bytes_in_storage)
 	verify {
@@ -787,7 +787,7 @@
 
 	<span class="comment">// This tests when execution would happen immediately after proposal
 	</span>propose_execute {
-		<span class="kw">let </span>b <span class="kw">in </span><span class="number">1 </span>.. MAX_BYTES;
+		<span class="kw">let </span>b <span class="kw">in </span><span class="number">2 </span>.. MAX_BYTES;
 		<span class="kw">let </span>m <span class="kw">in </span><span class="number">1 </span>.. T::MaxMembers::get();
 
 		<span class="kw">let </span>bytes_in_storage = b + size_of::&lt;u32&gt;() <span class="kw">as </span>u32;
@@ -804,7 +804,7 @@
 
 		Collective::&lt;T, I&gt;::set_members(SystemOrigin::Root.into(), members, <span class="prelude-val">None</span>, T::MaxMembers::get())<span class="question-mark">?</span>;
 
-		<span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: <span class="macro">vec!</span>[<span class="number">1</span>; b <span class="kw">as </span>usize] }.into();
+		<span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(<span class="number">1</span>, b <span class="kw">as </span>usize) }.into();
 		<span class="kw">let </span>threshold = <span class="number">1</span>;
 
 	}: propose(SystemOrigin::Signed(caller), threshold, Box::new(proposal.clone()), bytes_in_storage)
@@ -818,7 +818,7 @@
 
 	<span class="comment">// This tests when proposal is created and queued as &quot;proposed&quot;
 	</span>propose_proposed {
-		<span class="kw">let </span>b <span class="kw">in </span><span class="number">1 </span>.. MAX_BYTES;
+		<span class="kw">let </span>b <span class="kw">in </span><span class="number">2 </span>.. MAX_BYTES;
 		<span class="kw">let </span>m <span class="kw">in </span><span class="number">2 </span>.. T::MaxMembers::get();
 		<span class="kw">let </span>p <span class="kw">in </span><span class="number">1 </span>.. T::MaxProposals::get();
 
@@ -838,7 +838,7 @@
 		<span class="comment">// Add previous proposals.
 		</span><span class="kw">for </span>i <span class="kw">in </span><span class="number">0 </span>.. p - <span class="number">1 </span>{
 			<span class="comment">// Proposals should be different so that different proposal hashes are generated
-			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: <span class="macro">vec!</span>[i <span class="kw">as </span>u8; b <span class="kw">as </span>usize] }.into();
+			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(i, b <span class="kw">as </span>usize) }.into();
 			Collective::&lt;T, I&gt;::propose(
 				SystemOrigin::Signed(caller.clone()).into(),
 				threshold,
@@ -849,7 +849,7 @@
 
 		<span class="macro">assert_eq!</span>(Collective::&lt;T, I&gt;::proposals().len(), (p - <span class="number">1</span>) <span class="kw">as </span>usize);
 
-		<span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: <span class="macro">vec!</span>[p <span class="kw">as </span>u8; b <span class="kw">as </span>usize] }.into();
+		<span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(p, b <span class="kw">as </span>usize) }.into();
 
 	}: propose(SystemOrigin::Signed(caller.clone()), threshold, Box::new(proposal.clone()), bytes_in_storage)
 	verify {
@@ -886,7 +886,7 @@
 		</span><span class="kw">let </span><span class="kw-2">mut </span>last_hash = T::Hash::default();
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">0 </span>.. p {
 			<span class="comment">// Proposals should be different so that different proposal hashes are generated
-			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: <span class="macro">vec!</span>[i <span class="kw">as </span>u8; b <span class="kw">as </span>usize] }.into();
+			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(i, b <span class="kw">as </span>usize) }.into();
 			Collective::&lt;T, I&gt;::propose(
 				SystemOrigin::Signed(proposer.clone()).into(),
 				threshold,
@@ -961,9 +961,7 @@
 		</span><span class="kw">let </span><span class="kw-2">mut </span>last_hash = T::Hash::default();
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">0 </span>.. p {
 			<span class="comment">// Proposals should be different so that different proposal hashes are generated
-			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark {
-				remark: <span class="macro">vec!</span>[i <span class="kw">as </span>u8; bytes <span class="kw">as </span>usize]
-			}.into();
+			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(i, bytes <span class="kw">as </span>usize) }.into();
 			Collective::&lt;T, I&gt;::propose(
 				SystemOrigin::Signed(proposer.clone()).into(),
 				threshold,
@@ -1016,7 +1014,7 @@
 	}
 
 	close_early_approved {
-		<span class="kw">let </span>b <span class="kw">in </span><span class="number">1 </span>.. MAX_BYTES;
+		<span class="kw">let </span>b <span class="kw">in </span><span class="number">2 </span>.. MAX_BYTES;
 		<span class="comment">// We choose 4 as a minimum so we always trigger a vote in the voting loop (`for j in ...`)
 		</span><span class="kw">let </span>m <span class="kw">in </span><span class="number">4 </span>.. T::MaxMembers::get();
 		<span class="kw">let </span>p <span class="kw">in </span><span class="number">1 </span>.. T::MaxProposals::get();
@@ -1040,7 +1038,7 @@
 		</span><span class="kw">let </span><span class="kw-2">mut </span>last_hash = T::Hash::default();
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">0 </span>.. p {
 			<span class="comment">// Proposals should be different so that different proposal hashes are generated
-			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: <span class="macro">vec!</span>[i <span class="kw">as </span>u8; b <span class="kw">as </span>usize] }.into();
+			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(i, b <span class="kw">as </span>usize) }.into();
 			Collective::&lt;T, I&gt;::propose(
 				SystemOrigin::Signed(caller.clone()).into(),
 				threshold,
@@ -1126,9 +1124,7 @@
 		</span><span class="kw">let </span><span class="kw-2">mut </span>last_hash = T::Hash::default();
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">0 </span>.. p {
 			<span class="comment">// Proposals should be different so that different proposal hashes are generated
-			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark {
-				remark: <span class="macro">vec!</span>[i <span class="kw">as </span>u8; bytes <span class="kw">as </span>usize]
-			}.into();
+			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(i, bytes <span class="kw">as </span>usize) }.into();
 			Collective::&lt;T, I&gt;::propose(
 				SystemOrigin::Signed(caller.clone()).into(),
 				threshold,
@@ -1181,7 +1177,7 @@
 	}
 
 	close_approved {
-		<span class="kw">let </span>b <span class="kw">in </span><span class="number">1 </span>.. MAX_BYTES;
+		<span class="kw">let </span>b <span class="kw">in </span><span class="number">2 </span>.. MAX_BYTES;
 		<span class="comment">// We choose 4 as a minimum so we always trigger a vote in the voting loop (`for j in ...`)
 		</span><span class="kw">let </span>m <span class="kw">in </span><span class="number">4 </span>.. T::MaxMembers::get();
 		<span class="kw">let </span>p <span class="kw">in </span><span class="number">1 </span>.. T::MaxProposals::get();
@@ -1210,7 +1206,7 @@
 		</span><span class="kw">let </span><span class="kw-2">mut </span>last_hash = T::Hash::default();
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">0 </span>.. p {
 			<span class="comment">// Proposals should be different so that different proposal hashes are generated
-			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: <span class="macro">vec!</span>[i <span class="kw">as </span>u8; b <span class="kw">as </span>usize] }.into();
+			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(i, b <span class="kw">as </span>usize) }.into();
 			Collective::&lt;T, I&gt;::propose(
 				SystemOrigin::Signed(caller.clone()).into(),
 				threshold,
@@ -1281,7 +1277,7 @@
 		</span><span class="kw">let </span><span class="kw-2">mut </span>last_hash = T::Hash::default();
 		<span class="kw">for </span>i <span class="kw">in </span><span class="number">0 </span>.. p {
 			<span class="comment">// Proposals should be different so that different proposal hashes are generated
-			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: <span class="macro">vec!</span>[i <span class="kw">as </span>u8; b <span class="kw">as </span>usize] }.into();
+			</span><span class="kw">let </span>proposal: T::Proposal = SystemCall::&lt;T&gt;::remark { remark: id_to_remark_data(i, b <span class="kw">as </span>usize) }.into();
 			Collective::&lt;T, I&gt;::propose(
 				SystemOrigin::Signed(caller.clone()).into(),
 				threshold,
