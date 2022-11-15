@@ -442,6 +442,35 @@
 <span id="442">442</span>
 <span id="443">443</span>
 <span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -522,25 +551,6 @@
 	});
 }
 
-<span class="kw">fn </span>add_consumers&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;(minter: T::AccountId, n: u32) {
-	<span class="kw">let </span>origin = SystemOrigin::Signed(minter);
-	<span class="kw">let </span><span class="kw-2">mut </span>s = <span class="bool-val">false</span>;
-	swap_is_sufficient::&lt;T, I&gt;(<span class="kw-2">&amp;mut </span>s);
-	<span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..n {
-		<span class="kw">let </span>target = account(<span class="string">&quot;consumer&quot;</span>, i, SEED);
-		T::Currency::make_free_balance_be(<span class="kw-2">&amp;</span>target, T::Currency::minimum_balance());
-		<span class="kw">let </span>target_lookup = T::Lookup::unlookup(target);
-		<span class="macro">assert!</span>(Assets::&lt;T, I&gt;::mint(
-			origin.clone().into(),
-			Default::default(),
-			target_lookup,
-			<span class="number">100u32</span>.into()
-		)
-		.is_ok());
-	}
-	swap_is_sufficient::&lt;T, I&gt;(<span class="kw-2">&amp;mut </span>s);
-}
-
 <span class="kw">fn </span>add_sufficients&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt;(minter: T::AccountId, n: u32) {
 	<span class="kw">let </span>origin = SystemOrigin::Signed(minter);
 	<span class="kw">let </span><span class="kw-2">mut </span>s = <span class="bool-val">true</span>;
@@ -612,18 +622,66 @@
 		assert_last_event::&lt;T, I&gt;(Event::ForceCreated { asset_id: Default::default(), owner: caller }.into());
 	}
 
-	destroy {
-		<span class="kw">let </span>c <span class="kw">in </span><span class="number">0 </span>.. <span class="number">5_000</span>;
-		<span class="kw">let </span>s <span class="kw">in </span><span class="number">0 </span>.. <span class="number">5_000</span>;
-		<span class="kw">let </span>a <span class="kw">in </span><span class="number">0 </span>.. <span class="number">5_00</span>;
-		<span class="kw">let </span>(caller, <span class="kw">_</span>) = create_default_asset::&lt;T, I&gt;(<span class="bool-val">true</span>);
-		add_consumers::&lt;T, I&gt;(caller.clone(), c);
-		add_sufficients::&lt;T, I&gt;(caller.clone(), s);
-		add_approvals::&lt;T, I&gt;(caller.clone(), a);
-		<span class="kw">let </span>witness = Asset::&lt;T, I&gt;::get(T::AssetId::default()).unwrap().destroy_witness();
-	}: <span class="kw">_</span>(SystemOrigin::Signed(caller), Default::default(), witness)
+	start_destroy {
+		<span class="kw">let </span>(caller, caller_lookup) = create_default_minted_asset::&lt;T, I&gt;(<span class="bool-val">true</span>, <span class="number">100u32</span>.into());
+		Assets::&lt;T, I&gt;::freeze_asset(
+			SystemOrigin::Signed(caller.clone()).into(),
+			Default::default(),
+		)<span class="question-mark">?</span>;
+	}:<span class="kw">_</span>(SystemOrigin::Signed(caller), Default::default())
 	verify {
-		assert_last_event::&lt;T, I&gt;(Event::Destroyed { asset_id: Default::default() }.into());
+		assert_last_event::&lt;T, I&gt;(Event::DestructionStarted { asset_id: Default::default() }.into());
+	}
+
+	destroy_accounts {
+		<span class="kw">let </span>c <span class="kw">in </span><span class="number">0 </span>.. T::RemoveItemsLimit::get();
+		<span class="kw">let </span>(caller, <span class="kw">_</span>) = create_default_asset::&lt;T, I&gt;(<span class="bool-val">true</span>);
+		add_sufficients::&lt;T, I&gt;(caller.clone(), c);
+		Assets::&lt;T, I&gt;::freeze_asset(
+			SystemOrigin::Signed(caller.clone()).into(),
+			Default::default(),
+		)<span class="question-mark">?</span>;
+		Assets::&lt;T,I&gt;::start_destroy(SystemOrigin::Signed(caller.clone()).into(), Default::default())<span class="question-mark">?</span>;
+	}:<span class="kw">_</span>(SystemOrigin::Signed(caller), Default::default())
+	verify {
+		assert_last_event::&lt;T, I&gt;(Event::AccountsDestroyed {
+			asset_id: Default::default() ,
+			accounts_destroyed: c,
+			accounts_remaining: <span class="number">0</span>,
+		}.into());
+	}
+
+	destroy_approvals {
+		<span class="kw">let </span>a <span class="kw">in </span><span class="number">0 </span>.. T::RemoveItemsLimit::get();
+		<span class="kw">let </span>(caller, <span class="kw">_</span>) = create_default_minted_asset::&lt;T, I&gt;(<span class="bool-val">true</span>, <span class="number">100u32</span>.into());
+		add_approvals::&lt;T, I&gt;(caller.clone(), a);
+		Assets::&lt;T, I&gt;::freeze_asset(
+			SystemOrigin::Signed(caller.clone()).into(),
+			Default::default(),
+		)<span class="question-mark">?</span>;
+		Assets::&lt;T,I&gt;::start_destroy(SystemOrigin::Signed(caller.clone()).into(), Default::default())<span class="question-mark">?</span>;
+	}:<span class="kw">_</span>(SystemOrigin::Signed(caller), Default::default())
+	verify {
+		assert_last_event::&lt;T, I&gt;(Event::ApprovalsDestroyed {
+			asset_id: Default::default() ,
+			approvals_destroyed: a,
+			approvals_remaining: <span class="number">0</span>,
+		}.into());
+	}
+
+	finish_destroy {
+		<span class="kw">let </span>(caller, caller_lookup) = create_default_asset::&lt;T, I&gt;(<span class="bool-val">true</span>);
+		Assets::&lt;T, I&gt;::freeze_asset(
+			SystemOrigin::Signed(caller.clone()).into(),
+			Default::default(),
+		)<span class="question-mark">?</span>;
+		Assets::&lt;T,I&gt;::start_destroy(SystemOrigin::Signed(caller.clone()).into(), Default::default())<span class="question-mark">?</span>;
+	}:<span class="kw">_</span>(SystemOrigin::Signed(caller), Default::default())
+	verify {
+		assert_last_event::&lt;T, I&gt;(Event::Destroyed {
+			asset_id: Default::default() ,
+		}.into()
+		);
 	}
 
 	mint {

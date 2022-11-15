@@ -498,6 +498,47 @@
 <span id="498">498</span>
 <span id="499">499</span>
 <span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -549,7 +590,10 @@
 </span><span class="kw">pub trait </span>WeightInfo {
 	<span class="kw">fn </span>create() -&gt; Weight;
 	<span class="kw">fn </span>force_create() -&gt; Weight;
-	<span class="kw">fn </span>destroy(c: u32, s: u32, a: u32, ) -&gt; Weight;
+	<span class="kw">fn </span>start_destroy() -&gt; Weight;
+	<span class="kw">fn </span>destroy_accounts(c: u32) -&gt; Weight;
+	<span class="kw">fn </span>destroy_approvals(m: u32) -&gt; Weight;
+	<span class="kw">fn </span>finish_destroy() -&gt; Weight;
 	<span class="kw">fn </span>mint() -&gt; Weight;
 	<span class="kw">fn </span>burn() -&gt; Weight;
 	<span class="kw">fn </span>transfer() -&gt; Weight;
@@ -589,30 +633,49 @@
 			.saturating_add(T::DbWeight::get().reads(<span class="number">1 </span><span class="kw">as </span>u64))
 			.saturating_add(T::DbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
 	}
+
 	<span class="comment">// Storage: Assets Asset (r:1 w:1)
-	// Storage: Assets Account (r:5002 w:5001)
-	// Storage: System Account (r:5000 w:5000)
-	// Storage: Assets Metadata (r:1 w:0)
-	// Storage: Assets Approvals (r:501 w:500)
-	</span><span class="doccomment">/// The range of component `c` is `[0, 5000]`.
-	/// The range of component `s` is `[0, 5000]`.
-	/// The range of component `a` is `[0, 500]`.
-	</span><span class="kw">fn </span>destroy(c: u32, s: u32, a: u32, ) -&gt; Weight {
-		<span class="comment">// Minimum execution time: 76_222_544 nanoseconds.
-		</span>Weight::from_ref_time(<span class="number">76_864_587_000 </span><span class="kw">as </span>u64)
-			<span class="comment">// Standard Error: 127_086
-			</span>.saturating_add(Weight::from_ref_time(<span class="number">8_645_143 </span><span class="kw">as </span>u64).saturating_mul(c <span class="kw">as </span>u64))
-			<span class="comment">// Standard Error: 127_086
-			</span>.saturating_add(Weight::from_ref_time(<span class="number">11_281_301 </span><span class="kw">as </span>u64).saturating_mul(s <span class="kw">as </span>u64))
-			.saturating_add(T::DbWeight::get().reads(<span class="number">5 </span><span class="kw">as </span>u64))
+	</span><span class="kw">fn </span>start_destroy() -&gt; Weight {
+		Weight::from_ref_time(<span class="number">31_000_000 </span><span class="kw">as </span>u64)
+			.saturating_add(T::DbWeight::get().reads(<span class="number">1 </span><span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
+	}
+
+	<span class="comment">// Storage: Assets Asset (r:1 w:1)
+	// Storage: Assets Account (r:1 w:0)
+	// Storage: System Account (r:20 w:20)
+	</span><span class="doccomment">/// The range of component `c` is `[0, 1000]`.
+	</span><span class="kw">fn </span>destroy_accounts(c: u32, ) -&gt; Weight {
+		Weight::from_ref_time(<span class="number">37_000_000 </span><span class="kw">as </span>u64)
+			<span class="comment">// Standard Error: 19_301
+			</span>.saturating_add(Weight::from_ref_time(<span class="number">25_467_908 </span><span class="kw">as </span>u64).saturating_mul(c <span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().reads(<span class="number">2 </span><span class="kw">as </span>u64))
 			.saturating_add(T::DbWeight::get().reads((<span class="number">2 </span><span class="kw">as </span>u64).saturating_mul(c <span class="kw">as </span>u64)))
-			.saturating_add(T::DbWeight::get().reads((<span class="number">2 </span><span class="kw">as </span>u64).saturating_mul(s <span class="kw">as </span>u64)))
-			.saturating_add(T::DbWeight::get().reads((<span class="number">1 </span><span class="kw">as </span>u64).saturating_mul(a <span class="kw">as </span>u64)))
-			.saturating_add(T::DbWeight::get().writes(<span class="number">2 </span><span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
 			.saturating_add(T::DbWeight::get().writes((<span class="number">2 </span><span class="kw">as </span>u64).saturating_mul(c <span class="kw">as </span>u64)))
-			.saturating_add(T::DbWeight::get().writes((<span class="number">2 </span><span class="kw">as </span>u64).saturating_mul(s <span class="kw">as </span>u64)))
+	}
+
+	<span class="comment">// Storage: Assets Asset (r:1 w:1)
+	// Storage: Assets Approvals (r:1 w:0)
+	</span><span class="doccomment">/// The range of component `a` is `[0, 1000]`.
+	</span><span class="kw">fn </span>destroy_approvals(a: u32, ) -&gt; Weight {
+		Weight::from_ref_time(<span class="number">39_000_000 </span><span class="kw">as </span>u64)
+			<span class="comment">// Standard Error: 14_298
+			</span>.saturating_add(Weight::from_ref_time(<span class="number">27_632_144 </span><span class="kw">as </span>u64).saturating_mul(a <span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().reads(<span class="number">2 </span><span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().reads((<span class="number">1 </span><span class="kw">as </span>u64).saturating_mul(a <span class="kw">as </span>u64)))
+			.saturating_add(T::DbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
 			.saturating_add(T::DbWeight::get().writes((<span class="number">1 </span><span class="kw">as </span>u64).saturating_mul(a <span class="kw">as </span>u64)))
 	}
+
+	<span class="comment">// Storage: Assets Asset (r:1 w:1)
+	// Storage: Assets Metadata (r:1 w:0)
+	</span><span class="kw">fn </span>finish_destroy() -&gt; Weight {
+		Weight::from_ref_time(<span class="number">33_000_000 </span><span class="kw">as </span>u64)
+			.saturating_add(T::DbWeight::get().reads(<span class="number">2 </span><span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
+	}
+
 	<span class="comment">// Storage: Assets Asset (r:1 w:1)
 	// Storage: Assets Account (r:1 w:1)
 	</span><span class="kw">fn </span>mint() -&gt; Weight {
@@ -802,30 +865,49 @@
 			.saturating_add(RocksDbWeight::get().reads(<span class="number">1 </span><span class="kw">as </span>u64))
 			.saturating_add(RocksDbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
 	}
+
 	<span class="comment">// Storage: Assets Asset (r:1 w:1)
-	// Storage: Assets Account (r:5002 w:5001)
-	// Storage: System Account (r:5000 w:5000)
-	// Storage: Assets Metadata (r:1 w:0)
-	// Storage: Assets Approvals (r:501 w:500)
-	</span><span class="doccomment">/// The range of component `c` is `[0, 5000]`.
-	/// The range of component `s` is `[0, 5000]`.
-	/// The range of component `a` is `[0, 500]`.
-	</span><span class="kw">fn </span>destroy(c: u32, s: u32, a: u32, ) -&gt; Weight {
-		<span class="comment">// Minimum execution time: 76_222_544 nanoseconds.
-		</span>Weight::from_ref_time(<span class="number">76_864_587_000 </span><span class="kw">as </span>u64)
-			<span class="comment">// Standard Error: 127_086
-			</span>.saturating_add(Weight::from_ref_time(<span class="number">8_645_143 </span><span class="kw">as </span>u64).saturating_mul(c <span class="kw">as </span>u64))
-			<span class="comment">// Standard Error: 127_086
-			</span>.saturating_add(Weight::from_ref_time(<span class="number">11_281_301 </span><span class="kw">as </span>u64).saturating_mul(s <span class="kw">as </span>u64))
-			.saturating_add(RocksDbWeight::get().reads(<span class="number">5 </span><span class="kw">as </span>u64))
+	</span><span class="kw">fn </span>start_destroy() -&gt; Weight {
+		Weight::from_ref_time(<span class="number">31_000_000 </span><span class="kw">as </span>u64)
+			.saturating_add(RocksDbWeight::get().reads(<span class="number">1 </span><span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
+	}
+
+	<span class="comment">// Storage: Assets Asset (r:1 w:1)
+	// Storage: Assets Account (r:1 w:0)
+	// Storage: System Account (r:20 w:20)
+	</span><span class="doccomment">/// The range of component `c` is `[0, 1000]`.
+	</span><span class="kw">fn </span>destroy_accounts(c: u32, ) -&gt; Weight {
+		Weight::from_ref_time(<span class="number">37_000_000 </span><span class="kw">as </span>u64)
+			<span class="comment">// Standard Error: 19_301
+			</span>.saturating_add(Weight::from_ref_time(<span class="number">25_467_908 </span><span class="kw">as </span>u64).saturating_mul(c <span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().reads(<span class="number">2 </span><span class="kw">as </span>u64))
 			.saturating_add(RocksDbWeight::get().reads((<span class="number">2 </span><span class="kw">as </span>u64).saturating_mul(c <span class="kw">as </span>u64)))
-			.saturating_add(RocksDbWeight::get().reads((<span class="number">2 </span><span class="kw">as </span>u64).saturating_mul(s <span class="kw">as </span>u64)))
-			.saturating_add(RocksDbWeight::get().reads((<span class="number">1 </span><span class="kw">as </span>u64).saturating_mul(a <span class="kw">as </span>u64)))
-			.saturating_add(RocksDbWeight::get().writes(<span class="number">2 </span><span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
 			.saturating_add(RocksDbWeight::get().writes((<span class="number">2 </span><span class="kw">as </span>u64).saturating_mul(c <span class="kw">as </span>u64)))
-			.saturating_add(RocksDbWeight::get().writes((<span class="number">2 </span><span class="kw">as </span>u64).saturating_mul(s <span class="kw">as </span>u64)))
+	}
+
+	<span class="comment">// Storage: Assets Asset (r:1 w:1)
+	// Storage: Assets Approvals (r:1 w:0)
+	</span><span class="doccomment">/// The range of component `a` is `[0, 1000]`.
+	</span><span class="kw">fn </span>destroy_approvals(a: u32, ) -&gt; Weight {
+		Weight::from_ref_time(<span class="number">39_000_000 </span><span class="kw">as </span>u64)
+			<span class="comment">// Standard Error: 14_298
+			</span>.saturating_add(Weight::from_ref_time(<span class="number">27_632_144 </span><span class="kw">as </span>u64).saturating_mul(a <span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().reads(<span class="number">2 </span><span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().reads((<span class="number">1 </span><span class="kw">as </span>u64).saturating_mul(a <span class="kw">as </span>u64)))
+			.saturating_add(RocksDbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
 			.saturating_add(RocksDbWeight::get().writes((<span class="number">1 </span><span class="kw">as </span>u64).saturating_mul(a <span class="kw">as </span>u64)))
 	}
+
+	<span class="comment">// Storage: Assets Asset (r:1 w:1)
+	// Storage: Assets Metadata (r:1 w:0)
+	</span><span class="kw">fn </span>finish_destroy() -&gt; Weight {
+		Weight::from_ref_time(<span class="number">33_000_000 </span><span class="kw">as </span>u64)
+			.saturating_add(RocksDbWeight::get().reads(<span class="number">2 </span><span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
+	}
+
 	<span class="comment">// Storage: Assets Asset (r:1 w:1)
 	// Storage: Assets Account (r:1 w:1)
 	</span><span class="kw">fn </span>mint() -&gt; Weight {

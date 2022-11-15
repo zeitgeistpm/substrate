@@ -278,22 +278,6 @@
 <span id="278">278</span>
 <span id="279">279</span>
 <span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -472,22 +456,6 @@
 		min_balance: <span class="self">Self</span>::Balance,
 	) -&gt; DispatchResult {
 		<span class="self">Self</span>::do_force_create(id, admin, is_sufficient, min_balance)
-	}
-}
-
-<span class="kw">impl</span>&lt;T: Config&lt;I&gt;, I: <span class="lifetime">&#39;static</span>&gt; fungibles::Destroy&lt;T::AccountId&gt; <span class="kw">for </span>Pallet&lt;T, I&gt; {
-	<span class="kw">type </span>DestroyWitness = DestroyWitness;
-
-	<span class="kw">fn </span>get_destroy_witness(asset: <span class="kw-2">&amp;</span>T::AssetId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::DestroyWitness&gt; {
-		Asset::&lt;T, I&gt;::get(asset).map(|asset_details| asset_details.destroy_witness())
-	}
-
-	<span class="kw">fn </span>destroy(
-		id: T::AssetId,
-		witness: <span class="self">Self</span>::DestroyWitness,
-		maybe_check_owner: <span class="prelude-ty">Option</span>&lt;T::AccountId&gt;,
-	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::DestroyWitness, DispatchError&gt; {
-		<span class="self">Self</span>::do_destroy(id, witness, maybe_check_owner)
 	}
 }
 

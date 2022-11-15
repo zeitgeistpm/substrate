@@ -261,17 +261,6 @@
 <span id="261">261</span>
 <span id="262">262</span>
 <span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -303,6 +292,19 @@
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>AssetAccountOf&lt;T, I&gt; =
 	AssetAccount&lt;&lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Balance, DepositBalanceOf&lt;T, I&gt;, &lt;T <span class="kw">as </span>Config&lt;I&gt;&gt;::Extra&gt;;
 
+<span class="doccomment">/// AssetStatus holds the current state of the asset. It could either be Live and available for use,
+/// or in a Destroying state.
+</span><span class="attribute">#[derive(Clone, Encode, Decode, Eq, PartialEq, RuntimeDebug, MaxEncodedLen, TypeInfo)]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">enum </span>AssetStatus {
+	<span class="doccomment">/// The asset is active and able to be used.
+	</span>Live,
+	<span class="doccomment">/// Whether the asset is frozen for non-admin transfers.
+	</span>Frozen,
+	<span class="doccomment">/// The asset is currently being destroyed, and all actions are no longer permitted on the
+	/// asset. Once set to `Destroying`, the asset can never transition back to a `Live` state.
+	</span>Destroying,
+}
+
 <span class="attribute">#[derive(Clone, Encode, Decode, Eq, PartialEq, RuntimeDebug, MaxEncodedLen, TypeInfo)]
 </span><span class="kw">pub struct </span>AssetDetails&lt;Balance, AccountId, DepositBalance&gt; {
 	<span class="doccomment">/// Can change `owner`, `issuer`, `freezer` and `admin` accounts.
@@ -328,18 +330,8 @@
 	</span><span class="kw">pub</span>(<span class="kw">super</span>) sufficients: u32,
 	<span class="doccomment">/// The total number of approvals.
 	</span><span class="kw">pub</span>(<span class="kw">super</span>) approvals: u32,
-	<span class="doccomment">/// Whether the asset is frozen for non-admin transfers.
-	</span><span class="kw">pub</span>(<span class="kw">super</span>) is_frozen: bool,
-}
-
-<span class="kw">impl</span>&lt;Balance, AccountId, DepositBalance&gt; AssetDetails&lt;Balance, AccountId, DepositBalance&gt; {
-	<span class="kw">pub fn </span>destroy_witness(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DestroyWitness {
-		DestroyWitness {
-			accounts: <span class="self">self</span>.accounts,
-			sufficients: <span class="self">self</span>.sufficients,
-			approvals: <span class="self">self</span>.approvals,
-		}
-	}
+	<span class="doccomment">/// The status of the asset
+	</span><span class="kw">pub</span>(<span class="kw">super</span>) status: AssetStatus,
 }
 
 <span class="doccomment">/// Data concerning an approval.
@@ -411,20 +403,6 @@
 	</span><span class="kw">pub</span>(<span class="kw">super</span>) decimals: u8,
 	<span class="doccomment">/// Whether the asset metadata may be changed by a non Force origin.
 	</span><span class="kw">pub</span>(<span class="kw">super</span>) is_frozen: bool,
-}
-
-<span class="doccomment">/// Witness data for the destroy transactions.
-</span><span class="attribute">#[derive(Copy, Clone, Encode, Decode, Eq, PartialEq, RuntimeDebug, MaxEncodedLen, TypeInfo)]
-</span><span class="kw">pub struct </span>DestroyWitness {
-	<span class="doccomment">/// The number of accounts holding the asset.
-	</span><span class="attribute">#[codec(compact)]
-	</span><span class="kw">pub</span>(<span class="kw">super</span>) accounts: u32,
-	<span class="doccomment">/// The number of accounts holding the asset with a self-sufficient reference.
-	</span><span class="attribute">#[codec(compact)]
-	</span><span class="kw">pub</span>(<span class="kw">super</span>) sufficients: u32,
-	<span class="doccomment">/// The number of transfer-approvals of the asset.
-	</span><span class="attribute">#[codec(compact)]
-	</span><span class="kw">pub</span>(<span class="kw">super</span>) approvals: u32,
 }
 
 <span class="doccomment">/// Trait for allowing a minimum balance on the account to be specified, beyond the
