@@ -3306,6 +3306,26 @@
 <span id="3306">3306</span>
 <span id="3307">3307</span>
 <span id="3308">3308</span>
+<span id="3309">3309</span>
+<span id="3310">3310</span>
+<span id="3311">3311</span>
+<span id="3312">3312</span>
+<span id="3313">3313</span>
+<span id="3314">3314</span>
+<span id="3315">3315</span>
+<span id="3316">3316</span>
+<span id="3317">3317</span>
+<span id="3318">3318</span>
+<span id="3319">3319</span>
+<span id="3320">3320</span>
+<span id="3321">3321</span>
+<span id="3322">3322</span>
+<span id="3323">3323</span>
+<span id="3324">3324</span>
+<span id="3325">3325</span>
+<span id="3326">3326</span>
+<span id="3327">3327</span>
+<span id="3328">3328</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -3604,6 +3624,15 @@
 
 	<span class="doccomment">/// Sets new code hash for existing contract.
 	</span><span class="kw">fn </span>set_code_hash(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hash: CodeHash&lt;<span class="self">Self</span>::T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), DispatchError&gt;;
+
+	<span class="doccomment">/// Returns the number of times the currently executing contract exists on the call stack in
+	/// addition to the calling instance. A value of 0 means no reentrancy.
+	</span><span class="kw">fn </span>reentrant_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32;
+
+	<span class="doccomment">/// Returns the number of times the specified contract exists on the call stack. Delegated calls
+	/// are not calculated as separate entrance.
+	/// A value of 0 means it does not exist on the call stack.
+	</span><span class="kw">fn </span>account_reentrance_count(<span class="kw-2">&amp;</span><span class="self">self</span>, account_id: <span class="kw-2">&amp;</span>AccountIdOf&lt;<span class="self">Self</span>::T&gt;) -&gt; u32;
 }
 
 <span class="doccomment">/// Describes the different functions that can be exported by an [`Executable`].
@@ -4681,6 +4710,17 @@
 			},
 		);
 		<span class="prelude-val">Ok</span>(())
+	}
+
+	<span class="kw">fn </span>reentrant_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+		<span class="kw">let </span>id: <span class="kw-2">&amp;</span>AccountIdOf&lt;<span class="self">Self</span>::T&gt; = <span class="kw-2">&amp;</span><span class="self">self</span>.top_frame().account_id;
+		<span class="self">self</span>.account_reentrance_count(id).saturating_sub(<span class="number">1</span>)
+	}
+
+	<span class="kw">fn </span>account_reentrance_count(<span class="kw-2">&amp;</span><span class="self">self</span>, account_id: <span class="kw-2">&amp;</span>AccountIdOf&lt;<span class="self">Self</span>::T&gt;) -&gt; u32 {
+		<span class="self">self</span>.frames()
+			.filter(|f| f.delegate_caller.is_none() &amp;&amp; <span class="kw-2">&amp;</span>f.account_id == account_id)
+			.count() <span class="kw">as </span>u32
 	}
 }
 

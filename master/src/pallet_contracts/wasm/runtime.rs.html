@@ -2445,6 +2445,48 @@
 <span id="2445">2445</span>
 <span id="2446">2446</span>
 <span id="2447">2447</span>
+<span id="2448">2448</span>
+<span id="2449">2449</span>
+<span id="2450">2450</span>
+<span id="2451">2451</span>
+<span id="2452">2452</span>
+<span id="2453">2453</span>
+<span id="2454">2454</span>
+<span id="2455">2455</span>
+<span id="2456">2456</span>
+<span id="2457">2457</span>
+<span id="2458">2458</span>
+<span id="2459">2459</span>
+<span id="2460">2460</span>
+<span id="2461">2461</span>
+<span id="2462">2462</span>
+<span id="2463">2463</span>
+<span id="2464">2464</span>
+<span id="2465">2465</span>
+<span id="2466">2466</span>
+<span id="2467">2467</span>
+<span id="2468">2468</span>
+<span id="2469">2469</span>
+<span id="2470">2470</span>
+<span id="2471">2471</span>
+<span id="2472">2472</span>
+<span id="2473">2473</span>
+<span id="2474">2474</span>
+<span id="2475">2475</span>
+<span id="2476">2476</span>
+<span id="2477">2477</span>
+<span id="2478">2478</span>
+<span id="2479">2479</span>
+<span id="2480">2480</span>
+<span id="2481">2481</span>
+<span id="2482">2482</span>
+<span id="2483">2483</span>
+<span id="2484">2484</span>
+<span id="2485">2485</span>
+<span id="2486">2486</span>
+<span id="2487">2487</span>
+<span id="2488">2488</span>
+<span id="2489">2489</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -2698,6 +2740,12 @@
 	</span>SetCodeHash,
 	<span class="doccomment">/// Weight of calling `ecdsa_to_eth_address`
 	</span>EcdsaToEthAddress,
+	<span class="doccomment">/// Weight of calling `seal_reentrant_count`
+	</span><span class="attribute">#[cfg(feature = <span class="string">&quot;unstable-interface&quot;</span>)]
+	</span>ReentrantCount,
+	<span class="doccomment">/// Weight of calling `seal_account_reentrance_count`
+	</span><span class="attribute">#[cfg(feature = <span class="string">&quot;unstable-interface&quot;</span>)]
+	</span>AccountEntranceCount,
 }
 
 <span class="kw">impl </span>RuntimeCosts {
@@ -2777,6 +2825,10 @@
 			</span>CallRuntime(weight) =&gt; weight.ref_time(),
 			SetCodeHash =&gt; s.set_code_hash,
 			EcdsaToEthAddress =&gt; s.ecdsa_to_eth_address,
+			<span class="attribute">#[cfg(feature = <span class="string">&quot;unstable-interface&quot;</span>)]
+			</span>ReentrantCount =&gt; s.reentrant_count,
+			<span class="attribute">#[cfg(feature = <span class="string">&quot;unstable-interface&quot;</span>)]
+			</span>AccountEntranceCount =&gt; s.account_reentrance_count,
 		};
 		RuntimeToken {
 			<span class="attribute">#[cfg(test)]
@@ -3635,6 +3687,7 @@
 			<span class="prelude-val">Ok</span>(ReturnCode::KeyNotFound)
 		}
 	}
+
 	<span class="doccomment">/// Transfer some value to another account.
 	///
 	/// # Parameters
@@ -3801,6 +3854,7 @@
 			output_len_ptr,
 		)
 	}
+
 	<span class="doccomment">/// Instantiate a contract with the specified code hash.
 	///
 	/// # Deprecation
@@ -4890,6 +4944,36 @@
 			},
 			<span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(ReturnCode::EcdsaRecoverFailed),
 		}
+	}
+
+	<span class="doccomment">/// Returns the number of times the currently executing contract exists on the call stack in
+	/// addition to the calling instance.
+	///
+	/// # Return Value
+	///
+	/// Returns 0 when there is no reentrancy.
+	</span><span class="attribute">#[unstable]
+	</span><span class="kw">fn </span>reentrant_count(ctx: Runtime&lt;E&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;u32, TrapReason&gt; {
+		ctx.charge_gas(RuntimeCosts::ReentrantCount)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(ctx.ext.reentrant_count())
+	}
+
+	<span class="doccomment">/// Returns the number of times specified contract exists on the call stack. Delegated calls are
+	/// not counted as separate calls.
+	///
+	/// # Parameters
+	///
+	/// - `account_ptr`: a pointer to the contract address.
+	///
+	/// # Return Value
+	///
+	/// Returns 0 when the contract does not exist on the call stack.
+	</span><span class="attribute">#[unstable]
+	</span><span class="kw">fn </span>account_reentrance_count(ctx: Runtime&lt;E&gt;, account_ptr: u32) -&gt; <span class="prelude-ty">Result</span>&lt;u32, TrapReason&gt; {
+		ctx.charge_gas(RuntimeCosts::AccountEntranceCount)<span class="question-mark">?</span>;
+		<span class="kw">let </span>account_id: &lt;&lt;E <span class="kw">as </span>Ext&gt;::T <span class="kw">as </span>frame_system::Config&gt;::AccountId =
+			ctx.read_sandbox_memory_as(account_ptr)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(ctx.ext.account_reentrance_count(<span class="kw-2">&amp;</span>account_id))
 	}
 }
 </code></pre></div>

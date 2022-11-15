@@ -2851,6 +2851,78 @@
 <span id="2851">2851</span>
 <span id="2852">2852</span>
 <span id="2853">2853</span>
+<span id="2854">2854</span>
+<span id="2855">2855</span>
+<span id="2856">2856</span>
+<span id="2857">2857</span>
+<span id="2858">2858</span>
+<span id="2859">2859</span>
+<span id="2860">2860</span>
+<span id="2861">2861</span>
+<span id="2862">2862</span>
+<span id="2863">2863</span>
+<span id="2864">2864</span>
+<span id="2865">2865</span>
+<span id="2866">2866</span>
+<span id="2867">2867</span>
+<span id="2868">2868</span>
+<span id="2869">2869</span>
+<span id="2870">2870</span>
+<span id="2871">2871</span>
+<span id="2872">2872</span>
+<span id="2873">2873</span>
+<span id="2874">2874</span>
+<span id="2875">2875</span>
+<span id="2876">2876</span>
+<span id="2877">2877</span>
+<span id="2878">2878</span>
+<span id="2879">2879</span>
+<span id="2880">2880</span>
+<span id="2881">2881</span>
+<span id="2882">2882</span>
+<span id="2883">2883</span>
+<span id="2884">2884</span>
+<span id="2885">2885</span>
+<span id="2886">2886</span>
+<span id="2887">2887</span>
+<span id="2888">2888</span>
+<span id="2889">2889</span>
+<span id="2890">2890</span>
+<span id="2891">2891</span>
+<span id="2892">2892</span>
+<span id="2893">2893</span>
+<span id="2894">2894</span>
+<span id="2895">2895</span>
+<span id="2896">2896</span>
+<span id="2897">2897</span>
+<span id="2898">2898</span>
+<span id="2899">2899</span>
+<span id="2900">2900</span>
+<span id="2901">2901</span>
+<span id="2902">2902</span>
+<span id="2903">2903</span>
+<span id="2904">2904</span>
+<span id="2905">2905</span>
+<span id="2906">2906</span>
+<span id="2907">2907</span>
+<span id="2908">2908</span>
+<span id="2909">2909</span>
+<span id="2910">2910</span>
+<span id="2911">2911</span>
+<span id="2912">2912</span>
+<span id="2913">2913</span>
+<span id="2914">2914</span>
+<span id="2915">2915</span>
+<span id="2916">2916</span>
+<span id="2917">2917</span>
+<span id="2918">2918</span>
+<span id="2919">2919</span>
+<span id="2920">2920</span>
+<span id="2921">2921</span>
+<span id="2922">2922</span>
+<span id="2923">2923</span>
+<span id="2924">2924</span>
+<span id="2925">2925</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
@@ -3431,6 +3503,12 @@
 		<span class="kw">fn </span>ecdsa_to_eth_address(<span class="kw-2">&amp;</span><span class="self">self</span>, _pk: <span class="kw-2">&amp;</span>[u8; <span class="number">33</span>]) -&gt; <span class="prelude-ty">Result</span>&lt;[u8; <span class="number">20</span>], ()&gt; {
 			<span class="prelude-val">Ok</span>([<span class="number">2u8</span>; <span class="number">20</span>])
 		}
+		<span class="kw">fn </span>reentrant_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+			<span class="number">12
+		</span>}
+		<span class="kw">fn </span>account_reentrance_count(<span class="kw-2">&amp;</span><span class="self">self</span>, _account_id: <span class="kw-2">&amp;</span>AccountIdOf&lt;<span class="self">Self</span>::T&gt;) -&gt; u32 {
+			<span class="number">12
+		</span>}
 	}
 
 	<span class="kw">fn </span>execute&lt;E: BorrowMut&lt;MockExt&gt;&gt;(wat: <span class="kw-2">&amp;</span>str, input_data: Vec&lt;u8&gt;, <span class="kw-2">mut </span>ext: E) -&gt; ExecResult {
@@ -5702,6 +5780,72 @@
 		execute(CODE, [<span class="number">0u8</span>; <span class="number">32</span>].encode(), <span class="kw-2">&amp;mut </span>mock_ext).unwrap();
 
 		<span class="macro">assert_eq!</span>(mock_ext.code_hashes.pop().unwrap(), H256::from_slice(<span class="kw-2">&amp;</span>[<span class="number">17u8</span>; <span class="number">32</span>]));
+	}
+
+	<span class="attribute">#[test]
+	#[cfg(feature = <span class="string">&quot;unstable-interface&quot;</span>)]
+	</span><span class="kw">fn </span>reentrant_count_works() {
+		<span class="kw">const </span>CODE: <span class="kw-2">&amp;</span>str = <span class="string">r#&quot;
+(module
+	(import &quot;__unstable__&quot; &quot;reentrant_count&quot; (func $reentrant_count (result i32)))
+	(import &quot;env&quot; &quot;memory&quot; (memory 1 1))
+	(func $assert (param i32)
+		(block $ok
+			(br_if $ok
+				(get_local 0)
+			)
+			(unreachable)
+		)
+	)
+	(func (export &quot;call&quot;)
+		(local $return_val i32)
+		(set_local $return_val
+			(call $reentrant_count)
+		)
+		(call $assert
+			(i32.eq (get_local $return_val) (i32.const 12))
+		)
+	)
+
+	(func (export &quot;deploy&quot;))
+)
+&quot;#</span>;
+
+		<span class="kw">let </span><span class="kw-2">mut </span>mock_ext = MockExt::default();
+		execute(CODE, <span class="macro">vec!</span>[], <span class="kw-2">&amp;mut </span>mock_ext).unwrap();
+	}
+
+	<span class="attribute">#[test]
+	#[cfg(feature = <span class="string">&quot;unstable-interface&quot;</span>)]
+	</span><span class="kw">fn </span>account_reentrance_count_works() {
+		<span class="kw">const </span>CODE: <span class="kw-2">&amp;</span>str = <span class="string">r#&quot;
+(module
+	(import &quot;__unstable__&quot; &quot;account_reentrance_count&quot; (func $account_reentrance_count (param i32) (result i32)))
+	(import &quot;env&quot; &quot;memory&quot; (memory 1 1))
+	(func $assert (param i32)
+		(block $ok
+			(br_if $ok
+				(get_local 0)
+			)
+			(unreachable)
+		)
+	)
+	(func (export &quot;call&quot;)
+		(local $return_val i32)
+		(set_local $return_val
+			(call $account_reentrance_count (i32.const 0))
+		)
+		(call $assert
+			(i32.eq (get_local $return_val) (i32.const 12))
+		)
+	)
+
+	(func (export &quot;deploy&quot;))
+)
+&quot;#</span>;
+
+		<span class="kw">let </span><span class="kw-2">mut </span>mock_ext = MockExt::default();
+		execute(CODE, <span class="macro">vec!</span>[], <span class="kw-2">&amp;mut </span>mock_ext).unwrap();
 	}
 }
 </code></pre></div>

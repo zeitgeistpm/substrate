@@ -797,6 +797,14 @@
 <span id="797">797</span>
 <span id="798">798</span>
 <span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -1222,6 +1230,12 @@
 	<span class="doccomment">/// Weight of calling `seal_ecdsa_to_eth_address`.
 	</span><span class="kw">pub </span>ecdsa_to_eth_address: u64,
 
+	<span class="doccomment">/// Weight of calling `seal_reentrant_count`.
+	</span><span class="kw">pub </span>reentrant_count: u64,
+
+	<span class="doccomment">/// Weight of calling `seal_account_reentrance_count`.
+	</span><span class="kw">pub </span>account_reentrance_count: u64,
+
 	<span class="doccomment">/// The type parameter is used in the default implementation.
 	</span><span class="attribute">#[codec(skip)]
 	</span><span class="kw">pub </span>_phantom: PhantomData&lt;T&gt;,
@@ -1458,6 +1472,8 @@
 			hash_blake2_128_per_byte: <span class="macro">cost_byte_batched!</span>(seal_hash_blake2_128_per_kb),
 			ecdsa_recover: <span class="macro">cost_batched!</span>(seal_ecdsa_recover),
 			ecdsa_to_eth_address: <span class="macro">cost_batched!</span>(seal_ecdsa_to_eth_address),
+			reentrant_count: <span class="macro">cost_batched!</span>(seal_reentrant_count),
+			account_reentrance_count: <span class="macro">cost_batched!</span>(seal_account_reentrance_count),
 			_phantom: PhantomData,
 		}
 	}

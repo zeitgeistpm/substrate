@@ -289,6 +289,32 @@
 <span id="289">289</span>
 <span id="290">290</span>
 <span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2019-2022 Parity Technologies (UK) Ltd.
@@ -558,27 +584,53 @@
 
 <span class="doccomment">/// Trait for providing the ability to destroy existing fungible assets.
 </span><span class="kw">pub trait </span>Destroy&lt;AccountId&gt;: Inspect&lt;AccountId&gt; {
-	<span class="doccomment">/// The witness data needed to destroy an asset.
-	</span><span class="kw">type </span>DestroyWitness;
-
-	<span class="doccomment">/// Provide the appropriate witness data needed to destroy an asset.
-	</span><span class="kw">fn </span>get_destroy_witness(id: <span class="kw-2">&amp;</span><span class="self">Self</span>::AssetId) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::DestroyWitness&gt;;
-
-	<span class="doccomment">/// Destroy an existing fungible asset.
-	/// * `id`: The `AssetId` to be destroyed.
-	/// * `witness`: Any witness data that needs to be provided to complete the operation
-	///   successfully.
+	<span class="doccomment">/// Start the destruction an existing fungible asset.
+	/// * `id`: The `AssetId` to be destroyed. successfully.
 	/// * `maybe_check_owner`: An optional account id that can be used to authorize the destroy
-	///   command. If not provided, we will not do any authorization checks before destroying the
+	///   command. If not provided, no authorization checks will be performed before destroying
 	///   asset.
+	</span><span class="kw">fn </span>start_destroy(id: <span class="self">Self</span>::AssetId, maybe_check_owner: <span class="prelude-ty">Option</span>&lt;AccountId&gt;) -&gt; DispatchResult;
+
+	<span class="doccomment">/// Destroy all accounts associated with a given asset.
+	/// `destroy_accounts` should only be called after `start_destroy` has been called, and the
+	/// asset is in a `Destroying` state
 	///
-	/// If successful, this function will return the actual witness data from the destroyed asset.
-	/// This may be different than the witness data provided, and can be used to refund weight.
-	</span><span class="kw">fn </span>destroy(
-		id: <span class="self">Self</span>::AssetId,
-		witness: <span class="self">Self</span>::DestroyWitness,
-		maybe_check_owner: <span class="prelude-ty">Option</span>&lt;AccountId&gt;,
-	) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>::DestroyWitness, DispatchError&gt;;
+	/// * `id`: The identifier of the asset to be destroyed. This must identify an existing asset.
+	/// * `max_items`: The maximum number of accounts to be destroyed for a given call of the
+	///   function. This value should be small enough to allow the operation fit into a logical
+	///   block.
+	///
+	///	Response:
+	/// * u32: Total number of approvals which were actually destroyed
+	///
+	/// Due to weight restrictions, this function may need to be called multiple
+	/// times to fully destroy all approvals. It will destroy `max_items` approvals at a
+	/// time.
+	</span><span class="kw">fn </span>destroy_accounts(id: <span class="self">Self</span>::AssetId, max_items: u32) -&gt; <span class="prelude-ty">Result</span>&lt;u32, DispatchError&gt;;
+	<span class="doccomment">/// Destroy all approvals associated with a given asset up to the `max_items`
+	/// `destroy_approvals` should only be called after `start_destroy` has been called, and the
+	/// asset is in a `Destroying` state
+	///
+	/// * `id`: The identifier of the asset to be destroyed. This must identify an existing asset.
+	/// * `max_items`: The maximum number of accounts to be destroyed for a given call of the
+	///   function. This value should be small enough to allow the operation fit into a logical
+	///   block.
+	///
+	///	Response:
+	/// * u32: Total number of approvals which were actually destroyed
+	///
+	/// Due to weight restrictions, this function may need to be called multiple
+	/// times to fully destroy all approvals. It will destroy `max_items` approvals at a
+	/// time.
+	</span><span class="kw">fn </span>destroy_approvals(id: <span class="self">Self</span>::AssetId, max_items: u32) -&gt; <span class="prelude-ty">Result</span>&lt;u32, DispatchError&gt;;
+
+	<span class="doccomment">/// Complete destroying asset and unreserve currency.
+	/// `finish_destroy` should only be called after `start_destroy` has been called, and the
+	/// asset is in a `Destroying` state. All accounts or approvals should be destroyed before
+	/// hand.
+	///
+	/// * `id`: The identifier of the asset to be destroyed. This must identify an existing asset.
+	</span><span class="kw">fn </span>finish_destroy(id: <span class="self">Self</span>::AssetId) -&gt; DispatchResult;
 }
 </code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="frame_support" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>

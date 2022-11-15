@@ -2953,6 +2953,59 @@
 <span id="2953">2953</span>
 <span id="2954">2954</span>
 <span id="2955">2955</span>
+<span id="2956">2956</span>
+<span id="2957">2957</span>
+<span id="2958">2958</span>
+<span id="2959">2959</span>
+<span id="2960">2960</span>
+<span id="2961">2961</span>
+<span id="2962">2962</span>
+<span id="2963">2963</span>
+<span id="2964">2964</span>
+<span id="2965">2965</span>
+<span id="2966">2966</span>
+<span id="2967">2967</span>
+<span id="2968">2968</span>
+<span id="2969">2969</span>
+<span id="2970">2970</span>
+<span id="2971">2971</span>
+<span id="2972">2972</span>
+<span id="2973">2973</span>
+<span id="2974">2974</span>
+<span id="2975">2975</span>
+<span id="2976">2976</span>
+<span id="2977">2977</span>
+<span id="2978">2978</span>
+<span id="2979">2979</span>
+<span id="2980">2980</span>
+<span id="2981">2981</span>
+<span id="2982">2982</span>
+<span id="2983">2983</span>
+<span id="2984">2984</span>
+<span id="2985">2985</span>
+<span id="2986">2986</span>
+<span id="2987">2987</span>
+<span id="2988">2988</span>
+<span id="2989">2989</span>
+<span id="2990">2990</span>
+<span id="2991">2991</span>
+<span id="2992">2992</span>
+<span id="2993">2993</span>
+<span id="2994">2994</span>
+<span id="2995">2995</span>
+<span id="2996">2996</span>
+<span id="2997">2997</span>
+<span id="2998">2998</span>
+<span id="2999">2999</span>
+<span id="3000">3000</span>
+<span id="3001">3001</span>
+<span id="3002">3002</span>
+<span id="3003">3003</span>
+<span id="3004">3004</span>
+<span id="3005">3005</span>
+<span id="3006">3006</span>
+<span id="3007">3007</span>
+<span id="3008">3008</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
@@ -5032,6 +5085,59 @@
 			],
 			call_body: <span class="prelude-val">Some</span>(body::repeated_dyn(r * API_BENCHMARK_BATCH_SIZE, <span class="macro">vec!</span>[
 				Counter(<span class="number">0</span>, code_hash_len <span class="kw">as </span>u32), <span class="comment">// code_hash_ptr
+				</span>Regular(Instruction::Call(<span class="number">0</span>)),
+				Regular(Instruction::Drop),
+			])),
+			.. Default::default()
+		});
+		<span class="kw">let </span>instance = Contract::&lt;T&gt;::new(code, <span class="macro">vec!</span>[])<span class="question-mark">?</span>;
+		<span class="kw">let </span>origin = RawOrigin::Signed(instance.caller.clone());
+	}: call(origin, instance.addr, <span class="number">0u32</span>.into(), Weight::MAX, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[])
+
+	reentrant_count {
+		<span class="kw">let </span>r <span class="kw">in </span><span class="number">0 </span>.. API_BENCHMARK_BATCHES;
+		<span class="kw">let </span>code = WasmModule::&lt;T&gt;::from(ModuleDefinition {
+			memory: <span class="prelude-val">Some</span>(ImportedMemory::max::&lt;T&gt;()),
+			imported_functions: <span class="macro">vec!</span>[ImportedFunction {
+				module: <span class="string">&quot;__unstable__&quot;</span>,
+				name: <span class="string">&quot;reentrant_count&quot;</span>,
+				params: <span class="macro">vec!</span>[],
+				return_type: <span class="prelude-val">Some</span>(ValueType::I32),
+			}],
+			call_body: <span class="prelude-val">Some</span>(body::repeated(r * API_BENCHMARK_BATCH_SIZE, <span class="kw-2">&amp;</span>[
+				Instruction::Call(<span class="number">0</span>),
+				Instruction::Drop,
+			])),
+			.. Default::default()
+		});
+		<span class="kw">let </span>instance = Contract::&lt;T&gt;::new(code, <span class="macro">vec!</span>[])<span class="question-mark">?</span>;
+		<span class="kw">let </span>origin = RawOrigin::Signed(instance.caller.clone());
+	}: call(origin, instance.addr, <span class="number">0u32</span>.into(), Weight::MAX, <span class="prelude-val">None</span>, <span class="macro">vec!</span>[])
+
+	account_reentrance_count {
+		<span class="kw">let </span>r <span class="kw">in </span><span class="number">0 </span>.. API_BENCHMARK_BATCHES;
+		<span class="kw">let </span>dummy_code = WasmModule::&lt;T&gt;::dummy_with_bytes(<span class="number">0</span>);
+		<span class="kw">let </span>accounts = (<span class="number">0</span>..r * API_BENCHMARK_BATCH_SIZE)
+			.map(|i| Contract::with_index(i + <span class="number">1</span>, dummy_code.clone(), <span class="macro">vec!</span>[]))
+			.collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
+		<span class="kw">let </span>account_id_len = accounts.get(<span class="number">0</span>).map(|i| i.account_id.encode().len()).unwrap_or(<span class="number">0</span>);
+		<span class="kw">let </span>account_id_bytes = accounts.iter().flat_map(|x| x.account_id.encode()).collect();
+		<span class="kw">let </span>code = WasmModule::&lt;T&gt;::from(ModuleDefinition {
+			memory: <span class="prelude-val">Some</span>(ImportedMemory::max::&lt;T&gt;()),
+			imported_functions: <span class="macro">vec!</span>[ImportedFunction {
+				module: <span class="string">&quot;__unstable__&quot;</span>,
+				name: <span class="string">&quot;account_reentrance_count&quot;</span>,
+				params: <span class="macro">vec!</span>[ValueType::I32],
+				return_type: <span class="prelude-val">Some</span>(ValueType::I32),
+			}],
+			data_segments: <span class="macro">vec!</span>[
+				DataSegment {
+					offset: <span class="number">0</span>,
+					value: account_id_bytes,
+				},
+			],
+			call_body: <span class="prelude-val">Some</span>(body::repeated_dyn(r * API_BENCHMARK_BATCH_SIZE, <span class="macro">vec!</span>[
+				Counter(<span class="number">0</span>, account_id_len <span class="kw">as </span>u32), <span class="comment">// account_ptr
 				</span>Regular(Instruction::Call(<span class="number">0</span>)),
 				Regular(Instruction::Drop),
 			])),

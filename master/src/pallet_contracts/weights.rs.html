@@ -2594,6 +2594,56 @@
 <span id="2594">2594</span>
 <span id="2595">2595</span>
 <span id="2596">2596</span>
+<span id="2597">2597</span>
+<span id="2598">2598</span>
+<span id="2599">2599</span>
+<span id="2600">2600</span>
+<span id="2601">2601</span>
+<span id="2602">2602</span>
+<span id="2603">2603</span>
+<span id="2604">2604</span>
+<span id="2605">2605</span>
+<span id="2606">2606</span>
+<span id="2607">2607</span>
+<span id="2608">2608</span>
+<span id="2609">2609</span>
+<span id="2610">2610</span>
+<span id="2611">2611</span>
+<span id="2612">2612</span>
+<span id="2613">2613</span>
+<span id="2614">2614</span>
+<span id="2615">2615</span>
+<span id="2616">2616</span>
+<span id="2617">2617</span>
+<span id="2618">2618</span>
+<span id="2619">2619</span>
+<span id="2620">2620</span>
+<span id="2621">2621</span>
+<span id="2622">2622</span>
+<span id="2623">2623</span>
+<span id="2624">2624</span>
+<span id="2625">2625</span>
+<span id="2626">2626</span>
+<span id="2627">2627</span>
+<span id="2628">2628</span>
+<span id="2629">2629</span>
+<span id="2630">2630</span>
+<span id="2631">2631</span>
+<span id="2632">2632</span>
+<span id="2633">2633</span>
+<span id="2634">2634</span>
+<span id="2635">2635</span>
+<span id="2636">2636</span>
+<span id="2637">2637</span>
+<span id="2638">2638</span>
+<span id="2639">2639</span>
+<span id="2640">2640</span>
+<span id="2641">2641</span>
+<span id="2642">2642</span>
+<span id="2643">2643</span>
+<span id="2644">2644</span>
+<span id="2645">2645</span>
+<span id="2646">2646</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2022 Parity Technologies (UK) Ltd.
@@ -2705,6 +2755,8 @@
 	<span class="kw">fn </span>seal_ecdsa_recover(r: u32, ) -&gt; Weight;
 	<span class="kw">fn </span>seal_ecdsa_to_eth_address(r: u32, ) -&gt; Weight;
 	<span class="kw">fn </span>seal_set_code_hash(r: u32, ) -&gt; Weight;
+	<span class="kw">fn </span>seal_reentrant_count(r: u32, ) -&gt; Weight;
+	<span class="kw">fn </span>seal_account_reentrance_count(r: u32, ) -&gt; Weight;
 	<span class="kw">fn </span>instr_i64const(r: u32, ) -&gt; Weight;
 	<span class="kw">fn </span>instr_i64load(r: u32, ) -&gt; Weight;
 	<span class="kw">fn </span>instr_i64store(r: u32, ) -&gt; Weight;
@@ -3615,6 +3667,30 @@
 			.saturating_add(T::DbWeight::get().reads((<span class="number">225 </span><span class="kw">as </span>u64).saturating_mul(r <span class="kw">as </span>u64)))
 			.saturating_add(T::DbWeight::get().writes(<span class="number">3 </span><span class="kw">as </span>u64))
 			.saturating_add(T::DbWeight::get().writes((<span class="number">150 </span><span class="kw">as </span>u64).saturating_mul(r <span class="kw">as </span>u64)))
+	}
+	<span class="comment">// Storage: System Account (r:1 w:0)
+	// Storage: Contracts ContractInfoOf (r:1 w:1)
+	// Storage: Contracts CodeStorage (r:1 w:0)
+	// Storage: Timestamp Now (r:1 w:0)
+	</span><span class="doccomment">/// The range of component `r` is `[0, 20]`.
+	</span><span class="kw">fn </span>seal_reentrant_count(r: u32, ) -&gt; Weight {
+		Weight::from_ref_time(<span class="number">304_709_000 </span><span class="kw">as </span>u64)
+			<span class="comment">// Standard Error: 67_000
+			</span>.saturating_add(Weight::from_ref_time(<span class="number">15_411_000 </span><span class="kw">as </span>u64).saturating_mul(r <span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().reads(<span class="number">4 </span><span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
+	}
+	<span class="comment">// Storage: System Account (r:1 w:0)
+	// Storage: Contracts ContractInfoOf (r:1 w:1)
+	// Storage: Contracts CodeStorage (r:1 w:0)
+	// Storage: Timestamp Now (r:1 w:0)
+	</span><span class="doccomment">/// The range of component `r` is `[0, 20]`.
+	</span><span class="kw">fn </span>seal_account_reentrance_count(r: u32, ) -&gt; Weight {
+		Weight::from_ref_time(<span class="number">328_378_000 </span><span class="kw">as </span>u64)
+			<span class="comment">// Standard Error: 137_000
+			</span>.saturating_add(Weight::from_ref_time(<span class="number">37_448_000 </span><span class="kw">as </span>u64).saturating_mul(r <span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().reads(<span class="number">4 </span><span class="kw">as </span>u64))
+			.saturating_add(T::DbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
 	}
 	<span class="doccomment">/// The range of component `r` is `[0, 50]`.
 	</span><span class="kw">fn </span>instr_i64const(r: u32, ) -&gt; Weight {
@@ -4832,6 +4908,30 @@
 			.saturating_add(RocksDbWeight::get().writes(<span class="number">3 </span><span class="kw">as </span>u64))
 			.saturating_add(RocksDbWeight::get().writes((<span class="number">150 </span><span class="kw">as </span>u64).saturating_mul(r <span class="kw">as </span>u64)))
 	}
+	<span class="comment">// Storage: System Account (r:1 w:0)
+	// Storage: Contracts ContractInfoOf (r:1 w:1)
+	// Storage: Contracts CodeStorage (r:1 w:0)
+	// Storage: Timestamp Now (r:1 w:0)
+	</span><span class="doccomment">/// The range of component `r` is `[0, 20]`.
+	</span><span class="kw">fn </span>seal_reentrant_count(r: u32, ) -&gt; Weight {
+		Weight::from_ref_time(<span class="number">304_709_000 </span><span class="kw">as </span>u64)
+			<span class="comment">// Standard Error: 67_000
+			</span>.saturating_add(Weight::from_ref_time(<span class="number">15_411_000 </span><span class="kw">as </span>u64).saturating_mul(r <span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().reads(<span class="number">4 </span><span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
+	}
+	<span class="comment">// Storage: System Account (r:1 w:0)
+	// Storage: Contracts ContractInfoOf (r:1 w:1)
+	// Storage: Contracts CodeStorage (r:1 w:0)
+	// Storage: Timestamp Now (r:1 w:0)
+	</span><span class="doccomment">/// The range of component `r` is `[0, 20]`.
+	</span><span class="kw">fn </span>seal_account_reentrance_count(r: u32, ) -&gt; Weight {
+		Weight::from_ref_time(<span class="number">328_378_000 </span><span class="kw">as </span>u64)
+			<span class="comment">// Standard Error: 137_000
+			</span>.saturating_add(Weight::from_ref_time(<span class="number">37_448_000 </span><span class="kw">as </span>u64).saturating_mul(r <span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().reads(<span class="number">4 </span><span class="kw">as </span>u64))
+			.saturating_add(RocksDbWeight::get().writes(<span class="number">1 </span><span class="kw">as </span>u64))
+	}
 	<span class="doccomment">/// The range of component `r` is `[0, 50]`.
 	</span><span class="kw">fn </span>instr_i64const(r: u32, ) -&gt; Weight {
 		<span class="comment">// Minimum execution time: 69_022 nanoseconds.
@@ -5189,6 +5289,5 @@
 			<span class="comment">// Standard Error: 986
 			</span>.saturating_add(Weight::from_ref_time(<span class="number">1_867_001 </span><span class="kw">as </span>u64).saturating_mul(r <span class="kw">as </span>u64))
 	}
-}
-</code></pre></div>
+}</code></pre></div>
 </section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pallet_contracts" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.66.0-nightly (81f391930 2022-10-09)" ></div></body></html>
