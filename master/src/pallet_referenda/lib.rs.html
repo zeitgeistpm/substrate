@@ -1138,6 +1138,31 @@
 <span id="1138">1138</span>
 <span id="1139">1139</span>
 <span id="1140">1140</span>
+<span id="1141">1141</span>
+<span id="1142">1142</span>
+<span id="1143">1143</span>
+<span id="1144">1144</span>
+<span id="1145">1145</span>
+<span id="1146">1146</span>
+<span id="1147">1147</span>
+<span id="1148">1148</span>
+<span id="1149">1149</span>
+<span id="1150">1150</span>
+<span id="1151">1151</span>
+<span id="1152">1152</span>
+<span id="1153">1153</span>
+<span id="1154">1154</span>
+<span id="1155">1155</span>
+<span id="1156">1156</span>
+<span id="1157">1157</span>
+<span id="1158">1158</span>
+<span id="1159">1159</span>
+<span id="1160">1160</span>
+<span id="1161">1161</span>
+<span id="1162">1162</span>
+<span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -1837,6 +1862,31 @@
 	) -&gt; <span class="prelude-ty">Result</span>&lt;ReferendumStatusOf&lt;T, I&gt;, DispatchError&gt; {
 		<span class="kw">match </span>ReferendumInfoFor::&lt;T, I&gt;::get(index) {
 			<span class="prelude-val">Some</span>(ReferendumInfo::Ongoing(status)) =&gt; <span class="prelude-val">Ok</span>(status),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(Error::&lt;T, I&gt;::NotOngoing.into()),
+		}
+	}
+
+	<span class="doccomment">/// Returns whether the referendum is passing.
+	/// Referendum must be ongoing and its track must exist.
+	</span><span class="kw">pub fn </span>is_referendum_passing(ref_index: ReferendumIndex) -&gt; <span class="prelude-ty">Result</span>&lt;bool, DispatchError&gt; {
+		<span class="kw">let </span>info = ReferendumInfoFor::&lt;T, I&gt;::get(ref_index).ok_or(Error::&lt;T, I&gt;::BadReferendum)<span class="question-mark">?</span>;
+		<span class="kw">match </span>info {
+			ReferendumInfo::Ongoing(status) =&gt; {
+				<span class="kw">let </span>track = <span class="self">Self</span>::track(status.track).ok_or(Error::&lt;T, I&gt;::NoTrack)<span class="question-mark">?</span>;
+				<span class="kw">let </span>elapsed = <span class="kw">if let </span><span class="prelude-val">Some</span>(deciding) = status.deciding {
+					frame_system::Pallet::&lt;T&gt;::block_number().saturating_sub(deciding.since)
+				} <span class="kw">else </span>{
+					Zero::zero()
+				};
+				<span class="prelude-val">Ok</span>(<span class="self">Self</span>::is_passing(
+					<span class="kw-2">&amp;</span>status.tally,
+					elapsed,
+					track.decision_period,
+					<span class="kw-2">&amp;</span>track.min_support,
+					<span class="kw-2">&amp;</span>track.min_approval,
+					status.track,
+				))
+			},
 			<span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(Error::&lt;T, I&gt;::NotOngoing.into()),
 		}
 	}

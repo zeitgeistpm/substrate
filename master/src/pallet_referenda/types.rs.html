@@ -763,16 +763,16 @@
 </span><span class="kw">pub struct </span>DecidingStatus&lt;BlockNumber&gt; {
 	<span class="doccomment">/// When this referendum began being &quot;decided&quot;. If confirming, then the
 	/// end will actually be delayed until the end of the confirmation period.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) since: BlockNumber,
+	</span><span class="kw">pub </span>since: BlockNumber,
 	<span class="doccomment">/// If `Some`, then the referendum has entered confirmation stage and will end at
 	/// the block number as long as it doesn&#39;t lose its approval in the meantime.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) confirming: <span class="prelude-ty">Option</span>&lt;BlockNumber&gt;,
+	</span><span class="kw">pub </span>confirming: <span class="prelude-ty">Option</span>&lt;BlockNumber&gt;,
 }
 
 <span class="attribute">#[derive(Encode, Decode, Clone, PartialEq, Eq, RuntimeDebug, TypeInfo, MaxEncodedLen)]
 </span><span class="kw">pub struct </span>Deposit&lt;AccountId, Balance&gt; {
-	<span class="kw">pub</span>(<span class="kw">crate</span>) who: AccountId,
-	<span class="kw">pub</span>(<span class="kw">crate</span>) amount: Balance,
+	<span class="kw">pub </span>who: AccountId,
+	<span class="kw">pub </span>amount: Balance,
 }
 
 <span class="attribute">#[derive(Clone, Encode, TypeInfo)]
@@ -833,28 +833,28 @@
 	ScheduleAddress: Eq + PartialEq + Debug + Encode + Decode + TypeInfo + Clone,
 &gt; {
 	<span class="doccomment">/// The track of this referendum.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) track: TrackId,
+	</span><span class="kw">pub </span>track: TrackId,
 	<span class="doccomment">/// The origin for this referendum.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) origin: RuntimeOrigin,
+	</span><span class="kw">pub </span>origin: RuntimeOrigin,
 	<span class="doccomment">/// The hash of the proposal up for referendum.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) proposal: Call,
+	</span><span class="kw">pub </span>proposal: Call,
 	<span class="doccomment">/// The time the proposal should be scheduled for enactment.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) enactment: DispatchTime&lt;Moment&gt;,
+	</span><span class="kw">pub </span>enactment: DispatchTime&lt;Moment&gt;,
 	<span class="doccomment">/// The time of submission. Once `UndecidingTimeout` passes, it may be closed by anyone if
 	/// `deciding` is `None`.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) submitted: Moment,
+	</span><span class="kw">pub </span>submitted: Moment,
 	<span class="doccomment">/// The deposit reserved for the submission of this referendum.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) submission_deposit: Deposit&lt;AccountId, Balance&gt;,
+	</span><span class="kw">pub </span>submission_deposit: Deposit&lt;AccountId, Balance&gt;,
 	<span class="doccomment">/// The deposit reserved for this referendum to be decided.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) decision_deposit: <span class="prelude-ty">Option</span>&lt;Deposit&lt;AccountId, Balance&gt;&gt;,
+	</span><span class="kw">pub </span>decision_deposit: <span class="prelude-ty">Option</span>&lt;Deposit&lt;AccountId, Balance&gt;&gt;,
 	<span class="doccomment">/// The status of a decision being made. If `None`, it has not entered the deciding period.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) deciding: <span class="prelude-ty">Option</span>&lt;DecidingStatus&lt;Moment&gt;&gt;,
+	</span><span class="kw">pub </span>deciding: <span class="prelude-ty">Option</span>&lt;DecidingStatus&lt;Moment&gt;&gt;,
 	<span class="doccomment">/// The current tally of votes in this referendum.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) tally: Tally,
+	</span><span class="kw">pub </span>tally: Tally,
 	<span class="doccomment">/// Whether we have been placed in the queue for being decided or not.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) in_queue: bool,
+	</span><span class="kw">pub </span>in_queue: bool,
 	<span class="doccomment">/// The next scheduled wake-up, if `Some`.
-	</span><span class="kw">pub</span>(<span class="kw">crate</span>) alarm: <span class="prelude-ty">Option</span>&lt;(Moment, ScheduleAddress)&gt;,
+	</span><span class="kw">pub </span>alarm: <span class="prelude-ty">Option</span>&lt;(Moment, ScheduleAddress)&gt;,
 }
 
 <span class="doccomment">/// Info regarding a referendum, present or past.
