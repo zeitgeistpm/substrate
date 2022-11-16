@@ -537,13 +537,6 @@
 <span id="537">537</span>
 <span id="538">538</span>
 <span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
 </pre><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -655,34 +648,27 @@
 }
 
 <span class="kw">impl</span>&lt;G: RuntimeGenesis, E&gt; BuildStorage <span class="kw">for </span>ChainSpec&lt;G, E&gt; {
-	<span class="kw">fn </span>build_storage(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Storage, String&gt; {
+	<span class="kw">fn </span>assimilate_storage(<span class="kw-2">&amp;</span><span class="self">self</span>, storage: <span class="kw-2">&amp;mut </span>Storage) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
 		<span class="kw">match </span><span class="self">self</span>.genesis.resolve()<span class="question-mark">? </span>{
-			Genesis::Runtime(gc) =&gt; gc.build_storage(),
-			Genesis::Raw(RawGenesis { top: map, children_default: children_map }) =&gt; <span class="prelude-val">Ok</span>(Storage {
-				top: map.into_iter().map(|(k, v)| (k.<span class="number">0</span>, v.<span class="number">0</span>)).collect(),
-				children_default: children_map
-					.into_iter()
-					.map(|(storage_key, child_content)| {
-						<span class="kw">let </span>child_info = ChildInfo::new_default(storage_key.<span class="number">0</span>.as_slice());
-						(
-							storage_key.<span class="number">0</span>,
-							StorageChild {
-								data: child_content.into_iter().map(|(k, v)| (k.<span class="number">0</span>, v.<span class="number">0</span>)).collect(),
-								child_info,
-							},
-						)
-					})
-					.collect(),
-			}),
+			Genesis::Runtime(gc) =&gt; gc.assimilate_storage(storage),
+			Genesis::Raw(RawGenesis { top: map, children_default: children_map }) =&gt; {
+				storage.top.extend(map.into_iter().map(|(k, v)| (k.<span class="number">0</span>, v.<span class="number">0</span>)));
+				children_map.into_iter().for_each(|(k, v)| {
+					<span class="kw">let </span>child_info = ChildInfo::new_default(k.<span class="number">0</span>.as_slice());
+					storage
+						.children_default
+						.entry(k.<span class="number">0</span>)
+						.or_insert_with(|| StorageChild { data: Default::default(), child_info })
+						.data
+						.extend(v.into_iter().map(|(k, v)| (k.<span class="number">0</span>, v.<span class="number">0</span>)));
+				});
+				<span class="prelude-val">Ok</span>(())
+			},
 			<span class="comment">// The `StateRootHash` variant exists as a way to keep note that other clients support
 			// it, but Substrate itself isn&#39;t capable of loading chain specs with just a hash at the
 			// moment.
 			</span>Genesis::StateRootHash(<span class="kw">_</span>) =&gt; <span class="prelude-val">Err</span>(<span class="string">&quot;Genesis storage in hash format not supported&quot;</span>.into()),
 		}
-	}
-
-	<span class="kw">fn </span>assimilate_storage(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Storage) -&gt; <span class="prelude-ty">Result</span>&lt;(), String&gt; {
-		<span class="prelude-val">Err</span>(<span class="string">&quot;`assimilate_storage` not implemented for `ChainSpec`.&quot;</span>.into())
 	}
 }
 
