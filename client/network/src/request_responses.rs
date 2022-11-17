@@ -40,7 +40,10 @@ use futures::{
 	prelude::*,
 };
 use libp2p::{
-	core::{connection::ConnectionId, transport::ListenerId, ConnectedPoint, Multiaddr, PeerId},
+	core::{
+		connection::{ConnectionId, ListenerId},
+		ConnectedPoint, Multiaddr, PeerId,
+	},
 	request_response::{
 		handler::RequestResponseHandler, ProtocolSupport, RequestResponse, RequestResponseCodec,
 		RequestResponseConfig, RequestResponseEvent, RequestResponseMessage, ResponseChannel,
@@ -965,7 +968,7 @@ mod tests {
 		let noise_keys =
 			noise::Keypair::<noise::X25519Spec>::new().into_authentic(&keypair).unwrap();
 
-		let transport = MemoryTransport::new()
+		let transport = MemoryTransport
 			.upgrade(upgrade::Version::V1)
 			.authenticate(noise::NoiseConfig::xx(noise_keys).into_authenticated())
 			.multiplex(libp2p::yamux::YamuxConfig::default())

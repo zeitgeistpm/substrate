@@ -27,7 +27,10 @@ use bytes::Bytes;
 use codec::{Decode, DecodeAll, Encode};
 use futures::{channel::oneshot, prelude::*};
 use libp2p::{
-	core::{connection::ConnectionId, transport::ListenerId, ConnectedPoint},
+	core::{
+		connection::{ConnectionId, ListenerId},
+		ConnectedPoint,
+	},
 	request_response::OutboundFailure,
 	swarm::{
 		ConnectionHandler, IntoConnectionHandler, NetworkBehaviour, NetworkBehaviourAction,
