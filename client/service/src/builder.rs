@@ -310,6 +310,7 @@ where
 		executor,
 		spawn_handle,
 		config.clone(),
+		execution_extensions,
 	)?;
 	crate::client::Client::new(
 		backend,
@@ -317,7 +318,6 @@ where
 		genesis_storage,
 		fork_blocks,
 		bad_blocks,
-		execution_extensions,
 		prometheus_registry,
 		telemetry,
 		config,
