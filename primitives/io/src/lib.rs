@@ -789,7 +789,7 @@ pub trait Crypto {
 				return false
 			};
 
-			let sig = ed25519_dalek::Signature::from(sig.0);
+			let sig = ed25519_dalek::Signature::from(sig.0.as_ref());
 
 			public_key.verify(msg, &sig).is_ok()
 		} else {
