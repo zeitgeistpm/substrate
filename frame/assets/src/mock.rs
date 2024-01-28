@@ -20,10 +20,13 @@
 use super::*;
 use crate as pallet_assets;
 
+extern crate alloc;
+
+use alloc::collections::BTreeMap;
 use codec::Encode;
 use frame_support::{
 	construct_runtime, parameter_types,
-	traits::{AsEnsureOriginWithArg, ConstU32, ConstU64, GenesisBuild},
+	traits::{fungibles::Destroy, AsEnsureOriginWithArg, ConstU32, ConstU64, GenesisBuild},
 };
 use sp_core::H256;
 use sp_io::storage;
@@ -132,6 +135,21 @@ impl AssetsCallbackHandle {
 	}
 }
 
+impl ManagedDestroy<AccountId> for Assets {
+	fn managed_destroy(
+		asset: Self::AssetId,
+		maybe_check_owner: Option<AccountId>,
+	) -> DispatchResult {
+		<Self as Destroy<AccountId>>::start_destroy(asset, maybe_check_owner)
+	}
+
+	fn managed_destroy_multi(
+		_assets: BTreeMap<Self::AssetId, Option<AccountId>>,
+	) -> DispatchResult {
+		unimplemented!();
+	}
+}
+
 impl Config for Test {
 	type RuntimeEvent = RuntimeEvent;
 	type Balance = u64;
@@ -146,6 +164,7 @@ impl Config for Test {
 	type MetadataDepositPerByte = ConstU64<1>;
 	type ApprovalDeposit = ConstU64<1>;
 	type StringLimit = ConstU32<50>;
+	type Destroyer = Assets;
 	type Freezer = TestFreezer;
 	type WeightInfo = ();
 	type CallbackHandle = AssetsCallbackHandle;
