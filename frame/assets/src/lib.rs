@@ -292,6 +292,9 @@ pub mod pallet {
 		#[pallet::constant]
 		type StringLimit: Get<u32>;
 
+		/// Automatic asset destruction handler.
+		type Destroyer: ManagedDestroy<Self::AccountId, AssetId = Self::AssetId>;
+
 		/// A hook to allow a per-asset, per-account minimum balance to be enforced. This must be
 		/// respected in all permissionless operations.
 		type Freezer: FrozenBalance<Self::AssetId, Self::AccountId, Self::Balance>;
@@ -681,7 +684,7 @@ pub mod pallet {
 				Err(origin) => Some(ensure_signed(origin)?),
 			};
 			let id: T::AssetId = id.into();
-			Self::do_start_destroy(id, maybe_check_owner)
+			T::Destroyer::managed_destroy(id, maybe_check_owner)
 		}
 
 		/// Destroy all accounts associated with a given asset.
@@ -1068,7 +1071,7 @@ pub mod pallet {
 				ensure!(details.status == AssetStatus::Live, Error::<T, I>::LiveAsset);
 				ensure!(origin == details.owner, Error::<T, I>::NoPermission);
 				if details.owner == owner {
-					return Ok(())
+					return Ok(());
 				}
 
 				let metadata_deposit = Metadata::<T, I>::get(id).deposit;
