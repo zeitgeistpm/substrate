@@ -162,6 +162,7 @@ use frame_support::{
 	pallet_prelude::DispatchResultWithPostInfo,
 	storage::KeyPrefixIterator,
 	traits::{
+		fungibles::Inspect,
 		tokens::{fungibles, DepositConsequence, WithdrawConsequence},
 		BalanceStatus::Reserved,
 		Currency, EnsureOriginWithArg, ReservableCurrency, StoredMap,
@@ -236,7 +237,12 @@ pub mod pallet {
 		type RemoveItemsLimit: Get<u32>;
 
 		/// Identifier for the class of asset.
-		type AssetId: Member + Parameter + Copy + MaybeSerializeDeserialize + MaxEncodedLen;
+		type AssetId: Member
+			+ Parameter
+			+ Copy
+			+ MaybeSerializeDeserialize
+			+ MaxEncodedLen
+			+ Into<<Self::Destroyer as Inspect<Self::AccountId>>::AssetId>;
 
 		/// Wrapper around `Self::AssetId` to use in dispatchable call signatures. Allows the use
 		/// of compact encoding in instances of the pallet, which will prevent breaking changes

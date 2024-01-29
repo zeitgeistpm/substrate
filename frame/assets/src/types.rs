@@ -22,7 +22,7 @@ extern crate alloc;
 use super::*;
 use alloc::collections::BTreeMap;
 use frame_support::{
-	pallet_prelude::*, 
+	pallet_prelude::*,
 	traits::{fungible, fungibles::Destroy, tokens::BalanceConversion},
 };
 use sp_runtime::{traits::Convert, FixedPointNumber, FixedPointOperand, FixedU128};
