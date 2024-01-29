@@ -299,7 +299,7 @@ pub mod pallet {
 		type StringLimit: Get<u32>;
 
 		/// Automatic asset destruction handler.
-		type Destroyer: ManagedDestroy<Self::AccountId, AssetId = Self::AssetId>;
+		type Destroyer: ManagedDestroy<Self::AccountId>;
 
 		/// A hook to allow a per-asset, per-account minimum balance to be enforced. This must be
 		/// respected in all permissionless operations.
@@ -690,7 +690,7 @@ pub mod pallet {
 				Err(origin) => Some(ensure_signed(origin)?),
 			};
 			let id: T::AssetId = id.into();
-			T::Destroyer::managed_destroy(id, maybe_check_owner)
+			T::Destroyer::managed_destroy(id.into(), maybe_check_owner)
 		}
 
 		/// Destroy all accounts associated with a given asset.
